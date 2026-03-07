@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>David Nicholson Art</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap');
+
+:root {
+  --bg: #0c0c0c;
+  --surface: #1e1e1e;
+  --surface2: #1f1f1f;
+  --border: #2a2a2a;
+  --border2: #222222;
+  --ink: #f0ede8;
+  --ink2: #888480;
+  --ink3: #4a4744;
+  --accent: #f0ede8;
+  --sheet-bg: #ffffff;
+  --radius: 8px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  width:100%; height:100%; overflow:hidden;
+  background:var(--bg);
+  font-family:'DM Sans', sans-serif;
+  color:var(--ink);
+  user-select:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── SCREENS ── */
+.screen {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  visibility:hidden; opacity:0;
+  transition:opacity 0.22s ease, visibility 0s linear 0.22s;
+}
+.screen.on { visibility:visible; opacity:1; transition:opacity 0.22s ease, visibility 0s; }
+
+/* ══════════════════════
+   APP BAR
+══════════════════════ */
+.app-bar {
+  display:flex; align-items:center;
+  padding:20px 20px 16px;
+  flex-shrink:0;
+  gap:12px;
+}
+.app-bar-title {
+  flex:1;
+  font-size:20px; font-weight:600; color:#ffffff;
+  letter-spacing:-0.02em;
+}
+.app-bar-title span {
+  color:#888480; font-weight:400; margin-left:8px; font-size:15px;
+}
+.top-btn {
+  background:#f0ede8;
+  border:none;
+  border-radius:20px;
+  padding:13px 22px;
+  font-family:'DM Sans', sans-serif;
+  font-size:15px; font-weight:500;
+  color:#1a1917; letter-spacing:-0.01em;
+  cursor:pointer; white-space:nowrap;
+  transition:background 0.15s, opacity 0.15s;
+}
+.top-btn:active { background:#dedad4; opacity:0.9; }
+
+/* ══════════════════════
+   CATALOG
+══════════════════════ */
+#main { background:var(--bg); }
+
+.catalog-scroll {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding:16px 16px 40px;
+  -webkit-overflow-scrolling:touch;
+}
+.catalog-scroll::-webkit-scrollbar { width:0; }
+
+.grid {
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+  align-items:center;
+}
+.card {
+  width:calc(33.333% - 12px);
+}
+
+.card {
+  background:var(--surface);
+  overflow:hidden; cursor:pointer;
+  position:relative;
+  border-radius:2px;
+}
+.card:active { opacity:0.85; }
+.card img {
+  width:100%; height:auto; display:block;
+  opacity:0; transition:opacity 0.35s;
+}
+.card img.loaded { opacity:1; }
+.card .ph {
+  width:100%; height:200px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; color:var(--ink3);
+}
+
+/* skeleton */
+.skel {
+  height:260px; border-radius:2px;
+  background:var(--surface);
+  animation:sk 1.6s ease-in-out infinite;
+}
+@keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+
+/* ══════════════════════
+   DETAIL MODAL (centered pop-out)
+══════════════════════ */
+#detail-overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.78);
+  visibility:hidden; opacity:0;
+  transition:opacity 0.28s, visibility 0s linear 0.28s;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+#detail-overlay.on {
+  visibility:visible; opacity:1;
+  transition:opacity 0.28s, visibility 0s;
+}
+
+#detail-sheet {
+  position:relative;
+  background:#f5f2ed;
+  border-radius:18px;
+  width:100%; max-width:820px;
+  max-height:88vh;
+  display:flex; flex-direction:row;
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3);
+  /* NO transform or opacity here — they create stacking contexts that trap children */
+  transition:none;
+}
+
+/* Close button */
+.modal-close {
+  position:absolute; top:14px; right:14px; z-index:20;
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(0,0,0,0.08); border:none;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:14px; color:#6b6560;
+  transition:background 0.15s;
+}
+.modal-close:active { background:rgba(0,0,0,0.15); }
+
+/* Left: image pane */
+.modal-img-pane {
+  flex:1.1; min-width:0;
+  background:#f5f2ed;
+  display:flex; flex-direction:column;
+  position:relative;
+  touch-action:none;
+}
+.img-viewer {
+  flex:1; position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  touch-action:none;
+}
+.img-viewer-inner {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+.viewer-slide {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  padding:28px;
+}
+.viewer-slide img {
+  max-width:100%; max-height:100%;
+  object-fit:contain; display:block;
+  border-radius:4px;
+}
+
+/* nav arrows */
+.img-nav {
+  background:rgba(0,0,0,0.12); border:none;
+  border-radius:50%; width:44px; height:44px;
+  flex-shrink:0; align-self:center;
+  cursor:pointer; z-index:20;
+  display:flex; align-items:center; justify-content:center;
+  color:#1a1917; font-size:20px; line-height:1;
+  transition:background 0.15s;
+  margin:0 6px;
+}
+.img-nav:active { background:rgba(0,0,0,0.22); }
+.img-nav.hidden { opacity:0; pointer-events:none; }
+
+/* Right: info pane */
+.modal-info-pane {
+  width:340px; flex-shrink:0;
+  display:flex; flex-direction:column;
+  border-left:1px solid rgba(0,0,0,0.06);
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+.modal-info-pane::-webkit-scrollbar { width:0; }
+
+.modal-info-inner {
+  padding:32px 28px 36px;
+  display:flex; flex-direction:column; gap:18px;
+  flex:1;
+}
+
+.sheet-name {
+  font-family:'Playfair Display', serif;
+  font-size:26px; font-weight:700;
+  color:#1a1917; line-height:1.2;
+}
+.sheet-desc {
+  font-family:'Playfair Display', serif; font-style:italic;
+  font-size:15px; color:#6b6560; line-height:1.7;
+}
+.sheet-buy-wrap {
+  display:flex; flex-direction:column; gap:12px;
+  margin-top:auto; padding-top:20px;
+}
+.sheet-buy-link {
+  font-size:16px; color:#6b6560;
+  text-decoration:underline; text-underline-offset:4px;
+  text-decoration-color:rgba(107,101,96,0.35);
+  cursor:pointer; line-height:1.55;
+  transition:color 0.2s;
+}
+.sheet-buy-link:active { color:#6b6560; }
+.sheet-qr-inner {
+  background:#fff; border-radius:8px; padding:10px;
+  border:1px solid #e8e4df; line-height:0; align-self:flex-start;
+}
+.sheet-qr-hint {
+  font-size:12px; color:#a8a39d; letter-spacing:0.02em;
+}
+
+/* Send link section */
+.send-link-wrap {
+  display:flex; flex-direction:column; gap:10px;
+  padding-top:16px;
+  border-top:1px solid #ece8e3;
+}
+.send-link-label {
+  font-size:13px; font-weight:500; color:#6b6560;
+}
+.send-link-row {
+  display:flex; gap:8px; align-items:stretch;
+}
+.send-link-input {
+  flex:1; background:rgba(255,255,255,0.6); border:1.5px solid rgba(0,0,0,0.1);
+  border-radius:10px; color:#1a1917;
+  font-family:'DM Sans', sans-serif; font-size:15px;
+  padding:13px 14px; outline:none;
+  transition:border-color 0.2s; -webkit-appearance:none;
+  min-width:0;
+}
+.send-link-input:focus { border-color:#a8a39d; }
+.send-link-input::placeholder { color:#b0aba5; }
+.send-link-btn {
+  background:#1a1917; border:none; border-radius:10px;
+  color:#fff; padding:13px 16px;
+  font-family:'DM Sans', sans-serif; font-size:14px; font-weight:500;
+  cursor:pointer; white-space:nowrap;
+  transition:opacity 0.15s;
+  flex-shrink:0;
+}
+.send-link-btn:active { opacity:0.8; }
+
+.send-link-confirm {
+  font-size:13px; color:#1a8c4e; font-weight:500;
+  display:none;
+}
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px;
+  background:rgba(0,0,0,0.05); border-radius:10px;
+  border:1.5px solid rgba(0,0,0,0.08);
+  transition:border-color 0.2s, background 0.2s;
+}
+  border-color:#a8a39d; background:#f0ede8; cursor:pointer;
+}
+  width:22px; height:22px; border-radius:6px;
+  border:2px solid #d0ccc7; background:#fff;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  transition:background 0.15s, border-color 0.15s;
+  cursor:default;
+}
+  font-size:13px; color:#b0aba5; line-height:1.4;
+  transition:color 0.2s;
+}
+
+
+
+/* dots — hidden, not needed for inter-print nav */
+.img-dots { display:none; }
+
+
+
+
+
+/* ══════════════════════
+   GUESTBOOK MODAL
+══════════════════════ */
+#gb-overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.78);
+  visibility:hidden; opacity:0;
+  transition:opacity 0.28s, visibility 0s linear 0.28s;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+#gb-overlay.on { visibility:visible; opacity:1; transition:opacity 0.28s, visibility 0s; }
+
+#gb-sheet {
+  position:relative;
+  background:#f5f2ed;
+  border-radius:18px;
+  width:100%; max-width:520px;
+  max-height:88vh;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.gb-header {
+  display:flex; align-items:center; padding:28px 28px 16px;
+  flex-shrink:0; gap:10px;
+}
+.gb-header h2 {
+  font-family:'Playfair Display', serif;
+  font-size:24px; font-weight:700; color:#1a1917; flex:1; letter-spacing:-0.01em;
+}
+
+.gb-header-actions { display:flex; gap:8px; align-items:center; }
+
+.export-btn {
+  background:rgba(0,0,0,0.07); border:none;
+  border-radius:7px; padding:7px 12px;
+  font-family:'DM Sans', sans-serif; font-size:11px; font-weight:500;
+  color:#6b6560; cursor:pointer; letter-spacing:-0.01em;
+  transition:background 0.15s;
+}
+.export-btn:active { background:rgba(0,0,0,0.13); }
+
+.close-btn {
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(0,0,0,0.08); border:none;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:14px; color:#6b6560; flex-shrink:0;
+  transition:background 0.15s;
+}
+.close-btn:active { background:rgba(0,0,0,0.15); }
+
+.gb-scroll {
+  flex:1; overflow-y:auto; padding:0 28px 36px;
+  display:flex; flex-direction:column; gap:16px;
+  -webkit-overflow-scrolling:touch;
+}
+.gb-scroll::-webkit-scrollbar { width:0; }
+
+.gb-form { display:flex; flex-direction:column; gap:14px; }
+.gb-field { display:flex; flex-direction:column; gap:6px; }
+.gb-label { font-size:12px; font-weight:500; color:#6b6560; letter-spacing:0.01em; }
+.gb-input {
+  background:rgba(255,255,255,0.7); border:1.5px solid rgba(0,0,0,0.1);
+  border-radius:10px; color:#1a1917;
+  font-family:'DM Sans', sans-serif; font-size:17px; padding:14px 16px;
+  outline:none; width:100%; transition:border-color 0.2s; -webkit-appearance:none;
+}
+.gb-input:focus { border-color:#a8a39d; background:#fff; }
+.gb-input::placeholder { color:#b0aba5; }
+.gb-ta {
+  background:rgba(255,255,255,0.7); border:1.5px solid rgba(0,0,0,0.1);
+  border-radius:10px; color:#1a1917;
+  font-family:'DM Sans', sans-serif; font-size:17px; padding:14px 16px;
+  outline:none; width:100%; transition:border-color 0.2s; -webkit-appearance:none;
+  resize:none; min-height:100px; line-height:1.5;
+}
+.gb-ta:focus { border-color:#a8a39d; background:#fff; }
+.gb-ta::placeholder { color:#b0aba5; }
+.gb-submit {
+  background:#1a1917; border:none; border-radius:10px; color:#f5f2ed;
+  padding:16px; font-family:'DM Sans', sans-serif;
+  font-size:16px; font-weight:600; cursor:pointer; width:100%;
+  margin-top:4px;
+  transition:opacity 0.15s, transform 0.12s;
+}
+.gb-submit:active { opacity:0.85; transform:scale(0.99); }
+
+.entries-section { display:flex; flex-direction:column; gap:10px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.08); }
+.entries-label { font-size:11px; font-weight:500; color:#a8a39d; text-transform:uppercase; letter-spacing:0.07em; }
+.entries-list { display:flex; flex-direction:column; gap:8px; }
+.gb-entry {
+  background:rgba(255,255,255,0.5); border-radius:8px;
+  padding:12px 14px; border:1px solid rgba(0,0,0,0.07);
+}
+.e-name { font-size:13px; font-weight:600; color:#1a1917; }
+.e-city { font-size:11px; color:#a8a39d; margin-top:2px; }
+.e-email { font-size:11px; color:#a8a39d; margin-top:1px; }
+.e-msg { font-size:13px; color:#6b6560; margin-top:6px; line-height:1.55;
+  font-family:'Playfair Display', serif; font-style:italic; }
+.e-date { font-size:11px; color:#a8a39d; margin-top:6px; }
+
+/* ══════════════════════
+   FOLLOW MODAL
+══════════════════════ */
+#con-overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.78);
+  visibility:hidden; opacity:0;
+  transition:opacity 0.28s, visibility 0s linear 0.28s;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+#con-overlay.on { visibility:visible; opacity:1; transition:opacity 0.28s, visibility 0s; }
+
+#con-sheet {
+  position:relative;
+  background:#f5f2ed;
+  border-radius:18px;
+  width:100%; max-width:380px;
+  display:flex; flex-direction:column;
+  align-items:center;
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3);
+  padding:40px 40px 44px;
+}
+
+.con-close {
+  position:absolute; top:14px; right:14px;
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(0,0,0,0.08); border:none;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:14px; color:#6b6560;
+  transition:background 0.15s;
+}
+.con-close:active { background:rgba(0,0,0,0.15); }
+
+.con-qr-wrap {
+  background:#fff; border-radius:12px; padding:16px;
+  border:1px solid rgba(0,0,0,0.07); line-height:0;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+.con-handle {
+  font-family:'Playfair Display', serif;
+  font-size:22px; font-weight:700; color:#1a1917;
+  margin-top:24px; letter-spacing:-0.01em;
+}
+.con-hint-text {
+  font-size:14px; color:#6b6560; margin-top:8px;
+  font-family:'DM Sans', sans-serif;
+}
+
+
+
+/* TOAST */
+#toast {
+  position:fixed; bottom:32px; left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--ink); color:#0c0c0c;
+  font-size:12px; font-weight:500;
+  padding:9px 18px; border-radius:20px;
+  opacity:0; pointer-events:none; z-index:300;
+  transition:opacity 0.2s, transform 0.2s; white-space:nowrap;
+}
+#toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
+
+* { scrollbar-width:none; }
+</style>
+</head>
+<body>
+
+<!-- ── MAIN ── -->
+<div class="screen on" id="main">
+  <div class="app-bar">
+    <div class="app-bar-title">
+      David Nicholson<span id="print-count"></span>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="top-btn" onclick="openGB()">Guest Book</button>
+      <button class="top-btn" onclick="openCon()">Follow</button>
+    </div>
+  </div>
+  <div class="catalog-scroll">
+    <div class="grid" id="grid">
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DETAIL MODAL ── -->
+<div id="detail-overlay" onclick="overlayClick(event)">
+  <div id="detail-sheet">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <!-- left edge prev arrow -->
+    <button class="img-nav img-nav-prev" id="nav-prev" onclick="slideNav(-1)">‹</button>
+    <!-- left: image -->
+    <div class="modal-img-pane">
+      <div class="img-viewer" id="img-viewer">
+        <div class="img-viewer-inner" id="viewer-inner"></div>
+      </div>
+      <div class="img-dots" id="img-dots"></div>
+    </div>
+    <!-- right: info -->
+    <div class="modal-info-pane">
+      <div class="modal-info-inner">
+        <div class="sheet-name" id="d-name"></div>
+        <div class="sheet-desc" id="d-desc"></div>
+        <div class="sheet-buy-wrap">
+          <span class="sheet-buy-link" onclick="toggleQR(this)">He doesn’t have this print with him but I think I want it</span>
+          <div class="sheet-qr-reveal" style="display:none">
+            <div class="sheet-qr-inner" id="d-qr" style="cursor:pointer" onclick="openProductUrl()"></div>
+            <div class="sheet-qr-hint">Scan to order online</div>
+            <div class="send-link-wrap">
+              <div class="send-link-label">Or send the link to yourself</div>
+              <div class="send-link-row">
+                <input class="send-link-input" id="send-email" type="email" placeholder="Email" autocomplete="off" autocapitalize="none" spellcheck="false">
+                <button class="send-link-btn" onclick="sendLink('email')">Send</button>
+              </div>
+              <div class="send-link-row">
+                <input class="send-link-input" id="send-phone" type="tel" placeholder="Phone number" autocomplete="off">
+                <button class="send-link-btn" onclick="sendLink('sms')">Text</button>
+              </div>
+              <div class="send-link-confirm" id="send-confirm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- right edge next arrow -->
+    <button class="img-nav img-nav-next" id="nav-next" onclick="slideNav(1)">›</button>
+  </div>
+</div>
+
+<!-- ── GUESTBOOK MODAL ── -->
+<div id="gb-overlay" onclick="gbOverlayClick(event)">
+<div id="gb-sheet">
+  <div class="gb-header">
+    <h2 id="gb-title" onclick="gbTitleTap()">Guest Book</h2>
+    <div class="gb-header-actions">
+      <button class="export-btn" id="export-btn" style="display:none" onclick="exportCSV()">Export CSV</button>
+      <button class="close-btn" onclick="closeGB()">✕</button>
+    </div>
+  </div>
+  <div class="gb-scroll">
+    <div class="gb-form">
+      <div class="gb-field">
+        <div class="gb-label">Name</div>
+        <input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+      <div class="gb-field">
+        <div class="gb-label">Email</div>
+        <input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="none">
+      </div>
+      <div class="gb-field">
+        <div class="gb-label">Note <span style="font-weight:400;color:#a8a39d">(optional)</span></div>
+        <textarea class="gb-ta" id="g-msg" placeholder="Favourite print, what brought you here…" autocomplete="off" spellcheck="false"></textarea>
+      </div>
+      <button class="gb-submit" onclick="submitGB()">Sign the Guest Book</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── FOLLOW MODAL ── -->
+<div id="con-overlay" onclick="conOverlayClick(event)">
+<div id="con-sheet">
+  <button class="con-close" onclick="closeCon()">✕</button>
+  <div class="con-qr-wrap" id="qr-ig"></div>
+  <div class="con-handle">@dave_nichol_son</div>
+  <div class="con-hint-text">Follow on Instagram</div>
+</div>
+</div>
+
+<!-- idle removed -->
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';
+const LAMBDA_URL = ''; // paste your API Gateway URL here after deploying
+const IG    = 'https://instagram.com/dave_nichol_son';
+
+let products = [], guests = [], conBuilt = false;
+
+// ── CATALOG ──────────────────────────────
+async function loadCatalog() {
+  products = await fetchAll();
+  document.getElementById('print-count').textContent = ' — ' + products.length + ' prints';
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  products.forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    if (p.img) {
+      const ph = document.createElement('div');
+      ph.className = 'ph'; ph.textContent = '';
+      const img = document.createElement('img');
+      img.src = p.img; img.alt = '';
+      img.addEventListener('load',  () => { img.classList.add('loaded'); ph.style.display='none'; });
+      img.addEventListener('error', () => img.remove());
+      el.appendChild(ph);
+      el.appendChild(img);
+    } else {
+      const ph = document.createElement('div');
+      ph.className = 'ph'; ph.textContent = '🖼';
+      el.appendChild(ph);
+    }
+    el.addEventListener('click', () => openDetail(i));
+    grid.appendChild(el);
+  });
+}
+
+async function fetchAll() {
+  try {
+    const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
+    if (!r.ok) throw 0;
+    const { products: raw } = await r.json();
+    return raw.map(p => {
+      const v = p.variants?.[0];
+      return {
+        slug: p.handle,
+        title: p.title,
+        desc: strip(p.body_html || ''),
+        price: v ? '$' + parseFloat(v.price).toFixed(0) : '',
+        img: p.images?.[0]?.src || null,
+        url: SHOPIFY + '/products/' + p.handle
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+// ── DETAIL + SWIPE BETWEEN PRINTS ────────
+let curIdx = 0;
+let ptrStartX = 0, ptrStartY = 0, ptrId = null, ptrDragging = false;
+
+function openDetail(idx) {
+  curIdx = idx;
+  renderDetail(products[idx]);
+  // reset QR reveal
+  const reveal = document.querySelector('.sheet-qr-reveal');
+  if (reveal) reveal.style.display = 'none';
+  const link = document.querySelector('.sheet-buy-link');
+  if (link) link.textContent = "He doesn't have this print with him but I think I might want it";
+  document.getElementById('d-qr').innerHTML = '';
+  document.getElementById('detail-overlay').classList.add('on');
+}
+
+function renderDetail(p) {
+  document.getElementById('d-name').textContent  = p.title;
+  document.getElementById('d-desc').textContent  = p.desc || '';
+  // image — primary only
+  const viewer = document.getElementById('img-viewer');
+  const inner  = document.getElementById('viewer-inner');
+  inner.innerHTML = p.img
+    ? `<div class="viewer-slide"><img src="${p.img}" alt=""></div>`
+    : `<div class="viewer-slide" style="min-height:220px;display:flex;align-items:center;justify-content:center;"><div class="ph" style="font-size:44px;color:#4a4744">🖼</div></div>`;
+  // nav arrows between prints
+  document.getElementById('nav-prev').classList.remove('hidden');
+  document.getElementById('nav-next').classList.remove('hidden');
+  document.getElementById('img-dots').innerHTML = '';
+
+}
+
+// Navigate between prints with arrow buttons
+function slideNav(dir) {
+  const next = (curIdx + dir + products.length) % products.length;
+  curIdx = next;
+  const p = products[curIdx];
+  // fade image out, swap, fade in
+  const inner = document.getElementById('viewer-inner');
+  inner.style.opacity = '0';
+  inner.style.transition = 'opacity 0.15s';
+  setTimeout(() => {
+    inner.innerHTML = p.img
+      ? `<div class="viewer-slide"><img src="${p.img}" alt=""></div>`
+      : `<div class="viewer-slide"><div class="ph" style="font-size:44px;color:#4a4744;padding:60px">🖼</div></div>`;
+    inner.style.opacity = '1';
+  }, 150);
+  document.getElementById('d-name').textContent  = p.title;
+  document.getElementById('d-desc').textContent  = p.desc || '';
+  document.getElementById('nav-prev').classList.remove('hidden');
+  document.getElementById('nav-next').classList.remove('hidden');
+  const reveal = document.querySelector('.sheet-qr-reveal');
+  if (reveal) reveal.style.display = 'none';
+  const link = document.querySelector('.sheet-buy-link');
+  if (link) link.textContent = "He doesn’t have this print with him but I think I want it";
+  document.getElementById('d-qr').innerHTML = '';
+}
+
+// Pointer-based swipe on the image (more reliable on iPad Safari)
+function openFS() {
+  const p = products[curIdx];
+  if (!p || !p.img) return;
+
+  // Build overlay fresh and append to body — bypasses ALL stacking contexts
+  const ov = document.createElement('div');
+  ov.id = 'fs-overlay';
+  ov.style.cssText = [
+    'position:fixed','inset:0','z-index:99999',
+    'background:rgba(0,0,0,0.96)',
+    'display:flex','align-items:center','justify-content:center',
+    'padding:20px','cursor:zoom-out',
+    'opacity:0','transition:opacity 0.2s'
+  ].join(';');
+
+  const img = document.createElement('img');
+  img.src = p.img;
+  img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;';
+
+  const close = document.createElement('button');
+  close.textContent = '✕';
+  close.style.cssText = [
+    'position:absolute','top:18px','right:18px',
+    'width:36px','height:36px','border-radius:50%',
+    'background:rgba(255,255,255,0.15)','border:none',
+    'color:#fff','font-size:16px','cursor:pointer',
+    'display:flex','align-items:center','justify-content:center'
+  ].join(';');
+
+  const hint = document.createElement('div');
+  hint.textContent = 'Tap anywhere to close';
+  hint.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,0.35);pointer-events:none;white-space:nowrap;';
+
+  ov.appendChild(img);
+  ov.appendChild(close);
+  ov.appendChild(hint);
+  document.body.appendChild(ov);
+
+  // Fade in
+  requestAnimationFrame(() => { ov.style.opacity = '1'; });
+
+  const dismiss = () => closeFS();
+  ov.addEventListener('click', dismiss);
+  close.addEventListener('click', e => { e.stopPropagation(); closeFS(); });
+}
+
+function closeFS() {
+  const ov = document.getElementById('fs-overlay');
+  if (!ov) return;
+  ov.style.opacity = '0';
+  setTimeout(() => ov.remove(), 200);
+}
+
+function initSwipe() {
+  const viewer = document.getElementById('img-viewer');
+  // Single tap on image = fullscreen
+  viewer.addEventListener('pointerup', e => {
+    if (ptrDragging) return;
+    openFS();
+  });
+  viewer.addEventListener('pointerdown', e => {
+    ptrId = e.pointerId; ptrStartX = e.clientX; ptrStartY = e.clientY; ptrDragging = false;
+    viewer.setPointerCapture(e.pointerId);
+  });
+  viewer.addEventListener('pointermove', e => {
+    if (e.pointerId !== ptrId) return;
+    const dx = e.clientX - ptrStartX;
+    const dy = e.clientY - ptrStartY;
+    if (!ptrDragging && Math.abs(dy) > Math.abs(dx) + 4) { ptrId = null; return; }
+    if (Math.abs(dx) > 8) ptrDragging = true;
+  });
+  viewer.addEventListener('pointerup', e => {
+    if (e.pointerId !== ptrId) return;
+    if (ptrDragging) {
+      const dx = e.clientX - ptrStartX;
+      if (dx < -55) slideNav(1);
+      else if (dx > 55) slideNav(-1);
+    }
+    ptrId = null; ptrDragging = false;
+  });
+  viewer.addEventListener('pointercancel', () => { ptrId = null; ptrDragging = false; });
+}
+
+function openProductUrl() {
+  const url = (curIdx < products.length) ? products[curIdx].url : '';
+  if (url) window.open(url, '_blank');
+}
+
+function toggleQR(el) {
+  const wrap = el.closest('.sheet-buy-wrap');
+  const reveal = wrap.querySelector('.sheet-qr-reveal');
+  const isOpen = reveal.style.display === 'flex';
+  if (isOpen) {
+    reveal.style.display = 'none';
+    el.textContent = "He doesn’t have this print with him but I think I want it";
+  } else {
+    const qel = document.getElementById('d-qr');
+    if (!qel.hasChildNodes() && curIdx < products.length) {
+      makeQR(qel, products[curIdx].url, 140);
+    }
+    reveal.style.display = 'flex';
+    reveal.style.flexDirection = 'column';
+    reveal.style.gap = '10px';
+    reveal.style.alignItems = 'flex-start';
+    el.textContent = "Hide ↑";
+  }
+}
+
+function sendLink(method) {
+  const url = (curIdx < products.length) ? products[curIdx].url : '';
+  if (!url) return;
+  const confirm = document.getElementById('send-confirm');
+
+  if (method === 'email') {
+    const email = document.getElementById('send-email').value.trim();
+    if (!email || !email.includes('@')) { showConfirm('Please enter a valid email', false); return; }
+    // Opens mail client with pre-filled body — works offline, no server needed
+    const subject = encodeURIComponent('Print from David Nicholson Art');
+    const body = encodeURIComponent('Here\u2019s the print you were looking at:\n\n' + url);
+    window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
+    document.getElementById('send-email').value = '';
+    showConfirm('Opening mail…', true);
+
+  } else {
+    const phone = document.getElementById('send-phone').value.trim().replace(/\D/g,'');
+    if (phone.length < 10) { showConfirm('Please enter a valid phone number', false); return; }
+    const body = encodeURIComponent('Print from David Nicholson Art: ' + url);
+    window.location.href = 'sms:' + phone + '&body=' + body;
+    document.getElementById('send-phone').value = '';
+    showConfirm('Opening Messages…', true);
+  }
+}
+
+function showConfirm(msg, success) {
+  const el = document.getElementById('send-confirm');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.color = success ? '#1a8c4e' : '#c0392b';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+function overlayClick(e) {
+  if (e.target === document.getElementById('detail-overlay')) closeDetail();
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('on');
+}
+
+// ── GUESTBOOK ────────────────────────────
+function openGB() {
+  document.getElementById('gb-overlay').classList.add('on');
+  document.getElementById('export-btn').style.display = 'none';
+  gbTapCount = 0;
+}
+let gbTapCount = 0, gbTapTimer;
+function gbTitleTap() {
+  gbTapCount++;
+  clearTimeout(gbTapTimer);
+  if (gbTapCount >= 3) {
+    gbTapCount = 0;
+    document.getElementById('export-btn').style.display = 'block';
+  } else {
+    gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
+  }
+}
+
+function closeGB() {
+  document.getElementById('gb-overlay').classList.remove('on');
+}
+function gbOverlayClick(e) {
+  if (e.target === document.getElementById('gb-overlay')) closeGB();
+}
+function submitGB() {
+  const name  = document.getElementById('g-name').value.trim();
+  const email = document.getElementById('g-email').value.trim();
+  const msg   = document.getElementById('g-msg').value.trim();
+  if (!name)  { toast('Please enter your name'); return; }
+  if (!email) { toast('Please enter your email'); return; }
+  guests.unshift({ name, email, msg,
+    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
+  try { localStorage.setItem('dna_gb', JSON.stringify(guests)); } catch {}
+  document.getElementById('g-name').value  = '';
+  document.getElementById('g-email').value = '';
+  document.getElementById('g-msg').value   = '';
+  toast('Thanks for signing!');
+}
+
+function renderGuests() {
+  const wrap = document.getElementById('ent-wrap');
+  const list = document.getElementById('ent-list');
+  if (!guests.length) { wrap.style.display='none'; return; }
+  wrap.style.display = 'flex';
+  list.innerHTML = guests.slice(0,40).map(e =>
+    '<div class="gb-entry">' +
+      '<div class="e-name">'+x(e.name)+'</div>' +
+      (e.email ? '<div class="e-email">'+x(e.email)+'</div>' : '') +
+      '<div class="e-date">'+e.date+'</div>' +
+    '</div>'
+  ).join('');
+}
+
+// ── CSV EXPORT ────────────────────────────
+function exportCSV() {
+  if (!guests.length) { toast('No entries yet'); return; }
+  const header = ['Name','Email','Note','Date'];
+  const rows = guests.map(e => [e.name, e.email||'', e.msg||'', e.date].map(csvCell));
+  const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'guestbook-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('Exported ' + guests.length + ' entries');
+}
+function csvCell(v) {
+  const s = String(v);
+  return (s.includes(',') || s.includes('"') || s.includes('\n'))
+    ? '"' + s.replace(/"/g, '""') + '"'
+    : s;
+}
+
+// ── CONNECT ───────────────────────────────
+function openCon() {
+  if (!conBuilt) {
+    conBuilt = true;
+    makeQR(document.getElementById('qr-ig'), 'https://www.instagram.com/dave_nichol_son/', 200);
+  }
+  document.getElementById('con-overlay').classList.add('on');
+}
+function closeCon() {
+  document.getElementById('con-overlay').classList.remove('on');
+}
+function conOverlayClick(e) {
+  if (e.target === document.getElementById('con-overlay')) closeCon();
+}
+
+// ── QR ────────────────────────────────────
+function makeQR(el, text, size) {
+  el.innerHTML = '';
+  new QRCode(el, { text, width:size, height:size,
+    colorDark:'#1a1917', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M });
+}
+
+function resetIdle() {}
+function wakeUp() {}
+
+// ── TOAST ─────────────────────────────────
+let tT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(tT); tT = setTimeout(() => el.classList.remove('on'), 2600);
+}
+
+// ── UTILS ─────────────────────────────────
+function x(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toTitle(s){ return s.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); }
+function strip(h){ const d=document.createElement('div'); d.innerHTML=h; return d.textContent||''; }
+
+// ── INIT ──────────────────────────────────
+(function(){
+  try { const s=localStorage.getItem('dna_gb'); if(s){guests=JSON.parse(s);renderGuests();} } catch{}
+  document.addEventListener('contextmenu', e=>e.preventDefault());
+  document.addEventListener('selectstart',  e=>e.preventDefault());
+  document.addEventListener('touchmove', e=>{
+    if (!e.target.closest('.catalog-scroll,.sheet-info,.gb-scroll,.con-scroll'))
+      e.preventDefault();
+  },{passive:false});
+  initSwipe();
+  loadCatalog();
+})();
+</script>
+
+<script>
+// ── SERVICE WORKER (offline cache) ────────────────────────────────────
+// Registers an inline SW so the app works offline after first load
+if ('serviceWorker' in navigator) {
+  const swCode = `
+const CACHE = 'dna-v1';
+const FONTS = [
+  'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+];
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FONTS)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(clients.claim());
+});
+self.addEventListener('fetch', e => {
+  // Cache-first for fonts/scripts, network-first for Shopify API + images
+  const url = e.request.url;
+  const isStatic = url.includes('fonts.googleapis') || url.includes('fonts.gstatic') || url.includes('cdnjs.cloudflare');
+  const isShopify = url.includes('0ipvjc-1v.myshopify.com');
+  if (isStatic) {
+    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+      const clone = res.clone();
+      caches.open(CACHE).then(c => c.put(e.request, clone));
+      return res;
+    })));
+  } else if (isShopify) {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return res;
+      }).catch(() => caches.match(e.request))
+    );
+  }
+});
+`;
+  const blob = new Blob([swCode], {type: 'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, {scope: '/'}).catch(() => {});
+}
+</script>
+</body>
+</html>
