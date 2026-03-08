@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Paintings and prints by David Nicholson, Kansas City">
+<title>David Nicholson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #111;
+  --border: #1e1e1e;
+  --border-mid: #2a2a2a;
+  --ink: #f2ede8;
+  --ink2: #888;
+  --ink3: #444;
+  --accent: #c8b89a;
+  --nav-h: 52px;
+  --wrap: 680px;
+  --font-sans: 'Syne', sans-serif;
+  --font-serif: 'Cormorant Garamond', serif;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 90;
+  height: var(--nav-h);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  background: rgba(10,10,10,0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--font-serif);
+  font-size: 18px; font-weight: 300; font-style: italic;
+  letter-spacing: 0.04em; color: var(--ink); flex: 1;
+}
+.nav-links {
+  display: flex; gap: 24px; align-items: center; list-style: none;
+}
+.nav-links a {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink2); transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-gb-btn {
+  background: none; border: 1px solid var(--border-mid);
+  border-radius: 20px; color: var(--ink2);
+  font-family: var(--font-sans); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 6px 14px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.nav-gb-btn:hover { border-color: var(--ink2); color: var(--ink); }
+
+.nav-menu-btn {
+  display: none; background: none; border: none;
+  color: var(--ink2); cursor: pointer;
+  flex-direction: column; gap: 5px; padding: 4px;
+}
+.nav-menu-btn span { display: block; width: 20px; height: 1px; background: currentColor; }
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column; gap: 0;
+    position: fixed; top: var(--nav-h); left: 0; right: 0;
+    background: rgba(10,10,10,0.98); border-bottom: 1px solid var(--border);
+    padding: 12px 24px 20px; align-items: flex-start;
+  }
+  .nav-links.open li { width: 100%; border-bottom: 1px solid var(--border); }
+  .nav-links.open a { display: block; padding: 13px 0; font-size: 12px; }
+  .nav-links.open .nav-gb-btn {
+    margin-top: 8px; border-radius: 0; border: none;
+    padding: 13px 0; font-size: 12px; letter-spacing: 0.16em;
+  }
+  .nav-menu-btn { display: flex; }
+}
+
+/* ── PAGE ── */
+.page {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+/* ── SPLASH ── */
+.splash-section { padding-top: var(--nav-h); }
+
+.splash-ph {
+  width: 100%; aspect-ratio: 3/4;
+  background: var(--surface);
+  animation: sk 1.8s ease-in-out infinite;
+}
+@keyframes sk { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+
+.splash-img {
+  width: 100%; height: auto; display: none;
+  opacity: 0; transition: opacity 0.5s;
+}
+.splash-img.loaded { opacity: 1; }
+
+.splash-caption {
+  font-size: 11px; color: var(--ink3);
+  letter-spacing: 0.06em; margin-top: 10px; font-style: italic;
+  min-height: 16px;
+}
+
+/* ── TITLE ── */
+.title-block { padding: 28px 0 0; }
+.site-title {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 7vw, 68px);
+  font-weight: 300; line-height: 1; letter-spacing: -0.01em;
+}
+
+/* ── RULE ── */
+.rule { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+/* ── SHARED LABEL ── */
+.label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 12px;
+}
+
+/* ── ABOUT ── */
+.about-text {
+  font-family: var(--font-serif);
+  font-size: 18px; font-weight: 300; line-height: 1.75; color: var(--ink2);
+}
+
+/* ── EVENTS ── */
+.events-year {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 12px;
+}
+.event { margin-bottom: 16px; }
+.event:last-child { margin-bottom: 0; }
+.event-date { font-size: 11px; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 3px; }
+.event-name {
+  font-family: var(--font-serif); font-size: 16px; font-weight: 300;
+  line-height: 1.4; color: var(--ink);
+}
+.event-loc { font-size: 11px; color: var(--ink3); margin-top: 2px; font-style: italic; }
+
+/* ── VENUE ── */
+.venue-name {
+  font-family: var(--font-serif); font-size: 17px; font-weight: 300;
+  color: var(--ink); line-height: 1.4;
+}
+.venue-addr { font-size: 11px; color: var(--ink3); margin-top: 3px; font-style: italic; }
+
+/* ── GALLERY LINK ── */
+.gallery-link {
+  display: inline-block;
+  font-family: var(--font-serif); font-size: 22px; font-weight: 300;
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-mid);
+  padding-bottom: 2px;
+  transition: border-color 0.2s;
+}
+.gallery-link:hover { border-color: var(--ink2); }
+.gallery-arrow {
+  font-size: 16px; color: var(--ink3); margin-left: 6px;
+  display: inline-block; transition: color 0.2s, transform 0.2s;
+}
+.gallery-link:hover .gallery-arrow { color: var(--ink); transform: translateX(3px); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 22px 24px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  max-width: var(--wrap); margin: 0 auto;
+}
+.footer-name { font-family: var(--font-serif); font-size: 13px; font-style: italic; color: var(--ink3); }
+.footer-copy { font-size: 10px; color: var(--ink3); letter-spacing: 0.08em; }
+
+/* ── GUESTBOOK MODAL ── */
+#gb-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+  visibility: hidden; opacity: 0;
+  transition: opacity 0.28s, visibility 0s linear 0.28s;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+#gb-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.28s, visibility 0s; }
+#gb-sheet {
+  background: #f5f2ed; border-radius: 4px;
+  width: 100%; max-width: 500px; max-height: 90vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+}
+.gb-header {
+  display: flex; align-items: center; padding: 26px 26px 14px; flex-shrink: 0; gap: 10px;
+}
+.gb-header h2 {
+  font-family: var(--font-serif); font-size: 26px; font-weight: 400; font-style: italic;
+  color: #1a1917; flex: 1;
+}
+.gb-close {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(0,0,0,0.07); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: #6b6560; transition: background 0.15s;
+}
+.gb-close:active { background: rgba(0,0,0,0.14); }
+.gb-scroll {
+  flex: 1; overflow-y: auto; padding: 0 26px 32px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.gb-scroll::-webkit-scrollbar { width: 0; }
+.gb-form { display: flex; flex-direction: column; gap: 12px; }
+.gb-label-field {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #6b6560; margin-bottom: 5px; display: block;
+}
+.gb-input, .gb-ta {
+  background: rgba(255,255,255,0.7); border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 6px; color: #1a1917;
+  font-family: var(--font-sans); font-size: 16px; padding: 12px 14px;
+  outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none;
+}
+.gb-input:focus, .gb-ta:focus { border-color: #a8a39d; background: #fff; }
+.gb-input::placeholder, .gb-ta::placeholder { color: #b0aba5; }
+.gb-ta { resize: none; min-height: 86px; line-height: 1.5; }
+.gb-submit {
+  background: #1a1917; border: none; border-radius: 6px; color: #f5f2ed;
+  padding: 15px; font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; width: 100%; margin-top: 4px; transition: opacity 0.15s;
+}
+.gb-submit:active { opacity: 0.8; }
+.gb-entries { padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 8px; }
+.gb-entries-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #a8a39d; }
+.gb-entry {
+  background: rgba(255,255,255,0.5); border-radius: 5px;
+  padding: 11px 13px; border: 1px solid rgba(0,0,0,0.07);
+}
+.e-name { font-size: 13px; font-weight: 600; color: #1a1917; }
+.e-date { font-size: 11px; color: #a8a39d; margin-top: 2px; }
+.e-msg { font-family: var(--font-serif); font-style: italic; font-size: 14px; color: #6b6560; margin-top: 5px; line-height: 1.55; }
+.export-btn {
+  background: rgba(0,0,0,0.07); border: none; border-radius: 5px;
+  padding: 5px 10px; font-family: var(--font-sans); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #6b6560; cursor: pointer;
+}
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 26px; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--ink); color: #0a0a0a;
+  font-family: var(--font-sans); font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  padding: 9px 18px; border-radius: 20px;
+  opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+* { scrollbar-width: thin; scrollbar-color: var(--border-mid) transparent; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border-mid); }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">David Nicholson</a>
+  <button class="nav-menu-btn" id="menu-btn" aria-label="Menu" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#about" onclick="closeMobileNav()">About</a></li>
+    <li><a href="https://kiosk.davidnicholsonllc.com" target="_blank" rel="noopener" onclick="closeMobileNav()">Gallery</a></li>
+    <li><a href="mailto:dave@davepainting.com" onclick="closeMobileNav()">Contact</a></li>
+    <li><button class="nav-gb-btn" onclick="openGB(); closeMobileNav()">Guest Book</button></li>
+  </ul>
+</nav>
+
+<div class="page splash-section">
+
+  <!-- HERO IMAGE — random primary product photo from Shopify -->
+  <div id="splash-wrap">
+    <div class="splash-ph" id="splash-ph"></div>
+    <img class="splash-img" id="splash-img" alt="painting by David Nicholson">
+  </div>
+  <p class="splash-caption" id="splash-cap"></p>
+
+  <!-- TITLE -->
+  <div class="title-block">
+    <h1 class="site-title">David Nicholson</h1>
+  </div>
+
+  <hr class="rule">
+
+  <!-- ABOUT -->
+  <div id="about" style="margin-bottom:32px;">
+    <p class="label">About</p>
+    <p class="about-text">
+      David Nicholson is a Kansas-based artist who paints from observation, blending colorful, figurative, simplified, and abstract elements.
+    </p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- FUTURE EVENTS -->
+  <div style="margin-bottom:32px;">
+    <p class="label">Future</p>
+    <p class="events-year">2026</p>
+    <div class="event">
+      <div class="event-date">April 24th</div>
+      <div class="event-name">Lawrence, KS Final Friday Artwalk</div>
+      <div class="event-loc">@ Phoenix Gallery</div>
+    </div>
+    <div class="event">
+      <div class="event-date">June 12th &amp; 13th</div>
+      <div class="event-name">Downtown Overland Park Art Fair</div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- ALSO AT -->
+  <div style="margin-bottom:32px;">
+    <p class="label">Also at</p>
+    <div class="venue-name">Phoenix Gallery</div>
+    <div class="venue-addr">825 Massachusetts, Lawrence, KS 66044</div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- PAST EVENTS -->
+  <div style="margin-bottom:32px;">
+    <p class="label">Past</p>
+    <p class="events-year">2025</p>
+    <div class="event">
+      <div class="event-name">Art Westport</div>
+      <div class="event-loc">Kansas City, MO</div>
+    </div>
+    <div class="event">
+      <div class="event-name">Art in the Park</div>
+      <div class="event-loc">Lawrence, KS</div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- GALLERY -->
+  <div>
+    <p class="label">Gallery</p>
+    <a class="gallery-link" href="https://kiosk.davidnicholsonllc.com" target="_blank" rel="noopener">
+      View gallery<span class="gallery-arrow">→</span>
+    </a>
+  </div>
+
+</div><!-- /page -->
+
+<footer>
+  <span class="footer-name">David Nicholson</span>
+  <span class="footer-copy">&copy; 2025 David Nicholson — All rights reserved</span>
+</footer>
+
+<!-- GUESTBOOK MODAL -->
+<div id="gb-overlay" onclick="gbOverlayClick(event)">
+  <div id="gb-sheet">
+    <div class="gb-header">
+      <h2 id="gb-title" onclick="gbTitleTap()">Guest Book</h2>
+      <button class="export-btn" id="export-btn" style="display:none" onclick="exportCSV()">Export CSV</button>
+      <button class="gb-close" onclick="closeGB()">✕</button>
+    </div>
+    <div class="gb-scroll">
+      <div class="gb-form">
+        <div>
+          <label class="gb-label-field" for="g-name">Name</label>
+          <input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <div>
+          <label class="gb-label-field" for="g-email">Email</label>
+          <input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false">
+        </div>
+        <div>
+          <label class="gb-label-field" for="g-msg">Note <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
+          <textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false"></textarea>
+        </div>
+        <button class="gb-submit" onclick="submitGB()">Sign the Guest Book</button>
+      </div>
+      <div class="gb-entries" id="gb-entries" style="display:none">
+        <div class="gb-entries-label">Recent visitors</div>
+        <div id="gb-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';
+
+// ── HERO — random primary product image from Shopify ─────
+async function loadHero() {
+  const ph  = document.getElementById('splash-ph');
+  const img = document.getElementById('splash-img');
+  const cap = document.getElementById('splash-cap');
+  try {
+    const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
+    if (!r.ok) throw 0;
+    const { products } = await r.json();
+    const withImg = products.filter(p => p.images?.[0]?.src);
+    if (!withImg.length) throw 0;
+    const p   = withImg[Math.floor(Math.random() * withImg.length)];
+    cap.textContent = p.title;
+    img.onload = () => {
+      img.classList.add('loaded');
+      img.style.display = 'block';
+      ph.style.display  = 'none';
+    };
+    img.onerror = () => { ph.style.display = 'none'; };
+    img.src = p.images[0].src;
+  } catch {
+    ph.style.display = 'none';
+  }
+}
+
+// ── GUESTBOOK ────────────────────────────────────────────
+let guests = [];
+
+function openGB() {
+  document.getElementById('gb-overlay').classList.add('on');
+  document.getElementById('export-btn').style.display = 'none';
+  gbTapCount = 0;
+  renderGuests();
+}
+function closeGB()         { document.getElementById('gb-overlay').classList.remove('on'); }
+function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
+
+let gbTapCount = 0, gbTapTimer;
+function gbTitleTap() {
+  gbTapCount++;
+  clearTimeout(gbTapTimer);
+  if (gbTapCount >= 3) { gbTapCount = 0; document.getElementById('export-btn').style.display = 'inline-block'; }
+  else gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
+}
+
+function submitGB() {
+  const name  = document.getElementById('g-name').value.trim();
+  const email = document.getElementById('g-email').value.trim();
+  const msg   = document.getElementById('g-msg').value.trim();
+  if (!name)                          { toast('Please enter your name'); return; }
+  if (!email || !email.includes('@')) { toast('Please enter a valid email'); return; }
+  guests.unshift({ name, email, msg,
+    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
+  try { localStorage.setItem('dna_guests', JSON.stringify(guests)); } catch {}
+  document.getElementById('g-name').value  = '';
+  document.getElementById('g-email').value = '';
+  document.getElementById('g-msg').value   = '';
+  renderGuests();
+  toast('Thanks for signing!');
+}
+
+function renderGuests() {
+  const wrap = document.getElementById('gb-entries');
+  const list = document.getElementById('gb-list');
+  if (!guests.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'flex';
+  list.innerHTML = guests.slice(0,40).map(e =>
+    `<div class="gb-entry"><div class="e-name">${esc(e.name)}</div><div class="e-date">${esc(e.date)}</div>${e.msg?'<div class="e-msg">'+esc(e.msg)+'</div>':''}</div>`
+  ).join('');
+}
+
+function exportCSV() {
+  if (!guests.length) { toast('No entries yet'); return; }
+  const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
+  const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
+  const a    = Object.assign(document.createElement('a'),{
+    href: URL.createObjectURL(new Blob([csv],{type:'text/csv'})),
+    download: 'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'
+  });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('Exported '+guests.length+' entries');
+}
+
+// ── MOBILE NAV ───────────────────────────────────────────
+function toggleMobileNav() { document.getElementById('nav-links').classList.toggle('open'); }
+function closeMobileNav()   { document.getElementById('nav-links').classList.remove('open'); }
+
+// ── TOAST ────────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), 2800);
+}
+
+// ── UTILS ────────────────────────────────────────────────
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── INIT ─────────────────────────────────────────────────
+(function() {
+  try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
+  loadHero();
+  document.addEventListener('click', e => {
+    const links = document.getElementById('nav-links');
+    const btn   = document.getElementById('menu-btn');
+    if (links.classList.contains('open') && !links.contains(e.target) && !btn.contains(e.target))
+      links.classList.remove('open');
+  });
+})();
+</script>
+</body>
+</html>
