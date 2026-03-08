@@ -7,7 +7,7 @@
 <title>David Nicholson</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0a0a0a;
@@ -15,13 +15,11 @@
   --border: #1e1e1e;
   --border-mid: #2a2a2a;
   --ink: #f2ede8;
-  --ink2: #888;
-  --ink3: #444;
-  --accent: #c8b89a;
-  --nav-h: 52px;
+  --ink2: #999;
+  --ink3: #777;
+  --accent: #a8b8c8;
   --wrap: 680px;
-  --font-sans: 'Syne', sans-serif;
-  --font-serif: 'Cormorant Garamond', serif;
+  --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,169 +28,150 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-sans);
+  font-family: var(--font);
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 a { color: inherit; text-decoration: none; }
 
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 90;
-  height: var(--nav-h);
-  display: flex; align-items: center;
-  padding: 0 24px;
-  background: rgba(10,10,10,0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-logo {
-  font-family: var(--font-serif);
-  font-size: 18px; font-weight: 300; font-style: italic;
-  letter-spacing: 0.04em; color: var(--ink); flex: 1;
-}
-.nav-links {
-  display: flex; gap: 24px; align-items: center; list-style: none;
-}
-.nav-links a {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--ink2); transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--ink); }
-.nav-gb-btn {
-  background: none; border: 1px solid var(--border-mid);
-  border-radius: 20px; color: var(--ink2);
-  font-family: var(--font-sans); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 6px 14px; cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-}
-.nav-gb-btn:hover { border-color: var(--ink2); color: var(--ink); }
-
-.nav-menu-btn {
-  display: none; background: none; border: none;
-  color: var(--ink2); cursor: pointer;
-  flex-direction: column; gap: 5px; padding: 4px;
-}
-.nav-menu-btn span { display: block; width: 20px; height: 1px; background: currentColor; }
-
-@media (max-width: 600px) {
-  .nav-links { display: none; }
-  .nav-links.open {
-    display: flex; flex-direction: column; gap: 0;
-    position: fixed; top: var(--nav-h); left: 0; right: 0;
-    background: rgba(10,10,10,0.98); border-bottom: 1px solid var(--border);
-    padding: 12px 24px 20px; align-items: flex-start;
-  }
-  .nav-links.open li { width: 100%; border-bottom: 1px solid var(--border); }
-  .nav-links.open a { display: block; padding: 13px 0; font-size: 12px; }
-  .nav-links.open .nav-gb-btn {
-    margin-top: 8px; border-radius: 0; border: none;
-    padding: 13px 0; font-size: 12px; letter-spacing: 0.16em;
-  }
-  .nav-menu-btn { display: flex; }
-}
-
 /* ── PAGE ── */
 .page {
-  max-width: var(--wrap);
-  margin: 0 auto;
-  padding: 0 24px 60px;
+  max-width: 680px;
+  margin: 0;
+  padding: 0 40px 60px 10%;
+}
+
+.content-col {
+  max-width: 100%;
+  font-weight: 300;
 }
 
 /* ── SPLASH ── */
-.splash-section { padding-top: var(--nav-h); }
+.splash-section { padding-top: 24px; }
 
 .splash-ph {
-  width: 100%; aspect-ratio: 3/4;
+  width: 100%;
+  aspect-ratio: 3/4;
   background: var(--surface);
   animation: sk 1.8s ease-in-out infinite;
 }
 @keyframes sk { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
 
+.splash-img-wrap {
+  width: 100%;
+  aspect-ratio: 3/4;
+  overflow: hidden; position: relative;
+}
 .splash-img {
-  width: 100%; height: auto; display: none;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  display: block;
   opacity: 0; transition: opacity 0.5s;
 }
 .splash-img.loaded { opacity: 1; }
 
 .splash-caption {
-  font-size: 11px; color: var(--ink3);
-  letter-spacing: 0.06em; margin-top: 10px; font-style: italic;
-  min-height: 16px;
+  font-size: 14px; color: var(--ink3);
+  letter-spacing: 0.06em; margin-top: 10px; font-weight: 300;
+  min-height: 20px;
 }
 
-/* ── TITLE ── */
-.title-block { padding: 28px 0 0; }
+/* ── TITLE BLOCK ── */
+.title-block { padding: 24px 0 0; }
+
 .site-title {
-  font-family: var(--font-serif);
+  font-family: var(--font);
   font-size: clamp(36px, 7vw, 68px);
-  font-weight: 300; line-height: 1; letter-spacing: -0.01em;
+  font-weight: 300 !important; line-height: 1; letter-spacing: 0.06em;
+  text-transform: lowercase;
 }
+
+/* ── FOLLOW BUTTON ── */
+.follow-btn {
+  display: inline-block;
+  margin-top: 28px;
+  font-family: var(--font); font-size: 13px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: lowercase;
+  color: var(--ink);
+  border: 1px solid #666;
+  border-radius: 20px;
+  padding: 7px 18px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.follow-btn:hover { border-color: var(--ink); }
 
 /* ── RULE ── */
 .rule { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
 
-/* ── SHARED LABEL ── */
-.label {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--ink3); margin-bottom: 12px;
+/* ── H2 ── */
+h2 {
+  font-family: var(--font);
+  font-size: 22px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: lowercase; color: var(--ink); margin-bottom: 20px;
 }
 
 /* ── ABOUT ── */
 .about-text {
-  font-family: var(--font-serif);
-  font-size: 18px; font-weight: 300; line-height: 1.75; color: var(--ink2);
+  font-size: 20px; font-weight: 300 !important; line-height: 1.8; color: var(--ink);
 }
 
 /* ── EVENTS ── */
 .events-year {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--ink3); margin-bottom: 12px;
+  font-size: 16px; font-weight: 400; letter-spacing: 0.08em;
+  text-transform: lowercase; color: var(--ink3); margin-bottom: 14px;
 }
-.event { margin-bottom: 16px; }
+.event { margin-bottom: 20px; }
 .event:last-child { margin-bottom: 0; }
-.event-date { font-size: 11px; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 3px; }
-.event-name {
-  font-family: var(--font-serif); font-size: 16px; font-weight: 300;
-  line-height: 1.4; color: var(--ink);
-}
-.event-loc { font-size: 11px; color: var(--ink3); margin-top: 2px; font-style: italic; }
+.event-date { font-size: 16px; color: var(--accent); margin-bottom: 4px; }
+.event-name { font-size: 20px; font-weight: 300; line-height: 1.4; color: var(--ink); }
+.event-loc  { font-size: 16px; color: var(--ink3); margin-top: 3px; }
 
 /* ── VENUE ── */
-.venue-name {
-  font-family: var(--font-serif); font-size: 17px; font-weight: 300;
-  color: var(--ink); line-height: 1.4;
+.venue-name { font-size: 20px; font-weight: 300; color: var(--ink); line-height: 1.4; }
+.venue-addr { font-size: 16px; color: var(--ink3); margin-top: 4px; }
+
+.event-name a, .venue-name a {
+  border-bottom: 1px solid var(--border-mid);
+  padding-bottom: 1px;
+  transition: border-color 0.2s, color 0.2s;
 }
-.venue-addr { font-size: 11px; color: var(--ink3); margin-top: 3px; font-style: italic; }
+.event-name a:hover, .venue-name a:hover { border-color: var(--ink2); }
 
 /* ── GALLERY LINK ── */
 .gallery-link {
-  display: inline-block;
-  font-family: var(--font-serif); font-size: 22px; font-weight: 300;
-  color: var(--ink);
-  border-bottom: 1px solid var(--border-mid);
-  padding-bottom: 2px;
-  transition: border-color 0.2s;
+  display: inline-flex; align-items: baseline; gap: 10px;
+  font-size: 26px; font-weight: 700;
+  letter-spacing: 0.03em; text-transform: lowercase;
+  color: var(--accent);
+  transition: opacity 0.2s;
 }
-.gallery-link:hover { border-color: var(--ink2); }
+.gallery-link:hover { opacity: 0.7; }
 .gallery-arrow {
-  font-size: 16px; color: var(--ink3); margin-left: 6px;
-  display: inline-block; transition: color 0.2s, transform 0.2s;
+  font-size: 20px; color: var(--accent);
+  display: inline-block; transition: transform 0.25s;
 }
-.gallery-link:hover .gallery-arrow { color: var(--ink); transform: translateX(3px); }
+.gallery-link:hover .gallery-arrow { transform: translateX(5px); }
 
 /* ── FOOTER ── */
 footer {
   border-top: 1px solid var(--border);
-  padding: 22px 24px;
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
-  max-width: var(--wrap); margin: 0 auto;
+  padding: 28px 40px 28px 10%;
+  max-width: 680px; margin: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
 }
-.footer-name { font-family: var(--font-serif); font-size: 13px; font-style: italic; color: var(--ink3); }
-.footer-copy { font-size: 10px; color: var(--ink3); letter-spacing: 0.08em; }
+.footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
+.footer-gb-btn {
+  background: none; border: 1px solid var(--border-mid);
+  border-radius: 20px; color: var(--ink2);
+  font-family: var(--font); font-size: 12px; font-weight: 400;
+  letter-spacing: 0.12em; text-transform: lowercase;
+  padding: 7px 16px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.footer-gb-btn:hover { border-color: var(--ink2); color: var(--ink); }
 
 /* ── GUESTBOOK MODAL ── */
 #gb-overlay {
@@ -213,8 +192,8 @@ footer {
   display: flex; align-items: center; padding: 26px 26px 14px; flex-shrink: 0; gap: 10px;
 }
 .gb-header h2 {
-  font-family: var(--font-serif); font-size: 26px; font-weight: 400; font-style: italic;
-  color: #1a1917; flex: 1;
+  font-size: 22px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: lowercase; color: #1a1917; flex: 1; margin-bottom: 0;
 }
 .gb-close {
   width: 30px; height: 30px; border-radius: 50%;
@@ -230,13 +209,13 @@ footer {
 .gb-scroll::-webkit-scrollbar { width: 0; }
 .gb-form { display: flex; flex-direction: column; gap: 12px; }
 .gb-label-field {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase;
   color: #6b6560; margin-bottom: 5px; display: block;
 }
 .gb-input, .gb-ta {
   background: rgba(255,255,255,0.7); border: 1.5px solid rgba(0,0,0,0.1);
   border-radius: 6px; color: #1a1917;
-  font-family: var(--font-sans); font-size: 16px; padding: 12px 14px;
+  font-family: var(--font); font-size: 16px; padding: 12px 14px;
   outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none;
 }
 .gb-input:focus, .gb-ta:focus { border-color: #a8a39d; background: #fff; }
@@ -244,24 +223,24 @@ footer {
 .gb-ta { resize: none; min-height: 86px; line-height: 1.5; }
 .gb-submit {
   background: #1a1917; border: none; border-radius: 6px; color: #f5f2ed;
-  padding: 15px; font-family: var(--font-sans); font-size: 12px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 15px; font-family: var(--font); font-size: 13px; font-weight: 400;
+  letter-spacing: 0.12em; text-transform: lowercase;
   cursor: pointer; width: 100%; margin-top: 4px; transition: opacity 0.15s;
 }
 .gb-submit:active { opacity: 0.8; }
 .gb-entries { padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 8px; }
-.gb-entries-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #a8a39d; }
+.gb-entries-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: lowercase; color: #a8a39d; }
 .gb-entry {
   background: rgba(255,255,255,0.5); border-radius: 5px;
   padding: 11px 13px; border: 1px solid rgba(0,0,0,0.07);
 }
-.e-name { font-size: 13px; font-weight: 600; color: #1a1917; }
-.e-date { font-size: 11px; color: #a8a39d; margin-top: 2px; }
-.e-msg { font-family: var(--font-serif); font-style: italic; font-size: 14px; color: #6b6560; margin-top: 5px; line-height: 1.55; }
+.e-name { font-size: 14px; font-weight: 500; color: #1a1917; }
+.e-date { font-size: 12px; color: #a8a39d; margin-top: 2px; }
+.e-msg { font-size: 14px; font-weight: 300; color: #6b6560; margin-top: 5px; line-height: 1.55; }
 .export-btn {
   background: rgba(0,0,0,0.07); border: none; border-radius: 5px;
-  padding: 5px 10px; font-family: var(--font-sans); font-size: 10px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase; color: #6b6560; cursor: pointer;
+  padding: 5px 10px; font-family: var(--font); font-size: 11px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: lowercase; color: #6b6560; cursor: pointer;
 }
 
 /* ── TOAST ── */
@@ -269,7 +248,7 @@ footer {
   position: fixed; bottom: 26px; left: 50%;
   transform: translateX(-50%) translateY(8px);
   background: var(--ink); color: #0a0a0a;
-  font-family: var(--font-sans); font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.08em;
   padding: 9px 18px; border-radius: 20px;
   opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap;
   transition: opacity 0.2s, transform 0.2s;
@@ -283,58 +262,54 @@ footer {
 </head>
 <body>
 
-<!-- ── NAV ── -->
-<nav>
-  <a href="#" class="nav-logo">David Nicholson</a>
-  <button class="nav-menu-btn" id="menu-btn" aria-label="Menu" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
-  </button>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#about" onclick="closeMobileNav()">About</a></li>
-    <li><a href="https://kiosk.davidnicholsonllc.com" target="_blank" rel="noopener" onclick="closeMobileNav()">Gallery</a></li>
-    <li><a href="mailto:dave@davepainting.com" onclick="closeMobileNav()">Contact</a></li>
-    <li><button class="nav-gb-btn" onclick="openGB(); closeMobileNav()">Guest Book</button></li>
-  </ul>
-</nav>
-
 <div class="page splash-section">
 
-  <!-- HERO IMAGE — random primary product photo from Shopify -->
+  <!-- HERO IMAGE -->
   <div id="splash-wrap">
     <div class="splash-ph" id="splash-ph"></div>
-    <img class="splash-img" id="splash-img" alt="painting by David Nicholson">
+    <div class="splash-img-wrap" id="splash-img-wrap" style="display:none">
+      <img class="splash-img" id="splash-img" alt="painting by David Nicholson">
+    </div>
   </div>
   <p class="splash-caption" id="splash-cap"></p>
 
+<div class="content-col">
+
   <!-- TITLE -->
   <div class="title-block">
-    <h1 class="site-title">David Nicholson</h1>
+    <h1 class="site-title" style="font-weight:300;">david nicholson</h1>
+    <a class="follow-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
   </div>
 
-  <hr class="rule">
+  <hr class="rule" id="content">
 
   <!-- ABOUT -->
   <div id="about" style="margin-bottom:32px;">
-    <p class="label">About</p>
-    <p class="about-text">
-      David Nicholson is a Kansas-based artist who paints from observation, blending colorful, figurative, simplified, and abstract elements.
+    <h2>about</h2>
+    <p class="about-text" style="font-weight:300;">
+      david nicholson is a kansas-based artist who paints from observation, blending colorful, figurative, simplified, and abstract elements.
     </p>
+    <div style="margin-top:28px;">
+      <a class="gallery-link" href="/shop.html">
+        view gallery<span class="gallery-arrow">→</span>
+      </a>
+    </div>
   </div>
 
   <hr class="rule">
 
-  <!-- FUTURE EVENTS -->
+  <!-- FUTURE -->
   <div style="margin-bottom:32px;">
-    <p class="label">Future</p>
+    <h2>future</h2>
     <p class="events-year">2026</p>
     <div class="event">
-      <div class="event-date">April 24th</div>
-      <div class="event-name">Lawrence, KS Final Friday Artwalk</div>
-      <div class="event-loc">@ Phoenix Gallery</div>
+      <div class="event-date">april 24th</div>
+      <div class="event-name"><a href="https://www.phoenixgalleryart.com">lawrence, ks final friday artwalk</a></div>
+      <div class="event-loc">@ phoenix gallery</div>
     </div>
     <div class="event">
-      <div class="event-date">June 12th &amp; 13th</div>
-      <div class="event-name">Downtown Overland Park Art Fair</div>
+      <div class="event-date">june 12th &amp; 13th</div>
+      <div class="event-name"><a href="https://www.downtownop.org/events/overland-park-event-page-ajcxw-rctlf-3xdt8-34da7-9sjs5-5pp2x-33fly-74nj4-9r2nc-23la6-53enr-43y62-6b3rg-tfhtb-c876k-2p6bt-2we64-ddjsn-4g2wy-2yf92-lkfjd-bsx74">downtown overland park art fair</a></div>
     </div>
   </div>
 
@@ -342,70 +317,65 @@ footer {
 
   <!-- ALSO AT -->
   <div style="margin-bottom:32px;">
-    <p class="label">Also at</p>
-    <div class="venue-name">Phoenix Gallery</div>
-    <div class="venue-addr">825 Massachusetts, Lawrence, KS 66044</div>
+    <h2>also at</h2>
+    <div class="venue-name"><a href="https://www.phoenixgalleryart.com">phoenix gallery</a></div>
+    <div class="venue-addr">825 massachusetts, lawrence, ks 66044</div>
   </div>
 
-  <hr class="rule">
-
-  <!-- PAST EVENTS -->
+  <!-- PAST -->
   <div style="margin-bottom:32px;">
-    <p class="label">Past</p>
+    <h2>past</h2>
     <p class="events-year">2025</p>
     <div class="event">
-      <div class="event-name">Art Westport</div>
-      <div class="event-loc">Kansas City, MO</div>
+      <div class="event-name"><a href="https://westportkcmo.com/art-westport/">art westport</a></div>
+      <div class="event-loc">kansas city, mo</div>
     </div>
     <div class="event">
-      <div class="event-name">Art in the Park</div>
-      <div class="event-loc">Lawrence, KS</div>
+      <div class="event-name"><a href="https://lawrenceartguild.org/art-in-the-park">art in the park</a></div>
+      <div class="event-loc">lawrence, ks</div>
     </div>
   </div>
 
-  <hr class="rule">
+</div><!-- /content-col -->
 
   <!-- GALLERY -->
-  <div>
-    <p class="label">Gallery</p>
-    <a class="gallery-link" href="https://kiosk.davidnicholsonllc.com" target="_blank" rel="noopener">
-      View gallery<span class="gallery-arrow">→</span>
-    </a>
-  </div>
 
 </div><!-- /page -->
 
 <footer>
-  <span class="footer-name">David Nicholson</span>
-  <span class="footer-copy">&copy; 2025 David Nicholson — All rights reserved</span>
+  <span class="footer-copy">&copy; 2026 david nicholson</span>
+  <div style="display:flex;gap:16px;align-items:center;">
+    <a href="/cdn-cgi/l/email-protection#bfdbdec9daffdbdec9dacfded6d1cbd6d1d891dcd0d2" class="footer-gb-btn">contact</a>
+    <button class="footer-gb-btn" onclick="openGB()">guest book</button>
+  </div>
 </footer>
 
 <!-- GUESTBOOK MODAL -->
 <div id="gb-overlay" onclick="gbOverlayClick(event)">
   <div id="gb-sheet">
     <div class="gb-header">
-      <h2 id="gb-title" onclick="gbTitleTap()">Guest Book</h2>
-      <button class="export-btn" id="export-btn" style="display:none" onclick="exportCSV()">Export CSV</button>
+      <h2 id="gb-title" onclick="gbTitleTap()">guest book</h2>
+      <button class="export-btn" id="export-btn" style="display:none" onclick="exportCSV()">export csv</button>
       <button class="gb-close" onclick="closeGB()">✕</button>
     </div>
     <div class="gb-scroll">
       <div class="gb-form">
         <div>
-          <label class="gb-label-field" for="g-name">Name</label>
+          <label class="gb-label-field" for="g-name">name</label>
           <input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false">
         </div>
         <div>
-          <label class="gb-label-field" for="g-email">Email</label>
+          <label class="gb-label-field" for="g-email">email</label>
           <input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false">
         </div>
         <div>
-          <label class="gb-label-field" for="g-msg">Note <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
+          <label class="gb-label-field" for="g-msg">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
           <textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false"></textarea>
         </div>
-        <button class="gb-submit" onclick="submitGB()">Sign the Guest Book</button>
+        <button class="gb-submit" onclick="submitGB()">sign the guest book</button>
       </div>
       <div class="gb-entries" id="gb-entries" style="display:none">
-        <div class="gb-entries-label">Recent visitors</div>
+        <div class="gb-entries-label">recent visitors</div>
         <div id="gb-list"></div>
       </div>
     </div>
@@ -414,26 +384,28 @@ footer {
 
 <div id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';
+const IG      = 'https://instagram.com/dave_nichol_son';
 
-// ── HERO — random primary product image from Shopify ─────
+// ── HERO ─────────────────────────────────────────────────
 async function loadHero() {
-  const ph  = document.getElementById('splash-ph');
-  const img = document.getElementById('splash-img');
-  const cap = document.getElementById('splash-cap');
+  const ph   = document.getElementById('splash-ph');
+  const wrap = document.getElementById('splash-img-wrap');
+  const img  = document.getElementById('splash-img');
+  const cap  = document.getElementById('splash-cap');
   try {
     const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
     if (!r.ok) throw 0;
     const { products } = await r.json();
     const withImg = products.filter(p => p.images?.[0]?.src);
     if (!withImg.length) throw 0;
-    const p   = withImg[Math.floor(Math.random() * withImg.length)];
+    const p = withImg[Math.floor(Math.random() * withImg.length)];
     cap.textContent = p.title;
     img.onload = () => {
-      img.classList.add('loaded');
-      img.style.display = 'block';
-      ph.style.display  = 'none';
+      img.style.opacity = '1';
+      wrap.style.display = 'block';
+      ph.style.display   = 'none';
     };
     img.onerror = () => { ph.style.display = 'none'; };
     img.src = p.images[0].src;
@@ -466,8 +438,8 @@ function submitGB() {
   const name  = document.getElementById('g-name').value.trim();
   const email = document.getElementById('g-email').value.trim();
   const msg   = document.getElementById('g-msg').value.trim();
-  if (!name)                          { toast('Please enter your name'); return; }
-  if (!email || !email.includes('@')) { toast('Please enter a valid email'); return; }
+  if (!name)                          { toast('please enter your name'); return; }
+  if (!email || !email.includes('@')) { toast('please enter a valid email'); return; }
   guests.unshift({ name, email, msg,
     date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
   try { localStorage.setItem('dna_guests', JSON.stringify(guests)); } catch {}
@@ -475,7 +447,7 @@ function submitGB() {
   document.getElementById('g-email').value = '';
   document.getElementById('g-msg').value   = '';
   renderGuests();
-  toast('Thanks for signing!');
+  toast('thanks for signing!');
 }
 
 function renderGuests() {
@@ -489,7 +461,7 @@ function renderGuests() {
 }
 
 function exportCSV() {
-  if (!guests.length) { toast('No entries yet'); return; }
+  if (!guests.length) { toast('no entries yet'); return; }
   const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
   const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
   const a    = Object.assign(document.createElement('a'),{
@@ -497,12 +469,8 @@ function exportCSV() {
     download: 'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'
   });
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  toast('Exported '+guests.length+' entries');
+  toast('exported '+guests.length+' entries');
 }
-
-// ── MOBILE NAV ───────────────────────────────────────────
-function toggleMobileNav() { document.getElementById('nav-links').classList.toggle('open'); }
-function closeMobileNav()   { document.getElementById('nav-links').classList.remove('open'); }
 
 // ── TOAST ────────────────────────────────────────────────
 let toastTimer;
@@ -520,12 +488,6 @@ function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 (function() {
   try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
   loadHero();
-  document.addEventListener('click', e => {
-    const links = document.getElementById('nav-links');
-    const btn   = document.getElementById('menu-btn');
-    if (links.classList.contains('open') && !links.contains(e.target) && !btn.contains(e.target))
-      links.classList.remove('open');
-  });
 })();
 </script>
 </body>

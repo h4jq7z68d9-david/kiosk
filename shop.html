@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Gallery — David Nicholson">
+<title>David Nicholson — Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0c;
+  --surface: #1a1a1a;
+  --border: #2a2a2a;
+  --border-mid: #333;
+  --ink: #f0ede8;
+  --ink2: #888480;
+  --ink3: #777;
+  --accent: #a8b8c8;
+  --font: 'DM Sans', sans-serif;
+  --serif: 'Playfair Display', serif;
+  --wrap: 1100px;
+  --nav-h: 56px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 80;
+  height: var(--nav-h);
+  background: var(--bg);
+  padding: 0 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-title {
+  font-size: 20px; font-weight: 400; color: var(--ink);
+  letter-spacing: 0.06em; text-transform: lowercase;
+  font-family: var(--font);
+  white-space: nowrap;
+}
+.nav-title span {
+  color: var(--ink2); font-weight: 300; margin-left: 8px; font-size: 14px;
+  letter-spacing: 0.04em;
+}
+.nav-center {
+  flex: 1; text-align: center;
+  font-size: 14px; font-weight: 400; letter-spacing: 0.1em;
+  text-transform: lowercase; color: var(--ink2);
+  font-family: var(--font);
+}
+.nav-btn {
+  background: none;
+  border: 1px solid #666;
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-family: var(--font);
+  font-size: 13px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: lowercase;
+  color: var(--ink); cursor: pointer; white-space: nowrap;
+  transition: border-color 0.2s; text-decoration: none;
+  display: inline-block;
+}
+.nav-btn:hover { border-color: var(--ink); }
+
+/* ── GRID ── */
+.grid-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + 32px) 16px 80px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+@media (max-width: 700px) {
+  nav { padding: 0 16px; }
+  .nav-title { font-size: 17px; }
+  .grid-wrap { padding: calc(var(--nav-h) + 20px) 10px 60px; }
+  .grid { gap: 10px; }
+}
+
+/* ── CARD ── */
+.card {
+  width: calc(33.333% - 12px);
+  aspect-ratio: 4/5;
+  position: relative; overflow: hidden; cursor: pointer;
+  background: var(--bg);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+}
+.card img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+  display: block;
+  opacity: 0; transition: opacity 0.35s;
+}
+.card img.loaded { opacity: 1; }
+.card:hover { opacity: 0.88; transition: opacity 0.2s; }
+
+@media (max-width: 600px) {
+  .card { width: calc(50% - 6px); }
+}
+@media (max-width: 380px) {
+  .card { width: 100%; }
+}
+
+/* skeleton */
+.skel {
+  width: calc(33.333% - 12px);
+  aspect-ratio: 4/5;
+  border-radius: 2px;
+  background: var(--surface);
+  animation: sk 1.6s ease-in-out infinite;
+}
+@keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+
+
+/* ── DETAIL MODAL ── */
+#detail-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  visibility: hidden; opacity: 0;
+  transition: opacity 0.25s, visibility 0s linear 0.25s;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+#detail-overlay.on {
+  visibility: visible; opacity: 1;
+  transition: opacity 0.25s, visibility 0s;
+}
+
+#detail-sheet {
+  position: relative;
+  background: #f5f2ed;
+  border-radius: 16px;
+  width: 100%; max-width: 900px;
+  max-height: 92vh;
+  display: flex; flex-direction: row;
+  overflow: hidden;
+  box-shadow: 0 32px 100px rgba(0,0,0,0.7);
+}
+
+@media (max-width: 680px) {
+  #detail-sheet { flex-direction: column; max-height: 96vh; border-radius: 12px; }
+}
+
+/* close */
+.modal-close {
+  position: absolute; top: 14px; right: 14px; z-index: 20;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.1); border: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #6b6560; transition: background 0.15s;
+}
+.modal-close:hover { background: rgba(0,0,0,0.18); }
+
+/* image pane */
+.modal-img-pane {
+  flex: 1.2; min-width: 0;
+  background: #ede9e4;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  cursor: zoom-in;
+}
+.modal-img-pane img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block; padding: 32px;
+  max-height: 92vh;
+}
+
+@media (max-width: 680px) {
+  .modal-img-pane { max-height: 52vw; min-height: 240px; }
+  .modal-img-pane img { padding: 20px; }
+}
+
+/* nav arrows */
+.img-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.15); border: none; border-radius: 50%;
+  width: 40px; height: 40px; cursor: pointer; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  color: #1a1917; font-size: 20px; transition: background 0.15s;
+}
+.img-nav:hover { background: rgba(0,0,0,0.28); }
+.img-nav-prev { left: 10px; }
+.img-nav-next { right: 10px; }
+.img-nav.hidden { opacity: 0; pointer-events: none; }
+
+/* info pane */
+.modal-info-pane {
+  width: 300px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  border-left: 1px solid rgba(0,0,0,0.07);
+  overflow-y: auto;
+}
+.modal-info-pane::-webkit-scrollbar { width: 0; }
+
+@media (max-width: 680px) {
+  .modal-info-pane { width: 100%; border-left: none; border-top: 1px solid rgba(0,0,0,0.07); }
+}
+
+.modal-info-inner {
+  padding: 32px 26px 36px;
+  display: flex; flex-direction: column; gap: 12px;
+  flex: 1;
+}
+
+.d-title {
+  font-family: var(--serif);
+  font-size: 22px; font-weight: 700;
+  color: #1a1917; line-height: 1.2;
+}
+.d-price {
+  font-size: 18px; font-weight: 400;
+  color: #6b6560; letter-spacing: -0.01em;
+}
+.d-desc {
+  font-family: var(--serif); font-style: italic;
+  font-size: 14px; color: #6b6560; line-height: 1.7;
+}
+
+/* buy section */
+.buy-section {
+  margin-top: auto; padding-top: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.btn-buy {
+  display: block; width: 100%;
+  background: #1a1917; color: #f5f2ed;
+  border: none; border-radius: 10px;
+  padding: 16px; text-align: center;
+  font-family: var(--font); font-size: 15px; font-weight: 500;
+  letter-spacing: 0.02em; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-buy:hover { opacity: 0.85; }
+
+.badge-sold {
+  display: inline-block;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #a8a39d;
+  border: 1px solid #d0ccc7; border-radius: 20px;
+  padding: 4px 10px;
+}
+
+/* ── FULLSCREEN ── */
+#fs-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.97);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px; cursor: zoom-out;
+}
+#fs-overlay.on { display: flex; }
+#fs-overlay img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain; border-radius: 4px;
+}
+.fs-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); border: none;
+  color: #fff; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
+.footer-gb-btn {
+  background: none; border: 1px solid #444;
+  border-radius: 20px; color: var(--ink2);
+  font-family: var(--font); font-size: 12px; font-weight: 400;
+  letter-spacing: 0.12em; text-transform: lowercase;
+  padding: 7px 16px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s; text-decoration: none;
+  display: inline-block;
+}
+.footer-gb-btn:hover { border-color: var(--ink2); color: var(--ink); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--ink); color: #0c0c0c;
+  font-family: var(--font); font-size: 12px; font-weight: 500;
+  padding: 9px 18px; border-radius: 20px;
+  opacity: 0; pointer-events: none; z-index: 1000;
+  transition: opacity 0.2s, transform 0.2s; white-space: nowrap;
+}
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-title" href="/index.html" style="text-decoration:none;">david nicholson<span id="nav-count"></span></a>
+  <div class="nav-center">gallery</div>
+  <a class="nav-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
+</nav>
+
+<div class="grid-wrap">
+  <div class="grid" id="grid">
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detail-overlay" onclick="overlayClick(event)">
+  <div id="detail-sheet">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+
+    <!-- image -->
+    <div class="modal-img-pane" onclick="openFS()">
+      <button class="img-nav img-nav-prev" id="nav-prev" onclick="event.stopPropagation();slideNav(-1)">‹</button>
+      <img id="d-img" src="" alt="">
+      <button class="img-nav img-nav-next" id="nav-next" onclick="event.stopPropagation();slideNav(1)">›</button>
+    </div>
+
+    <!-- info -->
+    <div class="modal-info-pane">
+      <div class="modal-info-inner">
+        <div class="d-title" id="d-title"></div>
+        <div class="d-desc"  id="d-desc"></div>
+        <div class="buy-section" id="buy-section"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN -->
+<div id="fs-overlay" onclick="closeFS()">
+  <button class="fs-close" onclick="event.stopPropagation();closeFS()">✕</button>
+  <img id="fs-img" src="" alt="">
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';
+
+let products = [];
+let curIdx = 0;
+
+// ── FETCH ─────────────────────────────────
+async function loadProducts() {
+  try {
+    const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
+    if (!r.ok) throw 0;
+    const { products: raw } = await r.json();
+    products = raw.map(p => {
+      const v = p.variants?.[0];
+      const sold = v?.inventory_management && v?.inventory_quantity <= 0;
+      return {
+        title:     p.title,
+        desc:      strip(p.body_html || ''),
+        price:     v ? '$' + parseFloat(v.price).toFixed(0) : '',
+        available: !sold,
+        img:       p.images?.[0]?.src || null,
+        url:       SHOPIFY + '/products/' + p.handle,
+      };
+    });
+    renderGrid();
+    document.getElementById('nav-count').textContent = ' — ' + products.length + ' works';
+  } catch {
+    document.getElementById('grid').innerHTML =
+      '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
+  }
+}
+
+// ── GRID ──────────────────────────────────
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  products.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    if (p.img) {
+      const img = document.createElement('img');
+      img.alt = p.title;
+      img.onload = () => img.classList.add('loaded');
+      img.src = p.img;
+      card.appendChild(img);
+    }
+    card.onclick = () => openDetail(i);
+    grid.appendChild(card);
+  });
+}
+
+// ── DETAIL ────────────────────────────────
+function openDetail(idx) {
+  curIdx = idx;
+  populateDetail(products[idx]);
+  document.getElementById('detail-overlay').classList.add('on');
+}
+
+function populateDetail(p) {
+  const img = document.getElementById('d-img');
+  img.src = p.img || ''; img.alt = p.title;
+
+  document.getElementById('d-title').textContent = p.title;
+  document.getElementById('d-desc').textContent  = p.desc  || '';
+
+  document.getElementById('nav-prev').classList.remove('hidden');
+  document.getElementById('nav-next').classList.remove('hidden');
+
+  const buy = document.getElementById('buy-section');
+  if (!p.available) {
+    buy.innerHTML = `<span class="badge-sold">sold out</span>`;
+  } else {
+    buy.innerHTML = `
+      <a class="btn-buy" href="${esc(p.url)}">prints</a>`;
+  }
+}
+
+function slideNav(dir) {
+  curIdx = (curIdx + dir + products.length) % products.length;
+  populateDetail(products[curIdx]);
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('on');
+}
+function overlayClick(e) {
+  if (e.target === document.getElementById('detail-overlay')) closeDetail();
+}
+
+// ── FULLSCREEN ────────────────────────────
+function openFS() {
+  const p = products[curIdx];
+  if (!p?.img) return;
+  document.getElementById('fs-img').src = p.img;
+  document.getElementById('fs-overlay').classList.add('on');
+}
+function closeFS() {
+  document.getElementById('fs-overlay').classList.remove('on');
+}
+
+// ── TOAST ─────────────────────────────────
+let tT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(tT); tT = setTimeout(() => el.classList.remove('on'), 2600);
+}
+
+// ── UTILS ─────────────────────────────────
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function strip(h) { const d = document.createElement('div'); d.innerHTML = h; return d.textContent || ''; }
+
+// ── INIT ──────────────────────────────────
+loadProducts();
+</script>
+
+<!-- GUESTBOOK MODAL -->
+<div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
+<div id="gb-sheet" style="background:#f5f2ed;border-radius:12px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+  <div style="display:flex;align-items:center;padding:26px 26px 14px;gap:10px;flex-shrink:0;">
+    <div id="gb-title" style="font-family:var(--serif);font-size:22px;font-weight:700;color:#1a1917;flex:1;cursor:default;" onclick="gbTitleTap()">guest book</div>
+    <button id="export-btn" style="display:none;background:rgba(0,0,0,0.07);border:none;border-radius:5px;padding:5px 10px;font-family:var(--font);font-size:11px;color:#6b6560;cursor:pointer;" onclick="exportCSV()">export csv</button>
+    <button onclick="closeGB()" style="width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6560;">✕</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:0 26px 32px;display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">name</label>
+        <input id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">email</label>
+        <input id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
+        <textarea id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;resize:none;min-height:80px;line-height:1.5;"></textarea></div>
+      <button onclick="submitGB()" style="background:#1a1917;border:none;border-radius:6px;color:#f5f2ed;padding:15px;font-family:var(--font);font-size:13px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
+    </div>
+    <div id="gb-entries" style="display:none;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.08);">
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:lowercase;color:#a8a39d;">recent visitors</div>
+      <div id="gb-list"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <span class="footer-copy">&copy; 2026 david nicholson</span>
+  <div style="display:flex;gap:16px;align-items:center;">
+    <a href="/cdn-cgi/l/email-protection#2a4e4b5c4f6a4e4b5c4f5a4b43445e43444d04494547" class="footer-gb-btn">contact</a>
+    <button class="footer-gb-btn" onclick="openGB()">guest book</button>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── GUESTBOOK ────────────────────────────────────────────
+let guests = [];
+try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
+
+function openGB() {
+  document.getElementById('gb-overlay').style.cssText += ';visibility:visible;opacity:1;transition:opacity 0.28s,visibility 0s;';
+  document.getElementById('export-btn').style.display = 'none';
+  gbTapCount = 0; renderGuests();
+}
+function closeGB() {
+  const o = document.getElementById('gb-overlay');
+  o.style.opacity = '0'; o.style.visibility = 'hidden';
+  o.style.transition = 'opacity 0.28s,visibility 0s linear 0.28s';
+}
+function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
+
+let gbTapCount = 0, gbTapTimer;
+function gbTitleTap() {
+  gbTapCount++;
+  clearTimeout(gbTapTimer);
+  if (gbTapCount >= 3) { gbTapCount = 0; document.getElementById('export-btn').style.display = 'inline-block'; }
+  else gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
+}
+
+function submitGB() {
+  const name  = document.getElementById('g-name').value.trim();
+  const email = document.getElementById('g-email').value.trim();
+  const msg   = document.getElementById('g-msg').value.trim();
+  if (!name)                         { toast('please enter your name'); return; }
+  if (!email || !email.includes('@')){ toast('please enter a valid email'); return; }
+  guests.unshift({ name, email, msg,
+    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
+  try { localStorage.setItem('dna_guests', JSON.stringify(guests)); } catch {}
+  document.getElementById('g-name').value = '';
+  document.getElementById('g-email').value = '';
+  document.getElementById('g-msg').value = '';
+  renderGuests(); toast('thanks for signing!');
+}
+
+function renderGuests() {
+  const wrap = document.getElementById('gb-entries');
+  const list = document.getElementById('gb-list');
+  if (!guests.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'flex';
+  list.innerHTML = guests.slice(0,40).map(e =>
+    `<div style="background:rgba(255,255,255,0.5);border-radius:5px;padding:11px 13px;border:1px solid rgba(0,0,0,0.07);margin-bottom:6px;">
+      <div style="font-size:14px;font-weight:500;color:#1a1917;">${esc(e.name)}</div>
+      <div style="font-size:12px;color:#a8a39d;margin-top:2px;">${esc(e.date)}</div>
+      ${e.msg ? `<div style="font-size:14px;font-weight:300;color:#6b6560;margin-top:5px;line-height:1.55;">${esc(e.msg)}</div>` : ''}
+    </div>`
+  ).join('');
+}
+
+function exportCSV() {
+  if (!guests.length) { toast('no entries yet'); return; }
+  const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
+  const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
+  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'
