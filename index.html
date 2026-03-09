@@ -395,10 +395,10 @@ async function loadHero() {
   const img  = document.getElementById('splash-img');
   const cap  = document.getElementById('splash-cap');
   try {
-    const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
+    const r = await fetch('https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/products');
     if (!r.ok) throw 0;
     const { products } = await r.json();
-    const withImg = products.filter(p => p.images?.[0]?.src);
+    const withImg = products.filter(p => p.img);
     if (!withImg.length) throw 0;
     const p = withImg[Math.floor(Math.random() * withImg.length)];
     cap.textContent = p.title;
@@ -408,7 +408,7 @@ async function loadHero() {
       ph.style.display   = 'none';
     };
     img.onerror = () => { ph.style.display = 'none'; };
-    img.src = p.images[0].src;
+    img.src = p.img;
   } catch {
     ph.style.display = 'none';
   }
