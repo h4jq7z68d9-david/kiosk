@@ -37,19 +37,59 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
 .skel { height:260px; border-radius:2px; background:var(--surface); animation:sk 1.6s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
 
-/* DETAIL MODAL — landscape default */
-#detail-overlay { position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.78); visibility:hidden; opacity:0; transition:opacity 0.28s, visibility 0s linear 0.28s; display:flex; align-items:center; justify-content:center; padding:24px; }
+/* DETAIL MODAL — base (landscape / iPad) */
+#detail-overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.78);
+  visibility:hidden; opacity:0;
+  transition:opacity 0.28s, visibility 0s linear 0.28s;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
 #detail-overlay.on { visibility:visible; opacity:1; transition:opacity 0.28s, visibility 0s; }
-#detail-sheet { position:relative; background:#f5f2ed; border-radius:18px; width:85%; max-width:820px; max-height:88vh; display:flex; flex-direction:row; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3); }
 
-/* Portrait: slide up from bottom as a sheet */
+#detail-sheet {
+  position:relative; background:#f5f2ed; border-radius:18px;
+  width:85%; max-width:820px; max-height:88vh;
+  display:flex; flex-direction:row;
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* Portrait phone: single scrollable pane, image on top */
 @media (orientation: portrait) {
-  #detail-overlay { align-items:flex-end; padding:0; }
-  #detail-sheet { width:100%; max-width:100%; max-height:95vh; border-radius:20px 20px 0 0; flex-direction:column; }
-  .modal-img-pane { flex:none; height:42vh; min-height:200px; border-bottom:1px solid rgba(0,0,0,0.06); }
-  .modal-info-pane { width:100%; flex:1; border-left:none; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  .modal-info-inner { padding:24px 24px 40px; }
-  .img-nav { display:none; }
+  #detail-overlay {
+    padding: 16px;
+    align-items: center;
+  }
+  #detail-sheet {
+    width: 100%;
+    max-width: 100%;
+    /* use dvh so browser chrome doesn't cut it off */
+    max-height: calc(100dvh - 32px);
+    flex-direction: column;
+    border-radius: 18px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-img-pane {
+    flex: none;
+    height: 55vw;
+    min-height: 200px;
+    max-height: 44vh;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .modal-info-pane {
+    width: 100%;
+    /* let info expand naturally — sheet itself scrolls */
+    flex: none;
+    border-left: none;
+    overflow-y: visible;
+  }
+  .modal-info-inner {
+    padding: 20px 20px 40px;
+  }
+  .img-nav { display: none; }
 }
 
 .modal-close { position:absolute; top:14px; right:14px; z-index:20; width:30px; height:30px; border-radius:50%; background:rgba(0,0,0,0.08); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; color:#6b6560; transition:background 0.15s; }
@@ -58,7 +98,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
 .modal-img-pane { flex:1.1; min-width:0; background:#f5f2ed; display:flex; flex-direction:column; position:relative; touch-action:none; }
 .img-viewer { flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none; }
 .img-viewer-inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-.viewer-slide { width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:28px; }
+.viewer-slide { width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:16px; }
 .viewer-slide img { max-width:100%; max-height:100%; object-fit:contain; display:block; border-radius:4px; }
 
 .img-nav { background:rgba(0,0,0,0.12); border:none; border-radius:50%; width:44px; height:44px; flex-shrink:0; align-self:center; cursor:pointer; z-index:20; display:flex; align-items:center; justify-content:center; color:#1a1917; font-size:20px; line-height:1; transition:background 0.15s; margin:0 6px; }
@@ -214,7 +254,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
       </div>
       <div class="gb-field">
         <div class="gb-label">Note <span style="font-weight:400;color:#a8a39d">(optional)</span></div>
-        <textarea class="gb-ta" id="g-msg" placeholder="Favourite print, what brought you here..." autocomplete="off" spellcheck="false"></textarea>
+        <textarea class="gb-ta" id="g-msg" placeholder="Favourite print, what brought you here…" autocomplete="off" spellcheck="false"></textarea>
       </div>
       <button class="gb-submit" onclick="submitGB()">Sign the Guest Book</button>
     </div>
@@ -266,7 +306,7 @@ async function loadCatalog() {
         img.addEventListener('error', () => img.remove());
         el.appendChild(ph); el.appendChild(img);
       } else {
-        const ph = document.createElement('div'); ph.className = 'ph'; ph.textContent = 'IMAGE';
+        const ph = document.createElement('div'); ph.className = 'ph'; ph.textContent = '🖼';
         el.appendChild(ph);
       }
       el.addEventListener('click', () => openDetail(i));
@@ -285,8 +325,8 @@ function renderDetail(p) {
   document.getElementById('d-name').textContent = p.title;
   const inner = document.getElementById('viewer-inner');
   inner.innerHTML = p.img
-    ? '<div class="viewer-slide"><img src="' + p.img + '" alt=""></div>'
-    : '<div class="viewer-slide" style="min-height:220px;display:flex;align-items:center;justify-content:center;"><div class="ph" style="font-size:44px;color:#4a4744">IMAGE</div></div>';
+    ? `<div class="viewer-slide"><img src="${p.img}" alt=""></div>`
+    : `<div class="viewer-slide" style="min-height:220px;display:flex;align-items:center;justify-content:center;"><div class="ph" style="font-size:44px;color:#4a4744">🖼</div></div>`;
   const url = p.url || 'https://david-nicholson-art.square.site';
   const qel = document.getElementById('d-qr');
   qel.innerHTML = '';
@@ -302,14 +342,14 @@ function slideNav(dir) {
   inner.style.opacity = '0'; inner.style.transition = 'opacity 0.15s';
   setTimeout(() => {
     inner.innerHTML = p.img
-      ? '<div class="viewer-slide"><img src="' + p.img + '" alt=""></div>'
-      : '<div class="viewer-slide"><div class="ph" style="font-size:44px;color:#4a4744;padding:60px">IMAGE</div></div>';
+      ? `<div class="viewer-slide"><img src="${p.img}" alt=""></div>`
+      : `<div class="viewer-slide"><div class="ph" style="font-size:44px;color:#4a4744;padding:60px">🖼</div></div>`;
     inner.style.opacity = '1';
   }, 150);
   document.getElementById('d-name').textContent = p.title;
-  const vid = p.variations && p.variations[0] && p.variations[0].id;
+  const vid = p.variations?.[0]?.id;
   curVariationId = vid || null;
-  const url = vid ? 'https://squareup.com/shop/item/' + vid : 'https://davidnicholsonllc.com';
+  const url = vid ? `https://squareup.com/shop/item/${vid}` : 'https://davidnicholsonllc.com';
   const qel = document.getElementById('d-qr');
   qel.innerHTML = '';
   makeQR(qel, url, 140);
@@ -324,13 +364,13 @@ function openFS() {
   const img = document.createElement('img');
   img.src = p.img; img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;';
   const close = document.createElement('button');
-  close.textContent = 'X';
+  close.textContent = '✕';
   close.style.cssText = 'position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;';
   ov.appendChild(img); ov.appendChild(close);
   document.body.appendChild(ov);
   requestAnimationFrame(() => { ov.style.opacity = '1'; });
   ov.addEventListener('click', closeFS);
-  close.addEventListener('click', function(e) { e.stopPropagation(); closeFS(); });
+  close.addEventListener('click', e => { e.stopPropagation(); closeFS(); });
 }
 function closeFS() {
   const ov = document.getElementById('fs-overlay');
@@ -340,48 +380,48 @@ function closeFS() {
 
 function initSwipe() {
   const viewer = document.getElementById('img-viewer');
-  viewer.addEventListener('pointerup', function(e) { if (!ptrDragging) openFS(); });
-  viewer.addEventListener('pointerdown', function(e) { ptrId = e.pointerId; ptrStartX = e.clientX; ptrStartY = e.clientY; ptrDragging = false; viewer.setPointerCapture(e.pointerId); });
-  viewer.addEventListener('pointermove', function(e) {
+  viewer.addEventListener('pointerup', e => { if (!ptrDragging) openFS(); });
+  viewer.addEventListener('pointerdown', e => { ptrId = e.pointerId; ptrStartX = e.clientX; ptrStartY = e.clientY; ptrDragging = false; viewer.setPointerCapture(e.pointerId); });
+  viewer.addEventListener('pointermove', e => {
     if (e.pointerId !== ptrId) return;
     const dx = e.clientX - ptrStartX, dy = e.clientY - ptrStartY;
     if (!ptrDragging && Math.abs(dy) > Math.abs(dx) + 4) { ptrId = null; return; }
     if (Math.abs(dx) > 8) ptrDragging = true;
   });
-  viewer.addEventListener('pointerup', function(e) {
+  viewer.addEventListener('pointerup', e => {
     if (e.pointerId !== ptrId) return;
     if (ptrDragging) { const dx = e.clientX - ptrStartX; if (dx < -55) slideNav(1); else if (dx > 55) slideNav(-1); }
     ptrId = null; ptrDragging = false;
   });
-  viewer.addEventListener('pointercancel', function() { ptrId = null; ptrDragging = false; });
+  viewer.addEventListener('pointercancel', () => { ptrId = null; ptrDragging = false; });
 }
 
 function openProductUrl() {
   const p = products[curIdx];
-  if (p && p.url) window.open(p.url, '_blank');
+  if (p?.url) window.open(p.url, '_blank');
 }
 
 async function sendLink(method) {
   const p = products[curIdx];
   if (!p) return;
-  const vid = curVariationId || (p.variations && p.variations[0] && p.variations[0].id);
-  const url = vid ? 'https://squareup.com/shop/item/' + vid : 'https://davidnicholsonllc.com';
+  const vid = curVariationId || p.variations?.[0]?.id;
+  const url = vid ? `https://squareup.com/shop/item/${vid}` : 'https://davidnicholsonllc.com';
   if (method === 'email') {
     const email = document.getElementById('send-email').value.trim();
     if (!email || !email.includes('@')) { showConfirm('Please enter a valid email', false); return; }
     try {
-      await fetch(LAMBDA_URL + '/send-link', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'email', to:email, url:url, title:p.title }) });
+      await fetch(LAMBDA_URL + '/send-link', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'email', to:email, url, title:p.title }) });
       document.getElementById('send-email').value = '';
       showConfirm('Sent!', true);
-    } catch(err) { showConfirm('Could not send - try again', false); }
+    } catch { showConfirm('Could not send — try again', false); }
   } else {
     const phone = document.getElementById('send-phone').value.trim().replace(/\D/g,'');
     if (phone.length < 10) { showConfirm('Please enter a valid phone number', false); return; }
     try {
-      await fetch(LAMBDA_URL + '/send-link', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'sms', to:phone, url:url, title:p.title }) });
+      await fetch(LAMBDA_URL + '/send-link', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'sms', to:phone, url, title:p.title }) });
       document.getElementById('send-phone').value = '';
       showConfirm('Sent!', true);
-    } catch(err) { showConfirm('Could not send - try again', false); }
+    } catch { showConfirm('Could not send — try again', false); }
   }
 }
 
@@ -389,7 +429,7 @@ function showConfirm(msg, success) {
   const el = document.getElementById('send-confirm');
   el.textContent = msg; el.style.display = 'block';
   el.style.color = success ? '#1a8c4e' : '#c0392b';
-  clearTimeout(el._t); el._t = setTimeout(function() { el.style.display = 'none'; }, 3000);
+  clearTimeout(el._t); el._t = setTimeout(() => { el.style.display = 'none'; }, 3000);
 }
 
 function overlayClick(e) { if (e.target === document.getElementById('detail-overlay')) closeDetail(); }
@@ -405,7 +445,7 @@ function gbTitleTap() {
   gbTapCount++;
   clearTimeout(gbTapTimer);
   if (gbTapCount >= 3) { gbTapCount = 0; document.getElementById('export-btn').style.display = 'block'; }
-  else gbTapTimer = setTimeout(function() { gbTapCount = 0; }, 600);
+  else gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
 }
 function closeGB() { document.getElementById('gb-overlay').classList.remove('on'); }
 function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
@@ -416,15 +456,15 @@ async function submitGB() {
   const msg   = document.getElementById('g-msg').value.trim();
   if (!name)  { toast('Please enter your name'); return; }
   if (!email) { toast('Please enter your email'); return; }
-  guests.unshift({ name:name, email:email, msg:msg, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
-  try { localStorage.setItem('dna_gb', JSON.stringify(guests)); } catch(e) {}
+  guests.unshift({ name, email, msg, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
+  try { localStorage.setItem('dna_gb', JSON.stringify(guests)); } catch {}
   document.getElementById('g-name').value = '';
   document.getElementById('g-email').value = '';
   document.getElementById('g-msg').value = '';
   renderGuests(); toast('Thanks for signing!');
   try {
-    await fetch(LAMBDA_URL + '/guestbook', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name:name, email:email, note:msg }) });
-  } catch(e) {}
+    await fetch(LAMBDA_URL + '/guestbook', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, email, note:msg }) });
+  } catch {}
 }
 
 function renderGuests() {
@@ -432,21 +472,21 @@ function renderGuests() {
   const list = document.getElementById('ent-list');
   if (!guests.length) { wrap.style.display='none'; return; }
   wrap.style.display = 'flex';
-  list.innerHTML = guests.slice(0,40).map(function(e) {
-    return '<div class="gb-entry">' +
+  list.innerHTML = guests.slice(0,40).map(e =>
+    '<div class="gb-entry">' +
       '<div class="e-name">'+x(e.name)+'</div>' +
       (e.email ? '<div class="e-email">'+x(e.email)+'</div>' : '') +
       (e.msg ? '<div class="e-msg">'+x(e.msg)+'</div>' : '') +
       '<div class="e-date">'+e.date+'</div>' +
-    '</div>';
-  }).join('');
+    '</div>'
+  ).join('');
 }
 
 function exportCSV() {
   if (!guests.length) { toast('No entries yet'); return; }
   const header = ['Name','Email','Note','Date'];
-  const rows = guests.map(function(e) { return [e.name, e.email||'', e.msg||'', e.date].map(csvCell); });
-  const csv = [header].concat(rows).map(function(r) { return r.join(','); }).join('\n');
+  const rows = guests.map(e => [e.name, e.email||'', e.msg||'', e.date].map(csvCell));
+  const csv = [header, ...rows].map(r => r.join(',')).join('\n');
   const blob = new Blob([csv], {type:'text/csv'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'guestbook-' + new Date().toISOString().slice(0,10) + '.csv';
@@ -464,20 +504,19 @@ function conOverlayClick(e) { if (e.target === document.getElementById('con-over
 
 function makeQR(el, text, size) {
   el.innerHTML = '';
-  new QRCode(el, { text:text, width:size, height:size, colorDark:'#1a1917', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M });
+  new QRCode(el, { text, width:size, height:size, colorDark:'#1a1917', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M });
 }
 
 let tT;
-function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(tT); tT = setTimeout(function() { el.classList.remove('on'); }, 2600); }
-
+function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(tT); tT = setTimeout(() => el.classList.remove('on'), 2600); }
 function x(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function strip(h){ const d=document.createElement('div'); d.innerHTML=h; return d.textContent||''; }
 
 (function(){
-  try { const s=localStorage.getItem('dna_gb'); if(s){guests=JSON.parse(s);renderGuests();} } catch(e){}
-  document.addEventListener('contextmenu', function(e){e.preventDefault();});
-  document.addEventListener('selectstart', function(e){e.preventDefault();});
-  document.addEventListener('touchmove', function(e){
+  try { const s=localStorage.getItem('dna_gb'); if(s){guests=JSON.parse(s);renderGuests();} } catch{}
+  document.addEventListener('contextmenu', e=>e.preventDefault());
+  document.addEventListener('selectstart',  e=>e.preventDefault());
+  document.addEventListener('touchmove', e=>{
     if (!e.target.closest('.catalog-scroll,.modal-info-pane,.gb-scroll'))
       e.preventDefault();
   },{passive:false});
@@ -488,33 +527,33 @@ function strip(h){ const d=document.createElement('div'); d.innerHTML=h; return 
 
 <script>
 if ('serviceWorker' in navigator) {
-  const swCode = [
-    "const CACHE = 'dna-v2';",
-    "const STATIC = [",
-    "  'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap',",
-    "  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'",
-    "];",
-    "self.addEventListener('install', e => {",
-    "  e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)).then(() => self.skipWaiting()));",
-    "});",
-    "self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });",
-    "self.addEventListener('fetch', e => {",
-    "  const url = e.request.url;",
-    "  const isStatic = url.includes('fonts.googleapis') || url.includes('fonts.gstatic') || url.includes('cdnjs.cloudflare');",
-    "  const isAPI = url.includes('execute-api.us-east-1.amazonaws.com');",
-    "  if (isStatic) {",
-    "    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {",
-    "      caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res;",
-    "    })));",
-    "  } else if (isAPI && e.request.method === 'GET') {",
-    "    e.respondWith(fetch(e.request).then(res => {",
-    "      caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res;",
-    "    }).catch(() => caches.match(e.request)));",
-    "  }",
-    "});"
-  ].join('\n');
+  const swCode = `
+const CACHE = 'dna-v2';
+const STATIC = [
+  'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+];
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
+self.addEventListener('fetch', e => {
+  const url = e.request.url;
+  const isStatic = url.includes('fonts.googleapis') || url.includes('fonts.gstatic') || url.includes('cdnjs.cloudflare');
+  const isAPI = url.includes('execute-api.us-east-1.amazonaws.com');
+  if (isStatic) {
+    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+      caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res;
+    })));
+  } else if (isAPI && e.request.method === 'GET') {
+    e.respondWith(fetch(e.request).then(res => {
+      caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res;
+    }).catch(() => caches.match(e.request)));
+  }
+});
+`;
   const blob = new Blob([swCode], {type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(blob), {scope:'/'}).catch(function(){});
+  navigator.serviceWorker.register(URL.createObjectURL(blob), {scope:'/'}).catch(()=>{});
 }
 </script>
 </body>
