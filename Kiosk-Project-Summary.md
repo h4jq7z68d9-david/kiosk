@@ -152,7 +152,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 ### shop.html (public gallery)
 - Fetches from Lambda
 - Variant selector (size buttons) with dynamic price
-- "Buy This Print" opens Square Online product page (`p.url`)
+- "Buy This Print" → POSTs to Lambda → Lambda creates Square Checkout session → redirects to Square-hosted payment page (pre-loaded with correct variation/price)
 - Variant buttons: `white-space: normal`, 12px font, wraps long names gracefully
 
 ### kiosk.html (art fair iPad)
@@ -166,6 +166,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
+- [ ] **Implement Square Checkout API** — Lambda `POST /checkout` creates a Square checkout session with variation ID and price pre-loaded, returns URL, shop.html redirects buyer there
 - [ ] **Request SES production access** (AWS Console → SES → Account dashboard)
 - [ ] **Update index.html** with 4 Lambda fetch edits above, push to GitHub
 - [ ] **Push shop.html and kiosk.html** to GitHub repo
