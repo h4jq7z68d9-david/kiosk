@@ -164,27 +164,21 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
     <div class="modal-info-pane">
       <div class="modal-info-inner">
         <div class="sheet-name" id="d-name"></div>
-        <div class="sheet-desc" id="d-desc"></div>
-        <div class="variant-label">Size</div>
-        <div class="variant-btns" id="d-variants"></div>
-        <div class="sheet-price" id="d-price"></div>
+        <div class="sheet-desc" id="d-desc">Order this print</div>
         <div class="sheet-buy-wrap">
-          <span class="sheet-buy-link" onclick="toggleQR(this)">He doesn't have this print with him but I think I might want it</span>
-          <div class="sheet-qr-reveal" style="display:none;flex-direction:column;gap:10px;align-items:flex-start;">
-            <div class="sheet-qr-inner" id="d-qr" style="cursor:pointer" onclick="openProductUrl()"></div>
-            <div class="sheet-qr-hint">Scan to order online</div>
-            <div class="send-link-wrap">
-              <div class="send-link-label">Or send the link to yourself</div>
-              <div class="send-link-row">
-                <input class="send-link-input" id="send-email" type="email" placeholder="Email" autocomplete="off" autocapitalize="none" spellcheck="false">
-                <button class="send-link-btn" onclick="sendLink('email')">Send</button>
-              </div>
-              <div class="send-link-row">
-                <input class="send-link-input" id="send-phone" type="tel" placeholder="Phone number" autocomplete="off">
-                <button class="send-link-btn" onclick="sendLink('sms')">Text</button>
-              </div>
-              <div class="send-link-confirm" id="send-confirm"></div>
+          <div class="sheet-qr-inner" id="d-qr" style="cursor:pointer" onclick="openProductUrl()"></div>
+          <div class="sheet-qr-hint">Scan to order online</div>
+          <div class="send-link-wrap">
+            <div class="send-link-label">Or send the link to yourself</div>
+            <div class="send-link-row">
+              <input class="send-link-input" id="send-email" type="email" placeholder="Email" autocomplete="off" autocapitalize="none" spellcheck="false">
+              <button class="send-link-btn" onclick="sendLink('email')">Send</button>
             </div>
+            <div class="send-link-row">
+              <input class="send-link-input" id="send-phone" type="tel" placeholder="Phone number" autocomplete="off">
+              <button class="send-link-btn" onclick="sendLink('sms')">Text</button>
+            </div>
+            <div class="send-link-confirm" id="send-confirm"></div>
           </div>
         </div>
       </div>
@@ -282,40 +276,21 @@ async function loadCatalog() {
 function openDetail(idx) {
   curIdx = idx;
   renderDetail(products[idx]);
-  const reveal = document.querySelector('.sheet-qr-reveal');
-  if (reveal) reveal.style.display = 'none';
-  const link = document.querySelector('.sheet-buy-link');
-  if (link) link.textContent = "He doesn't have this print with him but I think I might want it";
-  document.getElementById('d-qr').innerHTML = '';
   document.getElementById('detail-overlay').classList.add('on');
 }
 
 function renderDetail(p) {
   document.getElementById('d-name').textContent = p.title;
-  document.getElementById('d-desc').textContent = p.desc || '';
   const inner = document.getElementById('viewer-inner');
   inner.innerHTML = p.img
     ? `<div class="viewer-slide"><img src="${p.img}" alt=""></div>`
     : `<div class="viewer-slide" style="min-height:220px;display:flex;align-items:center;justify-content:center;"><div class="ph" style="font-size:44px;color:#4a4744">🖼</div></div>`;
 
-  // Variants
-  const vWrap = document.getElementById('d-variants');
-  vWrap.innerHTML = '';
-  const firstV = p.variations?.[0];
-  curVariationId = firstV?.id || null;
-  (p.variations || []).forEach((v, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'variant-btn' + (i === 0 ? ' selected' : '');
-    btn.textContent = v.name;
-    btn.onclick = () => {
-      curVariationId = v.id;
-      document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      document.getElementById('d-price').textContent = v.price ? '$' + v.price : '';
-    };
-    vWrap.appendChild(btn);
-  });
-  document.getElementById('d-price').textContent = firstV?.price ? '$' + firstV.price : '';
+  // Build QR immediately using product URL
+  const url = p.url || 'https://david-nicholson-art.square.site';
+  const qel = document.getElementById('d-qr');
+  qel.innerHTML = '';
+  makeQR(qel, url, 140);
 
   document.getElementById('nav-prev').classList.remove('hidden');
   document.getElementById('nav-next').classList.remove('hidden');
@@ -333,32 +308,13 @@ function slideNav(dir) {
     inner.style.opacity = '1';
   }, 150);
   document.getElementById('d-name').textContent = p.title;
-  document.getElementById('d-desc').textContent = p.desc || '';
 
-  // Reset variants
-  const vWrap = document.getElementById('d-variants');
-  vWrap.innerHTML = '';
-  const firstV = p.variations?.[0];
-  curVariationId = firstV?.id || null;
-  (p.variations || []).forEach((v, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'variant-btn' + (i === 0 ? ' selected' : '');
-    btn.textContent = v.name;
-    btn.onclick = () => {
-      curVariationId = v.id;
-      document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      document.getElementById('d-price').textContent = v.price ? '$' + v.price : '';
-    };
-    vWrap.appendChild(btn);
-  });
-  document.getElementById('d-price').textContent = firstV?.price ? '$' + firstV.price : '';
-
-  const reveal = document.querySelector('.sheet-qr-reveal');
-  if (reveal) reveal.style.display = 'none';
-  const link = document.querySelector('.sheet-buy-link');
-  if (link) link.textContent = "He doesn't have this print with him but I think I might want it";
-  document.getElementById('d-qr').innerHTML = '';
+  const vid = p.variations?.[0]?.id;
+  curVariationId = vid || null;
+  const url = vid ? `https://squareup.com/shop/item/${vid}` : 'https://davidnicholsonllc.com';
+  const qel = document.getElementById('d-qr');
+  qel.innerHTML = '';
+  makeQR(qel, url, 140);
 }
 
 function openFS() {
@@ -404,30 +360,7 @@ function initSwipe() {
 
 function openProductUrl() {
   const p = products[curIdx];
-  if (!p) return;
-  // Use Square's product page URL via variation ID
-  const vid = curVariationId || p.variations?.[0]?.id;
-  if (vid) window.open(`https://squareup.com/shop/item/${vid}`, '_blank');
-}
-
-function toggleQR(el) {
-  const wrap = el.closest('.sheet-buy-wrap');
-  const reveal = wrap.querySelector('.sheet-qr-reveal');
-  const isOpen = reveal.style.display === 'flex';
-  if (isOpen) {
-    reveal.style.display = 'none';
-    el.textContent = "He doesn't have this print with him but I think I might want it";
-  } else {
-    const qel = document.getElementById('d-qr');
-    if (!qel.hasChildNodes()) {
-      const p = products[curIdx];
-      const vid = curVariationId || p?.variations?.[0]?.id;
-      const url = vid ? `https://squareup.com/shop/item/${vid}` : 'https://davidnicholsonllc.com';
-      makeQR(qel, url, 140);
-    }
-    reveal.style.display = 'flex';
-    el.textContent = "Hide ↑";
-  }
+  if (p?.url) window.open(p.url, '_blank');
 }
 
 async function sendLink(method) {
