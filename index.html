@@ -205,12 +205,10 @@ async function loadHero() {
     const p = withImg[Math.floor(Math.random() * withImg.length)];
     cap.textContent = p.name || p.title || '';
     img.referrerPolicy = 'no-referrer';
-    img.onload = () => {
-      img.classList.add('loaded');
-      wrap.style.display = 'block';
-      ph.style.display = 'none';
-    };
-    img.onerror = () => { ph.style.display = 'none'; };
+    img.onload = () => { img.classList.add('loaded'); };
+    img.onerror = () => { ph.style.display = 'none'; wrap.style.display = 'none'; };
+    wrap.style.display = 'block';
+    ph.style.display = 'none';
     img.src = p.img || p.image_url;
   } catch {
     ph.style.display = 'none';
