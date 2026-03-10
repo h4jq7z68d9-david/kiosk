@@ -443,7 +443,7 @@ function populateDetail(p) {
   // reset payment UI
   resetPayUI();
 
-  if (!p.available) {
+  if (p.available === false) {
     document.getElementById('size-section').style.display = 'none';
     document.getElementById('pay-section').style.display = 'none';
     document.getElementById('sold-section').style.display = 'block';
