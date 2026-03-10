@@ -109,6 +109,8 @@ NOTIFY_EMAIL=dave@davepainting.com
 
 **IAM:** Lambda role has `AmazonDynamoDBFullAccess` attached.
 
+**Note:** DynamoDB write in `/checkout` is awaited (not fire-and-forget) — this is intentional so errors surface in CloudWatch and the write completes before returning success to the client.
+
 **To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
 
 ---
@@ -221,7 +223,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 ## Pending — In Order of Priority
 
 - [ ] **shop.html: replace modal with cart system** — Add to Cart, cart drawer, multi-item checkout (next session)
-- [ ] **Test end-to-end transaction** on shop.html
+- [x] **Test end-to-end transaction** on shop.html — confirmed working (card charge + DynamoDB write). SES email skipped due to sandbox mode.
 - [ ] **Request SES production access** (AWS Console → SES → Account dashboard)
 - [ ] **Update index.html** with 4 Lambda fetch edits above, push to GitHub
 - [ ] **Download 84 Shopify images** before cancelling Shopify
