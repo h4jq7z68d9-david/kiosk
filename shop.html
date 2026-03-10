@@ -428,8 +428,6 @@ function openDetail(idx) {
   curIdx = idx;
   populateDetail(products[idx]);
   document.getElementById('detail-overlay').classList.add('on');
-  // init Square card on first open
-  if (!cardInitialized) initSquare();
 }
 
 function populateDetail(p) {
@@ -581,6 +579,7 @@ function strip(h) { const d = document.createElement('div'); d.innerHTML = h; re
 
 // ── INIT ──────────────────────────────────
 loadProducts();
+initSquare();
 </script>
 
 <!-- GUESTBOOK MODAL -->
