@@ -382,15 +382,7 @@ async function initSquare() {
 async function attachSquareCard() {
   if (cardInitialized || !sqPayments) return;
   try {
-    sqCard = await sqPayments.card({
-      style: {
-        '.input-container': { borderRadius: '8px' },
-        '.input-container.is-focus': { borderColor: '#a8a39d' },
-        '.input-container.is-error': { borderColor: '#c0392b' },
-        input: { fontFamily: "'DM Sans', sans-serif", fontSize: '15px', color: '#1a1917' },
-        'input::placeholder': { color: '#b0aba5' },
-      }
-    });
+    sqCard = await sqPayments.card();
     await sqCard.attach('#card-container');
     cardInitialized = true;
   } catch (e) {
