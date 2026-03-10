@@ -24,9 +24,7 @@ a { color: inherit; text-decoration: none; }
 .splash-section { padding-top: 24px; }
 .splash-ph { width: 100%; aspect-ratio: 3/4; background: var(--surface); animation: sk 1.8s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
-.splash-img-wrap { width: 100%; aspect-ratio: 3/4; overflow: hidden; position: relative; }
-.splash-img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; opacity: 0; transition: opacity 0.5s; }
-.splash-img.loaded { opacity: 1; }
+.splash-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center top; display: block; }
 .splash-caption { font-size: 14px; color: var(--ink3); letter-spacing: 0.06em; margin-top: 10px; font-weight: 300; min-height: 20px; }
 
 .title-block { padding: 24px 0 0; }
@@ -91,9 +89,6 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
 <div class="page splash-section">
   <div id="splash-wrap">
     <div class="splash-ph" id="splash-ph"></div>
-    <div class="splash-img-wrap" id="splash-img-wrap" style="display:none">
-      <img class="splash-img" id="splash-img" alt="painting by David Nicholson">
-    </div>
   </div>
   <p class="splash-caption" id="splash-cap"></p>
 
@@ -191,25 +186,24 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
 const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
 async function loadHero() {
-  const ph   = document.getElementById('splash-ph');
-  const wrap = document.getElementById('splash-img-wrap');
-  const img  = document.getElementById('splash-img');
-  const cap  = document.getElementById('splash-cap');
+  const ph  = document.getElementById('splash-ph');
+  const cap = document.getElementById('splash-cap');
   try {
     const r = await fetch(LAMBDA + '/products');
     if (!r.ok) throw 0;
     const raw = await r.json();
-    const list = raw.products || raw;  // handle both {products:[]} and []
+    const list = raw.products || raw;
     const withImg = list.filter(p => p.img || p.image_url);
     if (!withImg.length) throw 0;
     const p = withImg[Math.floor(Math.random() * withImg.length)];
     cap.textContent = p.name || p.title || '';
+    const img = document.createElement('img');
+    img.className = 'splash-img';
+    img.alt = 'painting by David Nicholson';
     img.referrerPolicy = 'no-referrer';
-    img.onload = () => { img.classList.add('loaded'); };
-    img.onerror = () => { ph.style.display = 'none'; wrap.style.display = 'none'; };
-    wrap.style.display = 'block';
-    ph.style.display = 'none';
     img.src = p.img || p.image_url;
+    img.onload = () => { ph.replaceWith(img); };
+    img.onerror = () => { ph.style.display = 'none'; };
   } catch {
     ph.style.display = 'none';
   }
