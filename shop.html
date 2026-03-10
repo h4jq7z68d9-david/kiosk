@@ -171,6 +171,22 @@ nav {
 .size-btn.selected .sz, .size-btn.selected .pr { color: #f5f2ed; }
 .size-btn:hover:not(.selected) { border-color: #a8a39d; }
 
+/* -- SHIPPING FORM -- */
+.ship-section {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ship-row { display: flex; gap: 8px; }
+.ship-field { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.ship-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #a8a39d; }
+.ship-input {
+  background: rgba(255,255,255,0.7); border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 8px; color: #1a1917; font-family: var(--font);
+  font-size: 14px; padding: 10px 12px; outline: none; width: 100%;
+  transition: border-color 0.2s; -webkit-appearance: none;
+}
+.ship-input:focus { border-color: #a8a39d; background: #fff; }
+.ship-input::placeholder { color: #b0aba5; }
+
 /* ── PAYMENT SECTION ── */
 .pay-section {
   margin-top: auto; padding-top: 18px;
@@ -317,6 +333,40 @@ footer {
           </div>
         </div>
 
+        <!-- shipping -->
+        <div class="ship-section" id="ship-section">
+          <div class="ship-field">
+            <div class="ship-label">Full name</div>
+            <input class="ship-input" id="s-name" type="text" placeholder="Jane Smith" autocomplete="name" autocorrect="off" spellcheck="false">
+          </div>
+          <div class="ship-field">
+            <div class="ship-label">Email</div>
+            <input class="ship-input" id="s-email" type="email" placeholder="jane@email.com" autocomplete="email" autocapitalize="none" spellcheck="false">
+          </div>
+          <div class="ship-field">
+            <div class="ship-label">Address</div>
+            <input class="ship-input" id="s-addr1" type="text" placeholder="123 Main St" autocomplete="address-line1">
+          </div>
+          <div class="ship-field">
+            <div class="ship-label">Apt / Suite <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#c0bbb5">(optional)</span></div>
+            <input class="ship-input" id="s-addr2" type="text" placeholder="Apt 4B" autocomplete="address-line2">
+          </div>
+          <div class="ship-row">
+            <div class="ship-field" style="flex:2">
+              <div class="ship-label">City</div>
+              <input class="ship-input" id="s-city" type="text" placeholder="Chicago" autocomplete="address-level2">
+            </div>
+            <div class="ship-field" style="flex:1">
+              <div class="ship-label">State</div>
+              <input class="ship-input" id="s-state" type="text" placeholder="IL" maxlength="2" autocomplete="address-level1" style="text-transform:uppercase">
+            </div>
+            <div class="ship-field" style="flex:1">
+              <div class="ship-label">ZIP</div>
+              <input class="ship-input" id="s-zip" type="text" placeholder="60601" maxlength="10" autocomplete="postal-code" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+
         <!-- payment -->
         <div class="pay-section" id="pay-section">
           <div class="pay-price" id="pay-price">$50</div>
@@ -445,10 +495,12 @@ function populateDetail(p) {
 
   if (p.available === false) {
     document.getElementById('size-section').style.display = 'none';
+    document.getElementById('ship-section').style.display = 'none';
     document.getElementById('pay-section').style.display = 'none';
     document.getElementById('sold-section').style.display = 'block';
   } else {
     document.getElementById('size-section').style.display = 'block';
+    document.getElementById('ship-section').style.display = 'flex';
     document.getElementById('pay-section').style.display = 'flex';
     document.getElementById('sold-section').style.display = 'none';
   }
@@ -500,16 +552,34 @@ async function handlePay() {
     const p = products[curIdx];
     const sz = SIZES[curSize];
 
+    // Collect and validate shipping
+    const shipping = {
+      name:     document.getElementById('s-name').value.trim(),
+      email:    document.getElementById('s-email').value.trim(),
+      address1: document.getElementById('s-addr1').value.trim(),
+      address2: document.getElementById('s-addr2').value.trim(),
+      city:     document.getElementById('s-city').value.trim(),
+      state:    document.getElementById('s-state').value.trim().toUpperCase(),
+      zip:      document.getElementById('s-zip').value.trim(),
+    };
+
+    if (!shipping.name)                          { showError('Please enter your name.'); btn.disabled=false; btn.textContent='Pay $'+SIZES[curSize].price; return; }
+    if (!shipping.email || !shipping.email.includes('@')) { showError('Please enter a valid email.'); btn.disabled=false; btn.textContent='Pay $'+SIZES[curSize].price; return; }
+    if (!shipping.address1)                      { showError('Please enter your address.'); btn.disabled=false; btn.textContent='Pay $'+SIZES[curSize].price; return; }
+    if (!shipping.city)                          { showError('Please enter your city.'); btn.disabled=false; btn.textContent='Pay $'+SIZES[curSize].price; return; }
+    if (!shipping.state)                         { showError('Please enter your state.'); btn.disabled=false; btn.textContent='Pay $'+SIZES[curSize].price; return; }
+    if (!shipping.zip)                           { showError('Please enter your ZIP.'); btn.disabled=false; btn.textContent='Pay $'+SIZES[curSize].price; return; }
+
     const resp = await fetch(LAMBDA_URL + '/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sourceId:    result.token,
-        amount:      sz.cents,
-        currency:    'USD',
-        size:        curSize,
+        sourceId:     result.token,
+        amount:       sz.cents,
+        currency:     'USD',
+        size:         curSize,
         productTitle: p.title,
-        productId:   p.id || null,
+        shipping,
       })
     });
 
@@ -534,11 +604,19 @@ async function handlePay() {
 
 function showSuccess(title, sz) {
   document.getElementById('size-section').style.display = 'none';
+  document.getElementById('ship-section').style.display = 'none';
   document.getElementById('pay-section').style.display = 'none';
   const success = document.getElementById('pay-success');
   success.style.display = 'flex';
   document.getElementById('success-sub').textContent =
     `Your ${SIZES[sz].label}" print of "${title}" is confirmed. We'll be in touch!`;
+}
+
+function resetShipping() {
+  ['s-name','s-email','s-addr1','s-addr2','s-city','s-state','s-zip'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
 }
 
 function resetPayUI() {
@@ -548,6 +626,7 @@ function resetPayUI() {
   btn.disabled = false;
   curSize = '9x12';
   selectSize('9x12');
+  resetShipping();
 }
 
 function showError(msg) {
