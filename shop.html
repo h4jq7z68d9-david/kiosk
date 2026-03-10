@@ -8,16 +8,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<script src="https://web.squarecdn.com/v1/square.js"></script>
 <style>
 :root {
   --bg: #0c0c0c;
   --surface: #1a1a1a;
   --border: #2a2a2a;
-  --border-mid: #333;
   --ink: #f0ede8;
   --ink2: #888480;
   --ink3: #777;
-  --accent: #a8b8c8;
   --font: 'DM Sans', sans-serif;
   --serif: 'Playfair Display', serif;
   --nav-h: 56px;
@@ -40,15 +39,19 @@ nav {
 }
 .nav-title {
   font-size: 20px; font-weight: 400; color: var(--ink);
-  letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap;
+  letter-spacing: 0.06em; text-transform: lowercase;
 }
 .nav-title span { color: var(--ink2); font-weight: 300; margin-left: 8px; font-size: 14px; }
-.nav-center { flex: 1; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
+.nav-center {
+  flex: 1; text-align: center; font-size: 14px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2);
+}
 .nav-btn {
   background: none; border: 1px solid #666; border-radius: 20px;
-  padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400;
+  padding: 7px 18px; font-family: var(--font); font-size: 13px;
   letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink);
-  cursor: pointer; white-space: nowrap; transition: border-color 0.2s; display: inline-block;
+  cursor: pointer; white-space: nowrap; transition: border-color 0.2s;
+  text-decoration: none; display: inline-block;
 }
 .nav-btn:hover { border-color: var(--ink); }
 
@@ -56,30 +59,34 @@ nav {
 .grid-wrap { max-width: 1400px; margin: 0 auto; padding: calc(var(--nav-h) + 32px) 16px 80px; }
 .grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
 
+@media (max-width: 700px) {
+  nav { padding: 0 16px; }
+  .nav-title { font-size: 17px; }
+  .grid-wrap { padding: calc(var(--nav-h) + 20px) 10px 60px; }
+  .grid { gap: 10px; }
+}
+
 .card {
   width: calc(33.333% - 12px); aspect-ratio: 4/5;
   position: relative; overflow: hidden; cursor: pointer;
   background: var(--bg); border-radius: 2px;
   display: flex; align-items: center; justify-content: center;
 }
-.card img {
-  max-width: 100%; max-height: 100%; width: auto; height: auto;
-  object-fit: contain; display: block; opacity: 0; transition: opacity 0.35s;
-}
+.card img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; opacity: 0; transition: opacity 0.35s; }
 .card img.loaded { opacity: 1; }
 .card:hover { opacity: 0.88; transition: opacity 0.2s; }
+
+@media (max-width: 600px) { .card { width: calc(50% - 6px); } }
+@media (max-width: 380px) { .card { width: 100%; } }
 
 .skel { width: calc(33.333% - 12px); aspect-ratio: 4/5; border-radius: 2px; background: var(--surface); animation: sk 1.6s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
 
-@media (max-width: 600px) { .card, .skel { width: calc(50% - 6px); } }
-@media (max-width: 380px) { .card, .skel { width: 100%; } }
-@media (max-width: 700px) { nav { padding: 0 16px; } .nav-title { font-size: 17px; } }
-
 /* ── DETAIL MODAL ── */
 #detail-overlay {
   position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.88); backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   visibility: hidden; opacity: 0;
   transition: opacity 0.25s, visibility 0s linear 0.25s;
   display: flex; align-items: center; justify-content: center; padding: 24px;
@@ -88,11 +95,14 @@ nav {
 
 #detail-sheet {
   position: relative; background: #f5f2ed; border-radius: 16px;
-  width: 100%; max-width: 900px; max-height: 92vh;
+  width: 100%; max-width: 960px; max-height: 92vh;
   display: flex; flex-direction: row; overflow: hidden;
   box-shadow: 0 32px 100px rgba(0,0,0,0.7);
 }
-@media (max-width: 680px) { #detail-sheet { flex-direction: column; max-height: 96vh; border-radius: 12px; } }
+
+@media (max-width: 680px) {
+  #detail-sheet { flex-direction: column; max-height: 96vh; border-radius: 12px; }
+}
 
 .modal-close {
   position: absolute; top: 14px; right: 14px; z-index: 20;
@@ -109,7 +119,11 @@ nav {
   position: relative; overflow: hidden; cursor: zoom-in;
 }
 .modal-img-pane img { width: 100%; height: 100%; object-fit: contain; display: block; padding: 32px; max-height: 92vh; }
-@media (max-width: 680px) { .modal-img-pane { max-height: 52vw; min-height: 240px; } .modal-img-pane img { padding: 20px; } }
+
+@media (max-width: 680px) {
+  .modal-img-pane { max-height: 52vw; min-height: 240px; }
+  .modal-img-pane img { padding: 20px; }
+}
 
 .img-nav {
   position: absolute; top: 50%; transform: translateY(-50%);
@@ -121,46 +135,95 @@ nav {
 .img-nav:hover { background: rgba(0,0,0,0.28); }
 .img-nav-prev { left: 10px; }
 .img-nav-next { right: 10px; }
+.img-nav.hidden { opacity: 0; pointer-events: none; }
 
 .modal-info-pane {
-  width: 300px; flex-shrink: 0;
+  width: 320px; flex-shrink: 0;
   display: flex; flex-direction: column;
   border-left: 1px solid rgba(0,0,0,0.07); overflow-y: auto;
 }
 .modal-info-pane::-webkit-scrollbar { width: 0; }
-@media (max-width: 680px) { .modal-info-pane { width: 100%; border-left: none; border-top: 1px solid rgba(0,0,0,0.07); } }
 
-.modal-info-inner { padding: 32px 26px 36px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+@media (max-width: 680px) {
+  .modal-info-pane { width: 100%; border-left: none; border-top: 1px solid rgba(0,0,0,0.07); }
+}
+
+.modal-info-inner {
+  padding: 32px 26px 36px;
+  display: flex; flex-direction: column; gap: 14px; flex: 1;
+}
 
 .d-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: #1a1917; line-height: 1.2; }
 .d-desc { font-family: var(--serif); font-style: italic; font-size: 14px; color: #6b6560; line-height: 1.7; }
 
-/* variant selector */
-.variant-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #a8a39d; }
-.variant-btns { display: flex; flex-wrap: wrap; gap: 8px; }
-.variant-btn {
-  background: #fff; border: 1.5px solid #ddd; border-radius: 8px;
-  padding: 8px 12px; font-family: var(--font); font-size: 12px;
-  color: #6b6560; cursor: pointer; transition: all 0.15s; white-space: normal;
-  text-align: center; line-height: 1.3;
+/* ── SIZE SELECTOR ── */
+.size-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #a8a39d; }
+.size-btns { display: flex; gap: 8px; }
+.size-btn {
+  flex: 1; background: #fff; border: 1.5px solid #ddd; border-radius: 8px;
+  padding: 10px 8px; font-family: var(--font); font-size: 13px;
+  color: #6b6560; cursor: pointer; transition: all 0.15s; text-align: center;
+  line-height: 1.4;
 }
-.variant-btn:hover { border-color: #a8a39d; color: #1a1917; }
-.variant-btn.selected { border-color: #1a1917; background: #1a1917; color: #f5f2ed; }
+.size-btn .sz { font-weight: 500; color: #1a1917; display: block; }
+.size-btn .pr { font-size: 12px; color: #a8a39d; display: block; }
+.size-btn.selected { border-color: #1a1917; background: #1a1917; }
+.size-btn.selected .sz, .size-btn.selected .pr { color: #f5f2ed; }
+.size-btn:hover:not(.selected) { border-color: #a8a39d; }
 
-.d-price { font-size: 20px; font-weight: 500; color: #1a1917; letter-spacing: -0.01em; }
+/* ── PAYMENT SECTION ── */
+.pay-section {
+  margin-top: auto; padding-top: 18px;
+  display: flex; flex-direction: column; gap: 12px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
 
-.buy-section { margin-top: auto; padding-top: 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(0,0,0,0.08); }
+/* Square card form container */
+#card-container {
+  background: #fff;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 90px;
+  transition: border-color 0.2s;
+}
+#card-container.sq-focused { border-color: #a8a39d; }
 
-.btn-buy {
-  display: block; width: 100%; background: #1a1917; color: #f5f2ed;
-  border: none; border-radius: 10px; padding: 16px; text-align: center;
+.pay-price {
+  font-size: 22px; font-weight: 500; color: #1a1917; letter-spacing: -0.02em;
+}
+
+.btn-pay {
+  width: 100%; background: #1a1917; color: #f5f2ed;
+  border: none; border-radius: 10px; padding: 16px;
   font-family: var(--font); font-size: 15px; font-weight: 500;
-  letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; text-decoration: none;
+  letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn-buy:hover { opacity: 0.85; }
-.btn-buy:disabled { opacity: 0.4; cursor: default; }
+.btn-pay:hover { opacity: 0.85; }
+.btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.badge-sold { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #a8a39d; border: 1px solid #d0ccc7; border-radius: 20px; padding: 4px 10px; }
+.pay-error { font-size: 13px; color: #c0392b; line-height: 1.4; display: none; }
+.pay-legal { font-size: 11px; color: #a8a39d; line-height: 1.5; text-align: center; }
+
+/* ── SUCCESS STATE ── */
+.pay-success {
+  display: none; flex-direction: column; align-items: center;
+  gap: 10px; padding: 24px 0; text-align: center;
+}
+.pay-success .checkmark {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: #1a1917; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #f5f2ed;
+}
+.pay-success .success-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: #1a1917; }
+.pay-success .success-sub { font-size: 13px; color: #6b6560; line-height: 1.6; }
+
+.badge-sold {
+  display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #a8a39d;
+  border: 1px solid #d0ccc7; border-radius: 20px; padding: 4px 10px;
+}
 
 /* ── FULLSCREEN ── */
 #fs-overlay {
@@ -178,14 +241,34 @@ nav {
 }
 
 /* ── FOOTER ── */
-footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+footer {
+  border-top: 1px solid var(--border); padding: 28px 24px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
 .footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
-.footer-link { background: none; border: 1px solid #444; border-radius: 20px; color: var(--ink2); font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; padding: 7px 16px; cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none; display: inline-block; }
-.footer-link:hover { border-color: var(--ink2); color: var(--ink); }
+.footer-gb-btn {
+  background: none; border: 1px solid #444; border-radius: 20px; color: var(--ink2);
+  font-family: var(--font); font-size: 12px; letter-spacing: 0.12em; text-transform: lowercase;
+  padding: 7px 16px; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+  text-decoration: none; display: inline-block;
+}
+.footer-gb-btn:hover { border-color: var(--ink2); color: var(--ink); }
 
 /* ── TOAST ── */
-#toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #0c0c0c; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
+#toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--ink); color: #0c0c0c;
+  font-family: var(--font); font-size: 12px; font-weight: 500;
+  padding: 9px 18px; border-radius: 20px;
+  opacity: 0; pointer-events: none; z-index: 1000;
+  transition: opacity 0.2s, transform 0.2s; white-space: nowrap;
+}
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* spinner */
+.spin { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -207,19 +290,55 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
 <div id="detail-overlay" onclick="overlayClick(event)">
   <div id="detail-sheet">
     <button class="modal-close" onclick="closeDetail()">✕</button>
+
     <div class="modal-img-pane" onclick="openFS()">
-      <button class="img-nav img-nav-prev" onclick="event.stopPropagation();slideNav(-1)">‹</button>
+      <button class="img-nav img-nav-prev" id="nav-prev" onclick="event.stopPropagation();slideNav(-1)">‹</button>
       <img id="d-img" src="" alt="">
-      <button class="img-nav img-nav-next" onclick="event.stopPropagation();slideNav(1)">›</button>
+      <button class="img-nav img-nav-next" id="nav-next" onclick="event.stopPropagation();slideNav(1)">›</button>
     </div>
+
     <div class="modal-info-pane">
       <div class="modal-info-inner">
         <div class="d-title" id="d-title"></div>
-        <div class="d-desc"  id="d-desc"></div>
-        <div class="variant-label">Size</div>
-        <div class="variant-btns" id="d-variants"></div>
-        <div class="d-price" id="d-price"></div>
-        <div class="buy-section" id="buy-section"></div>
+        <div class="d-desc" id="d-desc"></div>
+
+        <!-- size selector -->
+        <div id="size-section">
+          <div class="size-label" style="margin-bottom:8px">Select size</div>
+          <div class="size-btns">
+            <button class="size-btn" id="btn-5x7" onclick="selectSize('5x7')">
+              <span class="sz">5 × 7</span>
+              <span class="pr">$35</span>
+            </button>
+            <button class="size-btn selected" id="btn-9x12" onclick="selectSize('9x12')">
+              <span class="sz">9 × 12</span>
+              <span class="pr">$50</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- payment -->
+        <div class="pay-section" id="pay-section">
+          <div class="pay-price" id="pay-price">$50</div>
+          <div id="card-container"></div>
+          <div class="pay-error" id="pay-error"></div>
+          <button class="btn-pay" id="btn-pay" onclick="handlePay()">
+            Pay now
+          </button>
+          <div class="pay-legal">Secured by Square. Your card info never touches our server.</div>
+        </div>
+
+        <!-- success -->
+        <div class="pay-success" id="pay-success">
+          <div class="checkmark">✓</div>
+          <div class="success-title">Order confirmed!</div>
+          <div class="success-sub" id="success-sub">Your print is on its way.</div>
+        </div>
+
+        <!-- sold out fallback -->
+        <div id="sold-section" style="display:none; padding-top:18px; border-top:1px solid rgba(0,0,0,0.08);">
+          <span class="badge-sold">sold out</span>
+        </div>
       </div>
     </div>
   </div>
@@ -234,29 +353,58 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
 <div id="toast"></div>
 
 <script>
-const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
-const SQUARE_APP_ID = 'sq0idp-6D-Q6hGLP9tk-medwFpxvQ';
-const LOCATION_ID   = 'LYVD3ZGR3X4KE';
+const LAMBDA_URL = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
+const SQ_APP_ID  = 'sq0idp-6D-Q6hGLP9tk-medwFpxvQ';
+const SQ_LOC_ID  = 'LYVD3ZGR3X4KE';
+
+const SIZES = {
+  '5x7':  { label: '5 × 7',  price: 35, cents: 3500 },
+  '9x12': { label: '9 × 12', price: 50, cents: 5000 },
+};
 
 let products = [];
 let curIdx = 0;
-let curVariationId = null;
+let curSize = '9x12';
+let sqCard = null;
+let sqPayments = null;
+let cardInitialized = false;
 
-// ── FETCH ─────────────────────────────────
+// ── SQUARE INIT ───────────────────────────
+async function initSquare() {
+  if (!window.Square) { console.error('Square.js not loaded'); return; }
+  try {
+    sqPayments = window.Square.payments(SQ_APP_ID, SQ_LOC_ID);
+    sqCard = await sqPayments.card({
+      style: {
+        '.input-container': { borderRadius: '8px' },
+        '.input-container.is-focus': { borderColor: '#a8a39d' },
+        '.input-container.is-error': { borderColor: '#c0392b' },
+        input: { fontFamily: "'DM Sans', sans-serif", fontSize: '15px', color: '#1a1917' },
+        'input::placeholder': { color: '#b0aba5' },
+      }
+    });
+    await sqCard.attach('#card-container');
+    cardInitialized = true;
+  } catch (e) {
+    console.error('Square init error', e);
+  }
+}
+
+// ── PRODUCTS ──────────────────────────────
 async function loadProducts() {
   try {
-    const r = await fetch(LAMBDA + '/products');
+    const r = await fetch(LAMBDA_URL + '/products');
     if (!r.ok) throw 0;
     const { products: raw } = await r.json();
     products = raw;
     renderGrid();
     document.getElementById('nav-count').textContent = ' — ' + products.length + ' works';
   } catch {
-    document.getElementById('grid').innerHTML = '<p style="color:var(--ink3);padding:40px;width:100%">Could not load products.</p>';
+    document.getElementById('grid').innerHTML =
+      '<p style="color:var(--ink3);padding:40px">could not load products.</p>';
   }
 }
 
-// ── GRID ──────────────────────────────────
 function renderGrid() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
@@ -280,54 +428,30 @@ function openDetail(idx) {
   curIdx = idx;
   populateDetail(products[idx]);
   document.getElementById('detail-overlay').classList.add('on');
+  // init Square card on first open
+  if (!cardInitialized) initSquare();
 }
 
 function populateDetail(p) {
   const img = document.getElementById('d-img');
   img.src = p.img || ''; img.alt = p.title;
   document.getElementById('d-title').textContent = p.title;
-  document.getElementById('d-desc').textContent  = p.desc || '';
+  document.getElementById('d-desc').textContent = p.desc || '';
+  document.getElementById('nav-prev').classList.remove('hidden');
+  document.getElementById('nav-next').classList.remove('hidden');
 
-  // Variant buttons
-  const vWrap = document.getElementById('d-variants');
-  vWrap.innerHTML = '';
-  const firstV = p.variations?.[0];
-  curVariationId = firstV?.id || null;
+  // reset payment UI
+  resetPayUI();
 
-  (p.variations || []).forEach((v, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'variant-btn' + (i === 0 ? ' selected' : '');
-    btn.textContent = v.name;
-    btn.onclick = () => selectVariant(p, v, btn);
-    vWrap.appendChild(btn);
-  });
-
-  // Price
-  document.getElementById('d-price').textContent = firstV?.price ? '$' + firstV.price : '';
-
-  // Buy button
-  renderBuyButton(p, firstV);
-}
-
-function selectVariant(p, v, btn) {
-  curVariationId = v.id;
-  document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('d-price').textContent = v.price ? '$' + v.price : '';
-  renderBuyButton(p, v);
-}
-
-function renderBuyButton(p, v) {
-  const buy = document.getElementById('buy-section');
-  const cartUrl = `https://squareup.com/dashboard/items/library`;
-  // Use Square's hosted checkout URL pattern
-  buy.innerHTML = `<button class="btn-buy" onclick="checkout()">Add to Cart — $${v?.price || ''}</button>`;
-}
-
-function checkout() {
-  const p = products[curIdx];
-  if (!p) return;
-  window.open(p.url, '_blank');
+  if (!p.available) {
+    document.getElementById('size-section').style.display = 'none';
+    document.getElementById('pay-section').style.display = 'none';
+    document.getElementById('sold-section').style.display = 'block';
+  } else {
+    document.getElementById('size-section').style.display = 'block';
+    document.getElementById('pay-section').style.display = 'flex';
+    document.getElementById('sold-section').style.display = 'none';
+  }
 }
 
 function slideNav(dir) {
@@ -335,8 +459,104 @@ function slideNav(dir) {
   populateDetail(products[curIdx]);
 }
 
-function closeDetail() { document.getElementById('detail-overlay').classList.remove('on'); }
-function overlayClick(e) { if (e.target === document.getElementById('detail-overlay')) closeDetail(); }
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('on');
+}
+function overlayClick(e) {
+  if (e.target === document.getElementById('detail-overlay')) closeDetail();
+}
+
+// ── SIZE ──────────────────────────────────
+function selectSize(sz) {
+  curSize = sz;
+  document.getElementById('btn-5x7').classList.toggle('selected', sz === '5x7');
+  document.getElementById('btn-9x12').classList.toggle('selected', sz === '9x12');
+  document.getElementById('pay-price').textContent = '$' + SIZES[sz].price;
+  document.getElementById('btn-pay').textContent = 'Pay $' + SIZES[sz].price;
+  document.getElementById('pay-error').style.display = 'none';
+}
+
+// ── PAYMENT ───────────────────────────────
+async function handlePay() {
+  if (!cardInitialized || !sqCard) {
+    showError('Payment form not ready yet, please wait a moment.');
+    return;
+  }
+  const btn = document.getElementById('btn-pay');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin"></div>';
+  hideError();
+
+  try {
+    const result = await sqCard.tokenize();
+    if (result.status !== 'OK') {
+      const msgs = result.errors?.map(e => e.message).join(' ') || 'Card error, please try again.';
+      showError(msgs);
+      btn.disabled = false;
+      btn.textContent = 'Pay $' + SIZES[curSize].price;
+      return;
+    }
+
+    const p = products[curIdx];
+    const sz = SIZES[curSize];
+
+    const resp = await fetch(LAMBDA_URL + '/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sourceId:    result.token,
+        amount:      sz.cents,
+        currency:    'USD',
+        size:        curSize,
+        productTitle: p.title,
+        productId:   p.id || null,
+      })
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok || data.error) {
+      showError(data.error || 'Payment failed, please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Pay $' + SIZES[curSize].price;
+      return;
+    }
+
+    // success
+    showSuccess(p.title, curSize);
+
+  } catch (err) {
+    showError('Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Pay $' + SIZES[curSize].price;
+  }
+}
+
+function showSuccess(title, sz) {
+  document.getElementById('size-section').style.display = 'none';
+  document.getElementById('pay-section').style.display = 'none';
+  const success = document.getElementById('pay-success');
+  success.style.display = 'flex';
+  document.getElementById('success-sub').textContent =
+    `Your ${SIZES[sz].label}" print of "${title}" is confirmed. We'll be in touch!`;
+}
+
+function resetPayUI() {
+  document.getElementById('pay-success').style.display = 'none';
+  document.getElementById('pay-error').style.display = 'none';
+  const btn = document.getElementById('btn-pay');
+  btn.disabled = false;
+  curSize = '9x12';
+  selectSize('9x12');
+}
+
+function showError(msg) {
+  const el = document.getElementById('pay-error');
+  el.textContent = msg; el.style.display = 'block';
+}
+function hideError() {
+  document.getElementById('pay-error').style.display = 'none';
+}
 
 // ── FULLSCREEN ────────────────────────────
 function openFS() {
@@ -359,26 +579,27 @@ function toast(msg) {
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function strip(h) { const d = document.createElement('div'); d.innerHTML = h; return d.textContent || ''; }
 
+// ── INIT ──────────────────────────────────
 loadProducts();
 </script>
 
-<!-- GUESTBOOK -->
-<div id="gb-overlay" onclick="if(event.target===this)closeGB()" style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
-<div style="background:#f5f2ed;border-radius:12px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+<!-- GUESTBOOK MODAL -->
+<div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
+<div id="gb-sheet" style="background:#f5f2ed;border-radius:12px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
   <div style="display:flex;align-items:center;padding:26px 26px 14px;gap:10px;flex-shrink:0;">
-    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#1a1917;flex:1;cursor:default;" onclick="gbTitleTap()">guest book</div>
-    <button id="export-btn" style="display:none;background:rgba(0,0,0,0.07);border:none;border-radius:5px;padding:5px 10px;font-family:'DM Sans',sans-serif;font-size:11px;color:#6b6560;cursor:pointer;" onclick="exportCSV()">export csv</button>
+    <div id="gb-title" style="font-family:var(--serif);font-size:22px;font-weight:700;color:#1a1917;flex:1;cursor:default;" onclick="gbTitleTap()">guest book</div>
+    <button id="export-btn" style="display:none;background:rgba(0,0,0,0.07);border:none;border-radius:5px;padding:5px 10px;font-family:var(--font);font-size:11px;color:#6b6560;cursor:pointer;" onclick="exportCSV()">export csv</button>
     <button onclick="closeGB()" style="width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6560;">✕</button>
   </div>
   <div style="flex:1;overflow-y:auto;padding:0 26px 32px;display:flex;flex-direction:column;gap:14px;">
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">name</label>
-        <input id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:'DM Sans',sans-serif;font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+        <input id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
       <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">email</label>
-        <input id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:'DM Sans',sans-serif;font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+        <input id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
       <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
-        <textarea id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:'DM Sans',sans-serif;font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;resize:none;min-height:80px;line-height:1.5;"></textarea></div>
-      <button onclick="submitGB()" style="background:#1a1917;border:none;border-radius:6px;color:#f5f2ed;padding:15px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
+        <textarea id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;resize:none;min-height:80px;line-height:1.5;"></textarea></div>
+      <button onclick="submitGB()" style="background:#1a1917;border:none;border-radius:6px;color:#f5f2ed;padding:15px;font-family:var(--font);font-size:13px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
     </div>
     <div id="gb-entries" style="display:none;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.08);">
       <div style="font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:lowercase;color:#a8a39d;">recent visitors</div>
@@ -391,20 +612,16 @@ loadProducts();
 <footer>
   <span class="footer-copy">&copy; 2026 david nicholson</span>
   <div style="display:flex;gap:16px;align-items:center;">
-    <a href="/cdn-cgi/l/email-protection#3753564152775356415247565e59435e59501954585a" class="footer-link">contact</a>
-    <button class="footer-link" onclick="openGB()">guest book</button>
+    <button class="footer-gb-btn" onclick="openGB()">guest book</button>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const LAMBDA_URL = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
+<script>
 let guests = [];
 try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
 
 function openGB() {
-  const o = document.getElementById('gb-overlay');
-  o.style.visibility = 'visible'; o.style.opacity = '1';
-  o.style.transition = 'opacity 0.28s,visibility 0s';
+  document.getElementById('gb-overlay').style.cssText += ';visibility:visible;opacity:1;transition:opacity 0.28s,visibility 0s;';
   document.getElementById('export-btn').style.display = 'none';
   gbTapCount = 0; renderGuests();
 }
@@ -413,6 +630,7 @@ function closeGB() {
   o.style.opacity = '0'; o.style.visibility = 'hidden';
   o.style.transition = 'opacity 0.28s,visibility 0s linear 0.28s';
 }
+function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
 
 let gbTapCount = 0, gbTapTimer;
 function gbTitleTap() {
@@ -422,25 +640,18 @@ function gbTitleTap() {
   else gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
 }
 
-async function submitGB() {
+function submitGB() {
   const name  = document.getElementById('g-name').value.trim();
   const email = document.getElementById('g-email').value.trim();
-  const note  = document.getElementById('g-msg').value.trim();
+  const msg   = document.getElementById('g-msg').value.trim();
   if (!name)                          { toast('please enter your name'); return; }
   if (!email || !email.includes('@')) { toast('please enter a valid email'); return; }
-  guests.unshift({ name, email, note, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
+  guests.unshift({ name, email, msg, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
   try { localStorage.setItem('dna_guests', JSON.stringify(guests)); } catch {}
   document.getElementById('g-name').value = '';
   document.getElementById('g-email').value = '';
   document.getElementById('g-msg').value = '';
   renderGuests(); toast('thanks for signing!');
-  // notify via Lambda
-  try {
-    await fetch(LAMBDA_URL + '/guestbook', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ name, email, note })
-    });
-  } catch {}
 }
 
 function renderGuests() {
@@ -452,16 +663,20 @@ function renderGuests() {
     `<div style="background:rgba(255,255,255,0.5);border-radius:5px;padding:11px 13px;border:1px solid rgba(0,0,0,0.07);margin-bottom:6px;">
       <div style="font-size:14px;font-weight:500;color:#1a1917;">${esc(e.name)}</div>
       <div style="font-size:12px;color:#a8a39d;margin-top:2px;">${esc(e.date)}</div>
-      ${e.note ? `<div style="font-size:14px;font-weight:300;color:#6b6560;margin-top:5px;line-height:1.55;">${esc(e.note)}</div>` : ''}
+      ${e.msg ? `<div style="font-size:14px;font-weight:300;color:#6b6560;margin-top:5px;line-height:1.55;">${esc(e.msg)}</div>` : ''}
     </div>`
   ).join('');
 }
 
 function exportCSV() {
   if (!guests.length) { toast('no entries yet'); return; }
-  const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.note||'',e.date])];
-  const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
+  const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
+  const csv = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
   const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'});
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  toast('exported '+guests.length+' entries');
+  toast('exported ' + guests.length + ' entries');
 }
+</script>
+
+</body>
+</html>
