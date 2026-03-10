@@ -10,251 +10,77 @@
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0a0a;
-  --surface: #111;
-  --border: #1e1e1e;
-  --border-mid: #2a2a2a;
-  --ink: #f2ede8;
-  --ink2: #999;
-  --ink3: #777;
-  --accent: #a8b8c8;
-  --wrap: 714px;
-  --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif;
+  --bg: #0a0a0a; --surface: #111; --border: #1e1e1e; --border-mid: #2a2a2a;
+  --ink: #f2ede8; --ink2: #999; --ink3: #777; --accent: #a8b8c8;
+  --wrap: 714px; --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif;
 }
-
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font);
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 
-/* ── PAGE ── */
-.page {
-  max-width: 714px;
-  margin: 0;
-  padding: 0 40px 60px 10%;
-}
-
-.content-col {
-  max-width: 100%;
-  font-weight: 300;
-}
-
-/* ── SPLASH ── */
+.page { max-width: 714px; margin: 0; padding: 0 40px 60px 10%; }
+.content-col { max-width: 100%; font-weight: 300; }
 .splash-section { padding-top: 24px; }
-
-.splash-ph {
-  width: 100%;
-  aspect-ratio: 3/4;
-  background: var(--surface);
-  animation: sk 1.8s ease-in-out infinite;
-}
+.splash-ph { width: 100%; aspect-ratio: 3/4; background: var(--surface); animation: sk 1.8s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
-
-.splash-img-wrap {
-  width: 100%;
-  aspect-ratio: 3/4;
-  overflow: hidden; position: relative;
-}
-.splash-img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center top;
-  display: block;
-  opacity: 0; transition: opacity 0.5s;
-}
+.splash-img-wrap { width: 100%; aspect-ratio: 3/4; overflow: hidden; position: relative; }
+.splash-img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; opacity: 0; transition: opacity 0.5s; }
 .splash-img.loaded { opacity: 1; }
+.splash-caption { font-size: 14px; color: var(--ink3); letter-spacing: 0.06em; margin-top: 10px; font-weight: 300; min-height: 20px; }
 
-.splash-caption {
-  font-size: 14px; color: var(--ink3);
-  letter-spacing: 0.06em; margin-top: 10px; font-weight: 300;
-  min-height: 20px;
-}
-
-/* ── TITLE BLOCK ── */
 .title-block { padding: 24px 0 0; }
-
-.site-title {
-  font-family: var(--font);
-  font-size: clamp(36px, 7vw, 68px);
-  font-weight: 300 !important; line-height: 1; letter-spacing: 0.06em;
-  text-transform: lowercase;
-}
-
-/* ── FOLLOW BUTTON ── */
-.follow-btn {
-  display: inline-block;
-  margin-top: 28px;
-  font-family: var(--font); font-size: 13px; font-weight: 400;
-  letter-spacing: 0.14em; text-transform: lowercase;
-  color: var(--ink);
-  border: 1px solid #666;
-  border-radius: 20px;
-  padding: 7px 18px;
-  transition: color 0.2s, border-color 0.2s;
-}
+.site-title { font-family: var(--font); font-size: clamp(36px, 7vw, 68px); font-weight: 300 !important; line-height: 1; letter-spacing: 0.06em; text-transform: lowercase; }
+.follow-btn { display: inline-block; margin-top: 28px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); border: 1px solid #666; border-radius: 20px; padding: 7px 18px; transition: color 0.2s, border-color 0.2s; }
 .follow-btn:hover { border-color: var(--ink); }
-
-/* ── RULE ── */
 .rule { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
-
-/* ── H2 ── */
-h2 {
-  font-family: var(--font);
-  font-size: 22px; font-weight: 700; letter-spacing: 0.04em;
-  text-transform: lowercase; color: var(--ink); margin-bottom: 20px;
-}
-
-/* ── ABOUT ── */
-.about-text {
-  font-size: 20px; font-weight: 300 !important; line-height: 1.8; color: var(--ink);
-}
-
-/* ── EVENTS ── */
-.events-year {
-  font-size: 16px; font-weight: 400; letter-spacing: 0.08em;
-  text-transform: lowercase; color: var(--ink3); margin-bottom: 14px;
-}
+h2 { font-family: var(--font); font-size: 22px; font-weight: 700; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); margin-bottom: 20px; }
+.about-text { font-size: 20px; font-weight: 300 !important; line-height: 1.8; color: var(--ink); }
+.events-year { font-size: 16px; font-weight: 400; letter-spacing: 0.08em; text-transform: lowercase; color: var(--ink3); margin-bottom: 14px; }
 .event { margin-bottom: 20px; }
 .event:last-child { margin-bottom: 0; }
 .event-date { font-size: 16px; color: var(--accent); margin-bottom: 4px; }
 .event-name { font-size: 20px; font-weight: 300; line-height: 1.4; color: var(--ink); }
-.event-loc  { font-size: 16px; color: var(--ink3); margin-top: 3px; }
-
-/* ── VENUE ── */
+.event-loc { font-size: 16px; color: var(--ink3); margin-top: 3px; }
 .venue-name { font-size: 20px; font-weight: 300; color: var(--ink); line-height: 1.4; }
 .venue-addr { font-size: 16px; color: var(--ink3); margin-top: 4px; }
-
-.event-name a, .venue-name a {
-  border-bottom: 1px solid var(--border-mid);
-  padding-bottom: 1px;
-  transition: border-color 0.2s, color 0.2s;
-}
+.event-name a, .venue-name a { border-bottom: 1px solid var(--border-mid); padding-bottom: 1px; transition: border-color 0.2s, color 0.2s; }
 .event-name a:hover, .venue-name a:hover { border-color: var(--ink2); }
-
-/* ── GALLERY LINK ── */
-.gallery-link {
-  display: inline-flex; align-items: baseline; gap: 10px;
-  font-size: 26px; font-weight: 700;
-  letter-spacing: 0.03em; text-transform: lowercase;
-  color: var(--accent);
-  transition: opacity 0.2s;
-}
+.gallery-link { display: inline-flex; align-items: baseline; gap: 10px; font-size: 26px; font-weight: 700; letter-spacing: 0.03em; text-transform: lowercase; color: var(--accent); transition: opacity 0.2s; }
 .gallery-link:hover { opacity: 0.7; }
-.gallery-arrow {
-  font-size: 20px; color: var(--accent);
-  display: inline-block; transition: transform 0.25s;
-}
+.gallery-arrow { font-size: 20px; color: var(--accent); display: inline-block; transition: transform 0.25s; }
 .gallery-link:hover .gallery-arrow { transform: translateX(5px); }
 
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 28px 40px 28px 10%;
-  max-width: 714px; margin: 0;
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
-}
+footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-width: 714px; margin: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
-.footer-gb-btn {
-  background: none; border: 1px solid var(--border-mid);
-  border-radius: 20px; color: var(--ink2);
-  font-family: var(--font); font-size: 12px; font-weight: 400;
-  letter-spacing: 0.12em; text-transform: lowercase;
-  padding: 7px 16px; cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-}
+.footer-gb-btn { background: none; border: 1px solid var(--border-mid); border-radius: 20px; color: var(--ink2); font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; padding: 7px 16px; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
 .footer-gb-btn:hover { border-color: var(--ink2); color: var(--ink); }
 
-/* ── GUESTBOOK MODAL ── */
-#gb-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-  visibility: hidden; opacity: 0;
-  transition: opacity 0.28s, visibility 0s linear 0.28s;
-  display: flex; align-items: center; justify-content: center; padding: 24px;
-}
+#gb-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
 #gb-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.28s, visibility 0s; }
-#gb-sheet {
-  background: #f5f2ed; border-radius: 4px;
-  width: 100%; max-width: 500px; max-height: 90vh;
-  display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
-}
-.gb-header {
-  display: flex; align-items: center; padding: 26px 26px 14px; flex-shrink: 0; gap: 10px;
-}
-.gb-header h2 {
-  font-size: 22px; font-weight: 700; letter-spacing: 0.04em;
-  text-transform: lowercase; color: #1a1917; flex: 1; margin-bottom: 0;
-}
-.gb-close {
-  width: 30px; height: 30px; border-radius: 50%;
-  background: rgba(0,0,0,0.07); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; color: #6b6560; transition: background 0.15s;
-}
-.gb-close:active { background: rgba(0,0,0,0.14); }
-.gb-scroll {
-  flex: 1; overflow-y: auto; padding: 0 26px 32px;
-  display: flex; flex-direction: column; gap: 14px;
-}
+#gb-sheet { background: #f5f2ed; border-radius: 4px; width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.7); }
+.gb-header { display: flex; align-items: center; padding: 26px 26px 14px; flex-shrink: 0; gap: 10px; }
+.gb-header h2 { font-size: 22px; font-weight: 700; letter-spacing: 0.04em; text-transform: lowercase; color: #1a1917; flex: 1; margin-bottom: 0; }
+.gb-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #6b6560; }
+.gb-scroll { flex: 1; overflow-y: auto; padding: 0 26px 32px; display: flex; flex-direction: column; gap: 14px; }
 .gb-scroll::-webkit-scrollbar { width: 0; }
 .gb-form { display: flex; flex-direction: column; gap: 12px; }
-.gb-label-field {
-  font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase;
-  color: #6b6560; margin-bottom: 5px; display: block;
-}
-.gb-input, .gb-ta {
-  background: rgba(255,255,255,0.7); border: 1.5px solid rgba(0,0,0,0.1);
-  border-radius: 6px; color: #1a1917;
-  font-family: var(--font); font-size: 16px; padding: 12px 14px;
-  outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none;
-}
+.gb-label-field { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #6b6560; margin-bottom: 5px; display: block; }
+.gb-input, .gb-ta { background: rgba(255,255,255,0.7); border: 1.5px solid rgba(0,0,0,0.1); border-radius: 6px; color: #1a1917; font-family: var(--font); font-size: 16px; padding: 12px 14px; outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none; }
 .gb-input:focus, .gb-ta:focus { border-color: #a8a39d; background: #fff; }
 .gb-input::placeholder, .gb-ta::placeholder { color: #b0aba5; }
 .gb-ta { resize: none; min-height: 86px; line-height: 1.5; }
-.gb-submit {
-  background: #1a1917; border: none; border-radius: 6px; color: #f5f2ed;
-  padding: 15px; font-family: var(--font); font-size: 13px; font-weight: 400;
-  letter-spacing: 0.12em; text-transform: lowercase;
-  cursor: pointer; width: 100%; margin-top: 4px; transition: opacity 0.15s;
-}
-.gb-submit:active { opacity: 0.8; }
+.gb-submit { background: #1a1917; border: none; border-radius: 6px; color: #f5f2ed; padding: 15px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; cursor: pointer; width: 100%; margin-top: 4px; }
 .gb-entries { padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 8px; }
 .gb-entries-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: lowercase; color: #a8a39d; }
-.gb-entry {
-  background: rgba(255,255,255,0.5); border-radius: 5px;
-  padding: 11px 13px; border: 1px solid rgba(0,0,0,0.07);
-}
+.gb-entry { background: rgba(255,255,255,0.5); border-radius: 5px; padding: 11px 13px; border: 1px solid rgba(0,0,0,0.07); }
 .e-name { font-size: 14px; font-weight: 500; color: #1a1917; }
 .e-date { font-size: 12px; color: #a8a39d; margin-top: 2px; }
 .e-msg { font-size: 14px; font-weight: 300; color: #6b6560; margin-top: 5px; line-height: 1.55; }
-.export-btn {
-  background: rgba(0,0,0,0.07); border: none; border-radius: 5px;
-  padding: 5px 10px; font-family: var(--font); font-size: 11px; font-weight: 400;
-  letter-spacing: 0.1em; text-transform: lowercase; color: #6b6560; cursor: pointer;
-}
+.export-btn { background: rgba(0,0,0,0.07); border: none; border-radius: 5px; padding: 5px 10px; font-family: var(--font); font-size: 11px; color: #6b6560; cursor: pointer; }
 
-/* ── TOAST ── */
-#toast {
-  position: fixed; bottom: 26px; left: 50%;
-  transform: translateX(-50%) translateY(8px);
-  background: var(--ink); color: #0a0a0a;
-  font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.08em;
-  padding: 9px 18px; border-radius: 20px;
-  opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap;
-  transition: opacity 0.2s, transform 0.2s;
-}
+#toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #0a0a0a; font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.08em; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap; transition: opacity 0.2s, transform 0.2s; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
-
 * { scrollbar-width: thin; scrollbar-color: var(--border-mid) transparent; }
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-thumb { background: var(--border-mid); }
@@ -263,8 +89,6 @@ footer {
 <body>
 
 <div class="page splash-section">
-
-  <!-- HERO IMAGE -->
   <div id="splash-wrap">
     <div class="splash-ph" id="splash-ph"></div>
     <div class="splash-img-wrap" id="splash-img-wrap" style="display:none">
@@ -273,72 +97,62 @@ footer {
   </div>
   <p class="splash-caption" id="splash-cap"></p>
 
-<div class="content-col">
+  <div class="content-col">
+    <div class="title-block">
+      <h1 class="site-title" style="font-weight:300;">david nicholson</h1>
+      <a class="follow-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
+    </div>
 
-  <!-- TITLE -->
-  <div class="title-block">
-    <h1 class="site-title" style="font-weight:300;">david nicholson</h1>
-    <a class="follow-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
-  </div>
+    <hr class="rule" id="content">
 
-  <hr class="rule" id="content">
+    <div id="about" style="margin-bottom:32px;">
+      <h2>about</h2>
+      <p class="about-text" style="font-weight:300;">
+        david nicholson is a kansas-based artist who paints from observation, blending colorful, figurative, simplified, and abstract elements.
+      </p>
+      <div style="margin-top:28px;">
+        <a class="gallery-link" href="/shop.html">view gallery<span class="gallery-arrow">→</span></a>
+      </div>
+    </div>
 
-  <!-- ABOUT -->
-  <div id="about" style="margin-bottom:32px;">
-    <h2>about</h2>
-    <p class="about-text" style="font-weight:300;">
-      david nicholson is a kansas-based artist who paints from observation, blending colorful, figurative, simplified, and abstract elements.
-    </p>
-    <div style="margin-top:28px;">
-      <a class="gallery-link" href="/shop.html">
-        view gallery<span class="gallery-arrow">→</span>
-      </a>
+    <hr class="rule">
+
+    <div style="margin-bottom:32px;">
+      <h2>future</h2>
+      <p class="events-year">2026</p>
+      <div class="event">
+        <div class="event-date">april 24th</div>
+        <div class="event-name"><a href="https://www.phoenixgalleryart.com">lawrence, ks final friday artwalk</a></div>
+        <div class="event-loc">@ phoenix gallery</div>
+      </div>
+      <div class="event">
+        <div class="event-date">june 12th &amp; 13th</div>
+        <div class="event-name"><a href="https://www.downtownop.org/events/overland-park-event-page-ajcxw-rctlf-3xdt8-34da7-9sjs5-5pp2x-33fly-74nj4-9r2nc-23la6-53enr-43y62-6b3rg-tfhtb-c876k-2p6bt-2we64-ddjsn-4g2wy-2yf92-lkfjd-bsx74">downtown overland park art fair</a></div>
+      </div>
+    </div>
+
+    <hr class="rule">
+
+    <div style="margin-bottom:32px;">
+      <h2>also at</h2>
+      <div class="venue-name"><a href="https://www.phoenixgalleryart.com">phoenix gallery</a></div>
+      <div class="venue-addr">825 massachusetts, lawrence, ks 66044</div>
+    </div>
+
+    <div style="margin-bottom:32px;">
+      <h2>past</h2>
+      <p class="events-year">2025</p>
+      <div class="event">
+        <div class="event-name"><a href="https://westportkcmo.com/art-westport/">art westport</a></div>
+        <div class="event-loc">kansas city, mo</div>
+      </div>
+      <div class="event">
+        <div class="event-name"><a href="https://lawrenceartguild.org/art-in-the-park">art in the park</a></div>
+        <div class="event-loc">lawrence, ks</div>
+      </div>
     </div>
   </div>
-
-  <hr class="rule">
-
-  <!-- FUTURE -->
-  <div style="margin-bottom:32px;">
-    <h2>future</h2>
-    <p class="events-year">2026</p>
-    <div class="event">
-      <div class="event-date">april 24th</div>
-      <div class="event-name"><a href="https://www.phoenixgalleryart.com">lawrence, ks final friday artwalk</a></div>
-      <div class="event-loc">@ phoenix gallery</div>
-    </div>
-    <div class="event">
-      <div class="event-date">june 12th &amp; 13th</div>
-      <div class="event-name"><a href="https://www.downtownop.org/events/overland-park-event-page-ajcxw-rctlf-3xdt8-34da7-9sjs5-5pp2x-33fly-74nj4-9r2nc-23la6-53enr-43y62-6b3rg-tfhtb-c876k-2p6bt-2we64-ddjsn-4g2wy-2yf92-lkfjd-bsx74">downtown overland park art fair</a></div>
-    </div>
-  </div>
-
-  <hr class="rule">
-
-  <!-- ALSO AT -->
-  <div style="margin-bottom:32px;">
-    <h2>also at</h2>
-    <div class="venue-name"><a href="https://www.phoenixgalleryart.com">phoenix gallery</a></div>
-    <div class="venue-addr">825 massachusetts, lawrence, ks 66044</div>
-  </div>
-
-  <!-- PAST -->
-  <div style="margin-bottom:32px;">
-    <h2>past</h2>
-    <p class="events-year">2025</p>
-    <div class="event">
-      <div class="event-name"><a href="https://westportkcmo.com/art-westport/">art westport</a></div>
-      <div class="event-loc">kansas city, mo</div>
-    </div>
-    <div class="event">
-      <div class="event-name"><a href="https://lawrenceartguild.org/art-in-the-park">art in the park</a></div>
-      <div class="event-loc">lawrence, ks</div>
-    </div>
-  </div>
-
-</div><!-- /content-col -->
-
-</div><!-- /page -->
+</div>
 
 <footer>
   <span class="footer-copy">&copy; 2026 david nicholson</span>
@@ -358,18 +172,9 @@ footer {
     </div>
     <div class="gb-scroll">
       <div class="gb-form">
-        <div>
-          <label class="gb-label-field" for="g-name">name</label>
-          <input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false">
-        </div>
-        <div>
-          <label class="gb-label-field" for="g-email">email</label>
-          <input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false">
-        </div>
-        <div>
-          <label class="gb-label-field" for="g-msg">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
-          <textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false"></textarea>
-        </div>
+        <div><label class="gb-label-field" for="g-name">name</label><input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+        <div><label class="gb-label-field" for="g-email">email</label><input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
+        <div><label class="gb-label-field" for="g-msg">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label><textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false"></textarea></div>
         <button class="gb-submit" onclick="submitGB()">sign the guest book</button>
       </div>
       <div class="gb-entries" id="gb-entries" style="display:none">
@@ -383,45 +188,32 @@ footer {
 <div id="toast"></div>
 
 <script>
-const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';
-const IG      = 'https://instagram.com/dave_nichol_son';
+const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
-// ── HERO ─────────────────────────────────────────────────
 async function loadHero() {
   const ph   = document.getElementById('splash-ph');
   const wrap = document.getElementById('splash-img-wrap');
   const img  = document.getElementById('splash-img');
   const cap  = document.getElementById('splash-cap');
   try {
-    const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
+    const r = await fetch(LAMBDA + '/products');
     if (!r.ok) throw 0;
-    const { products } = await r.json();
-    const withImg = products.filter(p => p.images?.[0]?.src);
+    const raw = await r.json();
+    const withImg = raw.filter(p => p.img || p.image_url);
     if (!withImg.length) throw 0;
     const p = withImg[Math.floor(Math.random() * withImg.length)];
-    cap.textContent = p.title;
-    img.onload = () => {
-      img.style.opacity = '1';
-      wrap.style.display = 'block';
-      ph.style.display   = 'none';
-    };
+    cap.textContent = p.name || p.title || '';
+    img.onload = () => { img.style.opacity = '1'; wrap.style.display = 'block'; ph.style.display = 'none'; };
     img.onerror = () => { ph.style.display = 'none'; };
-    img.src = p.images[0].src;
+    img.src = p.image_url || p.img;
   } catch {
     ph.style.display = 'none';
   }
 }
 
-// ── GUESTBOOK ────────────────────────────────────────────
 let guests = [];
-
-function openGB() {
-  document.getElementById('gb-overlay').classList.add('on');
-  document.getElementById('export-btn').style.display = 'none';
-  gbTapCount = 0;
-  renderGuests();
-}
-function closeGB()         { document.getElementById('gb-overlay').classList.remove('on'); }
+function openGB() { document.getElementById('gb-overlay').classList.add('on'); document.getElementById('export-btn').style.display = 'none'; gbTapCount = 0; renderGuests(); }
+function closeGB() { document.getElementById('gb-overlay').classList.remove('on'); }
 function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
 
 let gbTapCount = 0, gbTapTimer;
@@ -438,14 +230,12 @@ function submitGB() {
   const msg   = document.getElementById('g-msg').value.trim();
   if (!name)                          { toast('please enter your name'); return; }
   if (!email || !email.includes('@')) { toast('please enter a valid email'); return; }
-  guests.unshift({ name, email, msg,
-    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
+  guests.unshift({ name, email, msg, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
   try { localStorage.setItem('dna_guests', JSON.stringify(guests)); } catch {}
-  document.getElementById('g-name').value  = '';
+  document.getElementById('g-name').value = '';
   document.getElementById('g-email').value = '';
-  document.getElementById('g-msg').value   = '';
-  renderGuests();
-  toast('thanks for signing!');
+  document.getElementById('g-msg').value = '';
+  renderGuests(); toast('thanks for signing!');
 }
 
 function renderGuests() {
@@ -462,27 +252,15 @@ function exportCSV() {
   if (!guests.length) { toast('no entries yet'); return; }
   const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
   const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
-  const a    = Object.assign(document.createElement('a'),{
-    href: URL.createObjectURL(new Blob([csv],{type:'text/csv'})),
-    download: 'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'
-  });
+  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'});
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   toast('exported '+guests.length+' entries');
 }
 
-// ── TOAST ────────────────────────────────────────────────
 let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('on');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('on'), 2800);
-}
-
-// ── UTILS ────────────────────────────────────────────────
+function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ── INIT ─────────────────────────────────────────────────
 (function() {
   try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
   loadHero();

@@ -5,9 +5,13 @@
 
 ## What's Live
 
-**URL:** https://kiosk.davidnicholsonllc.com
+| URL | Purpose |
+|---|---|
+| https://kiosk.davidnicholsonllc.com | Main entry point / homepage (index.html) |
+| https://kiosk.davidnicholsonllc.com/shop.html | Public print gallery with checkout |
+| https://kiosk.davidnicholsonllc.com/kiosk.html | iPad kiosk for art fairs |
 
-The kiosk is deployed and working. Push changes to GitHub — deploy is automatic.
+**Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3 in ~60 seconds. No manual upload needed.
 
 ---
 
@@ -21,123 +25,199 @@ The kiosk is deployed and working. Push changes to GitHub — deploy is automati
 | CloudFront Distribution ID | E31J8ASEUTGXD9 |
 | CloudFront Domain | d33vrz1flme0j4.cloudfront.net |
 | SSL Cert | kiosk.davidnicholsonllc.com (ACM, us-east-1, auto-renews) |
-
-**To update any file:**
-1. Edit the file
-2. `git add . && git commit -m "your message" && git push`
-3. GitHub Actions deploys to S3 + invalidates CloudFront automatically
-4. Live in ~30 seconds
+| IAM User | lambda-deploy (AKIA47O4BG3JHDCHUU5W) |
 
 **Old cert to delete:** `arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424` (wrong region, unused)
 
 ---
 
-## GitHub / Deploy
+## GitHub Actions Auto-Deploy
 
-| Item | Value |
-|---|---|
-| Repo | https://github.com/h4jq7z68d9-david/kiosk |
-| Deploy workflow | `.github/workflows/deploy.yml` |
-| Trigger | Push to `main` branch |
-| What it does | Syncs all files to S3, invalidates CloudFront `/*` |
-
-**DO NOT** manually upload to S3 anymore — always push via GitHub.
+Fully configured. Push any file to the repo → live in ~60 seconds.
+- IAM user: `lambda-deploy`
+- Repo secrets set: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+- Workflow file: `.github/workflows/deploy.yml`
 
 ---
 
-## Shopify API
+## Square (replacing Shopify)
 
 | Item | Value |
 |---|---|
-| Store URL | https://0ipvjc-1v.myshopify.com (permanent, domain-independent) |
-| Kiosk collection | `frontpage` (id: 337726701728) — 40 prints |
-| Originals collection | `originals` (id: 341144928416) — 7 paintings |
-| API endpoint | `/collections/frontpage/products.json?limit=250` |
+| Square Online Store | https://david-nicholson-art.square.site |
+| Application ID | `sq0idp-6D-Q6hGLP9tk-medwFpxvQ` |
+| Production Access Token | `EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53` |
+| Location ID | `LYVD3ZGR3X4KE` |
 
-**Important:** `/products.json?collection_id=X` does NOT work on the public Shopify API. Must use `/collections/{handle}/products.json`.
+**Product URL pattern:**
+```
+https://david-nicholson-art.square.site/product/{slug}/{ITEM_ID}
+```
+Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda generates this automatically.
 
-**To add a print to the kiosk:** add it to the `frontpage` collection in Shopify admin — appears automatically on next load, no code changes needed.
+**Originals:** Excluded from API/kiosk by detecting single "Default Title" variation.
+
+**Fix needed in Square dashboard:** "Resurrection\tLilies" has a tab character in the name — rename it.
 
 ---
 
-## kiosk.html — Key Config
+## AWS Lambda
 
-```js
-const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';  // permanent
-const LAMBDA_URL = '';  // fill in after Lambda deploy
-const IG = 'https://instagram.com/dave_nichol_son';
-// Endpoint: /collections/frontpage/products.json?limit=250
+| Item | Value |
+|---|---|
+| Function name | `dna-kiosk` |
+| Runtime | nodejs22.x, us-east-1 |
+| Role | `arn:aws:iam::892204037842:role/dna-kiosk-role` |
+| API Gateway URL | `https://doqg3wcta7.execute-api.us-east-1.amazonaws.com` |
+
+**Environment variables:**
+```
+SQUARE_TOKEN=EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53
+SQUARE_LOC=LYVD3ZGR3X4KE
+SES_FROM=noreply@davidnicholsonart.com
+NOTIFY_EMAIL=dave@davepainting.com
 ```
 
----
+**Endpoints:**
+- `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, url, variations`
+- `POST /send-link` — sends email (SES) or SMS (SNS) with product link
+- `POST /guestbook` — emails dave@davepainting.com on guest book submission
+- `POST /checkout` — creates Square Checkout session, returns `checkout_url` *(pending implementation)*
 
-## kiosk.html — Features
-
-- 3-column grid of prints, fetched dynamically from Shopify
-- Tap print → detail modal (image, title, description)
-- Left/right arrows + swipe to navigate between prints
-- Tap image → fullscreen
-- "He doesn't have this print with him but I think I might want it" → reveals QR code
-- Tapping QR code opens Shopify product page
-- Email + phone fields send product link via iPad Mail / Messages (mailto/sms)
-- **Guest Book** — Name, Email, Note (optional) — saves to localStorage
-- Export CSV hidden by default — triple-tap "Guest Book" title to reveal
-- **Follow** modal — Instagram QR code for @dave_nichol_son
-- Service worker caches everything after first load — works offline
+**To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
 
 ---
 
-## shop.html — Features
+## SES (Email)
 
-- Public-facing gallery page (not kiosk)
-- Same Shopify product fetch — grid shuffled randomly on each load
-- Tap print → mobile-friendly bottom sheet modal (scrollable, image + info + buy button)
-- Desktop: side-by-side image + info panel, click image to fullscreen
-- Mobile: bottom sheet slides up, swipe left/right to browse prints
-- Guest Book in footer (same localStorage store as kiosk)
-- Footer contact link
+| Domain/Address | Status |
+|---|---|
+| dave@davepainting.com | Verified ✓ |
+| davidnicholsonart.com | DNS records added to Shopify DNS, awaiting verification |
 
----
-
-## Next Steps
-
-### 1. Lambda + SES + SNS (server-side email & text)
-Replace mailto/sms so messages come from a dedicated address/number, not visitor's device.
-- Create Lambda function + API Gateway endpoint
-- SES: verify davidnicholsonllc.com, request production access (24-48hr approval)
-- SNS: get dedicated phone number (~$1-2/month)
-- Kiosk POSTs `{type, to, url}` to Lambda
-- `LAMBDA_URL` constant already stubbed in kiosk.html — just needs the API Gateway URL
-- Graceful fallback to mailto/sms if Lambda unreachable
-
-### 2. Guest Book auto-email
-Have every submission emailed to David immediately — no manual CSV export needed.
-- Same Lambda function handles it
-- POST `{type:'guestbook', name, email, note}` → SES sends to dave@davepainting.com
-
-### 3. iPad setup for art fair
-- Open kiosk.davidnicholsonllc.com in Safari
-- Let all prints load on good WiFi (populates offline cache)
-- Safari → Share → Add to Home Screen
-- Settings → Accessibility → Guided Access to lock iPad to kiosk
+- SES still in **sandbox mode** — need to request production access
+- **TODO:** AWS Console → SES → Account dashboard → Request production access (24-48hr approval)
+- DNS records for davidnicholsonart.com: 3 CNAMEs + 1 TXT, added to Shopify DNS
 
 ---
 
-## Platform Strategy
+## SNS (SMS)
 
-- Currently on Shopify $40/month for online store + Facebook/Instagram/Pinterest integrations
-- Social commerce integrations were painful — don't touch until there's a clear reason to migrate
-- Shopify Starter ($5/month): unlimited products, but 5% transaction fee — breakeven vs $40 plan is ~$1,667/month in sales
-- David uses **Square** for in-person POS — Square also does online checkout (2.9% + 30¢, no monthly fee)
-- Long-term option: migrate checkout to Square, eliminate $40/month Shopify bill
-- Prints: 9×12 at $50, 5×7 at $35
-- Flat-rate shipping is the right approach
+Not yet set up. SMS send-link will fail until a dedicated phone number is provisioned (~$1-2/month in AWS SNS).
 
 ---
 
-## HIPAA Web App (Separate Future Project)
+## Shopify (Being Cancelled)
 
-- Keep completely separate from this project and davidnicholsonllc.com
-- Requires: AWS BAA, specific service configs, encryption, audit logging, access controls
-- Consider a separate AWS account for clean compliance boundary
-- Nothing to configure now — tackle when ready
+- Old permanent URL: `https://0ipvjc-1v.myshopify.com` (keep until image migration complete)
+- **DO NOT cancel until all 84 product images are downloaded** — CDN URLs will die
+- Image download list: `image-urls.txt` (84 URLs)
+- Rename map: `rename-map.txt` (handle-1.jpg / handle-2.jpg pattern)
+
+---
+
+## Image Migration Plan (In Progress)
+
+1. Bulk download 84 images using `image-urls.txt`
+2. Rename per `rename-map.txt` (handle-1.jpg / handle-2.jpg)
+3. Add to GitHub repo under `/images/` folder → auto-deploys to S3
+4. In Square dashboard: manually assign images to each product (88 uploads)
+5. Once done, Lambda `/products` will return image URLs and kiosk/shop will show them
+
+---
+
+## Square Import
+
+- `square_import.xlsx` — 84 variant rows, 40 prints, originals excluded
+- Already imported to Square (40 prints confirmed in catalog)
+- Prices: 5×7 at $35, 9×12 at $50
+
+---
+
+## HTML Files
+
+All three are single-file, no framework, no build step — intentional, keep it that way.
+
+### index.html (homepage)
+- Hero image column width: 714px (bumped from 680px for ~5% larger hero)
+- Hero fetches a random product image from Lambda on each load
+- **TODO:** Update fetch to Lambda (4 edits — see below)
+
+**Edits needed to switch index.html to Lambda:**
+1. Remove: `const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';`
+2. Replace fetch: `const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');`
+   With: `const r = await fetch('https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/products');`
+3. Replace: `const withImg = products.filter(p => p.images?.[0]?.src);`
+   With: `const withImg = products.filter(p => p.img);`
+4. Replace: `img.src = p.images[0].src;`
+   With: `img.src = p.img;`
+
+### shop.html (public gallery)
+- Fetches from Lambda (`GET /products`)
+- Grid shuffled randomly on each page load
+- Tap print → **mobile bottom sheet modal** (slides up from bottom, rounded top corners, full-screen scrollable)
+  - Image renders at natural square aspect ratio — no cramped fixed height
+  - Info scrolls below image as one unit
+  - Swipe left/right to browse prints on mobile; arrows on desktop
+  - Tap image on desktop → fullscreen; disabled on mobile
+  - Drag handle pill at top of sheet
+- Variant selector (size buttons) with name + price, auto-selects first
+- Dynamic price display updates on variant selection
+- "Buy this print" → POSTs `{variation_id, item_id}` to Lambda `POST /checkout` → redirects to Square-hosted checkout *(checkout endpoint pending)*
+- Guest book in footer
+
+### kiosk.html (art fair iPad)
+- Fetches from Lambda (with service worker offline cache)
+- Detail modal: title + "Order this print" + QR code (links to `p.url`)
+- Email/phone send fields POST to Lambda
+- Guest book POSTs to Lambda → email notification to dave@davepainting.com
+- Export CSV hidden behind triple-tap on "Guest Book" title
+
+---
+
+## Pending — In Order of Priority
+
+- [ ] **Implement Lambda `POST /checkout`** — creates Square Checkout session with variation ID + price pre-loaded, returns `checkout_url`; shop.html redirects buyer there
+- [ ] **Request SES production access** (AWS Console → SES → Account dashboard)
+- [ ] **Push shop.html, kiosk.html, index.html** to GitHub repo
+- [ ] **Download 84 Shopify images** before cancelling Shopify
+- [ ] **Rename and upload images** to GitHub /images/ and Square dashboard
+- [ ] **Wait for davidnicholsonart.com SES verification** to go green
+- [ ] **Fix "Resurrection\tLilies"** tab character in Square dashboard
+- [ ] **Cancel Shopify** ($40/month) — only after images are safely migrated
+- [ ] **Reconnect Facebook/Instagram shops** to Square after Shopify cancelled
+- [ ] **Provision SNS phone number** for SMS (~$1-2/month)
+- [ ] **Delete orphaned ACM cert** in us-east-2 (see above)
+
+---
+
+## iPad Art Fair Setup
+
+1. Open https://kiosk.davidnicholsonllc.com/kiosk.html in Safari
+2. Let all prints load on good WiFi (populates offline cache)
+3. Safari → Share → Add to Home Screen
+4. Settings → Accessibility → Guided Access to lock iPad to kiosk
+
+---
+
+## Key Principles
+
+- **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
+- **Single-file HTML** — no frameworks, no build pipeline, keep it that way
+- **Admin features hidden** — triple-tap pattern for CSV export, never visible to kiosk visitors
+- **Shopify social commerce integrations** — reconnect to Square after migration, don't disrupt until ready
+- **HIPAA web app** — future, entirely separate AWS account, nothing to do now
+- **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
+
+---
+
+## Contacts & Accounts
+
+| Service | Detail |
+|---|---|
+| Instagram | @dave_nichol_son |
+| Notification email | dave@davepainting.com |
+| Send-from email | noreply@davidnicholsonart.com |
+| Shopify store | https://0ipvjc-1v.myshopify.com |
+| Square Online | https://david-nicholson-art.square.site |
+| GitHub repo | https://github.com/h4jq7z68d9-david/kiosk |
