@@ -204,6 +204,7 @@ async function loadHero() {
     if (!withImg.length) throw 0;
     const p = withImg[Math.floor(Math.random() * withImg.length)];
     cap.textContent = p.name || p.title || '';
+    img.referrerPolicy = 'no-referrer';
     img.onload = () => {
       img.classList.add('loaded');
       wrap.style.display = 'block';

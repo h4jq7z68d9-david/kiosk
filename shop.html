@@ -196,6 +196,7 @@ function renderGrid() {
     if (p.img) {
       const img = document.createElement('img');
       img.alt = p.title;
+      img.referrerPolicy = 'no-referrer';
       img.onload = () => img.classList.add('loaded');
       img.src = p.img;
       card.appendChild(img);
@@ -214,6 +215,7 @@ function openDetail(idx) {
 }
 
 function populateDetail(p) {
+  document.getElementById('d-img').referrerPolicy = 'no-referrer';
   document.getElementById('d-img').src = p.img || '';
   document.getElementById('d-img').alt = p.title;
   document.getElementById('d-title').textContent = p.title;
@@ -352,12 +354,12 @@ loadProducts();
 <footer>
   <span class="footer-copy">&copy; 2026 david nicholson</span>
   <div style="display:flex;gap:16px;align-items:center;">
-    <a href="mailto:dave@davepainting.com" class="footer-gb-btn">contact</a>
+    <a href="/cdn-cgi/l/email-protection#214540574461454057445140484f55484f460f424e4c" class="footer-gb-btn">contact</a>
     <button class="footer-gb-btn" onclick="openGB()">guest book</button>
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 let guests = [];
 try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
 
@@ -414,9 +416,4 @@ function exportCSV() {
   if (!guests.length) { toast('no entries yet'); return; }
   const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
   const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
-  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'});
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-</script>
-</body>
-</html>
+  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestboo
