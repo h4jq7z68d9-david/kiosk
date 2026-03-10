@@ -85,7 +85,7 @@ NOTIFY_EMAIL=dave@davepainting.com
 - `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, url, variations`
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
 - `POST /guestbook` — emails dave@davepainting.com on guest book submission
-- `POST /checkout` — tokenizes card via Square Web Payments SDK, charges card, saves order to DynamoDB, sends notification email
+- `POST /checkout` — **to be refactored next session:** will create a Square Order (with line items + shipment fulfillment including shipping address), then attach payment to that order. Currently charges card directly and saves to DynamoDB — DynamoDB to be removed once Orders API is in place.
 
 **`/checkout` request body:**
 ```json
@@ -107,9 +107,7 @@ NOTIFY_EMAIL=dave@davepainting.com
 }
 ```
 
-**IAM:** Lambda role has `AmazonDynamoDBFullAccess` attached.
-
-**Note:** DynamoDB write in `/checkout` is awaited (not fire-and-forget) — this is intentional so errors surface in CloudWatch and the write completes before returning success to the client.
+**IAM:** Lambda role has `AmazonDynamoDBFullAccess` attached — to be removed once Orders API replaces DynamoDB.
 
 **To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
 
@@ -117,22 +115,9 @@ NOTIFY_EMAIL=dave@davepainting.com
 
 ## DynamoDB — dna-orders
 
-Each completed order is saved as a row:
+**Status: To be removed.** Moving to Square Orders API which stores line items, shipping address, and fulfillment status natively in Square dashboard. DynamoDB is redundant once Orders API is implemented.
 
-| Field | Type | Notes |
-|---|---|---|
-| id | S (PK) | Square payment ID |
-| timestamp | S | ISO timestamp |
-| name | S | Buyer name |
-| email | S | Buyer email |
-| address1 | S | |
-| address2 | S | Optional |
-| city | S | |
-| state | S | |
-| zip | S | |
-| productTitle | S | |
-| size | S | 5x7 or 9x12 |
-| amount | N | In cents (3500 or 5000) |
+Table exists at `dna-orders` (us-east-1) — can be deleted after Orders API is confirmed working.
 
 ---
 
@@ -222,7 +207,9 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [ ] **shop.html: replace modal with cart system** — Add to Cart, cart drawer, multi-item checkout (next session)
+- [ ] **Refactor `/checkout` to use Square Orders API** — create Order with line items + shipment fulfillment (shipping address), attach payment to order. Orders appear in Square dashboard with proper fulfillment status instead of auto-completing. Start here next session.
+- [ ] **Remove DynamoDB** from Lambda and delete `dna-orders` table once Orders API is confirmed working
+- [ ] **shop.html: replace modal with cart system** — Add to Cart, cart drawer, multi-item checkout. Cart maps naturally to Orders API line items.
 - [x] **Test end-to-end transaction** on shop.html — confirmed working (card charge + DynamoDB write). SES email skipped due to sandbox mode.
 - [ ] **Request SES production access** (AWS Console → SES → Account dashboard)
 - [ ] **Update index.html** with 4 Lambda fetch edits above, push to GitHub
