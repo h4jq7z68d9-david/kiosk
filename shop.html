@@ -294,6 +294,28 @@ nav {
   font-size: 14px; color: #6b6560; line-height: 1.7;
 }
 
+/* variant selector */
+.variant-label {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: lowercase; color: #a8a39d;
+}
+.variant-btns {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.variant-btn {
+  background: rgba(0,0,0,0.04); border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 8px; padding: 8px 14px;
+  font-family: var(--font); font-size: 13px; font-weight: 400;
+  color: #4a4744; cursor: pointer; transition: all 0.15s;
+  white-space: normal; line-height: 1.3;
+}
+.variant-btn:hover { border-color: #1a1917; }
+.variant-btn.selected { background: #1a1917; border-color: #1a1917; color: #f5f2ed; }
+
+.d-price-display {
+  font-size: 22px; font-weight: 400; color: #1a1917; letter-spacing: -0.01em;
+}
+
 /* buy section */
 .buy-section {
   margin-top: auto; padding-top: 20px;
@@ -311,6 +333,7 @@ nav {
   transition: opacity 0.15s;
 }
 .btn-buy:hover { opacity: 0.85; }
+.btn-buy:disabled { opacity: 0.4; cursor: default; }
 
 .badge-sold {
   display: inline-block;
@@ -404,6 +427,9 @@ footer {
       <div class="modal-info-inner">
         <div class="d-title" id="d-title"></div>
         <div class="d-desc"  id="d-desc"></div>
+        <div class="variant-label" id="variant-label" style="display:none">size</div>
+        <div class="variant-btns" id="d-variants"></div>
+        <div class="d-price-display" id="d-price"></div>
         <div class="buy-section" id="buy-section"></div>
       </div>
     </div>
@@ -419,29 +445,30 @@ footer {
 <div id="toast"></div>
 
 <script>
-const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';
+const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
 let products = [];
 let curIdx = 0;
+let curVariationId = null;
 
 // ── FETCH ─────────────────────────────────
 async function loadProducts() {
   try {
-    const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
+    const r = await fetch(LAMBDA + '/products');
     if (!r.ok) throw 0;
-    const { products: raw } = await r.json();
-    products = raw.map(p => {
-      const v = p.variants?.[0];
-      const sold = v?.inventory_management && v?.inventory_quantity <= 0;
-      return {
-        title:     p.title,
-        desc:      strip(p.body_html || ''),
-        price:     v ? '$' + parseFloat(v.price).toFixed(0) : '',
-        available: !sold,
-        img:       p.images?.[0]?.src || null,
-        url:       SHOPIFY + '/products/' + p.handle,
-      };
-    });
+    const raw = await r.json();
+    products = raw.map(p => ({
+      id:         p.id,
+      title:      p.name || p.title,
+      desc:       p.description || '',
+      img:        p.image_url || p.img || null,
+      url:        p.url || null,
+      variations: (p.variations || []).map(v => ({
+        id:    v.id,
+        name:  v.name,
+        price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
+      })),
+    }));
     // Shuffle so order varies each load
     for (let i = products.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -477,9 +504,9 @@ function renderGrid() {
 // ── DETAIL ────────────────────────────────
 function openDetail(idx) {
   curIdx = idx;
+  curVariationId = null;
   populateDetail(products[idx]);
   document.getElementById('detail-overlay').classList.add('on');
-  // Scroll sheet back to top when opening a new product
   document.getElementById('detail-sheet').scrollTop = 0;
 }
 
@@ -488,16 +515,73 @@ function populateDetail(p) {
   img.src = p.img || ''; img.alt = p.title;
 
   document.getElementById('d-title').textContent = p.title;
-  document.getElementById('d-desc').textContent  = p.desc  || '';
+  document.getElementById('d-desc').textContent  = p.desc || '';
 
-  document.getElementById('nav-prev').classList.remove('hidden');
-  document.getElementById('nav-next').classList.remove('hidden');
+  // Variants
+  const vWrap = document.getElementById('d-variants');
+  const vLabel = document.getElementById('variant-label');
+  const priceEl = document.getElementById('d-price');
+  vWrap.innerHTML = '';
+  curVariationId = null;
 
-  const buy = document.getElementById('buy-section');
-  if (!p.available) {
-    buy.innerHTML = `<span class="badge-sold">sold out</span>`;
+  if (p.variations && p.variations.length > 0) {
+    vLabel.style.display = 'block';
+    p.variations.forEach((v, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'variant-btn' + (i === 0 ? ' selected' : '');
+      btn.textContent = v.name + (v.price ? '  —  $' + v.price : '');
+      btn.onclick = () => selectVariant(v, btn, priceEl);
+      vWrap.appendChild(btn);
+    });
+    // Auto-select first
+    const first = p.variations[0];
+    curVariationId = first.id;
+    priceEl.textContent = first.price ? '$' + first.price : '';
   } else {
-    buy.innerHTML = `<a class="btn-buy" href="${esc(p.url)}">prints</a>`;
+    vLabel.style.display = 'none';
+    priceEl.textContent = '';
+  }
+
+  renderBuyButton();
+}
+
+function selectVariant(v, btn, priceEl) {
+  curVariationId = v.id;
+  document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  priceEl.textContent = v.price ? '$' + v.price : '';
+  renderBuyButton();
+}
+
+function renderBuyButton() {
+  const p = products[curIdx];
+  const buy = document.getElementById('buy-section');
+  if (!p) return;
+  const hasVariants = p.variations && p.variations.length > 0;
+  const ready = !hasVariants || curVariationId;
+  buy.innerHTML = `<button class="btn-buy" ${ready ? '' : 'disabled'} onclick="checkout()">buy this print</button>`;
+}
+
+async function checkout() {
+  const p = products[curIdx];
+  if (!p) return;
+  const btn = document.querySelector('#buy-section .btn-buy');
+  if (btn) { btn.disabled = true; btn.textContent = 'one moment…'; }
+  try {
+    const r = await fetch(LAMBDA + '/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ variation_id: curVariationId, item_id: p.id }),
+    });
+    const data = await r.json();
+    if (data.checkout_url) {
+      window.location.href = data.checkout_url;
+    } else {
+      throw new Error('no checkout url');
+    }
+  } catch {
+    toast('something went wrong — try again');
+    if (btn) { btn.disabled = false; btn.textContent = 'buy this print'; }
   }
 }
 
