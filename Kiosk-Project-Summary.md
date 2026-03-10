@@ -5,13 +5,9 @@
 
 ## What's Live
 
-| URL | Purpose |
-|---|---|
-| https://kiosk.davidnicholsonllc.com | Main entry point / homepage (index.html) |
-| https://kiosk.davidnicholsonllc.com/shop.html | Public print gallery with inline checkout |
-| https://kiosk.davidnicholsonllc.com/kiosk.html | iPad kiosk for art fairs |
+**URL:** https://kiosk.davidnicholsonllc.com
 
-**Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3 in ~60 seconds. No manual upload needed.
+The kiosk is deployed and working. Push changes to GitHub — deploy is automatic.
 
 ---
 
@@ -25,232 +21,123 @@
 | CloudFront Distribution ID | E31J8ASEUTGXD9 |
 | CloudFront Domain | d33vrz1flme0j4.cloudfront.net |
 | SSL Cert | kiosk.davidnicholsonllc.com (ACM, us-east-1, auto-renews) |
-| IAM User | lambda-deploy (AKIA47O4BG3JHDCHUU5W) |
-| DynamoDB Table | `dna-orders` (us-east-1, partition key: `id`) |
+
+**To update any file:**
+1. Edit the file
+2. `git add . && git commit -m "your message" && git push`
+3. GitHub Actions deploys to S3 + invalidates CloudFront automatically
+4. Live in ~30 seconds
 
 **Old cert to delete:** `arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424` (wrong region, unused)
 
 ---
 
-## GitHub Actions Auto-Deploy
-
-Fully configured. Push any file to the repo → live in ~60 seconds.
-- IAM user: `lambda-deploy`
-- Repo secrets set: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
-- Workflow file: `.github/workflows/deploy.yml`
-- **Correct raw URL pattern:** `https://raw.githubusercontent.com/h4jq7z68d9-david/kiosk/refs/heads/main/filename`
-  (use `refs/heads/main` not just `main`)
-
----
-
-## Square (replacing Shopify)
+## GitHub / Deploy
 
 | Item | Value |
 |---|---|
-| Square Online Store | https://david-nicholson-art.square.site |
-| Application ID | `sq0idp-6D-Q6hGLP9tk-medwFpxvQ` |
-| Production Access Token | `EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53` |
-| Location ID | `LYVD3ZGR3X4KE` |
+| Repo | https://github.com/h4jq7z68d9-david/kiosk |
+| Deploy workflow | `.github/workflows/deploy.yml` |
+| Trigger | Push to `main` branch |
+| What it does | Syncs all files to S3, invalidates CloudFront `/*` |
 
-**Product URL pattern:**
-```
-https://david-nicholson-art.square.site/product/{slug}/{ITEM_ID}
-```
-Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda generates this automatically.
-
-**Originals:** Excluded from API/kiosk by detecting single "Default Title" variation.
-
-**Fix needed in Square dashboard:** "Resurrection\tLilies" has a tab character in the name — rename it.
+**DO NOT** manually upload to S3 anymore — always push via GitHub.
 
 ---
 
-## AWS Lambda
+## Shopify API
 
 | Item | Value |
 |---|---|
-| Function name | `dna-kiosk` |
-| Runtime | nodejs22.x, us-east-1 |
-| Role | `arn:aws:iam::892204037842:role/dna-kiosk-role` |
-| API Gateway URL | `https://doqg3wcta7.execute-api.us-east-1.amazonaws.com` |
+| Store URL | https://0ipvjc-1v.myshopify.com (permanent, domain-independent) |
+| Kiosk collection | `frontpage` (id: 337726701728) — 40 prints |
+| Originals collection | `originals` (id: 341144928416) — 7 paintings |
+| API endpoint | `/collections/frontpage/products.json?limit=250` |
 
-**Environment variables:**
-```
-SQUARE_TOKEN=EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53
-SQUARE_LOC=LYVD3ZGR3X4KE
-SES_FROM=noreply@davidnicholsonart.com
-NOTIFY_EMAIL=dave@davepainting.com
-```
+**Important:** `/products.json?collection_id=X` does NOT work on the public Shopify API. Must use `/collections/{handle}/products.json`.
 
-**Endpoints:**
-- `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, url, variations`
-- `POST /send-link` — sends email (SES) or SMS (SNS) with product link
-- `POST /guestbook` — emails dave@davepainting.com on guest book submission
-- `POST /checkout` — **to be refactored next session:** will create a Square Order (with line items + shipment fulfillment including shipping address), then attach payment to that order. Currently charges card directly and saves to DynamoDB — DynamoDB to be removed once Orders API is in place.
+**To add a print to the kiosk:** add it to the `frontpage` collection in Shopify admin — appears automatically on next load, no code changes needed.
 
-**`/checkout` request body:**
-```json
-{
-  "sourceId": "cnon:...",
-  "amount": 5000,
-  "currency": "USD",
-  "size": "9x12",
-  "productTitle": "Print Name",
-  "shipping": {
-    "name": "Jane Smith",
-    "email": "jane@email.com",
-    "address1": "123 Main St",
-    "address2": "Apt 4B",
-    "city": "Chicago",
-    "state": "IL",
-    "zip": "60601"
-  }
-}
+---
+
+## kiosk.html — Key Config
+
+```js
+const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';  // permanent
+const LAMBDA_URL = '';  // fill in after Lambda deploy
+const IG = 'https://instagram.com/dave_nichol_son';
+// Endpoint: /collections/frontpage/products.json?limit=250
 ```
 
-**IAM:** Lambda role has `AmazonDynamoDBFullAccess` attached — to be removed once Orders API replaces DynamoDB.
+---
 
-**To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
+## kiosk.html — Features
+
+- 3-column grid of prints, fetched dynamically from Shopify
+- Tap print → detail modal (image, title, description)
+- Left/right arrows + swipe to navigate between prints
+- Tap image → fullscreen
+- "He doesn't have this print with him but I think I might want it" → reveals QR code
+- Tapping QR code opens Shopify product page
+- Email + phone fields send product link via iPad Mail / Messages (mailto/sms)
+- **Guest Book** — Name, Email, Note (optional) — saves to localStorage
+- Export CSV hidden by default — triple-tap "Guest Book" title to reveal
+- **Follow** modal — Instagram QR code for @dave_nichol_son
+- Service worker caches everything after first load — works offline
 
 ---
 
-## DynamoDB — dna-orders
+## shop.html — Features
 
-**Status: To be removed.** Moving to Square Orders API which stores line items, shipping address, and fulfillment status natively in Square dashboard. DynamoDB is redundant once Orders API is implemented.
-
-Table exists at `dna-orders` (us-east-1) — can be deleted after Orders API is confirmed working.
-
----
-
-## SES (Email)
-
-| Domain/Address | Status |
-|---|---|
-| dave@davepainting.com | Verified ✓ |
-| davidnicholsonart.com | DNS records added to Shopify DNS, awaiting verification |
-
-- SES still in **sandbox mode** — need to request production access
-- **TODO:** AWS Console → SES → Account dashboard → Request production access (24-48hr approval)
-- DNS records for davidnicholsonart.com: 3 CNAMEs + 1 TXT, added to Shopify DNS
+- Public-facing gallery page (not kiosk)
+- Same Shopify product fetch — grid shuffled randomly on each load
+- Tap print → mobile-friendly bottom sheet modal (scrollable, image + info + buy button)
+- Desktop: side-by-side image + info panel, click image to fullscreen
+- Mobile: bottom sheet slides up, swipe left/right to browse prints
+- Guest Book in footer (same localStorage store as kiosk)
+- Footer contact link
 
 ---
 
-## SNS (SMS)
+## Next Steps
 
-Not yet set up. SMS send-link will fail until a dedicated phone number is provisioned (~$1-2/month in AWS SNS).
+### 1. Lambda + SES + SNS (server-side email & text)
+Replace mailto/sms so messages come from a dedicated address/number, not visitor's device.
+- Create Lambda function + API Gateway endpoint
+- SES: verify davidnicholsonllc.com, request production access (24-48hr approval)
+- SNS: get dedicated phone number (~$1-2/month)
+- Kiosk POSTs `{type, to, url}` to Lambda
+- `LAMBDA_URL` constant already stubbed in kiosk.html — just needs the API Gateway URL
+- Graceful fallback to mailto/sms if Lambda unreachable
 
----
+### 2. Guest Book auto-email
+Have every submission emailed to David immediately — no manual CSV export needed.
+- Same Lambda function handles it
+- POST `{type:'guestbook', name, email, note}` → SES sends to dave@davepainting.com
 
-## Shopify (Being Cancelled)
-
-- Old permanent URL: `https://0ipvjc-1v.myshopify.com` (keep until image migration complete)
-- **DO NOT cancel until all 84 product images are downloaded** — CDN URLs will die
-- Image download list: `image-urls.txt` (84 URLs)
-- Rename map: `rename-map.txt` (handle-1.jpg / handle-2.jpg pattern)
-
----
-
-## Image Migration Plan (In Progress)
-
-1. Bulk download 84 images using `image-urls.txt`
-2. Rename per `rename-map.txt` (handle-1.jpg / handle-2.jpg)
-3. Add to GitHub repo under `/images/` folder → auto-deploys to S3
-4. In Square dashboard: manually assign images to each product (88 uploads)
-5. Once done, Lambda `/products` will return image URLs and kiosk/shop will show them
-
----
-
-## Square Import
-
-- `square_import.xlsx` — 84 variant rows, 40 prints, originals excluded
-- Already imported to Square (40 prints confirmed in catalog)
-- Prices: 5×7 at $35, 9×12 at $50
+### 3. iPad setup for art fair
+- Open kiosk.davidnicholsonllc.com in Safari
+- Let all prints load on good WiFi (populates offline cache)
+- Safari → Share → Add to Home Screen
+- Settings → Accessibility → Guided Access to lock iPad to kiosk
 
 ---
 
-## HTML Files
+## Platform Strategy
 
-All three are single-file, no framework, no build step — intentional, keep it that way.
-
-### index.html (homepage)
-- **TODO:** Update to fetch from Lambda instead of Shopify (4 find/replace edits — see below)
-
-**Edits needed:**
-1. Remove: `const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';`
-2. Replace fetch: `const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');`
-   With: `const r = await fetch('https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/products');`
-3. Replace: `const withImg = products.filter(p => p.images?.[0]?.src);`
-   With: `const withImg = products.filter(p => p.img);`
-4. Replace: `img.src = p.images[0].src;`
-   With: `img.src = p.img;`
-
-### shop.html (public gallery — replaces Shopify storefront)
-- Fetches products from Lambda `/products`
-- Product modal: image viewer + size selector (5×7/$35, 9×12/$50) + shipping form + inline Square card form
-- Square Web Payments SDK loaded from `https://web.squarecdn.com/v1/square.js`
-- `sqPayments` initialized on page load; `sqCard` attached to `#card-container` on first modal open (must be visible)
-- On pay: validates shipping fields → tokenizes card → POSTs to Lambda `/checkout` → shows success state
-- Completed orders saved to DynamoDB `dna-orders` + notification email to dave@davepainting.com
-- Sold-out state: shows badge, hides size/shipping/payment sections
-- **NEXT SESSION:** Replace modal with cart system — "Add to Cart" → cart drawer → checkout modal covering multiple items/sizes in one transaction
-
-### kiosk.html (art fair iPad)
-- Fetches from Lambda (with service worker offline cache, `CACHE = 'dna-v2'`)
-- Detail modal: `width:92%`, `max-width:1100px`, `max-height:92vh` — sized for iPad 11" landscape
-- Portrait phone: stacked layout, sheet scrolls, nav arrows hidden
-- Title: "david nicholson" (lowercase, no print count)
-- QR code links to Square product URL, tap opens product page
-- Email/phone send fields POST to Lambda `/send-link`
-- Guest book POSTs to Lambda `/guestbook` → email notification
-- Export CSV hidden behind triple-tap on "Guest Book" title
+- Currently on Shopify $40/month for online store + Facebook/Instagram/Pinterest integrations
+- Social commerce integrations were painful — don't touch until there's a clear reason to migrate
+- Shopify Starter ($5/month): unlimited products, but 5% transaction fee — breakeven vs $40 plan is ~$1,667/month in sales
+- David uses **Square** for in-person POS — Square also does online checkout (2.9% + 30¢, no monthly fee)
+- Long-term option: migrate checkout to Square, eliminate $40/month Shopify bill
+- Prints: 9×12 at $50, 5×7 at $35
+- Flat-rate shipping is the right approach
 
 ---
 
-## Pending — In Order of Priority
+## HIPAA Web App (Separate Future Project)
 
-- [ ] **Refactor `/checkout` to use Square Orders API** — create Order with line items + shipment fulfillment (shipping address), attach payment to order. Orders appear in Square dashboard with proper fulfillment status instead of auto-completing. Start here next session.
-- [ ] **Remove DynamoDB** from Lambda and delete `dna-orders` table once Orders API is confirmed working
-- [ ] **shop.html: replace modal with cart system** — Add to Cart, cart drawer, multi-item checkout. Cart maps naturally to Orders API line items.
-- [x] **Test end-to-end transaction** on shop.html — confirmed working (card charge + DynamoDB write). SES email skipped due to sandbox mode.
-- [ ] **Request SES production access** (AWS Console → SES → Account dashboard)
-- [ ] **Update index.html** with 4 Lambda fetch edits above, push to GitHub
-- [ ] **Download 84 Shopify images** before cancelling Shopify
-- [ ] **Rename and upload images** to GitHub /images/ and Square dashboard
-- [ ] **Wait for davidnicholsonart.com SES verification** to go green
-- [ ] **Fix "Resurrection\tLilies"** tab character in Square dashboard
-- [ ] **Cancel Shopify** ($40/month) — only after images are safely migrated
-- [ ] **Reconnect Facebook/Instagram shops** to Square after Shopify cancelled
-- [ ] **Provision SNS phone number** for SMS (~$1-2/month)
-- [ ] **Delete orphaned ACM cert** in us-east-2 (see above)
-
----
-
-## iPad Art Fair Setup
-
-1. Open https://kiosk.davidnicholsonllc.com/kiosk.html in Safari
-2. Let all prints load on good WiFi (populates offline cache)
-3. Safari → Share → Add to Home Screen
-4. Settings → Accessibility → Guided Access to lock iPad to kiosk
-
----
-
-## Key Principles
-
-- **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
-- **Single-file HTML** — no frameworks, no build pipeline, keep it that way
-- **Admin features hidden** — triple-tap pattern for CSV export, never visible to kiosk visitors
-- **Square Web Payments SDK** — must attach card form to a *visible* DOM element; initialize `sqPayments` on load, attach `sqCard` only after modal is open
-- **Shopify social commerce integrations** — reconnect to Square after migration, don't disrupt until ready
-- **HIPAA web app** — future, entirely separate AWS account, nothing to do now
-
----
-
-## Contacts & Accounts
-
-| Service | Detail |
-|---|---|
-| Instagram | @dave_nichol_son |
-| Notification email | dave@davepainting.com |
-| Send-from email | noreply@davidnicholsonart.com |
-| Shopify store | https://0ipvjc-1v.myshopify.com |
-| Square Online | https://david-nicholson-art.square.site |
-| GitHub repo | https://github.com/h4jq7z68d9-david/kiosk |
+- Keep completely separate from this project and davidnicholsonllc.com
+- Requires: AWS BAA, specific service configs, encryption, audit logging, access controls
+- Consider a separate AWS account for clean compliance boundary
+- Nothing to configure now — tackle when ready

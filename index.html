@@ -18,7 +18,7 @@
   --ink2: #999;
   --ink3: #777;
   --accent: #a8b8c8;
-  --wrap: 680px;
+  --wrap: 714px;
   --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif;
 }
 
@@ -38,7 +38,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ── PAGE ── */
 .page {
-  max-width: 680px;
+  max-width: 714px;
   margin: 0;
   padding: 0 40px 60px 10%;
 }
@@ -158,7 +158,7 @@ h2 {
 footer {
   border-top: 1px solid var(--border);
   padding: 28px 40px 28px 10%;
-  max-width: 680px; margin: 0;
+  max-width: 714px; margin: 0;
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 16px;
 }
@@ -338,14 +338,12 @@ footer {
 
 </div><!-- /content-col -->
 
-  <!-- GALLERY -->
-
 </div><!-- /page -->
 
 <footer>
   <span class="footer-copy">&copy; 2026 david nicholson</span>
   <div style="display:flex;gap:16px;align-items:center;">
-    <a href="/cdn-cgi/l/email-protection#bfdbdec9daffdbdec9dacfded6d1cbd6d1d891dcd0d2" class="footer-gb-btn">contact</a>
+    <a href="mailto:dave@davepainting.com" class="footer-gb-btn">contact</a>
     <button class="footer-gb-btn" onclick="openGB()">guest book</button>
   </div>
 </footer>
@@ -384,7 +382,7 @@ footer {
 
 <div id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';
 const IG      = 'https://instagram.com/dave_nichol_son';
 
@@ -395,10 +393,10 @@ async function loadHero() {
   const img  = document.getElementById('splash-img');
   const cap  = document.getElementById('splash-cap');
   try {
-    const r = await fetch('https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/products');
+    const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');
     if (!r.ok) throw 0;
     const { products } = await r.json();
-    const withImg = products.filter(p => p.img);
+    const withImg = products.filter(p => p.images?.[0]?.src);
     if (!withImg.length) throw 0;
     const p = withImg[Math.floor(Math.random() * withImg.length)];
     cap.textContent = p.title;
@@ -408,7 +406,7 @@ async function loadHero() {
       ph.style.display   = 'none';
     };
     img.onerror = () => { ph.style.display = 'none'; };
-    img.src = p.img;
+    img.src = p.images[0].src;
   } catch {
     ph.style.display = 'none';
   }
