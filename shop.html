@@ -86,7 +86,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .btn-buy { display: block; width: 100%; background: #1a1917; color: #f5f2ed; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
 .btn-buy:hover { opacity: 0.85; }
 .btn-buy:disabled { opacity: 0.4; cursor: default; }
-.badge-sold { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #a8a39d; border: 1px solid #d0ccc7; border-radius: 20px; padding: 4px 10px; }
 
 /* FULLSCREEN */
 #fs-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.97); display: none; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
@@ -162,11 +161,12 @@ async function loadProducts() {
     const r = await fetch(LAMBDA + '/products');
     if (!r.ok) throw 0;
     const raw = await r.json();
-    products = raw.map(p => ({
+    const list = raw.products || raw;  // handle both {products:[]} and []
+    products = list.map(p => ({
       id:         p.id,
       title:      p.name || p.title,
-      desc:       p.description || '',
-      img:        p.image_url || p.img || null,
+      desc:       p.description || p.desc || '',
+      img:        p.img || p.image_url || null,
       url:        p.url || null,
       variations: (p.variations || []).map(v => ({
         id:    v.id,
@@ -219,8 +219,8 @@ function populateDetail(p) {
   document.getElementById('d-title').textContent = p.title;
   document.getElementById('d-desc').textContent  = p.desc || '';
 
-  const vWrap  = document.getElementById('d-variants');
-  const vLabel = document.getElementById('variant-label');
+  const vWrap   = document.getElementById('d-variants');
+  const vLabel  = document.getElementById('variant-label');
   const priceEl = document.getElementById('d-price');
   vWrap.innerHTML = '';
   curVariationId = null;
@@ -319,7 +319,6 @@ function toast(msg) {
   clearTimeout(tT); tT = setTimeout(() => el.classList.remove('on'), 2600);
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function strip(h) { const d = document.createElement('div'); d.innerHTML = h; return d.textContent || ''; }
 
 loadProducts();
 </script>
