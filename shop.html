@@ -374,6 +374,14 @@ async function initSquare() {
   if (!window.Square) { console.error('Square.js not loaded'); return; }
   try {
     sqPayments = window.Square.payments(SQ_APP_ID, SQ_LOC_ID);
+  } catch (e) {
+    console.error('Square payments init error', e);
+  }
+}
+
+async function attachSquareCard() {
+  if (cardInitialized || !sqPayments) return;
+  try {
     sqCard = await sqPayments.card({
       style: {
         '.input-container': { borderRadius: '8px' },
@@ -386,7 +394,7 @@ async function initSquare() {
     await sqCard.attach('#card-container');
     cardInitialized = true;
   } catch (e) {
-    console.error('Square init error', e);
+    console.error('Square card attach error', e);
   }
 }
 
@@ -428,6 +436,8 @@ function openDetail(idx) {
   curIdx = idx;
   populateDetail(products[idx]);
   document.getElementById('detail-overlay').classList.add('on');
+  // Attach card form after modal is visible (Square requires visible DOM)
+  attachSquareCard();
 }
 
 function populateDetail(p) {
