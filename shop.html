@@ -210,7 +210,12 @@ let products = [];
 let curIdx = 0;
 let curVariationId = null;
 let curVariationPrice = 0;
-let cart = []; // [{id, title, img, variationId, variationName, price}]
+let cart = [];
+try { const s = localStorage.getItem('dna_cart'); if (s) cart = JSON.parse(s); } catch {}
+
+function saveCart() {
+  try { localStorage.setItem('dna_cart', JSON.stringify(cart)); } catch {}
+}
 
 async function loadProducts() {
   try {
@@ -235,6 +240,7 @@ async function loadProducts() {
       [products[i], products[j]] = [products[j], products[i]];
     }
     renderGrid();
+    updateCartCount();
   } catch {
     document.getElementById('grid').innerHTML =
       '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
@@ -324,7 +330,7 @@ function addToCart() {
   const variation = p.variations.find(v => v.id === curVariationId);
   if (!variation) return;
   cart.push({
-    cartId:        Date.now() + Math.random(), // unique per cart line
+    cartId:        Date.now() + Math.random(),
     id:            p.id,
     title:         p.title,
     img:           p.img,
@@ -332,6 +338,7 @@ function addToCart() {
     variationName: variation.name,
     price:         curVariationPrice,
   });
+  saveCart();
   updateCartCount();
   closeDetail();
   toast(p.title + ' added to cart');
@@ -377,6 +384,7 @@ function renderCart() {
 
 function removeFromCart(idx) {
   cart.splice(idx, 1);
+  saveCart();
   updateCartCount();
   renderCart();
 }
@@ -401,6 +409,9 @@ async function checkout() {
     });
     const data = await r.json();
     if (data.checkout_url) {
+      cart = [];
+      saveCart();
+      updateCartCount();
       window.location.href = data.checkout_url;
     } else {
       throw new Error('no checkout url');
