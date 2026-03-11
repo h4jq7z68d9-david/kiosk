@@ -24,8 +24,10 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; }
 .nav-title span { color: var(--ink2); font-weight: 300; margin-left: 8px; font-size: 14px; }
 .nav-center { flex: 1; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
-.nav-btn { background: none; border: 1px solid #666; border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
-.nav-btn:hover { border-color: var(--ink); }
+.nav-cart { position: relative; background: none; border: 1px solid #666; border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; display: flex; align-items: center; gap: 7px; }
+.nav-cart:hover { border-color: var(--ink); }
+.nav-cart-count { background: var(--accent); color: #0c0c0c; border-radius: 20px; font-size: 11px; font-weight: 600; padding: 1px 7px; display: none; }
+.nav-cart-count.on { display: inline-block; }
 
 /* GRID */
 .grid-wrap { max-width: 1400px; margin: 0 auto; padding: calc(var(--nav-h) + 32px) 16px 80px; }
@@ -66,7 +68,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .img-nav:hover { background: rgba(0,0,0,0.28); }
 .img-nav-prev { left: 10px; }
 .img-nav-next { right: 10px; }
-.img-nav.hidden { opacity: 0; pointer-events: none; }
 .modal-info-pane { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; border-left: 1px solid rgba(0,0,0,0.07); overflow-y: auto; }
 .modal-info-pane::-webkit-scrollbar { width: 0; }
 .modal-info-inner { padding: 32px 26px 36px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
@@ -83,15 +84,44 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 
 /* BUY SECTION */
 .buy-section { margin-top: auto; padding-top: 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(0,0,0,0.08); }
-.btn-buy { display: block; width: 100%; background: #1a1917; color: #f5f2ed; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
-.btn-buy:hover { opacity: 0.85; }
-.btn-buy:disabled { opacity: 0.4; cursor: default; }
+.btn-add { display: block; width: 100%; background: #1a1917; color: #f5f2ed; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
+.btn-add:hover { opacity: 0.85; }
 
 /* FULLSCREEN */
 #fs-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.97); display: none; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
 #fs-overlay.on { display: flex; }
 #fs-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; }
 .fs-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+/* CART MODAL */
+#cart-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); visibility: hidden; opacity: 0; transition: opacity 0.25s, visibility 0s linear 0.25s; display: flex; align-items: center; justify-content: center; padding: 24px; }
+#cart-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.25s, visibility 0s; }
+#cart-sheet { background: #f5f2ed; border-radius: 16px; width: 100%; max-width: 520px; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 100px rgba(0,0,0,0.7); }
+@media (max-width: 600px) {
+  #cart-overlay { padding: 0; align-items: flex-end; }
+  #cart-sheet { border-radius: 20px 20px 0 0; max-height: 90dvh; max-width: 100%; }
+}
+.cart-header { display: flex; align-items: center; padding: 22px 22px 14px; flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
+.cart-header h2 { font-family: var(--serif); font-size: 20px; font-weight: 700; color: #1a1917; flex: 1; }
+.cart-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #6b6560; }
+.cart-items { flex: 1; overflow-y: auto; padding: 16px 22px; display: flex; flex-direction: column; gap: 12px; }
+.cart-items::-webkit-scrollbar { width: 0; }
+.cart-item { display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.03); border-radius: 10px; padding: 12px; border: 1px solid rgba(0,0,0,0.06); }
+.cart-item-img { width: 56px; height: 56px; object-fit: contain; border-radius: 6px; background: #e8e4df; flex-shrink: 0; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-title { font-family: var(--serif); font-size: 14px; font-weight: 700; color: #1a1917; line-height: 1.2; }
+.cart-item-size { font-size: 12px; color: #6b6560; margin-top: 3px; }
+.cart-item-price { font-size: 15px; font-weight: 500; color: #1a1917; white-space: nowrap; }
+.cart-item-remove { background: none; border: none; cursor: pointer; color: #a8a39d; font-size: 16px; padding: 4px; flex-shrink: 0; transition: color 0.15s; }
+.cart-item-remove:hover { color: #1a1917; }
+.cart-empty { text-align: center; padding: 40px 20px; color: #a8a39d; font-size: 14px; font-style: italic; }
+.cart-footer { padding: 16px 22px 22px; border-top: 1px solid rgba(0,0,0,0.07); flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+.cart-total { display: flex; justify-content: space-between; align-items: baseline; }
+.cart-total-label { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: lowercase; color: #6b6560; }
+.cart-total-amount { font-size: 24px; font-weight: 400; color: #1a1917; }
+.btn-checkout { display: block; width: 100%; background: #1a1917; color: #f5f2ed; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
+.btn-checkout:hover { opacity: 0.85; }
+.btn-checkout:disabled { opacity: 0.4; cursor: default; }
 
 /* FOOTER */
 footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
@@ -109,7 +139,9 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
 <nav>
   <a class="nav-title" href="/index.html">david nicholson<span id="nav-count"></span></a>
   <div class="nav-center">gallery</div>
-  <a class="nav-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
+  <button class="nav-cart" onclick="openCart()">
+    cart <span class="nav-cart-count" id="cart-count">0</span>
+  </button>
 </nav>
 
 <div class="grid-wrap">
@@ -147,6 +179,24 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
   <img id="fs-img" src="" alt="">
 </div>
 
+<!-- CART MODAL -->
+<div id="cart-overlay" onclick="cartOverlayClick(event)">
+  <div id="cart-sheet">
+    <div class="cart-header">
+      <h2>your cart</h2>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer" id="cart-footer" style="display:none">
+      <div class="cart-total">
+        <span class="cart-total-label">total</span>
+        <span class="cart-total-amount" id="cart-total">$0</span>
+      </div>
+      <button class="btn-checkout" id="btn-checkout" onclick="checkout()">checkout</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -155,13 +205,15 @@ const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 let products = [];
 let curIdx = 0;
 let curVariationId = null;
+let curVariationPrice = 0;
+let cart = []; // [{id, title, img, variationId, variationName, price}]
 
 async function loadProducts() {
   try {
     const r = await fetch(LAMBDA + '/products');
     if (!r.ok) throw 0;
     const raw = await r.json();
-    const list = raw.products || raw;  // handle both {products:[]} and []
+    const list = raw.products || raw;
     products = list.map(p => ({
       id:         p.id,
       title:      p.name || p.title,
@@ -174,7 +226,6 @@ async function loadProducts() {
         price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
       })),
     }));
-    // Shuffle so order varies each load
     for (let i = products.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [products[i], products[j]] = [products[j], products[i]];
@@ -209,6 +260,7 @@ function renderGrid() {
 function openDetail(idx) {
   curIdx = idx;
   curVariationId = null;
+  curVariationPrice = 0;
   populateDetail(products[idx]);
   document.getElementById('detail-overlay').classList.add('on');
   document.getElementById('detail-sheet').scrollTop = 0;
@@ -226,6 +278,7 @@ function populateDetail(p) {
   const priceEl = document.getElementById('d-price');
   vWrap.innerHTML = '';
   curVariationId = null;
+  curVariationPrice = 0;
 
   if (p.variations && p.variations.length > 0) {
     vLabel.style.display = 'block';
@@ -238,40 +291,110 @@ function populateDetail(p) {
     });
     const first = p.variations[0];
     curVariationId = first.id;
+    curVariationPrice = parseInt(first.price) || 0;
     priceEl.textContent = first.price ? '$' + first.price : '';
   } else {
     vLabel.style.display = 'none';
     priceEl.textContent = '';
   }
 
-  renderBuyButton();
+  renderAddButton();
 }
 
 function selectVariant(v, btn, priceEl) {
   curVariationId = v.id;
+  curVariationPrice = parseInt(v.price) || 0;
   document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   priceEl.textContent = v.price ? '$' + v.price : '';
-  renderBuyButton();
+  renderAddButton();
 }
 
-function renderBuyButton() {
-  const p = products[curIdx];
+function renderAddButton() {
   const buy = document.getElementById('buy-section');
-  if (!p) return;
-  buy.innerHTML = `<button class="btn-buy" onclick="checkout()">buy this print</button>`;
+  buy.innerHTML = '<button class="btn-add" onclick="addToCart()">add to cart</button>';
+}
+
+function addToCart() {
+  const p = products[curIdx];
+  if (!p || !curVariationId) return;
+  const variation = p.variations.find(v => v.id === curVariationId);
+  if (!variation) return;
+  cart.push({
+    cartId:        Date.now() + Math.random(), // unique per cart line
+    id:            p.id,
+    title:         p.title,
+    img:           p.img,
+    variationId:   curVariationId,
+    variationName: variation.name,
+    price:         curVariationPrice,
+  });
+  updateCartCount();
+  closeDetail();
+  toast(p.title + ' added to cart');
+}
+
+function updateCartCount() {
+  const n = cart.length;
+  const el = document.getElementById('cart-count');
+  el.textContent = n;
+  el.classList.toggle('on', n > 0);
+}
+
+function openCart() {
+  renderCart();
+  document.getElementById('cart-overlay').classList.add('on');
+}
+function closeCart() { document.getElementById('cart-overlay').classList.remove('on'); }
+function cartOverlayClick(e) { if (e.target === document.getElementById('cart-overlay')) closeCart(); }
+
+function renderCart() {
+  const wrap = document.getElementById('cart-items');
+  const footer = document.getElementById('cart-footer');
+  if (!cart.length) {
+    wrap.innerHTML = '<div class="cart-empty">your cart is empty</div>';
+    footer.style.display = 'none';
+    return;
+  }
+  footer.style.display = 'flex';
+  wrap.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      ${item.img ? `<img class="cart-item-img" src="${esc(item.img)}" referrerpolicy="no-referrer" alt="${esc(item.title)}">` : '<div class="cart-item-img"></div>'}
+      <div class="cart-item-info">
+        <div class="cart-item-title">${esc(item.title)}</div>
+        <div class="cart-item-size">${esc(item.variationName)}</div>
+      </div>
+      <div class="cart-item-price">$${item.price}</div>
+      <button class="cart-item-remove" onclick="removeFromCart(${i})">✕</button>
+    </div>
+  `).join('');
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById('cart-total').textContent = '$' + total;
+}
+
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  updateCartCount();
+  renderCart();
 }
 
 async function checkout() {
-  const p = products[curIdx];
-  if (!p) return;
-  const btn = document.querySelector('#buy-section .btn-buy');
-  if (btn) { btn.disabled = true; btn.textContent = 'one moment…'; }
+  if (!cart.length) return;
+  const btn = document.getElementById('btn-checkout');
+  btn.disabled = true;
+  btn.textContent = 'one moment…';
   try {
     const r = await fetch(LAMBDA + '/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ variation_id: curVariationId, item_id: p.id }),
+      body: JSON.stringify({
+        items: cart.map(item => ({
+          variation_id: item.variationId,
+          item_id:      item.id,
+          title:        item.title,
+          price:        item.price,
+        }))
+      }),
     });
     const data = await r.json();
     if (data.checkout_url) {
@@ -281,7 +404,8 @@ async function checkout() {
     }
   } catch {
     toast('something went wrong — try again');
-    if (btn) { btn.disabled = false; btn.textContent = 'buy this print'; }
+    btn.disabled = false;
+    btn.textContent = 'checkout';
   }
 }
 
@@ -303,7 +427,6 @@ function openFS() {
 }
 function closeFS() { document.getElementById('fs-overlay').classList.remove('on'); }
 
-// Swipe on mobile
 let swipeStartX = 0;
 document.getElementById('detail-sheet').addEventListener('touchstart', e => {
   swipeStartX = e.touches[0].clientX;
@@ -326,7 +449,7 @@ loadProducts();
 </script>
 
 <!-- GUESTBOOK MODAL -->
-<div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
+<div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
 <div id="gb-sheet" style="background:#f5f2ed;border-radius:12px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
   <div style="display:flex;align-items:center;padding:26px 26px 14px;gap:10px;flex-shrink:0;">
     <div id="gb-title" style="font-family:var(--serif);font-size:22px;font-weight:700;color:#1a1917;flex:1;cursor:default;" onclick="gbTitleTap()">guest book</div>
@@ -359,7 +482,7 @@ loadProducts();
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 let guests = [];
 try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
 
@@ -416,4 +539,9 @@ function exportCSV() {
   if (!guests.length) { toast('no entries yet'); return; }
   const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
   const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
-  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestboo
+  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'});
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+</script>
+</body>
+</html>
