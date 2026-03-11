@@ -22,12 +22,14 @@ a { color: inherit; text-decoration: none; }
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; }
 .nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; }
-.nav-title span { color: var(--ink2); font-weight: 300; margin-left: 8px; font-size: 14px; }
 .nav-center { flex: 1; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
-.nav-cart { position: relative; background: none; border: 1px solid #666; border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; display: flex; align-items: center; gap: 7px; }
+.nav-btn { background: none; border: 1px solid #666; border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
+.nav-btn:hover { border-color: var(--ink); }
+.nav-cart { position: relative; background: none; border: 1px solid #666; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; flex-shrink: 0; }
 .nav-cart:hover { border-color: var(--ink); }
-.nav-cart-count { background: var(--accent); color: #0c0c0c; border-radius: 20px; font-size: 11px; font-weight: 600; padding: 1px 7px; display: none; }
-.nav-cart-count.on { display: inline-block; }
+.nav-cart svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #0c0c0c; border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
+.nav-cart-count.on { display: block; }
 
 /* GRID */
 .grid-wrap { max-width: 1400px; margin: 0 auto; padding: calc(var(--nav-h) + 32px) 16px 80px; }
@@ -137,10 +139,12 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
 <body>
 
 <nav>
-  <a class="nav-title" href="/index.html">david nicholson<span id="nav-count"></span></a>
+  <a class="nav-title" href="/index.html">david nicholson</a>
   <div class="nav-center">gallery</div>
-  <button class="nav-cart" onclick="openCart()">
-    cart <span class="nav-cart-count" id="cart-count">0</span>
+  <a class="nav-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
+  <button class="nav-cart" onclick="openCart()" aria-label="cart">
+    <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    <span class="nav-cart-count" id="cart-count">0</span>
   </button>
 </nav>
 
@@ -231,7 +235,6 @@ async function loadProducts() {
       [products[i], products[j]] = [products[j], products[i]];
     }
     renderGrid();
-    document.getElementById('nav-count').textContent = ' — ' + products.length + ' works';
   } catch {
     document.getElementById('grid').innerHTML =
       '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
