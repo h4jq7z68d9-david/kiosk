@@ -1,16 +1,15 @@
-# David Nicholson Art — Kiosk Project
-*Last updated: March 2026*
-
----
+# Kiosk Project Summary
 
 ## What's Live
 
+**URL:** https://kiosk.davidnicholsonllc.com
 | URL | Purpose |
 |---|---|
 | https://kiosk.davidnicholsonllc.com | Main entry point / homepage (index.html) |
-| https://kiosk.davidnicholsonllc.com/shop.html | Public print gallery with checkout |
+| https://kiosk.davidnicholsonllc.com/shop.html | Public print gallery with cart + checkout |
 | https://kiosk.davidnicholsonllc.com/kiosk.html | iPad kiosk for art fairs |
 
+The kiosk is deployed and working. Push changes to GitHub — deploy is automatic.
 **Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3 in ~60 seconds. No manual upload needed.
 
 ---
@@ -19,8 +18,7 @@
 
 | Resource | Value |
 |---|---|
-| AWS Account ID | 892204037842 |
-| Domain | davidnicholsonllc.com (Route 53) |
+| AWS Account | 892204037842 |
 | S3 Bucket | kiosk.davidnicholsonllc.com (us-east-1) |
 | CloudFront Distribution ID | E31J8ASEUTGXD9 |
 | CloudFront Domain | d33vrz1flme0j4.cloudfront.net |
@@ -28,6 +26,12 @@
 | IAM User | lambda-deploy (AKIA47O4BG3JHDCHUU5W) |
 
 **Old cert to delete:** `arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424` (wrong region, unused)
+
+**To update any file:**
+1. Edit the file
+2. `git add . && git commit -m "your message" && git push`
+3. GitHub Actions deploys to S3 + invalidates CloudFront automatically
+4. Live in ~60 seconds
 
 ---
 
@@ -40,7 +44,7 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 
 ---
 
-## Square (replacing Shopify)
+## Square
 
 | Item | Value |
 |---|---|
@@ -82,9 +86,11 @@ NOTIFY_EMAIL=dave@davepainting.com
 - `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, url, variations`
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
 - `POST /guestbook` — emails dave@davepainting.com on guest book submission
-- `POST /checkout` — creates Square Checkout session, returns `checkout_url` *(pending implementation)*
+- `POST /checkout` — **pending implementation** — should accept `{items:[{variation_id, item_id, title, price}]}`, create Square Checkout session, return `{checkout_url}`
 
 **To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
+
+**Note on images:** Square catalog API returns S3 URLs that 403 in browsers due to hotlink protection. Fixed in shop.html and index.html by setting `referrerPolicy = 'no-referrer'` on all image elements.
 
 ---
 
@@ -93,11 +99,11 @@ NOTIFY_EMAIL=dave@davepainting.com
 | Domain/Address | Status |
 |---|---|
 | dave@davepainting.com | Verified ✓ |
-| davidnicholsonart.com | DNS records added to Shopify DNS, awaiting verification |
+| davidnicholsonart.com | DNS records added, awaiting verification |
 
 - SES still in **sandbox mode** — need to request production access
 - **TODO:** AWS Console → SES → Account dashboard → Request production access (24-48hr approval)
-- DNS records for davidnicholsonart.com: 3 CNAMEs + 1 TXT, added to Shopify DNS
+- **Hold all email work** until davidnicholsonart.com domain is transferred and SES verification completes
 
 ---
 
@@ -121,16 +127,8 @@ Not yet set up. SMS send-link will fail until a dedicated phone number is provis
 1. Bulk download 84 images using `image-urls.txt`
 2. Rename per `rename-map.txt` (handle-1.jpg / handle-2.jpg)
 3. Add to GitHub repo under `/images/` folder → auto-deploys to S3
-4. In Square dashboard: manually assign images to each product (88 uploads)
+4. In Square dashboard: manually assign images to each product
 5. Once done, Lambda `/products` will return image URLs and kiosk/shop will show them
-
----
-
-## Square Import
-
-- `square_import.xlsx` — 84 variant rows, 40 prints, originals excluded
-- Already imported to Square (40 prints confirmed in catalog)
-- Prices: 5×7 at $35, 9×12 at $50
 
 ---
 
@@ -138,33 +136,32 @@ Not yet set up. SMS send-link will fail until a dedicated phone number is provis
 
 All three are single-file, no framework, no build step — intentional, keep it that way.
 
-### index.html (homepage)
-- Hero image column width: 714px (bumped from 680px for ~5% larger hero)
-- Hero fetches a random product image from Lambda on each load
-- **TODO:** Update fetch to Lambda (4 edits — see below)
+**Session workflow:** Claude generates files here, David downloads and pushes to GitHub. GitHub is NOT the source of truth during a session — the latest file Claude produced is. At the start of each session, fetch all 4 files from the repo as a starting point, but trust whatever was last produced in the session over GitHub.
 
-**Edits needed to switch index.html to Lambda:**
-1. Remove: `const SHOPIFY = 'https://0ipvjc-1v.myshopify.com';`
-2. Replace fetch: `const r = await fetch(SHOPIFY + '/collections/frontpage/products.json?limit=250');`
-   With: `const r = await fetch('https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/products');`
-3. Replace: `const withImg = products.filter(p => p.images?.[0]?.src);`
-   With: `const withImg = products.filter(p => p.img);`
-4. Replace: `img.src = p.images[0].src;`
-   With: `img.src = p.img;`
+### index.html (homepage)
+- Hero column width: 820px
+- Hero fetches a random product image from Lambda on page load
+- Image loads by creating a fresh `<img>` element and replacing the placeholder on `onload`
+- `referrerPolicy = 'no-referrer'` on hero image to avoid S3 403
+- Guest book saves to localStorage (`dna_guests`)
+- Contact link uses split string `'mai'+'lto:...'` to prevent Cloudflare email obfuscation injection
 
 ### shop.html (public gallery)
-- Fetches from Lambda (`GET /products`)
-- Grid shuffled randomly on each page load
-- Tap print → **mobile bottom sheet modal** (slides up from bottom, rounded top corners, full-screen scrollable)
-  - Image renders at natural square aspect ratio — no cramped fixed height
-  - Info scrolls below image as one unit
-  - Swipe left/right to browse prints on mobile; arrows on desktop
-  - Tap image on desktop → fullscreen; disabled on mobile
-  - Drag handle pill at top of sheet
-- Variant selector (size buttons) with name + price, auto-selects first
-- Dynamic price display updates on variant selection
-- "Buy this print" → POSTs `{variation_id, item_id}` to Lambda `POST /checkout` → redirects to Square-hosted checkout *(checkout endpoint pending)*
-- Guest book in footer
+- Fetches from Lambda `GET /products`
+- Grid shuffled randomly on each page load (Fisher-Yates)
+- **Cart** in top-right nav — shopping bag SVG icon with count badge
+- Cart persists in localStorage (`dna_cart`) across page loads and browser closes
+- Cart clears from localStorage after successful checkout
+- Tap print → bottom sheet modal on mobile, side-by-side on desktop
+  - Image at natural square aspect ratio
+  - Variant selector (size buttons) with name + price
+  - "Add to cart" button — adds selected variant, closes modal, returns to grid
+  - Swipe left/right to browse on mobile
+  - Click image on desktop → fullscreen
+- Cart modal: shows all items with thumbnail, title, size, price, remove button, running total
+- Checkout button → POSTs `{items:[{variation_id, item_id, title, price}]}` to Lambda `/checkout` → redirects to Square checkout URL *(endpoint pending)*
+- Guest book in footer (localStorage)
+- Contact link uses split string to prevent Cloudflare obfuscation
 
 ### kiosk.html (art fair iPad)
 - Fetches from Lambda (with service worker offline cache)
@@ -177,9 +174,9 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [ ] **Implement Lambda `POST /checkout`** — creates Square Checkout session with variation ID + price pre-loaded, returns `checkout_url`; shop.html redirects buyer there
-- [ ] **Request SES production access** (AWS Console → SES → Account dashboard)
-- [ ] **Push shop.html, kiosk.html, index.html** to GitHub repo
+- [ ] **Implement Lambda `POST /checkout`** — accept `{items:[{variation_id, item_id, title, price}]}`, create Square Checkout session for multiple items, return `{checkout_url}`
+- [ ] **Build checkout.html** — post-cart checkout page (shipping info, order summary, payment)
+- [ ] **Request SES production access** (AWS Console → SES → Account dashboard) — hold until davidnicholsonart.com domain transferred
 - [ ] **Download 84 Shopify images** before cancelling Shopify
 - [ ] **Rename and upload images** to GitHub /images/ and Square dashboard
 - [ ] **Wait for davidnicholsonart.com SES verification** to go green
@@ -188,6 +185,12 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - [ ] **Reconnect Facebook/Instagram shops** to Square after Shopify cancelled
 - [ ] **Provision SNS phone number** for SMS (~$1-2/month)
 - [ ] **Delete orphaned ACM cert** in us-east-2 (see above)
+
+---
+
+## Cloudflare Note
+
+`davidnicholsonllc.com` was previously owned by someone else who had it on Cloudflare. Cloudflare is injecting email obfuscation scripts into pages served from this domain even though DNS is on AWS Route 53. Workaround: all mailto links use split-string JS (`'mai'+'lto:...'`) so Cloudflare's obfuscator doesn't recognize them. **Do not use plain `href="mailto:..."` links anywhere** — they will be rewritten and break page scripts.
 
 ---
 
@@ -208,6 +211,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **Shopify social commerce integrations** — reconnect to Square after migration, don't disrupt until ready
 - **HIPAA web app** — future, entirely separate AWS account, nothing to do now
 - **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
+- **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
 
 ---
 
