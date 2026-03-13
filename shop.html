@@ -54,12 +54,12 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   #detail-overlay { padding: 0; align-items: flex-end; }
   #detail-sheet { flex-direction: column; max-height: 94dvh; max-width: 100%; border-radius: 20px 20px 0 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
   #detail-sheet::before { content: ''; display: block; width: 36px; height: 4px; background: rgba(0,0,0,0.15); border-radius: 2px; margin: 10px auto 0; flex-shrink: 0; }
-  .modal-img-pane { flex: none; width: 100%; max-height: none; min-height: none; aspect-ratio: 1/1; cursor: default; }
-  .modal-img-pane img { width: 100%; height: 100%; object-fit: contain; padding: 24px; max-height: none; }
+  .modal-img-pane { flex: none; width: 100%; height: 56vw; min-height: 220px; max-height: 44vh; cursor: zoom-in; }
+  .modal-img-pane img { width: 100%; height: 100%; object-fit: contain; padding: 16px; max-height: none; }
   .modal-info-pane { width: 100%; border-left: none; border-top: 1px solid rgba(0,0,0,0.07); overflow-y: visible; }
   .modal-info-inner { padding: 24px 20px 40px; }
   .buy-section { margin-top: 20px; }
-  .img-nav { display: none; }
+  .img-nav { display: flex; }
 }
 
 .modal-close { position: absolute; top: 14px; right: 14px; z-index: 20; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.1); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #6b6560; transition: background 0.15s; }
@@ -433,7 +433,6 @@ function closeDetail() { document.getElementById('detail-overlay').classList.rem
 function overlayClick(e) { if (e.target === document.getElementById('detail-overlay')) closeDetail(); }
 
 function openFS() {
-  if (window.innerWidth <= 680) return;
   const p = products[curIdx];
   if (!p?.img) return;
   document.getElementById('fs-img').src = p.img;
@@ -441,14 +440,19 @@ function openFS() {
 }
 function closeFS() { document.getElementById('fs-overlay').classList.remove('on'); }
 
-let swipeStartX = 0;
+let swipeStartX = 0, swipeStartY = 0;
 document.getElementById('detail-sheet').addEventListener('touchstart', e => {
   swipeStartX = e.touches[0].clientX;
+  swipeStartY = e.touches[0].clientY;
 }, { passive: true });
 document.getElementById('detail-sheet').addEventListener('touchend', e => {
   if (window.innerWidth > 680) return;
   const dx = e.changedTouches[0].clientX - swipeStartX;
-  if (Math.abs(dx) > 50) slideNav(dx < 0 ? 1 : -1);
+  const dy = e.changedTouches[0].clientY - swipeStartY;
+  // Horizontal swipe → navigate
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { slideNav(dx < 0 ? 1 : -1); return; }
+  // Short tap on image pane → fullscreen
+  if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e.target.closest('#modal-img-pane')) openFS();
 }, { passive: true });
 
 let tT;
