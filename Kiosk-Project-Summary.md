@@ -86,7 +86,7 @@ NOTIFY_EMAIL=dave@davepainting.com
 - `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, url, variations`
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
 - `POST /guestbook` — emails dave@davepainting.com on guest book submission
-- `POST /checkout` — **pending implementation** — should accept `{items:[{variation_id, item_id, title, price}]}`, create Square Checkout session, return `{checkout_url}`
+- `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}` ✓
 
 **To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
 
@@ -159,7 +159,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
   - Swipe left/right to browse on mobile
   - Click image on desktop → fullscreen
 - Cart modal: shows all items with thumbnail, title, size, price, remove button, running total
-- Checkout button → POSTs `{items:[{variation_id, item_id, title, price}]}` to Lambda `/checkout` → redirects to Square checkout URL *(endpoint pending)*
+- Checkout button → POSTs `{items:[{variation_id, item_id, title, price}]}` to Lambda `/checkout` → redirects to Square hosted checkout (Square collects shipping address + payment)
 - Guest book in footer (localStorage)
 - Contact link uses split string to prevent Cloudflare obfuscation
 
@@ -174,8 +174,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [ ] **Implement Lambda `POST /checkout`** — accept `{items:[{variation_id, item_id, title, price}]}`, create Square Checkout session for multiple items, return `{checkout_url}`
-- [ ] **Build checkout.html** — post-cart checkout page (shipping info, order summary, payment)
+- [x] **Lambda `POST /checkout`** — creates Square Payment Link with shipping address required, redirects customer to Square hosted checkout ✓
 - [ ] **Request SES production access** (AWS Console → SES → Account dashboard) — hold until davidnicholsonart.com domain transferred
 - [ ] **Download 84 Shopify images** before cancelling Shopify
 - [ ] **Rename and upload images** to GitHub /images/ and Square dashboard
@@ -211,6 +210,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **Shopify social commerce integrations** — reconnect to Square after migration, don't disrupt until ready
 - **HIPAA web app** — future, entirely separate AWS account, nothing to do now
 - **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
+- **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }` to collect shipping on the hosted checkout page. Square handles card + address; no embedded card form needed in shop.html.
 - **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
 
 ---
