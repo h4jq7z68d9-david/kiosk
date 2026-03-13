@@ -471,6 +471,15 @@ function toast(msg) {
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+// Handle post-checkout redirect
+if (new URLSearchParams(window.location.search).get('success') === '1') {
+  cart = [];
+  saveCart();
+  updateCartCount();
+  history.replaceState(null, '', '/shop.html');
+  setTimeout(() => toast('order placed — thank you!'), 400);
+}
+
 loadProducts();
 </script>
 
