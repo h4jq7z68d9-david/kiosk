@@ -22,7 +22,7 @@ a { color: inherit; text-decoration: none; }
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; }
 .nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; }
-.nav-center { flex: 1; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
+.nav-center { flex: 1; min-width: 0; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
 .nav-btn { background: none; border: 1px solid #666; border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
 .nav-btn:hover { border-color: var(--ink); }
 .nav-cart { position: relative; background: none; border: 1px solid #666; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; flex-shrink: 0; }
@@ -37,7 +37,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 @media (max-width: 700px) { nav { padding: 0 16px; } .nav-title { font-size: 17px; } .grid-wrap { padding: calc(var(--nav-h) + 20px) 10px 60px; } .grid { gap: 10px; } }
 @media (max-width: 500px) {
   .nav-title { font-size: 14px; letter-spacing: 0.03em; }
-  .nav-center { display: none; }
+  .nav-center { min-width: 0; font-size: 12px; }
   .nav-btn { font-size: 11px; padding: 6px 12px; letter-spacing: 0.08em; }
   .nav-btn .btn-text-long { display: none; }
   .nav-btn .btn-text-short { display: inline; }
@@ -168,9 +168,9 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
   <div id="detail-sheet">
     <button class="modal-close" onclick="closeDetail()">✕</button>
     <div class="modal-img-pane" id="modal-img-pane" onclick="openFS()">
-      <button class="img-nav img-nav-prev" id="nav-prev" onclick="event.stopPropagation();slideNav(-1)">‹</button>
+      <button class="img-nav img-nav-prev" id="nav-prev" onclick="event.stopPropagation();slideNav(-1)" ontouchend="event.stopPropagation()">‹</button>
       <img id="d-img" src="" alt="">
-      <button class="img-nav img-nav-next" id="nav-next" onclick="event.stopPropagation();slideNav(1)">›</button>
+      <button class="img-nav img-nav-next" id="nav-next" onclick="event.stopPropagation();slideNav(1)" ontouchend="event.stopPropagation()">›</button>
     </div>
     <div class="modal-info-pane">
       <div class="modal-info-inner">
@@ -459,8 +459,8 @@ document.getElementById('detail-sheet').addEventListener('touchend', e => {
   const dy = e.changedTouches[0].clientY - swipeStartY;
   // Horizontal swipe → navigate
   if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { slideNav(dx < 0 ? 1 : -1); return; }
-  // Short tap on image pane → fullscreen
-  if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e.target.closest('#modal-img-pane')) openFS();
+  // Short tap on image pane (not on nav arrows) → fullscreen
+  if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e.target.closest('#modal-img-pane') && !e.target.closest('.img-nav')) openFS();
 }, { passive: true });
 
 let tT;
