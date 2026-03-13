@@ -234,9 +234,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
 <div id="gb-overlay" onclick="gbOverlayClick(event)">
 <div id="gb-sheet">
   <div class="gb-header">
-    <h2 id="gb-title" onclick="gbTitleTap()">Guest Book</h2>
+    <h2>Guest Book</h2>
     <div class="gb-header-actions">
-      <button class="export-btn" id="export-btn" style="display:none" onclick="exportCSV()">Export CSV</button>
       <button class="close-btn" onclick="closeGB()">✕</button>
     </div>
   </div>
@@ -254,11 +253,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
         <div class="gb-label">Note <span style="font-weight:400;color:#a8a39d">(optional)</span></div>
         <textarea class="gb-ta" id="g-msg" placeholder="Favourite print, what brought you here…" autocomplete="off" spellcheck="false"></textarea>
       </div>
-      <button class="gb-submit" onclick="submitGB()">Sign the Guest Book</button>
-    </div>
-    <div class="entries-section" id="ent-wrap" style="display:none">
-      <div class="entries-label">Recent Visitors</div>
-      <div id="ent-list"></div>
+      <button class="gb-submit" id="gb-submit-btn" onclick="submitGB()">Sign the Guest Book</button>
     </div>
   </div>
 </div>
@@ -281,7 +276,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
 const LAMBDA_URL = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 const IG = 'https://instagram.com/dave_nichol_son';
 
-let products = [], guests = [], conBuilt = false;
+let products = [], conBuilt = false;
 let curIdx = 0, curVariationId = null;
 let ptrStartX = 0, ptrStartY = 0, ptrId = null, ptrDragging = false;
 
@@ -435,63 +430,39 @@ function closeDetail() { document.getElementById('detail-overlay').classList.rem
 
 function openGB() {
   document.getElementById('gb-overlay').classList.add('on');
-  document.getElementById('export-btn').style.display = 'none';
-  gbTapCount = 0;
-}
-let gbTapCount = 0, gbTapTimer;
-function gbTitleTap() {
-  gbTapCount++;
-  clearTimeout(gbTapTimer);
-  if (gbTapCount >= 3) { gbTapCount = 0; document.getElementById('export-btn').style.display = 'block'; }
-  else gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
 }
 function closeGB() { document.getElementById('gb-overlay').classList.remove('on'); }
 function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
 
+let gbSubmitting = false;
 async function submitGB() {
+  if (gbSubmitting) return;
   const name  = document.getElementById('g-name').value.trim();
   const email = document.getElementById('g-email').value.trim();
-  const msg   = document.getElementById('g-msg').value.trim();
+  const note  = document.getElementById('g-msg').value.trim();
   if (!name)  { toast('Please enter your name'); return; }
   if (!email) { toast('Please enter your email'); return; }
-  guests.unshift({ name, email, msg, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
-  try { localStorage.setItem('dna_gb', JSON.stringify(guests)); } catch {}
-  document.getElementById('g-name').value = '';
-  document.getElementById('g-email').value = '';
-  document.getElementById('g-msg').value = '';
-  renderGuests(); toast('Thanks for signing!');
+  gbSubmitting = true;
+  const btn = document.getElementById('gb-submit-btn');
+  btn.textContent = 'Signing…'; btn.style.opacity = '0.6';
   try {
-    await fetch(LAMBDA_URL + '/guestbook', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, email, note:msg }) });
-  } catch {}
+    await fetch(LAMBDA_URL + '/guestbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, note }),
+    });
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-email').value = '';
+    document.getElementById('g-msg').value = '';
+    toast('Thanks for signing!');
+    setTimeout(closeGB, 1200);
+  } catch {
+    toast('Something went wrong — try again');
+  } finally {
+    gbSubmitting = false;
+    btn.textContent = 'Sign the Guest Book'; btn.style.opacity = '';
+  }
 }
-
-function renderGuests() {
-  const wrap = document.getElementById('ent-wrap');
-  const list = document.getElementById('ent-list');
-  if (!guests.length) { wrap.style.display='none'; return; }
-  wrap.style.display = 'flex';
-  list.innerHTML = guests.slice(0,40).map(e =>
-    '<div class="gb-entry">' +
-      '<div class="e-name">'+x(e.name)+'</div>' +
-      (e.email ? '<div class="e-email">'+x(e.email)+'</div>' : '') +
-      (e.msg ? '<div class="e-msg">'+x(e.msg)+'</div>' : '') +
-      '<div class="e-date">'+e.date+'</div>' +
-    '</div>'
-  ).join('');
-}
-
-function exportCSV() {
-  if (!guests.length) { toast('No entries yet'); return; }
-  const header = ['Name','Email','Note','Date'];
-  const rows = guests.map(e => [e.name, e.email||'', e.msg||'', e.date].map(csvCell));
-  const csv = [header, ...rows].map(r => r.join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = 'guestbook-' + new Date().toISOString().slice(0,10) + '.csv';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  toast('Exported ' + guests.length + ' entries');
-}
-function csvCell(v) { const s = String(v); return (s.includes(',')||s.includes('"')||s.includes('\n')) ? '"'+s.replace(/"/g,'""')+'"' : s; }
 
 function openCon() {
   if (!conBuilt) { conBuilt = true; makeQR(document.getElementById('qr-ig'), 'https://www.instagram.com/dave_nichol_son/', 200); }
@@ -511,7 +482,6 @@ function x(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repla
 function strip(h){ const d=document.createElement('div'); d.innerHTML=h; return d.textContent||''; }
 
 (function(){
-  try { const s=localStorage.getItem('dna_gb'); if(s){guests=JSON.parse(s);renderGuests();} } catch{}
   document.addEventListener('contextmenu', e=>e.preventDefault());
   document.addEventListener('selectstart',  e=>e.preventDefault());
   document.addEventListener('touchmove', e=>{

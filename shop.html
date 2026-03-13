@@ -466,8 +466,7 @@ loadProducts();
 <div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
 <div id="gb-sheet" style="background:#f5f2ed;border-radius:12px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
   <div style="display:flex;align-items:center;padding:26px 26px 14px;gap:10px;flex-shrink:0;">
-    <div id="gb-title" style="font-family:var(--serif);font-size:22px;font-weight:700;color:#1a1917;flex:1;cursor:default;" onclick="gbTitleTap()">guest book</div>
-    <button id="export-btn" style="display:none;background:rgba(0,0,0,0.07);border:none;border-radius:5px;padding:5px 10px;font-family:var(--font);font-size:11px;color:#6b6560;cursor:pointer;" onclick="exportCSV()">export csv</button>
+    <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:#1a1917;flex:1;">guest book</div>
     <button onclick="closeGB()" style="width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6560;">✕</button>
   </div>
   <div style="flex:1;overflow-y:auto;padding:0 26px 32px;display:flex;flex-direction:column;gap:14px;">
@@ -478,11 +477,7 @@ loadProducts();
         <input id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
       <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
         <textarea id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;resize:none;min-height:80px;line-height:1.5;"></textarea></div>
-      <button onclick="submitGB()" style="background:#1a1917;border:none;border-radius:6px;color:#f5f2ed;padding:15px;font-family:var(--font);font-size:13px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
-    </div>
-    <div id="gb-entries" style="display:none;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.08);">
-      <div style="font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:lowercase;color:#a8a39d;">recent visitors</div>
-      <div id="gb-list"></div>
+      <button id="gb-submit-btn" onclick="submitGB()" style="background:#1a1917;border:none;border-radius:6px;color:#f5f2ed;padding:15px;font-family:var(--font);font-size:13px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
     </div>
   </div>
 </div>
@@ -497,13 +492,10 @@ loadProducts();
 </footer>
 
 <script>
-let guests = [];
-try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
+let gbSubmitting = false;
 
 function openGB() {
   document.getElementById('gb-overlay').style.cssText += ';visibility:visible;opacity:1;transition:opacity 0.28s,visibility 0s;';
-  document.getElementById('export-btn').style.display = 'none';
-  gbTapCount = 0; renderGuests();
 }
 function closeGB() {
   const o = document.getElementById('gb-overlay');
@@ -512,49 +504,34 @@ function closeGB() {
 }
 function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
 
-let gbTapCount = 0, gbTapTimer;
-function gbTitleTap() {
-  gbTapCount++;
-  clearTimeout(gbTapTimer);
-  if (gbTapCount >= 3) { gbTapCount = 0; document.getElementById('export-btn').style.display = 'inline-block'; }
-  else gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
-}
-
-function submitGB() {
+async function submitGB() {
+  if (gbSubmitting) return;
   const name  = document.getElementById('g-name').value.trim();
   const email = document.getElementById('g-email').value.trim();
-  const msg   = document.getElementById('g-msg').value.trim();
+  const note  = document.getElementById('g-msg').value.trim();
   if (!name)                         { toast('please enter your name'); return; }
   if (!email || !email.includes('@')){ toast('please enter a valid email'); return; }
-  guests.unshift({ name, email, msg,
-    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
-  try { localStorage.setItem('dna_guests', JSON.stringify(guests)); } catch {}
-  document.getElementById('g-name').value = '';
-  document.getElementById('g-email').value = '';
-  document.getElementById('g-msg').value = '';
-  renderGuests(); toast('thanks for signing!');
-}
-
-function renderGuests() {
-  const wrap = document.getElementById('gb-entries');
-  const list = document.getElementById('gb-list');
-  if (!guests.length) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'flex';
-  list.innerHTML = guests.slice(0,40).map(e =>
-    `<div style="background:rgba(255,255,255,0.5);border-radius:5px;padding:11px 13px;border:1px solid rgba(0,0,0,0.07);margin-bottom:6px;">
-      <div style="font-size:14px;font-weight:500;color:#1a1917;">${esc(e.name)}</div>
-      <div style="font-size:12px;color:#a8a39d;margin-top:2px;">${esc(e.date)}</div>
-      ${e.msg ? `<div style="font-size:14px;font-weight:300;color:#6b6560;margin-top:5px;line-height:1.55;">${esc(e.msg)}</div>` : ''}
-    </div>`
-  ).join('');
-}
-
-function exportCSV() {
-  if (!guests.length) { toast('no entries yet'); return; }
-  const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
-  const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
-  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'});
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  gbSubmitting = true;
+  const btn = document.getElementById('gb-submit-btn');
+  btn.textContent = 'signing…'; btn.style.opacity = '0.6';
+  try {
+    const r = await fetch(LAMBDA + '/guestbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, note }),
+    });
+    if (!r.ok) throw 0;
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-email').value = '';
+    document.getElementById('g-msg').value = '';
+    toast('thanks for signing!');
+    setTimeout(closeGB, 1200);
+  } catch {
+    toast('something went wrong — try again');
+  } finally {
+    gbSubmitting = false;
+    btn.textContent = 'sign the guest book'; btn.style.opacity = '';
+  }
 }
 </script>
 </body>

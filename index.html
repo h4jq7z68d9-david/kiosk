@@ -69,13 +69,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
 .gb-input::placeholder, .gb-ta::placeholder { color: #b0aba5; }
 .gb-ta { resize: none; min-height: 86px; line-height: 1.5; }
 .gb-submit { background: #1a1917; border: none; border-radius: 6px; color: #f5f2ed; padding: 15px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; cursor: pointer; width: 100%; margin-top: 4px; }
-.gb-entries { padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 8px; }
-.gb-entries-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: lowercase; color: #a8a39d; }
-.gb-entry { background: rgba(255,255,255,0.5); border-radius: 5px; padding: 11px 13px; border: 1px solid rgba(0,0,0,0.07); }
-.e-name { font-size: 14px; font-weight: 500; color: #1a1917; }
-.e-date { font-size: 12px; color: #a8a39d; margin-top: 2px; }
-.e-msg { font-size: 14px; font-weight: 300; color: #6b6560; margin-top: 5px; line-height: 1.55; }
-.export-btn { background: rgba(0,0,0,0.07); border: none; border-radius: 5px; padding: 5px 10px; font-family: var(--font); font-size: 11px; color: #6b6560; cursor: pointer; }
+
 
 #toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #0a0a0a; font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.08em; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap; transition: opacity 0.2s, transform 0.2s; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -161,8 +155,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
 <div id="gb-overlay" onclick="gbOverlayClick(event)">
   <div id="gb-sheet">
     <div class="gb-header">
-      <h2 id="gb-title" onclick="gbTitleTap()">guest book</h2>
-      <button class="export-btn" id="export-btn" style="display:none" onclick="exportCSV()">export csv</button>
+      <h2>guest book</h2>
       <button class="gb-close" onclick="closeGB()">✕</button>
     </div>
     <div class="gb-scroll">
@@ -171,10 +164,6 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
         <div><label class="gb-label-field" for="g-email">email</label><input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
         <div><label class="gb-label-field" for="g-msg">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label><textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false"></textarea></div>
         <button class="gb-submit" onclick="submitGB()">sign the guest book</button>
-      </div>
-      <div class="gb-entries" id="gb-entries" style="display:none">
-        <div class="gb-entries-label">recent visitors</div>
-        <div id="gb-list"></div>
       </div>
     </div>
   </div>
@@ -209,50 +198,39 @@ async function loadHero() {
   }
 }
 
-let guests = [];
-function openGB() { document.getElementById('gb-overlay').classList.add('on'); document.getElementById('export-btn').style.display = 'none'; gbTapCount = 0; renderGuests(); }
+let gbSubmitting = false;
+function openGB() { document.getElementById('gb-overlay').classList.add('on'); }
 function closeGB() { document.getElementById('gb-overlay').classList.remove('on'); }
 function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
 
-let gbTapCount = 0, gbTapTimer;
-function gbTitleTap() {
-  gbTapCount++;
-  clearTimeout(gbTapTimer);
-  if (gbTapCount >= 3) { gbTapCount = 0; document.getElementById('export-btn').style.display = 'inline-block'; }
-  else gbTapTimer = setTimeout(() => { gbTapCount = 0; }, 600);
-}
-
-function submitGB() {
+async function submitGB() {
+  if (gbSubmitting) return;
   const name  = document.getElementById('g-name').value.trim();
   const email = document.getElementById('g-email').value.trim();
-  const msg   = document.getElementById('g-msg').value.trim();
+  const note  = document.getElementById('g-msg').value.trim();
   if (!name)                          { toast('please enter your name'); return; }
   if (!email || !email.includes('@')) { toast('please enter a valid email'); return; }
-  guests.unshift({ name, email, msg, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
-  try { localStorage.setItem('dna_guests', JSON.stringify(guests)); } catch {}
-  document.getElementById('g-name').value = '';
-  document.getElementById('g-email').value = '';
-  document.getElementById('g-msg').value = '';
-  renderGuests(); toast('thanks for signing!');
-}
-
-function renderGuests() {
-  const wrap = document.getElementById('gb-entries');
-  const list = document.getElementById('gb-list');
-  if (!guests.length) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'flex';
-  list.innerHTML = guests.slice(0,40).map(e =>
-    `<div class="gb-entry"><div class="e-name">${esc(e.name)}</div><div class="e-date">${esc(e.date)}</div>${e.msg?'<div class="e-msg">'+esc(e.msg)+'</div>':''}</div>`
-  ).join('');
-}
-
-function exportCSV() {
-  if (!guests.length) { toast('no entries yet'); return; }
-  const rows = [['Name','Email','Note','Date'], ...guests.map(e=>[e.name,e.email||'',e.msg||'',e.date])];
-  const csv  = rows.map(r=>r.map(c=>{const s=String(c);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
-  const a = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'guestbook-'+new Date().toISOString().slice(0,10)+'.csv'});
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  toast('exported '+guests.length+' entries');
+  gbSubmitting = true;
+  const btn = document.querySelector('.gb-submit');
+  btn.textContent = 'signing…'; btn.style.opacity = '0.6';
+  try {
+    const r = await fetch(LAMBDA + '/guestbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, note }),
+    });
+    if (!r.ok) throw 0;
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-email').value = '';
+    document.getElementById('g-msg').value = '';
+    toast('thanks for signing!');
+    setTimeout(closeGB, 1200);
+  } catch {
+    toast('something went wrong — try again');
+  } finally {
+    gbSubmitting = false;
+    btn.textContent = 'sign the guest book'; btn.style.opacity = '';
+  }
 }
 
 let toastTimer;
@@ -260,7 +238,6 @@ function toast(msg) { const el = document.getElementById('toast'); el.textConten
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 (function() {
-  try { const s = localStorage.getItem('dna_guests'); if (s) guests = JSON.parse(s); } catch {}
   loadHero();
 })();
 </script>
