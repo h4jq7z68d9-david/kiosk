@@ -31,10 +31,56 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #0c0c0c; border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
 .nav-cart-count.on { display: block; }
 
+/* LAYOUT — sidebar + grid */
+.page-body {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-top: var(--nav-h);
+  min-height: 100vh;
+}
+
+/* YEAR SIDEBAR */
+.year-sidebar {
+  width: 44px;
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100vh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 0 28px;
+  gap: 2px;
+  border-right: 1px solid var(--border);
+}
+.year-btn {
+  background: none; border: none;
+  font-family: var(--font); font-size: 11px; font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  cursor: pointer;
+  padding: 6px 4px;
+  width: 100%; text-align: center;
+  transition: color 0.15s;
+  line-height: 1;
+}
+.year-btn:hover { color: var(--ink2); }
+.year-btn.active { color: var(--ink); font-weight: 500; }
+.year-btn.all { margin-bottom: 10px; letter-spacing: 0.12em; }
+
 /* GRID */
-.grid-wrap { max-width: 1400px; margin: 0 auto; padding: calc(var(--nav-h) + 44px + 32px) 16px 80px; }
+.grid-wrap { flex: 1; min-width: 0; padding: 32px 16px 80px; }
 .grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
-@media (max-width: 700px) { nav { padding: 0 16px; } .nav-title { font-size: 17px; } .grid-wrap { padding: calc(var(--nav-h) + 44px + 20px) 10px 60px; } .grid { gap: 10px; } }
+
+@media (max-width: 700px) {
+  nav { padding: 0 16px; }
+  .nav-title { font-size: 17px; }
+  .year-sidebar { width: 36px; padding: 20px 0; }
+  .year-btn { font-size: 10px; padding: 5px 2px; }
+  .grid-wrap { padding: 20px 10px 60px; }
+  .grid { gap: 10px; }
+}
 @media (max-width: 500px) {
   .nav-title { font-size: 14px; letter-spacing: 0.03em; }
   .nav-center { min-width: 0; font-size: 12px; }
@@ -43,42 +89,16 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   .nav-btn .btn-text-short { display: inline; }
 }
 @media (min-width: 501px) { .btn-text-short { display: none; } }
+
+/* CARDS — 3 col desktop, 1 col mobile */
 .card { width: calc(33.333% - 12px); aspect-ratio: 4/5; position: relative; overflow: hidden; cursor: pointer; background: var(--bg); border-radius: 2px; display: flex; align-items: center; justify-content: center; }
 .card img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; opacity: 0; transition: opacity 0.35s; }
 .card img.loaded { opacity: 1; }
 .card:hover { opacity: 0.88; transition: opacity 0.2s; }
-@media (max-width: 600px) { .card { width: calc(50% - 6px); } }
-@media (max-width: 380px) { .card { width: 100%; } }
+@media (max-width: 600px) { .card { width: 100%; aspect-ratio: 3/2; } }
 .skel { width: calc(33.333% - 12px); aspect-ratio: 4/5; border-radius: 2px; background: var(--surface); animation: sk 1.6s ease-in-out infinite; }
+@media (max-width: 600px) { .skel { width: 100%; aspect-ratio: 3/2; } }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
-
-/* FILTER BAR */
-.filter-bar {
-  position: sticky; top: var(--nav-h); z-index: 70;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 16px;
-  overflow-x: auto; overflow-y: hidden;
-  display: flex; align-items: center; gap: 8px;
-  height: 44px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.filter-bar::-webkit-scrollbar { display: none; }
-.filter-pill {
-  flex-shrink: 0;
-  background: none;
-  border: 1px solid #444;
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-family: var(--font); font-size: 12px; font-weight: 400;
-  letter-spacing: 0.1em; text-transform: lowercase;
-  color: var(--ink2); cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-  white-space: nowrap;
-}
-.filter-pill:hover { border-color: var(--ink2); color: var(--ink); }
-.filter-pill.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
 /* DETAIL MODAL — desktop */
 #detail-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.78); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
@@ -188,13 +208,19 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
   </button>
 </nav>
 
-<div class="filter-bar" id="filter-bar" style="display:none"></div>
+<div class="page-body">
+
+<div class="year-sidebar" id="year-sidebar" style="display:none">
+  <button class="year-btn all active" data-year="all" onclick="toggleFilter('all',this)">all</button>
+</div>
 
 <div class="grid-wrap">
   <div class="grid" id="grid">
     <div class="skel"></div><div class="skel"></div><div class="skel"></div>
     <div class="skel"></div><div class="skel"></div><div class="skel"></div>
   </div>
+</div>
+
 </div>
 
 <!-- DETAIL MODAL -->
@@ -297,29 +323,20 @@ function buildFilterBar() {
     .sort((a, b) => parseInt(b) - parseInt(a)); // newest first
   if (!years.length) return;
 
-  const bar = document.getElementById('filter-bar');
-  bar.style.display = 'flex';
-  bar.innerHTML = '';
-
-  // "All" pill
-  const all = document.createElement('button');
-  all.className = 'filter-pill active';
-  all.textContent = 'all';
-  all.dataset.year = 'all';
-  all.onclick = () => toggleFilter('all', all);
-  bar.appendChild(all);
+  const sidebar = document.getElementById('year-sidebar');
+  sidebar.style.display = 'flex';
 
   years.forEach(y => {
-    const pill = document.createElement('button');
-    pill.className = 'filter-pill';
-    pill.textContent = y;
-    pill.dataset.year = y;
-    pill.onclick = () => toggleFilter(y, pill);
-    bar.appendChild(pill);
+    const btn = document.createElement('button');
+    btn.className = 'year-btn';
+    btn.textContent = y;
+    btn.dataset.year = y;
+    btn.onclick = () => toggleFilter(y, btn);
+    sidebar.appendChild(btn);
   });
 }
 
-function toggleFilter(year, pill) {
+function toggleFilter(year, btn) {
   if (year === 'all') {
     activeYears.clear();
   } else {
@@ -329,12 +346,12 @@ function toggleFilter(year, pill) {
       activeYears.add(year);
     }
   }
-  // Sync pill states
-  document.querySelectorAll('.filter-pill').forEach(p => {
-    if (p.dataset.year === 'all') {
-      p.classList.toggle('active', activeYears.size === 0);
+  // Sync button states
+  document.querySelectorAll('.year-btn').forEach(b => {
+    if (b.dataset.year === 'all') {
+      b.classList.toggle('active', activeYears.size === 0);
     } else {
-      p.classList.toggle('active', activeYears.has(p.dataset.year));
+      b.classList.toggle('active', activeYears.has(b.dataset.year));
     }
   });
   applyFilter();
