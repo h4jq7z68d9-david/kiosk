@@ -2,15 +2,15 @@
 
 ## What's Live
 
-**URL:** https://kiosk.davidnicholsonllc.com
 | URL | Purpose |
 |---|---|
-| https://kiosk.davidnicholsonllc.com | Main entry point / homepage (index.html) |
-| https://kiosk.davidnicholsonllc.com/shop.html | Public print gallery with cart + checkout |
-| https://kiosk.davidnicholsonllc.com/kiosk.html | iPad kiosk for art fairs |
+| https://davidnicholsonart.com | Main entry point / homepage (index.html) — primary public site |
+| https://davidnicholsonart.com/shop.html | Public print gallery with cart + checkout |
+| https://davidnicholsonart.com/kiosk.html | iPad kiosk for art fairs |
+| https://kiosk.davidnicholsonllc.com | Legacy URL — still works, same content |
 
-The kiosk is deployed and working. Push changes to GitHub — deploy is automatic.
-**Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3 in ~60 seconds. No manual upload needed.
+The site is deployed and working. Push changes to GitHub — deploy is automatic.
+**Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3 + invalidates both CloudFront distributions in ~60 seconds.
 
 ---
 
@@ -19,18 +19,25 @@ The kiosk is deployed and working. Push changes to GitHub — deploy is automati
 | Resource | Value |
 |---|---|
 | AWS Account | 892204037842 |
-| S3 Bucket | kiosk.davidnicholsonllc.com (us-east-1) |
-| CloudFront Distribution ID | E31J8ASEUTGXD9 |
-| CloudFront Domain | d33vrz1flme0j4.cloudfront.net |
-| SSL Cert | kiosk.davidnicholsonllc.com (ACM, us-east-1, auto-renews) |
-| IAM User | lambda-deploy (AKIA47O4BG3JHDCHUU5W) |
+| S3 Bucket | kiosk.davidnicholsonllc (us-east-2) |
+| CloudFront Distribution — davidnicholsonart.com | E2EJH38GWGPEPG (dbhpvmx9kl58h.cloudfront.net) |
+| CloudFront Distribution — kiosk.davidnicholsonllc.com | E31J8ASEUTGXD9 (d33vrz1flme0j4.cloudfront.net) |
+| SSL Cert — davidnicholsonart.com | ACM us-east-1, covers apex + www, auto-renews |
+| SSL Cert — kiosk.davidnicholsonllc.com | ACM us-east-1, auto-renews |
+| IAM Role | github-kiosk-deploy — has CloudFront invalidation permission for both distributions |
 
-**Old cert to delete:** `arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424` (wrong region, unused)
+**Certs to delete:**
+- `arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424` (wrong region, unused)
+- Old `kiosk.davidnicholsonllc.com` cert once confident it's no longer needed
+
+**DNS:** `davidnicholsonart.com` is registered with AWS and DNS is in Route 53. Both apex and www point to CloudFront distribution E2EJH38GWGPEPG.
+
+**ACM validation tip:** When requesting a cert, the "Create records in Route 53" button only works if a hosted zone already exists. After setting nameservers, NS records in Route 53 Registered Domains must match the hosted zone NS records exactly — no trailing dots.
 
 **To update any file:**
 1. Edit the file
 2. `git add . && git commit -m "your message" && git push`
-3. GitHub Actions deploys to S3 + invalidates CloudFront automatically
+3. GitHub Actions deploys to S3 + invalidates both CloudFront distributions automatically
 4. Live in ~60 seconds
 
 ---
@@ -38,9 +45,10 @@ The kiosk is deployed and working. Push changes to GitHub — deploy is automati
 ## GitHub Actions Auto-Deploy
 
 Fully configured. Push any file to the repo → live in ~60 seconds.
-- IAM user: `lambda-deploy`
-- Repo secrets set: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+- IAM role: `github-kiosk-deploy` (OIDC, no static keys)
+- Repo secret set: `AWS_ROLE_ARN`
 - Workflow file: `.github/workflows/deploy.yml`
+- Invalidates both distributions: E31J8ASEUTGXD9 and E2EJH38GWGPEPG
 
 ---
 
@@ -63,6 +71,8 @@ Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda gene
 
 **Fix needed in Square dashboard:** "Resurrection\tLilies" has a tab character in the name — rename it.
 
+**Images:** Product images are hosted by Square. No dependency on Shopify CDN.
+
 ---
 
 ## AWS Lambda
@@ -84,26 +94,24 @@ NOTIFY_EMAIL=dave@davepainting.com
 
 **Endpoints:**
 - `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, url, variations`
+- `GET /hero` — returns a single random product with an image `{img, title, id}` — used by index.html hero
+- `GET /image?id=X` — proxies Square CDN image to avoid hotlink 403s
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
-- `POST /guestbook` — emails dave@davepainting.com on guest book submission
+- `POST /guestbook` — saves to DynamoDB + emails dave@davepainting.com on guest book submission
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}` ✓
 
 **To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
 
-**Note on images:** Square catalog API returns S3 URLs that 403 in browsers due to hotlink protection. Fixed in shop.html and index.html by setting `referrerPolicy = 'no-referrer'` on all image elements.
+**Note on images:** Square catalog API returns URLs that 403 in browsers due to hotlink protection. Lambda `/image` endpoint proxies them. All image elements use `referrerPolicy = 'no-referrer'` as a fallback.
 
 ---
 
 ## SES (Email)
 
-| Domain/Address | Status |
-|---|---|
-| dave@davepainting.com | Verified ✓ |
-| davidnicholsonart.com | DNS records added, awaiting verification |
-
+- SES was reset — needs to be set up fresh next session
 - SES still in **sandbox mode** — need to request production access
-- **TODO:** AWS Console → SES → Account dashboard → Request production access (24-48hr approval)
-- **Hold all email work** until davidnicholsonart.com domain is transferred and SES verification completes
+- Domain: `davidnicholsonart.com` (DNS now in Route 53, should verify quickly)
+- **TODO next session:** Verify domain in SES + request production access
 
 ---
 
@@ -113,22 +121,10 @@ Not yet set up. SMS send-link will fail until a dedicated phone number is provis
 
 ---
 
-## Shopify (Being Cancelled)
+## Shopify — Cancelled
 
-- Old permanent URL: `https://0ipvjc-1v.myshopify.com` (keep until image migration complete)
-- **DO NOT cancel until all 84 product images are downloaded** — CDN URLs will die
-- Image download list: `image-urls.txt` (84 URLs)
-- Rename map: `rename-map.txt` (handle-1.jpg / handle-2.jpg pattern)
-
----
-
-## Image Migration Plan (In Progress)
-
-1. Bulk download 84 images using `image-urls.txt`
-2. Rename per `rename-map.txt` (handle-1.jpg / handle-2.jpg)
-3. Add to GitHub repo under `/images/` folder → auto-deploys to S3
-4. In Square dashboard: manually assign images to each product
-5. Once done, Lambda `/products` will return image URLs and kiosk/shop will show them
+Shopify has been cancelled. All product images were already in Square — no image migration needed.
+- Facebook/Instagram shops need to be reconnected to Square
 
 ---
 
@@ -136,14 +132,15 @@ Not yet set up. SMS send-link will fail until a dedicated phone number is provis
 
 All three are single-file, no framework, no build step — intentional, keep it that way.
 
-**Session workflow:** Claude generates files here, David downloads and pushes to GitHub. GitHub is NOT the source of truth during a session — the latest file Claude produced is. At the start of each session, fetch all 4 files from the repo as a starting point, but trust whatever was last produced in the session over GitHub.
+**Session workflow:** Claude generates files here, David downloads and pushes to GitHub. GitHub is NOT the source of truth during a session — the latest file Claude produced is. At the start of each session, upload all 4 files from the repo as a starting point.
 
 ### index.html (homepage)
 - Hero column width: 820px
-- Hero fetches a random product image from Lambda on page load
-- Image loads by creating a fresh `<img>` element and replacing the placeholder on `onload`
+- Hero calls Lambda `GET /hero` for a single random product image — fast, no full catalog fetch
+- Image appears at natural aspect ratio (`height: auto`) — no fixed placeholder, no skeleton
+- Caption (print title) appears only after image loads
 - `referrerPolicy = 'no-referrer'` on hero image to avoid S3 403
-- Guest book saves to localStorage (`dna_guests`)
+- Guest book POSTs to Lambda
 - Contact link uses split string `'mai'+'lto:...'` to prevent Cloudflare email obfuscation injection
 
 ### shop.html (public gallery)
@@ -153,14 +150,14 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - Cart persists in localStorage (`dna_cart`) across page loads and browser closes
 - Cart clears from localStorage after successful checkout
 - Tap print → bottom sheet modal on mobile, side-by-side on desktop
-  - Image at natural square aspect ratio
   - Variant selector (size buttons) with name + price
   - "Add to cart" button — adds selected variant, closes modal, returns to grid
   - Swipe left/right to browse on mobile
-  - Click image on desktop → fullscreen
+  - Click image → fullscreen shadowbox
+- **Fullscreen shadowbox:** left/right arrows + swipe to navigate between prints while staying fullscreen; tap background or ✕ to close and return to modal for current print
 - Cart modal: shows all items with thumbnail, title, size, price, remove button, running total
-- Checkout button → POSTs `{items:[{variation_id, item_id, title, price}]}` to Lambda `/checkout` → redirects to Square hosted checkout (Square collects shipping address + payment)
-- Guest book in footer (localStorage)
+- Checkout button → POSTs to Lambda `/checkout` → redirects to Square hosted checkout
+- Checkout redirect URL: `https://davidnicholsonart.com/shop.html?success=1`
 - Contact link uses split string to prevent Cloudflare obfuscation
 
 ### kiosk.html (art fair iPad)
@@ -174,16 +171,12 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [x] **Lambda `POST /checkout`** — creates Square Payment Link with shipping address required, redirects customer to Square hosted checkout ✓
-- [ ] **Request SES production access** (AWS Console → SES → Account dashboard) — hold until davidnicholsonart.com domain transferred
-- [ ] **Download 84 Shopify images** before cancelling Shopify
-- [ ] **Rename and upload images** to GitHub /images/ and Square dashboard
-- [ ] **Wait for davidnicholsonart.com SES verification** to go green
+- [ ] **SES setup fresh** — verify davidnicholsonart.com domain + request production access
+- [ ] **Reconnect Facebook/Instagram shops** to Square (Shopify cancelled)
 - [ ] **Fix "Resurrection\tLilies"** tab character in Square dashboard
-- [ ] **Cancel Shopify** ($40/month) — only after images are safely migrated
-- [ ] **Reconnect Facebook/Instagram shops** to Square after Shopify cancelled
 - [ ] **Provision SNS phone number** for SMS (~$1-2/month)
-- [ ] **Delete orphaned ACM cert** in us-east-2 (see above)
+- [ ] **Delete orphaned ACM cert** in us-east-2 (`arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424`)
+- [ ] **Delete old kiosk.davidnicholsonllc.com ACM cert** once confirmed not needed
 
 ---
 
@@ -195,7 +188,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## iPad Art Fair Setup
 
-1. Open https://kiosk.davidnicholsonllc.com/kiosk.html in Safari
+1. Open https://davidnicholsonart.com/kiosk.html in Safari
 2. Let all prints load on good WiFi (populates offline cache)
 3. Safari → Share → Add to Home Screen
 4. Settings → Accessibility → Guided Access to lock iPad to kiosk
@@ -207,11 +200,12 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **Single-file HTML** — no frameworks, no build pipeline, keep it that way
 - **Admin features hidden** — triple-tap pattern for CSV export, never visible to kiosk visitors
-- **Shopify social commerce integrations** — reconnect to Square after migration, don't disrupt until ready
-- **HIPAA web app** — future, entirely separate AWS account, nothing to do now
 - **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
 - **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }` to collect shipping on the hosted checkout page. Square handles card + address; no embedded card form needed in shop.html.
 - **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
+- **HIPAA web app** — future, entirely separate AWS account, nothing to do now
+- **S3 bucket is in us-east-2** — despite most other resources being in us-east-1
+- **IAM role must explicitly list both CloudFront distribution ARNs** for invalidation to work in GitHub Actions
 
 ---
 
@@ -222,6 +216,5 @@ All three are single-file, no framework, no build step — intentional, keep it 
 | Instagram | @dave_nichol_son |
 | Notification email | dave@davepainting.com |
 | Send-from email | noreply@davidnicholsonart.com |
-| Shopify store | https://0ipvjc-1v.myshopify.com |
 | Square Online | https://david-nicholson-art.square.site |
 | GitHub repo | https://github.com/h4jq7z68d9-david/kiosk |
