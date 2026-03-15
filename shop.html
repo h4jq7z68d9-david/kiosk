@@ -32,9 +32,9 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .nav-cart-count.on { display: block; }
 
 /* GRID */
-.grid-wrap { max-width: 1400px; margin: 0 auto; padding: calc(var(--nav-h) + 32px) 16px 80px; }
+.grid-wrap { max-width: 1400px; margin: 0 auto; padding: calc(var(--nav-h) + 44px + 32px) 16px 80px; }
 .grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
-@media (max-width: 700px) { nav { padding: 0 16px; } .nav-title { font-size: 17px; } .grid-wrap { padding: calc(var(--nav-h) + 20px) 10px 60px; } .grid { gap: 10px; } }
+@media (max-width: 700px) { nav { padding: 0 16px; } .nav-title { font-size: 17px; } .grid-wrap { padding: calc(var(--nav-h) + 44px + 20px) 10px 60px; } .grid { gap: 10px; } }
 @media (max-width: 500px) {
   .nav-title { font-size: 14px; letter-spacing: 0.03em; }
   .nav-center { min-width: 0; font-size: 12px; }
@@ -51,6 +51,34 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 @media (max-width: 380px) { .card { width: 100%; } }
 .skel { width: calc(33.333% - 12px); aspect-ratio: 4/5; border-radius: 2px; background: var(--surface); animation: sk 1.6s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+
+/* FILTER BAR */
+.filter-bar {
+  position: sticky; top: var(--nav-h); z-index: 70;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  overflow-x: auto; overflow-y: hidden;
+  display: flex; align-items: center; gap: 8px;
+  height: 44px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-pill {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid #444;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-family: var(--font); font-size: 12px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: lowercase;
+  color: var(--ink2); cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.filter-pill:hover { border-color: var(--ink2); color: var(--ink); }
+.filter-pill.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
 /* DETAIL MODAL — desktop */
 #detail-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.78); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
@@ -160,6 +188,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
   </button>
 </nav>
 
+<div class="filter-bar" id="filter-bar" style="display:none"></div>
+
 <div class="grid-wrap">
   <div class="grid" id="grid">
     <div class="skel"></div><div class="skel"></div><div class="skel"></div>
@@ -221,7 +251,9 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
 const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
 let products = [];
-let curIdx = 0;
+let filteredIndices = []; // indices into products[] currently visible
+let activeYears = new Set(); // empty = show all
+let curIdx = 0; // index into products[]
 let curVariationId = null;
 let curVariationPrice = 0;
 let cart = [];
@@ -243,17 +275,16 @@ async function loadProducts() {
       desc:       p.description || p.desc || '',
       img:        p.img || p.image_url || null,
       url:        p.url || null,
+      year:       p.year || null,
       variations: (p.variations || []).map(v => ({
         id:    v.id,
         name:  v.name,
         price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
       })),
     }));
-    for (let i = products.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [products[i], products[j]] = [products[j], products[i]];
-    }
-    renderGrid();
+    // Lambda already sorts newest→oldest then alpha — no shuffle
+    buildFilterBar();
+    applyFilter();
     updateCartCount();
   } catch {
     document.getElementById('grid').innerHTML =
@@ -261,10 +292,74 @@ async function loadProducts() {
   }
 }
 
+function buildFilterBar() {
+  const years = [...new Set(products.map(p => p.year).filter(Boolean))]
+    .sort((a, b) => parseInt(b) - parseInt(a)); // newest first
+  if (!years.length) return;
+
+  const bar = document.getElementById('filter-bar');
+  bar.style.display = 'flex';
+  bar.innerHTML = '';
+
+  // "All" pill
+  const all = document.createElement('button');
+  all.className = 'filter-pill active';
+  all.textContent = 'all';
+  all.dataset.year = 'all';
+  all.onclick = () => toggleFilter('all', all);
+  bar.appendChild(all);
+
+  years.forEach(y => {
+    const pill = document.createElement('button');
+    pill.className = 'filter-pill';
+    pill.textContent = y;
+    pill.dataset.year = y;
+    pill.onclick = () => toggleFilter(y, pill);
+    bar.appendChild(pill);
+  });
+}
+
+function toggleFilter(year, pill) {
+  if (year === 'all') {
+    activeYears.clear();
+  } else {
+    if (activeYears.has(year)) {
+      activeYears.delete(year);
+    } else {
+      activeYears.add(year);
+    }
+  }
+  // Sync pill states
+  document.querySelectorAll('.filter-pill').forEach(p => {
+    if (p.dataset.year === 'all') {
+      p.classList.toggle('active', activeYears.size === 0);
+    } else {
+      p.classList.toggle('active', activeYears.has(p.dataset.year));
+    }
+  });
+  applyFilter();
+}
+
+function applyFilter() {
+  if (activeYears.size === 0) {
+    // Show everything
+    filteredIndices = products.map((_, i) => i);
+  } else {
+    // Show only products whose year is in the active set
+    // Products with no year are hidden when any year filter is active
+    filteredIndices = products
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => p.year && activeYears.has(p.year))
+      .map(({ i }) => i);
+  }
+  renderGrid();
+}
+
 function renderGrid() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  products.forEach((p, i) => {
+  filteredIndices.forEach(i => {
+    const p = products[i];
     const card = document.createElement('div');
     card.className = 'card';
     if (p.img) {
@@ -438,7 +533,10 @@ async function checkout() {
 }
 
 function slideNav(dir) {
-  curIdx = (curIdx + dir + products.length) % products.length;
+  // Navigate within the currently filtered set
+  const pos = filteredIndices.indexOf(curIdx);
+  const nextPos = (pos + dir + filteredIndices.length) % filteredIndices.length;
+  curIdx = filteredIndices[nextPos];
   populateDetail(products[curIdx]);
   document.getElementById('detail-sheet').scrollTop = 0;
 }
@@ -462,10 +560,11 @@ function fsBgClick(e) {
   if (e.target === document.getElementById('fs-overlay')) closeFS();
 }
 function fsNav(dir) {
-  curIdx = (curIdx + dir + products.length) % products.length;
+  const pos = filteredIndices.indexOf(curIdx);
+  const nextPos = (pos + dir + filteredIndices.length) % filteredIndices.length;
+  curIdx = filteredIndices[nextPos];
   const p = products[curIdx];
   document.getElementById('fs-img').src = p.img || '';
-  // keep detail modal in sync so closing FS shows the right print
   populateDetail(p);
 }
 
