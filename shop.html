@@ -42,7 +42,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 
 /* YEAR SIDEBAR */
 .year-sidebar {
-  width: 44px;
+  width: 52px;
   flex-shrink: 0;
   position: sticky;
   top: var(--nav-h);
@@ -76,7 +76,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 @media (max-width: 700px) {
   nav { padding: 0 16px; }
   .nav-title { font-size: 17px; }
-  .year-sidebar { width: 36px; padding: 20px 0; }
+  .year-sidebar { width: 42px; padding: 20px 0; }
   .year-btn { font-size: 10px; padding: 5px 2px; }
   .grid-wrap { padding: 20px 10px 60px; }
   .grid { gap: 10px; }
@@ -90,12 +90,15 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 }
 @media (min-width: 501px) { .btn-text-short { display: none; } }
 
-/* CARDS — 3 col desktop, 1 col mobile */
+/* CARDS — 3 col desktop, 1 col mobile natural ratio */
 .card { width: calc(33.333% - 12px); aspect-ratio: 4/5; position: relative; overflow: hidden; cursor: pointer; background: var(--bg); border-radius: 2px; display: flex; align-items: center; justify-content: center; }
 .card img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; opacity: 0; transition: opacity 0.35s; }
 .card img.loaded { opacity: 1; }
 .card:hover { opacity: 0.88; transition: opacity 0.2s; }
-@media (max-width: 600px) { .card { width: 100%; aspect-ratio: 3/2; } }
+@media (max-width: 600px) {
+  .card { width: 100%; aspect-ratio: unset; height: auto; }
+  .card img { max-width: 100%; max-height: none; width: 100%; height: auto; }
+}
 .skel { width: calc(33.333% - 12px); aspect-ratio: 4/5; border-radius: 2px; background: var(--surface); animation: sk 1.6s ease-in-out infinite; }
 @media (max-width: 600px) { .skel { width: 100%; aspect-ratio: 3/2; } }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
