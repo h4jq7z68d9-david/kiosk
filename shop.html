@@ -100,8 +100,12 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 /* FULLSCREEN */
 #fs-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.97); display: none; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
 #fs-overlay.on { display: flex; }
-#fs-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; }
-.fs-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+#fs-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; pointer-events: none; }
+.fs-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
+.fs-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.12); border: none; border-radius: 50%; width: 48px; height: 48px; cursor: pointer; z-index: 2; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; transition: background 0.15s; }
+.fs-nav:hover { background: rgba(255,255,255,0.22); }
+.fs-nav-prev { left: 16px; }
+.fs-nav-next { right: 16px; }
 
 /* CART MODAL */
 #cart-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); visibility: hidden; opacity: 0; transition: opacity 0.25s, visibility 0s linear 0.25s; display: flex; align-items: center; justify-content: center; padding: 24px; }
@@ -186,9 +190,11 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex;
 </div>
 
 <!-- FULLSCREEN -->
-<div id="fs-overlay" onclick="closeFS()">
+<div id="fs-overlay" onclick="fsBgClick(event)">
   <button class="fs-close" onclick="event.stopPropagation();closeFS()">✕</button>
+  <button class="fs-nav fs-nav-prev" onclick="event.stopPropagation();fsNav(-1)">‹</button>
   <img id="fs-img" src="" alt="">
+  <button class="fs-nav fs-nav-next" onclick="event.stopPropagation();fsNav(1)">›</button>
 </div>
 
 <!-- CART MODAL -->
@@ -444,9 +450,36 @@ function openFS() {
   const p = products[curIdx];
   if (!p?.img) return;
   document.getElementById('fs-img').src = p.img;
+  document.getElementById('fs-img').referrerPolicy = 'no-referrer';
   document.getElementById('fs-overlay').classList.add('on');
 }
-function closeFS() { document.getElementById('fs-overlay').classList.remove('on'); }
+function closeFS() {
+  document.getElementById('fs-overlay').classList.remove('on');
+  // ensure detail modal is visible for the current print
+  document.getElementById('detail-overlay').classList.add('on');
+}
+function fsBgClick(e) {
+  if (e.target === document.getElementById('fs-overlay')) closeFS();
+}
+function fsNav(dir) {
+  curIdx = (curIdx + dir + products.length) % products.length;
+  const p = products[curIdx];
+  document.getElementById('fs-img').src = p.img || '';
+  // keep detail modal in sync so closing FS shows the right print
+  populateDetail(p);
+}
+
+// Swipe on fullscreen overlay
+let fsSwipeX = 0;
+document.getElementById('fs-overlay').addEventListener('touchstart', e => {
+  fsSwipeX = e.touches[0].clientX;
+}, { passive: true });
+document.getElementById('fs-overlay').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - fsSwipeX;
+  if (Math.abs(dx) > 50) { fsNav(dx < 0 ? 1 : -1); return; }
+  // tap anywhere on image closes fullscreen
+  if (Math.abs(dx) < 8) closeFS();
+}, { passive: true });
 
 let swipeStartX = 0, swipeStartY = 0;
 document.getElementById('detail-sheet').addEventListener('touchstart', e => {

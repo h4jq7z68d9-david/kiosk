@@ -22,9 +22,8 @@ a { color: inherit; text-decoration: none; }
 .page { max-width: 820px; margin: 0; padding: 0 40px 60px 10%; }
 .content-col { max-width: 100%; font-weight: 300; }
 .splash-section { padding-top: 24px; }
-.splash-ph { width: 100%; aspect-ratio: 3/4; background: var(--surface); animation: sk 1.8s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
-.splash-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center top; display: block; }
+.splash-img { width: 100%; height: auto; display: block; }
 .splash-caption { font-size: 14px; color: var(--ink3); letter-spacing: 0.06em; margin-top: 10px; font-weight: 300; min-height: 20px; }
 
 .title-block { padding: 24px 0 0; }
@@ -81,10 +80,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
 <body>
 
 <div class="page splash-section">
-  <div id="splash-wrap">
-    <div class="splash-ph" id="splash-ph"></div>
-  </div>
-  <p class="splash-caption" id="splash-cap"></p>
+  <div id="splash-wrap"></div>
+  <p class="splash-caption" id="splash-cap" style="display:none"></p>
 
   <div class="content-col">
     <div class="title-block">
@@ -175,26 +172,26 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
 const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
 async function loadHero() {
-  const ph  = document.getElementById('splash-ph');
-  const cap = document.getElementById('splash-cap');
+  const wrap = document.getElementById('splash-wrap');
+  const cap  = document.getElementById('splash-cap');
   try {
-    const r = await fetch(LAMBDA + '/products');
+    const r = await fetch(LAMBDA + '/hero');
     if (!r.ok) throw 0;
-    const raw = await r.json();
-    const list = raw.products || raw;
-    const withImg = list.filter(p => p.img || p.image_url);
-    if (!withImg.length) throw 0;
-    const p = withImg[Math.floor(Math.random() * withImg.length)];
-    cap.textContent = p.name || p.title || '';
+    const p = await r.json();
+    if (!p.img) throw 0;
     const img = document.createElement('img');
     img.className = 'splash-img';
     img.alt = 'painting by David Nicholson';
     img.referrerPolicy = 'no-referrer';
-    img.src = p.img || p.image_url;
-    img.onload = () => { ph.replaceWith(img); };
-    img.onerror = () => { ph.style.display = 'none'; };
+    img.src = p.img;
+    img.onload = () => {
+      wrap.appendChild(img);
+      cap.textContent = p.title || '';
+      cap.style.display = '';
+    };
+    img.onerror = () => {};
   } catch {
-    ph.style.display = 'none';
+    // no hero — page looks fine without it
   }
 }
 
