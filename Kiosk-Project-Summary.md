@@ -5,7 +5,7 @@
 | URL | Purpose |
 |---|---|
 | https://davidnicholsonart.com | Main entry point / homepage (index.html) — primary public site |
-| https://davidnicholsonart.com/shop.html | Public print gallery with cart + checkout |
+| https://davidnicholsonart.com/gallery.html | Public print gallery with cart + checkout |
 | https://davidnicholsonart.com/kiosk.html | iPad kiosk for art fairs |
 | https://kiosk.davidnicholsonllc.com | Legacy URL — still works, same content |
 
@@ -143,7 +143,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - Guest book POSTs to Lambda
 - Contact link uses split string `'mai'+'lto:...'` to prevent Cloudflare email obfuscation injection
 
-### shop.html (public gallery)
+### gallery.html (public gallery)
 - Fetches from Lambda `GET /products`
 - Grid shuffled randomly on each page load (Fisher-Yates)
 - **Cart** in top-right nav — shopping bag SVG icon with count badge
@@ -157,7 +157,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **Fullscreen shadowbox:** left/right arrows + swipe to navigate between prints while staying fullscreen; tap background or ✕ to close and return to modal for current print
 - Cart modal: shows all items with thumbnail, title, size, price, remove button, running total
 - Checkout button → POSTs to Lambda `/checkout` → redirects to Square hosted checkout
-- Checkout redirect URL: `https://davidnicholsonart.com/shop.html?success=1`
+- Checkout redirect URL: `https://davidnicholsonart.com/gallery.html?success=1`
 - Contact link uses split string to prevent Cloudflare obfuscation
 
 ### kiosk.html (art fair iPad)
@@ -201,7 +201,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **Single-file HTML** — no frameworks, no build pipeline, keep it that way
 - **Admin features hidden** — triple-tap pattern for CSV export, never visible to kiosk visitors
 - **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
-- **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }` to collect shipping on the hosted checkout page. Square handles card + address; no embedded card form needed in shop.html.
+- **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }` to collect shipping on the hosted checkout page. Square handles card + address; no embedded card form needed in gallery.html.
 - **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
 - **HIPAA web app** — future, entirely separate AWS account, nothing to do now
 - **S3 bucket is in us-east-2** — despite most other resources being in us-east-1
