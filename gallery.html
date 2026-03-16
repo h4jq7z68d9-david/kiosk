@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Gallery — David Nicholson">
+<title>David Nicholson — Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0c; --surface: #1a1a1a; --border: #2a2a2a; --border-mid: #333;
+  --ink: #f0ede8; --ink2: #888480; --ink3: #777; --accent: #a8b8c8;
+  --font: 'DM Sans', sans-serif; --serif: 'Playfair Display', serif; --nav-h: 56px;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; }
+.nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; }
+.nav-center { flex: 1; min-width: 0; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
+.nav-btn { background: none; border: 1px solid #666; border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
+.nav-btn:hover { border-color: var(--ink); }
+.nav-cart { position: relative; background: none; border: 1px solid #666; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; flex-shrink: 0; }
+.nav-cart:hover { border-color: var(--ink); }
+.nav-cart svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #0c0c0c; border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
+.nav-cart-count.on { display: block; }
+
+/* LAYOUT — sidebar + grid */
+.page-body {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-top: var(--nav-h);
+  min-height: 100vh;
+}
+
+/* YEAR SIDEBAR */
+.year-sidebar {
+  width: 52px;
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100vh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 0 28px;
+  gap: 2px;
+  border-right: 1px solid var(--border);
+}
+.year-btn {
+  background: none; border: none;
+  font-family: var(--font); font-size: 11px; font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  cursor: pointer;
+  padding: 6px 4px;
+  width: 100%; text-align: center;
+  transition: color 0.15s;
+  line-height: 1;
+}
+.year-btn:hover { color: var(--ink2); }
+.year-btn.active { color: var(--ink); font-weight: 500; }
+.year-btn.all { margin-bottom: 10px; letter-spacing: 0.12em; }
+
+/* GRID */
+.grid-wrap { flex: 1; min-width: 0; padding: 32px 16px 80px; }
+.grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+
+@media (max-width: 700px) {
+  nav { padding: 0 16px; }
+  .nav-title { font-size: 17px; }
+  .year-sidebar { width: 42px; padding: 20px 0; }
+  .year-btn { font-size: 10px; padding: 5px 2px; }
+  .grid-wrap { padding: 20px 10px 60px; }
+  .grid { gap: 10px; }
+}
+@media (max-width: 500px) {
+  .nav-title { font-size: 14px; letter-spacing: 0.03em; }
+  .nav-center { min-width: 0; font-size: 12px; }
+  .nav-btn { font-size: 11px; padding: 6px 12px; letter-spacing: 0.08em; }
+  .nav-btn .btn-text-long { display: none; }
+  .nav-btn .btn-text-short { display: inline; }
+}
+@media (min-width: 501px) { .btn-text-short { display: none; } }
+
+/* CARDS — 3 col desktop, 1 col mobile natural ratio */
+.card { width: calc(33.333% - 12px); aspect-ratio: 4/5; position: relative; overflow: hidden; cursor: pointer; background: var(--bg); border-radius: 2px; display: flex; align-items: center; justify-content: center; }
+.card img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; opacity: 0; transition: opacity 0.35s; }
+.card img.loaded { opacity: 1; }
+.card:hover { opacity: 0.88; transition: opacity 0.2s; }
+@media (max-width: 600px) {
+  .card { width: 100%; aspect-ratio: unset; height: auto; }
+  .card img { max-width: 100%; max-height: none; width: 100%; height: auto; }
+}
+.skel { width: calc(33.333% - 12px); aspect-ratio: 4/5; border-radius: 2px; background: var(--surface); animation: sk 1.6s ease-in-out infinite; }
+@media (max-width: 600px) { .skel { width: 100%; aspect-ratio: 3/2; } }
+@keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+
+/* DETAIL MODAL — desktop */
+#detail-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.78); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
+#detail-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.28s, visibility 0s; }
+#detail-sheet { position: relative; background: #f5f2ed; border-radius: 18px; width: 92%; max-width: 1100px; max-height: 92vh; display: flex; flex-direction: row; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3); }
+
+/* MOBILE — bottom sheet */
+@media (max-width: 680px) {
+  #detail-overlay { padding: 0; align-items: flex-end; }
+  #detail-sheet { flex-direction: column; max-height: 94dvh; max-width: 100%; border-radius: 20px 20px 0 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+  #detail-sheet::before { content: ''; display: block; width: 36px; height: 4px; background: rgba(0,0,0,0.15); border-radius: 2px; margin: 10px auto 0; flex-shrink: 0; }
+  .modal-img-pane { flex: none; width: 100%; height: 56vw; min-height: 220px; max-height: 44vh; cursor: zoom-in; }
+  .modal-img-pane img { width: 100%; height: 100%; object-fit: contain; padding: 16px; max-height: none; }
+  .modal-info-pane { width: 100%; border-left: none; border-top: 1px solid rgba(0,0,0,0.07); overflow-y: visible; }
+  .modal-info-inner { padding: 24px 20px 40px; }
+  .buy-section { margin-top: 20px; }
+  .img-nav { display: flex; }
+}
+
+.modal-close { position: absolute; top: 14px; right: 14px; z-index: 20; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.08); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #6b6560; transition: background 0.15s; }
+.modal-close:active { background: rgba(0,0,0,0.15); }
+.modal-img-pane { flex: 1.1; min-width: 0; background: #f5f2ed; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: zoom-in; }
+.modal-img-pane img { width: 100%; height: 100%; object-fit: contain; display: block; padding: 32px; max-height: 92vh; }
+.img-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.12); border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; color: #1a1917; font-size: 20px; transition: background 0.15s; }
+.img-nav:active { background: rgba(0,0,0,0.22); }
+.img-nav-prev { left: 10px; }
+.img-nav-next { right: 10px; }
+.modal-info-pane { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; border-left: 1px solid rgba(0,0,0,0.06); overflow-y: auto; }
+.modal-info-pane::-webkit-scrollbar { width: 0; }
+.modal-info-inner { padding: 32px 28px 36px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.d-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: #1a1917; line-height: 1.2; }
+.d-desc { font-family: var(--serif); font-style: italic; font-size: 14px; color: #6b6560; line-height: 1.7; }
+
+/* VARIANT SELECTOR */
+.variant-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #a8a39d; }
+.variant-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.variant-btn { background: rgba(0,0,0,0.04); border: 1.5px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 8px 14px; font-family: var(--font); font-size: 13px; font-weight: 400; color: #4a4744; cursor: pointer; transition: all 0.15s; white-space: normal; line-height: 1.3; }
+.variant-btn:hover { border-color: #1a1917; }
+.variant-btn.selected { background: #1a1917; border-color: #1a1917; color: #f5f2ed; }
+.d-price-display { font-size: 22px; font-weight: 400; color: #1a1917; letter-spacing: -0.01em; }
+
+/* BUY SECTION */
+.buy-section { margin-top: auto; padding-top: 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(0,0,0,0.08); }
+.btn-add { display: block; width: 100%; background: #1a1917; color: #f5f2ed; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
+.btn-add:hover { opacity: 0.85; }
+
+/* FULLSCREEN */
+#fs-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.97); display: none; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
+#fs-overlay.on { display: flex; }
+#fs-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; pointer-events: none; }
+.fs-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
+.fs-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.12); border: none; border-radius: 50%; width: 48px; height: 48px; cursor: pointer; z-index: 2; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; transition: background 0.15s; }
+.fs-nav:hover { background: rgba(255,255,255,0.22); }
+.fs-nav-prev { left: 16px; }
+.fs-nav-next { right: 16px; }
+
+/* CART MODAL */
+#cart-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); visibility: hidden; opacity: 0; transition: opacity 0.25s, visibility 0s linear 0.25s; display: flex; align-items: center; justify-content: center; padding: 24px; }
+#cart-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.25s, visibility 0s; }
+#cart-sheet { background: #f5f2ed; border-radius: 16px; width: 100%; max-width: 520px; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 100px rgba(0,0,0,0.7); }
+@media (max-width: 600px) {
+  #cart-overlay { padding: 0; align-items: flex-end; }
+  #cart-sheet { border-radius: 20px 20px 0 0; max-height: 90dvh; max-width: 100%; }
+}
+.cart-header { display: flex; align-items: center; padding: 22px 22px 14px; flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
+.cart-header h2 { font-family: var(--serif); font-size: 20px; font-weight: 700; color: #1a1917; flex: 1; }
+.cart-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #6b6560; }
+.cart-items { flex: 1; overflow-y: auto; padding: 16px 22px; display: flex; flex-direction: column; gap: 12px; }
+.cart-items::-webkit-scrollbar { width: 0; }
+.cart-item { display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.03); border-radius: 10px; padding: 12px; border: 1px solid rgba(0,0,0,0.06); }
+.cart-item-img { width: 56px; height: 56px; object-fit: contain; border-radius: 6px; background: #e8e4df; flex-shrink: 0; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-title { font-family: var(--serif); font-size: 14px; font-weight: 700; color: #1a1917; line-height: 1.2; }
+.cart-item-size { font-size: 12px; color: #6b6560; margin-top: 3px; }
+.cart-item-price { font-size: 15px; font-weight: 500; color: #1a1917; white-space: nowrap; }
+.cart-item-remove { background: none; border: none; cursor: pointer; color: #a8a39d; font-size: 16px; padding: 4px; flex-shrink: 0; transition: color 0.15s; }
+.cart-item-remove:hover { color: #1a1917; }
+.cart-empty { text-align: center; padding: 40px 20px; color: #a8a39d; font-size: 14px; font-style: italic; }
+.cart-footer { padding: 16px 22px 22px; border-top: 1px solid rgba(0,0,0,0.07); flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+.cart-total { display: flex; justify-content: space-between; align-items: baseline; }
+.cart-total-label { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: lowercase; color: #6b6560; }
+.cart-total-amount { font-size: 24px; font-weight: 400; color: #1a1917; }
+.btn-checkout { display: block; width: 100%; background: #1a1917; color: #f5f2ed; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
+.btn-checkout:hover { opacity: 0.85; }
+.btn-checkout:disabled { opacity: 0.4; cursor: default; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
+.footer-gb-btn { background: none; border: 1px solid #444; border-radius: 20px; color: var(--ink2); font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; padding: 7px 16px; cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none; display: inline-block; }
+.footer-gb-btn:hover { border-color: var(--ink2); color: var(--ink); }
+
+/* TOAST */
+#toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #0c0c0c; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-title" href="/index.html">david nicholson</a>
+  <div class="nav-center">gallery</div>
+  <a class="nav-btn" href="https://instagram.com/dave_nichol_son"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
+  <button class="nav-cart" onclick="openCart()" aria-label="cart">
+    <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    <span class="nav-cart-count" id="cart-count">0</span>
+  </button>
+</nav>
+
+<div class="page-body">
+
+<div class="year-sidebar" id="year-sidebar" style="display:none">
+  <button class="year-btn all active" data-year="all" onclick="toggleFilter('all',this)">all</button>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid" id="grid">
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detail-overlay" onclick="overlayClick(event)">
+  <div id="detail-sheet">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div class="modal-img-pane" id="modal-img-pane" onclick="openFS()">
+      <button class="img-nav img-nav-prev" id="nav-prev" onclick="event.stopPropagation();slideNav(-1)" ontouchend="event.stopPropagation()">‹</button>
+      <img id="d-img" src="" alt="">
+      <button class="img-nav img-nav-next" id="nav-next" onclick="event.stopPropagation();slideNav(1)" ontouchend="event.stopPropagation()">›</button>
+    </div>
+    <div class="modal-info-pane">
+      <div class="modal-info-inner">
+        <div class="d-title" id="d-title"></div>
+        <div class="d-desc"  id="d-desc"></div>
+        <div class="variant-label" id="variant-label" style="display:none">size</div>
+        <div class="variant-btns" id="d-variants"></div>
+        <div class="d-price-display" id="d-price"></div>
+        <div class="buy-section" id="buy-section"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN -->
+<div id="fs-overlay" onclick="fsBgClick(event)">
+  <button class="fs-close" onclick="event.stopPropagation();closeFS()">✕</button>
+  <button class="fs-nav fs-nav-prev" onclick="event.stopPropagation();fsNav(-1)">‹</button>
+  <img id="fs-img" src="" alt="">
+  <button class="fs-nav fs-nav-next" onclick="event.stopPropagation();fsNav(1)">›</button>
+</div>
+
+<!-- CART MODAL -->
+<div id="cart-overlay" onclick="cartOverlayClick(event)">
+  <div id="cart-sheet">
+    <div class="cart-header">
+      <h2>your cart</h2>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer" id="cart-footer" style="display:none">
+      <div class="cart-total">
+        <span class="cart-total-label">total</span>
+        <span class="cart-total-amount" id="cart-total">$0</span>
+      </div>
+      <button class="btn-checkout" id="btn-checkout" onclick="checkout()">checkout</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
+
+let products = [];
+let filteredIndices = []; // indices into products[] currently visible
+let activeYears = new Set(); // empty = show all
+let curIdx = 0; // index into products[]
+let curVariationId = null;
+let curVariationPrice = 0;
+let cart = [];
+try { const s = localStorage.getItem('dna_cart'); if (s) cart = JSON.parse(s); } catch {}
+
+function saveCart() {
+  try { localStorage.setItem('dna_cart', JSON.stringify(cart)); } catch {}
+}
+
+async function loadProducts() {
+  try {
+    const r = await fetch(LAMBDA + '/products');
+    if (!r.ok) throw 0;
+    const raw = await r.json();
+    const list = raw.products || raw;
+    products = list.map(p => ({
+      id:         p.id,
+      title:      p.name || p.title,
+      desc:       p.description || p.desc || '',
+      img:        p.img || p.image_url || null,
+      url:        p.url || null,
+      year:       p.year || null,
+      variations: (p.variations || []).map(v => ({
+        id:    v.id,
+        name:  v.name,
+        price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
+      })),
+    }));
+    // Lambda already sorts newest→oldest then alpha — no shuffle
+    buildFilterBar();
+    applyFilter();
+    updateCartCount();
+  } catch {
+    document.getElementById('grid').innerHTML =
+      '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
+  }
+}
+
+function buildFilterBar() {
+  const years = [...new Set(products.map(p => p.year).filter(Boolean))]
+    .sort((a, b) => parseInt(b) - parseInt(a)); // newest first
+  if (!years.length) return;
+
+  const sidebar = document.getElementById('year-sidebar');
+  sidebar.style.display = 'flex';
+
+  years.forEach(y => {
+    const btn = document.createElement('button');
+    btn.className = 'year-btn';
+    btn.textContent = y;
+    btn.dataset.year = y;
+    btn.onclick = () => toggleFilter(y, btn);
+    sidebar.appendChild(btn);
+  });
+}
+
+function toggleFilter(year, btn) {
+  if (year === 'all') {
+    activeYears.clear();
+  } else {
+    if (activeYears.has(year)) {
+      activeYears.delete(year);
+    } else {
+      activeYears.add(year);
+    }
+  }
+  // Sync button states
+  document.querySelectorAll('.year-btn').forEach(b => {
+    if (b.dataset.year === 'all') {
+      b.classList.toggle('active', activeYears.size === 0);
+    } else {
+      b.classList.toggle('active', activeYears.has(b.dataset.year));
+    }
+  });
+  applyFilter();
+}
+
+function applyFilter() {
+  if (activeYears.size === 0) {
+    // Show everything
+    filteredIndices = products.map((_, i) => i);
+  } else {
+    // Show only products whose year is in the active set
+    // Products with no year are hidden when any year filter is active
+    filteredIndices = products
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => p.year && activeYears.has(p.year))
+      .map(({ i }) => i);
+  }
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  filteredIndices.forEach(i => {
+    const p = products[i];
+    const card = document.createElement('div');
+    card.className = 'card';
+    if (p.img) {
+      const img = document.createElement('img');
+      img.alt = p.title;
+      img.referrerPolicy = 'no-referrer';
+      img.onload = () => img.classList.add('loaded');
+      img.src = p.img;
+      card.appendChild(img);
+    }
+    card.onclick = () => openDetail(i);
+    grid.appendChild(card);
+  });
+}
+
+function openDetail(idx) {
+  curIdx = idx;
+  curVariationId = null;
+  curVariationPrice = 0;
+  populateDetail(products[idx]);
+  document.getElementById('detail-overlay').classList.add('on');
+  document.getElementById('detail-sheet').scrollTop = 0;
+}
+
+function populateDetail(p) {
+  document.getElementById('d-img').referrerPolicy = 'no-referrer';
+  document.getElementById('d-img').src = p.img || '';
+  document.getElementById('d-img').alt = p.title;
+  document.getElementById('d-title').textContent = p.title;
+  document.getElementById('d-desc').textContent  = p.desc || '';
+
+  const vWrap   = document.getElementById('d-variants');
+  const vLabel  = document.getElementById('variant-label');
+  const priceEl = document.getElementById('d-price');
+  vWrap.innerHTML = '';
+  curVariationId = null;
+  curVariationPrice = 0;
+
+  if (p.variations && p.variations.length > 0) {
+    vLabel.style.display = 'block';
+    p.variations.forEach((v, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'variant-btn' + (i === 0 ? ' selected' : '');
+      btn.textContent = v.name + (v.price ? '  —  $' + v.price : '');
+      btn.onclick = () => selectVariant(v, btn, priceEl);
+      vWrap.appendChild(btn);
+    });
+    const first = p.variations[0];
+    curVariationId = first.id;
+    curVariationPrice = parseInt(first.price) || 0;
+    priceEl.textContent = first.price ? '$' + first.price : '';
+  } else {
+    vLabel.style.display = 'none';
+    priceEl.textContent = '';
+  }
+
+  renderAddButton();
+}
+
+function selectVariant(v, btn, priceEl) {
+  curVariationId = v.id;
+  curVariationPrice = parseInt(v.price) || 0;
+  document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  priceEl.textContent = v.price ? '$' + v.price : '';
+  renderAddButton();
+}
+
+function renderAddButton() {
+  const buy = document.getElementById('buy-section');
+  buy.innerHTML = '<button class="btn-add" onclick="addToCart()">add to cart</button>';
+}
+
+function addToCart() {
+  const p = products[curIdx];
+  if (!p || !curVariationId) return;
+  const variation = p.variations.find(v => v.id === curVariationId);
+  if (!variation) return;
+  cart.push({
+    cartId:        Date.now() + Math.random(),
+    id:            p.id,
+    title:         p.title,
+    img:           p.img,
+    variationId:   curVariationId,
+    variationName: variation.name,
+    price:         curVariationPrice,
+  });
+  saveCart();
+  updateCartCount();
+  closeDetail();
+  toast(p.title + ' added to cart');
+}
+
+function updateCartCount() {
+  const n = cart.length;
+  const el = document.getElementById('cart-count');
+  el.textContent = n;
+  el.classList.toggle('on', n > 0);
+}
+
+function openCart() {
+  renderCart();
+  document.getElementById('cart-overlay').classList.add('on');
+}
+function closeCart() { document.getElementById('cart-overlay').classList.remove('on'); }
+function cartOverlayClick(e) { if (e.target === document.getElementById('cart-overlay')) closeCart(); }
+
+function renderCart() {
+  const wrap = document.getElementById('cart-items');
+  const footer = document.getElementById('cart-footer');
+  if (!cart.length) {
+    wrap.innerHTML = '<div class="cart-empty">your cart is empty</div>';
+    footer.style.display = 'none';
+    return;
+  }
+  footer.style.display = 'flex';
+  wrap.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      ${item.img ? `<img class="cart-item-img" src="${esc(item.img)}" referrerpolicy="no-referrer" alt="${esc(item.title)}">` : '<div class="cart-item-img"></div>'}
+      <div class="cart-item-info">
+        <div class="cart-item-title">${esc(item.title)}</div>
+        <div class="cart-item-size">${esc(item.variationName)}</div>
+      </div>
+      <div class="cart-item-price">$${item.price}</div>
+      <button class="cart-item-remove" onclick="removeFromCart(${i})">✕</button>
+    </div>
+  `).join('');
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById('cart-total').textContent = '$' + total;
+}
+
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  saveCart();
+  updateCartCount();
+  renderCart();
+}
+
+async function checkout() {
+  if (!cart.length) return;
+  const btn = document.getElementById('btn-checkout');
+  btn.disabled = true;
+  btn.textContent = 'one moment…';
+  try {
+    const r = await fetch(LAMBDA + '/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: cart.map(item => ({
+          variation_id: item.variationId,
+          item_id:      item.id,
+          title:        item.title,
+          price:        item.price,
+        }))
+      }),
+    });
+    const data = await r.json();
+    if (data.checkout_url) {
+      cart = [];
+      saveCart();
+      updateCartCount();
+      window.location.href = data.checkout_url;
+    } else {
+      throw new Error('no checkout url');
+    }
+  } catch {
+    toast('something went wrong — try again');
+    btn.disabled = false;
+    btn.textContent = 'checkout';
+  }
+}
+
+function slideNav(dir) {
+  // Navigate within the currently filtered set
+  const pos = filteredIndices.indexOf(curIdx);
+  const nextPos = (pos + dir + filteredIndices.length) % filteredIndices.length;
+  curIdx = filteredIndices[nextPos];
+  populateDetail(products[curIdx]);
+  document.getElementById('detail-sheet').scrollTop = 0;
+}
+
+function closeDetail() { document.getElementById('detail-overlay').classList.remove('on'); }
+function overlayClick(e) { if (e.target === document.getElementById('detail-overlay')) closeDetail(); }
+
+function openFS() {
+  const p = products[curIdx];
+  if (!p?.img) return;
+  document.getElementById('fs-img').src = p.img;
+  document.getElementById('fs-img').referrerPolicy = 'no-referrer';
+  document.getElementById('fs-overlay').classList.add('on');
+}
+function closeFS() {
+  document.getElementById('fs-overlay').classList.remove('on');
+  // ensure detail modal is visible for the current print
+  document.getElementById('detail-overlay').classList.add('on');
+}
+function fsBgClick(e) {
+  if (e.target === document.getElementById('fs-overlay')) closeFS();
+}
+function fsNav(dir) {
+  const pos = filteredIndices.indexOf(curIdx);
+  const nextPos = (pos + dir + filteredIndices.length) % filteredIndices.length;
+  curIdx = filteredIndices[nextPos];
+  const p = products[curIdx];
+  document.getElementById('fs-img').src = p.img || '';
+  populateDetail(p);
+}
+
+// Swipe on fullscreen overlay
+let fsSwipeX = 0;
+document.getElementById('fs-overlay').addEventListener('touchstart', e => {
+  fsSwipeX = e.touches[0].clientX;
+}, { passive: true });
+document.getElementById('fs-overlay').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - fsSwipeX;
+  if (Math.abs(dx) > 50) { fsNav(dx < 0 ? 1 : -1); return; }
+  // tap anywhere on image closes fullscreen
+  if (Math.abs(dx) < 8) closeFS();
+}, { passive: true });
+
+let swipeStartX = 0, swipeStartY = 0;
+document.getElementById('detail-sheet').addEventListener('touchstart', e => {
+  swipeStartX = e.touches[0].clientX;
+  swipeStartY = e.touches[0].clientY;
+}, { passive: true });
+document.getElementById('detail-sheet').addEventListener('touchend', e => {
+  if (window.innerWidth > 680) return;
+  const dx = e.changedTouches[0].clientX - swipeStartX;
+  const dy = e.changedTouches[0].clientY - swipeStartY;
+  // Horizontal swipe → navigate
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { slideNav(dx < 0 ? 1 : -1); return; }
+  // Short tap on image pane (not on nav arrows) → fullscreen
+  if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e.target.closest('#modal-img-pane') && !e.target.closest('.img-nav')) openFS();
+}, { passive: true });
+
+let tT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(tT); tT = setTimeout(() => el.classList.remove('on'), 2600);
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Handle post-checkout redirect
+if (new URLSearchParams(window.location.search).get('success') === '1') {
+  cart = [];
+  saveCart();
+  updateCartCount();
+  history.replaceState(null, '', '/gallery.html');
+  setTimeout(() => toast('order placed — thank you!'), 400);
+}
+
+loadProducts();
+</script>
+
+<!-- GUESTBOOK MODAL -->
+<div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
+<div id="gb-sheet" style="background:#f5f2ed;border-radius:12px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+  <div style="display:flex;align-items:center;padding:26px 26px 14px;gap:10px;flex-shrink:0;">
+    <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:#1a1917;flex:1;">guest book</div>
+    <button onclick="closeGB()" style="width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6560;">✕</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:0 26px 32px;display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">name</label>
+        <input id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">email</label>
+        <input id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label>
+        <textarea id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;resize:none;min-height:80px;line-height:1.5;"></textarea></div>
+      <button id="gb-submit-btn" onclick="submitGB()" style="background:#1a1917;border:none;border-radius:6px;color:#f5f2ed;padding:15px;font-family:var(--font);font-size:13px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <span class="footer-copy">&copy; 2026 david nicholson</span>
+  <div style="display:flex;gap:16px;align-items:center;">
+    <button class="footer-gb-btn" onclick="window.location='mai'+'lto:'+'dave@'+'davepainting.com'">contact</button>
+    <button class="footer-gb-btn" onclick="openGB()">guest book</button>
+  </div>
+</footer>
+
+<script>
+let gbSubmitting = false;
+
+function openGB() {
+  document.getElementById('gb-overlay').style.cssText += ';visibility:visible;opacity:1;transition:opacity 0.28s,visibility 0s;';
+}
+function closeGB() {
+  const o = document.getElementById('gb-overlay');
+  o.style.opacity = '0'; o.style.visibility = 'hidden';
+  o.style.transition = 'opacity 0.28s,visibility 0s linear 0.28s';
+}
+function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
+
+async function submitGB() {
+  if (gbSubmitting) return;
+  const name  = document.getElementById('g-name').value.trim();
+  const email = document.getElementById('g-email').value.trim();
+  const note  = document.getElementById('g-msg').value.trim();
+  if (!name)                         { toast('please enter your name'); return; }
+  if (!email || !email.includes('@')){ toast('please enter a valid email'); return; }
+  gbSubmitting = true;
+  const btn = document.getElementById('gb-submit-btn');
+  btn.textContent = 'signing…'; btn.style.opacity = '0.6';
+  try {
+    const r = await fetch(LAMBDA + '/guestbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, note }),
+    });
+    if (!r.ok) throw 0;
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-email').value = '';
+    document.getElementById('g-msg').value = '';
+    toast('thanks for signing!');
+    setTimeout(closeGB, 1200);
+  } catch {
+    toast('something went wrong — try again');
+  } finally {
+    gbSubmitting = false;
+    btn.textContent = 'sign the guest book'; btn.style.opacity = '';
+  }
+}
+</script>
+</body>
+</html>
