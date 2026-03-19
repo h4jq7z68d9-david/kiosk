@@ -26,10 +26,6 @@ The site is deployed and working. Push changes to GitHub — deploy is automatic
 | SSL Cert — kiosk.davidnicholsonllc.com | ACM us-east-1, auto-renews |
 | IAM Role | github-kiosk-deploy — has CloudFront invalidation permission for both distributions |
 
-**Certs to delete:**
-- `arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424` (wrong region, unused)
-- Old `kiosk.davidnicholsonllc.com` cert once confident it's no longer needed
-
 **DNS:** `davidnicholsonart.com` is registered with AWS and DNS is in Route 53. Both apex and www point to CloudFront distribution E2EJH38GWGPEPG.
 
 **ACM validation tip:** When requesting a cert, the "Create records in Route 53" button only works if a hosted zone already exists. After setting nameservers, NS records in Route 53 Registered Domains must match the hosted zone NS records exactly — no trailing dots.
@@ -49,6 +45,7 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 - Repo secret set: `AWS_ROLE_ARN`
 - Workflow file: `.github/workflows/deploy.yml`
 - Invalidates both distributions: E31J8ASEUTGXD9 and E2EJH38GWGPEPG
+- Syncs `*.html` and `*.png` files to S3
 
 ---
 
@@ -69,8 +66,6 @@ Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda gene
 
 **Originals:** Excluded from API/kiosk by detecting single "Default Title" variation.
 
-**Fix needed in Square dashboard:** "Resurrection\tLilies" has a tab character in the name — rename it.
-
 **Images:** Product images are hosted by Square. No dependency on Shopify CDN.
 
 ---
@@ -89,7 +84,7 @@ Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda gene
 SQUARE_TOKEN=EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53
 SQUARE_LOC=LYVD3ZGR3X4KE
 SES_FROM=noreply@davidnicholsonart.com
-NOTIFY_EMAIL=dave@davepainting.com
+NOTIFY_EMAIL=david@davidnicholsonart.com
 ```
 
 **Endpoints:**
@@ -97,7 +92,7 @@ NOTIFY_EMAIL=dave@davepainting.com
 - `GET /hero` — returns a single random product with an image `{img, title, id}` — used by index.html hero
 - `GET /image?id=X` — proxies Square CDN image to avoid hotlink 403s
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
-- `POST /guestbook` — saves to DynamoDB + emails dave@davepainting.com on guest book submission
+- `POST /guestbook` — saves to DynamoDB + emails david@davidnicholsonart.com on guest book submission
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}` ✓
 
 **To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
@@ -108,23 +103,52 @@ NOTIFY_EMAIL=dave@davepainting.com
 
 ## SES (Email)
 
-- SES was reset — needs to be set up fresh next session
-- SES still in **sandbox mode** — need to request production access
-- Domain: `davidnicholsonart.com` (DNS now in Route 53, should verify quickly)
-- **TODO next session:** Verify domain in SES + request production access
+- Domain `davidnicholsonart.com` verified in SES ✓
+- Production access requested — awaiting AWS approval
+- Once approved: test by submitting a guestbook entry and confirming notification arrives at `david@davidnicholsonart.com`
+- Domain: `davidnicholsonart.com` (DNS in Route 53)
 
 ---
 
 ## SNS (SMS)
 
-Not yet set up. SMS send-link will fail until a dedicated phone number is provisioned (~$1-2/month in AWS SNS).
+| Item | Value |
+|---|---|
+| Phone number | +18444767251 |
+| Type | Toll-free |
+| Phone number ID | phone-0c0649f801484987accc2fbeb0f0ed3b |
+| ARN | arn:aws:sms-voice:us-east-1:892204037842:phone-number/phone-0c0649f801484987accc2fbeb0f0ed3b |
+| Status | Pending carrier registration (up to 15 business days) |
+| Monthly fee | $2.00 |
+
+Lambda `sendSMS` updated with `OriginationNumber: '+18444767251'`. SMS will work once carrier registration clears.
+
+---
+
+## Email — david@davidnicholsonart.com
+
+Set up via iCloud+ custom domain. DNS records added to Route 53:
+- TXT: `apple-domain=...` verification + SPF record
+- MX: `mx01.mail.icloud.com.` and `mx02.mail.icloud.com.` (both priority 10)
+- CNAME: `sig1._domainkey` → iCloud DKIM
+
+Sends and receives from Apple Mail on all devices.
+
+---
+
+## Favicon
+
+- `favicon96.png` — 96x96, used as browser tab icon
+- `favicon180.png` — 180x180, used as Apple touch icon (home screen)
+- Both files in repo root, deployed to S3 via GitHub Actions
+- Tags added to all three HTML files
 
 ---
 
 ## Shopify — Cancelled
 
 Shopify has been cancelled. All product images were already in Square — no image migration needed.
-- Facebook/Instagram shops need to be reconnected to Square
+- Facebook/Instagram/Pinterest shops need to be reconnected to Square
 
 ---
 
@@ -141,11 +165,11 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - Caption (print title) appears only after image loads
 - `referrerPolicy = 'no-referrer'` on hero image to avoid S3 403
 - Guest book POSTs to Lambda
-- Contact link uses split string `'mai'+'lto:...'` to prevent Cloudflare email obfuscation injection
+- Contact link uses split string `'mai'+'lto:david@davidnicholsonart.com'` to prevent Cloudflare email obfuscation injection
 
 ### gallery.html (public gallery)
 - Fetches from Lambda `GET /products`
-- Grid shuffled randomly on each page load (Fisher-Yates)
+- Sort: year descending, then alphabetical within same year
 - **Cart** in top-right nav — shopping bag SVG icon with count badge
 - Cart persists in localStorage (`dna_cart`) across page loads and browser closes
 - Cart clears from localStorage after successful checkout
@@ -164,19 +188,16 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - Fetches from Lambda (with service worker offline cache)
 - Detail modal: title + "Order this print" + QR code (links to `p.url`)
 - Email/phone send fields POST to Lambda
-- Guest book POSTs to Lambda → email notification to dave@davepainting.com
+- Guest book POSTs to Lambda → email notification to david@davidnicholsonart.com
 - Export CSV hidden behind triple-tap on "Guest Book" title
 
 ---
 
 ## Pending — In Order of Priority
 
-- [ ] **SES setup fresh** — verify davidnicholsonart.com domain + request production access
-- [ ] **Reconnect Facebook/Instagram shops** to Square (Shopify cancelled)
-- [ ] **Fix "Resurrection\tLilies"** tab character in Square dashboard
-- [ ] **Provision SNS phone number** for SMS (~$1-2/month)
-- [ ] **Delete orphaned ACM cert** in us-east-2 (`arn:aws:acm:us-east-2:892204037842:certificate/97eed359-f614-49e6-aaeb-f1cfe8c44424`)
-- [ ] **Delete old kiosk.davidnicholsonllc.com ACM cert** once confirmed not needed
+- [ ] **SES production access** — awaiting AWS approval; test with guestbook submission once approved
+- [ ] **Reconnect Facebook/Instagram/Pinterest shops** to Square (Shopify cancelled)
+- [ ] **Provision SNS phone number** — provisioned, awaiting carrier registration (up to 15 business days)
 
 ---
 
@@ -203,9 +224,9 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
 - **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }` to collect shipping on the hosted checkout page. Square handles card + address; no embedded card form needed in gallery.html.
 - **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
-- **HIPAA web app** — future, entirely separate AWS account, nothing to do now
 - **S3 bucket is in us-east-2** — despite most other resources being in us-east-1
 - **IAM role must explicitly list both CloudFront distribution ARNs** for invalidation to work in GitHub Actions
+- **S3 bucket name is `kiosk.davidnicholsonllc`** (no .com) — easy to confuse with the domain name
 
 ---
 
@@ -214,7 +235,8 @@ All three are single-file, no framework, no build step — intentional, keep it 
 | Service | Detail |
 |---|---|
 | Instagram | @dave_nichol_son |
-| Notification email | dave@davepainting.com |
+| Personal email | david@davidnicholsonart.com (iCloud+ custom domain) |
+| Notification email | david@davidnicholsonart.com |
 | Send-from email | noreply@davidnicholsonart.com |
 | Square Online | https://david-nicholson-art.square.site |
 | GitHub repo | https://github.com/h4jq7z68d9-david/kiosk |
