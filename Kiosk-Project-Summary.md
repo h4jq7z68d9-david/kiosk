@@ -84,7 +84,7 @@ Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda gene
 ```
 SQUARE_TOKEN=EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53
 SQUARE_LOC=LYVD3ZGR3X4KE
-SES_FROM=noreply@davidnicholsonart.com
+SES_FROM=david@davidnicholsonart.com
 NOTIFY_EMAIL=david@davidnicholsonart.com
 ```
 
@@ -100,14 +100,16 @@ NOTIFY_EMAIL=david@davidnicholsonart.com
 
 **Note on images:** Square catalog API returns URLs that 403 in browsers due to hotlink protection. Lambda `/image` endpoint proxies them. All image elements use `referrerPolicy = 'no-referrer'` as a fallback.
 
+**Email sender:** All emails send as `"David Nicholson Art" <david@davidnicholsonart.com>`. Display name set in code; address set via `SES_FROM` env var.
+
 ---
 
 ## SES (Email)
 
 - Domain `davidnicholsonart.com` verified in SES ✓
-- Production access requested — awaiting AWS approval
-- Once approved: test by submitting a guestbook entry and confirming notification arrives at `david@davidnicholsonart.com`
-- Domain: `davidnicholsonart.com` (DNS in Route 53)
+- **Production access approved ✓** — guestbook notifications and send-link emails are live
+- Sends from `david@davidnicholsonart.com` with display name "David Nicholson Art"
+- Test confirmed working: guestbook submission → notification email arrives at david@davidnicholsonart.com
 
 ---
 
@@ -149,7 +151,7 @@ Sends and receives from Apple Mail on all devices.
 ## Shopify — Cancelled
 
 Shopify has been cancelled. All product images were already in Square — no image migration needed.
-- Facebook/Instagram/Pinterest shops need to be reconnected to Square
+- Facebook/Instagram/Pinterest shops need to be reconnected to Square (pending SEO work first)
 
 ---
 
@@ -189,7 +191,8 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ### kiosk.html (art fair iPad)
 - Fetches from Lambda (with service worker offline cache)
-- Detail modal: title + "Order this print" + QR code (links to `p.url`)
+- Detail modal: title + "Order this print" + QR code (links to `p.url` — davidnicholsonart.com gallery page)
+- Send-link (email/SMS) uses `p.url` — links to davidnicholsonart.com gallery, not Square
 - Email/phone send fields POST to Lambda
 - Guest book POSTs to Lambda → email notification to david@davidnicholsonart.com; includes newsletter opt-in checkbox — `subscribed` bool stored in DynamoDB
 - Top bar buttons (Guest Book, Follow) — dark background with white text
@@ -199,9 +202,23 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [ ] **SES production access** — awaiting AWS approval; test with guestbook submission once approved
-- [ ] **Reconnect Facebook/Instagram/Pinterest shops** to Square (Shopify cancelled)
-- [ ] **Provision SNS phone number** — provisioned, awaiting carrier registration (up to 15 business days)
+- [ ] **SEO & discoverability** — meta tags, Open Graph, sitemap.xml, robots.txt, Google Analytics, Google Search Console — do this BEFORE reconnecting social shops
+- [ ] **Reconnect Facebook, Instagram, Pinterest shops** to Square (after SEO)
+- [ ] **Ad accounts** — Meta Ads (Facebook/Instagram), Pinterest Ads, Google Ads
+- [ ] **Newsletter** — evaluate MailerLite vs. custom-built on SES; mailing list already capturing subscribers in DynamoDB
+- [ ] **Mailing list unsubscribe endpoint** — `GET /unsubscribe?id=xyz` Lambda endpoint (pair with newsletter work)
+- [ ] **SNS carrier registration** — waiting, nothing to do; SMS will work once cleared
+- [ ] **Square tax issue** — revisit once sales begin; Square support: 1-855-700-6000
+
+---
+
+## Completed This Session
+
+- ✓ SES out of sandbox — production email confirmed working
+- ✓ Email sender fixed: now sends as `"David Nicholson Art" <david@davidnicholsonart.com>`
+- ✓ Lambda env vars updated: `SES_FROM` and `NOTIFY_EMAIL` both set to `david@davidnicholsonart.com`
+- ✓ kiosk.html send-link and QR code fixed: use `p.url` (davidnicholsonart.com) instead of squareup.com URLs
+- ✓ Orphaned ACM certificate in us-east-2 deleted
 
 ---
 
@@ -231,6 +248,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **S3 bucket is in us-east-2** — despite most other resources being in us-east-1
 - **IAM role must explicitly list both CloudFront distribution ARNs** for invalidation to work in GitHub Actions
 - **S3 bucket name is `kiosk.davidnicholsonllc`** (no .com) — easy to confuse with the domain name
+- **kiosk send-link and QR always use `p.url`** — never construct squareup.com or square.site URLs directly
 
 ---
 
@@ -241,6 +259,6 @@ All three are single-file, no framework, no build step — intentional, keep it 
 | Instagram | @dave_nichol_son |
 | Personal email | david@davidnicholsonart.com (iCloud+ custom domain) |
 | Notification email | david@davidnicholsonart.com |
-| Send-from email | noreply@davidnicholsonart.com |
+| Send-from email | david@davidnicholsonart.com |
 | Square Online | https://david-nicholson-art.square.site |
 | GitHub repo | https://github.com/h4jq7z68d9-david/kiosk |
