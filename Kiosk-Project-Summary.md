@@ -10,7 +10,7 @@
 | https://kiosk.davidnicholsonllc.com | Legacy URL — still works, same content |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
-**Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3 + invalidates both CloudFront distributions in ~60 seconds.
+**Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3, deploys Lambda, and invalidates both CloudFront distributions in ~60 seconds.
 
 ---
 
@@ -24,7 +24,7 @@ The site is deployed and working. Push changes to GitHub — deploy is automatic
 | CloudFront Distribution — kiosk.davidnicholsonllc.com | E31J8ASEUTGXD9 (d33vrz1flme0j4.cloudfront.net) |
 | SSL Cert — davidnicholsonart.com | ACM us-east-1, covers apex + www, auto-renews |
 | SSL Cert — kiosk.davidnicholsonllc.com | ACM us-east-1, auto-renews |
-| IAM Role | github-kiosk-deploy — has CloudFront invalidation permission for both distributions |
+| IAM Role | github-kiosk-deploy — has S3, CloudFront invalidation, and Lambda UpdateFunctionCode permissions |
 
 **DNS:** `davidnicholsonart.com` is registered with AWS and DNS is in Route 53. Both apex and www point to CloudFront distribution E2EJH38GWGPEPG.
 
@@ -44,8 +44,9 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 - IAM role: `github-kiosk-deploy` (OIDC, no static keys)
 - Repo secret set: `AWS_ROLE_ARN`
 - Workflow file: `.github/workflows/deploy.yml`
-- Invalidates both distributions: E31J8ASEUTGXD9 and E2EJH38GWGPEPG
 - Syncs `*.html` and `*.png` files to S3
+- Zips and deploys `index.mjs` to Lambda function `dna-kiosk`
+- Invalidates both distributions: E31J8ASEUTGXD9 and E2EJH38GWGPEPG
 
 ---
 
@@ -92,10 +93,10 @@ NOTIFY_EMAIL=david@davidnicholsonart.com
 - `GET /hero` — returns a single random product with an image `{img, title, id}` — used by index.html hero
 - `GET /image?id=X` — proxies Square CDN image to avoid hotlink 403s
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
-- `POST /guestbook` — saves to DynamoDB + emails david@davidnicholsonart.com on guest book submission
+- `POST /guestbook` — saves to DynamoDB (`dna-guestbook`) + emails david@davidnicholsonart.com; stores `name, email, note, subscribed (BOOL)`. Notification email includes subscribed: yes/no.
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}` ✓
 
-**To redeploy Lambda:** Replace `index.mjs` in local lambda folder on Mac, run `./deploy.sh`.
+**To redeploy Lambda:** Push `index.mjs` to GitHub — deploy is automatic via GitHub Actions.
 
 **Note on images:** Square catalog API returns URLs that 403 in browsers due to hotlink protection. Lambda `/image` endpoint proxies them. All image elements use `referrerPolicy = 'no-referrer'` as a fallback.
 
@@ -164,7 +165,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - Image appears at natural aspect ratio (`height: auto`) — no fixed placeholder, no skeleton
 - Caption (print title) appears only after image loads
 - `referrerPolicy = 'no-referrer'` on hero image to avoid S3 403
-- Guest book POSTs to Lambda
+- Guest book POSTs to Lambda; includes newsletter opt-in checkbox ("casually stay informed") — `subscribed` bool stored in DynamoDB
 - Contact link uses split string `'mai'+'lto:david@davidnicholsonart.com'` to prevent Cloudflare email obfuscation injection
 
 ### gallery.html (public gallery)
@@ -182,13 +183,16 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - Cart modal: shows all items with thumbnail, title, size, price, remove button, running total
 - Checkout button → POSTs to Lambda `/checkout` → redirects to Square hosted checkout
 - Checkout redirect URL: `https://davidnicholsonart.com/gallery.html?success=1`
+- Guest book includes newsletter opt-in checkbox ("casually stay informed") — `subscribed` bool stored in DynamoDB
+- Footer buttons white text/border; bottom padding 48px; cart icon white
 - Contact link uses split string to prevent Cloudflare obfuscation
 
 ### kiosk.html (art fair iPad)
 - Fetches from Lambda (with service worker offline cache)
 - Detail modal: title + "Order this print" + QR code (links to `p.url`)
 - Email/phone send fields POST to Lambda
-- Guest book POSTs to Lambda → email notification to david@davidnicholsonart.com
+- Guest book POSTs to Lambda → email notification to david@davidnicholsonart.com; includes newsletter opt-in checkbox — `subscribed` bool stored in DynamoDB
+- Top bar buttons (Guest Book, Follow) — dark background with white text
 - Export CSV hidden behind triple-tap on "Guest Book" title
 
 ---
