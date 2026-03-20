@@ -106,15 +106,16 @@ async function saveOrder(squareOrder) {
   }));
 }
 
-async function saveGuest({ name, email, note }) {
+async function saveGuest({ name, email, note, subscribed }) {
   await dynamo.send(new PutItemCommand({
     TableName: 'dna-guestbook',
     Item: {
-      id:        { S: Date.now().toString() },
-      timestamp: { S: new Date().toISOString() },
-      name:      { S: name },
-      email:     { S: email },
-      note:      { S: note || '' },
+      id:         { S: Date.now().toString() },
+      timestamp:  { S: new Date().toISOString() },
+      name:       { S: name },
+      email:      { S: email },
+      note:       { S: note || '' },
+      subscribed: { BOOL: subscribed === true },
     }
   }));
 }
@@ -237,14 +238,14 @@ async function sendLink(body) {
 }
 
 async function guestbook(body) {
-  const { name, email, note } = body;
+  const { name, email, note, subscribed } = body;
   if (!name || !email) return err('Missing name or email');
 
   const time = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' });
-  const text = `New guest book entry:\n\nName:  ${name}\nEmail: ${email}\nNote:  ${note || '(none)'}\nTime:  ${time}`;
+  const text = `New guest book entry:\n\nName:  ${name}\nEmail: ${email}\nNote:  ${note || '(none)'}\nSubscribed: ${subscribed ? 'yes' : 'no'}\nTime:  ${time}`;
 
   await Promise.all([
-    saveGuest({ name, email, note }),
+    saveGuest({ name, email, note, subscribed }),
     sendEmail({ to: NOTIFY_EMAIL, subject: `Guest Book — ${name}`, body: text }),
   ]);
 

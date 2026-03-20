@@ -162,6 +162,10 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 28px 10%; max-w
         <div><label class="gb-label-field" for="g-name">name</label><input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false"></div>
         <div><label class="gb-label-field" for="g-email">email</label><input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
         <div><label class="gb-label-field" for="g-msg">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label><textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false"></textarea></div>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
+          <input id="g-subscribe" type="checkbox" style="width:17px;height:17px;flex-shrink:0;accent-color:#1a1917;cursor:pointer;">
+          <span style="font-size:12px;color:#6b6560;letter-spacing:0.04em;line-height:1.4;">casually stay informed — occasional notes on new work &amp; upcoming events</span>
+        </label>
         <button class="gb-submit" onclick="submitGB()">sign the guest book</button>
       </div>
     </div>
@@ -204,9 +208,10 @@ function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overla
 
 async function submitGB() {
   if (gbSubmitting) return;
-  const name  = document.getElementById('g-name').value.trim();
-  const email = document.getElementById('g-email').value.trim();
-  const note  = document.getElementById('g-msg').value.trim();
+  const name       = document.getElementById('g-name').value.trim();
+  const email      = document.getElementById('g-email').value.trim();
+  const note       = document.getElementById('g-msg').value.trim();
+  const subscribed = document.getElementById('g-subscribe').checked;
   if (!name)                          { toast('please enter your name'); return; }
   if (!email || !email.includes('@')) { toast('please enter a valid email'); return; }
   gbSubmitting = true;
@@ -216,12 +221,13 @@ async function submitGB() {
     const r = await fetch(LAMBDA + '/guestbook', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, note }),
+      body: JSON.stringify({ name, email, note, subscribed }),
     });
     if (!r.ok) throw 0;
     document.getElementById('g-name').value = '';
     document.getElementById('g-email').value = '';
     document.getElementById('g-msg').value = '';
+    document.getElementById('g-subscribe').checked = false;
     toast('thanks for signing!');
     setTimeout(closeGB, 1200);
   } catch {
