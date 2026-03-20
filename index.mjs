@@ -79,7 +79,7 @@ function fetchBinary(url) {
 
 async function sendEmail({ to, subject, body }) {
   await ses.send(new SendEmailCommand({
-    Source: SES_FROM,
+    Source: `"David Nicholson Art" <${SES_FROM}>`,
     Destination: { ToAddresses: [to] },
     Message: { Subject: { Data: subject }, Body: { Text: { Data: body } } }
   }));

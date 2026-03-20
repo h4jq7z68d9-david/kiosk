@@ -357,7 +357,7 @@ function slideNav(dir) {
   document.getElementById('d-name').textContent = p.title;
   const vid = p.variations?.[0]?.id;
   curVariationId = vid || null;
-  const url = vid ? `https://squareup.com/shop/item/${vid}` : 'https://davidnicholsonllc.com';
+  const url = p.url || 'https://davidnicholsonart.com/gallery.html';
   const qel = document.getElementById('d-qr');
   qel.innerHTML = '';
   makeQR(qel, url, 140);
@@ -413,7 +413,7 @@ async function sendLink(method) {
   const p = products[curIdx];
   if (!p) return;
   const vid = curVariationId || p.variations?.[0]?.id;
-  const url = vid ? `https://squareup.com/shop/item/${vid}` : 'https://davidnicholsonllc.com';
+  const url = p.url || 'https://davidnicholsonart.com/gallery.html';
   if (method === 'email') {
     const email = document.getElementById('send-email').value.trim();
     if (!email || !email.includes('@')) { showConfirm('Please enter a valid email', false); return; }
