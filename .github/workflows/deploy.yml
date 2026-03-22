@@ -22,6 +22,9 @@ jobs:
             --exclude "*" \
             --include "*.html" \
             --include "*.png" \
+            --include "*.jpg" \
+            --include "*.xml" \
+            --include "*.txt" \
             --delete
       - name: Deploy Lambda
         run: |
