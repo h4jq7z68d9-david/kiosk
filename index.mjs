@@ -196,6 +196,69 @@ async function getProducts() {
   return ok({ products });
 }
 
+async function getFeed() {
+  const products = await buildProductList();
+  const SITE = 'https://davidnicholsonart.com';
+
+  const items = products.flatMap(p => {
+    if (!p.variations || !p.variations.length) return [];
+    return p.variations.map(v => {
+      const price = v.price ? parseFloat(v.price).toFixed(2) : '0.00';
+      const id = `${p.id}_${v.id}`;
+      const title = p.variations.length > 1 ? `${p.title} — ${v.name}` : p.title;
+      const desc = p.desc
+        ? xmlEsc(p.desc)
+        : xmlEsc(`${p.title} — fine art print by David Nicholson. Available in multiple sizes.`);
+      const img = p.img || '';
+      const link = `${SITE}/gallery.html`;
+
+      return `    <item>
+      <g:id>${xmlEsc(id)}</g:id>
+      <g:item_group_id>${xmlEsc(p.id)}</g:item_group_id>
+      <title>${xmlEsc(title)}</title>
+      <description>${desc}</description>
+      <link>${link}</link>
+      <g:image_link>${xmlEsc(img)}</g:image_link>
+      <g:price>${price} USD</g:price>
+      <g:availability>in stock</g:availability>
+      <g:condition>new</g:condition>
+      <g:brand>David Nicholson Art</g:brand>
+      <g:google_product_category>Arts &amp; Entertainment &gt; Hobbies &amp; Creative Arts &gt; Artwork</g:google_product_category>
+      <g:product_type>Fine Art Print</g:product_type>
+    </item>`;
+    });
+  });
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>David Nicholson Art</title>
+    <link>${SITE}/gallery.html</link>
+    <description>Fine art prints by David Nicholson — Kansas-based artist.</description>
+${items.join('\n')}
+  </channel>
+</rss>`;
+
+  return {
+    statusCode: 200,
+    headers: {
+      ...CORS,
+      'Content-Type': 'application/xml; charset=UTF-8',
+      'Cache-Control': 'public, max-age=3600',
+    },
+    body: xml,
+  };
+}
+
+function xmlEsc(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 async function getHero() {
   const products = await buildProductList();
   const withImg = products.filter(p => p.img);
@@ -296,6 +359,7 @@ export const handler = async (event) => {
   if (method === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
   try {
     if (method === 'GET'  && path === '/products')              return await getProducts();
+    if (method === 'GET'  && path === '/feed')                 return await getFeed();
     if (method === 'GET'  && path === '/hero')                  return await getHero();
     if (method === 'GET'  && path.startsWith('/image'))         return await proxyImage(event.queryStringParameters?.id);
     if (method === 'POST' && path === '/send-link')             return await sendLink(JSON.parse(event.body || '{}'));
