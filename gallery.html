@@ -635,40 +635,67 @@ if (new URLSearchParams(window.location.search).get('success') === '1') {
   setTimeout(() => toast('order placed — thank you!'), 400);
 }
 
-// Handle incoming product_id from Meta/Pinterest/Google feed links
-// Feed IDs are formatted as {item_id}_{variation_id}
+// Handle incoming product from Meta/Pinterest/Google feed links
+// Supports multiple parameter formats:
+//   Meta: ?products=ITEMID_VARIATIONID:1 (colon-separated quantity)
+//   Generic: ?product_id=ITEMID_VARIATIONID
 function handleIncomingProduct() {
   const params = new URLSearchParams(window.location.search);
-  const productId = params.get('product_id');
-  if (!productId) return;
 
   // Clean up URL without reloading
   history.replaceState(null, '', '/gallery.html');
 
-  // Parse item_id and variation_id from the compound feed ID
-  const lastUnderscore = productId.lastIndexOf('_');
-  if (lastUnderscore === -1) return;
-  const itemId      = productId.slice(0, lastUnderscore);
-  const variationId = productId.slice(lastUnderscore + 1);
+  // Resolve a compound feed ID (ITEMID_VARIATIONID) to a cart item
+  function resolveId(compoundId) {
+    const lastUnderscore = compoundId.lastIndexOf('_');
+    if (lastUnderscore === -1) return null;
+    const itemId      = compoundId.slice(0, lastUnderscore);
+    const variationId = compoundId.slice(lastUnderscore + 1);
+    const product = products.find(p => p.id === itemId);
+    if (!product) return null;
+    const variation = product.variations.find(v => v.id === variationId);
+    if (!variation) return null;
+    return { product, variation };
+  }
 
-  // Find the matching product
-  const product = products.find(p => p.id === itemId);
-  if (!product) return;
+  const itemsToAdd = [];
 
-  // Find the matching variation
-  const variation = product.variations.find(v => v.id === variationId);
-  if (!variation) return;
+  // Meta format: ?products=ITEMID_VARIATIONID:quantity (colon-separated, comma for multiple)
+  const productsParam = params.get('products');
+  if (productsParam) {
+    for (const entry of productsParam.split(',')) {
+      const colonIdx = entry.lastIndexOf(':');
+      const compoundId = colonIdx !== -1 ? entry.slice(0, colonIdx) : entry;
+      const qty = colonIdx !== -1 ? Math.max(1, parseInt(entry.slice(colonIdx + 1)) || 1) : 1;
+      const resolved = resolveId(decodeURIComponent(compoundId));
+      if (resolved) {
+        for (let i = 0; i < qty; i++) itemsToAdd.push(resolved);
+      }
+    }
+  }
 
-  // Add to cart
-  cart.push({
-    cartId:        Date.now() + Math.random(),
-    id:            product.id,
-    title:         product.title,
-    img:           product.img,
-    variationId:   variation.id,
-    variationName: variation.name,
-    price:         parseInt(variation.price) || 0,
-  });
+  // Fallback: ?product_id=ITEMID_VARIATIONID (skip if Meta sent literal {product_id})
+  if (!itemsToAdd.length) {
+    const productId = params.get('product_id');
+    if (productId && !productId.startsWith('{')) {
+      const resolved = resolveId(productId);
+      if (resolved) itemsToAdd.push(resolved);
+    }
+  }
+
+  if (!itemsToAdd.length) return;
+
+  for (const { product, variation } of itemsToAdd) {
+    cart.push({
+      cartId:        Date.now() + Math.random(),
+      id:            product.id,
+      title:         product.title,
+      img:           product.img,
+      variationId:   variation.id,
+      variationName: variation.name,
+      price:         parseInt(variation.price) || 0,
+    });
+  }
   saveCart();
   updateCartCount();
 
