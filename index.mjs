@@ -353,6 +353,88 @@ async function checkout(body) {
   return ok({ checkout_url: checkoutUrl });
 }
 
+// Handle Meta/Pinterest/Google feed cart redirect
+// Accepts ?products=[{"id":"ITEMID_VARIATIONID","quantity":1}] from Meta
+// or ?product_id=ITEMID_VARIATIONID for single-product links
+async function cartRedirect(queryParams) {
+  let lineItems = [];
+
+  // Meta format: ?products=[{"id":"...","quantity":1}]
+  if (queryParams?.products) {
+    let items;
+    try { items = JSON.parse(queryParams.products); } catch { items = []; }
+    for (const item of items) {
+      if (!item.id) continue;
+      const lastUnderscore = item.id.lastIndexOf('_');
+      if (lastUnderscore === -1) continue;
+      const variationId = item.id.slice(lastUnderscore + 1);
+      const qty = Math.max(1, parseInt(item.quantity) || 1);
+      for (let i = 0; i < qty; i++) {
+        lineItems.push({ quantity: '1', catalog_object_id: variationId });
+      }
+    }
+  }
+
+  // Single product format: ?product_id=ITEMID_VARIATIONID
+  if (!lineItems.length && queryParams?.product_id) {
+    const lastUnderscore = queryParams.product_id.lastIndexOf('_');
+    if (lastUnderscore !== -1) {
+      const variationId = queryParams.product_id.slice(lastUnderscore + 1);
+      lineItems.push({ quantity: '1', catalog_object_id: variationId });
+    }
+  }
+
+  if (!lineItems.length) {
+    // Nothing parseable — fall back to gallery
+    return {
+      statusCode: 302,
+      headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' },
+      body: '',
+    };
+  }
+
+  const idempotencyKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  const linkRes = await squarePost('/v2/online-checkout/payment-links', {
+    idempotency_key: idempotencyKey,
+    order: {
+      location_id: SQUARE_LOC,
+      line_items:  lineItems,
+    },
+    checkout_options: {
+      ask_for_shipping_address: true,
+      redirect_url: 'https://davidnicholsonart.com/gallery.html?success=1',
+    },
+  });
+
+  if (linkRes.errors) {
+    console.error('Square cart redirect error:', linkRes.errors);
+    return {
+      statusCode: 302,
+      headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' },
+      body: '',
+    };
+  }
+
+  const checkoutUrl = linkRes.payment_link?.url;
+  if (!checkoutUrl) {
+    return {
+      statusCode: 302,
+      headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' },
+      body: '',
+    };
+  }
+
+  const squareOrder = linkRes.related_resources?.orders?.[0];
+  if (squareOrder) saveOrder(squareOrder).catch(e => console.error('DynamoDB saveOrder error:', e));
+
+  return {
+    statusCode: 302,
+    headers: { ...CORS, Location: checkoutUrl },
+    body: '',
+  };
+}
+
 export const handler = async (event) => {
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
@@ -360,6 +442,7 @@ export const handler = async (event) => {
   try {
     if (method === 'GET'  && path === '/products')              return await getProducts();
     if (method === 'GET'  && path === '/feed')                 return await getFeed();
+    if (method === 'GET'  && path === '/cart')                 return await cartRedirect(event.queryStringParameters);
     if (method === 'GET'  && path === '/hero')                  return await getHero();
     if (method === 'GET'  && path.startsWith('/image'))         return await proxyImage(event.queryStringParameters?.id);
     if (method === 'POST' && path === '/send-link')             return await sendLink(JSON.parse(event.body || '{}'));
