@@ -30,6 +30,22 @@
   gtag('js', new Date());
   gtag('config', 'G-FL5BKJFVXF');
 </script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1480355107052738');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1480355107052738&ev=PageView&noscript=1"
+/></noscript>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
@@ -307,9 +323,9 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
 let products = [];
-let filteredIndices = []; // indices into products[] currently visible
-let activeYears = new Set(); // empty = show all
-let curIdx = 0; // index into products[]
+let filteredIndices = [];
+let activeYears = new Set();
+let curIdx = 0;
 let curVariationId = null;
 let curVariationPrice = 0;
 let cart = [];
@@ -338,7 +354,6 @@ async function loadProducts() {
         price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
       })),
     }));
-    // Lambda already sorts newest→oldest then alpha — no shuffle
     buildFilterBar();
     applyFilter();
     updateCartCount();
@@ -350,7 +365,7 @@ async function loadProducts() {
 
 function buildFilterBar() {
   const years = [...new Set(products.map(p => p.year).filter(Boolean))]
-    .sort((a, b) => parseInt(b) - parseInt(a)); // newest first
+    .sort((a, b) => parseInt(b) - parseInt(a));
   if (!years.length) return;
 
   const sidebar = document.getElementById('year-sidebar');
@@ -376,7 +391,6 @@ function toggleFilter(year, btn) {
       activeYears.add(year);
     }
   }
-  // Sync button states
   document.querySelectorAll('.year-btn').forEach(b => {
     if (b.dataset.year === 'all') {
       b.classList.toggle('active', activeYears.size === 0);
@@ -389,11 +403,8 @@ function toggleFilter(year, btn) {
 
 function applyFilter() {
   if (activeYears.size === 0) {
-    // Show everything
     filteredIndices = products.map((_, i) => i);
   } else {
-    // Show only products whose year is in the active set
-    // Products with no year are hidden when any year filter is active
     filteredIndices = products
       .map((p, i) => ({ p, i }))
       .filter(({ p }) => p.year && activeYears.has(p.year))
@@ -580,7 +591,6 @@ async function checkout() {
 }
 
 function slideNav(dir) {
-  // Navigate within the currently filtered set
   const pos = filteredIndices.indexOf(curIdx);
   const nextPos = (pos + dir + filteredIndices.length) % filteredIndices.length;
   curIdx = filteredIndices[nextPos];
@@ -600,7 +610,6 @@ function openFS() {
 }
 function closeFS() {
   document.getElementById('fs-overlay').classList.remove('on');
-  // ensure detail modal is visible for the current print
   document.getElementById('detail-overlay').classList.add('on');
 }
 function fsBgClick(e) {
@@ -615,7 +624,6 @@ function fsNav(dir) {
   populateDetail(p);
 }
 
-// Swipe on fullscreen overlay
 let fsSwipeX = 0;
 document.getElementById('fs-overlay').addEventListener('touchstart', e => {
   fsSwipeX = e.touches[0].clientX;
@@ -623,7 +631,6 @@ document.getElementById('fs-overlay').addEventListener('touchstart', e => {
 document.getElementById('fs-overlay').addEventListener('touchend', e => {
   const dx = e.changedTouches[0].clientX - fsSwipeX;
   if (Math.abs(dx) > 50) { fsNav(dx < 0 ? 1 : -1); return; }
-  // tap anywhere on image closes fullscreen
   if (Math.abs(dx) < 8) closeFS();
 }, { passive: true });
 
@@ -636,9 +643,7 @@ document.getElementById('detail-sheet').addEventListener('touchend', e => {
   if (window.innerWidth > 680) return;
   const dx = e.changedTouches[0].clientX - swipeStartX;
   const dy = e.changedTouches[0].clientY - swipeStartY;
-  // Horizontal swipe → navigate
   if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { slideNav(dx < 0 ? 1 : -1); return; }
-  // Short tap on image pane (not on nav arrows) → fullscreen
   if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e.target.closest('#modal-img-pane') && !e.target.closest('.img-nav')) openFS();
 }, { passive: true });
 
@@ -650,7 +655,6 @@ function toast(msg) {
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// Handle post-checkout redirect
 if (new URLSearchParams(window.location.search).get('success') === '1') {
   cart = [];
   saveCart();
