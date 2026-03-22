@@ -44,7 +44,7 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 - IAM role: `github-kiosk-deploy` (OIDC, no static keys)
 - Repo secret set: `AWS_ROLE_ARN`
 - Workflow file: `.github/workflows/deploy.yml`
-- Syncs `*.html` and `*.png` files to S3
+- Syncs `*.html`, `*.png`, `*.jpg`, `*.xml`, `*.txt` files to S3
 - Zips and deploys `index.mjs` to Lambda function `dna-kiosk`
 - Invalidates both distributions: E31J8ASEUTGXD9 and E2EJH38GWGPEPG
 
@@ -148,10 +148,21 @@ Sends and receives from Apple Mail on all devices.
 
 ---
 
+## SEO & Analytics
+
+- **Google Analytics** — Measurement ID: `G-FL5BKJFVXF`, Stream ID: `14175458930`; snippet on all three HTML pages
+- **Google Search Console** — verified via GA tag; sitemap submitted and confirmed fetched
+- **Open Graph** — `og-image.jpg` (1200×630, Shuttlecock No. 2) in repo root; OG + Twitter card tags on index.html and gallery.html
+- **sitemap.xml** — lists index.html (priority 1.0, monthly) and gallery.html (priority 0.9, weekly)
+- **robots.txt** — allows all crawlers, disallows kiosk.html, references sitemap
+- **kiosk.html** — has `noindex, nofollow` meta tag; excluded from sitemap
+
+---
+
 ## Shopify — Cancelled
 
 Shopify has been cancelled. All product images were already in Square — no image migration needed.
-- Facebook/Instagram/Pinterest shops need to be reconnected to Square (pending SEO work first)
+- Facebook/Instagram/Pinterest shops need to be reconnected to Square
 
 ---
 
@@ -202,8 +213,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [ ] **SEO & discoverability** — meta tags, Open Graph, sitemap.xml, robots.txt, Google Analytics, Google Search Console — do this BEFORE reconnecting social shops
-- [ ] **Reconnect Facebook, Instagram, Pinterest shops** to Square (after SEO)
+- [ ] **Reconnect Facebook, Instagram, Pinterest shops** to Square
 - [ ] **Ad accounts** — Meta Ads (Facebook/Instagram), Pinterest Ads, Google Ads
 - [ ] **Newsletter** — evaluate MailerLite vs. custom-built on SES; mailing list already capturing subscribers in DynamoDB
 - [ ] **Mailing list unsubscribe endpoint** — `GET /unsubscribe?id=xyz` Lambda endpoint (pair with newsletter work)
@@ -214,11 +224,12 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Completed This Session
 
-- ✓ SES out of sandbox — production email confirmed working
-- ✓ Email sender fixed: now sends as `"David Nicholson Art" <david@davidnicholsonart.com>`
-- ✓ Lambda env vars updated: `SES_FROM` and `NOTIFY_EMAIL` both set to `david@davidnicholsonart.com`
-- ✓ kiosk.html send-link and QR code fixed: use `p.url` (davidnicholsonart.com) instead of squareup.com URLs
-- ✓ Orphaned ACM certificate in us-east-2 deleted
+- ✓ SEO pass complete: meta tags, Open Graph, Twitter card tags on all pages
+- ✓ Google Analytics added (G-FL5BKJFVXF) to all three HTML files
+- ✓ Google Search Console verified (auto-verified via GA tag); sitemap submitted and confirmed
+- ✓ og-image.jpg created (1200×630 crop of Shuttlecock No. 2) and deployed
+- ✓ sitemap.xml and robots.txt added to repo and deployed
+- ✓ deploy.yml updated to sync *.jpg, *.xml, *.txt to S3
 
 ---
 
@@ -262,3 +273,5 @@ All three are single-file, no framework, no build step — intentional, keep it 
 | Send-from email | david@davidnicholsonart.com |
 | Square Online | https://david-nicholson-art.square.site |
 | GitHub repo | https://github.com/h4jq7z68d9-david/kiosk |
+| Google Analytics | G-FL5BKJFVXF, Stream ID 14175458930 |
+| Google Search Console | davidnicholsonart.com, verified via GA tag |
