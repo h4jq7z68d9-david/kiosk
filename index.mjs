@@ -221,6 +221,7 @@ async function getFeed() {
       <g:image_link>${xmlEsc(img)}</g:image_link>
       <g:price>${price} USD</g:price>
       <g:availability>in stock</g:availability>
+      <g:quantity_to_sell>999</g:quantity_to_sell>
       <g:condition>new</g:condition>
       <g:brand>David Nicholson Art</g:brand>
       <g:google_product_category>Arts &amp; Entertainment &gt; Hobbies &amp; Creative Arts &gt; Artwork</g:google_product_category>
