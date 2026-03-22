@@ -335,34 +335,6 @@ function saveCart() {
   try { localStorage.setItem('dna_cart', JSON.stringify(cart)); } catch {}
 }
 
-async function loadProducts() {
-  try {
-    const r = await fetch(LAMBDA + '/products');
-    if (!r.ok) throw 0;
-    const raw = await r.json();
-    const list = raw.products || raw;
-    products = list.map(p => ({
-      id:         p.id,
-      title:      p.name || p.title,
-      desc:       p.description || p.desc || '',
-      img:        p.img || p.image_url || null,
-      url:        p.url || null,
-      year:       p.year || null,
-      variations: (p.variations || []).map(v => ({
-        id:    v.id,
-        name:  v.name,
-        price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
-      })),
-    }));
-    buildFilterBar();
-    applyFilter();
-    updateCartCount();
-  } catch {
-    document.getElementById('grid').innerHTML =
-      '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
-  }
-}
-
 function buildFilterBar() {
   const years = [...new Set(products.map(p => p.year).filter(Boolean))]
     .sort((a, b) => parseInt(b) - parseInt(a));
@@ -661,6 +633,79 @@ if (new URLSearchParams(window.location.search).get('success') === '1') {
   updateCartCount();
   history.replaceState(null, '', '/gallery.html');
   setTimeout(() => toast('order placed — thank you!'), 400);
+}
+
+// Handle incoming product_id from Meta/Pinterest/Google feed links
+// Feed IDs are formatted as {item_id}_{variation_id}
+function handleIncomingProduct() {
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get('product_id');
+  if (!productId) return;
+
+  // Clean up URL without reloading
+  history.replaceState(null, '', '/gallery.html');
+
+  // Parse item_id and variation_id from the compound feed ID
+  const lastUnderscore = productId.lastIndexOf('_');
+  if (lastUnderscore === -1) return;
+  const itemId      = productId.slice(0, lastUnderscore);
+  const variationId = productId.slice(lastUnderscore + 1);
+
+  // Find the matching product
+  const product = products.find(p => p.id === itemId);
+  if (!product) return;
+
+  // Find the matching variation
+  const variation = product.variations.find(v => v.id === variationId);
+  if (!variation) return;
+
+  // Add to cart
+  cart.push({
+    cartId:        Date.now() + Math.random(),
+    id:            product.id,
+    title:         product.title,
+    img:           product.img,
+    variationId:   variation.id,
+    variationName: variation.name,
+    price:         parseInt(variation.price) || 0,
+  });
+  saveCart();
+  updateCartCount();
+
+  // Open cart so they see it immediately
+  setTimeout(() => {
+    renderCart();
+    document.getElementById('cart-overlay').classList.add('on');
+  }, 400);
+}
+
+async function loadProducts() {
+  try {
+    const r = await fetch(LAMBDA + '/products');
+    if (!r.ok) throw 0;
+    const raw = await r.json();
+    const list = raw.products || raw;
+    products = list.map(p => ({
+      id:         p.id,
+      title:      p.name || p.title,
+      desc:       p.description || p.desc || '',
+      img:        p.img || p.image_url || null,
+      url:        p.url || null,
+      year:       p.year || null,
+      variations: (p.variations || []).map(v => ({
+        id:    v.id,
+        name:  v.name,
+        price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
+      })),
+    }));
+    buildFilterBar();
+    applyFilter();
+    updateCartCount();
+    handleIncomingProduct();
+  } catch {
+    document.getElementById('grid').innerHTML =
+      '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
+  }
 }
 
 loadProducts();
