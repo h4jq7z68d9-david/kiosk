@@ -210,7 +210,7 @@ async function getFeed() {
         ? xmlEsc(p.desc)
         : xmlEsc(`${p.title} — fine art print by David Nicholson. Available in multiple sizes.`);
       const img = p.img || '';
-      const link = `https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/cart?product_id=${encodeURIComponent(id)}`;
+      const link = `${SITE}/gallery.html?product_id=${encodeURIComponent(id)}`;
 
       return `    <item>
       <g:id>${xmlEsc(id)}</g:id>
