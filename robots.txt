@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /kiosk.html
+
+Sitemap: https://davidnicholsonart.com/sitemap.xml
