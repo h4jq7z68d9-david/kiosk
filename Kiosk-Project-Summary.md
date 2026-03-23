@@ -213,6 +213,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
+- [ ] **Square product descriptions** — write product + SEO descriptions for all 40 prints and enter in Square; descriptions drafted in `painting-descriptions.md` (generated 2025-03-23); also wire alt text from Square product descriptions into gallery.html image tags
 - [ ] **Reconnect Facebook, Instagram, Pinterest shops** to Square
 - [ ] **Ad accounts** — Meta Ads (Facebook/Instagram), Pinterest Ads, Google Ads
 - [ ] **Newsletter** — evaluate MailerLite vs. custom-built on SES; mailing list already capturing subscribers in DynamoDB
