@@ -394,7 +394,7 @@ function renderGrid() {
     card.className = 'card';
     if (p.img) {
       const img = document.createElement('img');
-      img.alt = p.title;
+      img.alt = p.desc || p.title;  // SEO: use description as alt text, fall back to title
       img.referrerPolicy = 'no-referrer';
       img.onload = () => img.classList.add('loaded');
       img.src = p.img;
@@ -417,7 +417,7 @@ function openDetail(idx) {
 function populateDetail(p) {
   document.getElementById('d-img').referrerPolicy = 'no-referrer';
   document.getElementById('d-img').src = p.img || '';
-  document.getElementById('d-img').alt = p.title;
+  document.getElementById('d-img').alt = p.desc || p.title;
   document.getElementById('d-title').textContent = p.title;
   document.getElementById('d-desc').textContent  = p.desc || '';
 
@@ -636,16 +636,10 @@ if (new URLSearchParams(window.location.search).get('success') === '1') {
 }
 
 // Handle incoming product from Meta/Pinterest/Google feed links
-// Supports multiple parameter formats:
-//   Meta: ?products=ITEMID_VARIATIONID:1 (colon-separated quantity)
-//   Generic: ?product_id=ITEMID_VARIATIONID
 function handleIncomingProduct() {
   const params = new URLSearchParams(window.location.search);
-
-  // Clean up URL without reloading
   history.replaceState(null, '', '/gallery.html');
 
-  // Resolve a compound feed ID (ITEMID_VARIATIONID) to a cart item
   function resolveId(compoundId) {
     const lastUnderscore = compoundId.lastIndexOf('_');
     if (lastUnderscore === -1) return null;
@@ -660,7 +654,6 @@ function handleIncomingProduct() {
 
   const itemsToAdd = [];
 
-  // Meta format: ?products=ITEMID_VARIATIONID:quantity (colon-separated, comma for multiple)
   const productsParam = params.get('products');
   if (productsParam) {
     for (const entry of productsParam.split(',')) {
@@ -674,7 +667,6 @@ function handleIncomingProduct() {
     }
   }
 
-  // Fallback: ?product_id=ITEMID_VARIATIONID (skip if Meta sent literal {product_id})
   if (!itemsToAdd.length) {
     const productId = params.get('product_id');
     if (productId && !productId.startsWith('{')) {
@@ -699,7 +691,6 @@ function handleIncomingProduct() {
   saveCart();
   updateCartCount();
 
-  // Open cart so they see it immediately
   setTimeout(() => {
     renderCart();
     document.getElementById('cart-overlay').classList.add('on');
