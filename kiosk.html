@@ -353,10 +353,12 @@ async function loadCatalog() {
       el.appendChild(qrDiv);
       grid.appendChild(el);
     });
-    // Stagger QR generation so library isn't overwhelmed
-    document.querySelectorAll('.card-qr').forEach((div, i) => {
-      setTimeout(() => makeQR(div, div.dataset.url, 84), i * 30);
-    });
+    // Generate QR codes after a short delay to ensure DOM is settled
+    setTimeout(() => {
+      document.querySelectorAll('.card-qr').forEach((div, i) => {
+        setTimeout(() => makeQR(div, div.dataset.url, 84), i * 30);
+      });
+    }, 200);
   } catch { }
 }
 
