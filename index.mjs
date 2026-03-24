@@ -441,7 +441,7 @@ export const handler = async (event) => {
   if (method === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
   try {
     if (method === 'GET'  && path === '/products')              return await getProducts();
-    if (method === 'GET'  && path === '/feed')                 return await getFeed();
+    if (method === 'GET'  && (path === '/feed' || path === '/feed.xml')) return await getFeed();
     if (method === 'GET'  && path === '/cart')                 return await cartRedirect(event.queryStringParameters);
     if (method === 'GET'  && path === '/hero')                  return await getHero();
     if (method === 'GET'  && path.startsWith('/image'))         return await proxyImage(event.queryStringParameters?.id);
