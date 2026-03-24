@@ -59,8 +59,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
 .card img { width:100%; height:auto; display:block; opacity:0; transition:opacity 0.35s; }
 .card img.loaded { opacity:1; }
 .card .ph { width:100%; height:200px; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--ink3); }
-.card-qr { position:absolute; bottom:8px; right:8px; background:rgba(255,255,255,0.92); border-radius:6px; padding:5px; width:94px; height:94px; pointer-events:none; }
-.card-qr img, .card-qr canvas { width:84px !important; height:84px !important; display:block; }
+.card-qr { position:absolute; bottom:8px; right:8px; background:rgba(255,255,255,0.92); border-radius:6px; padding:5px; pointer-events:none; line-height:0; }
 .skel { height:260px; border-radius:2px; background:var(--surface); animation:sk 1.6s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
 
@@ -348,24 +347,15 @@ async function loadCatalog() {
       el.addEventListener('click', () => openDetail(i));
       const qrDiv = document.createElement('div');
       qrDiv.className = 'card-qr';
-      qrDiv.dataset.url = p.url || 'https://david-nicholson-art.square.site';
+      const qrUrl = p.url || 'https://david-nicholson-art.square.site';
+      const qrImg = document.createElement('img');
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=84x84&data=${encodeURIComponent(qrUrl)}`;
+      qrImg.width = 84;
+      qrImg.height = 84;
+      qrDiv.appendChild(qrImg);
       el.appendChild(qrDiv);
       grid.appendChild(el);
     });
-    // Generate QRs one at a time after cards are in the DOM
-    const qrDivs = [...document.querySelectorAll('.card-qr')];
-    function renderNextQR(idx) {
-      if (idx >= qrDivs.length) return;
-      const div = qrDivs[idx];
-      new QRCode(div, {
-        text: div.dataset.url,
-        width: 84, height: 84,
-        colorDark: '#1a1917', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-      setTimeout(() => renderNextQR(idx + 1), 40);
-    }
-    setTimeout(() => renderNextQR(0), 100);
   } catch { }
 }
 
