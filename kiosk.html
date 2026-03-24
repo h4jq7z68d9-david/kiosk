@@ -558,7 +558,7 @@ function strip(h){ const d=document.createElement('div'); d.innerHTML=h; return 
 <script>
 if ('serviceWorker' in navigator) {
   const swCode = `
-const CACHE = 'dna-v2';
+const CACHE = 'dna-v3';
 const STATIC = [
   'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
@@ -570,11 +570,14 @@ self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
 self.addEventListener('fetch', e => {
   const url = e.request.url;
   const isStatic = url.includes('fonts.googleapis') || url.includes('fonts.gstatic') || url.includes('cdnjs.cloudflare');
+  const isQR = url.includes('api.qrserver.com');
   const isAPI = url.includes('execute-api.us-east-1.amazonaws.com');
   if (isStatic) {
     e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
       caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res;
     })));
+  } else if (isQR) {
+    e.respondWith(fetch(e.request));
   } else if (isAPI && e.request.method === 'GET') {
     e.respondWith(fetch(e.request).then(res => {
       caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res;
