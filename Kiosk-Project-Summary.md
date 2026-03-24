@@ -69,6 +69,8 @@ Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda gene
 
 **Images:** Product images are hosted by Square. No dependency on Shopify CDN.
 
+**Product descriptions:** All 40 prints have customer-facing product descriptions and SEO descriptions entered in Square (completed 2025-03-23). Reference file: `painting-descriptions.md` in repo.
+
 ---
 
 ## AWS Lambda
@@ -156,6 +158,8 @@ Sends and receives from Apple Mail on all devices.
 - **sitemap.xml** — lists index.html (priority 1.0, monthly) and gallery.html (priority 0.9, weekly)
 - **robots.txt** — allows all crawlers, disallows kiosk.html, references sitemap
 - **kiosk.html** — has `noindex, nofollow` meta tag; excluded from sitemap
+- **Product image alt text** — gallery.html uses Square product description as `alt` text on all images (falls back to title if no description)
+- **Square product + SEO descriptions** — all 40 prints have both fields completed in Square; descriptions flow automatically into gallery alt text via Lambda `/products` endpoint
 
 ---
 
@@ -196,25 +200,27 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - Cart modal: shows all items with thumbnail, title, size, price, remove button, running total
 - Checkout button → POSTs to Lambda `/checkout` → redirects to Square hosted checkout
 - Checkout redirect URL: `https://davidnicholsonart.com/gallery.html?success=1`
+- Product modal shows description (from Square) in italic serif, plus "Giclée prints are signed and dated, matted and ready to frame." below the price
 - Guest book includes newsletter opt-in checkbox ("casually stay informed") — `subscribed` bool stored in DynamoDB
 - Footer buttons white text/border; bottom padding 48px; cart icon white
 - Contact link uses split string to prevent Cloudflare obfuscation
 
 ### kiosk.html (art fair iPad)
 - Fetches from Lambda (with service worker offline cache)
-- Detail modal: title + "Order this print" + QR code (links to `p.url` — davidnicholsonart.com gallery page)
+- Detail modal: title + product description (from Square) + "Giclée prints are signed and dated, matted and ready to frame." + QR code (links to `p.url`)
 - Send-link (email/SMS) uses `p.url` — links to davidnicholsonart.com gallery, not Square
 - Email/phone send fields POST to Lambda
 - Guest book POSTs to Lambda → email notification to david@davidnicholsonart.com; includes newsletter opt-in checkbox — `subscribed` bool stored in DynamoDB
 - Top bar buttons (Guest Book, Follow) — dark background with white text
 - Export CSV hidden behind triple-tap on "Guest Book" title
+- Service worker cache key: `dna-v3`
+- **Service worker blocks external image requests** — SW only passes through fonts, cdnjs, and Lambda API; any other external image source will be silently blocked (learned the hard way trying to add QR codes to grid cards)
 
 ---
 
 ## Pending — In Order of Priority
 
-- [ ] **Square product descriptions** — write product + SEO descriptions for all 40 prints and enter in Square; descriptions drafted in `painting-descriptions.md` (generated 2025-03-23); also wire alt text from Square product descriptions into gallery.html image tags
-- [ ] **Reconnect Facebook, Instagram, Pinterest shops** to Square
+- [ ] **Pinterest shop** — reconnect to Square; good next step for SEO and discovery
 - [ ] **Ad accounts** — Meta Ads (Facebook/Instagram), Pinterest Ads, Google Ads
 - [ ] **Newsletter** — evaluate MailerLite vs. custom-built on SES; mailing list already capturing subscribers in DynamoDB
 - [ ] **Mailing list unsubscribe endpoint** — `GET /unsubscribe?id=xyz` Lambda endpoint (pair with newsletter work)
@@ -225,11 +231,22 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Completed This Session
 
-- ✓ SEO pass complete: meta tags, Open Graph, Twitter card tags on all pages
+- ✓ Product descriptions and SEO descriptions written for all 40 prints and entered in Square
+- ✓ painting-descriptions.md added to repo as reference
+- ✓ gallery.html image alt text updated to use Square product description (falls back to title)
+- ✓ gallery.html product modal: "Giclée prints are signed and dated, matted and ready to frame." added below price
+- ✓ kiosk.html product modal: Square description now displays; giclée note added below it
+
+---
+
+## Previously Completed
+
+- ✓ Facebook and Instagram shops reconnected to Square
+- ✓ SEO pass: meta tags, Open Graph, Twitter card tags on all pages
 - ✓ Google Analytics added (G-FL5BKJFVXF) to all three HTML files
-- ✓ Google Search Console verified (auto-verified via GA tag); sitemap submitted and confirmed
-- ✓ og-image.jpg created (1200×630 crop of Shuttlecock No. 2) and deployed
-- ✓ sitemap.xml and robots.txt added to repo and deployed
+- ✓ Google Search Console verified; sitemap submitted and confirmed
+- ✓ og-image.jpg created and deployed
+- ✓ sitemap.xml and robots.txt added and deployed
 - ✓ deploy.yml updated to sync *.jpg, *.xml, *.txt to S3
 
 ---
@@ -261,6 +278,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - **IAM role must explicitly list both CloudFront distribution ARNs** for invalidation to work in GitHub Actions
 - **S3 bucket name is `kiosk.davidnicholsonllc`** (no .com) — easy to confuse with the domain name
 - **kiosk send-link and QR always use `p.url`** — never construct squareup.com or square.site URLs directly
+- **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda — do not attempt to load external images (QR APIs etc.) in the kiosk grid
 
 ---
 
