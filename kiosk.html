@@ -59,7 +59,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
 .card img { width:100%; height:auto; display:block; opacity:0; transition:opacity 0.35s; }
 .card img.loaded { opacity:1; }
 .card .ph { width:100%; height:200px; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--ink3); }
-.card-qr { position:absolute; bottom:8px; right:8px; background:rgba(255,255,255,0.92); border-radius:6px; padding:5px; line-height:0; pointer-events:none; }
+.card-qr { position:absolute; bottom:8px; right:8px; background:rgba(255,255,255,0.92); border-radius:6px; padding:5px; width:94px; height:94px; pointer-events:none; overflow:hidden; }
+.card-qr img, .card-qr canvas { width:84px !important; height:84px !important; display:block; }
 .skel { height:260px; border-radius:2px; background:var(--surface); animation:sk 1.6s ease-in-out infinite; }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
 
@@ -348,23 +349,14 @@ async function loadCatalog() {
       const qrDiv = document.createElement('div');
       qrDiv.className = 'card-qr';
       qrDiv.dataset.url = p.url || 'https://david-nicholson-art.square.site';
+      qrDiv.dataset.idx = i;
       el.appendChild(qrDiv);
       grid.appendChild(el);
     });
-    // Render QR codes lazily as cards scroll into view
-    const qrObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const div = entry.target;
-          if (!div.dataset.rendered) {
-            div.dataset.rendered = '1';
-            makeQR(div, div.dataset.url, 84);
-          }
-          qrObserver.unobserve(div);
-        }
-      });
-    }, { rootMargin: '100px' });
-    document.querySelectorAll('.card-qr').forEach(d => qrObserver.observe(d));
+    // Stagger QR generation so library isn't overwhelmed
+    document.querySelectorAll('.card-qr').forEach((div, i) => {
+      setTimeout(() => makeQR(div, div.dataset.url, 84), i * 30);
+    });
   } catch { }
 }
 
