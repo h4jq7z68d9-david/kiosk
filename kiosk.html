@@ -347,11 +347,24 @@ async function loadCatalog() {
       el.addEventListener('click', () => openDetail(i));
       const qrDiv = document.createElement('div');
       qrDiv.className = 'card-qr';
-      const url = p.url || 'https://david-nicholson-art.square.site';
-      makeQR(qrDiv, url, 84);
+      qrDiv.dataset.url = p.url || 'https://david-nicholson-art.square.site';
       el.appendChild(qrDiv);
       grid.appendChild(el);
     });
+    // Render QR codes lazily as cards scroll into view
+    const qrObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const div = entry.target;
+          if (!div.dataset.rendered) {
+            div.dataset.rendered = '1';
+            makeQR(div, div.dataset.url, 84);
+          }
+          qrObserver.unobserve(div);
+        }
+      });
+    }, { rootMargin: '100px' });
+    document.querySelectorAll('.card-qr').forEach(d => qrObserver.observe(d));
   } catch { }
 }
 
