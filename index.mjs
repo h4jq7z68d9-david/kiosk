@@ -173,6 +173,7 @@ async function buildProductList() {
       title:      item.name,
       desc:       item.description || '',
       img:        imgUrl,
+      rawImg:     rawImgUrl,
       url,
       variations,
       year:       extractYear(obj),  // null if not set
@@ -209,7 +210,7 @@ async function getFeed() {
       const desc = p.desc
         ? xmlEsc(p.desc)
         : xmlEsc(`${p.title} — fine art print by David Nicholson. Available in multiple sizes.`);
-      const img = p.img || '';
+      const img = p.rawImg || p.img || '';
       const link = `${SITE}/gallery.html?product_id=${encodeURIComponent(id)}`;
 
       return `    <item>
@@ -220,10 +221,9 @@ async function getFeed() {
       <g:image_link>${xmlEsc(img)}</g:image_link>
       <g:price>${price} USD</g:price>
       <g:availability>in stock</g:availability>
-      <g:quantity_to_sell>9999999999</g:quantity_to_sell>
       <g:condition>new</g:condition>
       <g:brand>David Nicholson Art</g:brand>
-      <g:google_product_category>Arts &amp; Entertainment &gt; Hobbies &amp; Creative Arts &gt; Artwork</g:google_product_category>
+      <g:google_product_category>Arts &amp; Entertainment &gt; Hobbies &amp; Creative Arts &gt; Artwork &gt; Prints</g:google_product_category>
       <g:product_type>Fine Art Print</g:product_type>
     </item>`;
     });
