@@ -126,6 +126,24 @@ NOTIFY_EMAIL=david@davidnicholsonart.com
 
 ---
 
+## Google Merchant Center
+
+| Item | Value |
+|---|---|
+| Account | Existing account, davidnicholsonart.com claimed and verified |
+| Feed URL | `https://davidnicholsonart.com/feed.xml?v=1` |
+| Feed type | Scheduled fetch, daily, XML |
+| Status | Feed submitted, pending Google review (24–48 hours) |
+
+**Notes:**
+- Same Lambda `/feed.xml` endpoint used for both Pinterest and Google
+- `?v=1` query string required — Google's URL validator rejected the bare URL without it; bump to `?v=2` etc. to force a re-fetch if needed
+- Old Shopify/API feeds deleted; one Google-discovered feed with 17 products could not be deleted (read-only) — will fade out once new feed is approved
+- Missing GTIN warnings are expected and acceptable for handmade/art items
+- **Next step:** Once products are approved and showing healthy, set up Google Shopping Ads via Google Ads account
+
+---
+
 ## SES (Email)
 
 - Domain `davidnicholsonart.com` verified in SES ✓
@@ -173,6 +191,7 @@ Sends and receives from Apple Mail on all devices.
 ## SEO & Analytics
 
 - **Google Analytics** — Measurement ID: `G-FL5BKJFVXF`, Stream ID: `14175458930`; snippet on all three HTML pages
+- **Google Analytics linked to:** Google Ads, Google Merchant Center, Google Search Console ✓
 - **Google Search Console** — verified via GA tag; sitemap submitted and confirmed fetched
 - **Open Graph** — `og-image.jpg` (1200×630, Shuttlecock No. 2) in repo root; OG + Twitter card tags on index.html and gallery.html
 - **sitemap.xml** — lists index.html (priority 1.0, monthly) and gallery.html (priority 0.9, weekly)
@@ -241,8 +260,10 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [ ] **Pinterest Verified Merchant Program** — apply once catalog is approved (1–2 days); go to pinterest.com/business/hub/
-- [ ] **Pinterest Tag** — add to gallery.html after VMP approval, needed for ads/conversion tracking (10-min task)
+- [ ] **Pinterest Verified Merchant Program** — apply once catalog approved (1–2 days); pinterest.com/business/hub/
+- [ ] **Pinterest Tag** — add to gallery.html after VMP approval, needed for conversion tracking + ads (10-min task)
+- [ ] **Google Merchant Center approval** — monitor feed in 24–48 hrs; fix any product errors
+- [ ] **Google Shopping Ads** — set up once Merchant Center products are healthy
 - [ ] **Ad accounts** — Meta Ads (Facebook/Instagram), Pinterest Ads, Google Ads
 - [ ] **Newsletter** — evaluate MailerLite vs. custom-built on SES; mailing list already capturing subscribers in DynamoDB
 - [ ] **Mailing list unsubscribe endpoint** — `GET /unsubscribe?id=xyz` Lambda endpoint (pair with newsletter work)
@@ -257,6 +278,12 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - ✓ Lambda `/feed.xml` route added (alongside existing `/feed`)
 - ✓ CloudFront behavior added for `/feed.xml` on E2EJH38GWGPEPG → API Gateway
 - ✓ Pinterest catalog data source submitted: `https://davidnicholsonart.com/feed.xml`
+- ✓ Google Merchant Center existing account found, domain already claimed/verified
+- ✓ Old Shopify/API feeds removed from Google Merchant Center
+- ✓ Google Merchant Center feed submitted: `https://davidnicholsonart.com/feed.xml?v=1`
+- ✓ Google Merchant Center shipping configured; tax handled automatically by Google (Merchant Center Next)
+- ✓ `shipping.html` created — matches gallery.html styling; 5–7 day shipping, 14-day returns, buyer pays return shipping
+- ✓ Google Analytics linked to Google Ads, Merchant Center, and Search Console
 
 ---
 
