@@ -215,6 +215,7 @@ async function getFeed() {
 
       return `    <item>
       <g:id>${xmlEsc(id)}</g:id>
+      <g:item_group_id>${xmlEsc(p.id)}</g:item_group_id>
       <title>${xmlEsc(title)}</title>
       <description>${desc}</description>
       <link>${link}</link>
