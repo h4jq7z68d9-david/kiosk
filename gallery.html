@@ -46,6 +46,20 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1480355107052738&ev=PageView&noscript=1"
 /></noscript>
+<!-- Pinterest Tag -->
+<script type="text/javascript">
+!function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(
+Array.prototype.slice.call(arguments))};var n=window.pintrk;n.queue=[],n.version="3.0";
+var t=document.createElement("script");t.async=!0,t.src=e;var r=document.getElementsByTagName("script")[0];
+r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+pintrk('load', '549769596185', { em: '' });
+function getEpik() {
+  return new URLSearchParams(window.location.search).get('epik') || undefined;
+}
+pintrk('track', 'pagevisit', { click_id: getEpik() });
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+  src="https://ct.pinterest.com/v3/?tid=549769596185&noscript=1" /></noscript>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
@@ -413,6 +427,10 @@ function openDetail(idx) {
   populateDetail(products[idx]);
   document.getElementById('detail-overlay').classList.add('on');
   document.getElementById('detail-sheet').scrollTop = 0;
+  const p = products[idx];
+  if (p && p.id) {
+    pintrk('track', 'pagevisit', { product_id: p.id, click_id: getEpik() });
+  }
 }
 
 function populateDetail(p) {
@@ -482,6 +500,14 @@ function addToCart() {
   updateCartCount();
   closeDetail();
   toast(p.title + ' added to cart');
+  pintrk('track', 'addtocart', {
+    product_id:       p.id,
+    product_name:     p.title,
+    product_price:    curVariationPrice,
+    product_quantity: 1,
+    currency:         'USD',
+    click_id:         getEpik(),
+  });
 }
 
 function updateCartCount() {
@@ -549,6 +575,18 @@ async function checkout() {
     });
     const data = await r.json();
     if (data.checkout_url) {
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      pintrk('track', 'checkout', {
+        value:    total,
+        currency: 'USD',
+        line_items: cart.map(item => ({
+          product_id:       item.id,
+          product_name:     item.title,
+          product_price:    item.price,
+          product_quantity: 1,
+        })),
+        click_id: getEpik(),
+      });
       cart = [];
       saveCart();
       updateCartCount();

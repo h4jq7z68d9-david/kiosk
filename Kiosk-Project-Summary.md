@@ -90,7 +90,7 @@ Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda gene
 - CloudFront is at the behavior limit (25) on current plan — cannot add more Lambda path behaviors without upgrading
 - 3 dead Shopify catalogs exist on the Pinterest account; Pinterest won't let them be deleted without the Shopify app. They error out harmlessly.
 - **Next step:** Once catalog is approved, apply for Verified Merchant Program (pinterest.com/business/hub/) — required for rich Product Pins with prices and for Shopping Ads
-- **After VMP:** Add Pinterest Tag to gallery.html for conversion tracking (10-minute task)
+- Pinterest Tag is live in gallery.html (advertiser ID 549769596185); fires 4 events: `pagevisit` (page load), `pagevisit` with `product_id` (product modal open), `addtocart`, `checkout`; all include `click_id` (epik) for ad attribution
 
 ---
 
@@ -263,7 +263,6 @@ All three are single-file, no framework, no build step — intentional, keep it 
 ## Pending — In Order of Priority
 
 - [ ] **Pinterest Verified Merchant Program** — apply once catalog approved (1–2 days); pinterest.com/business/hub/
-- [ ] **Pinterest Tag** — add to gallery.html after VMP approval, needed for conversion tracking + ads (10-min task)
 - [ ] **Google Merchant Center approval** — monitor feed in 24–48 hrs; fix any product errors
 - [ ] **Google Shopping Ads** — set up once Merchant Center products are healthy
 - [ ] **Ad accounts** — Meta Ads (Facebook/Instagram), Pinterest Ads, Google Ads
@@ -276,6 +275,7 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Completed This Session
 
+- ✓ Pinterest Tag added to gallery.html — all 4 events wired: pagevisit (page load + product modal open with product_id), addtocart, checkout; click_id (epik) captured on all events
 - ✓ Reviewed Google Search Console coverage report — 115 noindex URLs are crawl noise, not a site problem
 - ✓ `shipping.html` noindex tag removed (changed to `index, follow`)
 - ✓ `sitemap.xml` updated to include `shop.html` (priority 0.8) and `shipping.html` (priority 0.5)
