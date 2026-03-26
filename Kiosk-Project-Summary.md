@@ -6,6 +6,8 @@
 |---|---|
 | https://davidnicholsonart.com | Main entry point / homepage (index.html) — primary public site |
 | https://davidnicholsonart.com/gallery.html | Public print gallery with cart + checkout |
+| https://davidnicholsonart.com/shop.html | Shop page |
+| https://davidnicholsonart.com/shipping.html | Shipping & returns info |
 | https://davidnicholsonart.com/kiosk.html | iPad kiosk for art fairs |
 | https://kiosk.davidnicholsonllc.com | Legacy URL — still works, same content |
 
@@ -274,6 +276,14 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Completed This Session
 
+- ✓ Reviewed Google Search Console coverage report — 115 noindex URLs are crawl noise, not a site problem
+- ✓ `shipping.html` noindex tag removed (changed to `index, follow`)
+- ✓ `sitemap.xml` updated to include `shop.html` (priority 0.8) and `shipping.html` (priority 0.5)
+
+---
+
+## Previously Completed
+
 - ✓ Pinterest domain claimed (davidnicholsonart.com) — verification meta tag added to index.html
 - ✓ Lambda `/feed.xml` route added (alongside existing `/feed`)
 - ✓ CloudFront behavior added for `/feed.xml` on E2EJH38GWGPEPG → API Gateway
@@ -284,10 +294,6 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - ✓ Google Merchant Center shipping configured; tax handled automatically by Google (Merchant Center Next)
 - ✓ `shipping.html` created — matches gallery.html styling; 5–7 day shipping, 14-day returns, buyer pays return shipping
 - ✓ Google Analytics linked to Google Ads, Merchant Center, and Search Console
-
----
-
-## Previously Completed
 
 - ✓ Product descriptions and SEO descriptions written for all 40 prints and entered in Square
 - ✓ painting-descriptions.md added to repo as reference
