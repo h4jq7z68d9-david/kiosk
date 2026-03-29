@@ -262,9 +262,10 @@ function xmlEsc(s) {
 
 async function getHero() {
   const products = await buildProductList();
-  const withImg = products.filter(p => p.img);
-  if (!withImg.length) return err('No products with images', 404);
-  const p = withImg[Math.floor(Math.random() * withImg.length)];
+  const recent = products.filter(p => p.img && p.year && [2025, 2026].includes(parseInt(p.year)));
+  const pool = recent.length ? recent : products.filter(p => p.img);
+  if (!pool.length) return err('No products with images', 404);
+  const p = pool[Math.floor(Math.random() * pool.length)];
   return ok({ img: p.img, title: p.title, id: p.id });
 }
 
