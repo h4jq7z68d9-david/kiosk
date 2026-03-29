@@ -262,19 +262,37 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Pending — In Order of Priority
 
-- [ ] **Pinterest Verified Merchant Program** — apply once catalog approved (1–2 days); pinterest.com/business/hub/
-- [ ] **Google Merchant Center approval** — monitor feed in 24–48 hrs; fix any product errors
-- [ ] **Google Shopping Ads** — set up once Merchant Center products are healthy
-- [ ] **Ad accounts** — Meta Ads (Facebook/Instagram), Pinterest Ads, Google Ads
-- [ ] **Newsletter** — evaluate MailerLite vs. custom-built on SES; mailing list already capturing subscribers in DynamoDB
-- [ ] **Mailing list unsubscribe endpoint** — `GET /unsubscribe?id=xyz` Lambda endpoint (pair with newsletter work)
+- [ ] **Pinterest Verified Merchant Program** — apply once catalog approved; pinterest.com/business/hub/
+- [ ] **Google Merchant Center approval** — monitor feed; fix any product errors
+- [ ] **Ad campaigns (mid-April)** — Google Shopping / Performance Max, Meta Ads (Facebook/Instagram), Pinterest Ads
 - [ ] **SNS carrier registration** — waiting, nothing to do; SMS will work once cleared
-- [ ] **Square tax issue** — revisit once sales begin; Square support: 1-855-700-6000
+
+---
+
+## Up Next (Next Session)
+
+- **Sales/inventory dashboard**
+- **Expense tracker**
+- **Admin dashboard** — inventory tracking
+- **Print wall configurator**
+
+## On the Horizon
+
+- **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
+- **Color picker filter for gallery** — maybe
+- **Art fair mode enhancements** — maybe
+- **CloudFront Pro upgrade** ($15/month) — removes 25-behavior limit; do when needed
 
 ---
 
 ## Completed This Session
 
+- ✓ Junction and Terminal added to Square — product descriptions and SEO descriptions written
+- ✓ `/hero` endpoint updated to limit random selection to 2025–2026 prints (falls back to full catalog if none have images)
+- ✓ Confirmed: SES production access granted, guestbook email notification working, orphaned ACM cert deleted, Square tax resolved
+- ✓ Confirmed: Instagram Shop live at instagram.com/dave_nichol_son/shop; Facebook Shop working in app
+- ✓ Clarified Meta crossposting limitation — Instagram crossposts to personal profile only, not Pages; Business Suite is the right tool for posting to both simultaneously
+- ✓ kiosk.html top bar: "guest book" and "follow" buttons restored to `#f5f2ed` off-white; tagline "prints also available at davidnicholsonart.com" replaces name; all lowercase; buttons right-justified
 - ✓ Pinterest Tag added to gallery.html — all 4 events wired: pagevisit (page load + product modal open with product_id), addtocart, checkout; click_id (epik) captured on all events
 - ✓ Reviewed Google Search Console coverage report — 115 noindex URLs are crawl noise, not a site problem
 - ✓ `shipping.html` noindex tag removed (changed to `index, follow`)
@@ -284,6 +302,11 @@ All three are single-file, no framework, no build step — intentional, keep it 
 
 ## Previously Completed
 
+- ✓ Checkout page — nixed; Square hosted Payment Links handle checkout entirely
+- ✓ SES production access granted
+- ✓ Guestbook auto-email notification working
+- ✓ Orphaned ACM certificate in us-east-2 deleted
+- ✓ Square tax configuration resolved
 - ✓ Pinterest domain claimed (davidnicholsonart.com) — verification meta tag added to index.html
 - ✓ Lambda `/feed.xml` route added (alongside existing `/feed`)
 - ✓ CloudFront behavior added for `/feed.xml` on E2EJH38GWGPEPG → API Gateway
@@ -294,7 +317,6 @@ All three are single-file, no framework, no build step — intentional, keep it 
 - ✓ Google Merchant Center shipping configured; tax handled automatically by Google (Merchant Center Next)
 - ✓ `shipping.html` created — matches gallery.html styling; 5–7 day shipping, 14-day returns, buyer pays return shipping
 - ✓ Google Analytics linked to Google Ads, Merchant Center, and Search Console
-
 - ✓ Product descriptions and SEO descriptions written for all 40 prints and entered in Square
 - ✓ painting-descriptions.md added to repo as reference
 - ✓ gallery.html image alt text updated to use Square product description (falls back to title)
