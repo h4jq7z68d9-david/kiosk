@@ -57,12 +57,8 @@ function getEpik() {
   return new URLSearchParams(window.location.search).get('epik') || undefined;
 }
 (function() {
-  var params = new URLSearchParams(window.location.search);
-  var evt = {};
-  var epik = params.get('epik');
-  if (epik) evt.click_id = epik;
-  var pid = params.get('product');
-  if (pid) evt.product_id = pid;
+  var epik = new URLSearchParams(window.location.search).get('epik');
+  var evt = epik ? { click_id: epik } : {};
   pintrk('track', 'pagevisit', evt);
 })();
 </script>
