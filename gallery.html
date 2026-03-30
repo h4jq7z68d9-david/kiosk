@@ -436,7 +436,8 @@ function openDetail(idx) {
   curIdx = idx;
   curVariationId = null;
   curVariationPrice = 0;
-  populateDetail(products[idx]);
+  const p = products[idx];
+  populateDetail(p);
   // Share buttons
   const pageUrl = encodeURIComponent('https://davidnicholsonart.com/gallery.html');
   const imgUrl  = encodeURIComponent(p.img || '');
@@ -456,7 +457,6 @@ function openDetail(idx) {
 
   document.getElementById('detail-overlay').classList.add('on');
   document.getElementById('detail-sheet').scrollTop = 0;
-  const p = products[idx];
   if (p && p.id) {
     pintrk('track', 'pagevisit', { product_id: p.id, click_id: getEpik() });
   }
