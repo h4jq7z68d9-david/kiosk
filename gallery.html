@@ -56,7 +56,15 @@ pintrk('load', '549769596185', { em: '' });
 function getEpik() {
   return new URLSearchParams(window.location.search).get('epik') || undefined;
 }
-pintrk('track', 'pagevisit', { click_id: getEpik() });
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var evt = {};
+  var epik = params.get('epik');
+  if (epik) evt.click_id = epik;
+  var pid = params.get('product');
+  if (pid) evt.product_id = pid;
+  pintrk('track', 'pagevisit', evt);
+})();
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
   src="https://ct.pinterest.com/v3/?tid=549769596185&noscript=1" /></noscript>
