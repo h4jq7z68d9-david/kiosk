@@ -439,11 +439,12 @@ function openDetail(idx) {
   const p = products[idx];
   populateDetail(p);
   // Share buttons
-  const pageUrl = encodeURIComponent('https://davidnicholsonart.com/gallery.html');
-  const imgUrl  = encodeURIComponent(p.img || '');
-  const desc    = encodeURIComponent(p.title + ' — Fine art giclée print by David Nicholson.');
-  const fbUrl   = 'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl;
-  const pinUrl  = 'https://pinterest.com/pin/create/button/?url=' + pageUrl + '&media=' + imgUrl + '&description=' + desc;
+  function toSlug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/, ''); }
+  const printUrl = encodeURIComponent('https://davidnicholsonart.com/prints/' + toSlug(p.title) + '.html');
+  const imgUrl   = encodeURIComponent(p.img || '');
+  const desc     = encodeURIComponent(p.title + ' — Fine art giclée print by David Nicholson.');
+  const fbUrl    = 'https://www.facebook.com/sharer/sharer.php?u=' + printUrl;
+  const pinUrl   = 'https://pinterest.com/pin/create/button/?url=' + printUrl + '&media=' + imgUrl + '&description=' + desc;
   document.getElementById('share-row').innerHTML =
     '<span class="share-label">share</span>' +
     '<a class="share-btn" href="' + pinUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' +
