@@ -8,12 +8,27 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 
-const SITE = 'https://davidnicholsonart.com';
+const SITE     = 'https://davidnicholsonart.com';
+const API_BASE = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 const OUT  = path.join(process.cwd(), 'prints');
 
 function get(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, res => {
+    const opts = new URL(url);
+    const reqOpts = {
+      hostname: opts.hostname,
+      path: opts.pathname + opts.search,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; DavidNicholsonArt-Build/1.0)',
+        'Accept': 'application/json',
+      }
+    };
+    https.request(reqOpts, res => {
+      // Follow redirects
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        return get(res.headers.location).then(resolve).catch(reject);
+      }
       let data = '';
       res.on('data', d => data += d);
       res.on('end', () => {
@@ -24,7 +39,7 @@ function get(url) {
           reject(new Error('Parse error from ' + url));
         }
       });
-    }).on('error', reject);
+    }).on('error', reject).end();
   });
 }
 
@@ -82,7 +97,7 @@ function buildHtml(p) {
 
 async function main() {
   console.log('Fetching product catalog…');
-  const data = await get(`${SITE}/products`);
+  const data = await get(`${API_BASE}/products`);
   const products = data.products || [];
 
   if (!products.length) {
