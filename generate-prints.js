@@ -18,7 +18,11 @@ function get(url) {
       res.on('data', d => data += d);
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
-        catch { reject(new Error('Parse error from ' + url)); }
+        catch {
+          console.error('Status:', res.statusCode);
+          console.error('Body:', data.slice(0, 500));
+          reject(new Error('Parse error from ' + url));
+        }
       });
     }).on('error', reject);
   });
