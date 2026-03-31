@@ -766,6 +766,15 @@ function handleIncomingProduct() {
   }, 400);
 }
 
+function handleViewParam() {
+  const params = new URLSearchParams(window.location.search);
+  const viewId = params.get('view');
+  if (!viewId) return;
+  history.replaceState(null, '', '/gallery.html');
+  const idx = products.findIndex(p => p.id === viewId);
+  if (idx !== -1) openDetail(idx);
+}
+
 async function loadProducts() {
   try {
     const r = await fetch(LAMBDA + '/products');
@@ -789,6 +798,7 @@ async function loadProducts() {
     applyFilter();
     updateCartCount();
     handleIncomingProduct();
+    handleViewParam();
   } catch {
     document.getElementById('grid').innerHTML =
       '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';

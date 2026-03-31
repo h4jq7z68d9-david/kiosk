@@ -58,7 +58,7 @@ function esc(s) {
 function buildHtml(p) {
   const productSlug = slug(p.title);
   const canonicalUrl = `${SITE}/prints/${productSlug}.html`;
-  const galleryUrl   = `${SITE}/gallery.html?product_id=${encodeURIComponent(p.id + '_' + p.variations[0].id)}`;
+  const galleryUrl   = `${SITE}/gallery.html?view=${encodeURIComponent(p.id)}`;
   const imgUrl       = p.rawImg || p.img || `${SITE}/og-image.jpg`;
   const title        = `${p.title} — David Nicholson Art`;
   const desc         = p.desc
