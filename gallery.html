@@ -801,8 +801,8 @@ async function loadProducts() {
     buildFilterBar();
     applyFilter();
     updateCartCount();
-    handleIncomingProduct();
     handleViewParam();
+    handleIncomingProduct();
   } catch {
     document.getElementById('grid').innerHTML =
       '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
