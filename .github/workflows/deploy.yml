@@ -27,6 +27,7 @@ jobs:
           aws s3 sync . s3://kiosk.davidnicholsonllc \
             --exclude "*" \
             --include "*.html" \
+            --include "prints/*.html" \
             --include "*.png" \
             --include "*.jpg" \
             --include "*.xml" \
