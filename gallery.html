@@ -770,8 +770,12 @@ function handleViewParam() {
   const params = new URLSearchParams(window.location.search);
   const viewId = params.get('view');
   if (!viewId) return;
+  console.log('view param:', viewId);
+  console.log('products loaded:', products.length);
+  console.log('first product id:', products[0]?.id);
   history.replaceState(null, '', '/gallery.html');
   const idx = products.findIndex(p => p.id === viewId);
+  console.log('found idx:', idx);
   if (idx !== -1) openDetail(idx);
 }
 
