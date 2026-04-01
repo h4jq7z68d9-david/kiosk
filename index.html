@@ -75,11 +75,12 @@ a { color: inherit; text-decoration: none; }
 .follow-btn:hover { border-color: var(--ink); }
 .rule { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
 h2 { font-family: var(--font); font-size: 22px; font-weight: 700; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); margin-bottom: 20px; }
+.h2-future { font-size: 26px; }
 .about-text { font-size: 20px; font-weight: 300 !important; line-height: 1.8; color: var(--ink); }
 .events-year { font-size: 16px; font-weight: 400; letter-spacing: 0.08em; text-transform: lowercase; color: var(--ink3); margin-bottom: 14px; }
 .event { margin-bottom: 20px; }
 .event:last-child { margin-bottom: 0; }
-.event-date { font-size: 16px; color: var(--accent); margin-bottom: 4px; }
+.event-date { font-size: 16px; color: var(--ink); margin-bottom: 4px; }
 .event-name { font-size: 20px; font-weight: 300; line-height: 1.4; color: var(--ink); }
 .event-loc { font-size: 16px; color: var(--ink3); margin-top: 3px; }
 .venue-name { font-size: 20px; font-weight: 300; color: var(--ink); line-height: 1.4; }
@@ -149,12 +150,13 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 48px 10%; max-w
     <hr class="rule">
 
     <div style="margin-bottom:32px;">
-      <h2>future</h2>
+      <h2 class="h2-future">future</h2>
+
       <p class="events-year">2026</p>
       <div class="event">
+        <div class="event-name" style="margin-bottom:6px;"><a href="/varied-readings.html" style="color:var(--accent);border-bottom:none;text-decoration:none;">varied readings →</a></div>
         <div class="event-date">april 24th</div>
-        <div class="event-name"><a href="https://www.phoenixgalleryart.com">lawrence, ks final friday artwalk</a></div>
-        <div class="event-loc">@ phoenix gallery</div>
+        <div class="event-name"><a href="https://www.phoenixgalleryart.com" style="color:var(--ink);text-decoration:none;">lawrence, ks final friday artwalk @ phoenix gallery</a></div>
       </div>
       <div class="event">
         <div class="event-date">june 12th &amp; 13th</div>
@@ -165,7 +167,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 40px 48px 10%; max-w
     <hr class="rule">
 
     <div style="margin-bottom:32px;">
-      <h2>also at</h2>
+      <h2>represented at</h2>
       <div class="venue-name"><a href="https://www.phoenixgalleryart.com">phoenix gallery</a></div>
       <div class="venue-addr">825 massachusetts, lawrence, ks 66044</div>
     </div>

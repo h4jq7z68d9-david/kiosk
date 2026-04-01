@@ -10,6 +10,7 @@
 | https://davidnicholsonart.com/shipping.html | Shipping & returns info |
 | https://davidnicholsonart.com/kiosk.html | iPad kiosk for art fairs |
 | https://davidnicholsonart.com/prints/{slug}.html | Per-product pages with OG tags — redirect to gallery modal |
+| https://davidnicholsonart.com/varied-readings.html | Varied Readings show page — interactive tile flip animation |
 | https://kiosk.davidnicholsonllc.com | Legacy URL — still works, same content |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
@@ -303,6 +304,16 @@ All are single-file, no framework — intentional, keep it that way.
 - Service worker cache key: `dna-v3`
 - **Service worker blocks external image requests** — SW only passes through fonts, cdnjs, and Lambda API
 
+### varied-readings.html (show page)
+- Standalone page for the Varied Readings show, April 24, 2026
+- 10 paintings in 5 diptych pairs, all base64 embedded
+- 4×4 tile grid, each tile has independent sequence index
+- Snake flip animation: even pairs top-down, odd pairs bottom-up
+- Click any tile to advance it one step in the sequence
+- Pairs: Junction & Terminal, Early Still & U.S. 50 East, Johnson Drive 6am & 6:01am, KS Wind Farm 1 & 2, Sunflower 1 & 2
+- Links to phoenixgalleryart.com for gallery info
+- No nav — standalone experience, "david nicholson" footer links back to index.html
+
 ### generate-prints.js (build script)
 - Runs in GitHub Actions before S3 sync
 - Fetches from `API_URL` (raw API Gateway URL) — NOT through CloudFront (CloudFront blocks GitHub Actions IPs)
@@ -338,6 +349,28 @@ All are single-file, no framework — intentional, keep it that way.
 ---
 
 ## Completed This Session
+
+- ✓ `varied-readings.html` created — interactive show page for Varied Readings (April 24, 2026, Phoenix Gallery, Lawrence KS)
+  - 4×4 tile grid flip animation cycling through all 10 paintings in 5 diptych pairs
+  - Snake pattern: top-down then bottom-up alternating between paintings
+  - Each tile tracks its own sequence index independently — click any tile to advance it one step
+  - Sweep respects manually advanced tiles, corrects tiles that jumped too far ahead
+  - No pause — continuous animation, click interaction runs alongside
+  - All 10 images base64 embedded — self-contained, no deploy dependency for images
+  - Links back to davidnicholsonart.com via "david nicholson" footer link
+- ✓ `index.html` updated:
+  - "varied readings →" gold link added to future events section
+  - "also at" changed to "represented at"
+  - Dates changed from gold to white; "future" heading bumped to 26px
+  - Lawrence, KS final friday artwalk @ phoenix gallery combined to one line, links to phoenixgalleryart.com
+- ✓ Pinterest share buttons added to gallery.html product modal (Pinterest + Facebook)
+- ✓ Pinterest tag base pagevisit fixed — click_id only included when epik param present
+- ✓ Product modal title/description switched from Playfair Display to DM Sans
+- ✓ Per-product /prints/ pages implemented (see full details in previous session entry)
+- ✓ API_URL Lambda env var set to https://davidnicholsonart.com
+- ✓ CloudFront /image* behavior Origin request policy set to AllViewerExceptHostHeader
+
+## Previously Completed
 
 - ✓ Pinterest tag base pagevisit fixed — `click_id` only included when `epik` param is present (omitting undefined key)
 - ✓ Product modal title and description switched from Playfair Display (serif/italic) to DM Sans to match site nav typography
