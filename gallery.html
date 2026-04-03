@@ -396,7 +396,7 @@ function buildFilterBar() {
   shuffleBtn.className = 'shuffle-btn';
   shuffleBtn.title = 'shuffle';
   shuffleBtn.setAttribute('aria-label', 'shuffle');
-  shuffleBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>`;
+  shuffleBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="36" cy="36" r="34" stroke-width="2.5"/><g stroke-width="2.8"><path d="M18,44 C30,44 42,28 54,28"/><polyline points="46,20 54,28 46,36"/><path d="M18,28 C30,28 42,44 54,44"/><polyline points="46,36 54,44 46,52"/></g></svg>`;
   shuffleBtn.onclick = () => shuffleGrid(shuffleBtn);
   sidebar.appendChild(shuffleBtn);
 }
