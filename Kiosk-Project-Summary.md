@@ -287,7 +287,7 @@ All are single-file, no framework — intentional, keep it that way.
 - Checkout redirect URL: `https://davidnicholsonart.com/gallery.html?success=1`
 - Product modal title and description use DM Sans (var(--font)) — not serif
 - Product modal shows description + "Giclée prints are signed and dated, matted and ready to frame."
-- **Share row** in product modal — Pinterest and Facebook share buttons using brand icons and nav button typography (DM Sans, weight 400, letter-spacing 0.14em, lowercase)
+- **Shuffle button** — below year filters in sidebar; shuffles current filtered set (Fisher-Yates); active state orange; SVG inline bowed-arrow icon (placeholder, swap when better icon found)
 - Share URLs point to `/prints/{slug}.html` — provides correct OG preview on share
 - `?view={ITEM_ID}` param opens product modal directly — used by `/prints/` redirect pages
 - `?product_id=ITEMID_VARIATIONID` param adds item to cart and opens cart — used by ad feed links
@@ -334,6 +334,7 @@ All are single-file, no framework — intentional, keep it that way.
 
 ## Up Next (Next Session)
 
+- **index.html footer full-bleed** — footer (contact info + guestbook) should span edge to edge like the gallery nav bar, breaking out of the content max-width; content above stays constrained as-is
 - **Sales/inventory dashboard**
 - **Expense tracker**
 - **Admin dashboard**
@@ -349,6 +350,11 @@ All are single-file, no framework — intentional, keep it that way.
 ---
 
 ## Completed This Session
+
+- ✓ **Shuffle button added to gallery.html sidebar** — appears below year filters (All / 2026 / 2025 / 2024 / 2023); shuffles current filtered set using Fisher-Yates; active state turns accent orange; icon is two vertical bowed arrows (SVG inline, no Font Awesome dependency); placeholder icon in place — swap for a better icon when found
+- ✓ **gallery.html nav bar constrained** — top bar (David Nicholson / Gallery / Instagram / Cart) max-width constrained so it doesn't bleed to edges on iPad and desktop; content area width unchanged
+
+## Previously Completed (prior session) — Site-wide light theme
 
 - ✓ **Site-wide light theme applied** — gallery.html, index.html, and varied-readings.html converted from dark to light
   - Palette: `--bg: #f8f6f3`, `--ink: #1a2a3a`, `--ink2: #7a8a99`, `--ink3: #9aa0a8`, `--accent: #e07030`
