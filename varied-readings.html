@@ -14,10 +14,11 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0c0c0c;
-  --ink: #f0ede8;
-  --ink2: #888480;
-  --ink3: #555;
+  --bg: #f8f6f3;
+  --ink: #1a2a3a;
+  --ink2: #7a8a99;
+  --ink3: #9aa0a8;
+  --accent: #e07030;
   --font: 'DM Sans', sans-serif;
   --serif: 'DM Serif Display', serif;
 }
@@ -62,7 +63,7 @@ header {
   line-height: 1.9;
   padding-top: 6px;
 }
-.header-meta a { color: var(--ink); text-decoration: none; }
+.header-meta a { color: var(--accent); text-decoration: none; }
 .statement {
   max-width: 580px;
   margin: 24px auto 0;
@@ -91,7 +92,7 @@ canvas#main-canvas {
   display: block;
   width: 100%;
   height: auto;
-  background: #0c0c0c;
+  background: #f8f6f3;
 }
 .painting-labels {
   display: flex;
@@ -123,10 +124,10 @@ footer {
 .footer-copy { font-size: 11px; color: var(--ink3); letter-spacing: 0.08em; }
 .footer-link {
   font-size: 20px; letter-spacing: 0.06em; text-transform: lowercase;
-  color: var(--ink); text-decoration: none; font-weight: 400;
-  transition: color 0.2s;
+  color: var(--accent); text-decoration: none; font-weight: 400;
+  transition: opacity 0.2s;
 }
-.footer-link:hover { color: var(--ink2); }
+.footer-link:hover { opacity: 0.7; }
 @media (max-width: 600px) {
   header { padding: 28px 20px 0; }
   .header-meta { text-align: left; }
@@ -431,7 +432,7 @@ function tick(now) {
   const canvas = document.getElementById('main-canvas');
   const ctx    = canvas.getContext('2d');
 
-  ctx.fillStyle = '#0c0c0c';
+  ctx.fillStyle = '#f8f6f3';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   tiles.forEach((tile, i) => {

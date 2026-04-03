@@ -350,6 +350,14 @@ All are single-file, no framework — intentional, keep it that way.
 
 ## Completed This Session
 
+- ✓ **Site-wide light theme applied** — gallery.html, index.html, and varied-readings.html converted from dark to light
+  - Palette: `--bg: #f8f6f3`, `--ink: #1a2a3a`, `--ink2: #7a8a99`, `--ink3: #9aa0a8`, `--accent: #e07030`
+  - kiosk.html intentionally left on dark theme
+- ✓ **gallery.html nav:** Instagram as pill button (bordered); cart is bare icon with no circle border; active year filter in orange; 2-column mobile grid; add-to-cart and checkout buttons orange; footer links plain text (no pill borders)
+- ✓ **index.html:** Event/venue links orange; footer links plain text; follow button uses `--border-mid` border
+- ✓ **varied-readings.html:** Canvas bg updated to `#f8f6f3`; Phoenix Gallery link and footer link in orange
+- ✓ **Pinterest boards created and populated**
+
 - ✓ `varied-readings.html` created — interactive show page for Varied Readings (April 24, 2026, Phoenix Gallery, Lawrence KS)
   - 4×4 tile grid flip animation cycling through all 10 paintings in 5 diptych pairs
   - Snake pattern: top-down then bottom-up alternating between paintings
