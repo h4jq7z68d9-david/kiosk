@@ -127,18 +127,21 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 }
 .year-btn:hover { color: var(--ink2); }
 .year-btn.active { color: var(--accent); font-weight: 500; }
-.year-btn.all { margin-bottom: 10px; letter-spacing: 0.12em; }
+.year-btn.all { margin-bottom: 18px; letter-spacing: 0.12em; }
 .shuffle-btn {
   background: none; border: none;
   cursor: pointer;
-  padding: 8px 4px;
-  width: 100%; display: flex; align-items: center; justify-content: center;
-  margin-top: 10px;
+  padding: 6px 4px;
+  width: 100%; text-align: center;
+  margin-top: 18px;
   color: var(--ink3);
+  font-family: var(--font); font-size: 11px; font-weight: 400;
+  letter-spacing: 0.08em;
   transition: color 0.15s;
+  line-height: 1;
 }
 .shuffle-btn:hover { color: var(--ink2); }
-.shuffle-btn.active { color: var(--accent); }
+.shuffle-btn.active { color: var(--accent); font-weight: 500; }
 
 /* GRID */
 .grid-wrap { flex: 1; min-width: 0; padding: 32px 16px 80px; }
@@ -396,7 +399,7 @@ function buildFilterBar() {
   shuffleBtn.className = 'shuffle-btn';
   shuffleBtn.title = 'shuffle';
   shuffleBtn.setAttribute('aria-label', 'shuffle');
-  shuffleBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20 Q3 12 8 4"/><polyline points="4,8 8,4 12,8"/><path d="M16 4 Q21 12 16 20"/><polyline points="12,16 16,20 20,16"/></svg>`;
+  shuffleBtn.textContent = 'mix';
   shuffleBtn.onclick = () => shuffleGrid(shuffleBtn);
   sidebar.appendChild(shuffleBtn);
 }
