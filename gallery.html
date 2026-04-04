@@ -100,7 +100,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   min-height: 100vh;
 }
 
-/* YEAR SIDEBAR */
+/* YEAR SIDEBAR — desktop only */
 .year-sidebar {
   width: 52px;
   flex-shrink: 0;
@@ -143,17 +143,76 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .shuffle-btn:hover { color: var(--ink2); }
 .shuffle-btn.active { color: var(--accent); font-weight: 500; }
 
+/* WORK COUNT — below filters in sidebar */
+.work-count {
+  margin-top: auto;
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding-bottom: 4px;
+  line-height: 1.4;
+}
+
+/* MOBILE FILTER BAR — replaces sidebar on small screens */
+.filter-bar-mobile {
+  display: none;
+}
+@media (max-width: 600px) {
+  .year-sidebar { display: none !important; }
+  .filter-bar-mobile {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: var(--nav-h);
+    background: var(--bg);
+    z-index: 70;
+    align-items: center;
+  }
+  .filter-bar-mobile::-webkit-scrollbar { display: none; }
+  .filter-pill {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-mid);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    background: none;
+    color: var(--ink3);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-pill:hover { color: var(--ink2); border-color: var(--ink2); }
+  .filter-pill.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .filter-pill.mix-pill { color: var(--ink3); }
+  .filter-pill.mix-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .mobile-count {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--ink3);
+    letter-spacing: 0.04em;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+}
+
 /* GRID */
-.grid-wrap { flex: 1; min-width: 0; padding: 32px 16px 80px; }
-.grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.grid-wrap { flex: 1; min-width: 0; padding: 32px 24px 80px; }
+.grid { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
 
 @media (max-width: 700px) {
   nav { padding: 0 16px; }
   .nav-title { font-size: 17px; }
-  .year-sidebar { width: 42px; padding: 20px 0; }
-  .year-btn { font-size: 10px; padding: 5px 2px; }
-  .grid-wrap { padding: 20px 10px 60px; }
-  .grid { gap: 10px; }
+  .grid-wrap { padding: 20px 14px 60px; }
+  .grid { gap: 16px; }
 }
 @media (max-width: 500px) {
   .nav-title { font-size: 14px; letter-spacing: 0.03em; }
@@ -164,17 +223,40 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 }
 @media (min-width: 501px) { .btn-text-short { display: none; } }
 
-/* CARDS — 3 col desktop, 1 col mobile natural ratio */
-.card { width: calc(33.333% - 12px); aspect-ratio: 4/5; position: relative; overflow: hidden; cursor: pointer; background: var(--bg); border-radius: 2px; display: flex; align-items: center; justify-content: center; }
-.card img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; opacity: 0; transition: opacity 0.35s; }
-.card img.loaded { opacity: 1; }
-.card:hover { opacity: 0.88; transition: opacity 0.2s; }
-@media (max-width: 600px) {
-  .card { width: calc(50% - 5px); aspect-ratio: 4/5; }
-  .card img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+/* CARDS — natural proportions, mat effect */
+.card {
+  width: calc(33.333% - 19px);
+  position: relative;
+  cursor: pointer;
+  background: #fff;
+  border-radius: 3px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.05);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  /* view-transition-name set dynamically per card */
 }
-.skel { width: calc(33.333% - 12px); aspect-ratio: 4/5; border-radius: 2px; background: var(--surface); animation: sk 1.6s ease-in-out infinite; }
-@media (max-width: 600px) { .skel { width: calc(50% - 5px); aspect-ratio: 4/5; } }
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+  opacity: 1;
+}
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.35s;
+  border-radius: 1px;
+}
+.card img.loaded { opacity: 1; }
+
+@media (max-width: 600px) {
+  .card { width: calc(50% - 8px); padding: 7px; }
+}
+
+/* Skeleton — approximate portrait ratio since we don't know actual yet */
+.skel { width: calc(33.333% - 19px); aspect-ratio: 4/5; border-radius: 3px; background: var(--surface); animation: sk 1.6s ease-in-out infinite; }
+@media (max-width: 600px) { .skel { width: calc(50% - 8px); } }
 @keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
 
 /* DETAIL MODAL — desktop */
@@ -187,7 +269,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   #detail-overlay { padding: 0; align-items: flex-end; }
   #detail-sheet { flex-direction: column; max-height: 94dvh; max-width: 100%; border-radius: 20px 20px 0 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
   #detail-sheet::before { content: ''; display: block; width: 36px; height: 4px; background: rgba(0,0,0,0.15); border-radius: 2px; margin: 10px auto 0; flex-shrink: 0; }
-  .modal-img-pane { flex: none; width: 100%; height: 56vw; min-height: 220px; max-height: 44vh; cursor: zoom-in; }
+  .modal-img-pane { flex: none; width: 100%; height: 56vw; min-height: 220px; max-height: 52vh; cursor: zoom-in; }
   .modal-img-pane img { width: 100%; height: 100%; object-fit: contain; padding: 16px; max-height: none; }
   .modal-info-pane { width: 100%; border-left: none; border-top: 1px solid rgba(0,0,0,0.07); overflow-y: visible; }
   .modal-info-inner { padding: 24px 20px 40px; }
@@ -278,6 +360,9 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 /* TOAST */
 #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f8f6f3; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Grid shuffle transition */
+.grid-transitioning .card { transition: opacity 0.18s ease; }
 </style>
 <link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon180.png">
@@ -293,6 +378,9 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
     <span class="nav-cart-count" id="cart-count">0</span>
   </button>
 </nav>
+
+<!-- MOBILE FILTER BAR — visible only on ≤600px -->
+<div class="filter-bar-mobile" id="filter-bar-mobile" style="display:none"></div>
 
 <div class="page-body">
 
@@ -377,11 +465,22 @@ function saveCart() {
   try { localStorage.setItem('dna_cart', JSON.stringify(cart)); } catch {}
 }
 
+function updateWorkCount() {
+  const n = filteredIndices.length;
+  // Desktop sidebar count
+  let countEl = document.getElementById('work-count');
+  if (countEl) countEl.textContent = n + (n === 1 ? ' work' : ' works');
+  // Mobile bar count
+  let mobileCountEl = document.getElementById('mobile-count');
+  if (mobileCountEl) mobileCountEl.textContent = n + (n === 1 ? ' work' : ' works');
+}
+
 function buildFilterBar() {
   const years = [...new Set(products.map(p => p.year).filter(Boolean))]
     .sort((a, b) => parseInt(b) - parseInt(a));
   if (!years.length) return;
 
+  // --- Desktop sidebar ---
   const sidebar = document.getElementById('year-sidebar');
   sidebar.style.display = 'flex';
 
@@ -402,17 +501,67 @@ function buildFilterBar() {
   shuffleBtn.textContent = 'mix';
   shuffleBtn.onclick = () => shuffleGrid(shuffleBtn);
   sidebar.appendChild(shuffleBtn);
+
+  // Work count
+  const countEl = document.createElement('div');
+  countEl.className = 'work-count';
+  countEl.id = 'work-count';
+  sidebar.appendChild(countEl);
+
+  // --- Mobile filter bar ---
+  const mobileBar = document.getElementById('filter-bar-mobile');
+  mobileBar.style.display = '';  // let CSS media query control visibility
+
+  const allPill = document.createElement('button');
+  allPill.className = 'filter-pill active';
+  allPill.textContent = 'all';
+  allPill.dataset.year = 'all';
+  allPill.onclick = () => toggleFilter('all', allPill);
+  mobileBar.appendChild(allPill);
+
+  years.forEach(y => {
+    const pill = document.createElement('button');
+    pill.className = 'filter-pill';
+    pill.textContent = y;
+    pill.dataset.year = y;
+    pill.onclick = () => toggleFilter(y, pill);
+    mobileBar.appendChild(pill);
+  });
+
+  const mixPill = document.createElement('button');
+  mixPill.className = 'filter-pill mix-pill';
+  mixPill.textContent = 'mix';
+  mixPill.setAttribute('aria-label', 'shuffle');
+  mixPill.onclick = () => shuffleGrid(mixPill);
+  mobileBar.appendChild(mixPill);
+
+  const mobileCount = document.createElement('span');
+  mobileCount.className = 'mobile-count';
+  mobileCount.id = 'mobile-count';
+  mobileBar.appendChild(mobileCount);
 }
 
 function shuffleGrid(btn) {
-  // Fisher-Yates shuffle on a copy of the current filtered indices
   const arr = [...filteredIndices];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   filteredIndices = arr;
-  renderGrid();
+
+  // View Transitions API — fade grid on shuffle if supported
+  if (document.startViewTransition) {
+    document.startViewTransition(() => renderGrid());
+  } else {
+    const grid = document.getElementById('grid');
+    grid.style.opacity = '0';
+    grid.style.transition = 'opacity 0.15s';
+    setTimeout(() => {
+      renderGrid();
+      grid.style.opacity = '1';
+    }, 150);
+  }
+
   btn.classList.add('active');
   setTimeout(() => btn.classList.remove('active'), 400);
 }
@@ -427,6 +576,8 @@ function toggleFilter(year, btn) {
       activeYears.add(year);
     }
   }
+
+  // Update desktop sidebar buttons
   document.querySelectorAll('.year-btn').forEach(b => {
     if (b.dataset.year === 'all') {
       b.classList.toggle('active', activeYears.size === 0);
@@ -434,8 +585,21 @@ function toggleFilter(year, btn) {
       b.classList.toggle('active', activeYears.has(b.dataset.year));
     }
   });
+
+  // Update mobile pills
+  document.querySelectorAll('.filter-pill').forEach(b => {
+    if (b.dataset.year === 'all') {
+      b.classList.toggle('active', activeYears.size === 0);
+    } else if (b.dataset.year) {
+      b.classList.toggle('active', activeYears.has(b.dataset.year));
+    }
+  });
+
   const shuffleBtn = document.querySelector('.shuffle-btn');
   if (shuffleBtn) shuffleBtn.classList.remove('active');
+  const mixPill = document.querySelector('.mix-pill');
+  if (mixPill) mixPill.classList.remove('active');
+
   applyFilter();
 }
 
@@ -449,6 +613,7 @@ function applyFilter() {
       .map(({ i }) => i);
   }
   renderGrid();
+  updateWorkCount();
 }
 
 function renderGrid() {
@@ -460,7 +625,7 @@ function renderGrid() {
     card.className = 'card';
     if (p.img) {
       const img = document.createElement('img');
-      img.alt = p.desc || p.title;  // SEO: use description as alt text, fall back to title
+      img.alt = p.desc || p.title;
       img.referrerPolicy = 'no-referrer';
       img.onload = () => img.classList.add('loaded');
       img.src = p.img;
