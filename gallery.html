@@ -174,30 +174,24 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 
 /* YEAR SECTION HEADINGS */
 .year-section { width: 100%; margin-bottom: 0; }
-.year-section + .year-section { margin-top: 56px; }
+.year-section + .year-section { margin-top: 64px; }
 .year-heading {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-.year-heading-rule {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
+  margin-bottom: 24px;
+  scroll-margin-top: calc(var(--nav-h) + 20px);
 }
 .year-heading-label {
   font-family: var(--font);
-  font-size: 11px;
+  font-size: 22px;
   font-weight: 400;
-  letter-spacing: 0.18em;
-  color: var(--ink3);
+  letter-spacing: 0.01em;
+  color: var(--ink);
   text-transform: lowercase;
-  flex-shrink: 0;
+  display: block;
 }
 @media (max-width: 600px) {
-  .year-section + .year-section { margin-top: 40px; }
-  .year-heading { margin-bottom: 20px; }
+  .year-section + .year-section { margin-top: 44px; }
+  .year-heading { margin-bottom: 18px; }
+  .year-heading-label { font-size: 18px; }
 }
 
 /* GRID — masonry columns */
@@ -394,7 +388,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 <div class="grid-wrap">
   <div id="grid">
     <div class="year-section">
-      <div class="year-heading"><div class="year-heading-rule"></div><div class="year-heading-label" style="opacity:0.3">····</div><div class="year-heading-rule"></div></div>
+      <div class="year-heading"><div class="year-heading-label" style="opacity:0.2; font-size:22px;">····</div></div>
       <div class="grid">
         <div class="masonry-col"><div class="skel"></div><div class="skel" style="aspect-ratio:3/4"></div></div>
         <div class="masonry-col"><div class="skel" style="aspect-ratio:3/2"></div><div class="skel"></div></div>
@@ -522,15 +516,12 @@ function renderGrid() {
     // Section wrapper with anchor
     const section = document.createElement('div');
     section.className = 'year-section';
-    section.id = 'year-' + y;
 
-    // Heading with rule
+    // Heading — anchor target is the heading itself so scroll lands on it
     const heading = document.createElement('div');
     heading.className = 'year-heading';
-    heading.innerHTML =
-      '<div class="year-heading-rule"></div>' +
-      '<div class="year-heading-label">' + y + '</div>' +
-      '<div class="year-heading-rule"></div>';
+    heading.id = 'year-' + y;
+    heading.innerHTML = '<div class="year-heading-label">' + y + '</div>';
     section.appendChild(heading);
 
     // Masonry columns
