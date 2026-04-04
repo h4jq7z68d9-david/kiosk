@@ -100,7 +100,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   min-height: 100vh;
 }
 
-/* YEAR SIDEBAR — desktop only */
+/* YEAR SIDEBAR — desktop jump nav */
 .year-sidebar {
   width: 52px;
   flex-shrink: 0;
@@ -124,37 +124,13 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   width: 100%; text-align: center;
   transition: color 0.15s;
   line-height: 1;
+  text-decoration: none;
+  display: block;
 }
 .year-btn:hover { color: var(--ink2); }
 .year-btn.active { color: var(--accent); font-weight: 500; }
-.year-btn.all { margin-bottom: 18px; letter-spacing: 0.12em; }
-.shuffle-btn {
-  background: none; border: none;
-  cursor: pointer;
-  padding: 6px 4px;
-  width: 100%; text-align: center;
-  margin-top: 18px;
-  color: var(--ink3);
-  font-family: var(--font); font-size: 11px; font-weight: 400;
-  letter-spacing: 0.08em;
-  transition: color 0.15s;
-  line-height: 1;
-}
-.shuffle-btn:hover { color: var(--ink2); }
-.shuffle-btn.active { color: var(--accent); font-weight: 500; }
 
-/* WORK COUNT — below filters in sidebar */
-.work-count {
-  margin-top: auto;
-  font-size: 10px;
-  color: var(--ink3);
-  letter-spacing: 0.06em;
-  text-align: center;
-  padding-bottom: 4px;
-  line-height: 1.4;
-}
-
-/* MOBILE FILTER BAR — replaces sidebar on small screens */
+/* MOBILE JUMP BAR — replaces sidebar on small screens */
 .filter-bar-mobile {
   display: none;
 }
@@ -189,19 +165,39 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
     cursor: pointer;
     transition: all 0.15s;
     white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
   }
   .filter-pill:hover { color: var(--ink2); border-color: var(--ink2); }
-  .filter-pill.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-  .filter-pill.mix-pill { color: var(--ink3); }
-  .filter-pill.mix-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .mobile-count {
-    flex-shrink: 0;
-    font-size: 11px;
-    color: var(--ink3);
-    letter-spacing: 0.04em;
-    margin-left: 4px;
-    white-space: nowrap;
-  }
+  .filter-pill.active { color: var(--accent); border-color: var(--accent); font-weight: 500; }
+}
+
+/* YEAR SECTION HEADINGS */
+.year-section { width: 100%; margin-bottom: 0; }
+.year-section + .year-section { margin-top: 56px; }
+.year-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.year-heading-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.year-heading-label {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink3);
+  text-transform: lowercase;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .year-section + .year-section { margin-top: 40px; }
+  .year-heading { margin-bottom: 20px; }
 }
 
 /* GRID — masonry columns */
@@ -371,8 +367,6 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f8f6f3; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Grid shuffle transition */
-.grid-transitioning .card { transition: opacity 0.18s ease; }
 </style>
 <link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon180.png">
@@ -389,20 +383,24 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
   </button>
 </nav>
 
-<!-- MOBILE FILTER BAR — visible only on ≤600px -->
+<!-- MOBILE JUMP BAR — visible only on ≤600px -->
 <div class="filter-bar-mobile" id="filter-bar-mobile" style="display:none"></div>
 
 <div class="page-body">
 
 <div class="year-sidebar" id="year-sidebar" style="display:none">
-  <button class="year-btn all active" data-year="all" onclick="toggleFilter('all',this)">all</button>
 </div>
 
 <div class="grid-wrap">
-  <div class="grid" id="grid">
-    <div class="masonry-col"><div class="skel"></div><div class="skel" style="aspect-ratio:3/4"></div></div>
-    <div class="masonry-col"><div class="skel" style="aspect-ratio:3/2"></div><div class="skel"></div></div>
-    <div class="masonry-col"><div class="skel"></div><div class="skel" style="aspect-ratio:1/1"></div></div>
+  <div id="grid">
+    <div class="year-section">
+      <div class="year-heading"><div class="year-heading-rule"></div><div class="year-heading-label" style="opacity:0.3">····</div><div class="year-heading-rule"></div></div>
+      <div class="grid">
+        <div class="masonry-col"><div class="skel"></div><div class="skel" style="aspect-ratio:3/4"></div></div>
+        <div class="masonry-col"><div class="skel" style="aspect-ratio:3/2"></div><div class="skel"></div></div>
+        <div class="masonry-col"><div class="skel"></div><div class="skel" style="aspect-ratio:1/1"></div></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -464,8 +462,6 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
 let products = [];
-let filteredIndices = [];
-let activeYears = new Set();
 let curIdx = 0;
 let curVariationId = null;
 let curVariationPrice = 0;
@@ -476,183 +472,111 @@ function saveCart() {
   try { localStorage.setItem('dna_cart', JSON.stringify(cart)); } catch {}
 }
 
-function updateWorkCount() {
-  const n = filteredIndices.length;
-  // Desktop sidebar count
-  let countEl = document.getElementById('work-count');
-  if (countEl) countEl.textContent = n + (n === 1 ? ' work' : ' works');
-  // Mobile bar count
-  let mobileCountEl = document.getElementById('mobile-count');
-  if (mobileCountEl) mobileCountEl.textContent = n + (n === 1 ? ' work' : ' works');
-}
-
-function buildFilterBar() {
+function buildNav() {
   const years = [...new Set(products.map(p => p.year).filter(Boolean))]
     .sort((a, b) => parseInt(b) - parseInt(a));
   if (!years.length) return;
 
-  // --- Desktop sidebar ---
+  // Desktop sidebar — anchor links
   const sidebar = document.getElementById('year-sidebar');
   sidebar.style.display = 'flex';
-
   years.forEach(y => {
-    const btn = document.createElement('button');
-    btn.className = 'year-btn';
-    btn.textContent = y;
-    btn.dataset.year = y;
-    btn.onclick = () => toggleFilter(y, btn);
-    sidebar.appendChild(btn);
+    const a = document.createElement('a');
+    a.className = 'year-btn';
+    a.textContent = y;
+    a.href = '#year-' + y;
+    a.dataset.year = y;
+    sidebar.appendChild(a);
   });
 
-  // Shuffle button
-  const shuffleBtn = document.createElement('button');
-  shuffleBtn.className = 'shuffle-btn';
-  shuffleBtn.title = 'shuffle';
-  shuffleBtn.setAttribute('aria-label', 'shuffle');
-  shuffleBtn.textContent = 'mix';
-  shuffleBtn.onclick = () => shuffleGrid(shuffleBtn);
-  sidebar.appendChild(shuffleBtn);
-
-  // Work count
-  const countEl = document.createElement('div');
-  countEl.className = 'work-count';
-  countEl.id = 'work-count';
-  sidebar.appendChild(countEl);
-
-  // --- Mobile filter bar ---
+  // Mobile jump bar — anchor links
   const mobileBar = document.getElementById('filter-bar-mobile');
-  mobileBar.style.display = '';  // let CSS media query control visibility
-
-  const allPill = document.createElement('button');
-  allPill.className = 'filter-pill active';
-  allPill.textContent = 'all';
-  allPill.dataset.year = 'all';
-  allPill.onclick = () => toggleFilter('all', allPill);
-  mobileBar.appendChild(allPill);
-
+  mobileBar.style.display = '';
   years.forEach(y => {
-    const pill = document.createElement('button');
-    pill.className = 'filter-pill';
-    pill.textContent = y;
-    pill.dataset.year = y;
-    pill.onclick = () => toggleFilter(y, pill);
-    mobileBar.appendChild(pill);
+    const a = document.createElement('a');
+    a.className = 'filter-pill';
+    a.textContent = y;
+    a.href = '#year-' + y;
+    a.dataset.year = y;
+    mobileBar.appendChild(a);
   });
-
-  const mixPill = document.createElement('button');
-  mixPill.className = 'filter-pill mix-pill';
-  mixPill.textContent = 'mix';
-  mixPill.setAttribute('aria-label', 'shuffle');
-  mixPill.onclick = () => shuffleGrid(mixPill);
-  mobileBar.appendChild(mixPill);
-
-  const mobileCount = document.createElement('span');
-  mobileCount.className = 'mobile-count';
-  mobileCount.id = 'mobile-count';
-  mobileBar.appendChild(mobileCount);
-}
-
-function shuffleGrid(btn) {
-  const arr = [...filteredIndices];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  filteredIndices = arr;
-
-  // View Transitions API — fade grid on shuffle if supported
-  if (document.startViewTransition) {
-    document.startViewTransition(() => renderGrid());
-  } else {
-    const grid = document.getElementById('grid');
-    grid.style.opacity = '0';
-    grid.style.transition = 'opacity 0.15s';
-    setTimeout(() => {
-      renderGrid();
-      grid.style.opacity = '1';
-    }, 150);
-  }
-
-  btn.classList.add('active');
-  setTimeout(() => btn.classList.remove('active'), 400);
-}
-
-function toggleFilter(year, btn) {
-  if (year === 'all') {
-    activeYears.clear();
-  } else {
-    if (activeYears.has(year)) {
-      activeYears.delete(year);
-    } else {
-      activeYears.add(year);
-    }
-  }
-
-  // Update desktop sidebar buttons
-  document.querySelectorAll('.year-btn').forEach(b => {
-    if (b.dataset.year === 'all') {
-      b.classList.toggle('active', activeYears.size === 0);
-    } else {
-      b.classList.toggle('active', activeYears.has(b.dataset.year));
-    }
-  });
-
-  // Update mobile pills
-  document.querySelectorAll('.filter-pill').forEach(b => {
-    if (b.dataset.year === 'all') {
-      b.classList.toggle('active', activeYears.size === 0);
-    } else if (b.dataset.year) {
-      b.classList.toggle('active', activeYears.has(b.dataset.year));
-    }
-  });
-
-  const shuffleBtn = document.querySelector('.shuffle-btn');
-  if (shuffleBtn) shuffleBtn.classList.remove('active');
-  const mixPill = document.querySelector('.mix-pill');
-  if (mixPill) mixPill.classList.remove('active');
-
-  applyFilter();
-}
-
-function applyFilter() {
-  if (activeYears.size === 0) {
-    filteredIndices = products.map((_, i) => i);
-  } else {
-    filteredIndices = products
-      .map((p, i) => ({ p, i }))
-      .filter(({ p }) => p.year && activeYears.has(p.year))
-      .map(({ i }) => i);
-  }
-  renderGrid();
-  updateWorkCount();
 }
 
 function renderGrid() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
+  const wrap = document.getElementById('grid');
+  wrap.innerHTML = '';
   const numCols = window.innerWidth <= 600 ? 2 : 3;
-  const cols = [];
-  for (let c = 0; c < numCols; c++) {
-    const col = document.createElement('div');
-    col.className = 'masonry-col';
-    grid.appendChild(col);
-    cols.push(col);
-  }
-  filteredIndices.forEach((i, pos) => {
-    const p = products[i];
-    const card = document.createElement('div');
-    card.className = 'card';
-    if (p.img) {
-      const img = document.createElement('img');
-      img.alt = p.desc || p.title;
-      img.referrerPolicy = 'no-referrer';
-      img.onload = () => img.classList.add('loaded');
-      img.src = p.img;
-      card.appendChild(img);
+
+  const years = [...new Set(products.map(p => p.year).filter(Boolean))]
+    .sort((a, b) => parseInt(b) - parseInt(a));
+
+  // Products with no year go at end under their own section
+  const noYear = products.map((p, i) => ({ p, i })).filter(({ p }) => !p.year);
+
+  years.forEach(y => {
+    const yearProducts = products
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => p.year === y);
+    if (!yearProducts.length) return;
+
+    // Section wrapper with anchor
+    const section = document.createElement('div');
+    section.className = 'year-section';
+    section.id = 'year-' + y;
+
+    // Heading with rule
+    const heading = document.createElement('div');
+    heading.className = 'year-heading';
+    heading.innerHTML =
+      '<div class="year-heading-rule"></div>' +
+      '<div class="year-heading-label">' + y + '</div>' +
+      '<div class="year-heading-rule"></div>';
+    section.appendChild(heading);
+
+    // Masonry columns
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    const cols = [];
+    for (let c = 0; c < numCols; c++) {
+      const col = document.createElement('div');
+      col.className = 'masonry-col';
+      grid.appendChild(col);
+      cols.push(col);
     }
-    card.onclick = () => openDetail(i);
-    cols[pos % numCols].appendChild(card);
+    yearProducts.forEach(({ p, i }, pos) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      if (p.img) {
+        const img = document.createElement('img');
+        img.alt = p.desc || p.title;
+        img.referrerPolicy = 'no-referrer';
+        img.onload = () => img.classList.add('loaded');
+        img.src = p.img;
+        card.appendChild(img);
+      }
+      card.onclick = () => openDetail(i);
+      cols[pos % numCols].appendChild(card);
+    });
+    section.appendChild(grid);
+    wrap.appendChild(section);
   });
+}
+
+// Scroll spy — highlight sidebar/mobile link for visible section
+function initScrollSpy() {
+  const sections = document.querySelectorAll('.year-section[id]');
+  if (!sections.length) return;
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const y = entry.target.id.replace('year-', '');
+        document.querySelectorAll('.year-btn, .filter-pill').forEach(el => {
+          el.classList.toggle('active', el.dataset.year === y);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
 }
 
 function openDetail(idx) {
@@ -855,9 +779,8 @@ async function checkout() {
 }
 
 function slideNav(dir) {
-  const pos = filteredIndices.indexOf(curIdx);
-  const nextPos = (pos + dir + filteredIndices.length) % filteredIndices.length;
-  curIdx = filteredIndices[nextPos];
+  const nextIdx = (curIdx + dir + products.length) % products.length;
+  curIdx = nextIdx;
   populateDetail(products[curIdx]);
   document.getElementById('detail-sheet').scrollTop = 0;
 }
@@ -880,9 +803,8 @@ function fsBgClick(e) {
   if (e.target === document.getElementById('fs-overlay')) closeFS();
 }
 function fsNav(dir) {
-  const pos = filteredIndices.indexOf(curIdx);
-  const nextPos = (pos + dir + filteredIndices.length) % filteredIndices.length;
-  curIdx = filteredIndices[nextPos];
+  const nextIdx = (curIdx + dir + products.length) % products.length;
+  curIdx = nextIdx;
   const p = products[curIdx];
   document.getElementById('fs-img').src = p.img || '';
   populateDetail(p);
@@ -1021,11 +943,12 @@ async function loadProducts() {
         price: v.price_money ? (v.price_money.amount / 100).toFixed(0) : v.price || '',
       })),
     }));
-    buildFilterBar();
-    applyFilter();
+    buildNav();
+    renderGrid();
     updateCartCount();
     handleViewParam();
     handleIncomingProduct();
+    setTimeout(initScrollSpy, 100);
   } catch {
     document.getElementById('grid').innerHTML =
       '<p style="color:var(--ink3);padding:40px;grid-column:1/-1">could not load products.</p>';
