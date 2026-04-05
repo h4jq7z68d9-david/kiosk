@@ -153,23 +153,22 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   .filter-bar-mobile::-webkit-scrollbar { display: none; }
   .filter-pill {
     flex-shrink: 0;
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border-mid);
+    padding: 6px 4px;
+    border: none;
+    background: none;
     font-family: var(--font);
     font-size: 12px;
     font-weight: 400;
     letter-spacing: 0.08em;
-    background: none;
     color: var(--ink3);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: color 0.15s;
     white-space: nowrap;
     text-decoration: none;
     display: inline-block;
   }
-  .filter-pill:hover { color: var(--ink2); border-color: var(--ink2); }
-  .filter-pill.active { color: var(--accent); border-color: var(--accent); font-weight: 500; }
+  .filter-pill:hover { color: var(--ink2); }
+  .filter-pill.active { color: var(--accent); font-weight: 500; }
 }
 
 /* YEAR SECTION HEADINGS */
@@ -554,9 +553,10 @@ function renderGrid() {
 }
 
 // Scroll spy — highlight sidebar/mobile link for visible section
+// id is on .year-heading elements, not .year-section
 function initScrollSpy() {
-  const sections = document.querySelectorAll('.year-section[id]');
-  if (!sections.length) return;
+  const headings = document.querySelectorAll('.year-heading[id]');
+  if (!headings.length) return;
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -566,8 +566,8 @@ function initScrollSpy() {
         });
       }
     });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-  sections.forEach(s => observer.observe(s));
+  }, { rootMargin: '0px 0px -80% 0px' });
+  headings.forEach(h => observer.observe(h));
 }
 
 function openDetail(idx) {
