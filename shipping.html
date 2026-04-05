@@ -32,8 +32,8 @@ a { color: inherit; text-decoration: none; }
 
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
 .nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; flex: 1; }
-.nav-back { background: none; border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
-.nav-back:hover { border-color: var(--ink); }
+.nav-btn { background: none; border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
+.nav-btn:hover { border-color: var(--ink); }
 
 .page { max-width: 680px; margin: 0 auto; padding: calc(var(--nav-h) + 48px) 24px 80px; }
 
@@ -55,8 +55,29 @@ p:last-child { margin-bottom: 0; }
 
 footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
-.footer-link { background: none; border: none; font-family: var(--font); font-size: 12px; color: var(--ink2); letter-spacing: 0.12em; text-transform: lowercase; padding: 0; cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
-.footer-link:hover { color: var(--ink); }
+.footer-btn { background: none; border: none; font-family: var(--font); font-size: 12px; color: var(--ink2); letter-spacing: 0.12em; text-transform: lowercase; padding: 0; cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
+.footer-btn:hover { color: var(--ink); }
+
+/* GUESTBOOK MODAL */
+#gb-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
+#gb-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.28s, visibility 0s; }
+#gb-sheet { background: #f5f2ed; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.7); }
+.gb-header { display: flex; align-items: center; padding: 26px 26px 14px; flex-shrink: 0; gap: 10px; }
+.gb-header h2 { font-size: 22px; font-weight: 400; letter-spacing: 0.01em; text-transform: lowercase; color: #1a1917; flex: 1; margin-bottom: 0; }
+.gb-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #6b6560; }
+.gb-scroll { flex: 1; overflow-y: auto; padding: 0 26px 32px; display: flex; flex-direction: column; gap: 14px; }
+.gb-scroll::-webkit-scrollbar { width: 0; }
+.gb-form { display: flex; flex-direction: column; gap: 12px; }
+.gb-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #6b6560; margin-bottom: 5px; display: block; }
+.gb-input, .gb-ta { background: rgba(255,255,255,0.7); border: 1.5px solid rgba(0,0,0,0.1); border-radius: 6px; color: #1a1917; font-family: var(--font); font-size: 16px; padding: 12px 14px; outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none; }
+.gb-input:focus, .gb-ta:focus { border-color: #a8a39d; background: #fff; }
+.gb-input::placeholder, .gb-ta::placeholder { color: #b0aba5; }
+.gb-ta { resize: none; min-height: 86px; line-height: 1.5; }
+.gb-submit { background: var(--accent); border: none; border-radius: 10px; color: #fff; padding: 15px; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; text-transform: lowercase; cursor: pointer; width: 100%; margin-top: 4px; transition: opacity 0.15s; }
+.gb-submit:hover { opacity: 0.85; }
+
+#toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f8f6f3; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap; transition: opacity 0.2s, transform 0.2s; }
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 500px) {
   h1 { font-size: 22px; }
@@ -70,7 +91,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 
 <nav>
   <a class="nav-title" href="/index.html"><span style="margin-right:8px;font-size:16px;">&#8592;</span>david nicholson</a>
-  <a class="nav-back" href="/gallery.html">gallery</a>
+  <a class="nav-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
 </nav>
 
 <div class="page">
@@ -102,8 +123,79 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 
 <footer>
   <span class="footer-copy">&copy; 2026 david nicholson</span>
-  <a class="footer-link" href="/gallery.html">gallery</a>
+  <div style="display:flex;gap:16px;align-items:center;">
+    <a class="footer-btn" href="/gallery.html">gallery</a>
+    <button class="footer-btn" onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
+    <button class="footer-btn" onclick="openGB()">guest book</button>
+  </div>
 </footer>
 
+<!-- GUESTBOOK MODAL -->
+<div id="gb-overlay" onclick="gbOverlayClick(event)">
+  <div id="gb-sheet">
+    <div class="gb-header">
+      <h2>guest book</h2>
+      <button class="gb-close" onclick="closeGB()">&#x2715;</button>
+    </div>
+    <div class="gb-scroll">
+      <div class="gb-form">
+        <div><label class="gb-label" for="g-name">name</label><input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+        <div><label class="gb-label" for="g-email">email</label><input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
+        <div><label class="gb-label" for="g-msg">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#a8a39d">(optional)</span></label><textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here&hellip;" spellcheck="false"></textarea></div>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
+          <input id="g-subscribe" type="checkbox" style="width:17px;height:17px;flex-shrink:0;accent-color:#1a1917;cursor:pointer;">
+          <span style="font-size:12px;color:#6b6560;letter-spacing:0.04em;line-height:1.4;">casually stay informed &mdash; occasional notes on new work &amp; upcoming events</span>
+        </label>
+        <button class="gb-submit" id="gb-submit-btn" onclick="submitGB()">sign the guest book</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
+
+let gbSubmitting = false;
+function openGB() { document.getElementById('gb-overlay').classList.add('on'); }
+function closeGB() { document.getElementById('gb-overlay').classList.remove('on'); }
+function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
+
+async function submitGB() {
+  if (gbSubmitting) return;
+  const name       = document.getElementById('g-name').value.trim();
+  const email      = document.getElementById('g-email').value.trim();
+  const note       = document.getElementById('g-msg').value.trim();
+  const subscribed = document.getElementById('g-subscribe').checked;
+  if (!name)                          { toast('please enter your name'); return; }
+  if (!email || !email.includes('@')) { toast('please enter a valid email'); return; }
+  gbSubmitting = true;
+  const btn = document.getElementById('gb-submit-btn');
+  btn.textContent = 'signing…'; btn.style.opacity = '0.6';
+  try {
+    const r = await fetch(LAMBDA + '/guestbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, note, subscribed }),
+    });
+    if (!r.ok) throw 0;
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-email').value = '';
+    document.getElementById('g-msg').value = '';
+    document.getElementById('g-subscribe').checked = false;
+    toast('thanks for signing!');
+    setTimeout(closeGB, 1200);
+  } catch {
+    toast('something went wrong — try again');
+  } finally {
+    gbSubmitting = false;
+    btn.textContent = 'sign the guest book'; btn.style.opacity = '';
+  }
+}
+
+let toastTimer;
+function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
+</script>
 </body>
 </html>
