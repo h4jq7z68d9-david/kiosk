@@ -950,7 +950,7 @@ loadProducts();
 
 <!-- GUESTBOOK MODAL -->
 <div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
-<div id="gb-sheet" style="background:#f5f2ed;border-radius:12px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+<div id="gb-sheet" style="background:#f5f2ed;border-radius:16px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
   <div style="display:flex;align-items:center;padding:26px 26px 14px;gap:10px;flex-shrink:0;">
     <div style="font-family:var(--serif);font-size:22px;font-weight:700;color:#1a1917;flex:1;">guest book</div>
     <button onclick="closeGB()" style="width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6560;">✕</button>
@@ -967,7 +967,7 @@ loadProducts();
         <input id="g-subscribe" type="checkbox" style="width:17px;height:17px;flex-shrink:0;accent-color:#1a1917;cursor:pointer;">
         <span style="font-size:12px;color:#6b6560;letter-spacing:0.04em;line-height:1.4;">casually stay informed — occasional notes on new work &amp; upcoming events</span>
       </label>
-      <button id="gb-submit-btn" onclick="submitGB()" style="background:#1a1917;border:none;border-radius:6px;color:#f5f2ed;padding:15px;font-family:var(--font);font-size:13px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
+      <button id="gb-submit-btn" onclick="submitGB()" style="background:var(--accent);border:none;border-radius:10px;color:#fff;padding:15px;font-family:var(--font);font-size:15px;font-weight:500;letter-spacing:0.02em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
     </div>
   </div>
 </div>

@@ -111,7 +111,7 @@ footer {
 
 #gb-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
 #gb-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.28s, visibility 0s; }
-#gb-sheet { background: #f5f2ed; border-radius: 4px; width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.7); }
+#gb-sheet { background: #f5f2ed; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.7); }
 .gb-header { display: flex; align-items: center; padding: 26px 26px 14px; flex-shrink: 0; gap: 10px; }
 .gb-header h2 { font-size: 22px; font-weight: 700; letter-spacing: 0.04em; text-transform: lowercase; color: #1a1917; flex: 1; margin-bottom: 0; }
 .gb-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #6b6560; }
@@ -123,7 +123,7 @@ footer {
 .gb-input:focus, .gb-ta:focus { border-color: #a8a39d; background: #fff; }
 .gb-input::placeholder, .gb-ta::placeholder { color: #b0aba5; }
 .gb-ta { resize: none; min-height: 86px; line-height: 1.5; }
-.gb-submit { background: #1a1917; border: none; border-radius: 6px; color: #f5f2ed; padding: 15px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; cursor: pointer; width: 100%; margin-top: 4px; }
+.gb-submit { background: var(--accent); border: none; border-radius: 10px; color: #fff; padding: 15px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; cursor: pointer; width: 100%; margin-top: 4px; }
 
 #toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f8f6f3; font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.08em; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap; transition: opacity 0.2s, transform 0.2s; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }

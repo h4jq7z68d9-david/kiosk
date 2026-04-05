@@ -18,12 +18,12 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0c0c0c; --surface: #1a1a1a; --border: #2a2a2a; --border-mid: #333;
-  --ink: #f0ede8; --ink2: #888480; --ink3: #777; --accent: #a8b8c8;
-  --font: 'DM Sans', sans-serif; --serif: 'Playfair Display', serif; --nav-h: 56px;
+  --bg: #f8f6f3; --surface: #ede9e3; --border: #ddd8d0; --border-mid: #ccc6bc;
+  --ink: #1a2a3a; --ink2: #7a8a99; --ink3: #9aa0a8; --accent: #e07030;
+  --font: 'DM Sans', sans-serif; --nav-h: 56px;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -31,18 +31,18 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font); font-
 a { color: inherit; text-decoration: none; }
 
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
-.nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; }
-.nav-back { background: none; border: 1px solid #666; border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; margin-left: auto; }
+.nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; flex: 1; }
+.nav-back { background: none; border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
 .nav-back:hover { border-color: var(--ink); }
 
 .page { max-width: 680px; margin: 0 auto; padding: calc(var(--nav-h) + 48px) 24px 80px; }
 
-h1 { font-family: var(--font); font-size: 28px; font-weight: 400; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); margin-bottom: 40px; }
+h1 { font-family: var(--font); font-size: 28px; font-weight: 400; letter-spacing: 0.02em; text-transform: lowercase; color: var(--ink); margin-bottom: 40px; }
 
 .section { margin-bottom: 40px; }
 .section:last-child { margin-bottom: 0; }
 
-h2 { font-family: var(--font); font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 14px; }
+h2 { font-family: var(--font); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 14px; }
 
 p { font-size: 16px; font-weight: 300; line-height: 1.8; color: var(--ink); margin-bottom: 12px; }
 p:last-child { margin-bottom: 0; }
@@ -50,13 +50,13 @@ p:last-child { margin-bottom: 0; }
 .rule { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 
 .contact-line { font-size: 14px; color: var(--ink3); margin-top: 24px; }
-.contact-line a { color: var(--accent); border-bottom: 1px solid transparent; transition: border-color 0.2s; }
-.contact-line a:hover { border-color: var(--accent); }
+.contact-line a { color: var(--accent); transition: opacity 0.2s; }
+.contact-line a:hover { opacity: 0.7; }
 
 footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
-.footer-link { font-size: 12px; color: var(--ink3); letter-spacing: 0.08em; text-transform: lowercase; border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
-.footer-link:hover { color: var(--ink2); border-color: var(--ink2); }
+.footer-link { background: none; border: none; font-family: var(--font); font-size: 12px; color: var(--ink2); letter-spacing: 0.12em; text-transform: lowercase; padding: 0; cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
+.footer-link:hover { color: var(--ink); }
 
 @media (max-width: 500px) {
   h1 { font-size: 22px; }
@@ -69,8 +69,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 <body>
 
 <nav>
-  <span class="nav-title">david nicholson</span>
-  <a class="nav-back" href="/gallery.html">← gallery</a>
+  <a class="nav-title" href="/index.html"><span style="margin-right:8px;font-size:16px;">&#8592;</span>david nicholson</a>
+  <a class="nav-back" href="/gallery.html">gallery</a>
 </nav>
 
 <div class="page">
