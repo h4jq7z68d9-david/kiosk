@@ -326,7 +326,7 @@ All are single-file, no framework — intentional, keep it that way.
 ## Pending — In Order of Priority
 
 - [ ] **Ad campaigns (mid-April)** — Google Shopping / Performance Max (~$5/day), Meta Ads (~$5/day), Pinterest Ads (~$30/day minimum)
-- [ ] **Pinterest Verified Merchant** — requires healthy conversion source (real checkout events in last 30 days); revisit once ads are running
+- [x] **Pinterest Verified Merchant** — ✓ verified April 2026
 - [ ] **SNS carrier registration** — waiting, nothing to do; SMS will work once cleared
 - [ ] **Google Merchant Center** — monitor feed health; fix any product errors
 
@@ -334,7 +334,7 @@ All are single-file, no framework — intentional, keep it that way.
 
 ## Up Next (Next Session)
 
-- **index.html footer full-bleed** — footer (contact info + guestbook) should span edge to edge like the gallery nav bar, breaking out of the content max-width; content above stays constrained as-is
+- [x] **index.html footer full-bleed** — ✓ done
 - **Sales/inventory dashboard**
 - **Expense tracker**
 - **Admin dashboard**
@@ -345,11 +345,20 @@ All are single-file, no framework — intentional, keep it that way.
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
 - **Color picker filter for gallery** — maybe
 - **Art fair mode enhancements** — maybe
-- **CloudFront Pro upgrade** ($15/month) — removes 25-behavior limit; do when needed
+- [x] **CloudFront Pro upgrade** — ✓ upgraded April 2026; 25-behavior limit no longer a constraint
 
 ---
 
 ## Completed This Session
+
+- ✓ **Gallery redesign** — masonry columns (3 desktop / 2 mobile), natural image proportions, white mat/padding effect on cards, hover lift instead of opacity dim
+- ✓ **Gallery year sections** — replaced filter/shuffle with chronological year sections; sidebar and mobile bar are now anchor jump-nav with scroll spy highlighting active year
+- ✓ **Gallery nav** — removed "gallery" label, added ← back arrow to david nicholson home link
+- ✓ **shipping.html** — full light theme conversion; consistent nav (← david nicholson + follow on instagram) and footer (gallery · contact · guest book) with working guestbook modal
+- ✓ **index.html footer full-bleed** — removed max-width constraint and asymmetric padding; added shipping & returns link
+- ✓ **Guestbook modal** — rounded corners (16px) and orange submit button consistent across gallery.html, index.html, shipping.html
+
+## Previously Completed This Session (prior entry)
 
 - ✓ **Shuffle button added to gallery.html sidebar** — appears below year filters (All / 2026 / 2025 / 2024 / 2023); shuffles current filtered set using Fisher-Yates; active state turns accent orange; icon is two vertical bowed arrows (SVG inline, no Font Awesome dependency); placeholder icon in place — swap for a better icon when found
 - ✓ **gallery.html nav bar constrained** — top bar (David Nicholson / Gallery / Instagram / Cart) max-width constrained so it doesn't bleed to edges on iPad and desktop; content area width unchanged
