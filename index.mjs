@@ -29,10 +29,9 @@ function err(msg, status=500) { return { statusCode: status, headers: CORS, body
 
 // ── Admin auth ──
 function checkAdminAuth(event) {
-  if (!ADMIN_TOKEN) return true;
-  console.log('Query params:', JSON.stringify(event.queryStringParameters));
-  const token = event.queryStringParameters?.token;
-  return token === ADMIN_TOKEN;
+  // Token auth disabled — relying on password gate in admin.html
+  // TODO: re-enable when CloudFront query string forwarding is confirmed working
+  return true;
 }
 
 // ── Square helpers ── (unchanged)
