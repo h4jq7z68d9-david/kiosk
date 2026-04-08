@@ -325,20 +325,22 @@ All are single-file, no framework — intentional, keep it that way.
 
 ## Pending — In Order of Priority
 
-- [ ] **Ad campaigns (mid-April)** — Google Shopping / Performance Max (~$5/day), Meta Ads (~$5/day), Pinterest Ads (~$30/day minimum)
+- [x] **Google Performance Max campaign** — ✓ live April 2026, $5/day, Maximize Conversion Value, US only
+- [ ] **Google brand exclusion** — "David Nicholson" brand requested; check back in a few days to add as exclusion once approved
+- [ ] **Meta Ads** — ~$5/day, not yet started
+- [ ] **Pinterest Ads** — ~$30/day minimum, not yet started
 - [x] **Pinterest Verified Merchant** — ✓ verified April 2026
-- [ ] **SNS carrier registration** — waiting, nothing to do; SMS will work once cleared
-- [ ] **Google Merchant Center** — monitor feed health; fix any product errors
+- [ ] **SNS carrier registration** — waiting; check AWS Console → Pinpoint → Phone numbers → +18444767251 for status; SMS works once Active
+- [ ] **Google Merchant Center** — trigger manual feed fetch to clear product type warnings; monitor feed health
 
 ---
 
 ## Up Next (Next Session)
 
-- [x] **index.html footer full-bleed** — ✓ done
-- **Sales/inventory dashboard**
 - **Expense tracker**
-- **Admin dashboard**
 - **Print wall configurator**
+- **Re-enable admin token auth** — CloudFront query string forwarding to Lambda needs investigation; currently auth is bypassed
+- **www → apex redirect** — add CloudFront Function to redirect www to apex permanently
 
 ## On the Horizon
 
@@ -351,17 +353,51 @@ All are single-file, no framework — intentional, keep it that way.
 
 ## Completed This Session
 
+- ✓ **Admin dashboard built** — `admin.html` at `https://davidnicholsonart.com/admin.html`; password-gated (172377); fully wired to DynamoDB via Lambda API
+  - Inventory table: all 42 paintings, sortable, filterable, expandable rows with inline editing
+  - Filters: Never sold, Sold, Original available, Low print stock, Mom doesn't have
+  - Columns: Title, Year, Dimensions, Price (sq in calc), Rounded (nearest $50), Lg stock, Sm stock, Lg sold, Sm sold, Original status
+  - Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net
+  - Edit painting details inline (title, month, year, dimensions, stock counts, Mom's Prints checkbox)
+  - Edit/delete individual sales; delete painting with confirmation showing sale count
+  - Summary cards: Originals Sold (in stock sub), Large Prints Sold, Small Prints Sold, Art Fair Revenue, Online Revenue, Gallery Revenue
+  - Revenue chart by month with date range filter; Total Revenue card embedded left of chart
+  - Price/sq in adjuster affects Price and Rounded columns live; persisted to DynamoDB config record
+- ✓ **DynamoDB tables created** — `dna-paintings` (42 records + `__config__` rate record) and `dna-sales` (6 seeded records from inventory CSV); both PAY_PER_REQUEST in us-east-1
+- ✓ **Lambda admin endpoints added** to `index.mjs`:
+  - `GET /admin/paintings` — all paintings with sales joined
+  - `POST /admin/paintings` — add painting
+  - `PUT /admin/paintings/{id}` — update painting
+  - `DELETE /admin/paintings/{id}` — delete painting + all its sales
+  - `POST /admin/paintings/{id}/sales` — add sale
+  - `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale
+  - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
+  - `GET/PUT /admin/config` — rate value
+  - Auth: token check disabled for now (relying on password gate); CORS returns dynamic origin to support both apex and www
+- ✓ **CloudFront behavior `/admin/*`** added to E2EJH38GWGPEPG pointing to API Gateway; CachingDisabled; AllViewerExceptHostHeader; allows DELETE/PUT/POST
+- ✓ **IAM policies updated** — `lambda-deploy` user gets `dna-dynamodb-admin` policy; `dna-kiosk-role` gets `dna-dynamodb-paintings` policy for DynamoDB read/write
+- ✓ **Seed script** (`seed-admin-tables.js`) — one-time Node.js script that created both tables and loaded all data from localStorage export
+
+## Admin Dashboard — Key Notes
+
+- URL: `https://davidnicholsonart.com/admin.html` — always use apex (no www) to avoid Safari CORS redirect cache issue
+- Admin token: `dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE` — stored as Lambda env var `ADMIN_TOKEN`; currently bypassed, passed as `?token=` query param
+- DynamoDB paintings table stores paintings without sales array; sales stored separately in `dna-sales` with `paintingId` foreign key and GSI `paintingId-index`
+- `__config__` record in `dna-paintings` stores the price/sq in rate
+- Stock count +/− buttons autosave immediately via PUT to Lambda
+- Painting edit form requires explicit "Save changes" button
+- Mom's Prints checkbox seeded from CSV (37 checked; Beer Drinker, Evening Walkers, U.S. 50 East, Junction, U.S. 69 unchecked)
+
+## Previously Completed This Session (prior entry)
+
+- ✓ **Google Performance Max campaign launched** — $5/day, Maximize Conversion Value, US only; purchase conversion action set up via GA4 import; asset group with 15 headlines, 5 long headlines, 5 descriptions, search themes, audience signal (David Nicholson Art Buyers); Merchant Center feed connected; brand exclusion pending approval
+- ✓ **Google Ads cleanup** — removed stale 2023 page view conversion action; removed inactive draft campaigns
 - ✓ **Gallery redesign** — masonry columns (3 desktop / 2 mobile), natural image proportions, white mat/padding effect on cards, hover lift instead of opacity dim
 - ✓ **Gallery year sections** — replaced filter/shuffle with chronological year sections; sidebar and mobile bar are now anchor jump-nav with scroll spy highlighting active year
 - ✓ **Gallery nav** — removed "gallery" label, added ← back arrow to david nicholson home link
 - ✓ **shipping.html** — full light theme conversion; consistent nav (← david nicholson + follow on instagram) and footer (gallery · contact · guest book) with working guestbook modal
 - ✓ **index.html footer full-bleed** — removed max-width constraint and asymmetric padding; added shipping & returns link
 - ✓ **Guestbook modal** — rounded corners (16px) and orange submit button consistent across gallery.html, index.html, shipping.html
-
-## Previously Completed This Session (prior entry)
-
-- ✓ **Shuffle button added to gallery.html sidebar** — appears below year filters (All / 2026 / 2025 / 2024 / 2023); shuffles current filtered set using Fisher-Yates; active state turns accent orange; icon is two vertical bowed arrows (SVG inline, no Font Awesome dependency); placeholder icon in place — swap for a better icon when found
-- ✓ **gallery.html nav bar constrained** — top bar (David Nicholson / Gallery / Instagram / Cart) max-width constrained so it doesn't bleed to edges on iPad and desktop; content area width unchanged
 
 ## Previously Completed (prior session) — Site-wide light theme
 
