@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Admin — David Nicholson Art</title>
 <meta name="robots" content="noindex, nofollow">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="DNA Admin">
+<meta name="theme-color" content="#f8f6f3">
+<link rel="manifest" href="/admin.webmanifest">
+<link rel="apple-touch-icon" href="/admin-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,7 +73,9 @@
 
   .topbar {
     background: white; border-bottom: 1px solid var(--border);
-    padding: 0 32px; display: flex; align-items: center;
+    padding: 0 32px; padding-left: max(32px, env(safe-area-inset-left));
+    padding-right: max(32px, env(safe-area-inset-right));
+    display: flex; align-items: center;
     justify-content: space-between; height: 52px;
     position: sticky; top: 0; z-index: 100;
   }
@@ -76,7 +85,13 @@
   .btn-logout { font-family: var(--font); font-size: 12px; font-weight: 500; color: var(--ink2); background: none; border: none; cursor: pointer; letter-spacing: 0.04em; padding: 4px 0; }
   .btn-logout:hover { color: var(--ink); }
 
-  .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
+  .main {
+    padding: 32px;
+    padding-left: max(32px, env(safe-area-inset-left));
+    padding-right: max(32px, env(safe-area-inset-right));
+    padding-bottom: max(32px, env(safe-area-inset-bottom));
+    max-width: 1400px; margin: 0 auto;
+  }
 
   /* ── RATE CONTROL ── */
   .rate-bar {
@@ -376,10 +391,10 @@
         <!-- EXPENSE CARDS (all-time, no year filter) -->
         <div class="cards" id="dash-exp-cards"></div>
 
-        <!-- CHART -->
+        <!-- REVENUE CHART -->
         <div class="chart-section">
           <div style="display:flex;align-items:flex-start;gap:20px">
-            <div id="chart-rev-card" style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
+            <div style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
               <div class="card-label">Total Revenue</div>
               <div class="card-value accent" id="chart-rev-value">—</div>
               <div class="card-sub" id="chart-rev-sub"></div>
@@ -400,6 +415,30 @@
           </div>
         </div>
 
+        <!-- EXPENSE CHART -->
+        <div class="chart-section">
+          <div style="display:flex;align-items:flex-start;gap:20px">
+            <div style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
+              <div class="card-label">Total Expenses</div>
+              <div class="card-value" style="color:var(--red)" id="chart-exp-value">—</div>
+              <div class="card-sub" id="chart-exp-sub"></div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+                <div class="section-title" style="margin:0">Expenses by Month</div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <label style="font-size:12px;color:var(--ink2);font-weight:500">From</label>
+                  <input type="month" id="exp-chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderExpChart()">
+                  <label style="font-size:12px;color:var(--ink2);font-weight:500">To</label>
+                  <input type="month" id="exp-chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderExpChart()">
+                  <button onclick="clearExpChartRange()" style="font-family:var(--font);font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0">clear</button>
+                </div>
+              </div>
+              <div class="chart-wrap" id="exp-chart"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -416,7 +455,10 @@
       <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
         <div class="table-header">
           <div class="section-title" style="margin:0">Inventory</div>
-          <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
+            <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
+          </div>
         </div>
         <div class="filter-bar" id="filter-bar">
           <span class="filter-bar-label">Filter</span>
@@ -465,6 +507,7 @@
                 <option>Art Fair Fees</option><option>Retail &amp; Packaging</option><option>Equipment</option>
                 <option>Marketing</option><option>Licenses &amp; Fees</option><option>Travel</option><option>Other</option>
               </select>
+              <button class="btn-sm" onclick="exportExpensesCsv()" title="Export to CSV">↓ CSV</button>
               <button class="btn-primary" onclick="openExpModal()">+ Add Expense</button>
             </div>
           </div>
@@ -492,7 +535,10 @@
               <div class="section-title" style="margin:0">Mileage</div>
               <div style="font-size:12px;color:var(--ink3);margin-top:2px">IRS standard rate: <span style="font-family:var(--mono);color:var(--ink2)" id="irs-rate-display"></span></div>
             </div>
-            <button class="btn-primary" onclick="openMileModal()">+ Log Mileage</button>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="btn-sm" onclick="exportMileageCsv()" title="Export to CSV">↓ CSV</button>
+              <button class="btn-primary" onclick="openMileModal()">+ Log Mileage</button>
+            </div>
           </div>
           <div style="overflow-x:auto">
             <table>
@@ -895,6 +941,7 @@ async function init() {
   loadExpState();
   populateExpYearFilter();
   renderDashExpCards(); // render expense cards immediately — no API dependency
+  renderExpChart();     // render expense chart immediately — no API dependency
 
   setLoading(true);
   try {
@@ -922,6 +969,7 @@ async function init() {
 function render() {
   renderCards();
   renderChart();
+  renderExpChart();
   renderTable();
   renderDashExpCards();
 }
@@ -960,6 +1008,49 @@ function clearChartRange() {
   document.getElementById('chart-from').value = '';
   document.getElementById('chart-to').value = '';
   renderChart();
+}
+
+function clearExpChartRange() {
+  document.getElementById('exp-chart-from').value = '';
+  document.getElementById('exp-chart-to').value = '';
+  renderExpChart();
+}
+
+function renderExpChart() {
+  const fromVal = document.getElementById('exp-chart-from').value;
+  const toVal   = document.getElementById('exp-chart-to').value;
+  const buckets = {};
+  let filteredTotal = 0, filteredCount = 0, allTotal = 0, allCount = 0;
+
+  expState.expenses.forEach(e => {
+    const amt = Number(e.amount||0);
+    allTotal += amt; allCount++;
+    if (!e.date) return;
+    const key = e.date.slice(0,7);
+    if (fromVal && key < fromVal) return;
+    if (toVal   && key > toVal)   return;
+    buckets[key] = (buckets[key] || 0) + amt;
+    filteredTotal += amt; filteredCount++;
+  });
+
+  const isFiltered = fromVal || toVal;
+  const displayTotal = isFiltered ? filteredTotal : allTotal;
+  const displayCount = isFiltered ? filteredCount : allCount;
+  const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+  document.getElementById('chart-exp-value').textContent = fmt(displayTotal);
+  document.getElementById('chart-exp-sub').textContent = displayCount + ' record' + (displayCount !== 1 ? 's' : '') + (isFiltered ? ' in range' : ' total');
+
+  const keys = Object.keys(buckets).sort();
+  const el = document.getElementById('exp-chart');
+  if (!el) return;
+  if (!keys.length) { el.innerHTML = '<div class="chart-empty">No expenses in this range</div>'; return; }
+  const max = Math.max(...keys.map(k => buckets[k]));
+  el.innerHTML = keys.map(k => {
+    const pct = max > 0 ? (buckets[k] / max) * 120 : 0;
+    const [y, m] = k.split('-');
+    const label = MONTHS[parseInt(m)-1].slice(0,3) + ' ' + y.slice(2);
+    return `<div class="chart-col"><div class="chart-bar" style="height:${Math.max(4,pct)}px;background:var(--red);opacity:0.75" title="${label}: $${buckets[k].toLocaleString()}"></div><div class="chart-label">${label}</div></div>`;
+  }).join('');
 }
 
 function renderChart() {
@@ -1115,7 +1206,7 @@ function expCardHtml(exps, miles) {
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   return `
     <div class="card"><div class="card-label">Total Expenses</div><div class="card-value accent">${fmt(totalExp)}</div><div class="card-sub">${exps.length} record${exps.length !== 1 ? 's' : ''}</div></div>
-    <div class="card"><div class="card-label">Top Categories</div><div style="margin-top:4px">${topCatHtml || '<div class="card-sub">No expenses yet</div>'}</div></div>
+    <div class="card"><div class="card-label">Top Expense Categories</div><div style="margin-top:4px">${topCatHtml || '<div class="card-sub">No expenses yet</div>'}</div></div>
     <div class="card"><div class="card-label">Miles Driven</div><div class="card-value">${totalMiles.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:1})}</div><div class="card-sub">${miles.length} trip${miles.length !== 1 ? 's' : ''}</div></div>
     <div class="card"><div class="card-label">Mileage Deduction</div><div class="card-value accent">${fmt(totalMileDeduction)}</div><div class="card-sub">IRS standard rate</div></div>
   `;
@@ -1133,8 +1224,9 @@ function renderExpCards() {
   const exps  = expState.expenses.filter(e => !yearFilter || (e.date||'').startsWith(yearFilter));
   const miles = expState.mileage.filter(m => !yearFilter || (m.date||'').startsWith(yearFilter));
   // exp-cards no longer exists; expense tab shows no summary cards (just tables)
-  // Update dashboard cards (all-time) any time expense data changes
+  // Update dashboard (all-time) any time expense data changes
   renderDashExpCards();
+  renderExpChart();
 }
 
 function getExpList() {
@@ -1166,9 +1258,9 @@ function renderExpTable() {
   }
   tbody.innerHTML = list.map(e => {
     const amt = Number(e.amount||0);
-    const receiptHtml = e.receiptUrl
-      ? `<a class="receipt-link" href="${esc(e.receiptUrl)}" target="_blank" rel="noopener">📎 receipt</a>`
-      : `<span class="receipt-none">—</span>`;
+    const receiptHtml = !e.receiptUrl
+      ? `<span class="receipt-none">no receipt</span>`
+      : `<a class="receipt-link" href="${esc(e.receiptUrl)}" target="_blank" rel="noopener" onclick="checkReceipt(event,'${e.id}')">📎 receipt</a><span class="receipt-none" id="rcpt-err-${e.id}" style="display:none;margin-left:6px">no longer available</span>`;
     return `<tr>
       <td class="mono dim">${e.date || '—'}</td>
       <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
@@ -1639,12 +1731,131 @@ function esc(str) {
 }
 
 // ═══════════════════════════════════════════
+//  RECEIPT CHECK
+// ═══════════════════════════════════════════
+async function checkReceipt(e, expId) {
+  const url = e.currentTarget.href;
+  // Let the browser navigate normally — but also check in background
+  // If HEAD returns an error, swap the cell content
+  try {
+    const res = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+    // no-cors always returns opaque response (status 0) — we can't read status
+    // so instead catch network errors only; actual 403/404 will be apparent to user
+  } catch(err) {
+    // Network error — URL is dead
+    e.preventDefault();
+    const errEl = document.getElementById('rcpt-err-' + expId);
+    if (errEl) { errEl.style.display = 'inline'; }
+    e.currentTarget.style.opacity = '0.4';
+    e.currentTarget.style.pointerEvents = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════
+//  CSV EXPORT
+// ═══════════════════════════════════════════
+function csvEscape(val) {
+  const s = String(val == null ? '' : val);
+  if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+    return '"' + s.replace(/"/g, '\"\\"\"') + '"';
+  }
+  return s;
+}
+
+function downloadCsv(filename, rows) {
+  const csv = rows.map(r => r.map(csvEscape).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportInventoryCsv() {
+  const rate = db.rate || 1.10;
+  const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
+
+  const header = ['Title','Month','Year','Width','Height','Sq In','Price','Rounded',
+                  'Lg Stock','Sm Stock','Lg Sold','Sm Sold','Original Sold'];
+  const rows = list.map(p => {
+    const sq = p.width * p.height;
+    const price = sq * rate;
+    const rounded = Math.ceil(price / 50) * 50;
+    const lgSold = p.sales.filter(s => s.type === 'large').length;
+    const smSold = p.sales.filter(s => s.type === 'small').length;
+    const origSold = p.sales.some(s => s.type === 'original') ? 'Yes' : 'No';
+    return [
+      p.title, p.month || '', p.year,
+      p.width, p.height, sq,
+      price.toFixed(2), rounded,
+      p.stock.large || 0, p.stock.small || 0,
+      lgSold, smSold, origSold,
+    ];
+  });
+
+  downloadCsv('inventory.csv', [header, ...rows]);
+}
+
+function exportExpensesCsv() {
+  const yearFilter = document.getElementById('exp-year-filter').value;
+  const catFilter  = document.getElementById('exp-cat-filter').value;
+  let list = expState.expenses.slice();
+  if (yearFilter) list = list.filter(e => (e.date||''). startsWith(yearFilter));
+  if (catFilter)  list = list.filter(e => e.category === catFilter);
+  list.sort((a,b) => (a.date||''). localeCompare(b.date||''));
+
+  const header = ['Date','Category','Vendor','Description','Amount','Receipt URL'];
+  const rows = list.map(e => [
+    e.date || '',
+    e.category || '',
+    e.vendor || '',
+    e.desc || '',
+    Number(e.amount||0).toFixed(2),
+    e.receiptUrl || '',
+  ]);
+
+  const year = yearFilter || 'all';
+  const cat  = catFilter  ? '-' + catFilter.replace(/[^a-z0-9]/gi,'_') : '';
+  downloadCsv(`expenses-${year}${cat}.csv`, [header, ...rows]);
+}
+
+function exportMileageCsv() {
+  const yearFilter = document.getElementById('exp-year-filter').value;
+  let list = expState.mileage.slice();
+  if (yearFilter) list = list.filter(m => (m.date||''). startsWith(yearFilter));
+  list.sort((a,b) => (a.date||''). localeCompare(b.date||''));
+
+  const header = ['Date','Purpose','Miles','IRS Rate','Deduction','Notes'];
+  const rows = list.map(m => {
+    const year = parseInt((m.date||''). slice(0,4)) || new Date().getFullYear();
+    const rate = irsRate(year);
+    const miles = Number(m.miles||0);
+    return [
+      m.date || '',
+      m.purpose || '',
+      miles.toFixed(1),
+      rate.toFixed(2),
+      (miles * rate).toFixed(2),
+      m.notes || '',
+    ];
+  });
+
+  const year = yearFilter || 'all';
+  downloadCsv(`mileage-${year}.csv`, [header, ...rows]);
+}
+
+// ═══════════════════════════════════════════
 //  BOOT
 // ═══════════════════════════════════════════
 document.getElementById('pw-input').addEventListener('keydown', checkPassword);
 document.getElementById('pw-input').addEventListener('input', function() {
   if (this.value.length === 6) checkPassword({});
 });
+
+// PWA service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/admin-sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
