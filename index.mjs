@@ -539,6 +539,7 @@ async function adminUpdateConfig(body) {
 export const handler = async (event) => {
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
+  console.log('Request:', method, path);
   if (method === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
 
   try {
