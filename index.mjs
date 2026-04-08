@@ -30,10 +30,7 @@ function err(msg, status=500) { return { statusCode: status, headers: CORS, body
 // ── Admin auth ──
 function checkAdminAuth(event) {
   if (!ADMIN_TOKEN) return true;
-  const headers = event.headers || {};
-  console.log('Admin auth headers:', JSON.stringify(Object.keys(headers)));
-  const token = headers['x-admin-token'] || headers['X-Admin-Token'];
-  console.log('Token received:', token ? token.slice(0,8) + '...' : 'none');
+  const token = event.queryStringParameters?.token;
   return token === ADMIN_TOKEN;
 }
 
