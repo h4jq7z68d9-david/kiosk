@@ -1256,7 +1256,7 @@ async function adjStock(e, id, size, delta) {
   renderTable();
   renderCards();
   try {
-    await api('PUT', `/${id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas });
+    await api('PUT', `/paintings/${id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas });
   } catch(e) {
     alert('Failed to save stock change: ' + e.message);
   }
@@ -1268,7 +1268,7 @@ async function deleteSale(paintingId, saleId) {
   p.sales = p.sales.filter(s => s.id !== saleId);
   render();
   try {
-    await api('DELETE', `/${paintingId}/sales/${saleId}`);
+    await api('DELETE', `/paintings/${paintingId}/sales/${saleId}`);
   } catch(e) {
     alert('Failed to delete sale: ' + e.message);
   }
@@ -1286,7 +1286,7 @@ async function deletePainting(id) {
   if (expandedId === id) expandedId = null;
   render();
   try {
-    await api('DELETE', `/${id}`);
+    await api('DELETE', `/paintings/${id}`);
   } catch(e) {
     alert('Failed to delete painting: ' + e.message);
   }
@@ -1322,7 +1322,7 @@ async function saveNewPainting() {
   };
   try {
     setLoading(true);
-    const data = await api('POST', '', body);
+    const data = await api('POST', '/paintings', body);
     db.paintings.push({ ...data.painting, sales: [] });
     closeModal('add-modal');
     render();
@@ -1352,7 +1352,7 @@ async function savePaintingEdits(id) {
   Object.assign(p, { title, month, year, width, height, momsHas, stock: { large, small } });
   render();
   try {
-    await api('PUT', `/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas });
+    await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas });
   } catch(e) {
     alert('Failed to save changes: ' + e.message);
   }
@@ -1480,11 +1480,11 @@ async function saveSale() {
 
   try {
     if (editSaleId) {
-      const data = await api('PUT', `/${salePaintingId}/sales/${editSaleId}`, saleData);
+      const data = await api('PUT', `/paintings/${salePaintingId}/sales/${editSaleId}`, saleData);
       const idx = p.sales.findIndex(x => x.id === editSaleId);
       if (idx !== -1) p.sales[idx] = data.sale;
     } else {
-      const data = await api('POST', `/${salePaintingId}/sales`, saleData);
+      const data = await api('POST', `/paintings/${salePaintingId}/sales`, saleData);
       p.sales.push(data.sale);
     }
     render();
