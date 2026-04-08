@@ -2,25 +2,39 @@ import https from 'https';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand, ScanCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 
 const SQUARE_TOKEN  = process.env.SQUARE_TOKEN;
 const SQUARE_LOC    = process.env.SQUARE_LOC;
 const SES_FROM      = process.env.SES_FROM;
 const NOTIFY_EMAIL  = process.env.NOTIFY_EMAIL;
+const ADMIN_TOKEN   = process.env.ADMIN_TOKEN; // secret header value for admin routes
+
+const PAINTINGS_TABLE = 'dna-paintings';
+const SALES_TABLE     = 'dna-sales';
 
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
-  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type,X-Admin-Token',
 };
 
-const ses    = new SESClient({ region: 'us-east-1' });
-const sns    = new SNSClient({ region: 'us-east-1' });
-const dynamo = new DynamoDBClient({ region: 'us-east-1' });
+const ses       = new SESClient({ region: 'us-east-1' });
+const sns       = new SNSClient({ region: 'us-east-1' });
+const dynamoRaw = new DynamoDBClient({ region: 'us-east-1' });
+const dynamo    = DynamoDBDocumentClient.from(dynamoRaw);
 
 function ok(body)             { return { statusCode: 200, headers: { ...CORS, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }; }
 function err(msg, status=500) { return { statusCode: status, headers: CORS, body: JSON.stringify({ error: msg }) }; }
 
+// ── Admin auth ──
+function checkAdminAuth(event) {
+  if (!ADMIN_TOKEN) return true; // not set yet — allow (remove this once token is configured)
+  const token = event.headers?.['x-admin-token'] || event.headers?.['X-Admin-Token'];
+  return token === ADMIN_TOKEN;
+}
+
+// ── Square helpers ── (unchanged)
 function squareGet(path) {
   return new Promise((resolve, reject) => {
     const opts = {
@@ -94,7 +108,7 @@ async function sendSMS({ phone, message }) {
 }
 
 async function saveOrder(squareOrder) {
-  await dynamo.send(new PutItemCommand({
+  await dynamoRaw.send(new PutItemCommand({
     TableName: 'dna-orders',
     Item: {
       id:        { S: squareOrder.id },
@@ -107,7 +121,7 @@ async function saveOrder(squareOrder) {
 }
 
 async function saveGuest({ name, email, note, subscribed }) {
-  await dynamo.send(new PutItemCommand({
+  await dynamoRaw.send(new PutItemCommand({
     TableName: 'dna-guestbook',
     Item: {
       id:         { S: Date.now().toString() },
@@ -120,8 +134,6 @@ async function saveGuest({ name, email, note, subscribed }) {
   }));
 }
 
-// Extract the Year custom attribute from a Square catalog object.
-// The key is a UUID we can't hardcode, so we find the entry by name.
 function extractYear(obj) {
   const attrs = obj.custom_attribute_values;
   if (!attrs) return null;
@@ -176,12 +188,10 @@ async function buildProductList() {
       rawImg:     rawImgUrl,
       url,
       variations,
-      year:       extractYear(obj),  // null if not set
+      year:       extractYear(obj),
     });
   }
 
-  // Sort by year descending (newest first), then alphabetically within same year.
-  // Items with no year sort to the end.
   products.sort((a, b) => {
     const ya = a.year ? parseInt(a.year) : 0;
     const yb = b.year ? parseInt(b.year) : 0;
@@ -319,7 +329,6 @@ async function guestbook(body) {
 
 async function checkout(body) {
   const { items } = body;
-
   if (!items || !items.length) return err('No items in cart', 400);
 
   const lineItems = items.map(item => ({
@@ -355,13 +364,9 @@ async function checkout(body) {
   return ok({ checkout_url: checkoutUrl });
 }
 
-// Handle Meta/Pinterest/Google feed cart redirect
-// Accepts ?products=[{"id":"ITEMID_VARIATIONID","quantity":1}] from Meta
-// or ?product_id=ITEMID_VARIATIONID for single-product links
 async function cartRedirect(queryParams) {
   let lineItems = [];
 
-  // Meta format: ?products=[{"id":"...","quantity":1}]
   if (queryParams?.products) {
     let items;
     try { items = JSON.parse(queryParams.products); } catch { items = []; }
@@ -377,7 +382,6 @@ async function cartRedirect(queryParams) {
     }
   }
 
-  // Single product format: ?product_id=ITEMID_VARIATIONID
   if (!lineItems.length && queryParams?.product_id) {
     const lastUnderscore = queryParams.product_id.lastIndexOf('_');
     if (lastUnderscore !== -1) {
@@ -387,22 +391,14 @@ async function cartRedirect(queryParams) {
   }
 
   if (!lineItems.length) {
-    // Nothing parseable — fall back to gallery
-    return {
-      statusCode: 302,
-      headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' },
-      body: '',
-    };
+    return { statusCode: 302, headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' }, body: '' };
   }
 
   const idempotencyKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
   const linkRes = await squarePost('/v2/online-checkout/payment-links', {
     idempotency_key: idempotencyKey,
-    order: {
-      location_id: SQUARE_LOC,
-      line_items:  lineItems,
-    },
+    order: { location_id: SQUARE_LOC, line_items: lineItems },
     checkout_options: {
       ask_for_shipping_address: true,
       redirect_url: 'https://davidnicholsonart.com/gallery.html?success=1',
@@ -411,45 +407,190 @@ async function cartRedirect(queryParams) {
 
   if (linkRes.errors) {
     console.error('Square cart redirect error:', linkRes.errors);
-    return {
-      statusCode: 302,
-      headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' },
-      body: '',
-    };
+    return { statusCode: 302, headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' }, body: '' };
   }
 
   const checkoutUrl = linkRes.payment_link?.url;
   if (!checkoutUrl) {
-    return {
-      statusCode: 302,
-      headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' },
-      body: '',
-    };
+    return { statusCode: 302, headers: { ...CORS, Location: 'https://davidnicholsonart.com/gallery.html' }, body: '' };
   }
 
   const squareOrder = linkRes.related_resources?.orders?.[0];
   if (squareOrder) saveOrder(squareOrder).catch(e => console.error('DynamoDB saveOrder error:', e));
 
-  return {
-    statusCode: 302,
-    headers: { ...CORS, Location: checkoutUrl },
-    body: '',
-  };
+  return { statusCode: 302, headers: { ...CORS, Location: checkoutUrl }, body: '' };
 }
 
+// ── Admin endpoints ──
+
+// GET /admin/paintings — return all paintings with their sales joined
+async function adminGetPaintings() {
+  const [paintingsRes, salesRes] = await Promise.all([
+    dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE })),
+    dynamo.send(new ScanCommand({ TableName: SALES_TABLE })),
+  ]);
+
+  // Group sales by paintingId
+  const salesByPainting = {};
+  for (const s of (salesRes.Items || [])) {
+    if (!salesByPainting[s.paintingId]) salesByPainting[s.paintingId] = [];
+    salesByPainting[s.paintingId].push(s);
+  }
+
+  // Attach sales to paintings, exclude __config__ record
+  const paintings = (paintingsRes.Items || [])
+    .filter(p => p.id !== '__config__')
+    .map(p => ({ ...p, sales: salesByPainting[p.id] || [] }));
+
+  // Get rate from config record
+  const configRes = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
+  const rate = configRes.Item?.rate ?? 1.10;
+
+  return ok({ paintings, rate });
+}
+
+// POST /admin/paintings — add a new painting
+async function adminAddPainting(body) {
+  const { title, month, year, width, height, stock, momsHas } = body;
+  if (!title || !year || !width || !height) return err('Missing required fields', 400);
+  const id = 'p' + Date.now();
+  const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas };
+  await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
+  return ok({ painting: item });
+}
+
+// PUT /admin/paintings/{id} — update painting fields
+async function adminUpdatePainting(id, body) {
+  const { title, month, year, width, height, stock, momsHas } = body;
+  if (!title || !year || !width || !height) return err('Missing required fields', 400);
+  const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas };
+  await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
+  return ok({ painting: item });
+}
+
+// DELETE /admin/paintings/{id} — delete painting and all its sales
+async function adminDeletePainting(id) {
+  // Delete the painting record
+  await dynamo.send(new DeleteCommand({ TableName: PAINTINGS_TABLE, Key: { id } }));
+
+  // Find and delete all sales for this painting
+  const salesRes = await dynamo.send(new QueryCommand({
+    TableName: SALES_TABLE,
+    IndexName: 'paintingId-index',
+    KeyConditionExpression: 'paintingId = :pid',
+    ExpressionAttributeValues: { ':pid': id },
+  }));
+
+  await Promise.all((salesRes.Items || []).map(s =>
+    dynamo.send(new DeleteCommand({ TableName: SALES_TABLE, Key: { id: s.id } }))
+  ));
+
+  return ok({ deleted: true });
+}
+
+// POST /admin/paintings/{id}/sales — add a sale
+async function adminAddSale(paintingId, body) {
+  const { date, type, channel, price, pct, net } = body;
+  if (!type || !channel || price == null) return err('Missing required fields', 400);
+  const id = 's' + Date.now();
+  const item = { id, paintingId, date: date || '', type, channel, price: Number(price) };
+  if (channel === 'gallery') {
+    item.pct = Number(pct);
+    item.net = Number(net ?? price * (pct / 100));
+  }
+  await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: item }));
+  return ok({ sale: item });
+}
+
+// PUT /admin/paintings/{id}/sales/{saleId} — edit a sale
+async function adminUpdateSale(paintingId, saleId, body) {
+  const { date, type, channel, price, pct, net } = body;
+  if (!type || !channel || price == null) return err('Missing required fields', 400);
+  const item = { id: saleId, paintingId, date: date || '', type, channel, price: Number(price) };
+  if (channel === 'gallery') {
+    item.pct = Number(pct);
+    item.net = Number(net ?? price * (pct / 100));
+  }
+  await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: item }));
+  return ok({ sale: item });
+}
+
+// DELETE /admin/paintings/{id}/sales/{saleId} — delete a sale
+async function adminDeleteSale(saleId) {
+  await dynamo.send(new DeleteCommand({ TableName: SALES_TABLE, Key: { id: saleId } }));
+  return ok({ deleted: true });
+}
+
+// GET /admin/config — get rate
+async function adminGetConfig() {
+  const res = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
+  return ok({ rate: res.Item?.rate ?? 1.10 });
+}
+
+// PUT /admin/config — save rate
+async function adminUpdateConfig(body) {
+  const { rate } = body;
+  if (!rate || isNaN(rate)) return err('Invalid rate', 400);
+  await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: { id: '__config__', rate: Number(rate) } }));
+  return ok({ rate: Number(rate) });
+}
+
+// ── Router ──
 export const handler = async (event) => {
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
   if (method === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
+
   try {
-    if (method === 'GET'  && path === '/products')              return await getProducts();
-    if (method === 'GET'  && (path === '/feed' || path === '/feed.xml')) return await getFeed();
-    if (method === 'GET'  && path === '/cart')                 return await cartRedirect(event.queryStringParameters);
-    if (method === 'GET'  && path === '/hero')                  return await getHero();
-    if (method === 'GET'  && path.startsWith('/image'))         return await proxyImage(event.queryStringParameters?.id);
-    if (method === 'POST' && path === '/send-link')             return await sendLink(JSON.parse(event.body || '{}'));
-    if (method === 'POST' && path === '/guestbook')             return await guestbook(JSON.parse(event.body || '{}'));
-    if (method === 'POST' && path === '/checkout')              return await checkout(JSON.parse(event.body || '{}'));
+    // Public routes
+    if (method === 'GET'  && path === '/products')                        return await getProducts();
+    if (method === 'GET'  && (path === '/feed' || path === '/feed.xml'))  return await getFeed();
+    if (method === 'GET'  && path === '/cart')                            return await cartRedirect(event.queryStringParameters);
+    if (method === 'GET'  && path === '/hero')                            return await getHero();
+    if (method === 'GET'  && path.startsWith('/image'))                   return await proxyImage(event.queryStringParameters?.id);
+    if (method === 'POST' && path === '/send-link')                       return await sendLink(JSON.parse(event.body || '{}'));
+    if (method === 'POST' && path === '/guestbook')                       return await guestbook(JSON.parse(event.body || '{}'));
+    if (method === 'POST' && path === '/checkout')                        return await checkout(JSON.parse(event.body || '{}'));
+
+    // Admin routes — check token
+    if (path.startsWith('/admin')) {
+      if (!checkAdminAuth(event)) return err('Unauthorized', 401);
+
+      const b = () => JSON.parse(event.body || '{}');
+
+      // Config
+      if (method === 'GET' && path === '/admin/config')  return await adminGetConfig();
+      if (method === 'PUT' && path === '/admin/config')  return await adminUpdateConfig(b());
+
+      // Paintings
+      if (method === 'GET'    && path === '/admin/paintings')            return await adminGetPaintings();
+      if (method === 'POST'   && path === '/admin/paintings')            return await adminAddPainting(b());
+
+      // Match /admin/paintings/{id}
+      const paintingMatch = path.match(/^\/admin\/paintings\/([^/]+)$/);
+      if (paintingMatch) {
+        const paintingId = paintingMatch[1];
+        if (method === 'PUT')    return await adminUpdatePainting(paintingId, b());
+        if (method === 'DELETE') return await adminDeletePainting(paintingId);
+      }
+
+      // Match /admin/paintings/{id}/sales
+      const salesListMatch = path.match(/^\/admin\/paintings\/([^/]+)\/sales$/);
+      if (salesListMatch && method === 'POST') {
+        return await adminAddSale(salesListMatch[1], b());
+      }
+
+      // Match /admin/paintings/{id}/sales/{saleId}
+      const saleMatch = path.match(/^\/admin\/paintings\/([^/]+)\/sales\/([^/]+)$/);
+      if (saleMatch) {
+        const [, paintingId, saleId] = saleMatch;
+        if (method === 'PUT')    return await adminUpdateSale(paintingId, saleId, b());
+        if (method === 'DELETE') return await adminDeleteSale(saleId);
+      }
+
+      return err('Not found', 404);
+    }
+
     return { statusCode: 404, headers: CORS, body: JSON.stringify({ error: 'Not found' }) };
   } catch (e) {
     console.error(e);
