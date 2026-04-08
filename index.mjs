@@ -13,6 +13,23 @@ const ADMIN_TOKEN   = process.env.ADMIN_TOKEN; // secret header value for admin 
 const PAINTINGS_TABLE = 'dna-paintings';
 const SALES_TABLE     = 'dna-sales';
 
+const ALLOWED_ORIGINS = new Set([
+  'https://davidnicholsonart.com',
+  'https://www.davidnicholsonart.com',
+  'https://kiosk.davidnicholsonllc.com',
+]);
+
+function corsHeaders(event) {
+  const origin = event.headers?.origin || event.headers?.Origin || '';
+  const allowedOrigin = ALLOWED_ORIGINS.has(origin) ? origin : 'https://davidnicholsonart.com';
+  return {
+    'Access-Control-Allow-Origin':  allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type,X-Admin-Token',
+    'Access-Control-Allow-Credentials': 'true',
+  };
+}
+
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
@@ -24,8 +41,8 @@ const sns       = new SNSClient({ region: 'us-east-1' });
 const dynamoRaw = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo    = DynamoDBDocumentClient.from(dynamoRaw);
 
-function ok(body)             { return { statusCode: 200, headers: { ...CORS, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }; }
-function err(msg, status=500) { return { statusCode: status, headers: CORS, body: JSON.stringify({ error: msg }) }; }
+function ok(body, c)             { return { statusCode: 200, headers: { ...(c||CORS), 'Content-Type': 'application/json' }, body: JSON.stringify(body) }; }
+function err(msg, status=500, c) { return { statusCode: status, headers: c||CORS, body: JSON.stringify({ error: msg }) }; }
 
 // ── Admin auth ──
 function checkAdminAuth(event) {
@@ -423,75 +440,58 @@ async function cartRedirect(queryParams) {
 
 // ── Admin endpoints ──
 
-// GET /admin/paintings — return all paintings with their sales joined
-async function adminGetPaintings() {
+async function adminGetPaintings(cors) {
   const [paintingsRes, salesRes] = await Promise.all([
     dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE })),
     dynamo.send(new ScanCommand({ TableName: SALES_TABLE })),
   ]);
-
-  // Group sales by paintingId
   const salesByPainting = {};
   for (const s of (salesRes.Items || [])) {
     if (!salesByPainting[s.paintingId]) salesByPainting[s.paintingId] = [];
     salesByPainting[s.paintingId].push(s);
   }
-
-  // Attach sales to paintings, exclude __config__ record
   const paintings = (paintingsRes.Items || [])
     .filter(p => p.id !== '__config__')
     .map(p => ({ ...p, sales: salesByPainting[p.id] || [] }));
-
-  // Get rate from config record
   const configRes = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
   const rate = configRes.Item?.rate ?? 1.10;
-
-  return ok({ paintings, rate });
+  return ok({ paintings, rate }, cors);
 }
 
-// POST /admin/paintings — add a new painting
-async function adminAddPainting(body) {
+async function adminAddPainting(body, cors) {
   const { title, month, year, width, height, stock, momsHas } = body;
-  if (!title || !year || !width || !height) return err('Missing required fields', 400);
+  if (!title || !year || !width || !height) return err('Missing required fields', 400, cors);
   const id = 'p' + Date.now();
   const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas };
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
-  return ok({ painting: item });
+  return ok({ painting: item }, cors);
 }
 
-// PUT /admin/paintings/{id} — update painting fields
-async function adminUpdatePainting(id, body) {
+async function adminUpdatePainting(id, body, cors) {
   const { title, month, year, width, height, stock, momsHas } = body;
-  if (!title || !year || !width || !height) return err('Missing required fields', 400);
+  if (!title || !year || !width || !height) return err('Missing required fields', 400, cors);
   const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas };
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
-  return ok({ painting: item });
+  return ok({ painting: item }, cors);
 }
 
-// DELETE /admin/paintings/{id} — delete painting and all its sales
-async function adminDeletePainting(id) {
-  // Delete the painting record
+async function adminDeletePainting(id, cors) {
   await dynamo.send(new DeleteCommand({ TableName: PAINTINGS_TABLE, Key: { id } }));
-
-  // Find and delete all sales for this painting
   const salesRes = await dynamo.send(new QueryCommand({
     TableName: SALES_TABLE,
     IndexName: 'paintingId-index',
     KeyConditionExpression: 'paintingId = :pid',
     ExpressionAttributeValues: { ':pid': id },
   }));
-
   await Promise.all((salesRes.Items || []).map(s =>
     dynamo.send(new DeleteCommand({ TableName: SALES_TABLE, Key: { id: s.id } }))
   ));
-
-  return ok({ deleted: true });
+  return ok({ deleted: true }, cors);
 }
 
-// POST /admin/paintings/{id}/sales — add a sale
-async function adminAddSale(paintingId, body) {
+async function adminAddSale(paintingId, body, cors) {
   const { date, type, channel, price, pct, net } = body;
-  if (!type || !channel || price == null) return err('Missing required fields', 400);
+  if (!type || !channel || price == null) return err('Missing required fields', 400, cors);
   const id = 's' + Date.now();
   const item = { id, paintingId, date: date || '', type, channel, price: Number(price) };
   if (channel === 'gallery') {
@@ -499,40 +499,36 @@ async function adminAddSale(paintingId, body) {
     item.net = Number(net ?? price * (pct / 100));
   }
   await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: item }));
-  return ok({ sale: item });
+  return ok({ sale: item }, cors);
 }
 
-// PUT /admin/paintings/{id}/sales/{saleId} — edit a sale
-async function adminUpdateSale(paintingId, saleId, body) {
+async function adminUpdateSale(paintingId, saleId, body, cors) {
   const { date, type, channel, price, pct, net } = body;
-  if (!type || !channel || price == null) return err('Missing required fields', 400);
+  if (!type || !channel || price == null) return err('Missing required fields', 400, cors);
   const item = { id: saleId, paintingId, date: date || '', type, channel, price: Number(price) };
   if (channel === 'gallery') {
     item.pct = Number(pct);
     item.net = Number(net ?? price * (pct / 100));
   }
   await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: item }));
-  return ok({ sale: item });
+  return ok({ sale: item }, cors);
 }
 
-// DELETE /admin/paintings/{id}/sales/{saleId} — delete a sale
-async function adminDeleteSale(saleId) {
+async function adminDeleteSale(saleId, cors) {
   await dynamo.send(new DeleteCommand({ TableName: SALES_TABLE, Key: { id: saleId } }));
-  return ok({ deleted: true });
+  return ok({ deleted: true }, cors);
 }
 
-// GET /admin/config — get rate
-async function adminGetConfig() {
+async function adminGetConfig(cors) {
   const res = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
-  return ok({ rate: res.Item?.rate ?? 1.10 });
+  return ok({ rate: res.Item?.rate ?? 1.10 }, cors);
 }
 
-// PUT /admin/config — save rate
-async function adminUpdateConfig(body) {
+async function adminUpdateConfig(body, cors) {
   const { rate } = body;
-  if (!rate || isNaN(rate)) return err('Invalid rate', 400);
+  if (!rate || isNaN(rate)) return err('Invalid rate', 400, cors);
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: { id: '__config__', rate: Number(rate) } }));
-  return ok({ rate: Number(rate) });
+  return ok({ rate: Number(rate) }, cors);
 }
 
 // ── Router ──
@@ -540,7 +536,8 @@ export const handler = async (event) => {
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
   console.log('Request:', method, path);
-  if (method === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
+  const cors = corsHeaders(event);
+  if (method === 'OPTIONS') return { statusCode: 200, headers: cors, body: '' };
 
   try {
     // Public routes
@@ -555,41 +552,41 @@ export const handler = async (event) => {
 
     // Admin routes — check token
     if (path.startsWith('/admin')) {
-      if (!checkAdminAuth(event)) return err('Unauthorized', 401);
+      if (!checkAdminAuth(event)) return err('Unauthorized', 401, cors);
 
       const b = () => JSON.parse(event.body || '{}');
 
       // Config
-      if (method === 'GET' && path === '/admin/config')  return await adminGetConfig();
-      if (method === 'PUT' && path === '/admin/config')  return await adminUpdateConfig(b());
+      if (method === 'GET' && path === '/admin/config')  return await adminGetConfig(cors);
+      if (method === 'PUT' && path === '/admin/config')  return await adminUpdateConfig(b(), cors);
 
       // Paintings
-      if (method === 'GET'    && path === '/admin/paintings')            return await adminGetPaintings();
-      if (method === 'POST'   && path === '/admin/paintings')            return await adminAddPainting(b());
+      if (method === 'GET'    && path === '/admin/paintings')            return await adminGetPaintings(cors);
+      if (method === 'POST'   && path === '/admin/paintings')            return await adminAddPainting(b(), cors);
 
       // Match /admin/paintings/{id}
       const paintingMatch = path.match(/^\/admin\/paintings\/([^/]+)$/);
       if (paintingMatch) {
         const paintingId = paintingMatch[1];
-        if (method === 'PUT')    return await adminUpdatePainting(paintingId, b());
-        if (method === 'DELETE') return await adminDeletePainting(paintingId);
+        if (method === 'PUT')    return await adminUpdatePainting(paintingId, b(), cors);
+        if (method === 'DELETE') return await adminDeletePainting(paintingId, cors);
       }
 
       // Match /admin/paintings/{id}/sales
       const salesListMatch = path.match(/^\/admin\/paintings\/([^/]+)\/sales$/);
       if (salesListMatch && method === 'POST') {
-        return await adminAddSale(salesListMatch[1], b());
+        return await adminAddSale(salesListMatch[1], b(), cors);
       }
 
       // Match /admin/paintings/{id}/sales/{saleId}
       const saleMatch = path.match(/^\/admin\/paintings\/([^/]+)\/sales\/([^/]+)$/);
       if (saleMatch) {
         const [, paintingId, saleId] = saleMatch;
-        if (method === 'PUT')    return await adminUpdateSale(paintingId, saleId, b());
-        if (method === 'DELETE') return await adminDeleteSale(saleId);
+        if (method === 'PUT')    return await adminUpdateSale(paintingId, saleId, b(), cors);
+        if (method === 'DELETE') return await adminDeleteSale(saleId, cors);
       }
 
-      return err('Not found', 404);
+      return err('Not found', 404, cors);
     }
 
     return { statusCode: 404, headers: CORS, body: JSON.stringify({ error: 'Not found' }) };
