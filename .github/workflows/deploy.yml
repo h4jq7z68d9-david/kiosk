@@ -32,6 +32,8 @@ jobs:
             --include "*.jpg" \
             --include "*.xml" \
             --include "*.txt" \
+            --include "*.js" \
+            --include "*.webmanifest" \
             --delete
       - name: Deploy Lambda
         run: |
