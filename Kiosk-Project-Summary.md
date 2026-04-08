@@ -9,6 +9,7 @@
 | https://davidnicholsonart.com/shop.html | Shop page |
 | https://davidnicholsonart.com/shipping.html | Shipping & returns info |
 | https://davidnicholsonart.com/kiosk.html | iPad kiosk for art fairs |
+| https://davidnicholsonart.com/admin.html | Admin dashboard — password gated (172377) |
 | https://davidnicholsonart.com/prints/{slug}.html | Per-product pages with OG tags — redirect to gallery modal |
 | https://davidnicholsonart.com/varied-readings.html | Varied Readings show page — interactive tile flip animation |
 | https://kiosk.davidnicholsonllc.com | Legacy URL — still works, same content |
@@ -38,8 +39,9 @@ The site is deployed and working. Push changes to GitHub — deploy is automatic
 | 1 | /hero | API Gateway | Lambda hero endpoint |
 | 2 | /image* | API Gateway | Lambda image proxy — forwards query string |
 | 3 | /feed.xml | API Gateway | Lambda feed endpoint |
-| 4 | /prints/* | S3 | Per-product OG redirect pages |
-| 5 | Default (*) | S3 | All other static files |
+| 4 | /admin/* | API Gateway | Lambda admin endpoints |
+| 5 | /prints/* | S3 | Per-product OG redirect pages |
+| 6 | Default (*) | S3 | All other static files |
 
 **DNS:** `davidnicholsonart.com` is registered with AWS and DNS is in Route 53. Both apex and www point to CloudFront distribution E2EJH38GWGPEPG.
 
@@ -59,7 +61,7 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 - IAM role: `github-kiosk-deploy` (OIDC, no static keys)
 - Repo secret set: `AWS_ROLE_ARN`
 - Workflow file: `.github/workflows/deploy.yml`
-- Syncs `*.html`, `prints/*.html`, `*.png`, `*.jpg`, `*.xml`, `*.txt` files to S3
+- Syncs `*.html`, `prints/*.html`, `*.png`, `*.jpg`, `*.xml`, `*.txt`, `*.js`, `*.webmanifest` files to S3
 - Zips and deploys `index.mjs` to Lambda function `dna-kiosk`
 - Invalidates both distributions: E31J8ASEUTGXD9 and E2EJH38GWGPEPG
 - **Generate print pages step:** runs `generate-prints.js` before S3 sync — fetches catalog from Lambda API Gateway URL directly (bypasses CloudFront), writes `prints/*.html` files locally, S3 sync picks them up
@@ -102,7 +104,7 @@ Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda gene
 - Pinterest Tag live in gallery.html — fires 4 events: `pagevisit` (page load), `pagevisit` with `product_id` (product modal open), `addtocart`, `checkout`; all include `click_id` (epik) when present
 - Base `pagevisit` on page load only includes `click_id` if `epik` param is present in URL — omits key entirely when absent (Pinterest treats explicit `undefined` differently)
 - Conversion source health requires all 3 event types fired by real users in last 30 days — without ad traffic this will stay yellow
-- Verified Merchant Program blocked until conversion source is healthy — not a priority until ads start
+- Verified Merchant Program — ✓ verified April 2026
 - 3 dead Shopify catalogs exist on Pinterest account — harmless, can't be deleted without Shopify app
 - Share button on product modal links to `/prints/{slug}.html` — Pinterest receives correct image URL and description
 
@@ -153,6 +155,7 @@ SQUARE_LOC=LYVD3ZGR3X4KE
 SES_FROM=david@davidnicholsonart.com
 NOTIFY_EMAIL=david@davidnicholsonart.com
 API_URL=https://davidnicholsonart.com
+ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 ```
 
 **`API_URL` is critical:** Controls the domain used when building image proxy URLs (`/image?id=...`). Must be set to `https://davidnicholsonart.com` so image URLs use the CloudFront domain instead of the raw API Gateway domain. Pinterest rejects API Gateway domains in `image_url` fields.
@@ -165,6 +168,14 @@ API_URL=https://davidnicholsonart.com
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
 - `POST /guestbook` — saves to DynamoDB (`dna-guestbook`) + emails david@davidnicholsonart.com; stores `name, email, note, subscribed (BOOL)`
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}`
+- `GET /admin/paintings` — all paintings with sales joined
+- `POST /admin/paintings` — add painting
+- `PUT /admin/paintings/{id}` — update painting
+- `DELETE /admin/paintings/{id}` — delete painting + all its sales
+- `POST /admin/paintings/{id}/sales` — add sale
+- `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale
+- `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
+- `GET/PUT /admin/config` — price/sq in rate
 
 **To redeploy Lambda:** Push `index.mjs` to GitHub — deploy is automatic via GitHub Actions.
 
@@ -304,6 +315,50 @@ All are single-file, no framework — intentional, keep it that way.
 - Service worker cache key: `dna-v3`
 - **Service worker blocks external image requests** — SW only passes through fonts, cdnjs, and Lambda API
 
+### admin.html (admin dashboard)
+- Password gate: `172377`
+- **Always open at `https://davidnicholsonart.com/admin.html`** (apex, no www) — Safari CORS redirect cache issue
+- **PWA:** installable as home screen app on iPhone/iPad via Safari → Share → Add to Home Screen
+  - `admin.webmanifest` — app manifest (name: "DNA Admin", theme: #f8f6f3, orange icon)
+  - `admin-sw.js` — service worker caches admin shell; passes API calls and S3 receipt URLs through to network
+  - `admin-icon.png` — 512×512 orange DN icon
+  - Safe area insets applied to topbar and main padding for iPhone notch
+
+**Three-tab layout:**
+- **Dashboard tab** — revenue cards (originals sold, large/small prints sold, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter)
+- **Inventory tab** — price/sq in rate adjuster + sortable/filterable painting table with inline editing; `↓ CSV` export
+- **Expenses & Mileage tab** — expense table with year + category filters + `↓ CSV` export; mileage table with `↓ CSV` export
+
+**Inventory features:**
+- All paintings sortable by title, year, price, rounded price
+- Filters: Never sold, Sold, Original available, Low print stock, Mom doesn't have
+- Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom's Prints checkbox) + sale history
+- Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net
+- Stock +/− buttons autosave immediately
+- CSV export: title, month, year, dimensions, sq in, price, rounded, stock counts, units sold, original sold status
+
+**Expense features:**
+- Categories: Printing, Presentation, Art Supplies, Art Fair Fees, Retail & Packaging, Equipment, Marketing, Licenses & Fees, Travel, Other
+- Color-coded category badges
+- Receipt upload: file picker supports Camera, Photo Library, Browse on iPhone (no `capture` attribute — full iOS sheet)
+- Hurdlr receipt URLs show as normal `📎 receipt` links; if link fails on click, shows "no longer available" inline
+- Entries with no receipt show "no receipt"
+- CSV export includes date, category, vendor, description, amount, receipt URL; respects active year/category filter
+
+**Mileage features:**
+- IRS standard rate hardcoded per year at top of script (`IRS_RATE_BY_YEAR`) — update each January
+- 2025/2026 rate: $0.70/mile; 2024: $0.67/mile
+- Deduction auto-calculated per entry using rate for that entry's year
+- CSV export includes date, purpose, miles, IRS rate, deduction, notes
+
+**Data storage — current state (localStorage, pending backend migration):**
+- Expenses and mileage stored in `localStorage` key `dna-admin-expenses`
+- Pre-seeded on first load with all 2024 + 2025 Hurdlr data (77 expenses, 2 mileage entries) mapped to new categories
+- Inventory/sales stored in DynamoDB via Lambda API (already live)
+- **To reset expense data to seed:** clear `dna-admin-expenses` from localStorage (DevTools → Application → Local Storage)
+
+**Admin token:** `dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE` — stored as Lambda env var `ADMIN_TOKEN`; currently bypassed (passed as `?token=` query param); auth enforcement deferred
+
 ### varied-readings.html (show page)
 - Standalone page for the Varied Readings show, April 24, 2026
 - 10 paintings in 5 diptych pairs, all base64 embedded
@@ -323,35 +378,65 @@ All are single-file, no framework — intentional, keep it that way.
 
 ---
 
-## Pending — In Order of Priority
+## Expense Tracker — Backend Migration (Pending)
 
-- [x] **Google Performance Max campaign** — ✓ live April 2026, $5/day, Maximize Conversion Value, US only
-- [ ] **Google brand exclusion** — "David Nicholson" brand requested; check back in a few days to add as exclusion once approved
-- [ ] **Meta Ads** — ~$5/day, not yet started
-- [ ] **Pinterest Ads** — ~$30/day minimum, not yet started
-- [x] **Pinterest Verified Merchant** — ✓ verified April 2026
-- [ ] **SNS carrier registration** — waiting; check AWS Console → Pinpoint → Phone numbers → +18444767251 for status; SMS works once Active
-- [ ] **Google Merchant Center** — trigger manual feed fetch to clear product type warnings; monitor feed health
+Current state: expenses/mileage in localStorage. Backend wiring is ~2–3 hours in one session.
+
+**What's needed:**
+1. **DynamoDB** — new table `dna-expenses`; expenses and mileage in same table with `type` field. ~15 min in AWS console
+2. **Lambda** — add routes to `index.mjs`:
+   - `GET/POST/PUT/DELETE /admin/expenses`
+   - `GET/POST/PUT/DELETE /admin/mileage`
+   - `POST /admin/expenses/receipt-url` — pre-signed S3 URL for receipt upload (~10 lines)
+3. **S3** — new `receipts/` prefix in existing bucket; CORS policy for browser PUT. ~5 min
+4. **IAM** — add `dynamodb:*` on `dna-expenses` and `s3:PutObject` on receipts prefix to `github-kiosk-deploy` role
+5. **Admin frontend** — swap `loadExpState`/`saveExpState` from localStorage to API calls; two `TODO` comments already mark the exact spots; receipt upload swaps `URL.createObjectURL` for pre-signed URL fetch
+6. **Data migration** — one-time script to POST each localStorage record to the new API
 
 ---
 
-## Up Next (Next Session)
+## Pending — In Order of Priority
 
-- **Expense tracker**
-- **Print wall configurator**
-- **Re-enable admin token auth** — CloudFront query string forwarding to Lambda needs investigation; currently auth is bypassed
-- **www → apex redirect** — add CloudFront Function to redirect www to apex permanently
+- [ ] **Expense tracker backend** — wire localStorage to DynamoDB/Lambda/S3 (see section above); ~2–3 hours
+- [ ] **Google brand exclusion** — "David Nicholson" brand requested; check back to add as exclusion once approved
+- [ ] **Meta Ads** — ~$5/day, not yet started
+- [ ] **Pinterest Ads** — ~$30/day minimum, not yet started
+- [ ] **SNS carrier registration** — waiting; check AWS Console → Pinpoint → Phone numbers → +18444767251 for status; SMS works once Active
+- [ ] **Google Merchant Center** — trigger manual feed fetch to clear product type warnings; monitor feed health
+- [ ] **Re-enable admin token auth** — CloudFront query string forwarding to Lambda needs investigation; currently auth is bypassed
+- [ ] **www → apex redirect** — add CloudFront Function to redirect www to apex permanently
 
 ## On the Horizon
 
+- **Print wall configurator**
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
 - **Color picker filter for gallery** — maybe
 - **Art fair mode enhancements** — maybe
-- [x] **CloudFront Pro upgrade** — ✓ upgraded April 2026; 25-behavior limit no longer a constraint
 
 ---
 
 ## Completed This Session
+
+- ✓ **Admin expense & mileage tracker built** — Expenses & Mileage tab in admin.html
+  - Categories: Printing, Presentation, Art Supplies, Art Fair Fees, Retail & Packaging, Equipment, Marketing, Licenses & Fees, Travel, Other (derived from actual 2024–2025 Hurdlr data)
+  - 2024 + 2025 Hurdlr expense data imported (77 records, $15,876 total) — mapped to new categories, Hurdlr S3 receipt URLs preserved
+  - 2025 mileage imported: 488 miles (448 Lawrence + 40 Westport/KC), $341.60 deduction @ $0.70/mile
+  - Expense and mileage CSVs exportable with active filters applied
+  - Receipt upload with camera/photo library/browse on iPhone
+- ✓ **Admin dashboard tab** — Dashboard / Inventory / Expenses & Mileage three-tab layout
+  - Dashboard: all revenue + expense summary cards + both charts
+  - Inventory: rate bar + table (rate bar moved from dashboard)
+  - Expenses: data entry tables only, no duplicate cards
+- ✓ **Expense chart** — Expenses by Month bar chart (red bars) with independent date range filter, mirrors revenue chart pattern
+- ✓ **CSV export** — inventory, expenses, mileage all exportable; filenames include year/filter context
+- ✓ **Admin PWA** — installable as iPhone home screen app
+  - `admin.webmanifest`, `admin-sw.js`, `admin-icon.png` added to repo
+  - `deploy.yml` updated to sync `*.js` and `*.webmanifest` to S3
+  - Safe area insets for iPhone notch
+  - Service worker caches shell, passes API calls through to network
+  - SW cache version: `dna-admin-v1` — bump to v2 on next significant admin.html change
+
+## Previously Completed This Session (prior entry)
 
 - ✓ **Admin dashboard built** — `admin.html` at `https://davidnicholsonart.com/admin.html`; password-gated (172377); fully wired to DynamoDB via Lambda API
   - Inventory table: all 42 paintings, sortable, filterable, expandable rows with inline editing
@@ -364,16 +449,7 @@ All are single-file, no framework — intentional, keep it that way.
   - Revenue chart by month with date range filter; Total Revenue card embedded left of chart
   - Price/sq in adjuster affects Price and Rounded columns live; persisted to DynamoDB config record
 - ✓ **DynamoDB tables created** — `dna-paintings` (42 records + `__config__` rate record) and `dna-sales` (6 seeded records from inventory CSV); both PAY_PER_REQUEST in us-east-1
-- ✓ **Lambda admin endpoints added** to `index.mjs`:
-  - `GET /admin/paintings` — all paintings with sales joined
-  - `POST /admin/paintings` — add painting
-  - `PUT /admin/paintings/{id}` — update painting
-  - `DELETE /admin/paintings/{id}` — delete painting + all its sales
-  - `POST /admin/paintings/{id}/sales` — add sale
-  - `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale
-  - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
-  - `GET/PUT /admin/config` — rate value
-  - Auth: token check disabled for now (relying on password gate); CORS returns dynamic origin to support both apex and www
+- ✓ **Lambda admin endpoints added** to `index.mjs`
 - ✓ **CloudFront behavior `/admin/*`** added to E2EJH38GWGPEPG pointing to API Gateway; CachingDisabled; AllViewerExceptHostHeader; allows DELETE/PUT/POST
 - ✓ **IAM policies updated** — `lambda-deploy` user gets `dna-dynamodb-admin` policy; `dna-kiosk-role` gets `dna-dynamodb-paintings` policy for DynamoDB read/write
 - ✓ **Seed script** (`seed-admin-tables.js`) — one-time Node.js script that created both tables and loaded all data from localStorage export
@@ -387,83 +463,25 @@ All are single-file, no framework — intentional, keep it that way.
 - Stock count +/− buttons autosave immediately via PUT to Lambda
 - Painting edit form requires explicit "Save changes" button
 - Mom's Prints checkbox seeded from CSV (37 checked; Beer Drinker, Evening Walkers, U.S. 50 East, Junction, U.S. 69 unchecked)
-
-## Previously Completed This Session (prior entry)
-
-- ✓ **Google Performance Max campaign launched** — $5/day, Maximize Conversion Value, US only; purchase conversion action set up via GA4 import; asset group with 15 headlines, 5 long headlines, 5 descriptions, search themes, audience signal (David Nicholson Art Buyers); Merchant Center feed connected; brand exclusion pending approval
-- ✓ **Google Ads cleanup** — removed stale 2023 page view conversion action; removed inactive draft campaigns
-- ✓ **Gallery redesign** — masonry columns (3 desktop / 2 mobile), natural image proportions, white mat/padding effect on cards, hover lift instead of opacity dim
-- ✓ **Gallery year sections** — replaced filter/shuffle with chronological year sections; sidebar and mobile bar are now anchor jump-nav with scroll spy highlighting active year
-- ✓ **Gallery nav** — removed "gallery" label, added ← back arrow to david nicholson home link
-- ✓ **shipping.html** — full light theme conversion; consistent nav (← david nicholson + follow on instagram) and footer (gallery · contact · guest book) with working guestbook modal
-- ✓ **index.html footer full-bleed** — removed max-width constraint and asymmetric padding; added shipping & returns link
-- ✓ **Guestbook modal** — rounded corners (16px) and orange submit button consistent across gallery.html, index.html, shipping.html
-
-## Previously Completed (prior session) — Site-wide light theme
-
-- ✓ **Site-wide light theme applied** — gallery.html, index.html, and varied-readings.html converted from dark to light
-  - Palette: `--bg: #f8f6f3`, `--ink: #1a2a3a`, `--ink2: #7a8a99`, `--ink3: #9aa0a8`, `--accent: #e07030`
-  - kiosk.html intentionally left on dark theme
-- ✓ **gallery.html nav:** Instagram as pill button (bordered); cart is bare icon with no circle border; active year filter in orange; 2-column mobile grid; add-to-cart and checkout buttons orange; footer links plain text (no pill borders)
-- ✓ **index.html:** Event/venue links orange; footer links plain text; follow button uses `--border-mid` border
-- ✓ **varied-readings.html:** Canvas bg updated to `#f8f6f3`; Phoenix Gallery link and footer link in orange
-- ✓ **Pinterest boards created and populated**
-
-- ✓ `varied-readings.html` created — interactive show page for Varied Readings (April 24, 2026, Phoenix Gallery, Lawrence KS)
-  - 4×4 tile grid flip animation cycling through all 10 paintings in 5 diptych pairs
-  - Snake pattern: top-down then bottom-up alternating between paintings
-  - Each tile tracks its own sequence index independently — click any tile to advance it one step
-  - Sweep respects manually advanced tiles, corrects tiles that jumped too far ahead
-  - No pause — continuous animation, click interaction runs alongside
-  - All 10 images base64 embedded — self-contained, no deploy dependency for images
-  - Links back to davidnicholsonart.com via "david nicholson" footer link
-- ✓ `index.html` updated:
-  - "varied readings →" gold link added to future events section
-  - "also at" changed to "represented at"
-  - Dates changed from gold to white; "future" heading bumped to 26px
-  - Lawrence, KS final friday artwalk @ phoenix gallery combined to one line, links to phoenixgalleryart.com
-- ✓ Pinterest share buttons added to gallery.html product modal (Pinterest + Facebook)
-- ✓ Pinterest tag base pagevisit fixed — click_id only included when epik param present
-- ✓ Product modal title/description switched from Playfair Display to DM Sans
-- ✓ Per-product /prints/ pages implemented (see full details in previous session entry)
-- ✓ API_URL Lambda env var set to https://davidnicholsonart.com
-- ✓ CloudFront /image* behavior Origin request policy set to AllViewerExceptHostHeader
-
-## Previously Completed
-
-- ✓ Pinterest tag base pagevisit fixed — `click_id` only included when `epik` param is present (omitting undefined key)
-- ✓ Product modal title and description switched from Playfair Display (serif/italic) to DM Sans to match site nav typography
-- ✓ Share buttons added to product modal — Pinterest and Facebook, styled to match nav buttons
-- ✓ Per-product `/prints/` pages architecture implemented:
-  - `generate-prints.js` build script added to repo root
-  - `deploy.yml` updated to run script and sync `prints/*.html` to S3
-  - CloudFront behavior `/prints/*` added to E2EJH38GWGPEPG pointing to S3
-  - `handleViewParam()` added to gallery.html to open product modal from `?view=` param
-  - Call order fixed: `handleViewParam` before `handleIncomingProduct` to prevent URL wipe
-- ✓ `API_URL=https://davidnicholsonart.com` added to Lambda environment variables — image URLs now use CloudFront domain (required for Pinterest share button image validation)
-- ✓ CloudFront `/image*` behavior Origin request policy set to AllViewerExceptHostHeader — forwards query string to Lambda so image proxy works
+- SW cache key is `dna-admin-v1` — bump to `dna-admin-v2` in `admin-sw.js` after any significant `admin.html` update
 
 ---
 
-## Previously Completed
+## Previously Completed — Site-wide light theme & gallery redesign
 
-- ✓ Junction and Terminal added to Square — product descriptions and SEO descriptions written
-- ✓ `/hero` endpoint updated to limit random selection to 2025–2026 prints
-- ✓ Confirmed: SES production access granted, guestbook email notification working
-- ✓ Confirmed: Instagram Shop live; Facebook Shop working
-- ✓ Pinterest Tag added to gallery.html
-- ✓ Google Search Console coverage issues resolved
-- ✓ `shipping.html` noindex tag removed
-- ✓ `sitemap.xml` updated to include shop.html and shipping.html
-- ✓ Checkout page — nixed; Square hosted Payment Links handle checkout entirely
-- ✓ Pinterest domain claimed; feed submitted
-- ✓ Google Merchant Center feed submitted
-- ✓ Google Analytics linked to Ads, Merchant Center, Search Console
-- ✓ Product descriptions written for all 40 prints
-- ✓ Facebook and Instagram shops reconnected to Square
-- ✓ SEO pass: meta tags, OG, Twitter cards on all pages
-- ✓ og-image.jpg created and deployed
-- ✓ sitemap.xml and robots.txt added
+- ✓ **Google Performance Max campaign launched** — $5/day, Maximize Conversion Value, US only
+- ✓ **Gallery redesign** — masonry columns (3 desktop / 2 mobile), natural image proportions, white mat/padding effect on cards
+- ✓ **Gallery year sections** — chronological year sections; sidebar and mobile bar are anchor jump-nav with scroll spy
+- ✓ **Site-wide light theme** — gallery.html, index.html, varied-readings.html (kiosk.html stays dark)
+  - Palette: `--bg: #f8f6f3`, `--ink: #1a2a3a`, `--ink2: #7a8a99`, `--ink3: #9aa0a8`, `--accent: #e07030`
+- ✓ **shipping.html** — full light theme; consistent nav and footer
+- ✓ **index.html footer full-bleed** — removed max-width constraint; added shipping & returns link
+- ✓ **Guestbook modal** — rounded corners (16px) and orange submit button consistent across all pages
+- ✓ `varied-readings.html` created — Varied Readings show page, April 24, 2026, Phoenix Gallery Lawrence KS
+- ✓ Pinterest share buttons added to gallery.html product modal
+- ✓ Per-product /prints/ pages implemented
+- ✓ Pinterest Verified Merchant — ✓ verified April 2026
+- ✓ CloudFront Pro upgrade — ✓ April 2026; 25-behavior limit no longer a constraint
 
 ---
 
@@ -480,13 +498,18 @@ All are single-file, no framework — intentional, keep it that way.
 3. Safari → Share → Add to Home Screen
 4. Settings → Accessibility → Guided Access to lock iPad to kiosk
 
+## iPhone Admin Setup
+
+1. Open https://davidnicholsonart.com/admin.html in Safari
+2. Safari → Share → Add to Home Screen
+3. Opens full-screen as "DNA Admin" with orange DN icon
+
 ---
 
 ## Key Principles
 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **Single-file HTML** — no frameworks, no build pipeline for HTML files, keep it that way
-- **Admin features hidden** — triple-tap pattern for CSV export
 - **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
 - **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }`
 - **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
@@ -499,6 +522,7 @@ All are single-file, no framework — intentional, keep it that way.
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
+- **Admin SW cache key** — bump `dna-admin-v1` → `dna-admin-v2` in `admin-sw.js` after significant admin.html changes
 
 ---
 
