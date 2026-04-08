@@ -45,593 +45,286 @@
     display: flex; align-items: center; justify-content: center;
     z-index: 1000;
   }
-  .gate-box {
-    width: 320px;
-    text-align: center;
-  }
+  .gate-box { width: 320px; text-align: center; }
   .gate-box .wordmark {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink2);
-    margin-bottom: 32px;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink2); margin-bottom: 32px;
   }
   .gate-box input[type="password"] {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid var(--border-mid);
-    border-radius: var(--radius);
-    background: white;
-    font-family: var(--mono);
-    font-size: 18px;
-    letter-spacing: 0.2em;
-    color: var(--ink);
-    text-align: center;
-    outline: none;
-    transition: border-color 0.15s;
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--border-mid); border-radius: var(--radius);
+    background: white; font-family: var(--mono); font-size: 18px;
+    letter-spacing: 0.2em; color: var(--ink); text-align: center;
+    outline: none; transition: border-color 0.15s;
   }
   .gate-box input:focus { border-color: var(--accent); }
-  .gate-box .gate-error {
-    margin-top: 10px;
-    font-size: 13px;
-    color: var(--red);
-    min-height: 18px;
-  }
+  .gate-box .gate-error { margin-top: 10px; font-size: 13px; color: var(--red); min-height: 18px; }
 
   /* ── LAYOUT ── */
   #app { display: none; }
   #app.visible { display: block; }
 
   .topbar {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    padding: 0 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 52px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 0 32px; display: flex; align-items: center;
+    justify-content: space-between; height: 52px;
+    position: sticky; top: 0; z-index: 100;
   }
-  .topbar-left {
-    display: flex; align-items: center; gap: 16px;
-  }
-  .topbar .wordmark {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-  .topbar .badge {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: var(--accent);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .btn-logout {
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink2);
-    background: none;
-    border: none;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    padding: 4px 0;
-  }
+  .topbar-left { display: flex; align-items: center; gap: 16px; }
+  .topbar .wordmark { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+  .topbar .badge { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px; }
+  .btn-logout { font-family: var(--font); font-size: 12px; font-weight: 500; color: var(--ink2); background: none; border: none; cursor: pointer; letter-spacing: 0.04em; padding: 4px 0; }
   .btn-logout:hover { color: var(--ink); }
 
   .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
 
   /* ── RATE CONTROL ── */
   .rate-bar {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 24px; display: flex; align-items: center; gap: 24px;
+    margin-bottom: 28px; flex-wrap: wrap;
   }
-  .rate-bar label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink2);
-    white-space: nowrap;
-  }
-  .rate-input-wrap {
-    display: flex; align-items: center; gap: 8px;
-  }
-  .rate-input-wrap span {
-    font-family: var(--mono);
-    font-size: 15px;
-    color: var(--ink);
-  }
+  .rate-bar label { font-size: 13px; font-weight: 500; color: var(--ink2); white-space: nowrap; }
+  .rate-input-wrap { display: flex; align-items: center; gap: 8px; }
+  .rate-input-wrap span { font-family: var(--mono); font-size: 15px; color: var(--ink); }
   .rate-input-wrap input[type="number"] {
-    width: 80px;
-    font-family: var(--mono);
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--ink);
-    border: 1.5px solid var(--border-mid);
-    border-radius: 6px;
-    padding: 6px 10px;
-    background: var(--bg);
-    outline: none;
-    transition: border-color 0.15s;
+    width: 80px; font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--ink);
+    border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 6px 10px;
+    background: var(--bg); outline: none; transition: border-color 0.15s;
   }
   .rate-input-wrap input:focus { border-color: var(--accent); background: white; }
-  .rate-presets {
-    display: flex; gap: 6px; flex-wrap: wrap;
-  }
+  .rate-presets { display: flex; gap: 6px; flex-wrap: wrap; }
   .rate-preset {
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 4px 10px;
-    border: 1.5px solid var(--border-mid);
-    border-radius: 20px;
-    background: none;
-    color: var(--ink2);
-    cursor: pointer;
-    transition: all 0.12s;
+    font-family: var(--mono); font-size: 12px; padding: 4px 10px;
+    border: 1.5px solid var(--border-mid); border-radius: 20px;
+    background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s;
   }
   .rate-preset:hover { border-color: var(--accent); color: var(--accent); }
   .rate-preset.active { background: var(--accent); border-color: var(--accent); color: white; }
-  .rate-note {
-    font-size: 12px;
-    color: var(--ink3);
-    margin-left: auto;
-  }
+  .rate-note { font-size: 12px; color: var(--ink3); margin-left: auto; }
 
   /* ── SUMMARY CARDS ── */
   .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px; margin-bottom: 28px;
   }
-  .card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 20px 16px;
-  }
-  .card-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink2);
-    margin-bottom: 8px;
-  }
-  .card-value {
-    font-family: var(--mono);
-    font-size: 26px;
-    font-weight: 500;
-    color: var(--ink);
-    line-height: 1;
-  }
+  .card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 20px 16px; }
+  .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); margin-bottom: 8px; }
+  .card-value { font-family: var(--mono); font-size: 26px; font-weight: 500; color: var(--ink); line-height: 1; }
   .card-value.accent { color: var(--accent); }
-  .card-sub {
-    font-size: 12px;
-    color: var(--ink3);
-    margin-top: 6px;
-  }
+  .card-sub { font-size: 12px; color: var(--ink3); margin-top: 6px; }
 
   /* ── CHART ── */
   .chart-section {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-bottom: 28px;
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px 24px; margin-bottom: 28px;
   }
-  .section-title {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink2);
-    margin-bottom: 16px;
-  }
-  .chart-wrap {
-    height: 140px;
-    display: flex;
-    align-items: flex-end;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .chart-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-    min-width: 36px;
-  }
-  .chart-bar {
-    width: 28px;
-    background: var(--accent);
-    border-radius: 3px 3px 0 0;
-    opacity: 0.85;
-    transition: opacity 0.15s;
-    position: relative;
-    cursor: default;
-  }
+  .section-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); margin-bottom: 16px; }
+  .chart-wrap { height: 140px; display: flex; align-items: flex-end; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .chart-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; min-width: 36px; }
+  .chart-bar { width: 28px; background: var(--accent); border-radius: 3px 3px 0 0; opacity: 0.85; transition: opacity 0.15s; position: relative; cursor: default; }
   .chart-bar:hover { opacity: 1; }
-  .chart-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--ink3);
-    white-space: nowrap;
+  .chart-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); white-space: nowrap; }
+  .chart-empty { font-size: 13px; color: var(--ink3); padding: 40px 0; width: 100%; text-align: center; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex; gap: 0; margin-bottom: 0;
+    border-bottom: 2px solid var(--border);
   }
-  .chart-empty {
-    font-size: 13px;
-    color: var(--ink3);
-    padding: 40px 0;
-    width: 100%;
-    text-align: center;
+  .tab-btn {
+    font-family: var(--font); font-size: 13px; font-weight: 500;
+    padding: 10px 20px; background: none; border: none;
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+    color: var(--ink2); cursor: pointer; letter-spacing: 0.02em;
+    transition: color 0.15s, border-color 0.15s;
   }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
   /* ── TABLE SECTION ── */
-  .table-section {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
+  .table-section { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .table-header {
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
-  .table-search {
-    display: flex; align-items: center; gap: 8px;
-  }
+  .table-search { display: flex; align-items: center; gap: 8px; }
   .table-search input {
-    font-family: var(--font);
-    font-size: 13px;
-    border: 1.5px solid var(--border-mid);
-    border-radius: 6px;
-    padding: 7px 12px;
-    background: var(--bg);
-    color: var(--ink);
-    outline: none;
-    width: 200px;
-    transition: border-color 0.15s;
+    font-family: var(--font); font-size: 13px; border: 1.5px solid var(--border-mid);
+    border-radius: 6px; padding: 7px 12px; background: var(--bg); color: var(--ink);
+    outline: none; width: 200px; transition: border-color 0.15s;
   }
   .table-search input:focus { border-color: var(--accent); background: white; }
   .btn-primary {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: opacity 0.15s;
-    white-space: nowrap;
+    font-family: var(--font); font-size: 13px; font-weight: 500;
+    background: var(--accent); color: white; border: none; border-radius: 6px;
+    padding: 8px 16px; cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
   }
   .btn-primary:hover { opacity: 0.88; }
   .btn-sm {
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1.5px solid var(--border-mid);
-    background: none;
-    color: var(--ink2);
-    cursor: pointer;
-    transition: all 0.12s;
-    white-space: nowrap;
+    font-family: var(--font); font-size: 12px; font-weight: 500;
+    padding: 5px 10px; border-radius: 5px; border: 1.5px solid var(--border-mid);
+    background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; white-space: nowrap;
   }
   .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
   .btn-sm.danger:hover { border-color: var(--red); color: var(--red); }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  thead tr {
-    background: var(--bg2);
-  }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--bg2); }
   th {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink2);
-    padding: 10px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink2); padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+    white-space: nowrap; cursor: pointer; user-select: none;
   }
   th:hover { color: var(--ink); }
   th.sorted { color: var(--accent); }
   th .sort-arrow { font-size: 10px; margin-left: 3px; }
-  td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr.painting-row:hover td { background: #faf8f5; }
   tr.painting-row { cursor: pointer; }
-
   td.mono { font-family: var(--mono); font-size: 13px; }
   td.dim { color: var(--ink2); font-size: 13px; }
-  td.sold-badge { }
 
-  .stock-cell {
-    display: flex; align-items: center; gap: 4px;
-  }
-  .stock-num {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    min-width: 20px;
-    text-align: center;
-    color: var(--ink);
-  }
+  .stock-cell { display: flex; align-items: center; gap: 4px; }
+  .stock-num { font-family: var(--mono); font-size: 13px; font-weight: 500; min-width: 20px; text-align: center; color: var(--ink); }
   .stock-num.zero { color: var(--ink3); }
   .stock-btn {
-    width: 20px; height: 20px;
-    border-radius: 3px;
-    border: 1px solid var(--border-mid);
-    background: none;
-    font-size: 14px;
-    line-height: 1;
-    color: var(--ink2);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.1s;
-    flex-shrink: 0;
+    width: 20px; height: 20px; border-radius: 3px; border: 1px solid var(--border-mid);
+    background: none; font-size: 14px; line-height: 1; color: var(--ink2); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.1s; flex-shrink: 0;
   }
   .stock-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  .orig-sold {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 2px 7px;
-    border-radius: 3px;
-    background: var(--green);
-    color: white;
-    letter-spacing: 0.04em;
-  }
-  .orig-avail {
-    font-size: 12px;
-    color: var(--ink3);
-  }
+  .orig-sold { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 3px; background: var(--green); color: white; letter-spacing: 0.04em; }
+  .orig-avail { font-size: 12px; color: var(--ink3); }
 
   /* ── EXPAND ROW ── */
-  tr.expand-row td {
-    padding: 0;
-    background: var(--bg2);
-    border-bottom: 2px solid var(--border-mid);
-  }
-  .expand-inner {
-    padding: 16px 24px;
-  }
-  .expand-inner .sub-title {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink2);
-    margin-bottom: 10px;
-  }
-  .sales-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
+  tr.expand-row td { padding: 0; background: var(--bg2); border-bottom: 2px solid var(--border-mid); }
+  .expand-inner { padding: 16px 24px; }
+  .expand-inner .sub-title { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); margin-bottom: 10px; }
+  .sales-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
   .sale-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-    padding: 8px 12px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    display: flex; align-items: center; gap: 12px; font-size: 13px;
+    padding: 8px 12px; background: white; border: 1px solid var(--border); border-radius: 6px;
   }
   .sale-date { font-family: var(--mono); font-size: 12px; color: var(--ink2); min-width: 80px; }
-  .sale-type {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 3px;
-    letter-spacing: 0.04em;
-  }
+  .sale-type { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em; }
   .sale-type.original { background: var(--ink); color: white; }
   .sale-type.large { background: var(--accent); color: white; }
   .sale-type.small { background: var(--accent-dim); color: white; }
-  .sale-channel {
-    font-size: 12px;
-    color: var(--ink2);
-    text-transform: capitalize;
-  }
-  .sale-price {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--green);
-    margin-left: auto;
-  }
-  .sale-gross {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--ink3);
-  }
-  .sale-pct {
-    font-size: 11px;
-    color: var(--ink3);
-    white-space: nowrap;
-  }
-  .sale-del {
-    background: none;
-    border: none;
-    color: var(--ink3);
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    padding: 0 2px;
-    transition: color 0.12s;
-  }
+  .sale-channel { font-size: 12px; color: var(--ink2); text-transform: capitalize; }
+  .sale-price { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--green); margin-left: auto; }
+  .sale-gross { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
+  .sale-pct { font-size: 11px; color: var(--ink3); white-space: nowrap; }
+  .sale-del { background: none; border: none; color: var(--ink3); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; transition: color 0.12s; }
   .sale-del:hover { color: var(--red); }
   .no-sales { font-size: 13px; color: var(--ink3); font-style: italic; }
-
-  .expand-actions {
-    display: flex; gap: 8px;
-  }
+  .expand-actions { display: flex; gap: 8px; }
+  .expand-arrow { font-size: 10px; color: var(--ink3); transition: transform 0.15s; display: inline-block; }
+  .expand-arrow.open { transform: rotate(90deg); }
 
   /* ── MODALS ── */
   .modal-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(26,42,58,0.4);
-    z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
+    position: fixed; inset: 0; background: rgba(26,42,58,0.4);
+    z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px;
   }
-  .modal {
-    background: white;
-    border-radius: 12px;
-    box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal-head {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .modal-head h2 {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .modal-close {
-    background: none; border: none;
-    font-size: 20px; color: var(--ink3);
-    cursor: pointer; line-height: 1; padding: 2px;
-  }
+  .modal { background: white; border-radius: 12px; box-shadow: var(--shadow-lg); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+  .modal-head { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-head h2 { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .modal-close { background: none; border: none; font-size: 20px; color: var(--ink3); cursor: pointer; line-height: 1; padding: 2px; }
   .modal-close:hover { color: var(--ink); }
   .modal-body { padding: 20px 24px; }
-  .modal-foot {
-    padding: 16px 24px;
-    border-top: 1px solid var(--border);
-    display: flex; justify-content: flex-end; gap: 10px;
-  }
+  .modal-foot { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
 
   .field { margin-bottom: 16px; }
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink2);
-    margin-bottom: 6px;
-    letter-spacing: 0.04em;
+  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--ink2); margin-bottom: 6px; letter-spacing: 0.04em; }
+  .field input, .field select, .field textarea {
+    width: 100%; font-family: var(--font); font-size: 14px; color: var(--ink);
+    border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 9px 12px;
+    background: var(--bg); outline: none; transition: border-color 0.15s; appearance: none;
   }
-  .field input, .field select {
-    width: 100%;
-    font-family: var(--font);
-    font-size: 14px;
-    color: var(--ink);
-    border: 1.5px solid var(--border-mid);
-    border-radius: 6px;
-    padding: 9px 12px;
-    background: var(--bg);
-    outline: none;
-    transition: border-color 0.15s;
-    appearance: none;
-  }
-  .field input:focus, .field select:focus { border-color: var(--accent); background: white; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); background: white; }
+  .field textarea { resize: vertical; min-height: 72px; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .field-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 
-  .btn-cancel {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: 1.5px solid var(--border-mid);
-    background: none;
-    color: var(--ink2);
-    cursor: pointer;
-  }
+  .btn-cancel { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 6px; border: 1.5px solid var(--border-mid); background: none; color: var(--ink2); cursor: pointer; }
   .btn-cancel:hover { color: var(--ink); border-color: var(--ink2); }
 
   .filter-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    padding: 10px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg2);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    padding: 10px 24px; border-bottom: 1px solid var(--border); background: var(--bg2);
   }
-  .filter-bar-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink3);
-    margin-right: 4px;
-    white-space: nowrap;
-  }
-  .filter-chip {
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 11px;
-    border: 1.5px solid var(--border-mid);
-    border-radius: 20px;
-    background: none;
-    color: var(--ink2);
-    cursor: pointer;
-    transition: all 0.12s;
-    white-space: nowrap;
-  }
+  .filter-bar-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); margin-right: 4px; white-space: nowrap; }
+  .filter-chip { font-family: var(--font); font-size: 12px; font-weight: 500; padding: 4px 11px; border: 1.5px solid var(--border-mid); border-radius: 20px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; white-space: nowrap; }
   .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
   .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
-  .expand-arrow {
-    font-size: 10px;
-    color: var(--ink3);
-    transition: transform 0.15s;
-    display: inline-block;
-  }
-  .expand-arrow.open { transform: rotate(90deg); }
 
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--ink3);
-    font-size: 14px;
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); font-size: 14px; }
+
+  /* ── EXPENSE TAB ── */
+  .exp-cards {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px; margin-bottom: 24px;
   }
+
+  /* Category badge */
+  .cat-badge {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .cat-printing    { background: #ede9fe; color: #6d28d9; }
+  .cat-presentation{ background: #fce7f3; color: #9d174d; }
+  .cat-art-supplies{ background: #dbeafe; color: #1d4ed8; }
+  .cat-art-fair    { background: #d1fae5; color: #065f46; }
+  .cat-retail      { background: #ecfdf5; color: #064e3b; }
+  .cat-equipment   { background: #f1f5f9; color: #334155; }
+  .cat-marketing   { background: #fef3c7; color: #92400e; }
+  .cat-licenses    { background: #ffedd5; color: #9a3412; }
+  .cat-travel      { background: #fff7ed; color: #c2410c; }
+  .cat-other       { background: #f3f4f6; color: #374151; }
+
+  .receipt-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; color: var(--accent); text-decoration: none;
+    border: 1px solid var(--accent); border-radius: 4px; padding: 2px 7px;
+    transition: all 0.12s;
+  }
+  .receipt-link:hover { background: var(--accent); color: white; }
+  .receipt-none { font-size: 12px; color: var(--ink3); }
+
+  /* Receipt upload area */
+  .upload-zone {
+    border: 2px dashed var(--border-mid); border-radius: 8px;
+    padding: 24px; text-align: center; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: var(--bg);
+  }
+  .upload-zone:hover { border-color: var(--accent); background: white; }
+  .upload-zone.has-file { border-color: var(--green); background: #f0fdf4; }
+  .upload-zone input[type="file"] { display: none; }
+  .upload-zone-label { font-size: 13px; color: var(--ink2); }
+  .upload-zone-label strong { color: var(--accent); }
+  .upload-zone-filename { font-size: 12px; font-family: var(--mono); color: var(--green); margin-top: 6px; }
+
+  /* Mileage calc preview */
+  .mileage-preview {
+    background: var(--bg2); border-radius: 6px; padding: 10px 14px;
+    font-size: 13px; color: var(--ink2); margin-top: -8px; margin-bottom: 16px;
+    display: none;
+  }
+  .mileage-preview strong { color: var(--green); font-family: var(--mono); }
+
+  /* Expense table row actions */
+  .exp-del { background: none; border: none; color: var(--ink3); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; transition: color 0.12s; }
+  .exp-del:hover { color: var(--red); }
+
+  #loading-bar { display:none;height:3px;background:var(--accent);position:sticky;top:52px;z-index:99;animation:loadpulse 1s ease-in-out infinite alternate }
+  @keyframes loadpulse{from{opacity:0.4}to{opacity:1}}
 
   @media (max-width: 900px) {
     .main { padding: 16px; }
@@ -662,88 +355,170 @@
     </div>
     <button class="btn-logout" onclick="logout()">sign out</button>
   </div>
-  <div id="loading-bar" style="display:none;height:3px;background:var(--accent);position:sticky;top:52px;z-index:99;animation:loadpulse 1s ease-in-out infinite alternate"></div>
-  <style>@keyframes loadpulse{from{opacity:0.4}to{opacity:1}}</style>
+  <div id="loading-bar"></div>
 
   <div class="main">
 
-    <!-- SUMMARY CARDS -->
-    <div class="cards" id="cards"></div>
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-dashboard-btn" onclick="switchTab('dashboard')">Dashboard</button>
+      <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
+      <button class="tab-btn" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
+    </div>
 
-    <!-- CHART -->
-    <div class="chart-section">
-      <div style="display:flex;align-items:flex-start;gap:20px">
-        <!-- total revenue inset — left -->
-        <div id="chart-rev-card" style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
-          <div class="card-label">Total Revenue</div>
-          <div class="card-value accent" id="chart-rev-value">—</div>
-          <div class="card-sub" id="chart-rev-sub"></div>
-        </div>
-        <!-- bars + controls — right -->
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
-            <div class="section-title" style="margin:0">Revenue by Month</div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <label style="font-size:12px;color:var(--ink2);font-weight:500">From</label>
-              <input type="month" id="chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
-              <label style="font-size:12px;color:var(--ink2);font-weight:500">To</label>
-              <input type="month" id="chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
-              <button onclick="clearChartRange()" style="font-family:var(--font);font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0">clear</button>
+    <!-- ══ TAB: DASHBOARD ══ -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div style="padding-top:24px">
+
+        <!-- REVENUE CARDS -->
+        <div class="cards" id="cards"></div>
+
+        <!-- EXPENSE CARDS (all-time, no year filter) -->
+        <div class="cards" id="dash-exp-cards"></div>
+
+        <!-- CHART -->
+        <div class="chart-section">
+          <div style="display:flex;align-items:flex-start;gap:20px">
+            <div id="chart-rev-card" style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
+              <div class="card-label">Total Revenue</div>
+              <div class="card-value accent" id="chart-rev-value">—</div>
+              <div class="card-sub" id="chart-rev-sub"></div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+                <div class="section-title" style="margin:0">Revenue by Month</div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <label style="font-size:12px;color:var(--ink2);font-weight:500">From</label>
+                  <input type="month" id="chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
+                  <label style="font-size:12px;color:var(--ink2);font-weight:500">To</label>
+                  <input type="month" id="chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
+                  <button onclick="clearChartRange()" style="font-family:var(--font);font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0">clear</button>
+                </div>
+              </div>
+              <div class="chart-wrap" id="chart"></div>
             </div>
           </div>
-          <div class="chart-wrap" id="chart"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ TAB: INVENTORY ══ -->
+    <div class="tab-panel" id="tab-inventory">
+      <div class="rate-bar" style="border-top-left-radius:0;border-top-right-radius:0;margin-bottom:0">
+        <label>Price / sq in</label>
+        <div class="rate-input-wrap">
+          <span>$</span>
+          <input type="number" id="rate-input" value="1.10" step="0.05" min="0.10" max="10">
+        </div>
+        <span class="rate-note">Adjusts price &amp; rounded columns for all paintings</span>
+      </div>
+      <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
+        <div class="table-header">
+          <div class="section-title" style="margin:0">Inventory</div>
+          <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
+        </div>
+        <div class="filter-bar" id="filter-bar">
+          <span class="filter-bar-label">Filter</span>
+          <button class="filter-chip" id="fc-never-sold"     onclick="setFilter('never-sold')">Never sold</button>
+          <button class="filter-chip" id="fc-sold"           onclick="setFilter('sold')">Sold</button>
+          <button class="filter-chip" id="fc-original-avail" onclick="setFilter('original-avail')">Original available</button>
+          <button class="filter-chip" id="fc-low-stock"      onclick="setFilter('low-stock')">Low print stock</button>
+          <button class="filter-chip" id="fc-no-moms"        onclick="setFilter('no-moms')">Mom doesn't have</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:28px"></th>
+                <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
+                <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
+                <th class="col-hide">Dimensions</th>
+                <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
+                <th onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
+                <th>Lg stock</th>
+                <th>Sm stock</th>
+                <th>Lg sold</th>
+                <th>Sm sold</th>
+                <th>Original</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- RATE BAR -->
-    <div class="rate-bar">
-      <label>Price / sq in</label>
-      <div class="rate-input-wrap">
-        <span>$</span>
-        <input type="number" id="rate-input" value="1.10" step="0.05" min="0.10" max="10">
-      </div>
-      <span class="rate-note">Adjusts price &amp; rounded columns for all paintings</span>
-    </div>
+    <!-- ══ TAB: EXPENSES ══ -->
+    <div class="tab-panel" id="tab-expenses">
+      <div style="padding-top:24px">
 
-    <!-- INVENTORY TABLE -->
-    <div class="table-section">
-      <div class="table-header">
-        <div class="section-title" style="margin:0">Inventory</div>
-        <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
-      </div>
-      <div class="filter-bar" id="filter-bar">
-        <span class="filter-bar-label">Filter</span>
-        <button class="filter-chip" id="fc-never-sold"     onclick="setFilter('never-sold')">Never sold</button>
-        <button class="filter-chip" id="fc-sold"           onclick="setFilter('sold')">Sold</button>
-        <button class="filter-chip" id="fc-original-avail" onclick="setFilter('original-avail')">Original available</button>
-        <button class="filter-chip" id="fc-low-stock"      onclick="setFilter('low-stock')">Low print stock</button>
-        <button class="filter-chip" id="fc-no-moms"        onclick="setFilter('no-moms')">Mom doesn't have</button>
-      </div>
-      <div style="overflow-x:auto">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:28px"></th>
-              <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
-              <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
-              <th class="col-hide">Dimensions</th>
-              <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
-              <th onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
-              <th>Lg stock</th>
-              <th>Sm stock</th>
-              <th>Lg sold</th>
-              <th>Sm sold</th>
-              <th>Original</th>
-            </tr>
-          </thead>
-          <tbody id="table-body"></tbody>
-        </table>
+        <!-- Expenses table -->
+        <div class="table-section" style="margin-bottom:24px">
+          <div class="table-header">
+            <div class="section-title" style="margin:0">Expenses</div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="exp-year-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer"></select>
+              <select id="exp-cat-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
+                <option value="">All categories</option>
+                <option>Printing</option><option>Presentation</option><option>Art Supplies</option>
+                <option>Art Fair Fees</option><option>Retail &amp; Packaging</option><option>Equipment</option>
+                <option>Marketing</option><option>Licenses &amp; Fees</option><option>Travel</option><option>Other</option>
+              </select>
+              <button class="btn-primary" onclick="openExpModal()">+ Add Expense</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th onclick="expSortBy('date')">Date <span class="sort-arrow" id="exp-sort-date"></span></th>
+                  <th onclick="expSortBy('category')">Category <span class="sort-arrow" id="exp-sort-category"></span></th>
+                  <th>Vendor / Description</th>
+                  <th onclick="expSortBy('amount')">Amount <span class="sort-arrow" id="exp-sort-amount"></span></th>
+                  <th class="col-hide">Receipt</th>
+                  <th style="width:32px"></th>
+                </tr>
+              </thead>
+              <tbody id="exp-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mileage table -->
+        <div class="table-section">
+          <div class="table-header">
+            <div>
+              <div class="section-title" style="margin:0">Mileage</div>
+              <div style="font-size:12px;color:var(--ink3);margin-top:2px">IRS standard rate: <span style="font-family:var(--mono);color:var(--ink2)" id="irs-rate-display"></span></div>
+            </div>
+            <button class="btn-primary" onclick="openMileModal()">+ Log Mileage</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th onclick="mileSortBy('date')">Date <span class="sort-arrow" id="mile-sort-date"></span></th>
+                  <th>Purpose</th>
+                  <th onclick="mileSortBy('miles')" class="col-hide">Miles <span class="sort-arrow" id="mile-sort-miles"></span></th>
+                  <th onclick="mileSortBy('deduction')" class="col-hide">Deduction <span class="sort-arrow" id="mile-sort-deduction"></span></th>
+                  <th style="width:32px"></th>
+                </tr>
+              </thead>
+              <tbody id="mile-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
 
   </div><!-- /main -->
 </div><!-- /app -->
+
+<!-- ══════════════════════════════════════════
+     INVENTORY MODALS (unchanged)
+════════════════════════════════════════════ -->
 
 <!-- ADD PAINTING MODAL -->
 <div class="modal-backdrop" id="add-modal" style="display:none" onclick="closeModalOnBackdrop(event,'add-modal')">
@@ -753,10 +528,7 @@
       <button class="modal-close" onclick="closeModal('add-modal')">×</button>
     </div>
     <div class="modal-body">
-      <div class="field">
-        <label>Title</label>
-        <input type="text" id="add-title" placeholder="e.g. Johnson Drive, 6 AM">
-      </div>
+      <div class="field"><label>Title</label><input type="text" id="add-title" placeholder="e.g. Johnson Drive, 6 AM"></div>
       <div class="field-row">
         <div class="field">
           <label>Month (optional)</label>
@@ -768,30 +540,15 @@
             <option>October</option><option>November</option><option>December</option>
           </select>
         </div>
-        <div class="field">
-          <label>Year</label>
-          <input type="number" id="add-year" placeholder="2026" min="2000" max="2099">
-        </div>
+        <div class="field"><label>Year</label><input type="number" id="add-year" placeholder="2026" min="2000" max="2099"></div>
       </div>
       <div class="field-row">
-        <div class="field">
-          <label>Width (in)</label>
-          <input type="number" id="add-width" placeholder="22" min="1">
-        </div>
-        <div class="field">
-          <label>Height (in)</label>
-          <input type="number" id="add-height" placeholder="28" min="1">
-        </div>
+        <div class="field"><label>Width (in)</label><input type="number" id="add-width" placeholder="22" min="1"></div>
+        <div class="field"><label>Height (in)</label><input type="number" id="add-height" placeholder="28" min="1"></div>
       </div>
       <div class="field-row">
-        <div class="field">
-          <label>Large prints in stock</label>
-          <input type="number" id="add-large" placeholder="0" min="0">
-        </div>
-        <div class="field">
-          <label>Small prints in stock</label>
-          <input type="number" id="add-small" placeholder="0" min="0">
-        </div>
+        <div class="field"><label>Large prints in stock</label><input type="number" id="add-large" placeholder="0" min="0"></div>
+        <div class="field"><label>Small prints in stock</label><input type="number" id="add-small" placeholder="0" min="0"></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -809,10 +566,7 @@
       <button class="modal-close" onclick="closeModal('sale-modal')">×</button>
     </div>
     <div class="modal-body">
-      <div class="field">
-        <label>Date</label>
-        <input type="date" id="sale-date">
-      </div>
+      <div class="field"><label>Date</label><input type="date" id="sale-date"></div>
       <div class="field">
         <label>What sold</label>
         <select id="sale-type" onchange="onSaleTypeChange()">
@@ -829,22 +583,14 @@
           <option value="gallery">Gallery</option>
         </select>
       </div>
-      <!-- Price field — label changes based on channel -->
       <div class="field" id="sale-price-field">
         <label id="sale-price-label">Price received ($)</label>
         <input type="number" id="sale-price" placeholder="0.00" min="0" step="0.01" oninput="updateGalleryNet()">
       </div>
-      <!-- Gallery-only: percentage and computed net -->
       <div id="gallery-fields" style="display:none">
         <div class="field-row">
-          <div class="field">
-            <label>Your % of sale</label>
-            <input type="number" id="sale-pct" placeholder="e.g. 60" min="1" max="100" step="1" oninput="updateGalleryNet()">
-          </div>
-          <div class="field">
-            <label>Your net</label>
-            <input type="number" id="sale-net" placeholder="—" min="0" step="0.01" oninput="updateGalleryNetFromNet()" style="background:var(--bg2)">
-          </div>
+          <div class="field"><label>Your % of sale</label><input type="number" id="sale-pct" placeholder="e.g. 60" min="1" max="100" step="1" oninput="updateGalleryNet()"></div>
+          <div class="field"><label>Your net</label><input type="number" id="sale-net" placeholder="—" min="0" step="0.01" oninput="updateGalleryNetFromNet()" style="background:var(--bg2)"></div>
         </div>
         <div id="gallery-net-preview" style="font-size:12px;color:var(--ink2);margin-top:-8px;margin-bottom:16px"></div>
       </div>
@@ -856,37 +602,184 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     EXPENSE MODAL
+════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="exp-modal" style="display:none" onclick="closeModalOnBackdrop(event,'exp-modal')">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="exp-modal-title">Add Expense</h2>
+      <button class="modal-close" onclick="closeModal('exp-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field"><label>Date</label><input type="date" id="exp-date"></div>
+        <div class="field">
+          <label>Category</label>
+          <select id="exp-category">
+            <option>Printing</option>
+            <option>Presentation</option>
+            <option>Art Supplies</option>
+            <option>Art Fair Fees</option>
+            <option>Retail &amp; Packaging</option>
+            <option>Equipment</option>
+            <option>Marketing</option>
+            <option>Licenses &amp; Fees</option>
+            <option>Travel</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Vendor</label><input type="text" id="exp-vendor" placeholder="e.g. Jerry's Artarama"></div>
+      <div class="field"><label>Description</label><textarea id="exp-desc" placeholder="What was purchased…" rows="2"></textarea></div>
+      <div class="field">
+        <label>Amount ($)</label>
+        <input type="number" id="exp-amount" placeholder="0.00" min="0" step="0.01">
+      </div>
+      <div class="field">
+        <label>Receipt image <span style="font-weight:400;color:var(--ink3)">(optional — jpg, png, pdf)</span></label>
+        <div class="upload-zone" id="exp-upload-zone" onclick="document.getElementById('exp-receipt-file').click()">
+          <input type="file" id="exp-receipt-file" accept="image/*,application/pdf" onchange="onReceiptFileChange(event)">
+          <div class="upload-zone-label">Click to attach receipt — <strong>browse</strong></div>
+          <div class="upload-zone-filename" id="exp-filename"></div>
+        </div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:5px">Stored locally for now — will upload to S3 when backend is wired.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('exp-modal')">Cancel</button>
+      <button class="btn-primary" id="exp-save-btn" onclick="saveExpense()">Save Expense</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MILEAGE MODAL
+════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="mile-modal" style="display:none" onclick="closeModalOnBackdrop(event,'mile-modal')">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="mile-modal-title">Log Mileage</h2>
+      <button class="modal-close" onclick="closeModal('mile-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field"><label>Date</label><input type="date" id="mile-date"></div>
+        <div class="field">
+          <label>Miles</label>
+          <input type="number" id="mile-miles" placeholder="0" min="0" step="0.1" oninput="updateMilePreview()">
+        </div>
+      </div>
+      <div class="mileage-preview" id="mile-preview"></div>
+      <div class="field"><label>Purpose</label><input type="text" id="mile-purpose" placeholder="e.g. Art fair — Lawrence KS"></div>
+      <div class="field"><label>Notes <span style="font-weight:400;color:var(--ink3)">(optional)</span></label><textarea id="mile-notes" placeholder="Round trip, specific route…" rows="2"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('mile-modal')">Cancel</button>
+      <button class="btn-primary" id="mile-save-btn" onclick="saveMileage()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ── CONSTANTS ──
+// ═══════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════
 const PASSWORD    = '172377';
 const ADMIN_TOKEN = 'dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE';
 const API_BASE    = 'https://davidnicholsonart.com/admin';
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// ── STATE ──
+// IRS standard mileage rate — update each January when IRS announces new rate
+// 2025 rate: $0.70/mile  |  2026 rate: $0.70/mile (confirm at irs.gov/newsroom)
+const IRS_RATE_BY_YEAR = {
+  2024: 0.67,
+  2025: 0.70,
+  2026: 0.70,
+  // Add new years here each January
+};
+const DEFAULT_IRS_RATE = 0.70;
+
+function irsRate(year) {
+  return IRS_RATE_BY_YEAR[year] || DEFAULT_IRS_RATE;
+}
+
+// Expense categories for CSS class mapping
+const CAT_CLASS = {
+  'Printing':         'cat-printing',
+  'Presentation':     'cat-presentation',
+  'Art Supplies':     'cat-art-supplies',
+  'Art Fair Fees':    'cat-art-fair',
+  'Retail & Packaging': 'cat-retail',
+  'Equipment':        'cat-equipment',
+  'Marketing':        'cat-marketing',
+  'Licenses & Fees':  'cat-licenses',
+  'Travel':           'cat-travel',
+  'Other':            'cat-other',
+};
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
 let db = { paintings: [], rate: 1.10 };
-let sortField = 'title';
-let sortDir = 'asc';
-let activeFilter = null;
-let expandedId = null;
-let expandAll = false;
-let salePaintingId = null;
-let editSaleId = null;
+let sortField = 'title', sortDir = 'asc';
+let activeFilter = null, expandedId = null;
+let salePaintingId = null, editSaleId = null;
 let loading = false;
 
-// ── API ──
+// Expense state (localStorage until backend is wired)
+let expState = { expenses: [], mileage: [] };
+let expSortField = 'date', expSortDir = 'desc';
+let mileSortField = 'date', mileSortDir = 'desc';
+let editExpId = null, editMileId = null;
+let pendingReceiptFile = null;  // File object — will become S3 upload when backend is wired
+
+// ═══════════════════════════════════════════
+//  LOCAL STORAGE (expenses — backend stub)
+// ═══════════════════════════════════════════
+// TODO: Replace loadExpState/saveExpState with API calls when backend is ready.
+// Backend will need:
+//   GET  /admin/expenses          → { expenses, mileage }
+//   POST /admin/expenses          → { expense }
+//   PUT  /admin/expenses/:id      → { expense }
+//   DELETE /admin/expenses/:id
+//   POST /admin/mileage           → { entry }
+//   PUT  /admin/mileage/:id       → { entry }
+//   DELETE /admin/mileage/:id
+//   POST /admin/expenses/receipt-url  → { uploadUrl, fileUrl } (pre-signed S3)
+//   GET  /admin/config            → { rate } (already exists)
+
+function loadExpState() {
+  try {
+    const raw = localStorage.getItem('dna-admin-expenses');
+    if (raw) {
+      expState = JSON.parse(raw);
+    } else {
+      // First load — seed with Hurdlr import (2024 + 2025 data)
+      // Receipts link directly to Hurdlr S3 PDFs — still accessible
+      expState = {"expenses":[{"id":"19d6d9bca83h240","date":"2024-12-16","category":"Printing","vendor":"Printing","desc":"","amount":155.81,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398418_2d85464c-72f7-47e5-bacf-007ba28c1bf9.pdf"},{"id":"19d6d9bca84okj4","date":"2024-10-24","category":"Printing","vendor":"Printing","desc":"","amount":473.07,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398285_0cca74ce-ad22-45e1-92e6-fd8fe9593861.pdf"},{"id":"19d6d9bca84s2x7","date":"2024-09-25","category":"Printing","vendor":"Printing","desc":"","amount":150.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398121_3f403140-15f5-4a99-8af9-af341a2bdc13.pdf"},{"id":"19d6d9bca84cogz","date":"2024-09-23","category":"Printing","vendor":"Printing","desc":"","amount":233.18,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397834_38475659-7136-4489-a234-a9a5c1ae0d6a.pdf"},{"id":"19d6d9bca84zvqs","date":"2024-09-03","category":"Printing","vendor":"Printing","desc":"","amount":356.45,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397208_336c29b8-c5c8-4ee8-b8ae-13aa1ed80e32.pdf"},{"id":"19d6d9bca840jfh","date":"2024-09-03","category":"Printing","vendor":"Printing","desc":"scanning","amount":225.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397597_a55ded0e-eff6-4992-ae72-96312c04e153.pdf"},{"id":"19d6d9bca84jryj","date":"2025-12-23","category":"Art Fair Fees","vendor":"Art fair fees","desc":"","amount":75.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/217560441_7400898a-b9bc-4178-b5c5-12085a302ac9.pdf"},{"id":"19d6d9bca84jr64","date":"2025-12-17","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":56.08,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/216853618_d5099a23-37a5-4423-91c7-bafdd4f00a11.pdf"},{"id":"19d6d9bca84ykro","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":89.62,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744586_ea651ef6-8bff-46c9-bcea-3c9bffab8427.pdf"},{"id":"19d6d9bca840xtj","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":48.56,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744559_1dadd2b9-2fe6-49d0-b6e0-033139e800eb.pdf"},{"id":"19d6d9bca84rxjm","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":96.29,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744547_e3f2b69e-bce6-415b-b8b4-cf7237957c9a.pdf"},{"id":"19d6d9bca84x87y","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":83.82,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215730655_62977eec-d59a-40cd-9895-20f90f8a0c9d.pdf"},{"id":"19d6d9bca84q4pv","date":"2025-11-24","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":116.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/214266181_9ce7cb3d-cd0a-4fa4-abf5-ba15f88f6a83.pdf"},{"id":"19d6d9bca84q891","date":"2025-11-24","category":"Printing","vendor":"Printing","desc":"","amount":105.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/214199737_5a3c6344-b50e-4cac-99ce-c689f073fe7f.jpg"},{"id":"19d6d9bca84z53u","date":"2025-11-08","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":27.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/212287275_da665bb4-13b9-490d-a19d-9772e17762c2.pdf"},{"id":"19d6d9bca84gnhu","date":"2025-09-26","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":425.47,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207749823_a8c3b22b-9ed0-4370-9999-546be847293d.pdf"},{"id":"19d6d9bca84bikf","date":"2025-09-23","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":144.2,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207436576_3a61b11a-77a6-4116-82dd-12e95fd98403.pdf"},{"id":"19d6d9bca840pv3","date":"2025-09-23","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":92.36,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207436541_c810cc91-c7d0-445d-a919-54581a532b78.pdf"},{"id":"19d6d9bca84m0fw","date":"2025-09-22","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":36.39,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207287613_1fd87e21-2b6d-4acc-a165-5f9ccbaf38cb.pdf"},{"id":"19d6d9bca84ii4y","date":"2025-09-22","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":141.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207287600_6f228971-97b3-4bad-a58d-8bdf0e9bbccf.pdf"},{"id":"19d6d9bca84txgt","date":"2025-09-14","category":"Printing","vendor":"Printing","desc":"","amount":239.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206649446_af867249-d62f-46dd-91d6-53a94b74a468.pdf"},{"id":"19d6d9bca84zizs","date":"2025-09-14","category":"Art Fair Fees","vendor":"Art fair fees","desc":"","amount":195.7,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206649442_1b4de534-78f2-41db-9bc6-1dec135faded.pdf"},{"id":"19d6d9bca84khi0","date":"2025-09-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":131.52,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206310565_0a52635a-eef8-4674-810d-606f48b326ff.pdf"},{"id":"19d6d9bca849a7s","date":"2025-09-09","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":32.74,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206189586_16877c22-bf13-4789-a8ca-b1cf341e1881.pdf"},{"id":"19d6d9bca84b6nn","date":"2025-09-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":39.14,"receiptUrl":""},{"id":"19d6d9bca847m03","date":"2025-09-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":235.11,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206176430_58d79750-7fc1-4897-aaf1-2a0f747c280b.pdf"},{"id":"19d6d9bca842eqe","date":"2025-09-09","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":87.47,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206189572_5e1a1fc4-dafd-4306-b76a-f05f7a108838.pdf"},{"id":"19d6d9bca84xe4n","date":"2025-09-08","category":"Marketing","vendor":"Marketing","desc":"","amount":113.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206048012_d5667eee-142b-4d2a-9fbe-71cf2dc90695.pdf"},{"id":"19d6d9bca84a3v7","date":"2025-09-08","category":"Marketing","vendor":"Marketing","desc":"","amount":76.76,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206007733_8a75fa02-bc6a-498b-97b1-e396e95e5fa1.pdf"},{"id":"19d6d9bca841ob6","date":"2025-08-31","category":"Printing","vendor":"Printing","desc":"","amount":170.13,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/205252064_9b3ced63-93f0-43a4-a79b-2a7aac61b548.pdf"},{"id":"19d6d9bca84lbic","date":"2025-08-30","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":20.87,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/205199175_f35e4016-731a-4251-8680-690442eb1631.pdf"},{"id":"19d6d9bca84ff8e","date":"2025-08-27","category":"Marketing","vendor":"Marketing","desc":"","amount":24.84,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204896529_7d20e0f6-aaec-472e-be55-19e438a521b3.pdf"},{"id":"19d6d9bca84izu1","date":"2025-08-24","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":197.06,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204599888_d1a48ec7-9b31-485b-8fd0-9d1fa8d8b567.pdf"},{"id":"19d6d9bca84qr57","date":"2025-08-24","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":35.02,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204588953_68bf4fc1-fdf6-40af-bb1f-24bb7c67d391.pdf"},{"id":"19d6d9bca84yb0o","date":"2025-08-22","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":20.9,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204504343_3865d606-f9ba-47da-a309-e196ad6a5fd2.pdf"},{"id":"19d6d9bca84smxl","date":"2025-08-16","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":135.7,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203941207_168869a8-5ed5-4f9a-b01f-77f96440d800.pdf"},{"id":"19d6d9bca844ejr","date":"2025-08-16","category":"Printing","vendor":"Printing","desc":"","amount":92.85,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203923262_013c1190-b74c-48b3-83be-ef3dd25f40b9.pdf"},{"id":"19d6d9bca84xdhf","date":"2025-08-15","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":29.14,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203853541_d42fdd65-7616-4dc8-af1d-346436bef634.pdf"},{"id":"19d6d9bca84n251","date":"2025-08-15","category":"Printing","vendor":"Printing","desc":"","amount":249.99,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203849449_c1eee2d2-1615-424d-88bf-65e4c124592c.pdf"},{"id":"19d6d9bca84154x","date":"2025-08-15","category":"Printing","vendor":"Printing","desc":"","amount":600.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203831240_7ebea1d5-6dcc-4c6f-ab2a-a90c98a225ec.pdf"},{"id":"19d6d9bca84a20u","date":"2025-08-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":40.26,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203349188_b871301e-4de6-4d90-ad46-bf09c238d968.pdf"},{"id":"19d6d9bca84vtnr","date":"2025-08-10","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":45.75,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203349294_cc51ffb0-5c84-45b3-9dd1-a72e75a165ae.pdf"},{"id":"19d6d9bca84u4g5","date":"2025-08-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":29.65,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203342667_243427b6-e61e-490f-80c9-5d0f61b4f100.pdf"},{"id":"19d6d9bca84qd2a","date":"2025-08-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":69.22,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203342666_32e22e1e-e06c-442f-8904-89304b26b1f2.pdf"},{"id":"19d6d9bca84qa5y","date":"2025-08-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":18.68,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203323861_3f29e073-afc0-43cb-bcc7-3f32455134a5.pdf"},{"id":"19d6d9bca84ueh7","date":"2025-08-09","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":119.87,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203323860_db85c559-9300-4808-8a25-c295a95552cc.pdf"},{"id":"19d6d9bca84cvbx","date":"2025-08-09","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":40.3,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203271153_7dc9e30c-02bf-47bf-bdbd-21e85d25dd74.pdf"},{"id":"19d6d9bca844jbd","date":"2025-08-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":25.31,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203271152_3a0d2929-043d-404c-adfb-59c21599d0d7.pdf"},{"id":"19d6d9bca84ugqt","date":"2025-08-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":43.86,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203268618_0a96b3e5-9b8a-4bfa-93b0-7d720c3c4597.pdf"},{"id":"19d6d9bca84c675","date":"2025-08-04","category":"Printing","vendor":"Printing","desc":"ink","amount":140.08,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202717597_038ff661-0b8d-4433-9d8b-efa9e26ba416.pdf"},{"id":"19d6d9bca84s52e","date":"2025-08-02","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":12.88,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202586649_167d0da8-fe05-4548-ab9e-fa3d2b4e2aaf.pdf"},{"id":"19d6d9bca84avxi","date":"2025-07-31","category":"Equipment","vendor":"Printing","desc":"Printer","amount":929.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202351980_ba48fede-ba35-4bcf-8e19-5b59c06762ee.pdf"},{"id":"19d6d9bca846kia","date":"2025-07-27","category":"Printing","vendor":"Printing","desc":"","amount":239.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202011079_25165731-7f24-4c4b-bcb3-42f50e079ec5.pdf"},{"id":"19d6d9bca849be0","date":"2025-07-20","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":153.82,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/201366984_2c14a45a-33f9-4c0e-bcfe-257c8ef8e0a2.pdf"},{"id":"19d6d9bca84wid8","date":"2025-07-15","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":24.43,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200898390_df2acb37-e8fc-448f-81b8-284e90e8a423.jpg"},{"id":"19d6d9bca84m6j6","date":"2025-07-15","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":17.62,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200898423_ad39899a-e34c-43ea-b0ea-ff03a55be2a5.jpg"},{"id":"19d6d9bca84qdxl","date":"2025-07-12","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":565.33,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200682918_8c83290d-8fc2-4f23-8453-f16a533ca080.jpg"},{"id":"19d6d9bca84q0it","date":"2025-07-09","category":"Printing","vendor":"Printing","desc":"Polarizing filter","amount":100.93,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200422301_e17f8f76-fff5-48f8-a6ce-3252c1b5753f.jpg"},{"id":"19d6d9bca8454an","date":"2025-07-07","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":100.3,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200149030_bf13dd70-9a1a-4246-aa42-0dc2a61206af.pdf"},{"id":"19d6d9bca84m2gz","date":"2025-07-06","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":204.3,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200080886_5a470b41-895e-452c-ab0e-ba99098d729d.pdf"},{"id":"19d6d9bca8461ud","date":"2025-07-04","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":35.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199977198_61183820-8cb9-4d80-b220-a982458f7a29.jpg"},{"id":"19d6d9bca8412zw","date":"2025-07-03","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":22.8,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399200_479c07af-f2b7-4991-9ee3-a6f3814550ad.png"},{"id":"19d6d9bca84vckc","date":"2025-06-30","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":29.11,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199457014_e740c908-f374-497b-9799-1a53625128be.pdf"},{"id":"19d6d9bca84f2il","date":"2025-06-30","category":"Licenses & Fees","vendor":"Start Up Costs","desc":"Federal EIN","amount":149.0,"receiptUrl":""},{"id":"19d6d9bca849wmy","date":"2025-06-29","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":178.83,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199373489_79b3f5b1-0d9c-4518-aa72-37fedbce9e66.pdf"},{"id":"19d6d9bca84nc20","date":"2025-06-29","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"Vista Print","amount":102.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199354489_d5e2b84a-d49b-4f36-b4c8-6762b8631e41.pdf"},{"id":"19d6d9bca841xs9","date":"2025-06-29","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":160.0,"receiptUrl":""},{"id":"19d6d9bca849e35","date":"2025-06-25","category":"Presentation","vendor":"Presentation Supplies","desc":"Matboard and More, Archival Mats","amount":994.2,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199081301_2be299c9-3a14-4d1b-a8c3-14d86c52a980.pdf"},{"id":"19d6d9bca84vic9","date":"2025-06-23","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"Retail Packaging - Amazon Business Account","amount":77.29,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/198743000_a8b7e7b7-1223-430d-bbaa-138025a2afbe.jpg"},{"id":"19d6d9bca84xdi3","date":"2025-06-19","category":"Equipment","vendor":"Start Up Costs","desc":"square hardware","amount":64.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399092_85f33a78-8126-47f6-a207-2fc756709d34.pdf"},{"id":"19d6d9bca84e2hp","date":"2025-06-18","category":"Art Fair Fees","vendor":"Art fair fees","desc":"","amount":515.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202465759_eec6691b-bf3d-440b-868a-1540d216d8c1.pdf"},{"id":"19d6d9bca84w0j8","date":"2025-06-13","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":150.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399309_d84df3c7-d4d1-4952-891a-12c0969fb6cd.pdf"},{"id":"19d6d9bca84e1xq","date":"2025-05-28","category":"Art Fair Fees","vendor":"Art fair fees","desc":"Westport app","amount":35.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202465741_1651ee7f-d6c9-42f8-ae5d-a5b0f1c4bd90.pdf"},{"id":"19d6d9bca84gbk8","date":"2025-05-27","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":260.5,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398944_692b9fc2-f585-444b-9252-361072e3ccfa.pdf"},{"id":"19d6d9bca848l6g","date":"2025-05-01","category":"Equipment","vendor":"Start Up Costs","desc":"Flourish Tent","amount":3327.54,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398667_87ed12c7-98f6-4928-8db5-2578780f7de7.pdf"},{"id":"19d6d9bca84sguc","date":"2025-04-06","category":"Equipment","vendor":"Start Up Costs","desc":"canon camera","amount":706.11,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399663_a0072ce1-6157-45f4-bbd2-564e7ee65bbe.pdf"},{"id":"19d6d9bca846thl","date":"2025-04-06","category":"Equipment","vendor":"Start Up Costs","desc":"camera supplies","amount":288.66,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399746_325b6540-3263-47fe-80d9-aa70423aef4d.pdf"}],"mileage":[{"id":"19d6d9bca848g13","date":"2025-09-15","miles":448,"purpose":"7 round trips to Lawrence, September 2025","notes":""},{"id":"19d6d9bca84uz6k","date":"2025-09-15","miles":40,"purpose":"4 round trips Westport / Downtown KC, September 2025","notes":""}]};
+      saveExpState();
+    }
+  } catch(e) { expState = { expenses: [], mileage: [] }; }
+  if (!expState.expenses) expState.expenses = [];
+  if (!expState.mileage)  expState.mileage  = [];
+}
+
+function saveExpState() {
+  try { localStorage.setItem('dna-admin-expenses', JSON.stringify(expState)); } catch(e) {}
+}
+
+function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+// ═══════════════════════════════════════════
+//  API (inventory — unchanged)
+// ═══════════════════════════════════════════
 async function api(method, path, body) {
-  const url = 'https://davidnicholsonart.com/admin' + path + '?token=' + encodeURIComponent(ADMIN_TOKEN);
-  const opts = {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-  };
+  const url = API_BASE + path + '?token=' + encodeURIComponent(ADMIN_TOKEN);
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
   if (body !== undefined) opts.body = JSON.stringify(body);
   const res = await fetch(url, opts);
-  if (!res.ok) {
-    const e = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(e.error || res.statusText);
-  }
+  if (!res.ok) { const e = await res.json().catch(() => ({ error: res.statusText })); throw new Error(e.error || res.statusText); }
   return res.json();
 }
 
@@ -895,7 +788,9 @@ function setLoading(on) {
   document.getElementById('loading-bar').style.display = on ? 'block' : 'none';
 }
 
-// ── AUTH ──
+// ═══════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════
 function checkPassword(e) {
   if (e.key && e.key !== 'Enter') return;
   const val = document.getElementById('pw-input').value;
@@ -916,22 +811,29 @@ function logout() {
   expandedId = null;
 }
 
-// ── CALC ──
-function sqIn(p) { return p.width * p.height; }
-function cost(p, rate) { return sqIn(p) * rate; }
-function retail(p, rate) {
-  const c = cost(p, rate);
-  return Math.ceil(c / 50) * 50;
-}
-function originalSold(p) {
-  return p.sales.some(s => s.type === 'original');
-}
-function saleNet(s) {
-  if (s.channel === 'gallery' && s.net != null) return Number(s.net);
-  return Number(s.price);
+// ═══════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════
+function switchTab(tab) {
+  ['dashboard','inventory','expenses'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
+  });
+  if (tab === 'expenses') renderExpenses();
 }
 
-// ── RATE ──
+// ═══════════════════════════════════════════
+//  CALC (inventory)
+// ═══════════════════════════════════════════
+function sqIn(p) { return p.width * p.height; }
+function cost(p, rate) { return sqIn(p) * rate; }
+function retail(p, rate) { return Math.ceil(cost(p, rate) / 50) * 50; }
+function originalSold(p) { return p.sales.some(s => s.type === 'original'); }
+function saleNet(s) { if (s.channel === 'gallery' && s.net != null) return Number(s.net); return Number(s.price); }
+
+// ═══════════════════════════════════════════
+//  RATE
+// ═══════════════════════════════════════════
 function setRate(val) {
   db.rate = val;
   document.getElementById('rate-input').value = val.toFixed(2);
@@ -939,7 +841,9 @@ function setRate(val) {
   render();
 }
 
-// ── SORT ──
+// ═══════════════════════════════════════════
+//  SORT (inventory)
+// ═══════════════════════════════════════════
 function sortBy(field) {
   if (sortField === field) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
   else { sortField = field; sortDir = field === 'title' ? 'asc' : 'desc'; }
@@ -960,7 +864,9 @@ function sortedPaintings(list) {
   });
 }
 
-// ── FILTERS ──
+// ═══════════════════════════════════════════
+//  FILTERS (inventory)
+// ═══════════════════════════════════════════
 function setFilter(f) {
   activeFilter = activeFilter === f ? null : f;
   updateFilterChips();
@@ -982,15 +888,20 @@ function applyFilter(list) {
   return list;
 }
 
-// ── RENDER ──
+// ═══════════════════════════════════════════
+//  INIT & RENDER
+// ═══════════════════════════════════════════
 async function init() {
+  loadExpState();
+  populateExpYearFilter();
+  renderDashExpCards(); // render expense cards immediately — no API dependency
+
   setLoading(true);
   try {
     const data = await api('GET', '/paintings');
     db.paintings = data.paintings;
     db.rate = data.rate ?? 1.10;
   } catch(e) {
-    alert('Failed to load data: ' + e.message);
     setLoading(false);
     return;
   }
@@ -1001,6 +912,10 @@ async function init() {
     const v = parseFloat(this.value);
     if (!isNaN(v) && v > 0) setRate(v);
   });
+
+  document.getElementById('irs-rate-display').textContent =
+    '$' + DEFAULT_IRS_RATE.toFixed(2) + '/mile (2026)';
+
   render();
 }
 
@@ -1008,6 +923,7 @@ function render() {
   renderCards();
   renderChart();
   renderTable();
+  renderDashExpCards();
 }
 
 function renderCards() {
@@ -1025,42 +941,18 @@ function renderCards() {
       if (s.channel === 'gallery') revGallery += net;
     });
   });
-  const totalLarge = db.paintings.reduce((sum,p) => sum + (p.stock.large||0), 0);
-  const totalSmall = db.paintings.reduce((sum,p) => sum + (p.stock.small||0), 0);
+  const totalLarge = db.paintings.reduce((s,p) => s + (p.stock.large||0), 0);
+  const totalSmall = db.paintings.reduce((s,p) => s + (p.stock.small||0), 0);
   const originalsInStock = db.paintings.length - origSold;
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
 
   document.getElementById('cards').innerHTML = `
-    <div class="card">
-      <div class="card-label">Originals Sold</div>
-      <div class="card-value">${origSold}</div>
-      <div class="card-sub">${originalsInStock} in stock</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Large Prints Sold</div>
-      <div class="card-value">${largeSold}</div>
-      <div class="card-sub">${totalLarge} in stock</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Small Prints Sold</div>
-      <div class="card-value">${smallSold}</div>
-      <div class="card-sub">${totalSmall} in stock</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Art Fair Revenue</div>
-      <div class="card-value">${fmt(revFair)}</div>
-      <div class="card-sub">channel</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Online Revenue</div>
-      <div class="card-value">${fmt(revOnline)}</div>
-      <div class="card-sub">channel</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Gallery Revenue</div>
-      <div class="card-value">${fmt(revGallery)}</div>
-      <div class="card-sub">net to you</div>
-    </div>
+    <div class="card"><div class="card-label">Originals Sold</div><div class="card-value">${origSold}</div><div class="card-sub">${originalsInStock} in stock</div></div>
+    <div class="card"><div class="card-label">Large Prints Sold</div><div class="card-value">${largeSold}</div><div class="card-sub">${totalLarge} in stock</div></div>
+    <div class="card"><div class="card-label">Small Prints Sold</div><div class="card-value">${smallSold}</div><div class="card-sub">${totalSmall} in stock</div></div>
+    <div class="card"><div class="card-label">Art Fair Revenue</div><div class="card-value">${fmt(revFair)}</div><div class="card-sub">channel</div></div>
+    <div class="card"><div class="card-label">Online Revenue</div><div class="card-value">${fmt(revOnline)}</div><div class="card-sub">channel</div></div>
+    <div class="card"><div class="card-label">Gallery Revenue</div><div class="card-value">${fmt(revGallery)}</div><div class="card-sub">net to you</div></div>
   `;
 }
 
@@ -1075,7 +967,6 @@ function renderChart() {
   const toVal   = document.getElementById('chart-to').value;
   const buckets = {};
   let filteredRev = 0, filteredCount = 0, allRev = 0, allCount = 0;
-
   db.paintings.forEach(p => {
     p.sales.forEach(s => {
       const net = saleNet(s);
@@ -1088,14 +979,12 @@ function renderChart() {
       filteredRev += net; filteredCount++;
     });
   });
-
   const isFiltered = fromVal || toVal;
   const displayRev = isFiltered ? filteredRev : allRev;
   const displayCount = isFiltered ? filteredCount : allCount;
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
   document.getElementById('chart-rev-value').textContent = fmt(displayRev);
   document.getElementById('chart-rev-sub').textContent = displayCount + ' sale' + (displayCount !== 1 ? 's' : '') + (isFiltered ? ' in range' : ' logged');
-
   const keys = Object.keys(buckets).sort();
   const el = document.getElementById('chart');
   if (!keys.length) { el.innerHTML = '<div class="chart-empty">No sales in this range</div>'; return; }
@@ -1109,31 +998,22 @@ function renderChart() {
 }
 
 function renderTable() {
-  let list = db.paintings;
-  list = applyFilter(list);
+  let list = applyFilter(db.paintings);
   list = sortedPaintings(list);
-
   ['title','year','cost','retail'].forEach(f => {
     const el = document.getElementById('sort-'+f);
     if (el) el.textContent = sortField === f ? (sortDir === 'asc' ? '↑' : '↓') : '';
   });
-
   const tbody = document.getElementById('table-body');
-  if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">No paintings found.</div></td></tr>';
-    return;
-  }
-
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">No paintings found.</div></td></tr>'; return; }
   const rate = db.rate || 1.10;
   let rows = '';
   list.forEach(p => {
-    const c = cost(p, rate);
-    const r = retail(p, rate);
+    const c = cost(p, rate), r = retail(p, rate);
     const sold = originalSold(p);
-    const isOpen = expandAll ? p.sales.length > 0 : expandedId === p.id;
+    const isOpen = expandedId === p.id;
     const lgSold = p.sales.filter(s => s.type === 'large').length;
     const smSold = p.sales.filter(s => s.type === 'small').length;
-
     rows += `
       <tr class="painting-row" onclick="toggleExpand('${p.id}')">
         <td><span class="expand-arrow ${isOpen?'open':''}">▶</span></td>
@@ -1142,109 +1022,407 @@ function renderTable() {
         <td class="mono col-hide">${p.width}×${p.height}</td>
         <td class="mono">$${c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
         <td class="mono">$${r.toLocaleString()}</td>
-        <td>
-          <div class="stock-cell">
-            <button class="stock-btn" onclick="adjStock(event,'${p.id}','large',-1)">−</button>
-            <span class="stock-num ${(p.stock.large||0)===0?'zero':''}">${p.stock.large||0}</span>
-            <button class="stock-btn" onclick="adjStock(event,'${p.id}','large',1)">+</button>
-          </div>
-        </td>
-        <td>
-          <div class="stock-cell">
-            <button class="stock-btn" onclick="adjStock(event,'${p.id}','small',-1)">−</button>
-            <span class="stock-num ${(p.stock.small||0)===0?'zero':''}">${p.stock.small||0}</span>
-            <button class="stock-btn" onclick="adjStock(event,'${p.id}','small',1)">+</button>
-          </div>
-        </td>
+        <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','large',-1)">−</button><span class="stock-num ${(p.stock.large||0)===0?'zero':''}">${p.stock.large||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','large',1)">+</button></div></td>
+        <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',-1)">−</button><span class="stock-num ${(p.stock.small||0)===0?'zero':''}">${p.stock.small||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',1)">+</button></div></td>
         <td class="mono dim">${lgSold||'—'}</td>
         <td class="mono dim">${smSold||'—'}</td>
         <td>${sold ? '<span class="orig-sold">sold</span>' : '<span class="orig-avail">available</span>'}</td>
       </tr>`;
-
     if (isOpen) {
       const monthOpts = ['','January','February','March','April','May','June','July','August','September','October','November','December']
         .map(m => `<option value="${m}" ${p.month===m?'selected':''}>${m||'—'}</option>`).join('');
       rows += `
-        <tr class="expand-row">
-          <td colspan="11">
-            <div class="expand-inner">
-              <div class="sub-title" style="margin-bottom:12px">Painting Details</div>
-              <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">TITLE</div>
-                  <input type="text" value="${esc(p.title)}" id="edit-title-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
-                </div>
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">MONTH</div>
-                  <select id="edit-month-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none;appearance:none">${monthOpts}</select>
-                </div>
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">YEAR</div>
-                  <input type="number" value="${p.year}" id="edit-year-${p.id}" min="2000" max="2099" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
-                </div>
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">WIDTH</div>
-                  <input type="number" value="${p.width}" id="edit-width-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
-                </div>
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">HEIGHT</div>
-                  <input type="number" value="${p.height}" id="edit-height-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
-                </div>
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">LARGE</div>
-                  <input type="number" value="${p.stock.large||0}" id="edit-large-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
-                </div>
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">SMALL</div>
-                  <input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
-                </div>
-              </div>
-              <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px" onclick="event.stopPropagation()">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2)">
-                  <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''} style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
-                  Mom's Prints
-                </label>
-                <button class="btn-sm" onclick="savePaintingEdits('${p.id}')">Save changes</button>
-                <button class="btn-sm danger" onclick="deletePainting('${p.id}')">Delete painting</button>
-              </div>
-              <div class="sub-title">Sales</div>
-              <div class="sales-list">
-                ${p.sales.length === 0 ? '<div class="no-sales">No sales logged.</div>' : ''}
-                ${p.sales.map(s => {
-                  const typeLabel = s.type === 'original' ? 'Original' : s.type === 'large' ? 'Large print' : 'Small print';
-                  const chanLabel = s.channel === 'fair' ? 'Art fair' : s.channel === 'online' ? 'Online' : 'Gallery';
-                  const net = saleNet(s);
-                  const isGallery = s.channel === 'gallery';
-                  const priceHtml = isGallery
-                    ? `<span class="sale-gross">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} gross</span><span class="sale-pct">${s.pct}%</span><span class="sale-price">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} net</span>`
-                    : `<span class="sale-price">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
-                  return `
-                  <div class="sale-row">
-                    <span class="sale-date">${s.date || '—'}</span>
-                    <span class="sale-type ${s.type}">${typeLabel}</span>
-                    <span class="sale-channel">${chanLabel}</span>
-                    ${priceHtml}
-                    ${s.note ? `<span style="font-size:11px;color:var(--ink3)">${esc(s.note)}</span>` : ''}
-                    <button class="sale-del" onclick="openEditSaleModal('${p.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button>
-                    <button class="sale-del" onclick="deleteSale('${p.id}','${s.id}')" title="Remove sale">×</button>
-                  </div>`;
-                }).join('')}
-              </div>
-              <div class="expand-actions">
-                <button class="btn-sm" onclick="openSaleModal('${p.id}')">+ Log Sale</button>
-              </div>
-            </div>
-          </td>
-        </tr>`;
+        <tr class="expand-row"><td colspan="11"><div class="expand-inner">
+          <div class="sub-title" style="margin-bottom:12px">Painting Details</div>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">TITLE</div><input type="text" value="${esc(p.title)}" id="edit-title-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">MONTH</div><select id="edit-month-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none;appearance:none">${monthOpts}</select></div>
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">YEAR</div><input type="number" value="${p.year}" id="edit-year-${p.id}" min="2000" max="2099" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">WIDTH</div><input type="number" value="${p.width}" id="edit-width-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">HEIGHT</div><input type="number" value="${p.height}" id="edit-height-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">LARGE</div><input type="number" value="${p.stock.large||0}" id="edit-large-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">SMALL</div><input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px" onclick="event.stopPropagation()">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2)">
+              <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''} style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
+              Mom's Prints
+            </label>
+            <button class="btn-sm" onclick="savePaintingEdits('${p.id}')">Save changes</button>
+            <button class="btn-sm danger" onclick="deletePainting('${p.id}')">Delete painting</button>
+          </div>
+          <div class="sub-title">Sales</div>
+          <div class="sales-list">
+            ${p.sales.length === 0 ? '<div class="no-sales">No sales logged.</div>' : ''}
+            ${p.sales.map(s => {
+              const typeLabel = s.type === 'original' ? 'Original' : s.type === 'large' ? 'Large print' : 'Small print';
+              const chanLabel = s.channel === 'fair' ? 'Art fair' : s.channel === 'online' ? 'Online' : 'Gallery';
+              const net = saleNet(s);
+              const isGallery = s.channel === 'gallery';
+              const priceHtml = isGallery
+                ? `<span class="sale-gross">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} gross</span><span class="sale-pct">${s.pct}%</span><span class="sale-price">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} net</span>`
+                : `<span class="sale-price">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
+              return `<div class="sale-row">
+                <span class="sale-date">${s.date || '—'}</span>
+                <span class="sale-type ${s.type}">${typeLabel}</span>
+                <span class="sale-channel">${chanLabel}</span>
+                ${priceHtml}
+                ${s.note ? `<span style="font-size:11px;color:var(--ink3)">${esc(s.note)}</span>` : ''}
+                <button class="sale-del" onclick="openEditSaleModal('${p.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button>
+                <button class="sale-del" onclick="deleteSale('${p.id}','${s.id}')" title="Remove sale">×</button>
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="expand-actions"><button class="btn-sm" onclick="openSaleModal('${p.id}')">+ Log Sale</button></div>
+        </div></td></tr>`;
     }
   });
   tbody.innerHTML = rows;
 }
 
-// ── INTERACTIONS ──
+// ═══════════════════════════════════════════
+//  EXPENSE RENDERING
+// ═══════════════════════════════════════════
+function populateExpYearFilter() {
+  const sel = document.getElementById('exp-year-filter');
+  const curYear = new Date().getFullYear();
+  sel.innerHTML = '<option value="">All years</option>';
+  for (let y = curYear; y >= 2024; y--) {
+    sel.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+  sel.value = String(curYear);
+}
+
+function renderExpenses() {
+  renderExpCards();
+  renderExpTable();
+  renderMileTable();
+}
+
+function expCardHtml(exps, miles) {
+  const totalExp = exps.reduce((s, e) => s + Number(e.amount||0), 0);
+  const totalMiles = miles.reduce((s, m) => s + Number(m.miles||0), 0);
+  const totalMileDeduction = miles.reduce((s, m) => {
+    const y = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
+    return s + Number(m.miles||0) * irsRate(y);
+  }, 0);
+  const byCat = {};
+  exps.forEach(e => { byCat[e.category] = (byCat[e.category]||0) + Number(e.amount||0); });
+  const topCats = Object.entries(byCat).sort((a,b) => b[1]-a[1]).slice(0,3);
+  const topCatHtml = topCats.map(([cat, amt]) =>
+    `<div class="card-sub"><span class="cat-badge ${CAT_CLASS[cat]||'cat-other'}">${cat}</span> <span style="font-family:var(--mono);font-size:12px">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>`
+  ).join('');
+  const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return `
+    <div class="card"><div class="card-label">Total Expenses</div><div class="card-value accent">${fmt(totalExp)}</div><div class="card-sub">${exps.length} record${exps.length !== 1 ? 's' : ''}</div></div>
+    <div class="card"><div class="card-label">Top Categories</div><div style="margin-top:4px">${topCatHtml || '<div class="card-sub">No expenses yet</div>'}</div></div>
+    <div class="card"><div class="card-label">Miles Driven</div><div class="card-value">${totalMiles.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:1})}</div><div class="card-sub">${miles.length} trip${miles.length !== 1 ? 's' : ''}</div></div>
+    <div class="card"><div class="card-label">Mileage Deduction</div><div class="card-value accent">${fmt(totalMileDeduction)}</div><div class="card-sub">IRS standard rate</div></div>
+  `;
+}
+
+function renderDashExpCards() {
+  const el = document.getElementById('dash-exp-cards');
+  if (!el) return;
+  el.innerHTML = expCardHtml(expState.expenses, expState.mileage);
+}
+
+function renderExpCards() {
+  // Year-filtered version for the expenses tab
+  const yearFilter = document.getElementById('exp-year-filter').value;
+  const exps  = expState.expenses.filter(e => !yearFilter || (e.date||'').startsWith(yearFilter));
+  const miles = expState.mileage.filter(m => !yearFilter || (m.date||'').startsWith(yearFilter));
+  // exp-cards no longer exists; expense tab shows no summary cards (just tables)
+  // Update dashboard cards (all-time) any time expense data changes
+  renderDashExpCards();
+}
+
+function getExpList() {
+  const yearFilter = document.getElementById('exp-year-filter').value;
+  const catFilter  = document.getElementById('exp-cat-filter').value;
+  let list = expState.expenses.slice();
+  if (yearFilter) list = list.filter(e => (e.date||'').startsWith(yearFilter));
+  if (catFilter)  list = list.filter(e => e.category === catFilter);
+  list.sort((a, b) => {
+    let av = a[expSortField] ?? '', bv = b[expSortField] ?? '';
+    if (expSortField === 'amount') { av = Number(av); bv = Number(bv); }
+    if (av < bv) return expSortDir === 'asc' ? -1 : 1;
+    if (av > bv) return expSortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return list;
+}
+
+function renderExpTable() {
+  ['date','category','amount'].forEach(f => {
+    const el = document.getElementById('exp-sort-' + f);
+    if (el) el.textContent = expSortField === f ? (expSortDir === 'asc' ? '↑' : '↓') : '';
+  });
+  const list = getExpList();
+  const tbody = document.getElementById('exp-table-body');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No expenses logged yet.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(e => {
+    const amt = Number(e.amount||0);
+    const receiptHtml = e.receiptUrl
+      ? `<a class="receipt-link" href="${esc(e.receiptUrl)}" target="_blank" rel="noopener">📎 receipt</a>`
+      : `<span class="receipt-none">—</span>`;
+    return `<tr>
+      <td class="mono dim">${e.date || '—'}</td>
+      <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
+      <td>
+        <div style="font-size:13px;color:var(--ink)">${esc(e.vendor||'')}</div>
+        ${e.desc ? `<div style="font-size:12px;color:var(--ink2);margin-top:1px">${esc(e.desc)}</div>` : ''}
+      </td>
+      <td class="mono col-hide" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td class="col-hide">${receiptHtml}</td>
+      <td style="white-space:nowrap">
+        <button class="sale-del" onclick="openEditExpModal('${e.id}')" title="Edit" style="font-size:13px;color:var(--ink3)">✎</button>
+        <button class="exp-del" onclick="deleteExpense('${e.id}')" title="Delete">×</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function expSortBy(field) {
+  if (expSortField === field) expSortDir = expSortDir === 'asc' ? 'desc' : 'asc';
+  else { expSortField = field; expSortDir = field === 'date' ? 'desc' : 'asc'; }
+  renderExpTable();
+}
+
+// ═══════════════════════════════════════════
+//  MILEAGE RENDERING
+// ═══════════════════════════════════════════
+function getMileList() {
+  const yearFilter = document.getElementById('exp-year-filter').value;
+  let list = expState.mileage.slice();
+  if (yearFilter) list = list.filter(m => (m.date||'').startsWith(yearFilter));
+  list.sort((a, b) => {
+    let av = mileSortField === 'deduction'
+      ? Number(a.miles||0) * irsRate(parseInt((a.date||'').slice(0,4))||new Date().getFullYear())
+      : (mileSortField === 'miles' ? Number(a.miles||0) : a[mileSortField] ?? '');
+    let bv = mileSortField === 'deduction'
+      ? Number(b.miles||0) * irsRate(parseInt((b.date||'').slice(0,4))||new Date().getFullYear())
+      : (mileSortField === 'miles' ? Number(b.miles||0) : b[mileSortField] ?? '');
+    if (av < bv) return mileSortDir === 'asc' ? -1 : 1;
+    if (av > bv) return mileSortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return list;
+}
+
+function renderMileTable() {
+  ['date','miles','deduction'].forEach(f => {
+    const el = document.getElementById('mile-sort-' + f);
+    if (el) el.textContent = mileSortField === f ? (mileSortDir === 'asc' ? '↑' : '↓') : '';
+  });
+  const list = getMileList();
+  const tbody = document.getElementById('mile-table-body');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state">No mileage logged yet.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(m => {
+    const miles = Number(m.miles||0);
+    const year = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
+    const rate = irsRate(year);
+    const deduction = miles * rate;
+    return `<tr>
+      <td class="mono dim">${m.date || '—'}</td>
+      <td>
+        <div style="font-size:13px;color:var(--ink)">${esc(m.purpose||'')}</div>
+        ${m.notes ? `<div style="font-size:12px;color:var(--ink2);margin-top:1px">${esc(m.notes)}</div>` : ''}
+      </td>
+      <td class="mono col-hide">${miles.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})}</td>
+      <td class="mono col-hide" style="color:var(--green)">$${deduction.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}<span style="font-family:var(--font);font-size:11px;color:var(--ink3);margin-left:5px">@ $${rate.toFixed(2)}/mi</span></td>
+      <td style="white-space:nowrap">
+        <button class="sale-del" onclick="openEditMileModal('${m.id}')" title="Edit" style="font-size:13px;color:var(--ink3)">✎</button>
+        <button class="exp-del" onclick="deleteMileage('${m.id}')" title="Delete">×</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function mileSortBy(field) {
+  if (mileSortField === field) mileSortDir = mileSortDir === 'asc' ? 'desc' : 'asc';
+  else { mileSortField = field; mileSortDir = field === 'date' ? 'desc' : 'asc'; }
+  renderMileTable();
+}
+
+// ═══════════════════════════════════════════
+//  EXPENSE MODAL
+// ═══════════════════════════════════════════
+function openExpModal() {
+  editExpId = null;
+  pendingReceiptFile = null;
+  document.getElementById('exp-modal-title').textContent = 'Add Expense';
+  document.getElementById('exp-save-btn').textContent = 'Save Expense';
+  document.getElementById('exp-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('exp-category').value = 'Printing';
+  document.getElementById('exp-vendor').value = '';
+  document.getElementById('exp-desc').value = '';
+  document.getElementById('exp-amount').value = '';
+  document.getElementById('exp-filename').textContent = '';
+  document.getElementById('exp-upload-zone').classList.remove('has-file');
+  document.getElementById('exp-receipt-file').value = '';
+  document.getElementById('exp-modal').style.display = 'flex';
+}
+
+function openEditExpModal(id) {
+  const e = expState.expenses.find(x => x.id === id);
+  if (!e) return;
+  editExpId = id;
+  pendingReceiptFile = null;
+  document.getElementById('exp-modal-title').textContent = 'Edit Expense';
+  document.getElementById('exp-save-btn').textContent = 'Save Changes';
+  document.getElementById('exp-date').value = e.date || '';
+  document.getElementById('exp-category').value = e.category || 'Supplies';
+  document.getElementById('exp-vendor').value = e.vendor || '';
+  document.getElementById('exp-desc').value = e.desc || '';
+  document.getElementById('exp-amount').value = e.amount || '';
+  document.getElementById('exp-receipt-file').value = '';
+  if (e.receiptUrl) {
+    document.getElementById('exp-filename').textContent = '📎 existing receipt on file';
+    document.getElementById('exp-upload-zone').classList.add('has-file');
+  } else {
+    document.getElementById('exp-filename').textContent = '';
+    document.getElementById('exp-upload-zone').classList.remove('has-file');
+  }
+  document.getElementById('exp-modal').style.display = 'flex';
+}
+
+function onReceiptFileChange(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  pendingReceiptFile = file;
+  document.getElementById('exp-filename').textContent = '📎 ' + file.name;
+  document.getElementById('exp-upload-zone').classList.add('has-file');
+}
+
+async function saveExpense() {
+  const date     = document.getElementById('exp-date').value;
+  const category = document.getElementById('exp-category').value;
+  const vendor   = document.getElementById('exp-vendor').value.trim();
+  const desc     = document.getElementById('exp-desc').value.trim();
+  const amount   = parseFloat(document.getElementById('exp-amount').value);
+  if (!date) { alert('Date is required.'); return; }
+  if (isNaN(amount) || amount < 0) { alert('Enter a valid amount.'); return; }
+
+  // TODO: When backend is ready, upload pendingReceiptFile here to get S3 URL:
+  //   const { uploadUrl, fileUrl } = await api('POST', '/expenses/receipt-url', { filename, contentType })
+  //   await fetch(uploadUrl, { method:'PUT', body: pendingReceiptFile })
+  //   Then store fileUrl in the expense record.
+  let receiptUrl = null;
+  if (pendingReceiptFile) {
+    // For now, store as a local object URL (not persistent across sessions)
+    receiptUrl = URL.createObjectURL(pendingReceiptFile);
+    // Note: object URLs expire when the tab is closed — this is a placeholder
+  }
+
+  if (editExpId) {
+    const exp = expState.expenses.find(x => x.id === editExpId);
+    if (exp) {
+      Object.assign(exp, { date, category, vendor, desc, amount });
+      if (receiptUrl) exp.receiptUrl = receiptUrl;
+    }
+  } else {
+    const existing = editExpId ? null : null;
+    expState.expenses.push({ id: genId(), date, category, vendor, desc, amount, receiptUrl });
+  }
+
+  saveExpState();
+  closeModal('exp-modal');
+  renderExpenses();
+}
+
+function deleteExpense(id) {
+  const e = expState.expenses.find(x => x.id === id);
+  if (!e || !confirm(`Delete this expense (${e.vendor||e.category}, $${e.amount})?`)) return;
+  expState.expenses = expState.expenses.filter(x => x.id !== id);
+  saveExpState();
+  renderExpenses();
+}
+
+// ═══════════════════════════════════════════
+//  MILEAGE MODAL
+// ═══════════════════════════════════════════
+function openMileModal() {
+  editMileId = null;
+  document.getElementById('mile-modal-title').textContent = 'Log Mileage';
+  document.getElementById('mile-save-btn').textContent = 'Save';
+  document.getElementById('mile-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('mile-miles').value = '';
+  document.getElementById('mile-purpose').value = '';
+  document.getElementById('mile-notes').value = '';
+  document.getElementById('mile-preview').style.display = 'none';
+  document.getElementById('mile-modal').style.display = 'flex';
+}
+
+function openEditMileModal(id) {
+  const m = expState.mileage.find(x => x.id === id);
+  if (!m) return;
+  editMileId = id;
+  document.getElementById('mile-modal-title').textContent = 'Edit Mileage';
+  document.getElementById('mile-save-btn').textContent = 'Save Changes';
+  document.getElementById('mile-date').value = m.date || '';
+  document.getElementById('mile-miles').value = m.miles || '';
+  document.getElementById('mile-purpose').value = m.purpose || '';
+  document.getElementById('mile-notes').value = m.notes || '';
+  updateMilePreview();
+  document.getElementById('mile-modal').style.display = 'flex';
+}
+
+function updateMilePreview() {
+  const miles = parseFloat(document.getElementById('mile-miles').value);
+  const date  = document.getElementById('mile-date').value;
+  const year  = parseInt((date||'').slice(0,4)) || new Date().getFullYear();
+  const rate  = irsRate(year);
+  const prev  = document.getElementById('mile-preview');
+  if (!isNaN(miles) && miles > 0) {
+    const deduction = miles * rate;
+    prev.style.display = 'block';
+    prev.innerHTML = `${miles} miles × $${rate.toFixed(2)}/mile = <strong>$${deduction.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} deduction</strong>`;
+  } else {
+    prev.style.display = 'none';
+  }
+}
+
+function saveMileage() {
+  const date    = document.getElementById('mile-date').value;
+  const miles   = parseFloat(document.getElementById('mile-miles').value);
+  const purpose = document.getElementById('mile-purpose').value.trim();
+  const notes   = document.getElementById('mile-notes').value.trim();
+  if (!date) { alert('Date is required.'); return; }
+  if (isNaN(miles) || miles <= 0) { alert('Enter a valid mileage.'); return; }
+  if (!purpose) { alert('Purpose is required.'); return; }
+
+  if (editMileId) {
+    const m = expState.mileage.find(x => x.id === editMileId);
+    if (m) Object.assign(m, { date, miles, purpose, notes });
+  } else {
+    expState.mileage.push({ id: genId(), date, miles, purpose, notes });
+  }
+
+  saveExpState();
+  closeModal('mile-modal');
+  renderExpenses();
+}
+
+function deleteMileage(id) {
+  const m = expState.mileage.find(x => x.id === id);
+  if (!m || !confirm(`Delete mileage entry (${m.miles} miles, ${m.purpose})?`)) return;
+  expState.mileage = expState.mileage.filter(x => x.id !== id);
+  saveExpState();
+  renderExpenses();
+}
+
+// ═══════════════════════════════════════════
+//  INVENTORY INTERACTIONS (unchanged)
+// ═══════════════════════════════════════════
 function toggleExpand(id) {
-  if (expandAll) { expandAll = false; expandedId = null; }
-  else { expandedId = expandedId === id ? null : id; }
+  expandedId = expandedId === id ? null : id;
   renderTable();
 }
 
@@ -1253,13 +1431,10 @@ async function adjStock(e, id, size, delta) {
   const p = db.paintings.find(x => x.id === id);
   if (!p) return;
   p.stock[size] = Math.max(0, (p.stock[size] || 0) + delta);
-  renderTable();
-  renderCards();
+  renderTable(); renderCards();
   try {
     await api('PUT', `/paintings/${id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas });
-  } catch(e) {
-    alert('Failed to save stock change: ' + e.message);
-  }
+  } catch(e) { alert('Failed to save stock change: ' + e.message); }
 }
 
 async function deleteSale(paintingId, saleId) {
@@ -1267,11 +1442,8 @@ async function deleteSale(paintingId, saleId) {
   if (!p) return;
   p.sales = p.sales.filter(s => s.id !== saleId);
   render();
-  try {
-    await api('DELETE', `/paintings/${paintingId}/sales/${saleId}`);
-  } catch(e) {
-    alert('Failed to delete sale: ' + e.message);
-  }
+  try { await api('DELETE', `/paintings/${paintingId}/sales/${saleId}`); }
+  catch(e) { alert('Failed to delete sale: ' + e.message); }
 }
 
 async function deletePainting(id) {
@@ -1285,14 +1457,10 @@ async function deletePainting(id) {
   db.paintings = db.paintings.filter(x => x.id !== id);
   if (expandedId === id) expandedId = null;
   render();
-  try {
-    await api('DELETE', `/paintings/${id}`);
-  } catch(e) {
-    alert('Failed to delete painting: ' + e.message);
-  }
+  try { await api('DELETE', `/paintings/${id}`); }
+  catch(e) { alert('Failed to delete painting: ' + e.message); }
 }
 
-// ── ADD PAINTING MODAL ──
 function openAddModal() {
   document.getElementById('add-title').value = '';
   document.getElementById('add-month').value = '';
@@ -1314,26 +1482,18 @@ async function saveNewPainting() {
   const body = {
     title, year, width, height,
     month: document.getElementById('add-month').value,
-    stock: {
-      large: parseInt(document.getElementById('add-large').value) || 0,
-      small: parseInt(document.getElementById('add-small').value) || 0,
-    },
+    stock: { large: parseInt(document.getElementById('add-large').value) || 0, small: parseInt(document.getElementById('add-small').value) || 0 },
     momsHas: false,
   };
   try {
     setLoading(true);
     const data = await api('POST', '/paintings', body);
     db.paintings.push({ ...data.painting, sales: [] });
-    closeModal('add-modal');
-    render();
-  } catch(e) {
-    alert('Failed to add painting: ' + e.message);
-  } finally {
-    setLoading(false);
-  }
+    closeModal('add-modal'); render();
+  } catch(e) { alert('Failed to add painting: ' + e.message); }
+  finally { setLoading(false); }
 }
 
-// ── SAVE PAINTING EDITS ──
 async function savePaintingEdits(id) {
   const p = db.paintings.find(x => x.id === id);
   if (!p) return;
@@ -1348,19 +1508,13 @@ async function savePaintingEdits(id) {
   if (!title) { alert('Title is required.'); return; }
   if (!year || year < 2000) { alert('Year is required.'); return; }
   if (!width || !height) { alert('Dimensions are required.'); return; }
-  // Optimistic update
   Object.assign(p, { title, month, year, width, height, momsHas, stock: { large, small } });
   render();
-  try {
-    await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas });
-  } catch(e) {
-    alert('Failed to save changes: ' + e.message);
-  }
+  try { await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas }); }
+  catch(e) { alert('Failed to save changes: ' + e.message); }
 }
 
-// ── LOG / EDIT SALE MODAL ──
 const PRINT_DEFAULTS = { large: 60, small: 35 };
-
 function onSaleTypeChange() {
   const type = document.getElementById('sale-type').value;
   const ch   = document.getElementById('sale-channel').value;
@@ -1371,27 +1525,23 @@ function onSaleTypeChange() {
   }
   updateGalleryNet();
 }
-
 function onSaleChannelChange() {
   const ch   = document.getElementById('sale-channel').value;
   const type = document.getElementById('sale-type').value;
   const gf   = document.getElementById('gallery-fields');
   const lbl  = document.getElementById('sale-price-label');
   if (ch === 'gallery') {
-    gf.style.display = 'block';
-    lbl.textContent = 'Sale price (gross) ($)';
+    gf.style.display = 'block'; lbl.textContent = 'Sale price (gross) ($)';
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
     else if (type === 'small') document.getElementById('sale-price').value = PRINT_DEFAULTS.small;
     updateGalleryNet();
   } else {
-    gf.style.display = 'none';
-    lbl.textContent = 'Price received ($)';
+    gf.style.display = 'none'; lbl.textContent = 'Price received ($)';
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
     else if (type === 'small') document.getElementById('sale-price').value = PRINT_DEFAULTS.small;
     else document.getElementById('sale-price').value = '';
   }
 }
-
 function updateGalleryNet() {
   const gross = parseFloat(document.getElementById('sale-price').value);
   const pct   = parseFloat(document.getElementById('sale-pct').value);
@@ -1403,7 +1553,6 @@ function updateGalleryNet() {
     prev.textContent = `$${gross.toFixed(2)} × ${pct}% = $${net.toFixed(2)} to you`;
   } else { netEl.value = ''; prev.textContent = ''; }
 }
-
 function updateGalleryNetFromNet() {
   const gross = parseFloat(document.getElementById('sale-price').value);
   const net   = parseFloat(document.getElementById('sale-net').value);
@@ -1414,10 +1563,8 @@ function updateGalleryNetFromNet() {
     prev.textContent = `$${gross.toFixed(2)} × ${pct.toFixed(1)}% = $${net.toFixed(2)} to you`;
   }
 }
-
 function openSaleModal(paintingId) {
-  salePaintingId = paintingId;
-  editSaleId = null;
+  salePaintingId = paintingId; editSaleId = null;
   const p = db.paintings.find(x => x.id === paintingId);
   document.getElementById('sale-modal-title').textContent = 'Log Sale — ' + p.title;
   document.getElementById('sale-modal-save-btn').textContent = 'Log Sale';
@@ -1432,10 +1579,8 @@ function openSaleModal(paintingId) {
   document.getElementById('sale-price-label').textContent = 'Price received ($)';
   document.getElementById('sale-modal').style.display = 'flex';
 }
-
 function openEditSaleModal(paintingId, saleId) {
-  salePaintingId = paintingId;
-  editSaleId = saleId;
+  salePaintingId = paintingId; editSaleId = saleId;
   const p = db.paintings.find(x => x.id === paintingId);
   const s = p.sales.find(x => x.id === saleId);
   document.getElementById('sale-modal-title').textContent = 'Edit Sale — ' + p.title;
@@ -1453,31 +1598,20 @@ function openEditSaleModal(paintingId, saleId) {
   if (isGallery) updateGalleryNet();
   document.getElementById('sale-modal').style.display = 'flex';
 }
-
 async function saveSale() {
   const p = db.paintings.find(x => x.id === salePaintingId);
   if (!p) return;
   const channel = document.getElementById('sale-channel').value;
   const gross   = parseFloat(document.getElementById('sale-price').value);
   if (isNaN(gross) || gross < 0) { alert('Enter a valid price.'); return; }
-
-  const saleData = {
-    date:    document.getElementById('sale-date').value,
-    type:    document.getElementById('sale-type').value,
-    channel,
-    price:   gross,
-  };
-
+  const saleData = { date: document.getElementById('sale-date').value, type: document.getElementById('sale-type').value, channel, price: gross };
   if (channel === 'gallery') {
     const pct = parseFloat(document.getElementById('sale-pct').value);
     const net = parseFloat(document.getElementById('sale-net').value);
     if (isNaN(pct) || pct <= 0 || pct > 100) { alert('Enter a valid percentage (1–100).'); return; }
-    saleData.pct = pct;
-    saleData.net = isNaN(net) ? gross * (pct / 100) : net;
+    saleData.pct = pct; saleData.net = isNaN(net) ? gross * (pct / 100) : net;
   }
-
   closeModal('sale-modal');
-
   try {
     if (editSaleId) {
       const data = await api('PUT', `/paintings/${salePaintingId}/sales/${editSaleId}`, saleData);
@@ -1488,21 +1622,25 @@ async function saveSale() {
       p.sales.push(data.sale);
     }
     render();
-  } catch(e) {
-    alert('Failed to save sale: ' + e.message);
-  }
+  } catch(e) { alert('Failed to save sale: ' + e.message); }
 }
 
-// ── MODAL HELPERS ──
+// ═══════════════════════════════════════════
+//  MODAL HELPERS
+// ═══════════════════════════════════════════
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 function closeModalOnBackdrop(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
 
-// ── UTILS ──
+// ═══════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════
 function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── BOOT ──
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
 document.getElementById('pw-input').addEventListener('keydown', checkPassword);
 document.getElementById('pw-input').addEventListener('input', function() {
   if (this.value.length === 6) checkPassword({});
