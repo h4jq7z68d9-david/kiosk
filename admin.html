@@ -662,6 +662,8 @@
     </div>
     <button class="btn-logout" onclick="logout()">sign out</button>
   </div>
+  <div id="loading-bar" style="display:none;height:3px;background:var(--accent);position:sticky;top:52px;z-index:99;animation:loadpulse 1s ease-in-out infinite alternate"></div>
+  <style>@keyframes loadpulse{from{opacity:0.4}to{opacity:1}}</style>
 
   <div class="main">
 
@@ -856,120 +858,43 @@
 
 <script>
 // ── CONSTANTS ──
-const PASSWORD = '172377';
-const STORAGE_KEY = 'dna_admin_v1';
+const PASSWORD    = '172377';
+const ADMIN_TOKEN = 'dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE';
+const API_BASE    = 'https://davidnicholsonart.com/admin';
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-// ── INITIAL DATA (seeded from CSVs) ──
-const SEED = [
-  {title:'Alley, Western Auto',    month:'',        year:2025, width:16, height:20, stock:{large:1, small:1}, sales:[]},
-  {title:'Beer Drinker',           month:'October', year:2025, width:30, height:40, stock:{large:2, small:0}, sales:[]},
-  {title:'Birdhouse, X-Mas 24',   month:'',        year:2024, width:18, height:24, stock:{large:0, small:3}, sales:[]},
-  {title:'Blue Goose',             month:'',        year:2024, width:30, height:40, stock:{large:1, small:1}, sales:[]},
-  {title:'Commuter',               month:'',        year:2023, width:30, height:30, stock:{large:5, small:2}, sales:[]},
-  {title:'Early, Still',           month:'November',year:2025, width:22, height:28, stock:{large:0, small:1}, sales:[]},
-  {title:'Evening Walkers',        month:'December',year:2025, width:30, height:40, stock:{large:2, small:0}, sales:[]},
-  {title:'For the Next Hour',      month:'',        year:2025, width:18, height:24, stock:{large:0, small:1}, sales:[]},
-  {title:'Historic Marker Eve Ball 1890–1984', month:'', year:2024, width:16, height:16, stock:{large:0, small:0}, sales:[]},
-  {title:'I-35 No. 1',             month:'',        year:2025, width:22, height:28, stock:{large:0, small:1}, sales:[]},
-  {title:'I-35 No. 2',             month:'',        year:2025, width:18, height:24, stock:{large:0, small:1}, sales:[]},
-  {title:'I-435 Exit 81',          month:'',        year:2025, width:28, height:22, stock:{large:0, small:1}, sales:[]},
-  {title:'Johnson Drive, 6 AM',    month:'',        year:2025, width:22, height:28, stock:{large:0, small:1}, sales:[]},
-  {title:'Johnson Drive, 6:01 AM', month:'',        year:2025, width:22, height:28, stock:{large:0, small:1}, sales:[]},
-  {title:'Junction',               month:'February',year:2026, width:28, height:22, stock:{large:0, small:0}, sales:[]},
-  {title:'KS Wind Farm No. 1',     month:'',        year:2025, width:22, height:28, stock:{large:0, small:0}, sales:[]},
-  {title:'KS Wind Farm No. 2',     month:'',        year:2025, width:22, height:28, stock:{large:1, small:1}, sales:[]},
-  {title:'On Main',                month:'',        year:2023, width:18, height:24, stock:{large:2, small:0}, sales:[]},
-  {title:'Resurrection Lilies',    month:'',        year:2023, width:12, height:12, stock:{large:5, small:1}, sales:[]},
-  {title:'Santa Fe Trail, Burlington KS', month:'', year:2025, width:14, height:18, stock:{large:5, small:0}, sales:[]},
-  {title:'Shade Tree',             month:'October', year:2025, width:22, height:28, stock:{large:0, small:0}, sales:[]},
-  {title:'Shuttle Cock No. 2',     month:'',        year:2025, width:36, height:36, stock:{large:0, small:1}, sales:[]},
-  {title:'Shuttle Cock No. 3',     month:'',        year:2025, width:48, height:36, stock:{large:3, small:0}, sales:[]},
-  {title:'Side Street, Suburbs',   month:'',        year:2023, width:30, height:40, stock:{large:3, small:2}, sales:[]},
-  {title:'Strasser Hardware',      month:'',        year:2023, width:18, height:24, stock:{large:5, small:1}, sales:[]},
-  {title:'Suburbs',                month:'',        year:2023, width:16, height:20, stock:{large:5, small:2}, sales:[]},
-  {title:'Sunflower No. 1',        month:'',        year:2025, width:14, height:18, stock:{large:2, small:2}, sales:[]},
-  {title:'Sunflower No. 2',        month:'',        year:2025, width:14, height:18, stock:{large:0, small:0}, sales:[]},
-  {title:'Two Dogs',               month:'',        year:2025, width:18, height:24, stock:{large:0, small:1}, sales:[]},
-  {title:'U.S. 380',               month:'',        year:2024, width:30, height:30, stock:{large:3, small:0}, sales:[]},
-  {title:'U.S. 50 East',           month:'January', year:2026, width:22, height:28, stock:{large:2, small:0}, sales:[]},
-  {title:'U.S. 69',                month:'February',year:2026, width:22, height:28, stock:{large:0, small:0}, sales:[]},
-  {title:'Umbrella, Blue',         month:'',        year:2024, width:36, height:36, stock:{large:1, small:2}, sales:[]},
-  {title:'Umbrella, Lime',         month:'',        year:2024, width:30, height:40, stock:{large:3, small:2}, sales:[]},
-  {title:'Umbrella, Reverie',      month:'',        year:2024, width:30, height:40, stock:{large:3, small:2}, sales:[]},
-  {title:'Untitled Turbine',       month:'',        year:2024, width:30, height:40, stock:{large:1, small:1}, sales:[]},
-  {title:'US 380, Texas',          month:'',        year:2024, width:24, height:18, stock:{large:0, small:2}, sales:[]},
-  {title:'Utility Pastel',         month:'',        year:2023, width:24, height:36, stock:{large:3, small:2}, sales:[]},
-  {title:'Walk in Blue and Green', month:'',        year:2023, width:30, height:30, stock:{large:5, small:2}, sales:[]},
-  {title:'Waverly Church of Christ',month:'',       year:2025, width:22, height:28, stock:{large:1, small:1}, sales:[]},
-  {title:'Wayside',                month:'June',    year:2025, width:22, height:28, stock:{large:0, small:1}, sales:[]},
-  {title:'Yellow Umbrella',        month:'',        year:2025, width:40, height:30, stock:{large:1, small:0}, sales:[]},
-];
-
-// ── MOM'S PRINTS (from CSV — qty=1 means she has it, qty=0 means she doesn't) ──
-const MOMS_HAS = new Set([
-  'Alley, Western Auto','Birdhouse, X-Mas 24','Blue Goose','Commuter','For the Next Hour',
-  'Historic Marker Eve Ball 1890–1984','I-35 No. 1','I-35 No. 2','I-435 Exit 81',
-  'Johnson Drive, 6 AM','Johnson Drive, 6:01 AM','KS Wind Farm No. 1','KS Wind Farm No. 2',
-  'On Main','Santa Fe Trail, Burlington KS','Shuttle Cock No. 2','Shuttle Cock No. 3',
-  'Side Street, Suburbs','Strasser Hardware','Suburbs','Sunflower No. 1','Sunflower No. 2',
-  'Resurrection Lilies','Two Dogs','U.S. 380','Umbrella, Blue','Umbrella, Lime',
-  'Umbrella, Reverie','Untitled Turbine','US 380, Texas','Utility Pastel',
-  'Walk in Blue and Green','Waverly Church of Christ','Yellow Umbrella','Early, Still',
-  'Shade Tree','Wayside',
-  // qty=0 in CSV — Mom does NOT have these:
-  // Beer Drinker, Evening Walkers, U.S. 50 East excluded
-]);
 
 // ── STATE ──
 let db = { paintings: [], rate: 1.10 };
 let sortField = 'title';
 let sortDir = 'asc';
-let activeFilter = null; // 'never-sold' | 'original-avail' | 'low-stock' | year string
+let activeFilter = null;
 let expandedId = null;
 let expandAll = false;
 let salePaintingId = null;
 let editSaleId = null;
+let loading = false;
 
-// ── STORAGE ──
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-}
-function load() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw) {
-    db = JSON.parse(raw);
-  } else {
-    // First run: seed from CSV data
-    db.paintings = SEED.map((p, i) => ({
-      id: 'p' + Date.now() + i,
-      ...p,
-      momsHas: MOMS_HAS.has(p.title),
-      sales: []
-    }));
-    // Seed known sold originals from CSV
-    const knownSales = {
-      'Commuter':           {price: 600,  date: '2023-01-01'},
-      'Shuttle Cock No. 2': {price: 1300, date: '2025-01-01'},
-      'Umbrella, Blue':     {price: 1300, date: '2024-01-01'},
-      'Umbrella, Lime':     {price: 780,  date: '2024-01-01'},
-      'Utility Pastel':     {price: 600,  date: '2023-01-01'},
-      'Alley, Western Auto':{price: 400,  date: '2025-01-01'},
-    };
-    db.paintings.forEach(p => {
-      if (knownSales[p.title]) {
-        p.sales.push({
-          id: 's' + Math.random().toString(36).slice(2),
-          date: knownSales[p.title].date,
-          type: 'original',
-          channel: 'fair',
-          price: knownSales[p.title].price,
-          note: 'seeded from inventory CSV'
-        });
-      }
-    });
-    save();
+// ── API ──
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Admin-Token': ADMIN_TOKEN,
+    },
+  };
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  const res = await fetch(API_BASE.replace('/admin','') + '/admin' + path, opts);
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(e.error || res.statusText);
   }
+  return res.json();
+}
+
+function setLoading(on) {
+  loading = on;
+  document.getElementById('loading-bar').style.display = on ? 'block' : 'none';
 }
 
 // ── AUTH ──
@@ -1003,7 +928,6 @@ function retail(p, rate) {
 function originalSold(p) {
   return p.sales.some(s => s.type === 'original');
 }
-// Net received for a sale (gallery uses net field; others use price)
 function saleNet(s) {
   if (s.channel === 'gallery' && s.net != null) return Number(s.net);
   return Number(s.price);
@@ -1013,34 +937,11 @@ function saleNet(s) {
 function setRate(val) {
   db.rate = val;
   document.getElementById('rate-input').value = val.toFixed(2);
-  save();
+  api('PUT', '/config', { rate: val }).catch(e => console.error('Rate save failed:', e));
   render();
 }
 
-// ── FILTERS ──
-function setFilter(f) {
-  activeFilter = activeFilter === f ? null : f;
-  updateFilterChips();
-  renderTable();
-}
-
-function updateFilterChips() {
-  ['never-sold','sold','original-avail','low-stock','no-moms'].forEach(f => {
-    const el = document.getElementById('fc-' + f);
-    if (el) el.classList.toggle('active', activeFilter === f);
-  });
-}
-
-function applyFilter(list) {
-  if (!activeFilter) return list;
-  if (activeFilter === 'never-sold')     return list.filter(p => p.sales.length === 0);
-  if (activeFilter === 'sold')           return list.filter(p => p.sales.length > 0);
-  if (activeFilter === 'original-avail') return list.filter(p => !originalSold(p));
-  if (activeFilter === 'low-stock')      return list.filter(p => (p.stock.large||0) === 0 || (p.stock.small||0) === 0);
-  if (activeFilter === 'no-moms')        return list.filter(p => !p.momsHas);
-  return list;
-}
-
+// ── SORT ──
 function sortBy(field) {
   if (sortField === field) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
   else { sortField = field; sortDir = field === 'title' ? 'asc' : 'desc'; }
@@ -1061,17 +962,46 @@ function sortedPaintings(list) {
   });
 }
 
+// ── FILTERS ──
+function setFilter(f) {
+  activeFilter = activeFilter === f ? null : f;
+  updateFilterChips();
+  renderTable();
+}
+function updateFilterChips() {
+  ['never-sold','sold','original-avail','low-stock','no-moms'].forEach(f => {
+    const el = document.getElementById('fc-' + f);
+    if (el) el.classList.toggle('active', activeFilter === f);
+  });
+}
+function applyFilter(list) {
+  if (!activeFilter) return list;
+  if (activeFilter === 'never-sold')     return list.filter(p => p.sales.length === 0);
+  if (activeFilter === 'sold')           return list.filter(p => p.sales.length > 0);
+  if (activeFilter === 'original-avail') return list.filter(p => !originalSold(p));
+  if (activeFilter === 'low-stock')      return list.filter(p => (p.stock.large||0) === 0 || (p.stock.small||0) === 0);
+  if (activeFilter === 'no-moms')        return list.filter(p => !p.momsHas);
+  return list;
+}
+
 // ── RENDER ──
-function init() {
-  load();
-  document.getElementById('rate-input').value = (db.rate || 1.10).toFixed(2);
+async function init() {
+  setLoading(true);
+  try {
+    const data = await api('GET', '/paintings');
+    db.paintings = data.paintings;
+    db.rate = data.rate ?? 1.10;
+  } catch(e) {
+    alert('Failed to load data: ' + e.message);
+    setLoading(false);
+    return;
+  }
+  setLoading(false);
+
+  document.getElementById('rate-input').value = db.rate.toFixed(2);
   document.getElementById('rate-input').addEventListener('input', function() {
     const v = parseFloat(this.value);
-    if (!isNaN(v) && v > 0) {
-      db.rate = v;
-      save();
-      render();
-    }
+    if (!isNaN(v) && v > 0) setRate(v);
   });
   render();
 }
@@ -1083,7 +1013,6 @@ function render() {
 }
 
 function renderCards() {
-  const rate = db.rate || 1.10;
   let totalRev = 0, origSold = 0, largeSold = 0, smallSold = 0;
   let revFair = 0, revOnline = 0, revGallery = 0;
   db.paintings.forEach(p => {
@@ -1101,7 +1030,6 @@ function renderCards() {
   const totalLarge = db.paintings.reduce((sum,p) => sum + (p.stock.large||0), 0);
   const totalSmall = db.paintings.reduce((sum,p) => sum + (p.stock.small||0), 0);
   const originalsInStock = db.paintings.length - origSold;
-
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
 
   document.getElementById('cards').innerHTML = `
@@ -1147,29 +1075,22 @@ function clearChartRange() {
 function renderChart() {
   const fromVal = document.getElementById('chart-from').value;
   const toVal   = document.getElementById('chart-to').value;
-
   const buckets = {};
-  let filteredRev = 0;
-  let filteredCount = 0;
-  let allRev = 0;
-  let allCount = 0;
+  let filteredRev = 0, filteredCount = 0, allRev = 0, allCount = 0;
 
   db.paintings.forEach(p => {
     p.sales.forEach(s => {
       const net = saleNet(s);
-      allRev += net;
-      allCount++;
+      allRev += net; allCount++;
       if (!s.date) return;
       const key = s.date.slice(0,7);
       if (fromVal && key < fromVal) return;
       if (toVal   && key > toVal)   return;
       buckets[key] = (buckets[key] || 0) + net;
-      filteredRev += net;
-      filteredCount++;
+      filteredRev += net; filteredCount++;
     });
   });
 
-  // Update inset revenue card
   const isFiltered = fromVal || toVal;
   const displayRev = isFiltered ? filteredRev : allRev;
   const displayCount = isFiltered ? filteredCount : allCount;
@@ -1179,20 +1100,13 @@ function renderChart() {
 
   const keys = Object.keys(buckets).sort();
   const el = document.getElementById('chart');
-  if (!keys.length) {
-    el.innerHTML = '<div class="chart-empty">No sales in this range</div>';
-    return;
-  }
+  if (!keys.length) { el.innerHTML = '<div class="chart-empty">No sales in this range</div>'; return; }
   const max = Math.max(...keys.map(k => buckets[k]));
   el.innerHTML = keys.map(k => {
     const pct = max > 0 ? (buckets[k] / max) * 120 : 0;
     const [y, m] = k.split('-');
     const label = MONTHS[parseInt(m)-1].slice(0,3) + ' ' + y.slice(2);
-    return `
-      <div class="chart-col">
-        <div class="chart-bar" style="height:${Math.max(4,pct)}px" title="${label}: $${buckets[k].toLocaleString()}"></div>
-        <div class="chart-label">${label}</div>
-      </div>`;
+    return `<div class="chart-col"><div class="chart-bar" style="height:${Math.max(4,pct)}px" title="${label}: $${buckets[k].toLocaleString()}"></div><div class="chart-label">${label}</div></div>`;
   }).join('');
 }
 
@@ -1201,7 +1115,6 @@ function renderTable() {
   list = applyFilter(list);
   list = sortedPaintings(list);
 
-  // Update sort arrows
   ['title','year','cost','retail'].forEach(f => {
     const el = document.getElementById('sort-'+f);
     if (el) el.textContent = sortField === f ? (sortDir === 'asc' ? '↑' : '↓') : '';
@@ -1209,7 +1122,7 @@ function renderTable() {
 
   const tbody = document.getElementById('table-body');
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state">No paintings found.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">No paintings found.</div></td></tr>';
     return;
   }
 
@@ -1255,59 +1168,47 @@ function renderTable() {
         .map(m => `<option value="${m}" ${p.month===m?'selected':''}>${m||'—'}</option>`).join('');
       rows += `
         <tr class="expand-row">
-          <td colspan="10">
+          <td colspan="11">
             <div class="expand-inner">
-
-              <!-- EDIT FIELDS -->
               <div class="sub-title" style="margin-bottom:12px">Painting Details</div>
               <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">TITLE</div>
-                  <input type="text" value="${esc(p.title)}" id="edit-title-${p.id}"
-                    style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
+                  <input type="text" value="${esc(p.title)}" id="edit-title-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
                 </div>
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">MONTH</div>
-                  <select id="edit-month-${p.id}"
-                    style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none;appearance:none">${monthOpts}</select>
+                  <select id="edit-month-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none;appearance:none">${monthOpts}</select>
                 </div>
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">YEAR</div>
-                  <input type="number" value="${p.year}" id="edit-year-${p.id}" min="2000" max="2099"
-                    style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
+                  <input type="number" value="${p.year}" id="edit-year-${p.id}" min="2000" max="2099" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
                 </div>
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">WIDTH</div>
-                  <input type="number" value="${p.width}" id="edit-width-${p.id}" min="1"
-                    style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
+                  <input type="number" value="${p.width}" id="edit-width-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
                 </div>
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">HEIGHT</div>
-                  <input type="number" value="${p.height}" id="edit-height-${p.id}" min="1"
-                    style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
+                  <input type="number" value="${p.height}" id="edit-height-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
                 </div>
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">LARGE</div>
-                  <input type="number" value="${p.stock.large||0}" id="edit-large-${p.id}" min="0"
-                    style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
+                  <input type="number" value="${p.stock.large||0}" id="edit-large-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
                 </div>
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">SMALL</div>
-                  <input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0"
-                    style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
+                  <input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none">
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px" onclick="event.stopPropagation()">
                 <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2)">
-                  <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''}
-                    style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
+                  <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''} style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
                   Mom's Prints
                 </label>
                 <button class="btn-sm" onclick="savePaintingEdits('${p.id}')">Save changes</button>
                 <button class="btn-sm danger" onclick="deletePainting('${p.id}')">Delete painting</button>
               </div>
-
-              <!-- SALES -->
               <div class="sub-title">Sales</div>
               <div class="sales-list">
                 ${p.sales.length === 0 ? '<div class="no-sales">No sales logged.</div>' : ''}
@@ -1317,9 +1218,7 @@ function renderTable() {
                   const net = saleNet(s);
                   const isGallery = s.channel === 'gallery';
                   const priceHtml = isGallery
-                    ? `<span class="sale-gross">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} gross</span>
-                       <span class="sale-pct">${s.pct}%</span>
-                       <span class="sale-price">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} net</span>`
+                    ? `<span class="sale-gross">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} gross</span><span class="sale-pct">${s.pct}%</span><span class="sale-price">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} net</span>`
                     : `<span class="sale-price">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
                   return `
                   <div class="sale-row">
@@ -1336,7 +1235,6 @@ function renderTable() {
               <div class="expand-actions">
                 <button class="btn-sm" onclick="openSaleModal('${p.id}')">+ Log Sale</button>
               </div>
-
             </div>
           </td>
         </tr>`;
@@ -1347,78 +1245,38 @@ function renderTable() {
 
 // ── INTERACTIONS ──
 function toggleExpand(id) {
-  if (expandAll) {
-    // In expand-all mode, clicking a row collapses just that one by tracking exclusions
-    expandAll = false;
-    expandedId = null;
-  } else {
-    expandedId = expandedId === id ? null : id;
-  }
-  updateExpandAllBtn();
+  if (expandAll) { expandAll = false; expandedId = null; }
+  else { expandedId = expandedId === id ? null : id; }
   renderTable();
 }
 
-function toggleExpandAll() {
-  expandAll = !expandAll;
-  if (expandAll) expandedId = null;
-  updateExpandAllBtn();
-  renderTable();
-}
-
-function updateExpandAllBtn() {
-  const btn = document.getElementById('expand-all-btn');
-  if (!btn) return;
-  btn.textContent = expandAll ? 'collapse all' : 'expand sales';
-  btn.style.borderColor = expandAll ? 'var(--accent)' : '';
-  btn.style.color = expandAll ? 'var(--accent)' : '';
-}
-
-function savePaintingEdits(id) {
-  const p = db.paintings.find(x => x.id === id);
-  if (!p) return;
-  const title  = document.getElementById('edit-title-'  + id).value.trim();
-  const month  = document.getElementById('edit-month-'  + id).value;
-  const year   = parseInt(document.getElementById('edit-year-'   + id).value);
-  const width  = parseFloat(document.getElementById('edit-width-'  + id).value);
-  const height = parseFloat(document.getElementById('edit-height-' + id).value);
-  const large  = parseInt(document.getElementById('edit-large-'  + id).value) || 0;
-  const small  = parseInt(document.getElementById('edit-small-'  + id).value) || 0;
-  const momsHas = document.getElementById('edit-moms-' + id).checked;
-  if (!title) { alert('Title is required.'); return; }
-  if (!year || year < 2000) { alert('Year is required.'); return; }
-  if (!width || !height) { alert('Dimensions are required.'); return; }
-  p.title   = title;
-  p.month   = month;
-  p.year    = year;
-  p.width   = width;
-  p.height  = height;
-  p.stock.large = large;
-  p.stock.small = small;
-  p.momsHas = momsHas;
-  save();
-  render();
-}
-
-
-function adjStock(e, id, size, delta) {
+async function adjStock(e, id, size, delta) {
   e.stopPropagation();
   const p = db.paintings.find(x => x.id === id);
   if (!p) return;
   p.stock[size] = Math.max(0, (p.stock[size] || 0) + delta);
-  save();
   renderTable();
   renderCards();
+  try {
+    await api('PUT', `/${id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas });
+  } catch(e) {
+    alert('Failed to save stock change: ' + e.message);
+  }
 }
 
-function deleteSale(paintingId, saleId) {
+async function deleteSale(paintingId, saleId) {
   const p = db.paintings.find(x => x.id === paintingId);
   if (!p) return;
   p.sales = p.sales.filter(s => s.id !== saleId);
-  save();
   render();
+  try {
+    await api('DELETE', `/${paintingId}/sales/${saleId}`);
+  } catch(e) {
+    alert('Failed to delete sale: ' + e.message);
+  }
 }
 
-function deletePainting(id) {
+async function deletePainting(id) {
   const p = db.paintings.find(x => x.id === id);
   if (!p) return;
   const saleCount = p.sales.length;
@@ -1428,8 +1286,12 @@ function deletePainting(id) {
   if (!confirm(msg)) return;
   db.paintings = db.paintings.filter(x => x.id !== id);
   if (expandedId === id) expandedId = null;
-  save();
   render();
+  try {
+    await api('DELETE', `/${id}`);
+  } catch(e) {
+    alert('Failed to delete painting: ' + e.message);
+  }
 }
 
 // ── ADD PAINTING MODAL ──
@@ -1443,39 +1305,67 @@ function openAddModal() {
   document.getElementById('add-small').value = '0';
   document.getElementById('add-modal').style.display = 'flex';
 }
-function saveNewPainting() {
+async function saveNewPainting() {
   const title = document.getElementById('add-title').value.trim();
-  const year = parseInt(document.getElementById('add-year').value);
+  const year  = parseInt(document.getElementById('add-year').value);
   const width = parseFloat(document.getElementById('add-width').value);
   const height = parseFloat(document.getElementById('add-height').value);
   if (!title) { alert('Title is required.'); return; }
   if (!year || year < 2000) { alert('Year is required.'); return; }
   if (!width || !height) { alert('Dimensions are required.'); return; }
-  db.paintings.push({
-    id: 'p' + Date.now(),
-    title,
+  const body = {
+    title, year, width, height,
     month: document.getElementById('add-month').value,
-    year,
-    width,
-    height,
     stock: {
       large: parseInt(document.getElementById('add-large').value) || 0,
       small: parseInt(document.getElementById('add-small').value) || 0,
     },
-    sales: []
-  });
-  save();
-  closeModal('add-modal');
-  render();
+    momsHas: false,
+  };
+  try {
+    setLoading(true);
+    const data = await api('POST', '', body);
+    db.paintings.push({ ...data.painting, sales: [] });
+    closeModal('add-modal');
+    render();
+  } catch(e) {
+    alert('Failed to add painting: ' + e.message);
+  } finally {
+    setLoading(false);
+  }
 }
 
-// ── LOG SALE MODAL ──
+// ── SAVE PAINTING EDITS ──
+async function savePaintingEdits(id) {
+  const p = db.paintings.find(x => x.id === id);
+  if (!p) return;
+  const title  = document.getElementById('edit-title-'  + id).value.trim();
+  const month  = document.getElementById('edit-month-'  + id).value;
+  const year   = parseInt(document.getElementById('edit-year-'   + id).value);
+  const width  = parseFloat(document.getElementById('edit-width-'  + id).value);
+  const height = parseFloat(document.getElementById('edit-height-' + id).value);
+  const large  = parseInt(document.getElementById('edit-large-'  + id).value) || 0;
+  const small  = parseInt(document.getElementById('edit-small-'  + id).value) || 0;
+  const momsHas = document.getElementById('edit-moms-' + id).checked;
+  if (!title) { alert('Title is required.'); return; }
+  if (!year || year < 2000) { alert('Year is required.'); return; }
+  if (!width || !height) { alert('Dimensions are required.'); return; }
+  // Optimistic update
+  Object.assign(p, { title, month, year, width, height, momsHas, stock: { large, small } });
+  render();
+  try {
+    await api('PUT', `/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas });
+  } catch(e) {
+    alert('Failed to save changes: ' + e.message);
+  }
+}
+
+// ── LOG / EDIT SALE MODAL ──
 const PRINT_DEFAULTS = { large: 60, small: 35 };
 
 function onSaleTypeChange() {
   const type = document.getElementById('sale-type').value;
   const ch   = document.getElementById('sale-channel').value;
-  // Update price default for print types (not gallery — user enters gross there)
   if (ch !== 'gallery') {
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
     else if (type === 'small') document.getElementById('sale-price').value = PRINT_DEFAULTS.small;
@@ -1492,7 +1382,6 @@ function onSaleChannelChange() {
   if (ch === 'gallery') {
     gf.style.display = 'block';
     lbl.textContent = 'Sale price (gross) ($)';
-    // Set gross default for prints
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
     else if (type === 'small') document.getElementById('sale-price').value = PRINT_DEFAULTS.small;
     updateGalleryNet();
@@ -1514,10 +1403,7 @@ function updateGalleryNet() {
     const net = gross * (pct / 100);
     netEl.value = net.toFixed(2);
     prev.textContent = `$${gross.toFixed(2)} × ${pct}% = $${net.toFixed(2)} to you`;
-  } else {
-    netEl.value = '';
-    prev.textContent = '';
-  }
+  } else { netEl.value = ''; prev.textContent = ''; }
 }
 
 function updateGalleryNetFromNet() {
@@ -1570,7 +1456,7 @@ function openEditSaleModal(paintingId, saleId) {
   document.getElementById('sale-modal').style.display = 'flex';
 }
 
-function saveSale() {
+async function saveSale() {
   const p = db.paintings.find(x => x.id === salePaintingId);
   if (!p) return;
   const channel = document.getElementById('sale-channel').value;
@@ -1590,32 +1476,28 @@ function saveSale() {
     if (isNaN(pct) || pct <= 0 || pct > 100) { alert('Enter a valid percentage (1–100).'); return; }
     saleData.pct = pct;
     saleData.net = isNaN(net) ? gross * (pct / 100) : net;
-  } else {
-    delete saleData.pct;
-    delete saleData.net;
   }
 
-  if (editSaleId) {
-    // Edit existing sale
-    const idx = p.sales.findIndex(x => x.id === editSaleId);
-    if (idx !== -1) p.sales[idx] = { ...p.sales[idx], ...saleData };
-  } else {
-    // New sale
-    p.sales.push({ id: 's' + Date.now(), ...saleData });
-  }
-
-  save();
   closeModal('sale-modal');
-  render();
+
+  try {
+    if (editSaleId) {
+      const data = await api('PUT', `/${salePaintingId}/sales/${editSaleId}`, saleData);
+      const idx = p.sales.findIndex(x => x.id === editSaleId);
+      if (idx !== -1) p.sales[idx] = data.sale;
+    } else {
+      const data = await api('POST', `/${salePaintingId}/sales`, saleData);
+      p.sales.push(data.sale);
+    }
+    render();
+  } catch(e) {
+    alert('Failed to save sale: ' + e.message);
+  }
 }
 
 // ── MODAL HELPERS ──
-function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
-}
-function closeModalOnBackdrop(e, id) {
-  if (e.target === document.getElementById(id)) closeModal(id);
-}
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function closeModalOnBackdrop(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
 
 // ── UTILS ──
 function esc(str) {
@@ -1624,7 +1506,6 @@ function esc(str) {
 
 // ── BOOT ──
 document.getElementById('pw-input').addEventListener('keydown', checkPassword);
-// Also unlock on correct input immediately (no Enter needed if 6 digits typed)
 document.getElementById('pw-input').addEventListener('input', function() {
   if (this.value.length === 6) checkPassword({});
 });
