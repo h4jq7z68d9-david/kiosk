@@ -1091,6 +1091,9 @@ async function init() {
     '$' + DEFAULT_IRS_RATE.toFixed(2) + '/mile (2026)';
 
   render();
+
+  // Load expenses in background so dashboard cards populate on login
+  loadExpenses().catch(e => console.error('Background expense load failed:', e));
 }
 
 function render() {
@@ -1125,6 +1128,7 @@ function renderCards() {
     <div class="card"><div class="card-label">Originals Sold</div><div class="card-value">${origSold}</div><div class="card-sub">${originalsInStock} in stock</div></div>
     <div class="card"><div class="card-label">Large Prints Sold</div><div class="card-value">${largeSold}</div><div class="card-sub">${totalLarge} in stock</div></div>
     <div class="card"><div class="card-label">Small Prints Sold</div><div class="card-value">${smallSold}</div><div class="card-sub">${totalSmall} in stock</div></div>
+    <div class="card"><div class="card-label">Print Inventory</div><div class="card-value">${totalLarge + totalSmall}</div><div class="card-sub">${totalLarge} large · ${totalSmall} small</div></div>
     <div class="card"><div class="card-label">Art Fair Revenue</div><div class="card-value">${fmt(revFair)}</div><div class="card-sub">channel</div></div>
     <div class="card"><div class="card-label">Online Revenue</div><div class="card-value">${fmt(revOnline)}</div><div class="card-sub">channel</div></div>
     <div class="card"><div class="card-label">Gallery Revenue</div><div class="card-value">${fmt(revGallery)}</div><div class="card-sub">net to you</div></div>
