@@ -41,7 +41,8 @@ The site is deployed and working. Push changes to GitHub — deploy is automatic
 | 3 | /feed.xml | API Gateway | Lambda feed endpoint |
 | 4 | /admin/* | API Gateway | Lambda admin endpoints |
 | 5 | /prints/* | S3 | Per-product OG redirect pages |
-| 6 | Default (*) | S3 | All other static files |
+| 6 | /receipts/* | S3 | Receipt file storage — publicly readable via CloudFront |
+| 7 | Default (*) | S3 | All other static files |
 
 **DNS:** `davidnicholsonart.com` is registered with AWS and DNS is in Route 53. Both apex and www point to CloudFront distribution E2EJH38GWGPEPG.
 
@@ -176,6 +177,14 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 - `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale
 - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
 - `GET/PUT /admin/config` — price/sq in rate
+- `GET /admin/expenses` — returns `{ expenses, mileage }` from `dna-expenses` table
+- `POST /admin/expenses` — add expense record
+- `PUT /admin/expenses/{id}` — update expense
+- `DELETE /admin/expenses/{id}` — delete expense
+- `POST /admin/mileage` — add mileage entry
+- `PUT /admin/mileage/{id}` — update mileage entry
+- `DELETE /admin/mileage/{id}` — delete mileage entry
+- `POST /admin/expenses/receipt-url` — returns pre-signed S3 PUT URL + final CloudFront file URL; accepts `{ filename, contentType, date, amount, category }`; names file `{date}_{amount}_{category}.{ext}` in `receipts/` prefix
 
 **To redeploy Lambda:** Push `index.mjs` to GitHub — deploy is automatic via GitHub Actions.
 
@@ -320,14 +329,15 @@ All are single-file, no framework — intentional, keep it that way.
 - **Always open at `https://davidnicholsonart.com/admin.html`** (apex, no www) — Safari CORS redirect cache issue
 - **PWA:** installable as home screen app on iPhone/iPad via Safari → Share → Add to Home Screen
   - `admin.webmanifest` — app manifest (name: "DNA Admin", theme: #f8f6f3, orange icon)
-  - `admin-sw.js` — service worker caches admin shell; passes API calls and S3 receipt URLs through to network
+  - `admin-sw.js` — service worker caches admin shell; passes all `/admin/*` API calls and S3 receipt URLs through to network
   - `admin-icon.png` — 512×512 orange DN icon
   - Safe area insets applied to topbar and main padding for iPhone notch
+- **PWA mode behavior:** when launched from home screen (`navigator.standalone`), goes straight to Expenses & Mileage tab, hides Dashboard and Inventory tabs — full admin still accessible in Safari
 
 **Three-tab layout:**
-- **Dashboard tab** — revenue cards (originals sold, large/small prints sold, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter)
+- **Dashboard tab** — revenue cards (originals sold, large/small prints sold, print inventory, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter). Expense cards load in background on login so dashboard is always populated.
 - **Inventory tab** — price/sq in rate adjuster + sortable/filterable painting table with inline editing; `↓ CSV` export
-- **Expenses & Mileage tab** — expense table with year + category filters + `↓ CSV` export; mileage table with `↓ CSV` export
+- **Expenses & Mileage tab** — expense and mileage tables; tap any row to open edit modal; delete inside modal
 
 **Inventory features:**
 - All paintings sortable by title, year, price, rounded price
@@ -338,24 +348,35 @@ All are single-file, no framework — intentional, keep it that way.
 - CSV export: title, month, year, dimensions, sq in, price, rounded, stock counts, units sold, original sold status
 
 **Expense features:**
-- Categories: Printing, Presentation, Art Supplies, Art Fair Fees, Retail & Packaging, Equipment, Marketing, Licenses & Fees, Travel, Other
+- Categories: Printing, Framing, Art Supplies, Art Fair Fees, Retail & Packaging, Equipment, Marketing, Licenses & Fees, Insurance, Website & Software, Travel, Other
 - Color-coded category badges
-- Receipt upload: file picker supports Camera, Photo Library, Browse on iPhone (no `capture` attribute — full iOS sheet)
-- Hurdlr receipt URLs show as normal `📎 receipt` links; if link fails on click, shows "no longer available" inline
-- Entries with no receipt show "no receipt"
-- CSV export includes date, category, vendor, description, amount, receipt URL; respects active year/category filter
+- Tap row to edit; delete button inside edit modal (not on row)
+- Receipt upload: file picker supports Camera, Photo Library, Browse on iPhone
+- Receipt files stored in S3 under `receipts/` prefix, served via CloudFront at `https://davidnicholsonart.com/receipts/...`
+- Receipt filename convention: `{date}_{amount}_{category}.{ext}` — e.g. `2026-04-08_145.00_printing.jpg`
+- Receipt links are publicly accessible — safe to share in CSV with accountant
+- 📎 icon appears inline in description column on mobile so receipts are tappable without hidden column
+- Amount column always visible (not hidden on mobile)
+- Description column hidden in PWA mode to keep rows clean
+- CSV export: date, category, description, amount, receipt URL — receipt URLs are clickable CloudFront links
 
 **Mileage features:**
 - IRS standard rate hardcoded per year at top of script (`IRS_RATE_BY_YEAR`) — update each January
 - 2025/2026 rate: $0.70/mile; 2024: $0.67/mile
 - Deduction auto-calculated per entry using rate for that entry's year
+- Tap row to edit; delete button inside edit modal
 - CSV export includes date, purpose, miles, IRS rate, deduction, notes
 
-**Data storage — current state (localStorage, pending backend migration):**
-- Expenses and mileage stored in `localStorage` key `dna-admin-expenses`
-- Pre-seeded on first load with all 2024 + 2025 Hurdlr data (77 expenses, 2 mileage entries) mapped to new categories
-- Inventory/sales stored in DynamoDB via Lambda API (already live)
-- **To reset expense data to seed:** clear `dna-admin-expenses` from localStorage (DevTools → Application → Local Storage)
+**Data storage:**
+- Expenses and mileage stored in DynamoDB `dna-expenses` table (single table, `type` field = `expense` or `mileage`)
+- Receipt files in S3 `receipts/` prefix, served via CloudFront
+- Inventory/sales stored in DynamoDB via Lambda API (`dna-paintings`, `dna-sales`)
+
+**Historical data loaded:**
+- 2024: 6 expense records
+- 2025: 71 expense records + 2 mileage entries (488 miles Lawrence + 40 Westport/KC, $341.60 deduction)
+- 2026: 23 expense records from Hurdlr import ($4,049.02 total) — no receipt links yet, add manually
+- Total: 100 expenses seeded via `seed-expenses.js`
 
 **Admin token:** `dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE` — stored as Lambda env var `ADMIN_TOKEN`; currently bypassed (passed as `?token=` query param); auth enforcement deferred
 
@@ -378,26 +399,46 @@ All are single-file, no framework — intentional, keep it that way.
 
 ---
 
-## Expense Tracker — Backend Migration (Pending)
+## DynamoDB Tables
 
-Current state: expenses/mileage in localStorage. Backend wiring is ~2–3 hours in one session.
+| Table | Purpose |
+|---|---|
+| `dna-paintings` | All paintings + `__config__` rate record |
+| `dna-sales` | Sales records with `paintingId` foreign key + GSI `paintingId-index` |
+| `dna-guestbook` | Guest book entries |
+| `dna-orders` | Square order records |
+| `dna-expenses` | Expenses and mileage — single table, `type` field = `expense` or `mileage` |
 
-**What's needed:**
-1. **DynamoDB** — new table `dna-expenses`; expenses and mileage in same table with `type` field. ~15 min in AWS console
-2. **Lambda** — add routes to `index.mjs`:
-   - `GET/POST/PUT/DELETE /admin/expenses`
-   - `GET/POST/PUT/DELETE /admin/mileage`
-   - `POST /admin/expenses/receipt-url` — pre-signed S3 URL for receipt upload (~10 lines)
-3. **S3** — new `receipts/` prefix in existing bucket; CORS policy for browser PUT. ~5 min
-4. **IAM** — add `dynamodb:*` on `dna-expenses` and `s3:PutObject` on receipts prefix to `github-kiosk-deploy` role
-5. **Admin frontend** — swap `loadExpState`/`saveExpState` from localStorage to API calls; two `TODO` comments already mark the exact spots; receipt upload swaps `URL.createObjectURL` for pre-signed URL fetch
-6. **Data migration** — one-time script to POST each localStorage record to the new API
+All tables: PAY_PER_REQUEST, us-east-1.
+
+---
+
+## Receipt Storage (S3 + CloudFront)
+
+- S3 prefix: `kiosk.davidnicholsonllc/receipts/`
+- Served via CloudFront behavior `/receipts/*` → S3 origin
+- Publicly readable via CloudFront — no S3 public access needed
+- Filename convention: `{date}_{amount}_{category}.{ext}`
+- Pre-signed PUT URL generated by Lambda `POST /admin/expenses/receipt-url`
+- Old Hurdlr receipt links (2024–2025) point to Hurdlr's S3 — may expire eventually
+- 2026 receipts: add manually via admin, will get proper CloudFront URLs
+
+---
+
+## IAM — Key Policies
+
+**`dna-kiosk-role`** (Lambda execution role):
+- `dna-dynamodb-paintings` — read/write on `dna-paintings` and `dna-sales`
+- `dna-expenses-access` — read/write on `dna-expenses` + S3 PutObject/GetObject on `receipts/*`
+
+**`lambda-deploy` user** (local seed scripts):
+- Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
 
 ---
 
 ## Pending — In Order of Priority
 
-- [ ] **Expense tracker backend** — wire localStorage to DynamoDB/Lambda/S3 (see section above); ~2–3 hours
+- [ ] **Add 2026 receipts** — 23 expense records have no receipt; add manually via admin PWA
 - [ ] **Google brand exclusion** — "David Nicholson" brand requested; check back to add as exclusion once approved
 - [ ] **Meta Ads** — ~$5/day, not yet started
 - [ ] **Pinterest Ads** — ~$30/day minimum, not yet started
@@ -408,6 +449,7 @@ Current state: expenses/mileage in localStorage. Backend wiring is ~2–3 hours 
 
 ## On the Horizon
 
+- **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session)
 - **Print wall configurator**
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
 - **Color picker filter for gallery** — maybe
@@ -417,53 +459,22 @@ Current state: expenses/mileage in localStorage. Backend wiring is ~2–3 hours 
 
 ## Completed This Session
 
-- ✓ **Admin expense & mileage tracker built** — Expenses & Mileage tab in admin.html
-  - Categories: Printing, Presentation, Art Supplies, Art Fair Fees, Retail & Packaging, Equipment, Marketing, Licenses & Fees, Travel, Other (derived from actual 2024–2025 Hurdlr data)
-  - 2024 + 2025 Hurdlr expense data imported (77 records, $15,876 total) — mapped to new categories, Hurdlr S3 receipt URLs preserved
-  - 2025 mileage imported: 488 miles (448 Lawrence + 40 Westport/KC), $341.60 deduction @ $0.70/mile
-  - Expense and mileage CSVs exportable with active filters applied
-  - Receipt upload with camera/photo library/browse on iPhone
-- ✓ **Admin dashboard tab** — Dashboard / Inventory / Expenses & Mileage three-tab layout
-  - Dashboard: all revenue + expense summary cards + both charts
-  - Inventory: rate bar + table (rate bar moved from dashboard)
-  - Expenses: data entry tables only, no duplicate cards
-- ✓ **Expense chart** — Expenses by Month bar chart (red bars) with independent date range filter, mirrors revenue chart pattern
-- ✓ **CSV export** — inventory, expenses, mileage all exportable; filenames include year/filter context
-- ✓ **Admin PWA** — installable as iPhone home screen app
-  - `admin.webmanifest`, `admin-sw.js`, `admin-icon.png` added to repo
-  - `deploy.yml` updated to sync `*.js` and `*.webmanifest` to S3
-  - Safe area insets for iPhone notch
-  - Service worker caches shell, passes API calls through to network
-  - SW cache version: `dna-admin-v1` — bump to v2 on next significant admin.html change
-
-## Previously Completed This Session (prior entry)
-
-- ✓ **Admin dashboard built** — `admin.html` at `https://davidnicholsonart.com/admin.html`; password-gated (172377); fully wired to DynamoDB via Lambda API
-  - Inventory table: all 42 paintings, sortable, filterable, expandable rows with inline editing
-  - Filters: Never sold, Sold, Original available, Low print stock, Mom doesn't have
-  - Columns: Title, Year, Dimensions, Price (sq in calc), Rounded (nearest $50), Lg stock, Sm stock, Lg sold, Sm sold, Original status
-  - Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net
-  - Edit painting details inline (title, month, year, dimensions, stock counts, Mom's Prints checkbox)
-  - Edit/delete individual sales; delete painting with confirmation showing sale count
-  - Summary cards: Originals Sold (in stock sub), Large Prints Sold, Small Prints Sold, Art Fair Revenue, Online Revenue, Gallery Revenue
-  - Revenue chart by month with date range filter; Total Revenue card embedded left of chart
-  - Price/sq in adjuster affects Price and Rounded columns live; persisted to DynamoDB config record
-- ✓ **DynamoDB tables created** — `dna-paintings` (42 records + `__config__` rate record) and `dna-sales` (6 seeded records from inventory CSV); both PAY_PER_REQUEST in us-east-1
-- ✓ **Lambda admin endpoints added** to `index.mjs`
-- ✓ **CloudFront behavior `/admin/*`** added to E2EJH38GWGPEPG pointing to API Gateway; CachingDisabled; AllViewerExceptHostHeader; allows DELETE/PUT/POST
-- ✓ **IAM policies updated** — `lambda-deploy` user gets `dna-dynamodb-admin` policy; `dna-kiosk-role` gets `dna-dynamodb-paintings` policy for DynamoDB read/write
-- ✓ **Seed script** (`seed-admin-tables.js`) — one-time Node.js script that created both tables and loaded all data from localStorage export
-
-## Admin Dashboard — Key Notes
-
-- URL: `https://davidnicholsonart.com/admin.html` — always use apex (no www) to avoid Safari CORS redirect cache issue
-- Admin token: `dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE` — stored as Lambda env var `ADMIN_TOKEN`; currently bypassed, passed as `?token=` query param
-- DynamoDB paintings table stores paintings without sales array; sales stored separately in `dna-sales` with `paintingId` foreign key and GSI `paintingId-index`
-- `__config__` record in `dna-paintings` stores the price/sq in rate
-- Stock count +/− buttons autosave immediately via PUT to Lambda
-- Painting edit form requires explicit "Save changes" button
-- Mom's Prints checkbox seeded from CSV (37 checked; Beer Drinker, Evening Walkers, U.S. 50 East, Junction, U.S. 69 unchecked)
-- SW cache key is `dna-admin-v1` — bump to `dna-admin-v2` in `admin-sw.js` after any significant `admin.html` update
+- ✓ **Expense tracker wired to DynamoDB** — expenses and mileage moved from localStorage to `dna-expenses` DynamoDB table
+- ✓ **`seed-expenses.js`** — one-time script creates table and seeds all 100 historical records; run from Downloads folder with `node seed-expenses.js`
+- ✓ **Receipt upload to S3** — pre-signed URL flow; files land at `receipts/` prefix; served via CloudFront at `davidnicholsonart.com/receipts/...`
+- ✓ **Receipt filename convention** — `{date}_{amount}_{category}.{ext}` — readable and accountant-friendly
+- ✓ **Receipt CSV export** — CloudFront receipt URLs included in CSV; publicly accessible for accountant
+- ✓ **Category overhaul** — Presentation → Framing; added Insurance and Website & Software
+- ✓ **Vendor field removed** — dropped from data model, UI, and CSV export everywhere
+- ✓ **2026 Hurdlr import** — 23 records ($4,049.02) seeded; no receipt links (add manually)
+- ✓ **Dashboard expenses load on login** — background fetch so expense cards are always populated
+- ✓ **Print inventory card** — total large + small prints in stock on dashboard
+- ✓ **PWA mode** — home screen app goes straight to Expenses tab, hides other tabs; full admin still in Safari
+- ✓ **Row tap to edit** — tap any expense or mileage row opens edit modal; delete moved into modal
+- ✓ **Mobile UX** — amount always visible; description hidden in PWA; 📎 receipt icon inline on mobile; receipt column visible on desktop
+- ✓ **CloudFront `/receipts/*` behavior** — added to E2EJH38GWGPEPG pointing to S3 origin
+- ✓ **IAM `dna-expenses-access`** — added to `dna-kiosk-role` for DynamoDB expenses table + S3 receipts prefix
+- ✓ **admin-sw.js cache bumped** to `dna-admin-v2`
 
 ---
 
@@ -503,6 +514,8 @@ Current state: expenses/mileage in localStorage. Backend wiring is ~2–3 hours 
 1. Open https://davidnicholsonart.com/admin.html in Safari
 2. Safari → Share → Add to Home Screen
 3. Opens full-screen as "DNA Admin" with orange DN icon
+4. Launches directly to Expenses & Mileage tab — tap + Add Expense to log immediately
+5. Full admin (all tabs) always available by opening admin.html in Safari directly
 
 ---
 
@@ -522,7 +535,9 @@ Current state: expenses/mileage in localStorage. Backend wiring is ~2–3 hours 
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — bump `dna-admin-v1` → `dna-admin-v2` in `admin-sw.js` after significant admin.html changes
+- **Admin SW cache key** — currently `dna-admin-v2`; bump in `admin-sw.js` after significant admin.html changes
+- **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
+- **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 
 ---
 
