@@ -1379,18 +1379,17 @@ function renderExpTable() {
   }
   tbody.innerHTML = list.map(e => {
     const amt = Number(e.amount||0);
-    const receiptHtml = !e.receiptUrl
-      ? `<span class="receipt-none">no receipt</span>`
-      : `<a class="receipt-link" href="${esc(e.receiptUrl)}" target="_blank" rel="noopener">📎 receipt</a>`;
-    return `<tr>
+    const receiptInline = e.receiptUrl
+      ? `<a href="${esc(e.receiptUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:12px;color:var(--accent);text-decoration:none;margin-left:6px" title="View receipt">📎</a>`
+      : '';
+    return `<tr onclick="openEditExpModal('${e.id}')" style="cursor:pointer">
       <td class="mono dim">${e.date || '—'}</td>
       <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
-      <td style="font-size:13px;color:var(--ink2)">${esc(e.desc||'')}</td>
+      <td style="font-size:13px;color:var(--ink2)">${esc(e.desc||'')}${receiptInline}</td>
       <td class="mono col-hide" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td class="col-hide">${receiptHtml}</td>
+      <td class="col-hide"><a class="receipt-link" href="${esc(e.receiptUrl||'#')}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="${e.receiptUrl?'':'display:none'}" >📎 receipt</a>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
       <td style="white-space:nowrap">
-        <button class="sale-del" onclick="openEditExpModal('${e.id}')" title="Edit" style="font-size:13px;color:var(--ink3)">✎</button>
-        <button class="exp-del" onclick="deleteExpense('${e.id}')" title="Delete">×</button>
+        <button class="exp-del" onclick="event.stopPropagation();deleteExpense('${e.id}')" title="Delete">×</button>
       </td>
     </tr>`;
   }).join('');
@@ -1439,7 +1438,7 @@ function renderMileTable() {
     const year = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
     const rate = irsRate(year);
     const deduction = miles * rate;
-    return `<tr>
+    return `<tr onclick="openEditMileModal('${m.id}')" style="cursor:pointer">
       <td class="mono dim">${m.date || '—'}</td>
       <td>
         <div style="font-size:13px;color:var(--ink)">${esc(m.purpose||'')}</div>
@@ -1448,8 +1447,7 @@ function renderMileTable() {
       <td class="mono col-hide">${miles.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})}</td>
       <td class="mono col-hide" style="color:var(--green)">$${deduction.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}<span style="font-family:var(--font);font-size:11px;color:var(--ink3);margin-left:5px">@ $${rate.toFixed(2)}/mi</span></td>
       <td style="white-space:nowrap">
-        <button class="sale-del" onclick="openEditMileModal('${m.id}')" title="Edit" style="font-size:13px;color:var(--ink3)">✎</button>
-        <button class="exp-del" onclick="deleteMileage('${m.id}')" title="Delete">×</button>
+        <button class="exp-del" onclick="event.stopPropagation();deleteMileage('${m.id}')" title="Delete">×</button>
       </td>
     </tr>`;
   }).join('');
