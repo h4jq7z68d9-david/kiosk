@@ -1948,6 +1948,13 @@ document.getElementById('pw-input').addEventListener('input', function() {
   if (this.value.length === 6) checkPassword({});
 });
 
+// PWA mode — if launched from home screen, go straight to Expenses tab and hide others
+if (window.navigator.standalone) {
+  document.getElementById('tab-dashboard-btn').style.display = 'none';
+  document.getElementById('tab-inventory-btn').style.display = 'none';
+  switchTab('expenses');
+}
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/admin-sw.js').catch(() => {});
 }
