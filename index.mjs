@@ -610,7 +610,7 @@ async function adminReceiptUploadUrl(body, cors) {
     ContentType: contentType,
   });
   const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 min
-  const fileUrl = `https://${RECEIPTS_BUCKET}.s3.us-east-2.amazonaws.com/${key}`;
+ const fileUrl = `https://davidnicholsonart.com/${key}`;
   return ok({ uploadUrl, fileUrl }, cors);
 }
 
