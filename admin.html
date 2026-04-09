@@ -691,6 +691,8 @@
       </div>
     </div>
     <div class="modal-foot">
+      <button class="btn-cancel" id="exp-delete-btn" onclick="deleteExpenseFromModal()" style="display:none;color:var(--red);border-color:var(--red)">Delete</button>
+      <div style="flex:1"></div>
       <button class="btn-cancel" onclick="closeModal('exp-modal')">Cancel</button>
       <button class="btn-primary" id="exp-save-btn" onclick="saveExpense()">Save Expense</button>
     </div>
@@ -719,6 +721,8 @@
       <div class="field"><label>Notes <span style="font-weight:400;color:var(--ink3)">(optional)</span></label><textarea id="mile-notes" placeholder="Round trip, specific route…" rows="2"></textarea></div>
     </div>
     <div class="modal-foot">
+      <button class="btn-cancel" id="mile-delete-btn" onclick="deleteMileageFromModal()" style="display:none;color:var(--red);border-color:var(--red)">Delete</button>
+      <div style="flex:1"></div>
       <button class="btn-cancel" onclick="closeModal('mile-modal')">Cancel</button>
       <button class="btn-primary" id="mile-save-btn" onclick="saveMileage()">Save</button>
     </div>
@@ -1385,12 +1389,9 @@ function renderExpTable() {
     return `<tr onclick="openEditExpModal('${e.id}')" style="cursor:pointer">
       <td class="mono dim">${e.date || '—'}</td>
       <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
-      <td style="font-size:13px;color:var(--ink2)">${esc(e.desc||'')}${receiptInline}</td>
-      <td class="mono col-hide" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td class="col-hide"><a class="receipt-link" href="${esc(e.receiptUrl||'#')}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="${e.receiptUrl?'':'display:none'}" >📎 receipt</a>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
-      <td style="white-space:nowrap">
-        <button class="exp-del" onclick="event.stopPropagation();deleteExpense('${e.id}')" title="Delete">×</button>
-      </td>
+      <td style="font-size:13px;color:var(--ink2)">${isPWA ? '' : esc(e.desc||'')}${receiptInline}</td>
+      <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td class="col-hide"><a class="receipt-link" href="${esc(e.receiptUrl||'#')}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="${e.receiptUrl?'':'display:none'}">📎 receipt</a>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
     </tr>`;
   }).join('');
 }
@@ -1446,9 +1447,6 @@ function renderMileTable() {
       </td>
       <td class="mono col-hide">${miles.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})}</td>
       <td class="mono col-hide" style="color:var(--green)">$${deduction.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}<span style="font-family:var(--font);font-size:11px;color:var(--ink3);margin-left:5px">@ $${rate.toFixed(2)}/mi</span></td>
-      <td style="white-space:nowrap">
-        <button class="exp-del" onclick="event.stopPropagation();deleteMileage('${m.id}')" title="Delete">×</button>
-      </td>
     </tr>`;
   }).join('');
 }
@@ -1474,6 +1472,7 @@ function openExpModal() {
   document.getElementById('exp-filename').textContent = '';
   document.getElementById('exp-upload-zone').classList.remove('has-file');
   document.getElementById('exp-receipt-file').value = '';
+  document.getElementById('exp-delete-btn').style.display = 'none';
   document.getElementById('exp-modal').style.display = 'flex';
 }
 
@@ -1496,6 +1495,7 @@ function openEditExpModal(id) {
     document.getElementById('exp-filename').textContent = '';
     document.getElementById('exp-upload-zone').classList.remove('has-file');
   }
+  document.getElementById('exp-delete-btn').style.display = 'inline-block';
   document.getElementById('exp-modal').style.display = 'flex';
 }
 
@@ -1564,6 +1564,20 @@ async function deleteExpense(id) {
   }
 }
 
+async function deleteExpenseFromModal() {
+  if (!editExpId) return;
+  const e = expState.expenses.find(x => x.id === editExpId);
+  if (!e || !confirm(`Delete this expense ($${e.amount})?`)) return;
+  closeModal('exp-modal');
+  try {
+    await api('DELETE', `/expenses/${editExpId}`);
+    expState.expenses = expState.expenses.filter(x => x.id !== editExpId);
+    renderExpenses();
+  } catch(err) {
+    alert('Failed to delete: ' + err.message);
+  }
+}
+
 // ═══════════════════════════════════════════
 //  MILEAGE MODAL
 // ═══════════════════════════════════════════
@@ -1576,6 +1590,7 @@ function openMileModal() {
   document.getElementById('mile-purpose').value = '';
   document.getElementById('mile-notes').value = '';
   document.getElementById('mile-preview').style.display = 'none';
+  document.getElementById('mile-delete-btn').style.display = 'none';
   document.getElementById('mile-modal').style.display = 'flex';
 }
 
@@ -1590,6 +1605,7 @@ function openEditMileModal(id) {
   document.getElementById('mile-purpose').value = m.purpose || '';
   document.getElementById('mile-notes').value = m.notes || '';
   updateMilePreview();
+  document.getElementById('mile-delete-btn').style.display = 'inline-block';
   document.getElementById('mile-modal').style.display = 'flex';
 }
 
@@ -1641,6 +1657,20 @@ async function deleteMileage(id) {
   try {
     await api('DELETE', `/mileage/${id}`);
     expState.mileage = expState.mileage.filter(x => x.id !== id);
+    renderExpenses();
+  } catch(err) {
+    alert('Failed to delete: ' + err.message);
+  }
+}
+
+async function deleteMileageFromModal() {
+  if (!editMileId) return;
+  const m = expState.mileage.find(x => x.id === editMileId);
+  if (!m || !confirm(`Delete mileage entry (${m.miles} miles)?`)) return;
+  closeModal('mile-modal');
+  try {
+    await api('DELETE', `/mileage/${editMileId}`);
+    expState.mileage = expState.mileage.filter(x => x.id !== editMileId);
     renderExpenses();
   } catch(err) {
     alert('Failed to delete: ' + err.message);
@@ -1947,7 +1977,8 @@ document.getElementById('pw-input').addEventListener('input', function() {
 });
 
 // PWA mode — if launched from home screen, go straight to Expenses tab and hide others
-if (window.navigator.standalone) {
+const isPWA = !!window.navigator.standalone;
+if (isPWA) {
   document.getElementById('tab-dashboard-btn').style.display = 'none';
   document.getElementById('tab-inventory-btn').style.display = 'none';
   switchTab('expenses');
