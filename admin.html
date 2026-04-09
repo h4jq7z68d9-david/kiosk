@@ -280,28 +280,24 @@
 
   .empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); font-size: 14px; }
 
-  /* ── EXPENSE TAB ── */
-  .exp-cards {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px; margin-bottom: 24px;
-  }
-
   /* Category badge */
   .cat-badge {
     display: inline-block; font-size: 11px; font-weight: 500;
     padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em;
     white-space: nowrap;
   }
-  .cat-printing    { background: #ede9fe; color: #6d28d9; }
-  .cat-presentation{ background: #fce7f3; color: #9d174d; }
-  .cat-art-supplies{ background: #dbeafe; color: #1d4ed8; }
-  .cat-art-fair    { background: #d1fae5; color: #065f46; }
-  .cat-retail      { background: #ecfdf5; color: #064e3b; }
-  .cat-equipment   { background: #f1f5f9; color: #334155; }
-  .cat-marketing   { background: #fef3c7; color: #92400e; }
-  .cat-licenses    { background: #ffedd5; color: #9a3412; }
-  .cat-travel      { background: #fff7ed; color: #c2410c; }
-  .cat-other       { background: #f3f4f6; color: #374151; }
+  .cat-printing      { background: #ede9fe; color: #6d28d9; }
+  .cat-framing       { background: #fce7f3; color: #9d174d; }
+  .cat-art-supplies  { background: #dbeafe; color: #1d4ed8; }
+  .cat-art-fair      { background: #d1fae5; color: #065f46; }
+  .cat-retail        { background: #ecfdf5; color: #064e3b; }
+  .cat-equipment     { background: #f1f5f9; color: #334155; }
+  .cat-marketing     { background: #fef3c7; color: #92400e; }
+  .cat-licenses      { background: #ffedd5; color: #9a3412; }
+  .cat-insurance     { background: #e0f2fe; color: #0369a1; }
+  .cat-website       { background: #f0fdf4; color: #15803d; }
+  .cat-travel        { background: #fff7ed; color: #c2410c; }
+  .cat-other         { background: #f3f4f6; color: #374151; }
 
   .receipt-link {
     display: inline-flex; align-items: center; gap: 4px;
@@ -384,11 +380,7 @@
     <!-- ══ TAB: DASHBOARD ══ -->
     <div class="tab-panel active" id="tab-dashboard">
       <div style="padding-top:24px">
-
-        <!-- REVENUE CARDS -->
         <div class="cards" id="cards"></div>
-
-        <!-- EXPENSE CARDS (all-time, no year filter) -->
         <div class="cards" id="dash-exp-cards"></div>
 
         <!-- REVENUE CHART -->
@@ -438,7 +430,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -503,9 +494,18 @@
               <select id="exp-year-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer"></select>
               <select id="exp-cat-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
                 <option value="">All categories</option>
-                <option>Printing</option><option>Presentation</option><option>Art Supplies</option>
-                <option>Art Fair Fees</option><option>Retail &amp; Packaging</option><option>Equipment</option>
-                <option>Marketing</option><option>Licenses &amp; Fees</option><option>Travel</option><option>Other</option>
+                <option>Printing</option>
+                <option>Framing</option>
+                <option>Art Supplies</option>
+                <option>Art Fair Fees</option>
+                <option>Retail &amp; Packaging</option>
+                <option>Equipment</option>
+                <option>Marketing</option>
+                <option>Licenses &amp; Fees</option>
+                <option>Insurance</option>
+                <option>Website &amp; Software</option>
+                <option>Travel</option>
+                <option>Other</option>
               </select>
               <button class="btn-sm" onclick="exportExpensesCsv()" title="Export to CSV">↓ CSV</button>
               <button class="btn-primary" onclick="openExpModal()">+ Add Expense</button>
@@ -517,7 +517,7 @@
                 <tr>
                   <th onclick="expSortBy('date')">Date <span class="sort-arrow" id="exp-sort-date"></span></th>
                   <th onclick="expSortBy('category')">Category <span class="sort-arrow" id="exp-sort-category"></span></th>
-                  <th>Vendor / Description</th>
+                  <th>Description</th>
                   <th onclick="expSortBy('amount')">Amount <span class="sort-arrow" id="exp-sort-amount"></span></th>
                   <th class="col-hide">Receipt</th>
                   <th style="width:32px"></th>
@@ -563,10 +563,9 @@
 </div><!-- /app -->
 
 <!-- ══════════════════════════════════════════
-     INVENTORY MODALS (unchanged)
+     INVENTORY MODALS
 ════════════════════════════════════════════ -->
 
-<!-- ADD PAINTING MODAL -->
 <div class="modal-backdrop" id="add-modal" style="display:none" onclick="closeModalOnBackdrop(event,'add-modal')">
   <div class="modal">
     <div class="modal-head">
@@ -604,7 +603,6 @@
   </div>
 </div>
 
-<!-- LOG SALE MODAL -->
 <div class="modal-backdrop" id="sale-modal" style="display:none" onclick="closeModalOnBackdrop(event,'sale-modal')">
   <div class="modal">
     <div class="modal-head">
@@ -664,32 +662,32 @@
           <label>Category</label>
           <select id="exp-category">
             <option>Printing</option>
-            <option>Presentation</option>
+            <option>Framing</option>
             <option>Art Supplies</option>
             <option>Art Fair Fees</option>
             <option>Retail &amp; Packaging</option>
             <option>Equipment</option>
             <option>Marketing</option>
             <option>Licenses &amp; Fees</option>
+            <option>Insurance</option>
+            <option>Website &amp; Software</option>
             <option>Travel</option>
             <option>Other</option>
           </select>
         </div>
       </div>
-      <div class="field"><label>Vendor</label><input type="text" id="exp-vendor" placeholder="e.g. Jerry's Artarama"></div>
-      <div class="field"><label>Description</label><textarea id="exp-desc" placeholder="What was purchased…" rows="2"></textarea></div>
+      <div class="field"><label>Description <span style="font-weight:400;color:var(--ink3)">(optional)</span></label><textarea id="exp-desc" placeholder="What was purchased…" rows="2"></textarea></div>
       <div class="field">
         <label>Amount ($)</label>
         <input type="number" id="exp-amount" placeholder="0.00" min="0" step="0.01">
       </div>
       <div class="field">
-        <label>Receipt image <span style="font-weight:400;color:var(--ink3)">(optional — jpg, png, pdf)</span></label>
+        <label>Receipt <span style="font-weight:400;color:var(--ink3)">(optional — jpg, png, pdf)</span></label>
         <div class="upload-zone" id="exp-upload-zone" onclick="document.getElementById('exp-receipt-file').click()">
           <input type="file" id="exp-receipt-file" accept="image/*,application/pdf" onchange="onReceiptFileChange(event)">
-          <div class="upload-zone-label">Click to attach receipt — <strong>browse</strong></div>
+          <div class="upload-zone-label">Click to attach — <strong>browse</strong></div>
           <div class="upload-zone-filename" id="exp-filename"></div>
         </div>
-        <div style="font-size:11px;color:var(--ink3);margin-top:5px">Stored locally for now — will upload to S3 when backend is wired.</div>
       </div>
     </div>
     <div class="modal-foot">
@@ -736,13 +734,10 @@ const ADMIN_TOKEN = 'dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE';
 const API_BASE    = 'https://davidnicholsonart.com/admin';
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// IRS standard mileage rate — update each January when IRS announces new rate
-// 2025 rate: $0.70/mile  |  2026 rate: $0.70/mile (confirm at irs.gov/newsroom)
 const IRS_RATE_BY_YEAR = {
   2024: 0.67,
   2025: 0.70,
   2026: 0.70,
-  // Add new years here each January
 };
 const DEFAULT_IRS_RATE = 0.70;
 
@@ -750,75 +745,150 @@ function irsRate(year) {
   return IRS_RATE_BY_YEAR[year] || DEFAULT_IRS_RATE;
 }
 
-// Expense categories for CSS class mapping
 const CAT_CLASS = {
-  'Printing':         'cat-printing',
-  'Presentation':     'cat-presentation',
-  'Art Supplies':     'cat-art-supplies',
-  'Art Fair Fees':    'cat-art-fair',
+  'Printing':           'cat-printing',
+  'Framing':            'cat-framing',
+  'Art Supplies':       'cat-art-supplies',
+  'Art Fair Fees':      'cat-art-fair',
   'Retail & Packaging': 'cat-retail',
-  'Equipment':        'cat-equipment',
-  'Marketing':        'cat-marketing',
-  'Licenses & Fees':  'cat-licenses',
-  'Travel':           'cat-travel',
-  'Other':            'cat-other',
+  'Equipment':          'cat-equipment',
+  'Marketing':          'cat-marketing',
+  'Licenses & Fees':    'cat-licenses',
+  'Insurance':          'cat-insurance',
+  'Website & Software': 'cat-website',
+  'Travel':             'cat-travel',
+  'Other':              'cat-other',
 };
+
+// Seed data for first-time migration — POSTed to API if backend is empty
+// 2024+2025 data (Presentation renamed to Framing, vendor field removed)
+// + 2026 Hurdlr import
+const EXPENSE_SEED = [
+  {id:"19d6d9bca83h240",date:"2024-12-16",category:"Printing",desc:"",amount:155.81,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398418_2d85464c-72f7-47e5-bacf-007ba28c1bf9.pdf"},
+  {id:"19d6d9bca84okj4",date:"2024-10-24",category:"Printing",desc:"",amount:473.07,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398285_0cca74ce-ad22-45e1-92e6-fd8fe9593861.pdf"},
+  {id:"19d6d9bca84s2x7",date:"2024-09-25",category:"Printing",desc:"",amount:150.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398121_3f403140-15f5-4a99-8af9-af341a2bdc13.pdf"},
+  {id:"19d6d9bca84cogz",date:"2024-09-23",category:"Printing",desc:"",amount:233.18,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397834_38475659-7136-4489-a234-a9a5c1ae0d6a.pdf"},
+  {id:"19d6d9bca84zvqs",date:"2024-09-03",category:"Printing",desc:"",amount:356.45,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397208_336c29b8-c5c8-4ee8-b8ae-13aa1ed80e32.pdf"},
+  {id:"19d6d9bca840jfh",date:"2024-09-03",category:"Printing",desc:"scanning",amount:225.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397597_a55ded0e-eff6-4992-ae72-96312c04e153.pdf"},
+  {id:"19d6d9bca84jryj",date:"2025-12-23",category:"Art Fair Fees",desc:"",amount:75.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/217560441_7400898a-b9bc-4178-b5c5-12085a302ac9.pdf"},
+  {id:"19d6d9bca84jr64",date:"2025-12-17",category:"Art Supplies",desc:"",amount:56.08,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/216853618_d5099a23-37a5-4423-91c7-bafdd4f00a11.pdf"},
+  {id:"19d6d9bca84ykro",date:"2025-12-07",category:"Printing",desc:"",amount:89.62,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744586_ea651ef6-8bff-46c9-bcea-3c9bffab8427.pdf"},
+  {id:"19d6d9bca840xtj",date:"2025-12-07",category:"Printing",desc:"",amount:48.56,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744559_1dadd2b9-2fe6-49d0-b6e0-033139e800eb.pdf"},
+  {id:"19d6d9bca84rxjm",date:"2025-12-07",category:"Printing",desc:"",amount:96.29,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744547_e3f2b69e-bce6-415b-b8b4-cf7237957c9a.pdf"},
+  {id:"19d6d9bca84x87y",date:"2025-12-07",category:"Printing",desc:"",amount:83.82,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215730655_62977eec-d59a-40cd-9895-20f90f8a0c9d.pdf"},
+  {id:"19d6d9bca84q4pv",date:"2025-11-24",category:"Framing",desc:"",amount:116.44,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/214266181_9ce7cb3d-cd0a-4fa4-abf5-ba15f88f6a83.pdf"},
+  {id:"19d6d9bca84q891",date:"2025-11-24",category:"Printing",desc:"",amount:105.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/214199737_5a3c6344-b50e-4cac-99ce-c689f073fe7f.jpg"},
+  {id:"19d6d9bca84z53u",date:"2025-11-08",category:"Art Supplies",desc:"",amount:27.59,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/212287275_da665bb4-13b9-490d-a19d-9772e17762c2.pdf"},
+  {id:"19d6d9bca84gnhu",date:"2025-09-26",category:"Art Supplies",desc:"",amount:425.47,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207749823_a8c3b22b-9ed0-4370-9999-546be847293d.pdf"},
+  {id:"19d6d9bca84bikf",date:"2025-09-23",category:"Retail & Packaging",desc:"",amount:144.2,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207436576_3a61b11a-77a6-4116-82dd-12e95fd98403.pdf"},
+  {id:"19d6d9bca840pv3",date:"2025-09-23",category:"Retail & Packaging",desc:"",amount:92.36,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207436541_c810cc91-c7d0-445d-a919-54581a532b78.pdf"},
+  {id:"19d6d9bca84m0fw",date:"2025-09-22",category:"Art Supplies",desc:"",amount:36.39,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207287613_1fd87e21-2b6d-4acc-a165-5f9ccbaf38cb.pdf"},
+  {id:"19d6d9bca84ii4y",date:"2025-09-22",category:"Art Supplies",desc:"",amount:141.44,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207287600_6f228971-97b3-4bad-a58d-8bdf0e9bbccf.pdf"},
+  {id:"19d6d9bca84txgt",date:"2025-09-14",category:"Printing",desc:"",amount:239.59,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206649446_af867249-d62f-46dd-91d6-53a94b74a468.pdf"},
+  {id:"19d6d9bca84zizs",date:"2025-09-14",category:"Art Fair Fees",desc:"",amount:195.7,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206649442_1b4de534-78f2-41db-9bc6-1dec135faded.pdf"},
+  {id:"19d6d9bca84khi0",date:"2025-09-10",category:"Framing",desc:"",amount:131.52,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206310565_0a52635a-eef8-4674-810d-606f48b326ff.pdf"},
+  {id:"19d6d9bca849a7s",date:"2025-09-09",category:"Retail & Packaging",desc:"",amount:32.74,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206189586_16877c22-bf13-4789-a8ca-b1cf341e1881.pdf"},
+  {id:"19d6d9bca84b6nn",date:"2025-09-09",category:"Framing",desc:"",amount:39.14,receiptUrl:""},
+  {id:"19d6d9bca847m03",date:"2025-09-09",category:"Framing",desc:"",amount:235.11,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206176430_58d79750-7fc1-4897-aaf1-2a0f747c280b.pdf"},
+  {id:"19d6d9bca842eqe",date:"2025-09-09",category:"Retail & Packaging",desc:"",amount:87.47,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206189572_5e1a1fc4-dafd-4306-b76a-f05f7a108838.pdf"},
+  {id:"19d6d9bca84xe4n",date:"2025-09-08",category:"Marketing",desc:"",amount:113.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206048012_d5667eee-142b-4d2a-9fbe-71cf2dc90695.pdf"},
+  {id:"19d6d9bca84a3v7",date:"2025-09-08",category:"Marketing",desc:"",amount:76.76,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206007733_8a75fa02-bc6a-498b-97b1-e396e95e5fa1.pdf"},
+  {id:"19d6d9bca841ob6",date:"2025-08-31",category:"Printing",desc:"",amount:170.13,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/205252064_9b3ced63-93f0-43a4-a79b-2a7aac61b548.pdf"},
+  {id:"19d6d9bca84lbic",date:"2025-08-30",category:"Retail & Packaging",desc:"",amount:20.87,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/205199175_f35e4016-731a-4251-8680-690442eb1631.pdf"},
+  {id:"19d6d9bca84ff8e",date:"2025-08-27",category:"Marketing",desc:"",amount:24.84,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204896529_7d20e0f6-aaec-472e-be55-19e438a521b3.pdf"},
+  {id:"19d6d9bca84izu1",date:"2025-08-24",category:"Equipment",desc:"",amount:197.06,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204599888_d1a48ec7-9b31-485b-8fd0-9d1fa8d8b567.pdf"},
+  {id:"19d6d9bca84qr57",date:"2025-08-24",category:"Retail & Packaging",desc:"",amount:35.02,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204588953_68bf4fc1-fdf6-40af-bb1f-24bb7c67d391.pdf"},
+  {id:"19d6d9bca84yb0o",date:"2025-08-22",category:"Retail & Packaging",desc:"",amount:20.9,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204504343_3865d606-f9ba-47da-a309-e196ad6a5fd2.pdf"},
+  {id:"19d6d9bca84smxl",date:"2025-08-16",category:"Framing",desc:"",amount:135.7,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203941207_168869a8-5ed5-4f9a-b01f-77f96440d800.pdf"},
+  {id:"19d6d9bca844ejr",date:"2025-08-16",category:"Printing",desc:"",amount:92.85,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203923262_013c1190-b74c-48b3-83be-ef3dd25f40b9.pdf"},
+  {id:"19d6d9bca84xdhf",date:"2025-08-15",category:"Framing",desc:"",amount:29.14,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203853541_d42fdd65-7616-4dc8-af1d-346436bef634.pdf"},
+  {id:"19d6d9bca84n251",date:"2025-08-15",category:"Printing",desc:"",amount:249.99,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203849449_c1eee2d2-1615-424d-88bf-65e4c124592c.pdf"},
+  {id:"19d6d9bca84154x",date:"2025-08-15",category:"Printing",desc:"",amount:600.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203831240_7ebea1d5-6dcc-4c6f-ab2a-a90c98a225ec.pdf"},
+  {id:"19d6d9bca84a20u",date:"2025-08-10",category:"Framing",desc:"",amount:40.26,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203349188_b871301e-4de6-4d90-ad46-bf09c238d968.pdf"},
+  {id:"19d6d9bca84vtnr",date:"2025-08-10",category:"Retail & Packaging",desc:"",amount:45.75,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203349294_cc51ffb0-5c84-45b3-9dd1-a72e75a165ae.pdf"},
+  {id:"19d6d9bca84u4g5",date:"2025-08-10",category:"Framing",desc:"",amount:29.65,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203342667_243427b6-e61e-490f-80c9-5d0f61b4f100.pdf"},
+  {id:"19d6d9bca84qd2a",date:"2025-08-10",category:"Framing",desc:"",amount:69.22,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203342666_32e22e1e-e06c-442f-8904-89304b26b1f2.pdf"},
+  {id:"19d6d9bca84qa5y",date:"2025-08-09",category:"Framing",desc:"",amount:18.68,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203323861_3f29e073-afc0-43cb-bcc7-3f32455134a5.pdf"},
+  {id:"19d6d9bca84ueh7",date:"2025-08-09",category:"Art Supplies",desc:"",amount:119.87,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203323860_db85c559-9300-4808-8a25-c295a95552cc.pdf"},
+  {id:"19d6d9bca84cvbx",date:"2025-08-09",category:"Art Supplies",desc:"",amount:40.3,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203271153_7dc9e30c-02bf-47bf-bdbd-21e85d25dd74.pdf"},
+  {id:"19d6d9bca844jbd",date:"2025-08-09",category:"Framing",desc:"",amount:25.31,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203271152_3a0d2929-043d-404c-adfb-59c21599d0d7.pdf"},
+  {id:"19d6d9bca84ugqt",date:"2025-08-09",category:"Framing",desc:"",amount:43.86,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203268618_0a96b3e5-9b8a-4bfa-93b0-7d720c3c4597.pdf"},
+  {id:"19d6d9bca84c675",date:"2025-08-04",category:"Printing",desc:"ink",amount:140.08,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202717597_038ff661-0b8d-4433-9d8b-efa9e26ba416.pdf"},
+  {id:"19d6d9bca84s52e",date:"2025-08-02",category:"Art Supplies",desc:"",amount:12.88,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202586649_167d0da8-fe05-4548-ab9e-fa3d2b4e2aaf.pdf"},
+  {id:"19d6d9bca84avxi",date:"2025-07-31",category:"Equipment",desc:"Printer",amount:929.44,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202351980_ba48fede-ba35-4bcf-8e19-5b59c06762ee.pdf"},
+  {id:"19d6d9bca846kia",date:"2025-07-27",category:"Printing",desc:"",amount:239.59,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202011079_25165731-7f24-4c4b-bcb3-42f50e079ec5.pdf"},
+  {id:"19d6d9bca849be0",date:"2025-07-20",category:"Framing",desc:"",amount:153.82,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/201366984_2c14a45a-33f9-4c0e-bcfe-257c8ef8e0a2.pdf"},
+  {id:"19d6d9bca84wid8",date:"2025-07-15",category:"Art Supplies",desc:"",amount:24.43,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200898390_df2acb37-e8fc-448f-81b8-284e90e8a423.jpg"},
+  {id:"19d6d9bca84m6j6",date:"2025-07-15",category:"Art Supplies",desc:"",amount:17.62,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200898423_ad39899a-e34c-43ea-b0ea-ff03a55be2a5.jpg"},
+  {id:"19d6d9bca84qdxl",date:"2025-07-12",category:"Equipment",desc:"",amount:565.33,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200682918_8c83290d-8fc2-4f23-8453-f16a533ca080.jpg"},
+  {id:"19d6d9bca84q0it",date:"2025-07-09",category:"Printing",desc:"Polarizing filter",amount:100.93,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200422301_e17f8f76-fff5-48f8-a6ce-3252c1b5753f.jpg"},
+  {id:"19d6d9bca8454an",date:"2025-07-07",category:"Equipment",desc:"",amount:100.3,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200149030_bf13dd70-9a1a-4246-aa42-0dc2a61206af.pdf"},
+  {id:"19d6d9bca84m2gz",date:"2025-07-06",category:"Framing",desc:"",amount:204.3,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200080886_5a470b41-895e-452c-ab0e-ba99098d729d.pdf"},
+  {id:"19d6d9bca8461ud",date:"2025-07-04",category:"Framing",desc:"",amount:35.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199977198_61183820-8cb9-4d80-b220-a982458f7a29.jpg"},
+  {id:"19d6d9bca8412zw",date:"2025-07-03",category:"Equipment",desc:"",amount:22.8,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399200_479c07af-f2b7-4991-9ee3-a6f3814550ad.png"},
+  {id:"19d6d9bca84vckc",date:"2025-06-30",category:"Retail & Packaging",desc:"",amount:29.11,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199457014_e740c908-f374-497b-9799-1a53625128be.pdf"},
+  {id:"19d6d9bca84f2il",date:"2025-06-30",category:"Licenses & Fees",desc:"Federal EIN",amount:149.0,receiptUrl:""},
+  {id:"19d6d9bca849wmy",date:"2025-06-29",category:"Retail & Packaging",desc:"",amount:178.83,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199373489_79b3f5b1-0d9c-4518-aa72-37fedbce9e66.pdf"},
+  {id:"19d6d9bca84nc20",date:"2025-06-29",category:"Retail & Packaging",desc:"Vista Print",amount:102.44,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199354489_d5e2b84a-d49b-4f36-b4c8-6762b8631e41.pdf"},
+  {id:"19d6d9bca841xs9",date:"2025-06-29",category:"Equipment",desc:"",amount:160.0,receiptUrl:""},
+  {id:"19d6d9bca849e35",date:"2025-06-25",category:"Framing",desc:"Matboard and More, Archival Mats",amount:994.2,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199081301_2be299c9-3a14-4d1b-a8c3-14d86c52a980.pdf"},
+  {id:"19d6d9bca84vic9",date:"2025-06-23",category:"Retail & Packaging",desc:"Amazon Business Account",amount:77.29,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/198743000_a8b7e7b7-1223-430d-bbaa-138025a2afbe.jpg"},
+  {id:"19d6d9bca84xdi3",date:"2025-06-19",category:"Equipment",desc:"Square hardware",amount:64.59,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399092_85f33a78-8126-47f6-a207-2fc756709d34.pdf"},
+  {id:"19d6d9bca84e2hp",date:"2025-06-18",category:"Art Fair Fees",desc:"",amount:515.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202465759_eec6691b-bf3d-440b-868a-1540d216d8c1.pdf"},
+  {id:"19d6d9bca84w0j8",date:"2025-06-13",category:"Framing",desc:"",amount:150.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399309_d84df3c7-d4d1-4952-891a-12c0969fb6cd.pdf"},
+  {id:"19d6d9bca84e1xq",date:"2025-05-28",category:"Art Fair Fees",desc:"Westport app",amount:35.0,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202465741_1651ee7f-d6c9-42f8-ae5d-a5b0f1c4bd90.pdf"},
+  {id:"19d6d9bca84gbk8",date:"2025-05-27",category:"Equipment",desc:"",amount:260.5,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398944_692b9fc2-f585-444b-9252-361072e3ccfa.pdf"},
+  {id:"19d6d9bca848l6g",date:"2025-05-01",category:"Equipment",desc:"Flourish Tent",amount:3327.54,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398667_87ed12c7-98f6-4928-8db5-2578780f7de7.pdf"},
+  {id:"19d6d9bca84sguc",date:"2025-04-06",category:"Equipment",desc:"Canon camera",amount:706.11,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399663_a0072ce1-6157-45f4-bbd2-564e7ee65bbe.pdf"},
+  {id:"19d6d9bca846thl",date:"2025-04-06",category:"Equipment",desc:"Camera supplies",amount:288.66,receiptUrl:"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399746_325b6540-3263-47fe-80d9-aa70423aef4d.pdf"},
+  // 2026 Hurdlr import
+  {id:"2026hurdlr0101a",date:"2026-01-06",category:"Insurance",desc:"",amount:40.01,receiptUrl:""},
+  {id:"2026hurdlr0131a",date:"2026-01-31",category:"Art Supplies",desc:"",amount:40.54,receiptUrl:""},
+  {id:"2026hurdlr0206a",date:"2026-02-06",category:"Insurance",desc:"",amount:40.01,receiptUrl:""},
+  {id:"2026hurdlr0207a",date:"2026-02-07",category:"Art Supplies",desc:"",amount:39.67,receiptUrl:""},
+  {id:"2026hurdlr0207b",date:"2026-02-07",category:"Art Supplies",desc:"",amount:100.67,receiptUrl:""},
+  {id:"2026hurdlr0207c",date:"2026-02-07",category:"Art Supplies",desc:"",amount:39.88,receiptUrl:""},
+  {id:"2026hurdlr0207d",date:"2026-02-07",category:"Art Supplies",desc:"",amount:674.19,receiptUrl:""},
+  {id:"2026hurdlr0207e",date:"2026-02-07",category:"Art Supplies",desc:"",amount:47.69,receiptUrl:""},
+  {id:"2026hurdlr0216a",date:"2026-02-16",category:"Retail & Packaging",desc:"",amount:1369.46,receiptUrl:""},
+  {id:"2026hurdlr0220a",date:"2026-02-20",category:"Printing",desc:"",amount:145.00,receiptUrl:""},
+  {id:"2026hurdlr0222a",date:"2026-02-22",category:"Art Fair Fees",desc:"",amount:35.00,receiptUrl:""},
+  {id:"2026hurdlr0222b",date:"2026-02-22",category:"Art Fair Fees",desc:"",amount:35.00,receiptUrl:""},
+  {id:"2026hurdlr0222c",date:"2026-02-22",category:"Framing",desc:"",amount:129.16,receiptUrl:""},
+  {id:"2026hurdlr0226a",date:"2026-02-26",category:"Framing",desc:"",amount:232.97,receiptUrl:""},
+  {id:"2026hurdlr0306a",date:"2026-03-06",category:"Insurance",desc:"",amount:40.01,receiptUrl:""},
+  {id:"2026hurdlr0308a",date:"2026-03-08",category:"Framing",desc:"",amount:108.13,receiptUrl:""},
+  {id:"2026hurdlr0313a",date:"2026-03-13",category:"Printing",desc:"",amount:203.08,receiptUrl:""},
+  {id:"2026hurdlr0318a",date:"2026-03-18",category:"Framing",desc:"",amount:125.97,receiptUrl:""},
+  {id:"2026hurdlr0318b",date:"2026-03-18",category:"Framing",desc:"",amount:231.01,receiptUrl:""},
+  {id:"2026hurdlr0318c",date:"2026-03-18",category:"Framing",desc:"",amount:133.87,receiptUrl:""},
+  {id:"2026hurdlr0320a",date:"2026-03-20",category:"Framing",desc:"",amount:117.25,receiptUrl:""},
+  {id:"2026hurdlr0322a",date:"2026-03-22",category:"Framing",desc:"",amount:80.44,receiptUrl:""},
+  {id:"2026hurdlr0406a",date:"2026-04-06",category:"Insurance",desc:"",amount:40.01,receiptUrl:""},
+];
+
+const MILEAGE_SEED = [
+  {id:"19d6d9bca848g13",date:"2025-09-15",miles:448,purpose:"7 round trips to Lawrence, September 2025",notes:""},
+  {id:"19d6d9bca84uz6k",date:"2025-09-15",miles:40,purpose:"4 round trips Westport / Downtown KC, September 2025",notes:""},
+];
 
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
 let db = { paintings: [], rate: 1.10 };
+let expState = { expenses: [], mileage: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
 let activeFilter = null, expandedId = null;
 let salePaintingId = null, editSaleId = null;
-let loading = false;
-
-// Expense state (localStorage until backend is wired)
-let expState = { expenses: [], mileage: [] };
 let expSortField = 'date', expSortDir = 'desc';
 let mileSortField = 'date', mileSortDir = 'desc';
 let editExpId = null, editMileId = null;
-let pendingReceiptFile = null;  // File object — will become S3 upload when backend is wired
+let pendingReceiptFile = null;
+let loading = false;
+let expLoaded = false; // track whether we've fetched expenses from API yet
 
 // ═══════════════════════════════════════════
-//  LOCAL STORAGE (expenses — backend stub)
-// ═══════════════════════════════════════════
-// TODO: Replace loadExpState/saveExpState with API calls when backend is ready.
-// Backend will need:
-//   GET  /admin/expenses          → { expenses, mileage }
-//   POST /admin/expenses          → { expense }
-//   PUT  /admin/expenses/:id      → { expense }
-//   DELETE /admin/expenses/:id
-//   POST /admin/mileage           → { entry }
-//   PUT  /admin/mileage/:id       → { entry }
-//   DELETE /admin/mileage/:id
-//   POST /admin/expenses/receipt-url  → { uploadUrl, fileUrl } (pre-signed S3)
-//   GET  /admin/config            → { rate } (already exists)
-
-function loadExpState() {
-  try {
-    const raw = localStorage.getItem('dna-admin-expenses');
-    if (raw) {
-      expState = JSON.parse(raw);
-    } else {
-      // First load — seed with Hurdlr import (2024 + 2025 data)
-      // Receipts link directly to Hurdlr S3 PDFs — still accessible
-      expState = {"expenses":[{"id":"19d6d9bca83h240","date":"2024-12-16","category":"Printing","vendor":"Printing","desc":"","amount":155.81,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398418_2d85464c-72f7-47e5-bacf-007ba28c1bf9.pdf"},{"id":"19d6d9bca84okj4","date":"2024-10-24","category":"Printing","vendor":"Printing","desc":"","amount":473.07,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398285_0cca74ce-ad22-45e1-92e6-fd8fe9593861.pdf"},{"id":"19d6d9bca84s2x7","date":"2024-09-25","category":"Printing","vendor":"Printing","desc":"","amount":150.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398121_3f403140-15f5-4a99-8af9-af341a2bdc13.pdf"},{"id":"19d6d9bca84cogz","date":"2024-09-23","category":"Printing","vendor":"Printing","desc":"","amount":233.18,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397834_38475659-7136-4489-a234-a9a5c1ae0d6a.pdf"},{"id":"19d6d9bca84zvqs","date":"2024-09-03","category":"Printing","vendor":"Printing","desc":"","amount":356.45,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397208_336c29b8-c5c8-4ee8-b8ae-13aa1ed80e32.pdf"},{"id":"19d6d9bca840jfh","date":"2024-09-03","category":"Printing","vendor":"Printing","desc":"scanning","amount":225.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202397597_a55ded0e-eff6-4992-ae72-96312c04e153.pdf"},{"id":"19d6d9bca84jryj","date":"2025-12-23","category":"Art Fair Fees","vendor":"Art fair fees","desc":"","amount":75.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/217560441_7400898a-b9bc-4178-b5c5-12085a302ac9.pdf"},{"id":"19d6d9bca84jr64","date":"2025-12-17","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":56.08,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/216853618_d5099a23-37a5-4423-91c7-bafdd4f00a11.pdf"},{"id":"19d6d9bca84ykro","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":89.62,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744586_ea651ef6-8bff-46c9-bcea-3c9bffab8427.pdf"},{"id":"19d6d9bca840xtj","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":48.56,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744559_1dadd2b9-2fe6-49d0-b6e0-033139e800eb.pdf"},{"id":"19d6d9bca84rxjm","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":96.29,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215744547_e3f2b69e-bce6-415b-b8b4-cf7237957c9a.pdf"},{"id":"19d6d9bca84x87y","date":"2025-12-07","category":"Printing","vendor":"Printing","desc":"","amount":83.82,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/215730655_62977eec-d59a-40cd-9895-20f90f8a0c9d.pdf"},{"id":"19d6d9bca84q4pv","date":"2025-11-24","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":116.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/214266181_9ce7cb3d-cd0a-4fa4-abf5-ba15f88f6a83.pdf"},{"id":"19d6d9bca84q891","date":"2025-11-24","category":"Printing","vendor":"Printing","desc":"","amount":105.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/214199737_5a3c6344-b50e-4cac-99ce-c689f073fe7f.jpg"},{"id":"19d6d9bca84z53u","date":"2025-11-08","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":27.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/212287275_da665bb4-13b9-490d-a19d-9772e17762c2.pdf"},{"id":"19d6d9bca84gnhu","date":"2025-09-26","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":425.47,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207749823_a8c3b22b-9ed0-4370-9999-546be847293d.pdf"},{"id":"19d6d9bca84bikf","date":"2025-09-23","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":144.2,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207436576_3a61b11a-77a6-4116-82dd-12e95fd98403.pdf"},{"id":"19d6d9bca840pv3","date":"2025-09-23","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":92.36,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207436541_c810cc91-c7d0-445d-a919-54581a532b78.pdf"},{"id":"19d6d9bca84m0fw","date":"2025-09-22","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":36.39,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207287613_1fd87e21-2b6d-4acc-a165-5f9ccbaf38cb.pdf"},{"id":"19d6d9bca84ii4y","date":"2025-09-22","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":141.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/207287600_6f228971-97b3-4bad-a58d-8bdf0e9bbccf.pdf"},{"id":"19d6d9bca84txgt","date":"2025-09-14","category":"Printing","vendor":"Printing","desc":"","amount":239.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206649446_af867249-d62f-46dd-91d6-53a94b74a468.pdf"},{"id":"19d6d9bca84zizs","date":"2025-09-14","category":"Art Fair Fees","vendor":"Art fair fees","desc":"","amount":195.7,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206649442_1b4de534-78f2-41db-9bc6-1dec135faded.pdf"},{"id":"19d6d9bca84khi0","date":"2025-09-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":131.52,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206310565_0a52635a-eef8-4674-810d-606f48b326ff.pdf"},{"id":"19d6d9bca849a7s","date":"2025-09-09","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":32.74,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206189586_16877c22-bf13-4789-a8ca-b1cf341e1881.pdf"},{"id":"19d6d9bca84b6nn","date":"2025-09-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":39.14,"receiptUrl":""},{"id":"19d6d9bca847m03","date":"2025-09-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":235.11,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206176430_58d79750-7fc1-4897-aaf1-2a0f747c280b.pdf"},{"id":"19d6d9bca842eqe","date":"2025-09-09","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":87.47,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206189572_5e1a1fc4-dafd-4306-b76a-f05f7a108838.pdf"},{"id":"19d6d9bca84xe4n","date":"2025-09-08","category":"Marketing","vendor":"Marketing","desc":"","amount":113.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206048012_d5667eee-142b-4d2a-9fbe-71cf2dc90695.pdf"},{"id":"19d6d9bca84a3v7","date":"2025-09-08","category":"Marketing","vendor":"Marketing","desc":"","amount":76.76,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/206007733_8a75fa02-bc6a-498b-97b1-e396e95e5fa1.pdf"},{"id":"19d6d9bca841ob6","date":"2025-08-31","category":"Printing","vendor":"Printing","desc":"","amount":170.13,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/205252064_9b3ced63-93f0-43a4-a79b-2a7aac61b548.pdf"},{"id":"19d6d9bca84lbic","date":"2025-08-30","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":20.87,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/205199175_f35e4016-731a-4251-8680-690442eb1631.pdf"},{"id":"19d6d9bca84ff8e","date":"2025-08-27","category":"Marketing","vendor":"Marketing","desc":"","amount":24.84,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204896529_7d20e0f6-aaec-472e-be55-19e438a521b3.pdf"},{"id":"19d6d9bca84izu1","date":"2025-08-24","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":197.06,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204599888_d1a48ec7-9b31-485b-8fd0-9d1fa8d8b567.pdf"},{"id":"19d6d9bca84qr57","date":"2025-08-24","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":35.02,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204588953_68bf4fc1-fdf6-40af-bb1f-24bb7c67d391.pdf"},{"id":"19d6d9bca84yb0o","date":"2025-08-22","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":20.9,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/204504343_3865d606-f9ba-47da-a309-e196ad6a5fd2.pdf"},{"id":"19d6d9bca84smxl","date":"2025-08-16","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":135.7,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203941207_168869a8-5ed5-4f9a-b01f-77f96440d800.pdf"},{"id":"19d6d9bca844ejr","date":"2025-08-16","category":"Printing","vendor":"Printing","desc":"","amount":92.85,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203923262_013c1190-b74c-48b3-83be-ef3dd25f40b9.pdf"},{"id":"19d6d9bca84xdhf","date":"2025-08-15","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":29.14,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203853541_d42fdd65-7616-4dc8-af1d-346436bef634.pdf"},{"id":"19d6d9bca84n251","date":"2025-08-15","category":"Printing","vendor":"Printing","desc":"","amount":249.99,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203849449_c1eee2d2-1615-424d-88bf-65e4c124592c.pdf"},{"id":"19d6d9bca84154x","date":"2025-08-15","category":"Printing","vendor":"Printing","desc":"","amount":600.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203831240_7ebea1d5-6dcc-4c6f-ab2a-a90c98a225ec.pdf"},{"id":"19d6d9bca84a20u","date":"2025-08-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":40.26,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203349188_b871301e-4de6-4d90-ad46-bf09c238d968.pdf"},{"id":"19d6d9bca84vtnr","date":"2025-08-10","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":45.75,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203349294_cc51ffb0-5c84-45b3-9dd1-a72e75a165ae.pdf"},{"id":"19d6d9bca84u4g5","date":"2025-08-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":29.65,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203342667_243427b6-e61e-490f-80c9-5d0f61b4f100.pdf"},{"id":"19d6d9bca84qd2a","date":"2025-08-10","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":69.22,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203342666_32e22e1e-e06c-442f-8904-89304b26b1f2.pdf"},{"id":"19d6d9bca84qa5y","date":"2025-08-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":18.68,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203323861_3f29e073-afc0-43cb-bcc7-3f32455134a5.pdf"},{"id":"19d6d9bca84ueh7","date":"2025-08-09","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":119.87,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203323860_db85c559-9300-4808-8a25-c295a95552cc.pdf"},{"id":"19d6d9bca84cvbx","date":"2025-08-09","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":40.3,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203271153_7dc9e30c-02bf-47bf-bdbd-21e85d25dd74.pdf"},{"id":"19d6d9bca844jbd","date":"2025-08-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":25.31,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203271152_3a0d2929-043d-404c-adfb-59c21599d0d7.pdf"},{"id":"19d6d9bca84ugqt","date":"2025-08-09","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":43.86,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/203268618_0a96b3e5-9b8a-4bfa-93b0-7d720c3c4597.pdf"},{"id":"19d6d9bca84c675","date":"2025-08-04","category":"Printing","vendor":"Printing","desc":"ink","amount":140.08,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202717597_038ff661-0b8d-4433-9d8b-efa9e26ba416.pdf"},{"id":"19d6d9bca84s52e","date":"2025-08-02","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":12.88,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202586649_167d0da8-fe05-4548-ab9e-fa3d2b4e2aaf.pdf"},{"id":"19d6d9bca84avxi","date":"2025-07-31","category":"Equipment","vendor":"Printing","desc":"Printer","amount":929.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202351980_ba48fede-ba35-4bcf-8e19-5b59c06762ee.pdf"},{"id":"19d6d9bca846kia","date":"2025-07-27","category":"Printing","vendor":"Printing","desc":"","amount":239.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202011079_25165731-7f24-4c4b-bcb3-42f50e079ec5.pdf"},{"id":"19d6d9bca849be0","date":"2025-07-20","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":153.82,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/201366984_2c14a45a-33f9-4c0e-bcfe-257c8ef8e0a2.pdf"},{"id":"19d6d9bca84wid8","date":"2025-07-15","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":24.43,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200898390_df2acb37-e8fc-448f-81b8-284e90e8a423.jpg"},{"id":"19d6d9bca84m6j6","date":"2025-07-15","category":"Art Supplies","vendor":"Art Supplies","desc":"","amount":17.62,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200898423_ad39899a-e34c-43ea-b0ea-ff03a55be2a5.jpg"},{"id":"19d6d9bca84qdxl","date":"2025-07-12","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":565.33,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200682918_8c83290d-8fc2-4f23-8453-f16a533ca080.jpg"},{"id":"19d6d9bca84q0it","date":"2025-07-09","category":"Printing","vendor":"Printing","desc":"Polarizing filter","amount":100.93,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200422301_e17f8f76-fff5-48f8-a6ce-3252c1b5753f.jpg"},{"id":"19d6d9bca8454an","date":"2025-07-07","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":100.3,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200149030_bf13dd70-9a1a-4246-aa42-0dc2a61206af.pdf"},{"id":"19d6d9bca84m2gz","date":"2025-07-06","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":204.3,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/200080886_5a470b41-895e-452c-ab0e-ba99098d729d.pdf"},{"id":"19d6d9bca8461ud","date":"2025-07-04","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":35.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199977198_61183820-8cb9-4d80-b220-a982458f7a29.jpg"},{"id":"19d6d9bca8412zw","date":"2025-07-03","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":22.8,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399200_479c07af-f2b7-4991-9ee3-a6f3814550ad.png"},{"id":"19d6d9bca84vckc","date":"2025-06-30","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":29.11,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199457014_e740c908-f374-497b-9799-1a53625128be.pdf"},{"id":"19d6d9bca84f2il","date":"2025-06-30","category":"Licenses & Fees","vendor":"Start Up Costs","desc":"Federal EIN","amount":149.0,"receiptUrl":""},{"id":"19d6d9bca849wmy","date":"2025-06-29","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"","amount":178.83,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199373489_79b3f5b1-0d9c-4518-aa72-37fedbce9e66.pdf"},{"id":"19d6d9bca84nc20","date":"2025-06-29","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"Vista Print","amount":102.44,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199354489_d5e2b84a-d49b-4f36-b4c8-6762b8631e41.pdf"},{"id":"19d6d9bca841xs9","date":"2025-06-29","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":160.0,"receiptUrl":""},{"id":"19d6d9bca849e35","date":"2025-06-25","category":"Presentation","vendor":"Presentation Supplies","desc":"Matboard and More, Archival Mats","amount":994.2,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/199081301_2be299c9-3a14-4d1b-a8c3-14d86c52a980.pdf"},{"id":"19d6d9bca84vic9","date":"2025-06-23","category":"Retail & Packaging","vendor":"Retail Supplies","desc":"Retail Packaging - Amazon Business Account","amount":77.29,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/198743000_a8b7e7b7-1223-430d-bbaa-138025a2afbe.jpg"},{"id":"19d6d9bca84xdi3","date":"2025-06-19","category":"Equipment","vendor":"Start Up Costs","desc":"square hardware","amount":64.59,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399092_85f33a78-8126-47f6-a207-2fc756709d34.pdf"},{"id":"19d6d9bca84e2hp","date":"2025-06-18","category":"Art Fair Fees","vendor":"Art fair fees","desc":"","amount":515.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202465759_eec6691b-bf3d-440b-868a-1540d216d8c1.pdf"},{"id":"19d6d9bca84w0j8","date":"2025-06-13","category":"Presentation","vendor":"Presentation Supplies","desc":"","amount":150.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399309_d84df3c7-d4d1-4952-891a-12c0969fb6cd.pdf"},{"id":"19d6d9bca84e1xq","date":"2025-05-28","category":"Art Fair Fees","vendor":"Art fair fees","desc":"Westport app","amount":35.0,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202465741_1651ee7f-d6c9-42f8-ae5d-a5b0f1c4bd90.pdf"},{"id":"19d6d9bca84gbk8","date":"2025-05-27","category":"Equipment","vendor":"Start Up Costs","desc":"","amount":260.5,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398944_692b9fc2-f585-444b-9252-361072e3ccfa.pdf"},{"id":"19d6d9bca848l6g","date":"2025-05-01","category":"Equipment","vendor":"Start Up Costs","desc":"Flourish Tent","amount":3327.54,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202398667_87ed12c7-98f6-4928-8db5-2578780f7de7.pdf"},{"id":"19d6d9bca84sguc","date":"2025-04-06","category":"Equipment","vendor":"Start Up Costs","desc":"canon camera","amount":706.11,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399663_a0072ce1-6157-45f4-bbd2-564e7ee65bbe.pdf"},{"id":"19d6d9bca846thl","date":"2025-04-06","category":"Equipment","vendor":"Start Up Costs","desc":"camera supplies","amount":288.66,"receiptUrl":"https://s3.amazonaws.com/Hurdlr-Prod/hurdlr/Attachments/1298320/1299756/PendingExpense/202399746_325b6540-3263-47fe-80d9-aa70423aef4d.pdf"}],"mileage":[{"id":"19d6d9bca848g13","date":"2025-09-15","miles":448,"purpose":"7 round trips to Lawrence, September 2025","notes":""},{"id":"19d6d9bca84uz6k","date":"2025-09-15","miles":40,"purpose":"4 round trips Westport / Downtown KC, September 2025","notes":""}]};
-      saveExpState();
-    }
-  } catch(e) { expState = { expenses: [], mileage: [] }; }
-  if (!expState.expenses) expState.expenses = [];
-  if (!expState.mileage)  expState.mileage  = [];
-}
-
-function saveExpState() {
-  try { localStorage.setItem('dna-admin-expenses', JSON.stringify(expState)); } catch(e) {}
-}
-
-function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-
-// ═══════════════════════════════════════════
-//  API (inventory — unchanged)
+//  API
 // ═══════════════════════════════════════════
 async function api(method, path, body) {
   const url = API_BASE + path + '?token=' + encodeURIComponent(ADMIN_TOKEN);
@@ -855,6 +925,7 @@ function logout() {
   document.getElementById('pw-input').value = '';
   document.getElementById('gate-error').textContent = '';
   expandedId = null;
+  expLoaded = false;
 }
 
 // ═══════════════════════════════════════════
@@ -865,7 +936,66 @@ function switchTab(tab) {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
-  if (tab === 'expenses') renderExpenses();
+  if (tab === 'expenses' && !expLoaded) loadExpenses();
+  else if (tab === 'expenses') renderExpenses();
+}
+
+// ═══════════════════════════════════════════
+//  EXPENSE API LAYER
+// ═══════════════════════════════════════════
+async function loadExpenses() {
+  setLoading(true);
+  try {
+    const data = await api('GET', '/expenses');
+    expState.expenses = data.expenses || [];
+    expState.mileage  = data.mileage  || [];
+    expLoaded = true;
+
+    // First-time migration: if backend is empty, seed all historical data
+    if (expState.expenses.length === 0 && expState.mileage.length === 0) {
+      await seedExpenses();
+    }
+  } catch(e) {
+    console.error('Failed to load expenses:', e);
+    alert('Could not load expenses from server: ' + e.message);
+  } finally {
+    setLoading(false);
+  }
+  populateExpYearFilter();
+  renderExpenses();
+  renderDashExpCards();
+  renderExpChart();
+}
+
+async function seedExpenses() {
+  // POST all historical records to DynamoDB in batches to avoid overwhelming Lambda
+  setLoading(true);
+  try {
+    const expBatches = chunk(EXPENSE_SEED, 10);
+    for (const batch of expBatches) {
+      await Promise.all(batch.map(e =>
+        api('POST', '/expenses', { date: e.date, category: e.category, desc: e.desc || '', amount: e.amount, receiptUrl: e.receiptUrl || '' })
+          .then(res => expState.expenses.push(res.expense))
+      ));
+    }
+    const mileBatches = chunk(MILEAGE_SEED, 5);
+    for (const batch of mileBatches) {
+      await Promise.all(batch.map(m =>
+        api('POST', '/mileage', { date: m.date, miles: m.miles, purpose: m.purpose, notes: m.notes || '' })
+          .then(res => expState.mileage.push(res.entry))
+      ));
+    }
+  } catch(e) {
+    console.error('Seed error:', e);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function chunk(arr, size) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
 }
 
 // ═══════════════════════════════════════════
@@ -938,10 +1068,7 @@ function applyFilter(list) {
 //  INIT & RENDER
 // ═══════════════════════════════════════════
 async function init() {
-  loadExpState();
   populateExpYearFilter();
-  renderDashExpCards(); // render expense cards immediately — no API dependency
-  renderExpChart();     // render expense chart immediately — no API dependency
 
   setLoading(true);
   try {
@@ -969,9 +1096,9 @@ async function init() {
 function render() {
   renderCards();
   renderChart();
+  renderDashExpCards();
   renderExpChart();
   renderTable();
-  renderDashExpCards();
 }
 
 function renderCards() {
@@ -1043,7 +1170,7 @@ function renderExpChart() {
   const keys = Object.keys(buckets).sort();
   const el = document.getElementById('exp-chart');
   if (!el) return;
-  if (!keys.length) { el.innerHTML = '<div class="chart-empty">No expenses in this range</div>'; return; }
+  if (!keys.length) { el.innerHTML = '<div class="chart-empty">No expenses yet</div>'; return; }
   const max = Math.max(...keys.map(k => buckets[k]));
   el.innerHTML = keys.map(k => {
     const pct = max > 0 ? (buckets[k] / max) * 120 : 0;
@@ -1190,41 +1317,31 @@ function renderExpenses() {
   renderMileTable();
 }
 
-function expCardHtml(exps, miles) {
-  const totalExp = exps.reduce((s, e) => s + Number(e.amount||0), 0);
-  const totalMiles = miles.reduce((s, m) => s + Number(m.miles||0), 0);
-  const totalMileDeduction = miles.reduce((s, m) => {
+function renderDashExpCards() {
+  const el = document.getElementById('dash-exp-cards');
+  if (!el) return;
+  const totalExp = expState.expenses.reduce((s,e) => s + Number(e.amount||0), 0);
+  const totalMiles = expState.mileage.reduce((s,m) => s + Number(m.miles||0), 0);
+  const totalMileDeduction = expState.mileage.reduce((s,m) => {
     const y = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
     return s + Number(m.miles||0) * irsRate(y);
   }, 0);
   const byCat = {};
-  exps.forEach(e => { byCat[e.category] = (byCat[e.category]||0) + Number(e.amount||0); });
+  expState.expenses.forEach(e => { byCat[e.category] = (byCat[e.category]||0) + Number(e.amount||0); });
   const topCats = Object.entries(byCat).sort((a,b) => b[1]-a[1]).slice(0,3);
   const topCatHtml = topCats.map(([cat, amt]) =>
     `<div class="card-sub"><span class="cat-badge ${CAT_CLASS[cat]||'cat-other'}">${cat}</span> <span style="font-family:var(--mono);font-size:12px">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>`
   ).join('');
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-  return `
-    <div class="card"><div class="card-label">Total Expenses</div><div class="card-value accent">${fmt(totalExp)}</div><div class="card-sub">${exps.length} record${exps.length !== 1 ? 's' : ''}</div></div>
-    <div class="card"><div class="card-label">Top Expense Categories</div><div style="margin-top:4px">${topCatHtml || '<div class="card-sub">No expenses yet</div>'}</div></div>
-    <div class="card"><div class="card-label">Miles Driven</div><div class="card-value">${totalMiles.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:1})}</div><div class="card-sub">${miles.length} trip${miles.length !== 1 ? 's' : ''}</div></div>
+  el.innerHTML = `
+    <div class="card"><div class="card-label">Total Expenses</div><div class="card-value accent">${fmt(totalExp)}</div><div class="card-sub">${expState.expenses.length} records</div></div>
+    <div class="card"><div class="card-label">Top Categories</div><div style="margin-top:4px">${topCatHtml || '<div class="card-sub">—</div>'}</div></div>
+    <div class="card"><div class="card-label">Miles Driven</div><div class="card-value">${totalMiles.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:1})}</div><div class="card-sub">${expState.mileage.length} trips</div></div>
     <div class="card"><div class="card-label">Mileage Deduction</div><div class="card-value accent">${fmt(totalMileDeduction)}</div><div class="card-sub">IRS standard rate</div></div>
   `;
 }
 
-function renderDashExpCards() {
-  const el = document.getElementById('dash-exp-cards');
-  if (!el) return;
-  el.innerHTML = expCardHtml(expState.expenses, expState.mileage);
-}
-
 function renderExpCards() {
-  // Year-filtered version for the expenses tab
-  const yearFilter = document.getElementById('exp-year-filter').value;
-  const exps  = expState.expenses.filter(e => !yearFilter || (e.date||'').startsWith(yearFilter));
-  const miles = expState.mileage.filter(m => !yearFilter || (m.date||'').startsWith(yearFilter));
-  // exp-cards no longer exists; expense tab shows no summary cards (just tables)
-  // Update dashboard (all-time) any time expense data changes
   renderDashExpCards();
   renderExpChart();
 }
@@ -1253,21 +1370,18 @@ function renderExpTable() {
   const list = getExpList();
   const tbody = document.getElementById('exp-table-body');
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No expenses logged yet.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state">No expenses logged yet.</div></td></tr>';
     return;
   }
   tbody.innerHTML = list.map(e => {
     const amt = Number(e.amount||0);
     const receiptHtml = !e.receiptUrl
       ? `<span class="receipt-none">no receipt</span>`
-      : `<a class="receipt-link" href="${esc(e.receiptUrl)}" target="_blank" rel="noopener" onclick="checkReceipt(event,'${e.id}')">📎 receipt</a><span class="receipt-none" id="rcpt-err-${e.id}" style="display:none;margin-left:6px">no longer available</span>`;
+      : `<a class="receipt-link" href="${esc(e.receiptUrl)}" target="_blank" rel="noopener">📎 receipt</a>`;
     return `<tr>
       <td class="mono dim">${e.date || '—'}</td>
       <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
-      <td>
-        <div style="font-size:13px;color:var(--ink)">${esc(e.vendor||'')}</div>
-        ${e.desc ? `<div style="font-size:12px;color:var(--ink2);margin-top:1px">${esc(e.desc)}</div>` : ''}
-      </td>
+      <td style="font-size:13px;color:var(--ink2)">${esc(e.desc||'')}</td>
       <td class="mono col-hide" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
       <td class="col-hide">${receiptHtml}</td>
       <td style="white-space:nowrap">
@@ -1353,7 +1467,6 @@ function openExpModal() {
   document.getElementById('exp-save-btn').textContent = 'Save Expense';
   document.getElementById('exp-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('exp-category').value = 'Printing';
-  document.getElementById('exp-vendor').value = '';
   document.getElementById('exp-desc').value = '';
   document.getElementById('exp-amount').value = '';
   document.getElementById('exp-filename').textContent = '';
@@ -1370,8 +1483,7 @@ function openEditExpModal(id) {
   document.getElementById('exp-modal-title').textContent = 'Edit Expense';
   document.getElementById('exp-save-btn').textContent = 'Save Changes';
   document.getElementById('exp-date').value = e.date || '';
-  document.getElementById('exp-category').value = e.category || 'Supplies';
-  document.getElementById('exp-vendor').value = e.vendor || '';
+  document.getElementById('exp-category').value = e.category || 'Other';
   document.getElementById('exp-desc').value = e.desc || '';
   document.getElementById('exp-amount').value = e.amount || '';
   document.getElementById('exp-receipt-file').value = '';
@@ -1396,45 +1508,55 @@ function onReceiptFileChange(event) {
 async function saveExpense() {
   const date     = document.getElementById('exp-date').value;
   const category = document.getElementById('exp-category').value;
-  const vendor   = document.getElementById('exp-vendor').value.trim();
   const desc     = document.getElementById('exp-desc').value.trim();
   const amount   = parseFloat(document.getElementById('exp-amount').value);
   if (!date) { alert('Date is required.'); return; }
   if (isNaN(amount) || amount < 0) { alert('Enter a valid amount.'); return; }
 
-  // TODO: When backend is ready, upload pendingReceiptFile here to get S3 URL:
-  //   const { uploadUrl, fileUrl } = await api('POST', '/expenses/receipt-url', { filename, contentType })
-  //   await fetch(uploadUrl, { method:'PUT', body: pendingReceiptFile })
-  //   Then store fileUrl in the expense record.
-  let receiptUrl = null;
+  let receiptUrl = editExpId ? (expState.expenses.find(x => x.id === editExpId)?.receiptUrl || '') : '';
+
+  // Upload receipt to S3 if a new file was selected
   if (pendingReceiptFile) {
-    // For now, store as a local object URL (not persistent across sessions)
-    receiptUrl = URL.createObjectURL(pendingReceiptFile);
-    // Note: object URLs expire when the tab is closed — this is a placeholder
-  }
-
-  if (editExpId) {
-    const exp = expState.expenses.find(x => x.id === editExpId);
-    if (exp) {
-      Object.assign(exp, { date, category, vendor, desc, amount });
-      if (receiptUrl) exp.receiptUrl = receiptUrl;
+    try {
+      const { uploadUrl, fileUrl } = await api('POST', '/expenses/receipt-url', {
+        filename: pendingReceiptFile.name,
+        contentType: pendingReceiptFile.type || 'application/octet-stream',
+      });
+      await fetch(uploadUrl, { method: 'PUT', body: pendingReceiptFile, headers: { 'Content-Type': pendingReceiptFile.type || 'application/octet-stream' } });
+      receiptUrl = fileUrl;
+    } catch(e) {
+      alert('Receipt upload failed: ' + e.message + '\nExpense will be saved without receipt.');
     }
-  } else {
-    const existing = editExpId ? null : null;
-    expState.expenses.push({ id: genId(), date, category, vendor, desc, amount, receiptUrl });
   }
 
-  saveExpState();
+  try {
+    if (editExpId) {
+      const data = await api('PUT', `/expenses/${editExpId}`, { date, category, desc, amount, receiptUrl });
+      const idx = expState.expenses.findIndex(x => x.id === editExpId);
+      if (idx !== -1) expState.expenses[idx] = data.expense;
+    } else {
+      const data = await api('POST', '/expenses', { date, category, desc, amount, receiptUrl });
+      expState.expenses.push(data.expense);
+    }
+  } catch(e) {
+    alert('Failed to save expense: ' + e.message);
+    return;
+  }
+
   closeModal('exp-modal');
   renderExpenses();
 }
 
-function deleteExpense(id) {
+async function deleteExpense(id) {
   const e = expState.expenses.find(x => x.id === id);
-  if (!e || !confirm(`Delete this expense (${e.vendor||e.category}, $${e.amount})?`)) return;
-  expState.expenses = expState.expenses.filter(x => x.id !== id);
-  saveExpState();
-  renderExpenses();
+  if (!e || !confirm(`Delete this expense ($${e.amount})?`)) return;
+  try {
+    await api('DELETE', `/expenses/${id}`);
+    expState.expenses = expState.expenses.filter(x => x.id !== id);
+    renderExpenses();
+  } catch(err) {
+    alert('Failed to delete: ' + err.message);
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1481,7 +1603,7 @@ function updateMilePreview() {
   }
 }
 
-function saveMileage() {
+async function saveMileage() {
   const date    = document.getElementById('mile-date').value;
   const miles   = parseFloat(document.getElementById('mile-miles').value);
   const purpose = document.getElementById('mile-purpose').value.trim();
@@ -1490,24 +1612,34 @@ function saveMileage() {
   if (isNaN(miles) || miles <= 0) { alert('Enter a valid mileage.'); return; }
   if (!purpose) { alert('Purpose is required.'); return; }
 
-  if (editMileId) {
-    const m = expState.mileage.find(x => x.id === editMileId);
-    if (m) Object.assign(m, { date, miles, purpose, notes });
-  } else {
-    expState.mileage.push({ id: genId(), date, miles, purpose, notes });
+  try {
+    if (editMileId) {
+      const data = await api('PUT', `/mileage/${editMileId}`, { date, miles, purpose, notes });
+      const idx = expState.mileage.findIndex(x => x.id === editMileId);
+      if (idx !== -1) expState.mileage[idx] = data.entry;
+    } else {
+      const data = await api('POST', '/mileage', { date, miles, purpose, notes });
+      expState.mileage.push(data.entry);
+    }
+  } catch(e) {
+    alert('Failed to save mileage: ' + e.message);
+    return;
   }
 
-  saveExpState();
   closeModal('mile-modal');
   renderExpenses();
 }
 
-function deleteMileage(id) {
+async function deleteMileage(id) {
   const m = expState.mileage.find(x => x.id === id);
-  if (!m || !confirm(`Delete mileage entry (${m.miles} miles, ${m.purpose})?`)) return;
-  expState.mileage = expState.mileage.filter(x => x.id !== id);
-  saveExpState();
-  renderExpenses();
+  if (!m || !confirm(`Delete mileage entry (${m.miles} miles)?`)) return;
+  try {
+    await api('DELETE', `/mileage/${id}`);
+    expState.mileage = expState.mileage.filter(x => x.id !== id);
+    renderExpenses();
+  } catch(err) {
+    alert('Failed to delete: ' + err.message);
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1731,33 +1863,12 @@ function esc(str) {
 }
 
 // ═══════════════════════════════════════════
-//  RECEIPT CHECK
-// ═══════════════════════════════════════════
-async function checkReceipt(e, expId) {
-  const url = e.currentTarget.href;
-  // Let the browser navigate normally — but also check in background
-  // If HEAD returns an error, swap the cell content
-  try {
-    const res = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
-    // no-cors always returns opaque response (status 0) — we can't read status
-    // so instead catch network errors only; actual 403/404 will be apparent to user
-  } catch(err) {
-    // Network error — URL is dead
-    e.preventDefault();
-    const errEl = document.getElementById('rcpt-err-' + expId);
-    if (errEl) { errEl.style.display = 'inline'; }
-    e.currentTarget.style.opacity = '0.4';
-    e.currentTarget.style.pointerEvents = 'none';
-  }
-}
-
-// ═══════════════════════════════════════════
 //  CSV EXPORT
 // ═══════════════════════════════════════════
 function csvEscape(val) {
   const s = String(val == null ? '' : val);
   if (s.includes(',') || s.includes('"') || s.includes('\n')) {
-    return '"' + s.replace(/"/g, '\"\\"\"') + '"';
+    return '"' + s.replace(/"/g, '""') + '"';
   }
   return s;
 }
@@ -1774,7 +1885,6 @@ function downloadCsv(filename, rows) {
 function exportInventoryCsv() {
   const rate = db.rate || 1.10;
   const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
-
   const header = ['Title','Month','Year','Width','Height','Sq In','Price','Rounded',
                   'Lg Stock','Sm Stock','Lg Sold','Sm Sold','Original Sold'];
   const rows = list.map(p => {
@@ -1784,15 +1894,10 @@ function exportInventoryCsv() {
     const lgSold = p.sales.filter(s => s.type === 'large').length;
     const smSold = p.sales.filter(s => s.type === 'small').length;
     const origSold = p.sales.some(s => s.type === 'original') ? 'Yes' : 'No';
-    return [
-      p.title, p.month || '', p.year,
-      p.width, p.height, sq,
-      price.toFixed(2), rounded,
-      p.stock.large || 0, p.stock.small || 0,
-      lgSold, smSold, origSold,
-    ];
+    return [p.title, p.month || '', p.year, p.width, p.height, sq,
+            price.toFixed(2), rounded, p.stock.large || 0, p.stock.small || 0,
+            lgSold, smSold, origSold];
   });
-
   downloadCsv('inventory.csv', [header, ...rows]);
 }
 
@@ -1800,46 +1905,30 @@ function exportExpensesCsv() {
   const yearFilter = document.getElementById('exp-year-filter').value;
   const catFilter  = document.getElementById('exp-cat-filter').value;
   let list = expState.expenses.slice();
-  if (yearFilter) list = list.filter(e => (e.date||''). startsWith(yearFilter));
+  if (yearFilter) list = list.filter(e => (e.date||'').startsWith(yearFilter));
   if (catFilter)  list = list.filter(e => e.category === catFilter);
-  list.sort((a,b) => (a.date||''). localeCompare(b.date||''));
-
-  const header = ['Date','Category','Vendor','Description','Amount','Receipt URL'];
-  const rows = list.map(e => [
-    e.date || '',
-    e.category || '',
-    e.vendor || '',
-    e.desc || '',
-    Number(e.amount||0).toFixed(2),
-    e.receiptUrl || '',
-  ]);
-
+  list.sort((a,b) => (a.date||'').localeCompare(b.date||''));
+  const header = ['Date','Category','Description','Amount','Receipt URL'];
+  const rows = list.map(e => [e.date||'', e.category||'', e.desc||'',
+                               Number(e.amount||0).toFixed(2), e.receiptUrl||'']);
   const year = yearFilter || 'all';
-  const cat  = catFilter  ? '-' + catFilter.replace(/[^a-z0-9]/gi,'_') : '';
+  const cat  = catFilter ? '-' + catFilter.replace(/[^a-z0-9]/gi,'_') : '';
   downloadCsv(`expenses-${year}${cat}.csv`, [header, ...rows]);
 }
 
 function exportMileageCsv() {
   const yearFilter = document.getElementById('exp-year-filter').value;
   let list = expState.mileage.slice();
-  if (yearFilter) list = list.filter(m => (m.date||''). startsWith(yearFilter));
-  list.sort((a,b) => (a.date||''). localeCompare(b.date||''));
-
+  if (yearFilter) list = list.filter(m => (m.date||'').startsWith(yearFilter));
+  list.sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const header = ['Date','Purpose','Miles','IRS Rate','Deduction','Notes'];
   const rows = list.map(m => {
-    const year = parseInt((m.date||''). slice(0,4)) || new Date().getFullYear();
+    const year = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
     const rate = irsRate(year);
     const miles = Number(m.miles||0);
-    return [
-      m.date || '',
-      m.purpose || '',
-      miles.toFixed(1),
-      rate.toFixed(2),
-      (miles * rate).toFixed(2),
-      m.notes || '',
-    ];
+    return [m.date||'', m.purpose||'', miles.toFixed(1), rate.toFixed(2),
+            (miles * rate).toFixed(2), m.notes||''];
   });
-
   const year = yearFilter || 'all';
   downloadCsv(`mileage-${year}.csv`, [header, ...rows]);
 }
@@ -1852,7 +1941,6 @@ document.getElementById('pw-input').addEventListener('input', function() {
   if (this.value.length === 6) checkPassword({});
 });
 
-// PWA service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/admin-sw.js').catch(() => {});
 }

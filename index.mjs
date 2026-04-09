@@ -3,15 +3,20 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand, ScanCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const SQUARE_TOKEN  = process.env.SQUARE_TOKEN;
 const SQUARE_LOC    = process.env.SQUARE_LOC;
 const SES_FROM      = process.env.SES_FROM;
 const NOTIFY_EMAIL  = process.env.NOTIFY_EMAIL;
-const ADMIN_TOKEN   = process.env.ADMIN_TOKEN; // secret header value for admin routes
+const ADMIN_TOKEN   = process.env.ADMIN_TOKEN;
 
 const PAINTINGS_TABLE = 'dna-paintings';
 const SALES_TABLE     = 'dna-sales';
+const EXPENSES_TABLE  = 'dna-expenses';
+const RECEIPTS_BUCKET = 'kiosk.davidnicholsonllc';
+const RECEIPTS_PREFIX = 'receipts/';
 
 const ALLOWED_ORIGINS = new Set([
   'https://davidnicholsonart.com',
@@ -38,20 +43,19 @@ const CORS = {
 
 const ses       = new SESClient({ region: 'us-east-1' });
 const sns       = new SNSClient({ region: 'us-east-1' });
+const s3        = new S3Client({ region: 'us-east-2' });
 const dynamoRaw = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo    = DynamoDBDocumentClient.from(dynamoRaw);
 
 function ok(body, c)             { return { statusCode: 200, headers: { ...(c||CORS), 'Content-Type': 'application/json' }, body: JSON.stringify(body) }; }
 function err(msg, status=500, c) { return { statusCode: status, headers: c||CORS, body: JSON.stringify({ error: msg }) }; }
 
-// ── Admin auth ──
 function checkAdminAuth(event) {
   // Token auth disabled — relying on password gate in admin.html
-  // TODO: re-enable when CloudFront query string forwarding is confirmed working
   return true;
 }
 
-// ── Square helpers ── (unchanged)
+// ── Square helpers ──
 function squareGet(path) {
   return new Promise((resolve, reject) => {
     const opts = {
@@ -438,7 +442,7 @@ async function cartRedirect(queryParams) {
   return { statusCode: 302, headers: { ...CORS, Location: checkoutUrl }, body: '' };
 }
 
-// ── Admin endpoints ──
+// ── Admin: Paintings ──
 
 async function adminGetPaintings(cors) {
   const [paintingsRes, salesRes] = await Promise.all([
@@ -531,6 +535,80 @@ async function adminUpdateConfig(body, cors) {
   return ok({ rate: Number(rate) }, cors);
 }
 
+// ── Admin: Expenses ──
+
+async function adminGetExpenses(cors) {
+  const res = await dynamo.send(new ScanCommand({ TableName: EXPENSES_TABLE }));
+  const items = res.Items || [];
+  const expenses = items.filter(x => x.type === 'expense');
+  const mileage  = items.filter(x => x.type === 'mileage');
+  return ok({ expenses, mileage }, cors);
+}
+
+async function adminAddExpense(body, cors) {
+  const { date, category, desc, amount, receiptUrl } = body;
+  if (!date || amount == null) return err('Missing required fields', 400, cors);
+  const id = 'e' + Date.now() + Math.random().toString(36).slice(2,5);
+  const item = { id, type: 'expense', date, category: category || 'Other', desc: desc || '', amount: Number(amount), receiptUrl: receiptUrl || '' };
+  await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
+  return ok({ expense: item }, cors);
+}
+
+async function adminUpdateExpense(id, body, cors) {
+  const { date, category, desc, amount, receiptUrl } = body;
+  if (!date || amount == null) return err('Missing required fields', 400, cors);
+  // Preserve existing receiptUrl if not provided in update
+  const existing = await dynamo.send(new GetCommand({ TableName: EXPENSES_TABLE, Key: { id } }));
+  const existingReceiptUrl = existing.Item?.receiptUrl || '';
+  const item = { id, type: 'expense', date, category: category || 'Other', desc: desc || '', amount: Number(amount), receiptUrl: receiptUrl !== undefined ? receiptUrl : existingReceiptUrl };
+  await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
+  return ok({ expense: item }, cors);
+}
+
+async function adminDeleteExpense(id, cors) {
+  await dynamo.send(new DeleteCommand({ TableName: EXPENSES_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
+async function adminAddMileage(body, cors) {
+  const { date, miles, purpose, notes } = body;
+  if (!date || !miles || !purpose) return err('Missing required fields', 400, cors);
+  const id = 'm' + Date.now() + Math.random().toString(36).slice(2,5);
+  const item = { id, type: 'mileage', date, miles: Number(miles), purpose, notes: notes || '' };
+  await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
+  return ok({ entry: item }, cors);
+}
+
+async function adminUpdateMileage(id, body, cors) {
+  const { date, miles, purpose, notes } = body;
+  if (!date || !miles || !purpose) return err('Missing required fields', 400, cors);
+  const item = { id, type: 'mileage', date, miles: Number(miles), purpose, notes: notes || '' };
+  await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
+  return ok({ entry: item }, cors);
+}
+
+async function adminDeleteMileage(id, cors) {
+  await dynamo.send(new DeleteCommand({ TableName: EXPENSES_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
+// ── Admin: Receipt pre-signed URL ──
+
+async function adminReceiptUploadUrl(body, cors) {
+  const { filename, contentType } = body;
+  if (!filename || !contentType) return err('Missing filename or contentType', 400, cors);
+  const ext = filename.split('.').pop().toLowerCase();
+  const key = `${RECEIPTS_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+  const command = new PutObjectCommand({
+    Bucket: RECEIPTS_BUCKET,
+    Key: key,
+    ContentType: contentType,
+  });
+  const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 min
+  const fileUrl = `https://${RECEIPTS_BUCKET}.s3.us-east-2.amazonaws.com/${key}`;
+  return ok({ uploadUrl, fileUrl }, cors);
+}
+
 // ── Router ──
 export const handler = async (event) => {
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
@@ -550,7 +628,7 @@ export const handler = async (event) => {
     if (method === 'POST' && path === '/guestbook')                       return await guestbook(JSON.parse(event.body || '{}'));
     if (method === 'POST' && path === '/checkout')                        return await checkout(JSON.parse(event.body || '{}'));
 
-    // Admin routes — check token
+    // Admin routes
     if (path.startsWith('/admin')) {
       if (!checkAdminAuth(event)) return err('Unauthorized', 401, cors);
 
@@ -561,10 +639,9 @@ export const handler = async (event) => {
       if (method === 'PUT' && path === '/admin/config')  return await adminUpdateConfig(b(), cors);
 
       // Paintings
-      if (method === 'GET'    && path === '/admin/paintings')            return await adminGetPaintings(cors);
-      if (method === 'POST'   && path === '/admin/paintings')            return await adminAddPainting(b(), cors);
+      if (method === 'GET'  && path === '/admin/paintings') return await adminGetPaintings(cors);
+      if (method === 'POST' && path === '/admin/paintings') return await adminAddPainting(b(), cors);
 
-      // Match /admin/paintings/{id}
       const paintingMatch = path.match(/^\/admin\/paintings\/([^/]+)$/);
       if (paintingMatch) {
         const paintingId = paintingMatch[1];
@@ -572,18 +649,38 @@ export const handler = async (event) => {
         if (method === 'DELETE') return await adminDeletePainting(paintingId, cors);
       }
 
-      // Match /admin/paintings/{id}/sales
       const salesListMatch = path.match(/^\/admin\/paintings\/([^/]+)\/sales$/);
       if (salesListMatch && method === 'POST') {
         return await adminAddSale(salesListMatch[1], b(), cors);
       }
 
-      // Match /admin/paintings/{id}/sales/{saleId}
       const saleMatch = path.match(/^\/admin\/paintings\/([^/]+)\/sales\/([^/]+)$/);
       if (saleMatch) {
         const [, paintingId, saleId] = saleMatch;
         if (method === 'PUT')    return await adminUpdateSale(paintingId, saleId, b(), cors);
         if (method === 'DELETE') return await adminDeleteSale(saleId, cors);
+      }
+
+      // Expenses
+      if (method === 'GET'  && path === '/admin/expenses') return await adminGetExpenses(cors);
+      if (method === 'POST' && path === '/admin/expenses') return await adminAddExpense(b(), cors);
+      if (method === 'POST' && path === '/admin/expenses/receipt-url') return await adminReceiptUploadUrl(b(), cors);
+
+      const expenseMatch = path.match(/^\/admin\/expenses\/([^/]+)$/);
+      if (expenseMatch) {
+        const expId = expenseMatch[1];
+        if (method === 'PUT')    return await adminUpdateExpense(expId, b(), cors);
+        if (method === 'DELETE') return await adminDeleteExpense(expId, cors);
+      }
+
+      // Mileage
+      if (method === 'POST' && path === '/admin/mileage') return await adminAddMileage(b(), cors);
+
+      const mileageMatch = path.match(/^\/admin\/mileage\/([^/]+)$/);
+      if (mileageMatch) {
+        const mileId = mileageMatch[1];
+        if (method === 'PUT')    return await adminUpdateMileage(mileId, b(), cors);
+        if (method === 'DELETE') return await adminDeleteMileage(mileId, cors);
       }
 
       return err('Not found', 404, cors);
