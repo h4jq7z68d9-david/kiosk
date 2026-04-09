@@ -595,10 +595,15 @@ async function adminDeleteMileage(id, cors) {
 // ── Admin: Receipt pre-signed URL ──
 
 async function adminReceiptUploadUrl(body, cors) {
-  const { filename, contentType } = body;
+  const { filename, contentType, date, amount, category } = body;
   if (!filename || !contentType) return err('Missing filename or contentType', 400, cors);
-  const ext = filename.split('.').pop().toLowerCase();
-  const key = `${RECEIPTS_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+  const ext = filename.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  // Build a readable filename: 2026-04-08_40.01_Insurance
+  const safeCat = (category || 'other').replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').toLowerCase();
+  const safeDate = (date || new Date().toISOString().slice(0,10));
+  const safeAmt  = amount != null ? Number(amount).toFixed(2) : '0.00';
+  const baseName = `${safeDate}_${safeAmt}_${safeCat}`;
+  const key = `${RECEIPTS_PREFIX}${baseName}.${ext}`;
   const command = new PutObjectCommand({
     Bucket: RECEIPTS_BUCKET,
     Key: key,

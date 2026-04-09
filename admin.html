@@ -1521,6 +1521,9 @@ async function saveExpense() {
       const { uploadUrl, fileUrl } = await api('POST', '/expenses/receipt-url', {
         filename: pendingReceiptFile.name,
         contentType: pendingReceiptFile.type || 'application/octet-stream',
+        date,
+        amount,
+        category,
       });
       await fetch(uploadUrl, { method: 'PUT', body: pendingReceiptFile, headers: { 'Content-Type': pendingReceiptFile.type || 'application/octet-stream' } });
       receiptUrl = fileUrl;
