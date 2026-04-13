@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Original Paintings — David Nicholson</title>
+<meta name="description" content="Original oil paintings by David Nicholson. Available for purchase — contact for inquiries.">
+<meta name="author" content="David Nicholson">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://davidnicholsonart.com/originals.html">
+<meta property="og:title" content="Original Paintings — David Nicholson">
+<meta property="og:description" content="Original oil paintings by David Nicholson. Available for purchase — contact for inquiries.">
+<meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
+<meta property="og:site_name" content="David Nicholson Art">
+<!-- Twitter/X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Original Paintings — David Nicholson">
+<meta name="twitter:description" content="Original oil paintings by David Nicholson. Available for purchase — contact for inquiries.">
+<meta name="twitter:image" content="https://davidnicholsonart.com/og-image.jpg">
+<!-- Canonical -->
+<link rel="canonical" href="https://davidnicholsonart.com/originals.html">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FL5BKJFVXF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FL5BKJFVXF');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f3; --surface: #ede9e3; --border: #ddd8d0; --border-mid: #ccc6bc;
+  --ink: #1a2a3a; --ink2: #7a8a99; --ink3: #9aa0a8; --accent: #e07030;
+  --font: 'DM Sans', sans-serif; --serif: 'Playfair Display', serif; --nav-h: 56px;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+@media (min-width: 701px) { nav { padding: 0 40px; } }
+@media (min-width: 1100px) { nav { padding: 0 60px; } }
+.nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; flex: 1; }
+.nav-links { display: flex; align-items: center; gap: 8px; }
+.nav-btn { background: none; border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
+.nav-btn:hover { border-color: var(--ink); }
+
+/* LAYOUT */
+.page-body {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-top: var(--nav-h);
+  min-height: 100vh;
+}
+
+/* YEAR SIDEBAR */
+.year-sidebar {
+  width: 52px;
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100vh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 0;
+  gap: 2px;
+  border-right: 1px solid var(--border);
+}
+.year-btn {
+  background: none; border: none;
+  font-family: var(--font); font-size: 11px; font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  cursor: pointer;
+  padding: 6px 4px;
+  width: 100%; text-align: center;
+  transition: color 0.15s;
+  line-height: 1;
+  text-decoration: none;
+  display: block;
+}
+.year-btn:hover { color: var(--ink2); }
+.year-btn.active { color: var(--accent); font-weight: 500; }
+
+/* MOBILE YEAR BAR */
+.filter-bar-mobile {
+  display: none;
+}
+@media (max-width: 700px) {
+  .year-sidebar { display: none !important; }
+  .filter-bar-mobile {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: var(--nav-h);
+    background: var(--bg);
+    z-index: 70;
+    align-items: center;
+  }
+  .filter-bar-mobile::-webkit-scrollbar { display: none; }
+  .filter-pill {
+    flex-shrink: 0;
+    padding: 6px 4px;
+    border: none;
+    background: none;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--ink3);
+    cursor: pointer;
+    transition: color 0.15s;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .filter-pill:hover { color: var(--ink2); }
+  .filter-pill.active { color: var(--accent); font-weight: 500; }
+}
+
+/* MAIN CONTENT */
+.content-wrap {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 32px 80px;
+}
+@media (max-width: 700px) {
+  .content-wrap { padding: 24px 16px 60px; }
+}
+
+/* PAGE HEADER */
+.page-header {
+  margin-bottom: 48px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.page-header h1 {
+  font-family: var(--font);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.page-header p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink2);
+  line-height: 1.7;
+  max-width: 540px;
+}
+.page-header p a {
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+.page-header p a:hover { text-decoration: underline; }
+@media (max-width: 700px) {
+  .page-header { margin-bottom: 32px; padding-bottom: 20px; }
+  .page-header h1 { font-size: 22px; }
+}
+
+/* YEAR SECTIONS */
+.year-section + .year-section { margin-top: 56px; }
+.year-heading {
+  margin-bottom: 20px;
+  scroll-margin-top: calc(var(--nav-h) + 20px);
+}
+.year-heading-label {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--ink3);
+  text-transform: lowercase;
+}
+@media (max-width: 700px) {
+  .year-section + .year-section { margin-top: 40px; }
+}
+
+/* PAINTING LIST */
+.painting-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* PAINTING ROW */
+.painting-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 4px;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.painting-row:first-child { border-top: 1px solid var(--border); }
+.painting-row:hover { background: var(--surface); }
+
+.thumb-wrap {
+  flex-shrink: 0;
+  width: 88px;
+  height: 88px;
+  background: var(--surface);
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.thumb-wrap img.loaded { opacity: 1; }
+.thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--surface);
+}
+
+.painting-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 4px;
+}
+.painting-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+.painting-meta {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--ink2);
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+.painting-contact {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+  color: var(--accent);
+}
+
+@media (max-width: 500px) {
+  .thumb-wrap { width: 72px; height: 72px; }
+  .painting-row { gap: 16px; }
+  .painting-title { font-size: 15px; }
+  .painting-meta { font-size: 12px; }
+}
+
+/* SKELETON */
+.skel-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+.skel-row:first-child { border-top: 1px solid var(--border); }
+.skel { background: var(--surface); border-radius: 3px; animation: sk 1.6s ease-in-out infinite; }
+@keyframes sk { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+.skel-thumb { width: 88px; height: 88px; flex-shrink: 0; }
+.skel-lines { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.skel-line { height: 14px; border-radius: 3px; }
+
+/* LIGHTBOX */
+#lb-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: zoom-out;
+}
+#lb-overlay.on { display: flex; }
+#lb-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 3px;
+  pointer-events: none;
+  cursor: default;
+}
+.lb-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); border: none;
+  color: #fff; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+}
+.lb-close:hover { background: rgba(255,255,255,0.22); }
+.lb-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.12); border: none; border-radius: 50%;
+  width: 48px; height: 48px; cursor: pointer; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 24px; transition: background 0.15s;
+}
+.lb-nav:hover { background: rgba(255,255,255,0.22); }
+.lb-prev { left: 16px; }
+.lb-next { right: 16px; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
+.footer-link { background: none; border: none; color: var(--ink2); font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; padding: 0; cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
+.footer-link:hover { color: var(--ink); }
+
+/* TOAST */
+#toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f8f6f3; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+<link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon180.png">
+</head>
+<body>
+
+<nav>
+  <a class="nav-title" href="/index.html"><span style="margin-right:8px;font-size:16px;">&#8592;</span>david nicholson</a>
+  <div class="nav-links">
+    <a class="nav-btn" href="/gallery.html">prints</a>
+    <a class="nav-btn" href="https://instagram.com/dave_nichol_son">instagram</a>
+  </div>
+</nav>
+
+<div class="filter-bar-mobile" id="filter-bar-mobile" style="display:none"></div>
+
+<div class="page-body">
+
+  <div class="year-sidebar" id="year-sidebar" style="display:none"></div>
+
+  <div class="content-wrap">
+
+    <div class="page-header">
+      <h1>original paintings</h1>
+      <p>Original paintings available for purchase. To inquire, <a onclick="contact()">contact me directly</a>.</p>
+    </div>
+
+    <div id="list-wrap">
+      <!-- skeletons -->
+      <div class="year-section">
+        <div class="painting-list" id="skel-list">
+          <div class="skel-row"><div class="skel skel-thumb"></div><div class="skel-lines"><div class="skel skel-line" style="width:55%"></div><div class="skel skel-line" style="width:38%"></div></div></div>
+          <div class="skel-row"><div class="skel skel-thumb"></div><div class="skel-lines"><div class="skel skel-line" style="width:62%"></div><div class="skel skel-line" style="width:42%"></div></div></div>
+          <div class="skel-row"><div class="skel skel-thumb"></div><div class="skel-lines"><div class="skel skel-line" style="width:48%"></div><div class="skel skel-line" style="width:35%"></div></div></div>
+          <div class="skel-row"><div class="skel skel-thumb"></div><div class="skel-lines"><div class="skel skel-line" style="width:70%"></div><div class="skel skel-line" style="width:44%"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lb-overlay" onclick="lbBgClick(event)">
+  <button class="lb-close" onclick="event.stopPropagation();closeLB()">✕</button>
+  <button class="lb-nav lb-prev" onclick="event.stopPropagation();lbNav(-1)">‹</button>
+  <img id="lb-img" src="" alt="" referrerpolicy="no-referrer">
+  <button class="lb-nav lb-next" onclick="event.stopPropagation();lbNav(1)">›</button>
+</div>
+
+<div id="toast"></div>
+
+<footer>
+  <span class="footer-copy">&copy; 2026 david nicholson</span>
+  <div style="display:flex;gap:16px;align-items:center;">
+    <a class="footer-link" href="/shipping.html">shipping &amp; returns</a>
+    <button class="footer-link" onclick="contact()">contact</button>
+  </div>
+</footer>
+
+<script>
+const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
+
+let originals = [];
+let lbIdx = 0;
+
+// ── Contact ──
+function contact() {
+  window.location = 'mai' + 'lto:' + 'david@' + 'davidnicholsonart.com';
+}
+
+// ── Lightbox ──
+function openLB(idx) {
+  lbIdx = idx;
+  const p = originals[idx];
+  if (!p?.img) return;
+  document.getElementById('lb-img').src = p.img;
+  document.getElementById('lb-img').alt = p.title;
+  document.getElementById('lb-overlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeLB() {
+  document.getElementById('lb-overlay').classList.remove('on');
+  document.body.style.overflow = '';
+}
+function lbBgClick(e) {
+  if (e.target === document.getElementById('lb-overlay')) closeLB();
+}
+function lbNav(dir) {
+  lbIdx = (lbIdx + dir + originals.length) % originals.length;
+  const p = originals[lbIdx];
+  document.getElementById('lb-img').src = p.img || '';
+  document.getElementById('lb-img').alt = p.title;
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lb-overlay').classList.contains('on')) return;
+  if (e.key === 'Escape') closeLB();
+  if (e.key === 'ArrowLeft')  lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+});
+
+let lbSwipeX = 0;
+document.getElementById('lb-overlay').addEventListener('touchstart', e => {
+  lbSwipeX = e.touches[0].clientX;
+}, { passive: true });
+document.getElementById('lb-overlay').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - lbSwipeX;
+  if (Math.abs(dx) > 50) { lbNav(dx < 0 ? 1 : -1); return; }
+  if (Math.abs(dx) < 8) closeLB();
+}, { passive: true });
+
+// ── Render ──
+
+function buildNav(years) {
+  if (!years.length) return;
+  const sidebar = document.getElementById('year-sidebar');
+  sidebar.style.display = 'flex';
+  years.forEach(y => {
+    const a = document.createElement('a');
+    a.className = 'year-btn';
+    a.textContent = y;
+    a.href = '#year-' + y;
+    a.dataset.year = y;
+    sidebar.appendChild(a);
+  });
+
+  const mobileBar = document.getElementById('filter-bar-mobile');
+  mobileBar.style.display = '';
+  years.forEach(y => {
+    const a = document.createElement('a');
+    a.className = 'filter-pill';
+    a.textContent = y;
+    a.href = '#year-' + y;
+    a.dataset.year = y;
+    mobileBar.appendChild(a);
+  });
+}
+
+function initScrollSpy() {
+  const headings = document.querySelectorAll('.year-heading[id]');
+  if (!headings.length) return;
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const y = entry.target.id.replace('year-', '');
+        document.querySelectorAll('.year-btn, .filter-pill').forEach(el => {
+          el.classList.toggle('active', el.dataset.year === y);
+        });
+      }
+    });
+  }, { rootMargin: '0px 0px -80% 0px' });
+  headings.forEach(h => observer.observe(h));
+}
+
+function renderList() {
+  const wrap = document.getElementById('list-wrap');
+  wrap.innerHTML = '';
+
+  const years = [...new Set(originals.map(p => p.year).filter(Boolean))]
+    .sort((a, b) => parseInt(b) - parseInt(a));
+
+  buildNav(years);
+
+  // Group by year
+  const byYear = {};
+  const noYear = [];
+  originals.forEach((p, i) => {
+    if (p.year) {
+      if (!byYear[p.year]) byYear[p.year] = [];
+      byYear[p.year].push({ p, i });
+    } else {
+      noYear.push({ p, i });
+    }
+  });
+
+  const renderSection = (year, items) => {
+    const section = document.createElement('div');
+    section.className = 'year-section';
+
+    if (year) {
+      const heading = document.createElement('div');
+      heading.className = 'year-heading';
+      heading.id = 'year-' + year;
+      heading.innerHTML = '<div class="year-heading-label">' + year + '</div>';
+      section.appendChild(heading);
+    }
+
+    const list = document.createElement('div');
+    list.className = 'painting-list';
+
+    items.forEach(({ p, i }) => {
+      const row = document.createElement('div');
+      row.className = 'painting-row';
+      row.onclick = () => { if (p.img) openLB(i); };
+
+      // Thumb
+      const thumbWrap = document.createElement('div');
+      thumbWrap.className = 'thumb-wrap';
+      if (p.img) {
+        const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.alt = p.title;
+        img.onload = () => img.classList.add('loaded');
+        img.src = p.img;
+        thumbWrap.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'thumb-placeholder';
+        thumbWrap.appendChild(ph);
+      }
+      row.appendChild(thumbWrap);
+
+      // Info
+      const info = document.createElement('div');
+      info.className = 'painting-info';
+
+      const title = document.createElement('div');
+      title.className = 'painting-title';
+      title.textContent = p.title;
+      info.appendChild(title);
+
+      // Meta line: medium · dimensions
+      const metaParts = [p.medium || 'oil'];
+      if (p.width && p.height) metaParts.push(p.width + ' × ' + p.height + ' in');
+      const meta = document.createElement('div');
+      meta.className = 'painting-meta';
+      meta.textContent = metaParts.join('  ·  ');
+      info.appendChild(meta);
+
+      const contact = document.createElement('div');
+      contact.className = 'painting-contact';
+      contact.textContent = 'contact for inquiry';
+      info.appendChild(contact);
+
+      row.appendChild(info);
+      list.appendChild(row);
+    });
+
+    section.appendChild(list);
+    return section;
+  };
+
+  years.forEach(y => {
+    if (byYear[y]?.length) wrap.appendChild(renderSection(y, byYear[y]));
+  });
+  if (noYear.length) wrap.appendChild(renderSection(null, noYear));
+
+  setTimeout(initScrollSpy, 100);
+}
+
+// ── Load ──
+async function loadOriginals() {
+  try {
+    const r = await fetch(LAMBDA + '/originals');
+    if (!r.ok) throw 0;
+    const data = await r.json();
+    originals = data.originals || [];
+    if (!originals.length) {
+      document.getElementById('list-wrap').innerHTML =
+        '<p style="color:var(--ink3);padding:40px 0;font-size:14px;">No originals currently available.</p>';
+      return;
+    }
+    renderList();
+  } catch {
+    document.getElementById('list-wrap').innerHTML =
+      '<p style="color:var(--ink3);padding:40px 0;font-size:14px;">Could not load paintings — please try again.</p>';
+  }
+}
+
+let tT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(tT); tT = setTimeout(() => el.classList.remove('on'), 2600);
+}
+
+loadOriginals();
+</script>
+</body>
+</html>

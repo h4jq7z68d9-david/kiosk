@@ -228,6 +228,89 @@ async function getProducts() {
   return ok({ products });
 }
 
+async function getOriginals() {
+  const SELF = process.env.API_URL || 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
+
+  const [itemsRes, imagesRes, categoriesRes, configRes, paintingsRes] = await Promise.all([
+    squareGet(`/v2/catalog/list?types=ITEM&location_id=${SQUARE_LOC}`),
+    squareGet(`/v2/catalog/list?types=IMAGE`),
+    squareGet(`/v2/catalog/list?types=CATEGORY`),
+    dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } })),
+    dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE })),
+  ]);
+
+  // Build category ID → name lookup
+  const categoryNames = {};
+  for (const obj of (categoriesRes.objects || [])) {
+    if (obj.category_data?.name) categoryNames[obj.id] = obj.category_data.name.toLowerCase();
+  }
+
+  const originalAvailableId = Object.keys(categoryNames).find(id => categoryNames[id] === 'originalavailable');
+  if (!originalAvailableId) return ok({ originals: [] });
+
+  const rate = configRes.Item?.rate ?? null;
+
+  // Build title → dimensions lookup from dna-paintings
+  const dimsByTitle = {};
+  for (const item of (paintingsRes.Items || [])) {
+    if (item.id === '__config__') continue;
+    if (item.title && item.width && item.height) {
+      dimsByTitle[item.title.toLowerCase()] = { width: item.width, height: item.height };
+    }
+  }
+
+  const imageMap = {};
+  for (const img of (imagesRes.objects || [])) {
+    if (img.image_data?.url) imageMap[img.id] = img.image_data.url;
+  }
+
+  const originals = [];
+  for (const obj of (itemsRes.objects || [])) {
+    const item = obj.item_data;
+    if (!item) continue;
+    // Must have originalAvailable category
+    const itemCategoryIds = (item.categories || []).map(c => c.id);
+    if (!itemCategoryIds.includes(originalAvailableId)) continue;
+
+    // Determine medium from oil/acrylic category
+    let medium = 'oil';
+    if (itemCategoryIds.some(id => categoryNames[id] === 'acrylic')) medium = 'acrylic';
+
+    const imgId  = item.image_ids?.[0];
+    const rawImg = imgId ? imageMap[imgId] : null;
+    const img    = rawImg ? `${SELF}/image?id=${encodeURIComponent(imgId)}` : null;
+    const year   = extractYear(obj);
+
+    const dims = dimsByTitle[item.name.toLowerCase()] || null;
+    let price = null;
+    if (rate && dims) {
+      price = Math.ceil((dims.width * dims.height * rate) / 50) * 50;
+    }
+
+    originals.push({
+      id:     obj.id,
+      title:  item.name,
+      desc:   item.description || '',
+      img,
+      rawImg,
+      year,
+      width:  dims?.width  ?? null,
+      height: dims?.height ?? null,
+      medium,
+      price,
+    });
+  }
+
+  originals.sort((a, b) => {
+    const ya = a.year ? parseInt(a.year) : 0;
+    const yb = b.year ? parseInt(b.year) : 0;
+    if (yb !== ya) return yb - ya;
+    return a.title.localeCompare(b.title);
+  });
+
+  return ok({ originals });
+}
+
 async function getFeed() {
   const products = await buildProductList();
   const SITE = 'https://davidnicholsonart.com';
@@ -625,6 +708,7 @@ export const handler = async (event) => {
   try {
     // Public routes
     if (method === 'GET'  && path === '/products')                        return await getProducts();
+    if (method === 'GET'  && path === '/originals')                       return await getOriginals();
     if (method === 'GET'  && (path === '/feed' || path === '/feed.xml'))  return await getFeed();
     if (method === 'GET'  && path === '/cart')                            return await cartRedirect(event.queryStringParameters);
     if (method === 'GET'  && path === '/hero')                            return await getHero();
