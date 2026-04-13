@@ -263,8 +263,13 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   letter-spacing: 0.02em;
   line-height: 1.5;
 }
+.painting-price {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
 .painting-contact {
-  margin-top: 6px;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.1em;
@@ -571,6 +576,13 @@ function renderList() {
       meta.className = 'painting-meta';
       meta.textContent = metaParts.join('  ·  ');
       info.appendChild(meta);
+
+      if (p.price) {
+        const price = document.createElement('div');
+        price.className = 'painting-price';
+        price.textContent = '$' + p.price.toLocaleString();
+        info.appendChild(price);
+      }
 
       const contact = document.createElement('div');
       contact.className = 'painting-contact';

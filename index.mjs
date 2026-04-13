@@ -251,11 +251,15 @@ async function getOriginals() {
   const rate = configRes.Item?.rate ?? null;
 
   // Build title → dimensions lookup from dna-paintings
+  // Normalize: lowercase, collapse whitespace, strip punctuation for fuzzy matching
+  function normalizeTitle(t) {
+    return t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  }
   const dimsByTitle = {};
   for (const item of (paintingsRes.Items || [])) {
     if (item.id === '__config__') continue;
     if (item.title && item.width && item.height) {
-      dimsByTitle[item.title.toLowerCase()] = { width: item.width, height: item.height };
+      dimsByTitle[normalizeTitle(item.title)] = { width: item.width, height: item.height };
     }
   }
 
@@ -281,7 +285,7 @@ async function getOriginals() {
     const img    = rawImg ? `${SELF}/image?id=${encodeURIComponent(imgId)}` : null;
     const year   = extractYear(obj);
 
-    const dims = dimsByTitle[item.name.toLowerCase()] || null;
+    const dims = dimsByTitle[normalizeTitle(item.name)] || null;
     let price = null;
     if (rate && dims) {
       price = Math.ceil((dims.width * dims.height * rate) / 50) * 50;
