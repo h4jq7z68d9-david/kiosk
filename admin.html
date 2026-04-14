@@ -214,7 +214,6 @@
   .stock-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   .orig-sold { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 3px; background: var(--green); color: white; letter-spacing: 0.04em; }
-  .orig-avail { font-size: 12px; color: var(--ink3); }
 
   /* ── EXPAND ROW ── */
   tr.expand-row td { padding: 0; background: var(--bg2); border-bottom: 2px solid var(--border-mid); }
@@ -879,7 +878,7 @@ const MILEAGE_SEED = [
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
-let db = { paintings: [], rate: 1.10 };
+let db = { paintings: [], rate: 1.10, squareOriginals: {} };
 let expState = { expenses: [], mileage: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
 let activeFilter = null, expandedId = null;
@@ -947,6 +946,22 @@ function switchTab(tab) {
 // ═══════════════════════════════════════════
 //  EXPENSE API LAYER
 // ═══════════════════════════════════════════
+async function loadSquareOriginals() {
+  try {
+    const data = await api('GET', '/originals');
+    // Build a normalized-title → boolean lookup map
+    const map = {};
+    for (const o of (data.originals || [])) {
+      map[normTitle(o.title)] = true;
+    }
+    db.squareOriginals = map;
+    renderCards();
+    renderTable();
+  } catch(e) {
+    console.error('Failed to load Square originals:', e);
+  }
+}
+
 async function loadExpenses() {
   setLoading(true);
   try {
@@ -1009,6 +1024,11 @@ function sqIn(p) { return p.width * p.height; }
 function cost(p, rate) { return sqIn(p) * rate; }
 function retail(p, rate) { return Math.ceil(cost(p, rate) / 50) * 50; }
 function originalSold(p) { return p.sales.some(s => s.type === 'original'); }
+function normTitle(t) { return (t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function originalAvailInSquare(p) {
+  const key = normTitle(p.title);
+  return db.squareOriginals[key] === true;
+}
 function saleNet(s) { if (s.channel === 'gallery' && s.net != null) return Number(s.net); return Number(s.price); }
 
 // ═══════════════════════════════════════════
@@ -1062,7 +1082,7 @@ function applyFilter(list) {
   if (!activeFilter) return list;
   if (activeFilter === 'never-sold')     return list.filter(p => p.sales.length === 0);
   if (activeFilter === 'sold')           return list.filter(p => p.sales.length > 0);
-  if (activeFilter === 'original-avail') return list.filter(p => !originalSold(p));
+  if (activeFilter === 'original-avail') return list.filter(p => originalAvailInSquare(p));
   if (activeFilter === 'low-stock')      return list.filter(p => (p.stock.large||0) === 0 || (p.stock.small||0) === 0);
   if (activeFilter === 'no-moms')        return list.filter(p => !p.momsHas);
   return list;
@@ -1098,6 +1118,9 @@ async function init() {
 
   // Load expenses in background so dashboard cards populate on login
   loadExpenses().catch(e => console.error('Background expense load failed:', e));
+
+  // Load Square originals in background to populate Original Available column
+  loadSquareOriginals().catch(e => console.error('Background Square originals load failed:', e));
 }
 
 function render() {
@@ -1125,7 +1148,7 @@ function renderCards() {
   });
   const totalLarge = db.paintings.reduce((s,p) => s + (p.stock.large||0), 0);
   const totalSmall = db.paintings.reduce((s,p) => s + (p.stock.small||0), 0);
-  const originalsInStock = db.paintings.length - origSold;
+  const originalsInStock = Object.values(db.squareOriginals).filter(v => v === true).length;
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
 
   document.getElementById('cards').innerHTML = `
@@ -1237,6 +1260,7 @@ function renderTable() {
   list.forEach(p => {
     const c = cost(p, rate), r = retail(p, rate);
     const sold = originalSold(p);
+    const squareAvail = originalAvailInSquare(p);
     const isOpen = expandedId === p.id;
     const lgSold = p.sales.filter(s => s.type === 'large').length;
     const smSold = p.sales.filter(s => s.type === 'small').length;
@@ -1252,7 +1276,7 @@ function renderTable() {
         <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',-1)">−</button><span class="stock-num ${(p.stock.small||0)===0?'zero':''}">${p.stock.small||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',1)">+</button></div></td>
         <td class="mono dim">${lgSold||'—'}</td>
         <td class="mono dim">${smSold||'—'}</td>
-        <td>${sold ? '<span class="orig-sold">sold</span>' : '<span class="orig-avail">available</span>'}</td>
+        <td>${squareAvail ? '' : '<span class="orig-sold">sold</span>'}</td>
       </tr>`;
     if (isOpen) {
       const monthOpts = ['','January','February','March','April','May','June','July','August','September','October','November','December']
