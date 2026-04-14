@@ -201,6 +201,14 @@ async function buildProductList() {
     const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const url  = `https://david-nicholson-art.square.site/product/${slug}/${obj.id}`;
 
+    const attrs = obj.custom_attribute_values;
+    let originalAvail = false;
+    if (attrs) {
+      for (const val of Object.values(attrs)) {
+        if (val.name === 'Original Available') { originalAvail = val.boolean_value === true; break; }
+      }
+    }
+
     products.push({
       id:         obj.id,
       title:      item.name,
@@ -210,6 +218,7 @@ async function buildProductList() {
       url,
       variations,
       year:       extractYear(obj),
+      originalAvail,
     });
   }
 

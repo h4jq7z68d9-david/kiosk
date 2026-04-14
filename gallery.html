@@ -300,6 +300,8 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 
 /* SHARE ROW */
 .share-row { display: flex; gap: 10px; align-items: center; }
+.original-avail-link { display: block; text-align: right; font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 0.04em; text-decoration: none; margin-top: 2px; }
+.original-avail-link:hover { text-decoration: underline; }
 .share-label { font-size: 11px; font-weight: 500; letter-spacing: 0.10em; text-transform: lowercase; color: #a8a39d; margin-right: 2px; }
 .share-btn { display: flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 8px; border: 1.5px solid rgba(0,0,0,0.12); background: transparent; font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: #4a4744; cursor: pointer; text-decoration: none; transition: all 0.15s; white-space: nowrap; }
 .share-btn:hover { border-color: #1a1917; color: #1a1917; }
@@ -416,6 +418,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
         <div class="d-price-display" id="d-price"></div>
         <div style="font-size:12px;color:#a8a39d;letter-spacing:0.03em;">Giclée prints are signed and dated, matted and ready to frame.</div>
         <div class="share-row" id="share-row"></div>
+        <div id="original-avail-row"></div>
         <div class="buy-section" id="buy-section"></div>
       </div>
     </div>
@@ -592,6 +595,13 @@ function openDetail(idx) {
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.514c-1.491 0-1.956.93-1.956 1.886v2.254h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>' +
       'facebook' +
     '</a>';
+
+  const origRow = document.getElementById('original-avail-row');
+  if (p.originalAvail) {
+    origRow.innerHTML = '<a class="original-avail-link" href="/originals.html" onclick="event.stopPropagation()">original available →</a>';
+  } else {
+    origRow.innerHTML = '';
+  }
 
   document.getElementById('detail-overlay').classList.add('on');
   document.getElementById('detail-sheet').scrollTop = 0;
