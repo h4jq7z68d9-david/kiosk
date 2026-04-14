@@ -1109,13 +1109,12 @@ function render() {
 }
 
 function renderCards() {
-  let totalRev = 0, origSold = 0, largeSold = 0, smallSold = 0;
+  const origSold = db.paintings.filter(p => p.originalAvail !== true).length;
   let revFair = 0, revOnline = 0, revGallery = 0;
   db.paintings.forEach(p => {
     p.sales.forEach(s => {
       const net = saleNet(s);
       totalRev += net;
-      if (s.type === 'original') origSold++;
       if (s.type === 'large') largeSold++;
       if (s.type === 'small') smallSold++;
       if (s.channel === 'fair')    revFair    += net;
