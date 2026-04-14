@@ -1110,6 +1110,7 @@ function render() {
 
 function renderCards() {
   const origSold = db.paintings.filter(p => p.originalAvail !== true).length;
+  let totalRev = 0, largeSold = 0, smallSold = 0;
   let revFair = 0, revOnline = 0, revGallery = 0;
   db.paintings.forEach(p => {
     p.sales.forEach(s => {
