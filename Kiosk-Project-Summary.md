@@ -436,6 +436,16 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ---
 
+## Start of Next Session — Do This First
+
+1. **Test `/originals` endpoint** — confirm "A Walk in Blue and Green" (and any others David has set up in Square) appear on `davidnicholsonart.com/originals.html` with correct dimensions, medium, and price
+2. **Migrate `dna-paintings` to Square item IDs** — re-key all existing DynamoDB records from generated UUIDs to Square item IDs; drop orphan records with no Square match; this eliminates title-matching and prevents duplicate records when inventory page is built
+3. **Build inventory page** — fed from Square (painting list/images/attributes) + DynamoDB (print stock counts keyed by Square item ID); stock managed via admin, not Square
+
+David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `Original Available`) on all items before this session.
+
+---
+
 ## Pending — In Order of Priority
 
 - [ ] **Add 2026 receipts** — 23 expense records have no receipt; add manually via admin PWA
@@ -449,6 +459,11 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## On the Horizon
 
+- **Inventory page** — public-facing page fed from Square `/products`; shows print stock per painting (large/small), flags which have `Original Available = true`; replaces/supplements admin inventory card; feeds same data as originals page
+- **Square attribute bulk update** — fill `Width`, `Height`, `Medium`, `Original Available` on all 43 items; CSV import may work once attributes exist in system; test after "A Walk in Blue and Green" is confirmed working
+- **DynamoDB title corrections** — update 6 painting titles in admin to match Square canonical names (see Completed This Session above)
+- **originals.html nav placement** — decide where to link from (index.html, gallery.html nav, or both)
+- **Originals shipping** — still TBD; originals are contact-for-purchase so shipping is handled case by case for now
 - **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session)
 - **Print wall configurator**
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
@@ -459,6 +474,10 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Completed This Session
 
+- ✓ **`originals.html`** — new page listing available original paintings; light theme, year sections, thumbnail rows with medium/dimensions/price, fullscreen lightbox with swipe nav, contact mailto link
+- ✓ **Lambda `/originals` endpoint** — filters Square catalog for items where `Original Available` custom attribute is true; reads `Width`, `Height`, `Medium`, `Year` from Square custom attributes; calculates price from `width × height × rate` (rounded to nearest $50) using admin config rate from DynamoDB; no DynamoDB cross-reference or title matching
+- ✓ **Square custom attributes created** — `Width (in)`, `Height (in)`, `Medium`, `Original Available` (toggle); set on "A Walk in Blue and Green" for testing
+- ✓ **Square title standardization** — canonical titles aligned to Square (feeds); 6 DynamoDB titles need updating in admin: Shuttle Cock No. 2 → Shuttlecock No. 2, Shuttle Cock No. 3 → Shuttlecock No. 3, Walk in Blue and Green → A Walk in Blue and Green, Historic Marker Eve Ball 1890-1984 → Historic Marker\, Eve Ball, US 380\, Texas → U.S. 380\, TX, Waverly Church of Christ → Waverly Church
 - ✓ **Expense tracker wired to DynamoDB** — expenses and mileage moved from localStorage to `dna-expenses` DynamoDB table
 - ✓ **`seed-expenses.js`** — one-time script creates table and seeds all 100 historical records; run from Downloads folder with `node seed-expenses.js`
 - ✓ **Receipt upload to S3** — pre-signed URL flow; files land at `receipts/` prefix; served via CloudFront at `davidnicholsonart.com/receipts/...`
