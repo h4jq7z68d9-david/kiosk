@@ -521,10 +521,31 @@ async function cartRedirect(queryParams) {
 // ── Admin: Paintings ──
 
 async function adminGetPaintings(cors) {
-  const [paintingsRes, salesRes] = await Promise.all([
+  const [paintingsRes, salesRes, squareRes] = await Promise.all([
     dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE })),
     dynamo.send(new ScanCommand({ TableName: SALES_TABLE })),
+    squareGet(`/v2/catalog/list?types=ITEM&location_id=${SQUARE_LOC}`),
   ]);
+
+  // Build normalized-title → originalAvail map from Square custom attributes
+  function normTitle(t) { return (t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+  const squareAvailMap = {};
+  for (const obj of (squareRes.objects || [])) {
+    const name = obj.item_data?.name;
+    if (!name) continue;
+    const attrs = obj.custom_attribute_values;
+    let avail = false;
+    if (attrs) {
+      for (const val of Object.values(attrs)) {
+        if (val.name === 'Original Available') {
+          avail = val.boolean_value === true;
+          break;
+        }
+      }
+    }
+    squareAvailMap[normTitle(name)] = avail;
+  }
+
   const salesByPainting = {};
   for (const s of (salesRes.Items || [])) {
     if (!salesByPainting[s.paintingId]) salesByPainting[s.paintingId] = [];
@@ -532,7 +553,11 @@ async function adminGetPaintings(cors) {
   }
   const paintings = (paintingsRes.Items || [])
     .filter(p => p.id !== '__config__')
-    .map(p => ({ ...p, sales: salesByPainting[p.id] || [] }));
+    .map(p => ({
+      ...p,
+      sales: salesByPainting[p.id] || [],
+      originalAvail: squareAvailMap[normTitle(p.title)] ?? null,
+    }));
   const configRes = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
   const rate = configRes.Item?.rate ?? 1.10;
   return ok({ paintings, rate }, cors);
