@@ -544,7 +544,9 @@ function renderList() {
     items.forEach(({ p, i }) => {
       const row = document.createElement('div');
       row.className = 'painting-row';
-      row.onclick = () => { if (p.img) openLB(i); };
+      row.onclick = null;
+      thumbWrap.style.cursor = 'pointer';
+      thumbWrap.onclick = (e) => { e.stopPropagation(); if (p.img) openLB(i); };
 
       // Thumb
       const thumbWrap = document.createElement('div');
@@ -597,6 +599,7 @@ function renderList() {
       const bodyLines = [p.title, [mediumLine, dimsLine].filter(Boolean).join(', '), priceLine].filter(Boolean);
       const body = encodeURIComponent(bodyLines.join('\n'));
       contact.href = 'mai' + 'lto:david@davidnicholsonart.com?subject=' + subject + '&body=' + body;
+      contact.onclick = (e) => e.stopPropagation();
       info.appendChild(contact);
 
       row.appendChild(info);
