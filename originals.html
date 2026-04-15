@@ -411,7 +411,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 </footer>
 
 <script>
-const LAMBDA = 'https://davidnicholsonart.com';
+const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
 let originals = [];
 let lbIdx = 0;
@@ -545,12 +545,12 @@ function renderList() {
       const row = document.createElement('div');
       row.className = 'painting-row';
       row.onclick = null;
-      thumbWrap.style.cursor = 'pointer';
-      thumbWrap.onclick = (e) => { e.stopPropagation(); if (p.img) openLB(i); };
 
       // Thumb
       const thumbWrap = document.createElement('div');
       thumbWrap.className = 'thumb-wrap';
+      thumbWrap.style.cursor = 'pointer';
+      thumbWrap.onclick = (e) => { e.stopPropagation(); if (p.img) openLB(i); };
       if (p.img) {
         const img = document.createElement('img');
         img.referrerPolicy = 'no-referrer';
