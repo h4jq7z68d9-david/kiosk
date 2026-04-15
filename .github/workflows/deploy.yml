@@ -24,7 +24,7 @@ jobs:
         run: node --input-type=module < generate-prints.js
       - name: Upload to S3
         run: |
-          aws s3 sync . s3://kiosk.davidnicholsonllc \
+aws s3 sync . s3://kiosk.davidnicholsonllc \
             --exclude "*" \
             --include "*.html" \
             --include "prints/*.html" \
@@ -34,6 +34,7 @@ jobs:
             --include "*.txt" \
             --include "*.js" \
             --include "*.webmanifest" \
+            --exclude "receipts/*" \
             --delete
       - name: Deploy Lambda
         run: |
