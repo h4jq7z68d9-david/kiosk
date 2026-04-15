@@ -1520,6 +1520,12 @@ async function saveExpense() {
 
   // Upload receipt to S3 if a new file was selected
   if (pendingReceiptFile) {
+    const saveBtn = document.getElementById('exp-save-btn');
+    const uploadZone = document.getElementById('exp-upload-zone');
+    const filenameEl = document.getElementById('exp-filename');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Uploading…';
+    filenameEl.textContent = '⏳ uploading…';
     try {
       const { uploadUrl, fileUrl } = await api('POST', '/expenses/receipt-url', {
         filename: pendingReceiptFile.name,
@@ -1528,10 +1534,17 @@ async function saveExpense() {
         amount: parseFloat(document.getElementById('exp-amount').value) || 0,
         category: document.getElementById('exp-category').value,
       });
-      await fetch(uploadUrl, { method: 'PUT', body: pendingReceiptFile, headers: { 'Content-Type': pendingReceiptFile.type || 'application/octet-stream' } });
+      const putRes = await fetch(uploadUrl, { method: 'PUT', body: pendingReceiptFile, headers: { 'Content-Type': pendingReceiptFile.type || 'application/octet-stream' } });
+      if (!putRes.ok) throw new Error('S3 upload failed (' + putRes.status + ')');
       receiptUrl = fileUrl;
+      filenameEl.textContent = '✓ uploaded';
     } catch(e) {
+      filenameEl.textContent = '✗ upload failed';
+      uploadZone.classList.remove('has-file');
       alert('Receipt upload failed: ' + e.message + '\nExpense will be saved without receipt.');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = editExpId ? 'Save Changes' : 'Save Expense';
     }
   }
 
