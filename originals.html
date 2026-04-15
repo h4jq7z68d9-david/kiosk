@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Original Paintings — David Nicholson</title>
+<title>Available Originals — David Nicholson</title>
 <meta name="description" content="Original oil paintings by David Nicholson. Available for purchase — contact for inquiries.">
 <meta name="author" content="David Nicholson">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://davidnicholsonart.com/originals.html">
-<meta property="og:title" content="Original Paintings — David Nicholson">
+<meta property="og:title" content="Available Originals — David Nicholson">
 <meta property="og:description" content="Original oil paintings by David Nicholson. Available for purchase — contact for inquiries.">
 <meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
 <meta property="og:site_name" content="David Nicholson Art">
 <!-- Twitter/X Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Original Paintings — David Nicholson">
+<meta name="twitter:title" content="Available Originals — David Nicholson">
 <meta name="twitter:description" content="Original oil paintings by David Nicholson. Available for purchase — contact for inquiries.">
 <meta name="twitter:image" content="https://davidnicholsonart.com/og-image.jpg">
 <!-- Canonical -->
@@ -275,7 +275,10 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   letter-spacing: 0.1em;
   text-transform: lowercase;
   color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
 }
+.painting-contact:hover { text-decoration: underline; }
 
 @media (max-width: 500px) {
   .thumb-wrap { width: 72px; height: 72px; }
@@ -370,8 +373,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
   <div class="content-wrap">
 
     <div class="page-header">
-      <h1>original paintings</h1>
-      <p>Original paintings available for purchase. To inquire, <a onclick="contact()">contact me directly</a>.</p>
+      <h1>available originals</h1>
+      <p>original paintings available for purchase, if interested please contact me directly</p>
     </div>
 
     <div id="list-wrap">
@@ -584,9 +587,16 @@ function renderList() {
         info.appendChild(price);
       }
 
-      const contact = document.createElement('div');
+      const contact = document.createElement('a');
       contact.className = 'painting-contact';
-      contact.textContent = 'contact for inquiry';
+      contact.textContent = 'contact';
+      const subject = encodeURIComponent(p.title);
+      const mediumLine = p.medium || 'Oil on Canvas';
+      const dimsLine = (p.width && p.height) ? p.width + ' × ' + p.height + ' in' : '';
+      const priceLine = p.price ? '$' + p.price.toLocaleString() : '';
+      const bodyLines = [p.title, [mediumLine, dimsLine].filter(Boolean).join(', '), priceLine].filter(Boolean);
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      contact.href = 'mai' + 'lto:david@davidnicholsonart.com?subject=' + subject + '&body=' + body;
       info.appendChild(contact);
 
       row.appendChild(info);
