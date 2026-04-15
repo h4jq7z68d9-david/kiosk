@@ -448,7 +448,8 @@ David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `
 
 ## Pending — In Order of Priority
 
-- [ ] **Add 2026 receipts** — 23 expense records have no receipt; add manually via admin PWA
+- [ ] **Add 2026 receipts** — 23 expense records have no receipt; add manually via admin PWA; re-upload any receipts that were deleted by S3 sync bug (now fixed)
+- [ ] **Verify receipt persistence** — check next session that receipts uploaded from iPhone camera survive a deploy; if not, investigate PWA temp file issue
 - [ ] **Google brand exclusion** — "David Nicholson" brand requested; check back to add as exclusion once approved
 - [ ] **Meta Ads** — ~$5/day, not yet started
 - [ ] **Pinterest Ads** — ~$30/day minimum, not yet started
@@ -459,10 +460,7 @@ David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `
 
 ## On the Horizon
 
-- **Inventory page** — public-facing page fed from Square `/products`; shows print stock per painting (large/small), flags which have `Original Available = true`; replaces/supplements admin inventory card; feeds same data as originals page
-- **Square attribute bulk update** — fill `Width`, `Height`, `Medium`, `Original Available` on all 43 items; CSV import may work once attributes exist in system; test after "A Walk in Blue and Green" is confirmed working
-- **DynamoDB title corrections** — update 6 painting titles in admin to match Square canonical names (see Completed This Session above)
-- **originals.html nav placement** — decide where to link from (index.html, gallery.html nav, or both)
+- **Square attribute bulk update** — fill `Width`, `Height`, `Medium`, `Original Available` on remaining paintings; all 43 items need attributes for originals page to be complete
 - **Originals shipping** — still TBD; originals are contact-for-purchase so shipping is handled case by case for now
 - **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session)
 - **Print wall configurator**
@@ -472,28 +470,30 @@ David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `
 
 ---
 
-## Completed This Session
+## Completed This Session (April 14 2026)
+
+- ✓ **Admin inventory Original column** — now driven by Square `Original Available` attribute; green "sold" badge when false/unset, blank when true; filter chip updated to match
+- ✓ **Dashboard Originals Sold/In Stock** — both now use Square `originalAvail` data instead of DynamoDB sales records
+- ✓ **`originalAvail` in Lambda `/products`** — `buildProductList` reads Square `Original Available` custom attribute and includes `originalAvail: true/false` on every product
+- ✓ **`originalAvail` in Lambda `adminGetPaintings`** — fetches Square catalog in parallel, merges `originalAvail` onto each painting by normalized title match
+- ✓ **Gallery modal "original available →" link** — appears below share buttons when `p.originalAvail` is true; links to originals.html; right-aligned orange text with arrow
+- ✓ **originals.html renamed "Available Originals"** — title, h1, OG/Twitter tags updated; subtitle is plain text (no link)
+- ✓ **originals.html contact link** — "contact" mailto link with painting title as subject and title/medium+dims/price as body, stacked one per line
+- ✓ **originals.html click behavior** — thumbnail click opens lightbox; contact click opens mailto; row click does nothing; row no longer shows pointer or hover highlight
+- ✓ **originals.html nav** — back arrow links to gallery.html and reads "prints"; instagram button reads "follow on instagram"
+- ✓ **originals.html footer** — added "david nicholson" link to index.html
+- ✓ **gallery.html footer** — added "available originals" link to originals.html before shipping & returns
+- ✓ **Receipt upload feedback** — save button disables and shows "Uploading…" during S3 PUT; zone shows ⏳/✓/✗; PUT response checked for errors
+- ✓ **S3 sync receipt bug fixed** — `--exclude "receipts/*"` added to deploy.yml before `--delete`; previous deploys were wiping all uploaded receipts
+- ✓ **DynamoDB title corrections** — all 6 painting titles corrected via admin UI
+- ✓ **admin-sw.js cache** — bump to `dna-admin-v3` after pushing admin.html changes this session
+
+## Previously Completed — originals.html & Square attributes
 
 - ✓ **`originals.html`** — new page listing available original paintings; light theme, year sections, thumbnail rows with medium/dimensions/price, fullscreen lightbox with swipe nav, contact mailto link
-- ✓ **Lambda `/originals` endpoint** — filters Square catalog for items where `Original Available` custom attribute is true; reads `Width`, `Height`, `Medium`, `Year` from Square custom attributes; calculates price from `width × height × rate` (rounded to nearest $50) using admin config rate from DynamoDB; no DynamoDB cross-reference or title matching
-- ✓ **Square custom attributes created** — `Width (in)`, `Height (in)`, `Medium`, `Original Available` (toggle); set on "A Walk in Blue and Green" for testing
-- ✓ **Square title standardization** — canonical titles aligned to Square (feeds); 6 DynamoDB titles need updating in admin: Shuttle Cock No. 2 → Shuttlecock No. 2, Shuttle Cock No. 3 → Shuttlecock No. 3, Walk in Blue and Green → A Walk in Blue and Green, Historic Marker Eve Ball 1890-1984 → Historic Marker\, Eve Ball, US 380\, Texas → U.S. 380\, TX, Waverly Church of Christ → Waverly Church
-- ✓ **Expense tracker wired to DynamoDB** — expenses and mileage moved from localStorage to `dna-expenses` DynamoDB table
-- ✓ **`seed-expenses.js`** — one-time script creates table and seeds all 100 historical records; run from Downloads folder with `node seed-expenses.js`
-- ✓ **Receipt upload to S3** — pre-signed URL flow; files land at `receipts/` prefix; served via CloudFront at `davidnicholsonart.com/receipts/...`
-- ✓ **Receipt filename convention** — `{date}_{amount}_{category}.{ext}` — readable and accountant-friendly
-- ✓ **Receipt CSV export** — CloudFront receipt URLs included in CSV; publicly accessible for accountant
-- ✓ **Category overhaul** — Presentation → Framing; added Insurance and Website & Software
-- ✓ **Vendor field removed** — dropped from data model, UI, and CSV export everywhere
-- ✓ **2026 Hurdlr import** — 23 records ($4,049.02) seeded; no receipt links (add manually)
-- ✓ **Dashboard expenses load on login** — background fetch so expense cards are always populated
-- ✓ **Print inventory card** — total large + small prints in stock on dashboard
-- ✓ **PWA mode** — home screen app goes straight to Expenses tab, hides other tabs; full admin still in Safari
-- ✓ **Row tap to edit** — tap any expense or mileage row opens edit modal; delete moved into modal
-- ✓ **Mobile UX** — amount always visible; description hidden in PWA; 📎 receipt icon inline on mobile; receipt column visible on desktop
-- ✓ **CloudFront `/receipts/*` behavior** — added to E2EJH38GWGPEPG pointing to S3 origin
-- ✓ **IAM `dna-expenses-access`** — added to `dna-kiosk-role` for DynamoDB expenses table + S3 receipts prefix
-- ✓ **admin-sw.js cache bumped** to `dna-admin-v2`
+- ✓ **Lambda `/originals` endpoint** — filters Square catalog for items where `Original Available` custom attribute is true; reads `Width`, `Height`, `Medium`, `Year` from Square custom attributes; calculates price from `width × height × rate` (rounded to nearest $50) using admin config rate from DynamoDB
+- ✓ **Square custom attributes created** — `Width (in)`, `Height (in)`, `Medium`, `Original Available` (toggle); all paintings being filled in
+- ✓ **Square title standardization** — all 6 DynamoDB titles corrected to match Square canonical names
 
 ---
 
@@ -557,6 +557,8 @@ David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `
 - **Admin SW cache key** — currently `dna-admin-v2`; bump in `admin-sw.js` after significant admin.html changes
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
+- **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
+- **Debug order: check the code first** — when something isn't working after a push, review the code for bugs before assuming the deploy didn't complete or the user made an error. Both Claude and David make mistakes; neither is infallible. Start with the code.
 
 ---
 
