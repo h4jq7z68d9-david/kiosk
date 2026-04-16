@@ -300,12 +300,45 @@
 
   .receipt-link {
     display: inline-flex; align-items: center; gap: 4px;
-    font-size: 12px; color: var(--accent); text-decoration: none;
+    font-size: 12px; color: var(--accent); background: none;
     border: 1px solid var(--accent); border-radius: 4px; padding: 2px 7px;
+    cursor: pointer; font-family: var(--font);
     transition: all 0.12s;
   }
   .receipt-link:hover { background: var(--accent); color: white; }
   .receipt-none { font-size: 12px; color: var(--ink3); }
+
+  /* ── RECEIPT LIGHTBOX ── */
+  #receipt-lightbox {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    flex-direction: column; align-items: center; justify-content: center;
+  }
+  #receipt-lightbox.open { display: flex; }
+  #receipt-lightbox-toolbar {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+  }
+  #receipt-lightbox-toolbar button {
+    background: none; border: none; cursor: pointer;
+    color: white; font-size: 20px; padding: 8px; line-height: 1;
+    border-radius: 8px; transition: background 0.12s;
+  }
+  #receipt-lightbox-toolbar button:hover { background: rgba(255,255,255,0.15); }
+  #receipt-lightbox img {
+    max-width: 92vw; max-height: 82vh;
+    border-radius: 4px; object-fit: contain;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+  #receipt-lightbox-pdf-msg {
+    color: white; text-align: center; padding: 32px;
+    font-size: 15px; line-height: 1.6;
+  }
+  #receipt-lightbox-pdf-msg a {
+    color: var(--accent-dim); text-decoration: underline;
+  }
 
   /* Receipt upload area */
   .upload-zone {
@@ -1392,7 +1425,7 @@ function renderExpTable() {
       <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
       <td style="font-size:13px;color:var(--ink2)">${isPWA ? '' : esc(e.desc||'')}${receiptInline}</td>
       <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td class="col-hide"><a class="receipt-link" href="${esc(e.receiptUrl||'#')}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="${e.receiptUrl?'':'display:none'}">📎 receipt</a>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
+      <td class="col-hide"><button class="receipt-link" onclick="openReceiptLightbox('${esc(e.receiptUrl||'')}', event)" style="${e.receiptUrl?'':'display:none'}">📎 receipt</button>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
     </tr>`;
   }).join('');
 }
@@ -2000,6 +2033,99 @@ if (isPWA) {
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/admin-sw.js').catch(() => {});
+}
+</script>
+
+<!-- ── RECEIPT LIGHTBOX ── -->
+<div id="receipt-lightbox" role="dialog" aria-modal="true">
+  <div id="receipt-lightbox-toolbar">
+    <button id="receipt-lightbox-close" onclick="closeReceiptLightbox()" aria-label="Close">✕</button>
+    <button id="receipt-lightbox-share" onclick="shareReceipt()" aria-label="Share">⬆️ Share</button>
+  </div>
+  <img id="receipt-lightbox-img" src="" alt="Receipt" style="display:none">
+  <div id="receipt-lightbox-pdf-msg" style="display:none"></div>
+</div>
+
+<script>
+// ── RECEIPT LIGHTBOX ──
+let _receiptLightboxUrl = '';
+
+function openReceiptLightbox(url, event) {
+  if (event) event.stopPropagation();
+  if (!url) return;
+  _receiptLightboxUrl = url;
+
+  const lb = document.getElementById('receipt-lightbox');
+  const img = document.getElementById('receipt-lightbox-img');
+  const msg = document.getElementById('receipt-lightbox-pdf-msg');
+  const shareBtn = document.getElementById('receipt-lightbox-share');
+
+  const isPdf = url.toLowerCase().includes('.pdf');
+
+  if (isPdf) {
+    img.style.display = 'none';
+    img.src = '';
+    msg.style.display = '';
+    msg.innerHTML = '📄 PDF receipt<br><br><a href="' + url + '" target="_blank" rel="noopener">Open in browser ↗</a><br><br><small style="color:rgba(255,255,255,0.5)">Tap Share to save to iCloud</small>';
+    // Share is still possible — we'll fetch the blob
+    shareBtn.style.display = '';
+  } else {
+    msg.style.display = 'none';
+    img.src = url;
+    img.style.display = '';
+    shareBtn.style.display = '';
+  }
+
+  lb.classList.add('open');
+  document.addEventListener('keydown', _lbKeyClose);
+}
+
+function closeReceiptLightbox() {
+  document.getElementById('receipt-lightbox').classList.remove('open');
+  document.getElementById('receipt-lightbox-img').src = '';
+  document.removeEventListener('keydown', _lbKeyClose);
+}
+
+function _lbKeyClose(e) {
+  if (e.key === 'Escape') closeReceiptLightbox();
+}
+
+// Close on backdrop tap (not on image or toolbar)
+document.getElementById('receipt-lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeReceiptLightbox();
+});
+
+async function shareReceipt() {
+  if (!_receiptLightboxUrl) return;
+  const url = _receiptLightboxUrl;
+  const isPdf = url.toLowerCase().includes('.pdf');
+  const ext = isPdf ? 'pdf' : 'jpg';
+  const mimeType = isPdf ? 'application/pdf' : 'image/jpeg';
+  const filename = 'receipt.' + ext;
+
+  // Try Web Share API with file blob (works in iOS PWA for saving to iCloud etc.)
+  if (navigator.share && navigator.canShare) {
+    try {
+      const resp = await fetch(url);
+      const blob = await resp.blob();
+      const file = new File([blob], filename, { type: mimeType });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Receipt' });
+        return;
+      }
+    } catch(e) {
+      if (e.name === 'AbortError') return; // user cancelled — that's fine
+      // fall through to URL share
+    }
+  }
+
+  // Fallback: share the URL itself
+  if (navigator.share) {
+    try { await navigator.share({ url, title: 'Receipt' }); return; } catch(e) {}
+  }
+
+  // Last resort: open in new tab
+  window.open(url, '_blank');
 }
 </script>
 </body>
