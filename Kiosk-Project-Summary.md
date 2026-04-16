@@ -436,37 +436,23 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ---
 
-## Start of Next Session — Do This First
-
-1. **Test `/originals` endpoint** — confirm "A Walk in Blue and Green" (and any others David has set up in Square) appear on `davidnicholsonart.com/originals.html` with correct dimensions, medium, and price
-2. **Migrate `dna-paintings` to Square item IDs** — re-key all existing DynamoDB records from generated UUIDs to Square item IDs; drop orphan records with no Square match; this eliminates title-matching and prevents duplicate records when inventory page is built
-3. **Build inventory page** — fed from Square (painting list/images/attributes) + DynamoDB (print stock counts keyed by Square item ID); stock managed via admin, not Square
-
-David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `Original Available`) on all items before this session.
-
----
-
 ## Pending — In Order of Priority
 
-- [ ] **Add 2026 receipts** — 23 expense records have no receipt; add manually via admin PWA; re-upload any receipts that were deleted by S3 sync bug (now fixed)
-- [ ] **Verify receipt persistence** — check next session that receipts uploaded from iPhone camera survive a deploy; if not, investigate PWA temp file issue
-- [ ] **Google brand exclusion** — "David Nicholson" brand requested; check back to add as exclusion once approved
 - [ ] **Meta Ads** — ~$5/day, not yet started
 - [ ] **Pinterest Ads** — ~$30/day minimum, not yet started
 - [ ] **SNS carrier registration** — waiting; check AWS Console → Pinpoint → Phone numbers → +18444767251 for status; SMS works once Active
-- [ ] **Google Merchant Center** — trigger manual feed fetch to clear product type warnings; monitor feed health
 - [ ] **Re-enable admin token auth** — CloudFront query string forwarding to Lambda needs investigation; currently auth is bypassed
 - [ ] **www → apex redirect** — add CloudFront Function to redirect www to apex permanently
 
 ## On the Horizon
 
-- **Square attribute bulk update** — fill `Width`, `Height`, `Medium`, `Original Available` on remaining paintings; all 43 items need attributes for originals page to be complete
 - **Originals shipping** — still TBD; originals are contact-for-purchase so shipping is handled case by case for now
 - **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session)
 - **Print wall configurator**
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
 - **Color picker filter for gallery** — maybe
 - **Art fair mode enhancements** — maybe
+- **Print stock management** — currently managed manually via admin inventory tab; if volume picks up significantly, consider moving to Square inventory tracking instead of building a custom DynamoDB solution
 
 ---
 
@@ -486,7 +472,16 @@ David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `
 - ✓ **Receipt upload feedback** — save button disables and shows "Uploading…" during S3 PUT; zone shows ⏳/✓/✗; PUT response checked for errors
 - ✓ **S3 sync receipt bug fixed** — `--exclude "receipts/*"` added to deploy.yml before `--delete`; previous deploys were wiping all uploaded receipts
 - ✓ **DynamoDB title corrections** — all 6 painting titles corrected via admin UI
-- ✓ **admin-sw.js cache** — bump to `dna-admin-v3` after pushing admin.html changes this session
+- ✓ **admin-sw.js cache** — bump to `dna-admin-v4` after pushing admin.html changes this session
+
+## Completed This Session (April 15 2026)
+
+- ✓ **Receipt lightbox** — tapping 📎 receipt now opens an in-app lightbox instead of navigating away; image receipts show inline; PDF receipts show Open in browser link; close via ✕ button, backdrop tap, or Escape key
+- ✓ **Receipt share sheet** — ⬆️ Share button in lightbox fetches receipt as blob and invokes native iOS share sheet (`navigator.share({ files })`); supports both JPG and PDF; falls back to URL share then window.open
+- ✓ **Google brand exclusion** — "David Nicholson" brand approved and applied as exclusion on Performance Max campaign
+- ✓ **Google Merchant Center feed** — manual fetch triggered; product type warnings cleared
+- ✓ **2026 receipts** — all 23 expense records updated with receipts via admin PWA
+- ✓ **Receipt persistence** — confirmed receipts survive deploy (S3 sync bug was the cause, now fixed)
 
 ## Previously Completed — originals.html & Square attributes
 
@@ -554,7 +549,7 @@ David will have updated Square custom attributes (`Width`, `Height`, `Medium`, `
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v2`; bump in `admin-sw.js` after significant admin.html changes
+- **Admin SW cache key** — currently `dna-admin-v4`; bump in `admin-sw.js` after significant admin.html changes
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 - **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
