@@ -2099,9 +2099,9 @@ async function shareReceipt() {
   if (!_receiptLightboxUrl) return;
   const url = _receiptLightboxUrl;
   const isPdf = url.toLowerCase().includes('.pdf');
-  const ext = isPdf ? 'pdf' : 'jpg';
   const mimeType = isPdf ? 'application/pdf' : 'image/jpeg';
-  const filename = 'receipt.' + ext;
+  // Use the actual filename from the URL to preserve naming convention
+  const filename = url.split('/').pop() || ('receipt.' + (isPdf ? 'pdf' : 'jpg'));
 
   // Try Web Share API with file blob (works in iOS PWA for saving to iCloud etc.)
   if (navigator.share && navigator.canShare) {
@@ -2110,7 +2110,7 @@ async function shareReceipt() {
       const blob = await resp.blob();
       const file = new File([blob], filename, { type: mimeType });
       if (navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: 'Receipt' });
+        await navigator.share({ files: [file] });
         return;
       }
     } catch(e) {
@@ -2121,7 +2121,7 @@ async function shareReceipt() {
 
   // Fallback: share the URL itself
   if (navigator.share) {
-    try { await navigator.share({ url, title: 'Receipt' }); return; } catch(e) {}
+    try { await navigator.share({ url }); return; } catch(e) {}
   }
 
   // Last resort: open in new tab
