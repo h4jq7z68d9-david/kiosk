@@ -334,10 +334,11 @@ All are single-file, no framework — intentional, keep it that way.
   - Safe area insets applied to topbar and main padding for iPhone notch
 - **PWA mode behavior:** when launched from home screen (`navigator.standalone`), goes straight to Expenses & Mileage tab, hides Dashboard and Inventory tabs — full admin still accessible in Safari
 
-**Three-tab layout:**
-- **Dashboard tab** — revenue cards (originals sold, large/small prints sold, print inventory, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter). Expense cards load in background on login so dashboard is always populated.
+**Four-tab layout:**
+- **Dashboard tab** — revenue cards (originals sold, large/small prints sold, print inventory, top large print, top small print, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter). Expense cards load in background on login so dashboard is always populated.
 - **Inventory tab** — price/sq in rate adjuster + sortable/filterable painting table with inline editing; `↓ CSV` export
 - **Expenses & Mileage tab** — expense and mileage tables; tap any row to open edit modal; delete inside modal
+- **Prints tab** — print priority list sorted into four separate tables by stock tier (Out of Stock → Low Stock → Below Goal → Stocked), ranked by popularity score (70% sales volume, 30% recency) within each tier. "Zero stock only" checkbox filters to paintings where both sizes are at 0. Click any column header to collapse tiers into a single sortable flat table; "✕ Clear sort" returns to tiered view. Print Lg/Print Sm columns show how many to print to reach goal (2 large, 3 small); stock shown in red when below goal.
 
 **Inventory features:**
 - All paintings sortable by title, year, price, rounded price
@@ -447,7 +448,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ## On the Horizon
 
 - **Originals shipping** — still TBD; originals are contact-for-purchase so shipping is handled case by case for now
-- **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session)
+- **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session, planned)
 - **Print wall configurator**
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
 - **Color picker filter for gallery** — maybe
@@ -473,6 +474,11 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **S3 sync receipt bug fixed** — `--exclude "receipts/*"` added to deploy.yml before `--delete`; previous deploys were wiping all uploaded receipts
 - ✓ **DynamoDB title corrections** — all 6 painting titles corrected via admin UI
 - ✓ **admin-sw.js cache** — bump to `dna-admin-v4` after pushing admin.html changes this session
+
+## Completed This Session (May 4 2026)
+
+- ✓ **Prints tab** — new fourth tab in admin.html; four separate tables by stock tier (Out of Stock / Low Stock / Below Goal / Stocked); ranked by popularity score (70% sales volume, 30% recency) within each tier; "Zero stock only" checkbox filters to both-sizes-at-zero; column header click collapses to flat sortable table with "✕ Clear sort" to return; Print Lg/Print Sm columns show quantity needed to reach goal (2 large, 3 small); stock in red when below goal
+- ✓ **Dashboard top print cards** — two new cards: Top Large Print and Top Small Print, showing title and units sold; show "—" when no sales recorded yet
 
 ## Completed This Session (April 15 2026)
 
