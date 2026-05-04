@@ -1128,7 +1128,7 @@ function renderPrintsTab() {
     </div>`;
 
     visibleTiers.forEach(tier => {
-      const tierRows = sortRows(rows.filter(r => r.tier === tier.id));
+      const tierRows = sortRows(rows.filter(r => r.tier === tier.id && (!zeroOnly || r.bothZero)));
       if (!tierRows.length) return;
       html += `
         <div>
