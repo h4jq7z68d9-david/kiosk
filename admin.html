@@ -524,7 +524,7 @@
             <div style="display:flex;align-items:center;gap:16px">
               <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
                 <input type="checkbox" id="prints-low-only" onchange="renderPrintsTab()" style="cursor:pointer">
-                Needs printing only
+                Zero stock only
               </label>
               <div style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small</div>
             </div>
@@ -549,7 +549,7 @@
           </div>
         </div>
         <div style="margin-top:12px;font-size:12px;color:var(--ink3);padding:0 2px">
-          Ranked by popularity score (70% total sales · 30% recency). ⚠️ = below print goal.
+          Sorted by need (zero stock first), then popularity (70% sales · 30% recency). Stock in red = below goal.
         </div>
       </div>
     </div>
@@ -1023,10 +1023,9 @@ function switchTab(tab) {
 function renderPrintsTab() {
   const GOAL_LARGE = 2;
   const GOAL_SMALL = 3;
-  const lowOnly = document.getElementById('prints-low-only')?.checked;
+  const zeroOnly = document.getElementById('prints-low-only')?.checked;
 
   const paintings = (db.paintings || []).filter(p => {
-    // exclude originals-only (no print sales and no stock)
     const hasStock = (p.stock?.large || 0) > 0 || (p.stock?.small || 0) > 0;
     const hasPrintSales = (p.sales || []).some(s => s.type === 'large' || s.type === 'small');
     return hasStock || hasPrintSales;
@@ -1034,7 +1033,7 @@ function renderPrintsTab() {
 
   const now = Date.now();
   const MS_PER_DAY = 86400000;
-  const RECENCY_WINDOW = 365; // days — sales older than this score 0 recency
+  const RECENCY_WINDOW = 365;
 
   const scored = paintings.map(p => {
     const printSales = (p.sales || []).filter(s => s.type === 'large' || s.type === 'small');
@@ -1042,35 +1041,36 @@ function renderPrintsTab() {
     const smSold = printSales.filter(s => s.type === 'small').length;
     const totalSold = lgSold + smSold;
 
-    // Recency: days since last print sale (0 if no sales)
     const dates = printSales.map(s => s.date ? new Date(s.date).getTime() : 0).filter(Boolean);
     const lastSaleTs = dates.length ? Math.max(...dates) : 0;
     const lastSaleLabel = lastSaleTs ? new Date(lastSaleTs).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
     const daysSinceSale = lastSaleTs ? (now - lastSaleTs) / MS_PER_DAY : RECENCY_WINDOW;
     const recencyScore = Math.max(0, 1 - (daysSinceSale / RECENCY_WINDOW));
 
-    // Popularity score: 70% sales volume, 30% recency
-    // Sales component normalized against max across set (done after map)
     const lgStock = p.stock?.large || 0;
     const smStock = p.stock?.small || 0;
     const printLg = Math.max(0, GOAL_LARGE - lgStock);
     const printSm = Math.max(0, GOAL_SMALL - smStock);
-    const needsPrinting = printLg > 0 || printSm > 0;
+    const hasZero = lgStock === 0 || smStock === 0;
+    const belowGoal = lgStock < GOAL_LARGE || smStock < GOAL_SMALL;
 
-    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, needsPrinting };
+    // Sort tier: 0 = has a zero, 1 = below goal, 2 = at goal
+    const tier = hasZero ? 0 : belowGoal ? 1 : 2;
+
+    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, hasZero, tier };
   });
 
-  // Normalize sales volume
+  // Normalize sales volume for scoring
   const maxSold = Math.max(1, ...scored.map(r => r.totalSold));
   scored.forEach(r => {
     const salesNorm = r.totalSold / maxSold;
     r.score = Math.round((salesNorm * 0.7 + r.recencyScore * 0.3) * 100);
   });
 
-  // Sort by score desc
-  scored.sort((a, b) => b.score - a.score);
+  // Sort: tier first, then popularity score desc within tier
+  scored.sort((a, b) => a.tier !== b.tier ? a.tier - b.tier : b.score - a.score);
 
-  const filtered = lowOnly ? scored.filter(r => r.needsPrinting) : scored;
+  const filtered = zeroOnly ? scored.filter(r => r.hasZero) : scored;
 
   const tbody = document.getElementById('prints-body');
   if (!filtered.length) {
@@ -1078,15 +1078,18 @@ function renderPrintsTab() {
     return;
   }
 
-  tbody.innerHTML = filtered.map((r, i) => {
-    const warn = r.needsPrinting ? '⚠️ ' : '';
-    const rankBadge = i < 3 ? `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--accent);color:white;font-size:10px;font-weight:700;line-height:18px;text-align:center;margin-right:4px">${i+1}</span>` : `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--border);color:var(--ink2);font-size:10px;font-weight:600;line-height:18px;text-align:center;margin-right:4px">${i+1}</span>`;
+  let lastTier = -1;
+  tbody.innerHTML = filtered.map(r => {
+    const divider = (r.tier !== lastTier && lastTier !== -1)
+      ? `<tr><td colspan="9" style="padding:0;border-bottom:2px solid var(--border-mid)"></td></tr>`
+      : '';
+    lastTier = r.tier;
     const lgStockStyle = r.lgStock < GOAL_LARGE ? 'color:var(--red);font-weight:600' : '';
     const smStockStyle = r.smStock < GOAL_SMALL ? 'color:var(--red);font-weight:600' : '';
     const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
     const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
-    return `<tr>
-      <td style="max-width:200px">${warn}${rankBadge}<span style="font-size:13px">${r.p.title}</span></td>
+    return `${divider}<tr>
+      <td style="max-width:200px;font-size:13px">${r.p.title}</td>
       <td class="mono" style="text-align:center">${r.lgSold}</td>
       <td class="mono" style="text-align:center">${r.smSold}</td>
       <td class="dim" style="text-align:center;font-size:12px">${r.lastSaleLabel}</td>
