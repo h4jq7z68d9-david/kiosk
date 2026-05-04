@@ -1022,7 +1022,7 @@ function renderPrintsTab() {
     const printSm = Math.max(0, GOAL_SMALL - smStock);
     const bothZero = lgStock === 0 && smStock === 0;
     const hasZero  = lgStock === 0 || smStock === 0;
-    const hasOne   = !hasZero && (lgStock === 1 || smStock === 1);
+    const hasOne   = !bothZero && (lgStock === 1 || smStock === 1);
     const belowGoal = lgStock < GOAL_LARGE || smStock < GOAL_SMALL;
     const tier = hasZero ? 0 : hasOne ? 1 : belowGoal ? 2 : 3;
 
@@ -1035,7 +1035,7 @@ function renderPrintsTab() {
   });
 
   const TIERS = [
-    { id: 0, label: 'Out of Stock',       color: 'var(--red)',    desc: 'Both sizes at zero' },
+    { id: 0, label: 'Out of Stock',       color: 'var(--red)',    desc: 'At least one size at zero' },
     { id: 1, label: 'Low Stock',          color: 'var(--accent)', desc: '1 remaining in at least one size' },
     { id: 2, label: 'Below Goal',         color: 'var(--ink2)',   desc: 'Has stock but under goal' },
     { id: 3, label: 'Stocked',            color: 'var(--ink3)',   desc: 'At or above goal on both sizes' },
@@ -1117,12 +1117,17 @@ function renderPrintsTab() {
       </div>`;
   } else {
     // Separate table per tier
-    const zeroOnlyFilter = false; // no checkbox in new layout — use Out of Stock table directly
+    const zeroOnly = document.getElementById('prints-zero-only')?.checked;
+    const visibleTiers = zeroOnly ? TIERS.filter(t => t.id === 0) : TIERS;
     let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
+        <input type="checkbox" id="prints-zero-only" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroOnly ? 'checked' : ''}>
+        Zero stock only
+      </label>
       <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small · Stock in red = below goal · Click any column to sort</span>
     </div>`;
 
-    TIERS.forEach(tier => {
+    visibleTiers.forEach(tier => {
       const tierRows = sortRows(rows.filter(r => r.tier === tier.id));
       if (!tierRows.length) return;
       html += `
