@@ -517,40 +517,8 @@
 
     <!-- ══ TAB: PRINTS ══ -->
     <div class="tab-panel" id="tab-prints">
-      <div style="padding-top:24px">
-        <div class="table-section">
-          <div class="table-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-            <div style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink2)">Print List</div>
-            <div style="display:flex;align-items:center;gap:16px">
-              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
-                <input type="checkbox" id="prints-low-only" onchange="renderPrintsTab()" style="cursor:pointer">
-                Zero stock only
-              </label>
-              <div style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small</div>
-            </div>
-          </div>
-          <div style="overflow-x:auto">
-            <table>
-              <thead>
-                <tr>
-                  <th style="text-align:left">Title</th>
-                  <th style="text-align:center" title="Large prints sold">Lg Sold</th>
-                  <th style="text-align:center" title="Small prints sold">Sm Sold</th>
-                  <th style="text-align:center">Last Sale</th>
-                  <th style="text-align:center" title="Large in stock">Lg Stock</th>
-                  <th style="text-align:center" title="Small in stock">Sm Stock</th>
-                  <th style="text-align:center" title="Large to print to reach goal of 2">Print Lg</th>
-                  <th style="text-align:center" title="Small to print to reach goal of 3">Print Sm</th>
-                  <th style="text-align:center">Score</th>
-                </tr>
-              </thead>
-              <tbody id="prints-body"></tbody>
-            </table>
-          </div>
-        </div>
-        <div style="margin-top:12px;font-size:12px;color:var(--ink3);padding:0 2px">
-          Sorted by need (zero stock first), then popularity (70% sales · 30% recency). Stock in red = below goal.
-        </div>
+      <div style="padding-top:24px;display:flex;flex-direction:column;gap:24px" id="prints-container">
+        <!-- injected by renderPrintsTab() -->
       </div>
     </div>
 
@@ -1020,10 +988,11 @@ function switchTab(tab) {
 // ═══════════════════════════════════════════
 //  PRINTS TAB
 // ═══════════════════════════════════════════
+const printsSort = { col: null, dir: 1 }; // col: field name, dir: 1=asc -1=desc
+
 function renderPrintsTab() {
   const GOAL_LARGE = 2;
   const GOAL_SMALL = 3;
-  const zeroOnly = document.getElementById('prints-low-only')?.checked;
 
   const paintings = (db.paintings || []).filter(p => {
     const hasStock = (p.stock?.large || 0) > 0 || (p.stock?.small || 0) > 0;
@@ -1035,7 +1004,7 @@ function renderPrintsTab() {
   const MS_PER_DAY = 86400000;
   const RECENCY_WINDOW = 365;
 
-  const scored = paintings.map(p => {
+  const rows = paintings.map(p => {
     const printSales = (p.sales || []).filter(s => s.type === 'large' || s.type === 'small');
     const lgSold = printSales.filter(s => s.type === 'large').length;
     const smSold = printSales.filter(s => s.type === 'small').length;
@@ -1051,70 +1020,140 @@ function renderPrintsTab() {
     const smStock = p.stock?.small || 0;
     const printLg = Math.max(0, GOAL_LARGE - lgStock);
     const printSm = Math.max(0, GOAL_SMALL - smStock);
-    const hasZero = lgStock === 0 || smStock === 0;
-    const hasOne  = !hasZero && (lgStock === 1 || smStock === 1);
+    const bothZero = lgStock === 0 && smStock === 0;
+    const hasZero  = lgStock === 0 || smStock === 0;
+    const hasOne   = !hasZero && (lgStock === 1 || smStock === 1);
     const belowGoal = lgStock < GOAL_LARGE || smStock < GOAL_SMALL;
-
-    // Sort tier: 0 = any zero, 1 = any 1 in stock, 2 = below goal, 3 = at goal
     const tier = hasZero ? 0 : hasOne ? 1 : belowGoal ? 2 : 3;
 
-    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, hasZero, hasOne, tier };
+    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, bothZero, hasZero, hasOne, tier, score: 0 };
   });
 
-  // Normalize sales volume for scoring
-  const maxSold = Math.max(1, ...scored.map(r => r.totalSold));
-  scored.forEach(r => {
-    const salesNorm = r.totalSold / maxSold;
-    r.score = Math.round((salesNorm * 0.7 + r.recencyScore * 0.3) * 100);
+  const maxSold = Math.max(1, ...rows.map(r => r.totalSold));
+  rows.forEach(r => {
+    r.score = Math.round(((r.totalSold / maxSold) * 0.7 + r.recencyScore * 0.3) * 100);
   });
 
-  // Sort: tier first, then popularity score desc within tier
-  scored.sort((a, b) => a.tier !== b.tier ? a.tier - b.tier : b.score - a.score);
+  const TIERS = [
+    { id: 0, label: 'Out of Stock',       color: 'var(--red)',    desc: 'Both sizes at zero' },
+    { id: 1, label: 'Low Stock',          color: 'var(--accent)', desc: '1 remaining in at least one size' },
+    { id: 2, label: 'Below Goal',         color: 'var(--ink2)',   desc: 'Has stock but under goal' },
+    { id: 3, label: 'Stocked',            color: 'var(--ink3)',   desc: 'At or above goal on both sizes' },
+  ];
 
-  const filtered = zeroOnly ? scored.filter(r => r.hasZero) : scored;
+  const COLS = [
+    { key: 'title',    label: 'Title',    align: 'left',   val: r => r.p.title },
+    { key: 'lgSold',   label: 'Lg Sold',  align: 'center', val: r => r.lgSold },
+    { key: 'smSold',   label: 'Sm Sold',  align: 'center', val: r => r.smSold },
+    { key: 'lastSale', label: 'Last Sale',align: 'center', val: r => r.lastSaleTs },
+    { key: 'lgStock',  label: 'Lg Stock', align: 'center', val: r => r.lgStock },
+    { key: 'smStock',  label: 'Sm Stock', align: 'center', val: r => r.smStock },
+    { key: 'printLg',  label: 'Print Lg', align: 'center', val: r => r.printLg },
+    { key: 'printSm',  label: 'Print Sm', align: 'center', val: r => r.printSm },
+    { key: 'score',    label: 'Score',    align: 'center', val: r => r.score },
+  ];
 
-  const tbody = document.getElementById('prints-body');
-  if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--ink3);font-size:13px;padding:32px">No prints found.</td></tr>`;
-    return;
+  function sortRows(set) {
+    if (!printsSort.col) {
+      return set.sort((a, b) => b.score - a.score);
+    }
+    const col = COLS.find(c => c.key === printsSort.col);
+    return set.sort((a, b) => {
+      const av = col.val(a), bv = col.val(b);
+      if (typeof av === 'string') return printsSort.dir * av.localeCompare(bv);
+      return printsSort.dir * (av - bv);
+    });
   }
 
-  const TIER_LABELS = {
-    0: 'Out of Stock',
-    1: 'Low Stock — 1 remaining',
-    2: 'Below Goal',
-    3: 'Stocked'
-  };
-  const TIER_COLORS = {
-    0: 'var(--red)',
-    1: 'var(--accent)',
-    2: 'var(--ink2)',
-    3: 'var(--ink3)'
-  };
+  function buildThead(tierId) {
+    return `<thead><tr>${COLS.map(c => {
+      const active = printsSort.col === c.key;
+      const arrow = active ? (printsSort.dir === 1 ? ' ↑' : ' ↓') : '';
+      return `<th style="text-align:${c.align};cursor:pointer;user-select:none${active ? ';color:var(--accent)' : ''}" onclick="printsSortBy('${c.key}','${tierId}')">${c.label}${arrow}</th>`;
+    }).join('')}</tr></thead>`;
+  }
 
-  let lastTier = -1;
-  tbody.innerHTML = filtered.map(r => {
-    let header = '';
-    if (r.tier !== lastTier) {
-      header = `<tr><td colspan="9" style="padding:${lastTier === -1 ? '0' : '16px'} 0 6px;border:none"><span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${TIER_COLORS[r.tier]}">${TIER_LABELS[r.tier]}</span></td></tr>`;
-    }
-    lastTier = r.tier;
-    const lgStockStyle = r.lgStock < GOAL_LARGE ? 'color:var(--red);font-weight:600' : '';
-    const smStockStyle = r.smStock < GOAL_SMALL ? 'color:var(--red);font-weight:600' : '';
-    const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
-    const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
-    return `${header}<tr>
-      <td style="max-width:200px;font-size:13px">${r.p.title}</td>
-      <td class="mono" style="text-align:center">${r.lgSold}</td>
-      <td class="mono" style="text-align:center">${r.smSold}</td>
-      <td class="dim" style="text-align:center;font-size:12px">${r.lastSaleLabel}</td>
-      <td class="mono" style="text-align:center;${lgStockStyle}">${r.lgStock}</td>
-      <td class="mono" style="text-align:center;${smStockStyle}">${r.smStock}</td>
-      <td style="text-align:center">${printLgCell}</td>
-      <td style="text-align:center">${printSmCell}</td>
-      <td class="mono" style="text-align:center;font-size:12px;color:var(--ink2)">${r.score}</td>
-    </tr>`;
-  }).join('');
+  function buildRows(set, GOAL_LARGE, GOAL_SMALL) {
+    return set.map(r => {
+      const lgStockStyle = r.lgStock < GOAL_LARGE ? 'color:var(--red);font-weight:600' : '';
+      const smStockStyle = r.smStock < GOAL_SMALL ? 'color:var(--red);font-weight:600' : '';
+      const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
+      const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
+      const lastSaleDisplay = r.lastSaleTs ? r.lastSaleLabel : '—';
+      return `<tr>
+        <td style="font-size:13px">${r.p.title}</td>
+        <td class="mono" style="text-align:center">${r.lgSold}</td>
+        <td class="mono" style="text-align:center">${r.smSold}</td>
+        <td class="dim" style="text-align:center;font-size:12px">${lastSaleDisplay}</td>
+        <td class="mono" style="text-align:center;${lgStockStyle}">${r.lgStock}</td>
+        <td class="mono" style="text-align:center;${smStockStyle}">${r.smStock}</td>
+        <td style="text-align:center">${printLgCell}</td>
+        <td style="text-align:center">${printSmCell}</td>
+        <td class="mono" style="text-align:center;font-size:12px;color:var(--ink2)">${r.score}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const isSorting = !!printsSort.col;
+  const container = document.getElementById('prints-container');
+
+  if (isSorting) {
+    // Single flat sorted table
+    const sorted = sortRows([...rows]);
+    container.innerHTML = `
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink2)">All Prints</span>
+          <div style="display:flex;align-items:center;gap:16px">
+            <button onclick="printsClearSort()" style="font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0">✕ Clear sort</button>
+            <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small</span>
+          </div>
+        </div>
+        <div class="table-section"><div style="overflow-x:auto"><table>${buildThead('all')}
+          <tbody>${buildRows(sorted, GOAL_LARGE, GOAL_SMALL)}</tbody>
+        </table></div></div>
+        <div style="margin-top:10px;font-size:12px;color:var(--ink3)">Stock in red = below goal.</div>
+      </div>`;
+  } else {
+    // Separate table per tier
+    const zeroOnlyFilter = false; // no checkbox in new layout — use Out of Stock table directly
+    let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small · Stock in red = below goal · Click any column to sort</span>
+    </div>`;
+
+    TIERS.forEach(tier => {
+      const tierRows = sortRows(rows.filter(r => r.tier === tier.id));
+      if (!tierRows.length) return;
+      html += `
+        <div>
+          <div style="margin-bottom:8px">
+            <span style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${tier.color}">${tier.label}</span>
+            <span style="font-size:11px;color:var(--ink3);margin-left:8px">${tier.desc}</span>
+            <span style="font-size:11px;color:var(--ink3);margin-left:8px">(${tierRows.length})</span>
+          </div>
+          <div class="table-section"><div style="overflow-x:auto"><table>${buildThead(tier.id)}
+            <tbody>${buildRows(tierRows, GOAL_LARGE, GOAL_SMALL)}</tbody>
+          </table></div></div>
+        </div>`;
+    });
+    container.innerHTML = html;
+  }
+}
+
+function printsSortBy(col, tierId) {
+  if (printsSort.col === col) {
+    printsSort.dir *= -1;
+  } else {
+    printsSort.col = col;
+    printsSort.dir = col === 'title' ? 1 : -1; // default: alpha asc for title, desc for numbers
+  }
+  renderPrintsTab();
+}
+
+function printsClearSort() {
+  printsSort.col = null;
+  printsSort.dir = 1;
+  renderPrintsTab();
 }
 
 // ═══════════════════════════════════════════
