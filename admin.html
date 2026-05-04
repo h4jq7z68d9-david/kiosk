@@ -1052,12 +1052,13 @@ function renderPrintsTab() {
     const printLg = Math.max(0, GOAL_LARGE - lgStock);
     const printSm = Math.max(0, GOAL_SMALL - smStock);
     const hasZero = lgStock === 0 || smStock === 0;
+    const hasOne  = !hasZero && (lgStock === 1 || smStock === 1);
     const belowGoal = lgStock < GOAL_LARGE || smStock < GOAL_SMALL;
 
-    // Sort tier: 0 = has a zero, 1 = below goal, 2 = at goal
-    const tier = hasZero ? 0 : belowGoal ? 1 : 2;
+    // Sort tier: 0 = any zero, 1 = any 1 in stock, 2 = below goal, 3 = at goal
+    const tier = hasZero ? 0 : hasOne ? 1 : belowGoal ? 2 : 3;
 
-    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, hasZero, tier };
+    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, hasZero, hasOne, tier };
   });
 
   // Normalize sales volume for scoring
@@ -1078,17 +1079,31 @@ function renderPrintsTab() {
     return;
   }
 
+  const TIER_LABELS = {
+    0: 'Out of Stock',
+    1: 'Low Stock — 1 remaining',
+    2: 'Below Goal',
+    3: 'Stocked'
+  };
+  const TIER_COLORS = {
+    0: 'var(--red)',
+    1: 'var(--accent)',
+    2: 'var(--ink2)',
+    3: 'var(--ink3)'
+  };
+
   let lastTier = -1;
   tbody.innerHTML = filtered.map(r => {
-    const divider = (r.tier !== lastTier && lastTier !== -1)
-      ? `<tr><td colspan="9" style="padding:0;border-bottom:2px solid var(--border-mid)"></td></tr>`
-      : '';
+    let header = '';
+    if (r.tier !== lastTier) {
+      header = `<tr><td colspan="9" style="padding:${lastTier === -1 ? '0' : '16px'} 0 6px;border:none"><span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${TIER_COLORS[r.tier]}">${TIER_LABELS[r.tier]}</span></td></tr>`;
+    }
     lastTier = r.tier;
     const lgStockStyle = r.lgStock < GOAL_LARGE ? 'color:var(--red);font-weight:600' : '';
     const smStockStyle = r.smStock < GOAL_SMALL ? 'color:var(--red);font-weight:600' : '';
     const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
     const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
-    return `${divider}<tr>
+    return `${header}<tr>
       <td style="max-width:200px;font-size:13px">${r.p.title}</td>
       <td class="mono" style="text-align:center">${r.lgSold}</td>
       <td class="mono" style="text-align:center">${r.smSold}</td>
