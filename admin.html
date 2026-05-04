@@ -407,6 +407,7 @@
       <button class="tab-btn active" id="tab-dashboard-btn" onclick="switchTab('dashboard')">Dashboard</button>
       <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
       <button class="tab-btn" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
+      <button class="tab-btn" id="tab-prints-btn" onclick="switchTab('prints')">Prints</button>
     </div>
 
     <!-- ══ TAB: DASHBOARD ══ -->
@@ -510,6 +511,45 @@
             </thead>
             <tbody id="table-body"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB: PRINTS ══ -->
+    <div class="tab-panel" id="tab-prints">
+      <div style="padding-top:24px">
+        <div class="table-section">
+          <div class="table-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink2)">Print List</div>
+            <div style="display:flex;align-items:center;gap:16px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
+                <input type="checkbox" id="prints-low-only" onchange="renderPrintsTab()" style="cursor:pointer">
+                Needs printing only
+              </label>
+              <div style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small</div>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th style="text-align:left">Title</th>
+                  <th style="text-align:center" title="Large prints sold">Lg Sold</th>
+                  <th style="text-align:center" title="Small prints sold">Sm Sold</th>
+                  <th style="text-align:center">Last Sale</th>
+                  <th style="text-align:center" title="Large in stock">Lg Stock</th>
+                  <th style="text-align:center" title="Small in stock">Sm Stock</th>
+                  <th style="text-align:center" title="Large to print to reach goal of 2">Print Lg</th>
+                  <th style="text-align:center" title="Small to print to reach goal of 3">Print Sm</th>
+                  <th style="text-align:center">Score</th>
+                </tr>
+              </thead>
+              <tbody id="prints-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--ink3);padding:0 2px">
+          Ranked by popularity score (70% total sales · 30% recency). ⚠️ = below print goal.
         </div>
       </div>
     </div>
@@ -968,12 +1008,95 @@ function logout() {
 //  TABS
 // ═══════════════════════════════════════════
 function switchTab(tab) {
-  ['dashboard','inventory','expenses'].forEach(t => {
+  ['dashboard','inventory','expenses','prints'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
   if (tab === 'expenses' && !expLoaded) loadExpenses();
   else if (tab === 'expenses') renderExpenses();
+  else if (tab === 'prints') renderPrintsTab();
+}
+
+// ═══════════════════════════════════════════
+//  PRINTS TAB
+// ═══════════════════════════════════════════
+function renderPrintsTab() {
+  const GOAL_LARGE = 2;
+  const GOAL_SMALL = 3;
+  const lowOnly = document.getElementById('prints-low-only')?.checked;
+
+  const paintings = (db.paintings || []).filter(p => {
+    // exclude originals-only (no print sales and no stock)
+    const hasStock = (p.stock?.large || 0) > 0 || (p.stock?.small || 0) > 0;
+    const hasPrintSales = (p.sales || []).some(s => s.type === 'large' || s.type === 'small');
+    return hasStock || hasPrintSales;
+  });
+
+  const now = Date.now();
+  const MS_PER_DAY = 86400000;
+  const RECENCY_WINDOW = 365; // days — sales older than this score 0 recency
+
+  const scored = paintings.map(p => {
+    const printSales = (p.sales || []).filter(s => s.type === 'large' || s.type === 'small');
+    const lgSold = printSales.filter(s => s.type === 'large').length;
+    const smSold = printSales.filter(s => s.type === 'small').length;
+    const totalSold = lgSold + smSold;
+
+    // Recency: days since last print sale (0 if no sales)
+    const dates = printSales.map(s => s.date ? new Date(s.date).getTime() : 0).filter(Boolean);
+    const lastSaleTs = dates.length ? Math.max(...dates) : 0;
+    const lastSaleLabel = lastSaleTs ? new Date(lastSaleTs).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+    const daysSinceSale = lastSaleTs ? (now - lastSaleTs) / MS_PER_DAY : RECENCY_WINDOW;
+    const recencyScore = Math.max(0, 1 - (daysSinceSale / RECENCY_WINDOW));
+
+    // Popularity score: 70% sales volume, 30% recency
+    // Sales component normalized against max across set (done after map)
+    const lgStock = p.stock?.large || 0;
+    const smStock = p.stock?.small || 0;
+    const printLg = Math.max(0, GOAL_LARGE - lgStock);
+    const printSm = Math.max(0, GOAL_SMALL - smStock);
+    const needsPrinting = printLg > 0 || printSm > 0;
+
+    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, needsPrinting };
+  });
+
+  // Normalize sales volume
+  const maxSold = Math.max(1, ...scored.map(r => r.totalSold));
+  scored.forEach(r => {
+    const salesNorm = r.totalSold / maxSold;
+    r.score = Math.round((salesNorm * 0.7 + r.recencyScore * 0.3) * 100);
+  });
+
+  // Sort by score desc
+  scored.sort((a, b) => b.score - a.score);
+
+  const filtered = lowOnly ? scored.filter(r => r.needsPrinting) : scored;
+
+  const tbody = document.getElementById('prints-body');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--ink3);font-size:13px;padding:32px">No prints found.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((r, i) => {
+    const warn = r.needsPrinting ? '⚠️ ' : '';
+    const rankBadge = i < 3 ? `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--accent);color:white;font-size:10px;font-weight:700;line-height:18px;text-align:center;margin-right:4px">${i+1}</span>` : `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--border);color:var(--ink2);font-size:10px;font-weight:600;line-height:18px;text-align:center;margin-right:4px">${i+1}</span>`;
+    const lgStockStyle = r.lgStock < GOAL_LARGE ? 'color:var(--red);font-weight:600' : '';
+    const smStockStyle = r.smStock < GOAL_SMALL ? 'color:var(--red);font-weight:600' : '';
+    const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
+    const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
+    return `<tr>
+      <td style="max-width:200px">${warn}${rankBadge}<span style="font-size:13px">${r.p.title}</span></td>
+      <td class="mono" style="text-align:center">${r.lgSold}</td>
+      <td class="mono" style="text-align:center">${r.smSold}</td>
+      <td class="dim" style="text-align:center;font-size:12px">${r.lastSaleLabel}</td>
+      <td class="mono" style="text-align:center;${lgStockStyle}">${r.lgStock}</td>
+      <td class="mono" style="text-align:center;${smStockStyle}">${r.smStock}</td>
+      <td style="text-align:center">${printLgCell}</td>
+      <td style="text-align:center">${printSmCell}</td>
+      <td class="mono" style="text-align:center;font-size:12px;color:var(--ink2)">${r.score}</td>
+    </tr>`;
+  }).join('');
 }
 
 // ═══════════════════════════════════════════
@@ -1161,11 +1284,28 @@ function renderCards() {
   const originalsInStock = db.paintings.filter(p => p.originalAvail === true).length;
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
 
+  // Top print by size
+  const lgCounts = {}, smCounts = {};
+  db.paintings.forEach(p => {
+    lgCounts[p.id] = { title: p.title, count: p.sales.filter(s => s.type === 'large').length };
+    smCounts[p.id] = { title: p.title, count: p.sales.filter(s => s.type === 'small').length };
+  });
+  const topLg = Object.values(lgCounts).sort((a,b) => b.count - a.count)[0];
+  const topSm = Object.values(smCounts).sort((a,b) => b.count - a.count)[0];
+  const topLgCard = (topLg && topLg.count > 0)
+    ? `<div class="card"><div class="card-label">Top Large Print</div><div class="card-value" style="font-size:15px;line-height:1.3">${topLg.title}</div><div class="card-sub">${topLg.count} sold</div></div>`
+    : `<div class="card"><div class="card-label">Top Large Print</div><div class="card-value" style="font-size:15px">—</div><div class="card-sub">no sales yet</div></div>`;
+  const topSmCard = (topSm && topSm.count > 0)
+    ? `<div class="card"><div class="card-label">Top Small Print</div><div class="card-value" style="font-size:15px;line-height:1.3">${topSm.title}</div><div class="card-sub">${topSm.count} sold</div></div>`
+    : `<div class="card"><div class="card-label">Top Small Print</div><div class="card-value" style="font-size:15px">—</div><div class="card-sub">no sales yet</div></div>`;
+
   document.getElementById('cards').innerHTML = `
     <div class="card"><div class="card-label">Originals Sold</div><div class="card-value">${origSold}</div><div class="card-sub">${originalsInStock} in stock</div></div>
     <div class="card"><div class="card-label">Large Prints Sold</div><div class="card-value">${largeSold}</div><div class="card-sub">${totalLarge} in stock</div></div>
     <div class="card"><div class="card-label">Small Prints Sold</div><div class="card-value">${smallSold}</div><div class="card-sub">${totalSmall} in stock</div></div>
     <div class="card"><div class="card-label">Print Inventory</div><div class="card-value">${totalLarge + totalSmall}</div><div class="card-sub">${totalLarge} large · ${totalSmall} small</div></div>
+    ${topLgCard}
+    ${topSmCard}
     <div class="card"><div class="card-label">Art Fair Revenue</div><div class="card-value">${fmt(revFair)}</div><div class="card-sub">channel</div></div>
     <div class="card"><div class="card-label">Online Revenue</div><div class="card-value">${fmt(revOnline)}</div><div class="card-sub">channel</div></div>
     <div class="card"><div class="card-label">Gallery Revenue</div><div class="card-value">${fmt(revGallery)}</div><div class="card-sub">net to you</div></div>
