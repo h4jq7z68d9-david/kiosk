@@ -1066,11 +1066,12 @@ function renderPrintsTab() {
   }
 
   function buildThead(tierId) {
-    return `<thead><tr>${COLS.map(c => {
+    return '<thead><tr>' + COLS.map(c => {
       const active = printsSort.col === c.key;
       const arrow = active ? (printsSort.dir === 1 ? ' ↑' : ' ↓') : '';
-      return `<th style="text-align:${c.align};cursor:pointer;user-select:none${active ? ';color:var(--accent)' : ''}" onclick="printsSortBy('${c.key}','${tierId}')">${c.label}${arrow}</th>`;
-    }).join('')}</tr></thead>`;
+      const activeStyle = active ? ';color:var(--accent)' : '';
+      return '<th style="text-align:' + c.align + ';cursor:pointer;user-select:none' + activeStyle + '" onclick="printsSortBy(\'' + c.key + '\')">' + c.label + arrow + '</th>';
+    }).join('') + '</tr></thead>';
   }
 
   function buildRows(set, GOAL_LARGE, GOAL_SMALL) {
@@ -1140,7 +1141,7 @@ function renderPrintsTab() {
   }
 }
 
-function printsSortBy(col, tierId) {
+function printsSortBy(col) {
   if (printsSort.col === col) {
     printsSort.dir *= -1;
   } else {
