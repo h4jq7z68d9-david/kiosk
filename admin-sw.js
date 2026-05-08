@@ -1,5 +1,5 @@
-// Admin PWA Service Worker — cache version: dna-admin-v2
-const CACHE = 'dna-admin-v4';
+// Admin PWA Service Worker — cache version: dna-admin-v5
+const CACHE = 'dna-admin-v5';
 const SHELL = [
   '/admin.html',
   '/admin.webmanifest',
@@ -24,6 +24,7 @@ self.addEventListener('activate', e => {
 // Fetch strategy:
 //   - All /admin/* API calls → network only, never cache
 //   - S3 receipt URLs → network only
+//   - HTML files → network first, fall back to cache (always fresh when online)
 //   - Everything else → cache first, then network
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
@@ -36,7 +37,20 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Shell: cache first
+  // HTML: network first, cache fallback (so updates are always picked up when online)
+  if (url.pathname.endsWith('.html') || url.pathname === '/') {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        if (res.ok) {
+          caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+        }
+        return res;
+      }).catch(() => caches.match(e.request))
+    );
+    return;
+  }
+
+  // Shell assets: cache first
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
