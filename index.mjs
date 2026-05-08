@@ -530,29 +530,48 @@ async function cartRedirect(queryParams) {
 // ── Admin: Paintings ──
 
 async function adminGetPaintings(cors) {
-  const [paintingsRes, salesRes, squareRes] = await Promise.all([
+  const [paintingsRes, salesRes, squareRes, configRes] = await Promise.all([
     dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE })),
     dynamo.send(new ScanCommand({ TableName: SALES_TABLE })),
     squareGet(`/v2/catalog/list?types=ITEM&location_id=${SQUARE_LOC}`),
+    dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } })),
   ]);
 
-  // Build normalized-title → originalAvail map from Square custom attributes
   function normTitle(t) { return (t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
-  const squareAvailMap = {};
+
+  // Build Square catalog map — keyed by both Square item ID and normalized title
+  // Skips originals-only items (single "Default Title" variation)
+  const squareById = {};    // squareItemId → square data
+  const squareByTitle = {}; // normTitle    → square data
   for (const obj of (squareRes.objects || [])) {
-    const name = obj.item_data?.name;
-    if (!name) continue;
-    const attrs = obj.custom_attribute_values;
-    let avail = false;
-    if (attrs) {
+    const item = obj.item_data;
+    if (!item?.name) continue;
+    const variations = item.variations || [];
+    if (variations.length === 1 && variations[0].item_variation_data?.name === 'Default Title') continue;
+
+    const attrs = obj.custom_attribute_values || {};
+    function getAttr(name) {
       for (const val of Object.values(attrs)) {
-        if (val.name === 'Original Available') {
-          avail = val.boolean_value === true;
-          break;
+        if (val.name === name) {
+          if (val.boolean_value !== undefined) return val.boolean_value;
+          return val.string_value ?? val.number_value ?? null;
         }
       }
+      return null;
     }
-    squareAvailMap[normTitle(name)] = avail;
+
+    const squareData = {
+      squareId:     obj.id,
+      title:        item.name,
+      originalAvail: getAttr('Original Available') === true,
+      year:         getAttr('Year') || extractYear(obj) || '',
+      width:        parseFloat(getAttr('Width')) || null,
+      height:       parseFloat(getAttr('Height')) || null,
+      medium:       getAttr('Medium') || '',
+    };
+
+    squareById[obj.id]              = squareData;
+    squareByTitle[normTitle(item.name)] = squareData;
   }
 
   const salesByPainting = {};
@@ -560,14 +579,70 @@ async function adminGetPaintings(cors) {
     if (!salesByPainting[s.paintingId]) salesByPainting[s.paintingId] = [];
     salesByPainting[s.paintingId].push(s);
   }
+
+  // Map existing DynamoDB records, matching Square by ID first, then title
+  // If matched by title and no squareId stored yet, back-fill it in DynamoDB
+  const matchedSquareIds = new Set();
+  const backfillPromises = [];
+
   const paintings = (paintingsRes.Items || [])
     .filter(p => p.id !== '__config__')
-    .map(p => ({
-      ...p,
-      sales: salesByPainting[p.id] || [],
-      originalAvail: squareAvailMap[normTitle(p.title)] ?? null,
-    }));
-  const configRes = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
+    .map(p => {
+      const sq = (p.squareId && squareById[p.squareId])
+        || squareByTitle[normTitle(p.title)]
+        || null;
+
+      if (sq) {
+        matchedSquareIds.add(sq.squareId);
+        // Back-fill squareId onto DynamoDB record if missing
+        if (!p.squareId) {
+          backfillPromises.push(
+            dynamo.send(new PutCommand({
+              TableName: PAINTINGS_TABLE,
+              Item: { ...p, squareId: sq.squareId },
+            }))
+          );
+        }
+      }
+
+      return {
+        ...p,
+        squareId:     sq?.squareId ?? p.squareId ?? null,
+        sales:        salesByPainting[p.id] || [],
+        originalAvail: sq ? sq.originalAvail : null,
+      };
+    });
+
+  // Auto-create DynamoDB records for Square items with no match
+  const autoCreatePromises = [];
+  for (const sq of Object.values(squareById)) {
+    if (matchedSquareIds.has(sq.squareId)) continue;
+    const id   = 'p' + Date.now() + Math.floor(Math.random() * 1000);
+    const item = {
+      id,
+      squareId: sq.squareId,
+      title:    sq.title,
+      year:     sq.year || '',
+      month:    '',
+      width:    sq.width || 0,
+      height:   sq.height || 0,
+      medium:   sq.medium || '',
+      stock:    { large: 0, small: 0 },
+      momsHas:  false,
+    };
+    paintings.push({
+      ...item,
+      sales:        [],
+      originalAvail: sq.originalAvail,
+    });
+    autoCreatePromises.push(
+      dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }))
+    );
+  }
+
+  // Fire DynamoDB writes in background — don't block the response
+  await Promise.all([...backfillPromises, ...autoCreatePromises]);
+
   const rate = configRes.Item?.rate ?? 1.10;
   return ok({ paintings, rate }, cors);
 }
