@@ -398,6 +398,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="openQuickSaleModal()">+ Sale</button>
+      <button class="btn-primary" style="font-size:12px;padding:6px 14px;background:var(--ink);border-color:var(--ink)" onclick="printPriceTags()">🏷 Tags</button>
       <button class="btn-logout" onclick="logout()">sign out</button>
     </div>
   </div>
@@ -2172,6 +2173,13 @@ async function saveSale() {
     } else {
       const data = await api('POST', `/paintings/${salePaintingId}/sales`, saleData);
       p.sales.push(data.sale);
+      // Decrement print stock for new print sales (can go negative — intentional)
+      const saleType = saleData.type;
+      if (saleType === 'large' || saleType === 'small') {
+        p.stock[saleType] = (p.stock[saleType] || 0) - 1;
+        api('PUT', `/paintings/${salePaintingId}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas })
+          .catch(e => console.error('Stock decrement failed:', e));
+      }
     }
     render();
   } catch(e) { alert('Failed to save sale: ' + e.message); }
@@ -2188,6 +2196,70 @@ function closeModalOnBackdrop(e, id) { if (e.target === document.getElementById(
 // ═══════════════════════════════════════════
 function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
+// ═══════════════════════════════════════════
+//  PRICE TAGS (Avery 5371 — 3.5×2", 10/sheet)
+// ═══════════════════════════════════════════
+function printPriceTags() {
+  const rate = db.rate || 1.10;
+  const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
+
+  const cards = list.map(p => {
+    const price = retail(p, rate);
+    const dims  = p.width + ' × ' + p.height + ' in';
+    const med   = p.medium ? esc(p.medium) : 'oil on canvas';
+    const year  = p.year || '';
+    const meta2 = (year ? year : '') + (year && med ? ' · ' : '') + (med || '');
+    const origPrice = p.originalAvail
+      ? '<div class="price">$' + price.toLocaleString() + '</div>'
+      : '<div class="price sold">original sold</div>';
+
+    return '<div class="card">'
+      + '<div class="title">' + esc(p.title) + '</div>'
+      + '<div class="meta">' + meta2 + '</div>'
+      + '<div class="meta">' + dims + '</div>'
+      + origPrice
+      + '<div class="prints">Giclée prints: 5×7 $35 · 9×12 $65</div>'
+      + '</div>';
+  }).join('');
+
+  const html = '<!DOCTYPE html>\n'
+    + '<html>\n<head>\n<meta charset="UTF-8">\n'
+    + '<title>Price Tags — David Nicholson Art</title>\n'
+    + '<style>\n'
+    + '@page { size: letter; margin: 0.5in 0.75in; }\n'
+    + '* { box-sizing: border-box; margin: 0; padding: 0; }\n'
+    + 'body { font-family: Georgia, serif; background: white; }\n'
+    + '.grid {\n'
+    + '  display: grid;\n'
+    + '  grid-template-columns: repeat(2, 3.5in);\n'
+    + '  grid-template-rows: repeat(5, 2in);\n'
+    + '  column-gap: 0.25in;\n'
+    + '  row-gap: 0;\n'
+    + '}\n'
+    + '.card {\n'
+    + '  width: 3.5in; height: 2in;\n'
+    + '  padding: 0.18in 0.22in;\n'
+    + '  border: 0.5pt solid #ccc;\n'
+    + '  display: flex; flex-direction: column; justify-content: center;\n'
+    + '  overflow: hidden;\n'
+    + '}\n'
+    + '.title { font-size: 13pt; font-weight: bold; line-height: 1.2; margin-bottom: 4pt; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n'
+    + '.meta { font-size: 8pt; color: #555; line-height: 1.4; font-style: italic; }\n'
+    + '.price { font-size: 15pt; font-weight: bold; margin-top: 6pt; }\n'
+    + '.price.sold { font-size: 10pt; color: #888; font-weight: normal; font-style: italic; }\n'
+    + '.prints { font-size: 7.5pt; color: #777; margin-top: 4pt; font-family: Arial, sans-serif; }\n'
+    + '@media print { .card { border-color: transparent; } }\n'
+    + '</style>\n</head>\n<body>\n'
+    + '<div class="grid">' + cards + '</div>\n'
+    + '</body>\n</html>';
+
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function() { w.print(); }, 400);
 }
 
 // ═══════════════════════════════════════════
