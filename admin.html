@@ -476,7 +476,12 @@
         <label>Price / sq in</label>
         <div class="rate-input-wrap">
           <span>$</span>
-          <input type="number" id="rate-input" value="1.10" step="0.05" min="0.10" max="10">
+          <input type="text" inputmode="decimal" id="rate-input" value="1.10" style="-webkit-appearance:none;-moz-appearance:textfield">
+        </div>
+        <label style="margin-left:16px">Large (≥30") / sq in</label>
+        <div class="rate-input-wrap">
+          <span>$</span>
+          <input type="text" inputmode="decimal" id="rate-large-input" placeholder="same" style="-webkit-appearance:none;-moz-appearance:textfield">
         </div>
         <span class="rate-note">Adjusts price &amp; rounded columns for all paintings</span>
       </div>
@@ -929,7 +934,7 @@ const MILEAGE_SEED = [
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
-let db = { paintings: [], rate: 1.10 };
+let db = { paintings: [], rate: 1.10, rateLarge: null };
 let expState = { expenses: [], mileage: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
 let activeFilter = null, expandedId = null;
@@ -1234,7 +1239,8 @@ function chunk(arr, size) {
 //  CALC (inventory)
 // ═══════════════════════════════════════════
 function sqIn(p) { return p.width * p.height; }
-function cost(p, rate) { return sqIn(p) * rate; }
+function effectiveRate(p) { return (db.rateLarge != null && (p.width >= 30 || p.height >= 30)) ? db.rateLarge : db.rate; }
+function cost(p, rate) { return sqIn(p) * (rate !== undefined ? rate : effectiveRate(p)); }
 function retail(p, rate) { return Math.ceil(cost(p, rate) / 50) * 50; }
 function originalSold(p) { return p.sales.some(s => s.type === 'original'); }
 function originalAvailInSquare(p) { return p.originalAvail === true; }
@@ -1246,8 +1252,18 @@ function saleNet(s) { if (s.channel === 'gallery' && s.net != null) return Numbe
 function setRate(val) {
   db.rate = val;
   document.getElementById('rate-input').value = val.toFixed(2);
-  api('PUT', '/config', { rate: val }).catch(e => console.error('Rate save failed:', e));
+  saveRates();
   render();
+}
+function setRateLarge(val) {
+  db.rateLarge = isNaN(val) || val <= 0 ? null : val;
+  saveRates();
+  render();
+}
+function saveRates() {
+  const body = { rate: db.rate };
+  if (db.rateLarge != null) body.rateLarge = db.rateLarge;
+  api('PUT', '/config', body).catch(e => console.error('Rate save failed:', e));
 }
 
 // ═══════════════════════════════════════════
@@ -1261,11 +1277,10 @@ function sortBy(field) {
 function sortedPaintings(list) {
   return [...list].sort((a, b) => {
     let av, bv;
-    const r = db.rate;
     if (sortField === 'title')  { av = a.title.toLowerCase(); bv = b.title.toLowerCase(); }
     else if (sortField === 'year')   { av = a.year; bv = b.year; }
-    else if (sortField === 'cost')   { av = cost(a,r); bv = cost(b,r); }
-    else if (sortField === 'retail') { av = retail(a,r); bv = retail(b,r); }
+    else if (sortField === 'cost')   { av = cost(a); bv = cost(b); }
+    else if (sortField === 'retail') { av = retail(a); bv = retail(b); }
     else { av = a[sortField]; bv = b[sortField]; }
     if (av < bv) return sortDir === 'asc' ? -1 : 1;
     if (av > bv) return sortDir === 'asc' ? 1 : -1;
@@ -1308,6 +1323,7 @@ async function init() {
     const data = await api('GET', '/paintings');
     db.paintings = data.paintings;
     db.rate = data.rate ?? 1.10;
+    db.rateLarge = data.rateLarge ?? null;
   } catch(e) {
     setLoading(false);
     return;
@@ -1318,6 +1334,11 @@ async function init() {
   document.getElementById('rate-input').addEventListener('input', function() {
     const v = parseFloat(this.value);
     if (!isNaN(v) && v > 0) setRate(v);
+  });
+  if (db.rateLarge != null) document.getElementById('rate-large-input').value = db.rateLarge.toFixed(2);
+  document.getElementById('rate-large-input').addEventListener('input', function() {
+    const v = parseFloat(this.value);
+    setRateLarge(isNaN(v) ? null : v);
   });
 
   document.getElementById('irs-rate-display').textContent =
@@ -1478,10 +1499,9 @@ function renderTable() {
   });
   const tbody = document.getElementById('table-body');
   if (!list.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">No paintings found.</div></td></tr>'; return; }
-  const rate = db.rate || 1.10;
   let rows = '';
   list.forEach(p => {
-    const c = cost(p, rate), r = retail(p, rate);
+    const c = cost(p), r = retail(p);
     const sold = originalSold(p);
     const squareAvail = originalAvailInSquare(p);
     const isOpen = expandedId === p.id;
@@ -2203,11 +2223,10 @@ function esc(str) {
 //  PRICE TAGS (Avery 5371 — 3.5×2", 10/sheet)
 // ═══════════════════════════════════════════
 function printPriceTags() {
-  const rate = db.rate || 1.10;
   const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
 
   const cards = list.filter(p => p.originalAvail === true).map(p => {
-    const price = retail(p, rate);
+    const price = retail(p);
     const dims  = p.width + ' × ' + p.height + ' in';
     const med   = p.medium ? (p.medium.toLowerCase().includes('on canvas') ? esc(p.medium) : esc(p.medium) + ' on canvas') : 'oil on canvas';
     const year  = p.year || '';
@@ -2279,19 +2298,16 @@ function downloadCsv(filename, rows) {
 }
 
 function exportInventoryCsv() {
-  const rate = db.rate || 1.10;
   const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
   const header = ['Title','Month','Year','Width','Height','Sq In','Price','Rounded',
                   'Lg Stock','Sm Stock','Lg Sold','Sm Sold','Original Sold'];
   const rows = list.map(p => {
     const sq = p.width * p.height;
-    const price = sq * rate;
-    const rounded = Math.ceil(price / 50) * 50;
     const lgSold = p.sales.filter(s => s.type === 'large').length;
     const smSold = p.sales.filter(s => s.type === 'small').length;
     const origSold = p.sales.some(s => s.type === 'original') ? 'Yes' : 'No';
     return [p.title, p.month || '', p.year, p.width, p.height, sq,
-            price.toFixed(2), rounded, p.stock.large || 0, p.stock.small || 0,
+            effectiveRate(p).toFixed(2), Math.ceil(sq * effectiveRate(p) / 50) * 50, p.stock.large || 0, p.stock.small || 0,
             lgSold, smSold, origSold];
   });
   downloadCsv('inventory.csv', [header, ...rows]);

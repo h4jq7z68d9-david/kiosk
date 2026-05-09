@@ -645,7 +645,8 @@ async function adminGetPaintings(cors) {
   await Promise.all([...backfillPromises, ...autoCreatePromises]);
 
   const rate = configRes.Item?.rate ?? 1.10;
-  return ok({ paintings, rate }, cors);
+  const rateLarge = configRes.Item?.rateLarge ?? null;
+  return ok({ paintings, rate, rateLarge }, cors);
 }
 
 async function adminAddPainting(body, cors) {
@@ -711,14 +712,16 @@ async function adminDeleteSale(saleId, cors) {
 
 async function adminGetConfig(cors) {
   const res = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
-  return ok({ rate: res.Item?.rate ?? 1.10 }, cors);
+  return ok({ rate: res.Item?.rate ?? 1.10, rateLarge: res.Item?.rateLarge ?? null }, cors);
 }
 
 async function adminUpdateConfig(body, cors) {
-  const { rate } = body;
+  const { rate, rateLarge } = body;
   if (!rate || isNaN(rate)) return err('Invalid rate', 400, cors);
-  await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: { id: '__config__', rate: Number(rate) } }));
-  return ok({ rate: Number(rate) }, cors);
+  const item = { id: '__config__', rate: Number(rate) };
+  if (rateLarge != null && !isNaN(rateLarge)) item.rateLarge = Number(rateLarge);
+  await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
+  return ok({ rate: Number(rate), rateLarge: item.rateLarge ?? null }, cors);
 }
 
 // ── Admin: Expenses ──
