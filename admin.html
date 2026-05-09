@@ -396,7 +396,10 @@
       <span class="wordmark">David Nicholson Art</span>
       <span class="badge">Admin</span>
     </div>
-    <button class="btn-logout" onclick="logout()">sign out</button>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="openQuickSaleModal()">+ Sale</button>
+      <button class="btn-logout" onclick="logout()">sign out</button>
+    </div>
   </div>
   <div id="loading-bar"></div>
 
@@ -650,6 +653,12 @@
       <button class="modal-close" onclick="closeModal('sale-modal')">×</button>
     </div>
     <div class="modal-body">
+      <div class="field" id="sale-painting-field">
+        <label>Painting</label>
+        <select id="sale-painting-select" onchange="onSalePaintingChange()">
+          <option value="">— select —</option>
+        </select>
+      </div>
       <div class="field"><label>Date</label><input type="date" id="sale-date"></div>
       <div class="field">
         <label>What sold</label>
@@ -2073,13 +2082,45 @@ function updateGalleryNetFromNet() {
     prev.textContent = `$${gross.toFixed(2)} × ${pct.toFixed(1)}% = $${net.toFixed(2)} to you`;
   }
 }
+function openQuickSaleModal() {
+  // Populate painting picker from db
+  const sel = document.getElementById('sale-painting-select');
+  sel.innerHTML = '<option value="">— select —</option>';
+  const sorted = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
+  sorted.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id; opt.textContent = p.title;
+    sel.appendChild(opt);
+  });
+  document.getElementById('sale-painting-field').style.display = '';
+  salePaintingId = null; editSaleId = null;
+  document.getElementById('sale-modal-title').textContent = 'Log Sale';
+  document.getElementById('sale-modal-save-btn').textContent = 'Log Sale';
+  document.getElementById('sale-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('sale-type').value = 'large';
+  document.getElementById('sale-channel').value = 'fair';
+  document.getElementById('sale-price').value = '';
+  document.getElementById('sale-pct').value = '';
+  document.getElementById('sale-net').value = '';
+  document.getElementById('gallery-net-preview').textContent = '';
+  document.getElementById('gallery-fields').style.display = 'none';
+  document.getElementById('sale-price-label').textContent = 'Price received ($)';
+  document.getElementById('sale-modal').style.display = 'flex';
+}
+function onSalePaintingChange() {
+  const id = document.getElementById('sale-painting-select').value;
+  salePaintingId = id || null;
+  const p = id ? db.paintings.find(x => x.id === id) : null;
+  document.getElementById('sale-modal-title').textContent = p ? 'Log Sale — ' + p.title : 'Log Sale';
+}
 function openSaleModal(paintingId) {
   salePaintingId = paintingId; editSaleId = null;
+  document.getElementById('sale-painting-field').style.display = 'none';
   const p = db.paintings.find(x => x.id === paintingId);
   document.getElementById('sale-modal-title').textContent = 'Log Sale — ' + p.title;
   document.getElementById('sale-modal-save-btn').textContent = 'Log Sale';
   document.getElementById('sale-date').value = new Date().toISOString().slice(0,10);
-  document.getElementById('sale-type').value = 'original';
+  document.getElementById('sale-type').value = 'large';
   document.getElementById('sale-channel').value = 'fair';
   document.getElementById('sale-price').value = '';
   document.getElementById('sale-pct').value = '';
@@ -2091,6 +2132,7 @@ function openSaleModal(paintingId) {
 }
 function openEditSaleModal(paintingId, saleId) {
   salePaintingId = paintingId; editSaleId = saleId;
+  document.getElementById('sale-painting-field').style.display = 'none';
   const p = db.paintings.find(x => x.id === paintingId);
   const s = p.sales.find(x => x.id === saleId);
   document.getElementById('sale-modal-title').textContent = 'Edit Sale — ' + p.title;
@@ -2110,7 +2152,7 @@ function openEditSaleModal(paintingId, saleId) {
 }
 async function saveSale() {
   const p = db.paintings.find(x => x.id === salePaintingId);
-  if (!p) return;
+  if (!p) { alert('Select a painting first.'); return; }
   const channel = document.getElementById('sale-channel').value;
   const gross   = parseFloat(document.getElementById('sale-price').value);
   if (isNaN(gross) || gross < 0) { alert('Enter a valid price.'); return; }
