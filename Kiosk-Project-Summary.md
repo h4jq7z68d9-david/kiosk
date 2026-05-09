@@ -176,7 +176,7 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 - `POST /admin/paintings/{id}/sales` — add sale
 - `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale
 - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
-- `GET/PUT /admin/config` — price/sq in rate
+- `GET/PUT /admin/config` — price/sq in rate (`rate`) and large-painting rate (`rateLarge`, optional); both stored in DynamoDB `__config__` record
 - `GET /admin/expenses` — returns `{ expenses, mileage }` from `dna-expenses` table
 - `POST /admin/expenses` — add expense record
 - `PUT /admin/expenses/{id}` — update expense
@@ -336,7 +336,7 @@ All are single-file, no framework — intentional, keep it that way.
 
 **Four-tab layout:**
 - **Dashboard tab** — revenue cards (originals sold, large/small prints sold, print inventory, top large print, top small print, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter). Expense cards load in background on login so dashboard is always populated.
-- **Inventory tab** — price/sq in rate adjuster + sortable/filterable painting table with inline editing; `↓ CSV` export
+- **Inventory tab** — dual rate adjuster (standard + large ≥30") + sortable/filterable painting table with inline editing; `↓ CSV` export
 - **Expenses & Mileage tab** — expense and mileage tables; tap any row to open edit modal; delete inside modal
 - **Prints tab** — print priority list sorted into four separate tables by stock tier (Out of Stock → Low Stock → Below Goal → Stocked), ranked by popularity score (70% sales volume, 30% recency) within each tier. "Zero stock only" checkbox filters to paintings where both sizes are at 0. Click any column header to collapse tiers into a single sortable flat table; "✕ Clear sort" returns to tiered view. Print Lg/Print Sm columns show how many to print to reach goal (2 large, 3 small); stock shown in red when below goal.
 
@@ -345,8 +345,10 @@ All are single-file, no framework — intentional, keep it that way.
 - Filters: Never sold, Sold, Original available, Low print stock, Mom doesn't have
 - Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom's Prints checkbox) + sale history
 - Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net
-- Stock +/− buttons autosave immediately
-- CSV export: title, month, year, dimensions, sq in, price, rounded, stock counts, units sold, original sold status
+- Stock +/− buttons autosave immediately (floor at 0)
+- Logging a new print sale automatically decrements the matching size stock by 1 (can go negative — intentional)
+- **🏷 Tags button** in topbar: opens a printable Avery 5371/5871 price tag sheet (3.5×2", 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
+- CSV export: title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
 
 **Expense features:**
 - Categories: Printing, Framing, Art Supplies, Art Fair Fees, Retail & Packaging, Equipment, Marketing, Licenses & Fees, Insurance, Website & Software, Travel, Other
@@ -404,7 +406,7 @@ All are single-file, no framework — intentional, keep it that way.
 
 | Table | Purpose |
 |---|---|
-| `dna-paintings` | All paintings + `__config__` rate record |
+| `dna-paintings` | All paintings + `__config__` record (stores `rate` and optional `rateLarge`) |
 | `dna-sales` | Sales records with `paintingId` foreign key + GSI `paintingId-index` |
 | `dna-guestbook` | Guest book entries |
 | `dna-orders` | Square order records |
@@ -474,6 +476,16 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **S3 sync receipt bug fixed** — `--exclude "receipts/*"` added to deploy.yml before `--delete`; previous deploys were wiping all uploaded receipts
 - ✓ **DynamoDB title corrections** — all 6 painting titles corrected via admin UI
 - ✓ **admin-sw.js cache** — bump to `dna-admin-v4` after pushing admin.html changes this session
+
+## Completed This Session (May 9 2026)
+
+- ✓ **Dual pricing** — second "Large (≥30") / sq in" rate field in inventory rate bar; if either dimension ≥ 30, `effectiveRate(p)` uses `rateLarge` instead of `rate`; both rates saved to DynamoDB `__config__`; inventory table, sort, CSV export, and price tags all use effective rate per painting
+- ✓ **Rate bar inputs** — changed from number spinners to plain text fields (`inputmode="decimal"`); larger, squarish, centered text
+- ✓ **Sale → stock decrement** — logging a new print sale (large or small) decrements that size's stock count by 1 immediately; no floor (can go negative); edit-sale does not touch stock
+- ✓ **🏷 Tags button** — prints Avery 5371/5871 price tags (3.5×2", 10/sheet) for all currently-available originals; shows title, year, medium + " on canvas" (appended only if not already present), dimensions, original price; skips sold originals
+- ✓ **Medium in adminGetPaintings** — `medium` field from Square `Medium` custom attribute now correctly merged onto existing DynamoDB painting records (was missing from the `.map()` return; only auto-created records had it)
+- ✓ **Medium display logic** — appends " on canvas" if Square `Medium` value doesn't already contain "on canvas"; falls back to "oil on canvas" if attribute is empty
+- ✓ **Admin SW cache key** — bumped to `dna-admin-v5`
 
 ## Completed This Session (May 4 2026)
 
@@ -555,7 +567,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v4`; bump in `admin-sw.js` after significant admin.html changes
+- **Admin SW cache key** — currently `dna-admin-v5`; bump in `admin-sw.js` after significant admin.html changes
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 - **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
