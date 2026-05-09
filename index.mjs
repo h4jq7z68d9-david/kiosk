@@ -610,6 +610,7 @@ async function adminGetPaintings(cors) {
         squareId:     sq?.squareId ?? p.squareId ?? null,
         sales:        salesByPainting[p.id] || [],
         originalAvail: sq ? sq.originalAvail : null,
+        medium:       sq?.medium || p.medium || '',
       };
     });
 

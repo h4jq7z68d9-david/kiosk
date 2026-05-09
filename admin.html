@@ -2206,22 +2206,18 @@ function printPriceTags() {
   const rate = db.rate || 1.10;
   const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
 
-  const cards = list.map(p => {
+  const cards = list.filter(p => p.originalAvail === true).map(p => {
     const price = retail(p, rate);
     const dims  = p.width + ' × ' + p.height + ' in';
-    const med   = p.medium ? esc(p.medium) : 'oil on canvas';
+    const med   = p.medium ? (p.medium.toLowerCase().includes('on canvas') ? esc(p.medium) : esc(p.medium) + ' on canvas') : 'oil on canvas';
     const year  = p.year || '';
     const meta2 = (year ? year : '') + (year && med ? ' · ' : '') + (med || '');
-    const origPrice = p.originalAvail
-      ? '<div class="price">$' + price.toLocaleString() + '</div>'
-      : '<div class="price sold">original sold</div>';
 
     return '<div class="card">'
       + '<div class="title">' + esc(p.title) + '</div>'
       + '<div class="meta">' + meta2 + '</div>'
       + '<div class="meta">' + dims + '</div>'
-      + origPrice
-      + '<div class="prints">Giclée prints: 5×7 $35 · 9×12 $65</div>'
+      + '<div class="price">$' + price.toLocaleString() + '</div>'
       + '</div>';
   }).join('');
 
