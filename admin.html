@@ -411,6 +411,7 @@
       <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
       <button class="tab-btn" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
       <button class="tab-btn" id="tab-prints-btn" onclick="switchTab('prints')">Prints</button>
+      <button class="tab-btn" id="tab-saleslog-btn" onclick="switchTab('saleslog')">Sales Log</button>
     </div>
 
     <!-- ══ TAB: DASHBOARD ══ -->
@@ -608,6 +609,52 @@
       </div>
     </div>
 
+    <!-- ══ TAB: SALES LOG ══ -->
+    <div class="tab-panel" id="tab-saleslog">
+      <div style="padding-top:24px">
+        <div class="table-section">
+          <div class="table-header">
+            <div class="section-title" style="margin:0">Sales Log</div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <input type="date" id="sl-from" onchange="renderSalesLog()" style="font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
+              <span style="font-size:12px;color:var(--ink3)">to</span>
+              <input type="date" id="sl-to" onchange="renderSalesLog()" style="font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
+              <select id="sl-channel" onchange="renderSalesLog()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
+                <option value="">All channels</option>
+                <option value="fair">Art fair</option>
+                <option value="online">Online</option>
+                <option value="gallery">Gallery</option>
+              </select>
+              <select id="sl-state" onchange="renderSalesLog()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
+                <option value="">All states</option>
+                <option value="KS">KS</option>
+                <option value="MO">MO</option>
+              </select>
+              <button class="btn-sm" onclick="clearSalesLogFilters()">Clear</button>
+              <button class="btn-sm" onclick="exportSalesLogCsv()">↓ CSV</button>
+            </div>
+          </div>
+          <div id="sl-summary" style="padding:10px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;gap:24px;flex-wrap:wrap"></div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Painting</th>
+                  <th>Type</th>
+                  <th>Channel</th>
+                  <th>State</th>
+                  <th style="text-align:right">Price</th>
+                  <th style="text-align:right">Net</th>
+                </tr>
+              </thead>
+              <tbody id="sl-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app -->
 
@@ -680,6 +727,14 @@
           <option value="fair">Art fair</option>
           <option value="online">Online</option>
           <option value="gallery">Gallery</option>
+        </select>
+      </div>
+      <div class="field" id="sale-state-field" style="display:none">
+        <label>State</label>
+        <select id="sale-state">
+          <option value="">— select —</option>
+          <option value="KS">KS</option>
+          <option value="MO">MO</option>
         </select>
       </div>
       <div class="field" id="sale-price-field">
@@ -991,13 +1046,14 @@ function logout() {
 //  TABS
 // ═══════════════════════════════════════════
 function switchTab(tab) {
-  ['dashboard','inventory','expenses','prints'].forEach(t => {
+  ['dashboard','inventory','expenses','prints','saleslog'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
   if (tab === 'expenses' && !expLoaded) loadExpenses();
   else if (tab === 'expenses') renderExpenses();
   else if (tab === 'prints') renderPrintsTab();
+  else if (tab === 'saleslog') renderSalesLog();
 }
 
 // ═══════════════════════════════════════════
@@ -1545,7 +1601,7 @@ function renderTable() {
             ${p.sales.length === 0 ? '<div class="no-sales">No sales logged.</div>' : ''}
             ${p.sales.map(s => {
               const typeLabel = s.type === 'original' ? 'Original' : s.type === 'large' ? 'Large print' : 'Small print';
-              const chanLabel = s.channel === 'fair' ? 'Art fair' : s.channel === 'online' ? 'Online' : 'Gallery';
+              const chanLabel = s.channel === 'fair' ? ('Art fair' + (s.state ? ' · ' + s.state : '')) : s.channel === 'online' ? 'Online' : 'Gallery';
               const net = saleNet(s);
               const isGallery = s.channel === 'gallery';
               const priceHtml = isGallery
@@ -2066,6 +2122,8 @@ function onSaleChannelChange() {
   const type = document.getElementById('sale-type').value;
   const gf   = document.getElementById('gallery-fields');
   const lbl  = document.getElementById('sale-price-label');
+  const sf   = document.getElementById('sale-state-field');
+  sf.style.display = ch === 'fair' ? 'block' : 'none';
   if (ch === 'gallery') {
     gf.style.display = 'block'; lbl.textContent = 'Sale price (gross) ($)';
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
@@ -2116,6 +2174,8 @@ function openQuickSaleModal() {
   document.getElementById('sale-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('sale-type').value = 'large';
   document.getElementById('sale-channel').value = 'fair';
+  document.getElementById('sale-state').value = '';
+  document.getElementById('sale-state-field').style.display = 'block';
   document.getElementById('sale-price').value = '';
   document.getElementById('sale-pct').value = '';
   document.getElementById('sale-net').value = '';
@@ -2139,6 +2199,8 @@ function openSaleModal(paintingId) {
   document.getElementById('sale-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('sale-type').value = 'large';
   document.getElementById('sale-channel').value = 'fair';
+  document.getElementById('sale-state').value = '';
+  document.getElementById('sale-state-field').style.display = 'block';
   document.getElementById('sale-price').value = '';
   document.getElementById('sale-pct').value = '';
   document.getElementById('sale-net').value = '';
@@ -2157,6 +2219,8 @@ function openEditSaleModal(paintingId, saleId) {
   document.getElementById('sale-date').value = s.date || '';
   document.getElementById('sale-type').value = s.type;
   document.getElementById('sale-channel').value = s.channel;
+  document.getElementById('sale-state').value = s.state || '';
+  document.getElementById('sale-state-field').style.display = s.channel === 'fair' ? 'block' : 'none';
   document.getElementById('sale-price').value = s.price;
   document.getElementById('sale-pct').value = s.pct || '';
   document.getElementById('sale-net').value = s.net || '';
@@ -2173,7 +2237,8 @@ async function saveSale() {
   const channel = document.getElementById('sale-channel').value;
   const gross   = parseFloat(document.getElementById('sale-price').value);
   if (isNaN(gross) || gross < 0) { alert('Enter a valid price.'); return; }
-  const saleData = { date: document.getElementById('sale-date').value, type: document.getElementById('sale-type').value, channel, price: gross };
+  const state = channel === 'fair' ? (document.getElementById('sale-state').value || '') : '';
+  const saleData = { date: document.getElementById('sale-date').value, type: document.getElementById('sale-type').value, channel, price: gross, ...(state ? { state } : {}) };
   if (channel === 'gallery') {
     const pct = parseFloat(document.getElementById('sale-pct').value);
     const net = parseFloat(document.getElementById('sale-net').value);
@@ -2339,6 +2404,92 @@ function exportMileageCsv() {
   });
   const year = yearFilter || 'all';
   downloadCsv(`mileage-${year}.csv`, [header, ...rows]);
+}
+
+// ═══════════════════════════════════════════
+//  SALES LOG TAB
+// ═══════════════════════════════════════════
+function getSalesLogRows() {
+  const from    = document.getElementById('sl-from')?.value || '';
+  const to      = document.getElementById('sl-to')?.value || '';
+  const chanFil = document.getElementById('sl-channel')?.value || '';
+  const stateFil= document.getElementById('sl-state')?.value || '';
+
+  const rows = [];
+  for (const p of (db.paintings || [])) {
+    for (const s of (p.sales || [])) {
+      if (from && s.date && s.date < from) continue;
+      if (to   && s.date && s.date > to)   continue;
+      if (chanFil && s.channel !== chanFil) continue;
+      if (stateFil && (s.state || '') !== stateFil) continue;
+      rows.push({ painting: p, sale: s });
+    }
+  }
+  rows.sort((a, b) => (b.sale.date || '').localeCompare(a.sale.date || ''));
+  return rows;
+}
+
+function renderSalesLog() {
+  const rows = getSalesLogRows();
+  const tbody = document.getElementById('sl-table-body');
+  const summary = document.getElementById('sl-summary');
+
+  // Summary bar
+  const totalRevenue = rows.reduce((s, r) => s + Number(r.sale.price || 0), 0);
+  const totalNet     = rows.reduce((s, r) => s + saleNet(r.sale), 0);
+  const fmt = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  summary.innerHTML = `
+    <span style="font-size:12px;color:var(--ink2)"><strong style="color:var(--ink);font-family:var(--mono)">${rows.length}</strong> sales</span>
+    <span style="font-size:12px;color:var(--ink2)">Revenue <strong style="color:var(--accent);font-family:var(--mono)">${fmt(totalRevenue)}</strong></span>
+    <span style="font-size:12px;color:var(--ink2)">Net <strong style="color:var(--green);font-family:var(--mono)">${fmt(totalNet)}</strong></span>
+  `;
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No sales match the current filters.</div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(({ painting, sale: s }) => {
+    const typeLabel = s.type === 'original' ? 'Original' : s.type === 'large' ? 'Large print' : 'Small print';
+    const chanLabel = s.channel === 'fair' ? 'Art fair' : s.channel === 'online' ? 'Online' : 'Gallery';
+    const net = saleNet(s);
+    const isGallery = s.channel === 'gallery';
+    const priceHtml = isGallery
+      ? `<span style="font-family:var(--mono);font-size:13px;color:var(--ink3)">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
+      : `<span style="font-family:var(--mono);font-size:13px">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
+    return `<tr>
+      <td class="mono dim">${s.date || '—'}</td>
+      <td><strong>${esc(painting.title)}</strong></td>
+      <td><span class="sale-type ${s.type}">${typeLabel}</span></td>
+      <td class="dim">${chanLabel}</td>
+      <td class="mono dim">${s.state || '—'}</td>
+      <td style="text-align:right">${priceHtml}</td>
+      <td style="text-align:right;font-family:var(--mono);font-size:13px;color:var(--green)">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+    </tr>`;
+  }).join('');
+}
+
+function clearSalesLogFilters() {
+  document.getElementById('sl-from').value = '';
+  document.getElementById('sl-to').value = '';
+  document.getElementById('sl-channel').value = '';
+  document.getElementById('sl-state').value = '';
+  renderSalesLog();
+}
+
+function exportSalesLogCsv() {
+  const rows = getSalesLogRows();
+  const header = ['Date','Painting','Type','Channel','State','Price','Net'];
+  const data = rows.map(({ painting, sale: s }) => [
+    s.date || '',
+    painting.title,
+    s.type,
+    s.channel,
+    s.state || '',
+    Number(s.price || 0).toFixed(2),
+    saleNet(s).toFixed(2),
+  ]);
+  downloadCsv('sales-log.csv', [header, ...data]);
 }
 
 // ═══════════════════════════════════════════
