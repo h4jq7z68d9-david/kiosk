@@ -441,21 +441,14 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Pending — In Order of Priority
 
-- [ ] **Meta Ads** — ~$5/day, not yet started
-- [ ] **Pinterest Ads** — ~$30/day minimum, not yet started
-- [ ] **SNS carrier registration** — waiting; check AWS Console → Pinpoint → Phone numbers → +18444767251 for status; SMS works once Active
-- [ ] **Re-enable admin token auth** — CloudFront query string forwarding to Lambda needs investigation; currently auth is bypassed
-- [ ] **www → apex redirect** — add CloudFront Function to redirect www to apex permanently
+- [ ] **SNS — build SMS endpoint + UI** — carrier registration submitted May 21 2026; once approved, build `/sms` Lambda endpoint and "text me this link" UI in gallery/kiosk; sample message: "Check out this piece: https://davidnicholsonart.com/gallery.html?product=abc123"
+- [ ] **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session, planned)
+- [ ] **Meta Ads** — ~$5/day, paused
+- [ ] **Pinterest Ads** — ~$30/day minimum, paused
 
 ## On the Horizon
 
-- **Originals shipping** — still TBD; originals are contact-for-purchase so shipping is handled case by case for now
-- **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session, planned)
-- **Print wall configurator**
-- **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; do together
-- **Color picker filter for gallery** — maybe
-- **Art fair mode enhancements** — maybe
-- **Print stock management** — currently managed manually via admin inventory tab; if volume picks up significantly, consider moving to Square inventory tracking instead of building a custom DynamoDB solution
+- **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
 
 ---
 
@@ -476,6 +469,15 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **S3 sync receipt bug fixed** — `--exclude "receipts/*"` added to deploy.yml before `--delete`; previous deploys were wiping all uploaded receipts
 - ✓ **DynamoDB title corrections** — all 6 painting titles corrected via admin UI
 - ✓ **admin-sw.js cache** — bump to `dna-admin-v4` after pushing admin.html changes this session
+
+
+## Completed This Session (May 21 2026)
+
+- ✓ **index.html — Varied Readings moved to past** — removed from future section; added 2026 year header in past with "varied readings at phoenix gallery" / lawrence, ks; same link (/varied-readings.html), no arrow
+- ✓ **index.html — Crossroads Night Market added** — july 3rd, 4th & 5th, kansas city, mo; link to kccrossroads.org/night-market/; future section now ascending: OP art fair → Crossroads
+- ✓ **index.html — Phoenix Gallery represented link updated** — now points to /collections/david-nicholson page
+- ✓ **SNS carrier registration submitted** — form completed (use case: transactional notifications); was sitting incomplete since March 19; check back in ~1 week
+- ✓ **List cleanup** — removed: admin token auth, www→apex redirect, print wall configurator, color picker, art fair mode enhancements, DynamoDB migration, CloudFront Pro (already done); mileage bug confirmed resolved
 
 ## Completed This Session (May 9 2026)
 
