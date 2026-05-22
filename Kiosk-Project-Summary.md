@@ -334,20 +334,21 @@ All are single-file, no framework — intentional, keep it that way.
   - Safe area insets applied to topbar and main padding for iPhone notch
 - **PWA mode behavior:** when launched from home screen (`navigator.standalone`), goes straight to Expenses & Mileage tab, hides Dashboard and Inventory tabs — full admin still accessible in Safari
 
-**Four-tab layout:**
+**Five-tab layout:**
 - **Dashboard tab** — revenue cards (originals sold, large/small prints sold, print inventory, top large print, top small print, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter). Expense cards load in background on login so dashboard is always populated.
-- **Inventory tab** — dual rate adjuster (standard + large ≥30") + sortable/filterable painting table with inline editing; `↓ CSV` export
+- **Inventory tab** — dual rate adjuster (standard + large ≥30") + sortable/filterable painting table with inline editing; `↓ CSV` export; `🏷 Tags` button for price tag printing
 - **Expenses & Mileage tab** — expense and mileage tables; tap any row to open edit modal; delete inside modal
-- **Prints tab** — print priority list sorted into four separate tables by stock tier (Out of Stock → Low Stock → Below Goal → Stocked), ranked by popularity score (70% sales volume, 30% recency) within each tier. "Zero stock only" checkbox filters to paintings where both sizes are at 0. Click any column header to collapse tiers into a single sortable flat table; "✕ Clear sort" returns to tiered view. Print Lg/Print Sm columns show how many to print to reach goal (2 large, 3 small); stock shown in red when below goal.
+- **Prints tab** — all paintings shown (no stock filter); sorted into four tables by stock tier (Out of Stock → Low Stock → Below Goal → Stocked), ranked by popularity score (70% sales volume, 30% recency) within each tier. "Zero stock only" checkbox filters to paintings where both sizes are at 0. Click any column header to collapse tiers into a single sortable flat table; "✕ Clear sort" returns to tiered view. Print Lg/Print Sm columns show how many to print to reach goal (2 large, 3 small); stock shown in red when below goal.
+- **Sales Log tab** — filterable table of all sales; filters: date range (from/to), channel (all/art fair/online/gallery), state (all/KS/MO); summary bar shows count, total revenue, net; CSV export. Use cases: art fair debrief, monthly KS sales tax, year-end taxes.
 
 **Inventory features:**
 - All paintings sortable by title, year, price, rounded price
 - Filters: Never sold, Sold, Original available, Low print stock, Mom doesn't have
 - Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom's Prints checkbox) + sale history
-- Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net
+- Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net; art fair channel tracks state (KS/MO)
 - Stock +/− buttons autosave immediately (floor at 0)
 - Logging a new print sale automatically decrements the matching size stock by 1 (can go negative — intentional)
-- **🏷 Tags button** in topbar: opens a printable Avery 5371/5871 price tag sheet (3.5×2", 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
+- **🏷 Tags button** in Inventory tab header: opens a printable Avery 5371/5871 price tag sheet (3.5×2", 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
 - CSV export: title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
 
 **Expense features:**
@@ -471,6 +472,16 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **admin-sw.js cache** — bump to `dna-admin-v4` after pushing admin.html changes this session
 
 
+## Completed This Session (May 22 2026)
+
+- ✓ **Prints tab — show all paintings** — removed filter that required stock > 0 or a print sale; all paintings now appear in the Prints tab regardless of stock (the point is to show what needs to be printed)
+- ✓ **🏷 Tags button moved to Inventory tab** — removed from topbar; now sits in the Inventory tab header alongside ↓ CSV and + Add Painting; topbar now only has + Sale and sign out
+- ✓ **Sales Log tab** — new fifth tab; filterable table of all sales with date range (from/to), channel (all/art fair/online/gallery), and state (all/KS/MO) filters; summary bar shows sale count, total revenue, and net; CSV export; covers art fair debrief, monthly KS sales tax reporting, and year-end taxes
+- ✓ **Art fair state field** — sale modal shows KS/MO state dropdown when channel is "Art fair"; state saved with sale record; shown inline in inventory expand row (e.g. "Art fair · KS"); edit modal restores state correctly
+- ✓ **Lambda — state field in sales** — `adminAddSale` and `adminUpdateSale` now destructure and persist `state` field to DynamoDB `dna-sales`
+- ✓ **Square auto-sync confirmed** — new paintings added in Square automatically appear in admin Inventory on next load (Lambda `adminGetPaintings` auto-creates DynamoDB records by title match); no sync button needed; Prints tab shows them once they exist in inventory
+- ✓ **Admin SW cache key** — bump to `dna-admin-v6` after deploying this session's admin.html
+
 ## Completed This Session (May 21 2026)
 
 - ✓ **index.html — Varied Readings moved to past** — removed from future section; added 2026 year header in past with "varied readings at phoenix gallery" / lawrence, ks; same link (/varied-readings.html), no arrow
@@ -569,7 +580,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v5`; bump in `admin-sw.js` after significant admin.html changes
+- **Admin SW cache key** — currently `dna-admin-v6`; bump in `admin-sw.js` after significant admin.html changes
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 - **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
