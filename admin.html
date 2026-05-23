@@ -214,6 +214,7 @@
   .stock-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   .orig-sold { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 3px; background: var(--green); color: white; letter-spacing: 0.04em; }
+  .orig-gallery { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 3px; background: #3b82f6; color: white; letter-spacing: 0.04em; }
 
   /* ── EXPAND ROW ── */
   tr.expand-row td { padding: 0; background: var(--bg2); border-bottom: 2px solid var(--border-mid); }
@@ -1605,7 +1606,7 @@ function renderTable() {
         <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',-1)">−</button><span class="stock-num ${(p.stock.small||0)===0?'zero':''}">${p.stock.small||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',1)">+</button></div></td>
         <td class="mono dim">${lgSold||'—'}</td>
         <td class="mono dim">${smSold||'—'}</td>
-        <td>${squareAvail ? '' : '<span class="orig-sold">sold</span>'}</td>
+        <td>${p.atGallery ? `<span class="orig-gallery">${esc(p.atGallery)}</span>` : squareAvail ? '' : '<span class="orig-sold">sold</span>'}</td>
       </tr>`;
     if (isOpen) {
       const monthOpts = ['','January','February','March','April','May','June','July','August','September','October','November','December']
