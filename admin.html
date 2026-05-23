@@ -412,6 +412,7 @@
       <button class="tab-btn" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
       <button class="tab-btn" id="tab-prints-btn" onclick="switchTab('prints')">Prints</button>
       <button class="tab-btn" id="tab-saleslog-btn" onclick="switchTab('saleslog')">Sales Log</button>
+      <button class="tab-btn" id="tab-gallerystock-btn" onclick="switchTab('gallerystock')">Gallery Stock</button>
     </div>
 
     <!-- ══ TAB: DASHBOARD ══ -->
@@ -657,6 +658,38 @@
 
   </div><!-- /main -->
 </div><!-- /app -->
+
+    <div class="tab-panel" id="tab-gallerystock">
+      <div style="padding-top:24px">
+        <div class="table-section">
+          <div class="table-header">
+            <div class="section-title" style="margin:0">Gallery Stock</div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="gs-gallery-filter" onchange="renderGalleryStock()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
+                <option value="Phoenix Gallery">Phoenix Gallery</option>
+              </select>
+              <button class="btn-sm" onclick="openAddGalleryRow()">+ Add Painting</button>
+              <button class="btn-sm" onclick="exportGalleryStockCsv()">↓ CSV</button>
+            </div>
+          </div>
+          <div id="gs-summary" style="padding:10px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--ink2)"></div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Painting</th>
+                  <th style="text-align:center">Small</th>
+                  <th style="text-align:center">Large</th>
+                  <th style="text-align:center">Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="gs-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
 <!-- ══════════════════════════════════════════
      INVENTORY MODALS
@@ -1046,7 +1079,7 @@ function logout() {
 //  TABS
 // ═══════════════════════════════════════════
 function switchTab(tab) {
-  ['dashboard','inventory','expenses','prints','saleslog'].forEach(t => {
+  ['dashboard','inventory','expenses','prints','saleslog','gallerystock'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
@@ -1054,6 +1087,7 @@ function switchTab(tab) {
   else if (tab === 'expenses') renderExpenses();
   else if (tab === 'prints') renderPrintsTab();
   else if (tab === 'saleslog') renderSalesLog();
+  else if (tab === 'gallerystock') renderGalleryStock();
 }
 
 // ═══════════════════════════════════════════
@@ -2493,6 +2527,154 @@ function exportSalesLogCsv() {
 }
 
 // ═══════════════════════════════════════════
+//  GALLERY STOCK TAB
+// ═══════════════════════════════════════════
+
+const GALLERY_NAMES = ['Phoenix Gallery'];
+
+let gsData = []; // all gallery stock records
+let gsLoaded = false;
+
+async function loadGalleryStock() {
+  const res = await fetch('/admin/gallery-stock');
+  const json = await res.json();
+  gsData = json.stock || [];
+  gsLoaded = true;
+}
+
+function renderGalleryStock() {
+  if (!gsLoaded) {
+    loadGalleryStock().then(renderGalleryStock);
+    document.getElementById('gs-table-body').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:32px">Loading…</td></tr>';
+    return;
+  }
+
+  const gallery = document.getElementById('gs-gallery-filter').value;
+
+  // Build gallery name options dynamically (in case others are added later)
+  const allGalleries = [...new Set([...GALLERY_NAMES, ...gsData.map(r => r.galleryName)])].sort();
+  const sel = document.getElementById('gs-gallery-filter');
+  const currentVal = sel.value;
+  sel.innerHTML = allGalleries.map(g => `<option value="${esc(g)}" ${g === currentVal ? 'selected' : ''}>${esc(g)}</option>`).join('');
+
+  // Filter to selected gallery, join with paintings data
+  const rows = gsData
+    .filter(r => r.galleryName === gallery)
+    .map(r => {
+      const painting = db.paintings.find(p => p.id === r.paintingId);
+      return { ...r, title: painting ? painting.title : '(unknown)' };
+    })
+    .sort((a, b) => a.title.localeCompare(b.title));
+
+  // Summary
+  const totalSm = rows.reduce((s, r) => s + (Number(r.stockSm) || 0), 0);
+  const totalLg = rows.reduce((s, r) => s + (Number(r.stockLg) || 0), 0);
+  document.getElementById('gs-summary').innerHTML =
+    `<span><strong style="color:var(--ink)">${rows.length}</strong> paintings</span>` +
+    `<span><strong style="color:var(--ink)">${totalSm}</strong> small</span>` +
+    `<span><strong style="color:var(--ink)">${totalLg}</strong> large</span>` +
+    `<span><strong style="color:var(--ink)">${totalSm + totalLg}</strong> total prints</span>`;
+
+  const tbody = document.getElementById('gs-table-body');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:32px">No paintings at ${esc(gallery)}. Use + Add Painting to add one.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td style="font-weight:500">${esc(r.title)}</td>
+      <td style="text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+          <button class="stock-btn" onclick="gsAdjust('${r.id}','sm',-1)">−</button>
+          <span style="font-family:var(--mono);font-size:14px;min-width:20px;text-align:center${Number(r.stockSm)===0?' ;color:var(--ink3)':''}">${Number(r.stockSm)||0}</span>
+          <button class="stock-btn" onclick="gsAdjust('${r.id}','sm',1)">+</button>
+        </div>
+      </td>
+      <td style="text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+          <button class="stock-btn" onclick="gsAdjust('${r.id}','lg',-1)">−</button>
+          <span style="font-family:var(--mono);font-size:14px;min-width:20px;text-align:center${Number(r.stockLg)===0?' ;color:var(--ink3)':''}">${Number(r.stockLg)||0}</span>
+          <button class="stock-btn" onclick="gsAdjust('${r.id}','lg',1)">+</button>
+        </div>
+      </td>
+      <td style="text-align:center;font-family:var(--mono);font-size:14px;color:var(--ink2)">${(Number(r.stockSm)||0)+(Number(r.stockLg)||0)}</td>
+      <td style="text-align:right">
+        <button class="btn-sm" style="color:var(--red)" onclick="gsRemove('${esc(r.id)}','${esc(r.title)}')">Remove</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function gsAdjust(id, size, delta) {
+  const rec = gsData.find(r => r.id === id);
+  if (!rec) return;
+  const field = size === 'sm' ? 'stockSm' : 'stockLg';
+  rec[field] = Math.max(0, (Number(rec[field]) || 0) + delta);
+  renderGalleryStock();
+  // Save to backend
+  await fetch('/admin/gallery-stock', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paintingId: rec.paintingId, galleryName: rec.galleryName, stockSm: rec.stockSm, stockLg: rec.stockLg }),
+  });
+}
+
+async function gsRemove(id, title) {
+  if (!confirm(`Remove "${title}" from this gallery? This won't affect sales records.`)) return;
+  gsData = gsData.filter(r => r.id !== id);
+  renderGalleryStock();
+  await fetch('/admin/gallery-stock/' + encodeURIComponent(id), { method: 'DELETE' });
+}
+
+function openAddGalleryRow() {
+  const gallery = document.getElementById('gs-gallery-filter').value;
+  // Build list of paintings not already at this gallery
+  const existingIds = new Set(gsData.filter(r => r.galleryName === gallery).map(r => r.paintingId));
+  const available = db.paintings.filter(p => !existingIds.has(p.id)).sort((a,b) => a.title.localeCompare(b.title));
+  if (!available.length) { alert('All paintings are already listed at this gallery.'); return; }
+
+  document.getElementById('gs-add-gallery-name').textContent = gallery;
+  const sel = document.getElementById('gs-add-painting-select');
+  sel.innerHTML = `<option value="">— select painting —</option>` +
+    available.map(p => `<option value="${p.id}">${esc(p.title)}</option>`).join('');
+  document.getElementById('gs-add-sm').value = '0';
+  document.getElementById('gs-add-lg').value = '0';
+  document.getElementById('gs-add-modal').style.display = 'flex';
+}
+
+async function confirmAddGalleryRow() {
+  const gallery = document.getElementById('gs-gallery-filter').value;
+  const paintingId = document.getElementById('gs-add-painting-select').value;
+  const stockSm = parseInt(document.getElementById('gs-add-sm').value) || 0;
+  const stockLg = parseInt(document.getElementById('gs-add-lg').value) || 0;
+  if (!paintingId) { alert('Select a painting.'); return; }
+
+  const res = await fetch('/admin/gallery-stock', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paintingId, galleryName: gallery, stockSm, stockLg }),
+  });
+  const json = await res.json();
+  gsData.push(json.stock);
+  document.getElementById('gs-add-modal').style.display = 'none';
+  renderGalleryStock();
+}
+
+function exportGalleryStockCsv() {
+  const gallery = document.getElementById('gs-gallery-filter').value;
+  const rows = gsData
+    .filter(r => r.galleryName === gallery)
+    .map(r => {
+      const painting = db.paintings.find(p => p.id === r.paintingId);
+      return { title: painting ? painting.title : '(unknown)', ...r };
+    })
+    .sort((a,b) => a.title.localeCompare(b.title));
+  const header = ['Gallery','Painting','Small','Large','Total'];
+  const data = rows.map(r => [r.galleryName, r.title, r.stockSm||0, r.stockLg||0, (r.stockSm||0)+(r.stockLg||0)]);
+  downloadCsv('gallery-stock.csv', [header, ...data]);
+}
+
+// ═══════════════════════════════════════════
 //  BOOT
 // ═══════════════════════════════════════════
 document.getElementById('pw-input').addEventListener('keydown', checkPassword);
@@ -2505,6 +2687,7 @@ const isPWA = !!window.navigator.standalone;
 if (isPWA) {
   document.getElementById('tab-dashboard-btn').style.display = 'none';
   document.getElementById('tab-inventory-btn').style.display = 'none';
+  document.getElementById('tab-gallerystock-btn').style.display = 'none';
   switchTab('expenses');
 }
 
@@ -2514,6 +2697,28 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <!-- ── RECEIPT LIGHTBOX ── -->
+<div id="gs-add-modal" class="modal-backdrop" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Add Painting to <span id="gs-add-gallery-name"></span></h2>
+      <button class="modal-close" onclick="document.getElementById('gs-add-modal').style.display='none'">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Painting</label>
+        <select id="gs-add-painting-select" style="width:100%;font-family:var(--font);font-size:14px;border:1.5px solid var(--border-mid);border-radius:8px;padding:10px 12px;background:var(--bg);color:var(--ink);outline:none;appearance:none"></select>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Small qty</label><input type="number" id="gs-add-sm" value="0" min="0" step="1" inputmode="numeric"></div>
+        <div class="field"><label>Large qty</label><input type="number" id="gs-add-lg" value="0" min="0" step="1" inputmode="numeric"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="confirmAddGalleryRow()">Add</button>
+    </div>
+  </div>
+</div>
+
 <div id="receipt-lightbox" role="dialog" aria-modal="true">
   <div id="receipt-lightbox-toolbar">
     <button id="receipt-lightbox-close" onclick="closeReceiptLightbox()" aria-label="Close">✕</button>

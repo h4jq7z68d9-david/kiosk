@@ -15,6 +15,7 @@ const ADMIN_TOKEN   = process.env.ADMIN_TOKEN;
 const PAINTINGS_TABLE = 'dna-paintings';
 const SALES_TABLE     = 'dna-sales';
 const EXPENSES_TABLE  = 'dna-expenses';
+const GALLERY_TABLE   = 'dna-gallery-stock';
 const RECEIPTS_BUCKET = 'kiosk.davidnicholsonllc';
 const RECEIPTS_PREFIX = 'receipts/';
 
@@ -803,6 +804,35 @@ async function adminReceiptUploadUrl(body, cors) {
   return ok({ uploadUrl, fileUrl }, cors);
 }
 
+// ── Admin: Gallery Stock ──
+
+async function adminGetGalleryStock(cors) {
+  const res = await dynamo.send(new ScanCommand({ TableName: GALLERY_TABLE }));
+  return ok({ stock: res.Items || [] }, cors);
+}
+
+async function adminPutGalleryStock(body, cors) {
+  // Upsert a single painting's stock at a gallery
+  // body: { paintingId, galleryName, stockSm, stockLg }
+  const { paintingId, galleryName, stockSm, stockLg } = body;
+  if (!paintingId || !galleryName) return err('Missing paintingId or galleryName', 400, cors);
+  const id = `${paintingId}__${galleryName.replace(/\s+/g, '_')}`;
+  const item = {
+    id,
+    paintingId,
+    galleryName,
+    stockSm: Math.max(0, Number(stockSm) || 0),
+    stockLg: Math.max(0, Number(stockLg) || 0),
+  };
+  await dynamo.send(new PutCommand({ TableName: GALLERY_TABLE, Item: item }));
+  return ok({ stock: item }, cors);
+}
+
+async function adminDeleteGalleryStock(id, cors) {
+  await dynamo.send(new DeleteCommand({ TableName: GALLERY_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
 // ── Router ──
 export const handler = async (event) => {
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
@@ -877,6 +907,13 @@ export const handler = async (event) => {
         if (method === 'PUT')    return await adminUpdateMileage(mileId, b(), cors);
         if (method === 'DELETE') return await adminDeleteMileage(mileId, cors);
       }
+
+      // Gallery Stock
+      if (method === 'GET'  && path === '/admin/gallery-stock') return await adminGetGalleryStock(cors);
+      if (method === 'PUT'  && path === '/admin/gallery-stock') return await adminPutGalleryStock(b(), cors);
+
+      const galleryStockMatch = path.match(/^\/admin\/gallery-stock\/(.+)$/);
+      if (galleryStockMatch && method === 'DELETE') return await adminDeleteGalleryStock(decodeURIComponent(galleryStockMatch[1]), cors);
 
       return err('Not found', 404, cors);
     }
