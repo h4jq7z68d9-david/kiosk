@@ -668,7 +668,6 @@
               <select id="gs-gallery-filter" onchange="renderGalleryStock()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
                 <option value="Phoenix Gallery">Phoenix Gallery</option>
               </select>
-              <button class="btn-sm" onclick="openAddGalleryRow()">+ Add Painting</button>
               <button class="btn-sm" onclick="exportGalleryStockCsv()">↓ CSV</button>
             </div>
           </div>
@@ -681,7 +680,6 @@
                   <th style="text-align:center">Small</th>
                   <th style="text-align:center">Large</th>
                   <th style="text-align:center">Total</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody id="gs-table-body"></tbody>
@@ -2545,7 +2543,7 @@ async function loadGalleryStock() {
 function renderGalleryStock() {
   if (!gsLoaded) {
     loadGalleryStock().then(renderGalleryStock);
-    document.getElementById('gs-table-body').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:32px">Loading…</td></tr>';
+    document.getElementById('gs-table-body').innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--ink3);padding:32px">Loading…</td></tr>';
     return;
   }
 
@@ -2557,61 +2555,71 @@ function renderGalleryStock() {
   const currentVal = sel.value;
   sel.innerHTML = allGalleries.map(g => `<option value="${esc(g)}" ${g === currentVal ? 'selected' : ''}>${esc(g)}</option>`).join('');
 
-  // Filter to selected gallery, join with paintings data
-  const rows = gsData
-    .filter(r => r.galleryName === gallery)
-    .map(r => {
-      const painting = db.paintings.find(p => p.id === r.paintingId);
-      return { ...r, title: painting ? painting.title : '(unknown)' };
-    })
-    .sort((a, b) => a.title.localeCompare(b.title));
+  // Build rows from ALL paintings, merging any existing gsData records for this gallery
+  const stockByPainting = {};
+  for (const r of gsData.filter(r => r.galleryName === gallery)) {
+    stockByPainting[r.paintingId] = r;
+  }
 
-  // Summary
-  const totalSm = rows.reduce((s, r) => s + (Number(r.stockSm) || 0), 0);
-  const totalLg = rows.reduce((s, r) => s + (Number(r.stockLg) || 0), 0);
+  const rows = db.paintings
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map(p => {
+      const rec = stockByPainting[p.id] || { paintingId: p.id, galleryName: gallery, stockSm: 0, stockLg: 0, id: null };
+      return { ...rec, title: p.title };
+    });
+
+  // Summary — only count paintings with any stock
+  const withStock = rows.filter(r => (r.stockSm || 0) + (r.stockLg || 0) > 0);
+  const totalSm = withStock.reduce((s, r) => s + (Number(r.stockSm) || 0), 0);
+  const totalLg = withStock.reduce((s, r) => s + (Number(r.stockLg) || 0), 0);
   document.getElementById('gs-summary').innerHTML =
-    `<span><strong style="color:var(--ink)">${rows.length}</strong> paintings</span>` +
+    `<span><strong style="color:var(--ink)">${withStock.length}</strong> paintings on consignment</span>` +
     `<span><strong style="color:var(--ink)">${totalSm}</strong> small</span>` +
     `<span><strong style="color:var(--ink)">${totalLg}</strong> large</span>` +
     `<span><strong style="color:var(--ink)">${totalSm + totalLg}</strong> total prints</span>`;
 
   const tbody = document.getElementById('gs-table-body');
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:32px">No paintings at ${esc(gallery)}. Use + Add Painting to add one.</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = rows.map(r => `
-    <tr>
+  tbody.innerHTML = rows.map(r => {
+    const sm = Number(r.stockSm) || 0;
+    const lg = Number(r.stockLg) || 0;
+    const total = sm + lg;
+    const pid = esc(r.paintingId);
+    return `
+    <tr style="${total === 0 ? 'opacity:0.45' : ''}">
       <td style="font-weight:500">${esc(r.title)}</td>
       <td style="text-align:center">
         <div style="display:flex;align-items:center;justify-content:center;gap:6px">
-          <button class="stock-btn" onclick="gsAdjust('${r.id}','sm',-1)">−</button>
-          <span style="font-family:var(--mono);font-size:14px;min-width:20px;text-align:center${Number(r.stockSm)===0?' ;color:var(--ink3)':''}">${Number(r.stockSm)||0}</span>
-          <button class="stock-btn" onclick="gsAdjust('${r.id}','sm',1)">+</button>
+          <button class="stock-btn" onclick="gsAdjust('${pid}','sm',-1)">−</button>
+          <span style="font-family:var(--mono);font-size:14px;min-width:20px;text-align:center">${sm}</span>
+          <button class="stock-btn" onclick="gsAdjust('${pid}','sm',1)">+</button>
         </div>
       </td>
       <td style="text-align:center">
         <div style="display:flex;align-items:center;justify-content:center;gap:6px">
-          <button class="stock-btn" onclick="gsAdjust('${r.id}','lg',-1)">−</button>
-          <span style="font-family:var(--mono);font-size:14px;min-width:20px;text-align:center${Number(r.stockLg)===0?' ;color:var(--ink3)':''}">${Number(r.stockLg)||0}</span>
-          <button class="stock-btn" onclick="gsAdjust('${r.id}','lg',1)">+</button>
+          <button class="stock-btn" onclick="gsAdjust('${pid}','lg',-1)">−</button>
+          <span style="font-family:var(--mono);font-size:14px;min-width:20px;text-align:center">${lg}</span>
+          <button class="stock-btn" onclick="gsAdjust('${pid}','lg',1)">+</button>
         </div>
       </td>
-      <td style="text-align:center;font-family:var(--mono);font-size:14px;color:var(--ink2)">${(Number(r.stockSm)||0)+(Number(r.stockLg)||0)}</td>
-      <td style="text-align:right">
-        <button class="btn-sm" style="color:var(--red)" onclick="gsRemove('${esc(r.id)}','${esc(r.title)}')">Remove</button>
-      </td>
-    </tr>`).join('');
+      <td style="text-align:center;font-family:var(--mono);font-size:14px;color:${total > 0 ? 'var(--ink)' : 'var(--ink3)'}">${total || '—'}</td>
+    </tr>`;
+  }).join('');
 }
 
-async function gsAdjust(id, size, delta) {
-  const rec = gsData.find(r => r.id === id);
-  if (!rec) return;
+async function gsAdjust(paintingId, size, delta) {
+  const gallery = document.getElementById('gs-gallery-filter').value;
   const field = size === 'sm' ? 'stockSm' : 'stockLg';
+
+  // Find or create in-memory record — first + press creates the DynamoDB record
+  let rec = gsData.find(r => r.paintingId === paintingId && r.galleryName === gallery);
+  if (!rec) {
+    rec = { paintingId, galleryName: gallery, stockSm: 0, stockLg: 0, id: `${paintingId}__${gallery.replace(/\s+/g, '_')}` };
+    gsData.push(rec);
+  }
   rec[field] = Math.max(0, (Number(rec[field]) || 0) + delta);
   renderGalleryStock();
-  // Save to backend
+
   await fetch('/admin/gallery-stock', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -2619,60 +2627,21 @@ async function gsAdjust(id, size, delta) {
   });
 }
 
-async function gsRemove(id, title) {
-  if (!confirm(`Remove "${title}" from this gallery? This won't affect sales records.`)) return;
-  gsData = gsData.filter(r => r.id !== id);
-  renderGalleryStock();
-  await fetch('/admin/gallery-stock/' + encodeURIComponent(id), { method: 'DELETE' });
-}
-
-function openAddGalleryRow() {
-  const gallery = document.getElementById('gs-gallery-filter').value;
-  // Build list of paintings not already at this gallery
-  const existingIds = new Set(gsData.filter(r => r.galleryName === gallery).map(r => r.paintingId));
-  const available = db.paintings.filter(p => !existingIds.has(p.id)).sort((a,b) => a.title.localeCompare(b.title));
-  if (!available.length) { alert('All paintings are already listed at this gallery.'); return; }
-
-  document.getElementById('gs-add-gallery-name').textContent = gallery;
-  const sel = document.getElementById('gs-add-painting-select');
-  sel.innerHTML = `<option value="">— select painting —</option>` +
-    available.map(p => `<option value="${p.id}">${esc(p.title)}</option>`).join('');
-  document.getElementById('gs-add-sm').value = '0';
-  document.getElementById('gs-add-lg').value = '0';
-  document.getElementById('gs-add-modal').style.display = 'flex';
-}
-
-async function confirmAddGalleryRow() {
-  const gallery = document.getElementById('gs-gallery-filter').value;
-  const paintingId = document.getElementById('gs-add-painting-select').value;
-  const stockSm = parseInt(document.getElementById('gs-add-sm').value) || 0;
-  const stockLg = parseInt(document.getElementById('gs-add-lg').value) || 0;
-  if (!paintingId) { alert('Select a painting.'); return; }
-
-  const res = await fetch('/admin/gallery-stock', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paintingId, galleryName: gallery, stockSm, stockLg }),
-  });
-  const json = await res.json();
-  gsData.push(json.stock);
-  document.getElementById('gs-add-modal').style.display = 'none';
-  renderGalleryStock();
-}
-
 function exportGalleryStockCsv() {
   const gallery = document.getElementById('gs-gallery-filter').value;
-  const rows = gsData
-    .filter(r => r.galleryName === gallery)
-    .map(r => {
-      const painting = db.paintings.find(p => p.id === r.paintingId);
-      return { title: painting ? painting.title : '(unknown)', ...r };
+  const rows = db.paintings
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map(p => {
+      const rec = gsData.find(r => r.paintingId === p.id && r.galleryName === gallery);
+      return { title: p.title, sm: rec ? (rec.stockSm || 0) : 0, lg: rec ? (rec.stockLg || 0) : 0 };
     })
-    .sort((a,b) => a.title.localeCompare(b.title));
-  const header = ['Gallery','Painting','Small','Large','Total'];
-  const data = rows.map(r => [r.galleryName, r.title, r.stockSm||0, r.stockLg||0, (r.stockSm||0)+(r.stockLg||0)]);
+    .filter(r => r.sm + r.lg > 0);
+  const header = ['Gallery', 'Painting', 'Small', 'Large', 'Total'];
+  const data = rows.map(r => [gallery, r.title, r.sm, r.lg, r.sm + r.lg]);
   downloadCsv('gallery-stock.csv', [header, ...data]);
 }
+
 
 // ═══════════════════════════════════════════
 //  BOOT
@@ -2695,29 +2664,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/admin-sw.js').catch(() => {});
 }
 </script>
-
-<!-- ── RECEIPT LIGHTBOX ── -->
-<div id="gs-add-modal" class="modal-backdrop" style="display:none" onclick="if(event.target===this)this.style.display='none'">
-  <div class="modal">
-    <div class="modal-head">
-      <h2>Add Painting to <span id="gs-add-gallery-name"></span></h2>
-      <button class="modal-close" onclick="document.getElementById('gs-add-modal').style.display='none'">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>Painting</label>
-        <select id="gs-add-painting-select" style="width:100%;font-family:var(--font);font-size:14px;border:1.5px solid var(--border-mid);border-radius:8px;padding:10px 12px;background:var(--bg);color:var(--ink);outline:none;appearance:none"></select>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Small qty</label><input type="number" id="gs-add-sm" value="0" min="0" step="1" inputmode="numeric"></div>
-        <div class="field"><label>Large qty</label><input type="number" id="gs-add-lg" value="0" min="0" step="1" inputmode="numeric"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="confirmAddGalleryRow()">Add</button>
-    </div>
-  </div>
-</div>
 
 <div id="receipt-lightbox" role="dialog" aria-modal="true">
   <div id="receipt-lightbox-toolbar">
