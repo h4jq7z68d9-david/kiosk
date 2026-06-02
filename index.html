@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://davidnicholsonart.com" crossorigin>
 <title>David Nicholson — Paintings &amp; Prints</title>
 <meta name="description" content="Kansas-based artist painting from observation. Bold color, simplified form. Prints available online and at art fairs across the KC area.">
 <meta name="author" content="David Nicholson">
@@ -54,7 +55,7 @@ src="https://www.facebook.com/tr?id=1480355107052738&ev=PageView&noscript=1"
 <style>
 :root {
   --bg: #f8f6f3; --surface: #ede9e3; --border: #ddd8d0; --border-mid: #ccc6bc;
-  --ink: #1a2a3a; --ink2: #7a8a99; --ink3: #9aa0a8; --accent: #e07030;
+  --ink: #1a2a3a; --ink2: #5e6b78; --ink3: #64707c; --accent: #e07030;
   --wrap: 820px; --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -62,17 +63,21 @@ html { scroll-behavior: smooth; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font); font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 
-.page { max-width: 820px; margin: 0; padding: 0 40px 60px 10%; }
+.page { max-width: 820px; margin: 0 auto; padding: 0 clamp(20px, 6vw, 48px) 60px; }
 .content-col { max-width: 100%; font-weight: 300; }
 .splash-section { padding-top: 24px; }
-@keyframes sk { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+@keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.reveal { animation: reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) { .reveal { animation: none; } }
+#splash-wrap { aspect-ratio: 1 / 1; background: #efece8; border-radius: 2px; overflow: hidden; }
+#splash-wrap.loaded { aspect-ratio: auto; background: none; overflow: visible; }
 .splash-img { width: 100%; height: auto; display: block; }
 .splash-caption { font-size: 14px; color: var(--ink3); letter-spacing: 0.06em; margin-top: 10px; font-weight: 300; min-height: 20px; }
 
 .title-block { padding: 24px 0 0; }
 .site-title { font-family: var(--font); font-size: clamp(36px, 7vw, 68px); font-weight: 300 !important; line-height: 1; letter-spacing: 0.06em; text-transform: lowercase; }
-.follow-btn { display: inline-block; margin-top: 28px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; transition: color 0.2s, border-color 0.2s; }
-.follow-btn:hover { border-color: var(--ink); }
+.cta-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; transition: color 0.2s, border-color 0.2s; }
+.cta-secondary:hover { border-color: var(--ink); }
 .rule { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
 h2 { font-family: var(--font); font-size: 22px; font-weight: 700; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); margin-bottom: 20px; }
 .h2-future { font-size: 26px; }
@@ -87,10 +92,11 @@ h2 { font-family: var(--font); font-size: 22px; font-weight: 700; letter-spacing
 .venue-addr { font-size: 16px; color: var(--ink3); margin-top: 4px; }
 .event-name a, .venue-name a { color: var(--accent); border-bottom: none; padding-bottom: 1px; transition: opacity 0.2s; }
 .event-name a:hover, .venue-name a:hover { opacity: 0.7; }
-.gallery-link { display: inline-flex; align-items: baseline; gap: 10px; font-size: 26px; font-weight: 700; letter-spacing: 0.03em; text-transform: lowercase; color: var(--accent); transition: opacity 0.2s; }
-.gallery-link:hover { opacity: 0.7; }
-.gallery-arrow { font-size: 20px; color: var(--accent); display: inline-block; transition: transform 0.25s; }
-.gallery-link:hover .gallery-arrow { transform: translateX(5px); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 28px; }
+.cta-primary { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: lowercase; color: #fff; background: var(--accent); border: 1px solid var(--accent); border-radius: 20px; padding: 8px 20px; transition: background 0.2s; }
+.cta-primary:hover { background: #c95f24; border-color: #c95f24; }
+.gallery-arrow { font-size: 15px; color: currentColor; display: inline-block; transition: transform 0.25s; }
+.cta-secondary:hover .gallery-arrow { transform: translateX(4px); }
 
 /* FOOTER — full bleed edge to edge, content padded symmetrically */
 footer {
@@ -141,26 +147,26 @@ footer {
   <p class="splash-caption" id="splash-cap" style="display:none"></p>
 
   <div class="content-col">
-    <div class="title-block">
+    <div class="title-block reveal" style="animation-delay:.05s;">
       <h1 class="site-title" style="font-weight:300;">david nicholson</h1>
-      <a class="follow-btn" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
+      <div class="cta-row">
+        <a class="cta-primary" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
+        <a class="cta-secondary" href="/gallery.html">view gallery<span class="gallery-arrow">&rarr;</span></a>
+      </div>
     </div>
 
     <hr class="rule" id="content">
 
-    <div id="about" style="margin-bottom:32px;">
+    <div id="about" class="reveal" style="margin-bottom:32px;animation-delay:.14s;">
       <h2>about</h2>
       <p class="about-text" style="font-weight:300;">
         david nicholson is a kansas-based artist who paints from observation, focusing on color and composition using simplified, abstracted elements to express and reinterpret. 
       </p>
-      <div style="margin-top:28px;">
-        <a class="gallery-link" href="/gallery.html">view gallery<span class="gallery-arrow">&rarr;</span></a>
-      </div>
     </div>
 
     <hr class="rule">
 
-    <div style="margin-bottom:32px;">
+    <div class="reveal" style="margin-bottom:32px;animation-delay:.22s;">
       <h2 class="h2-future">future</h2>
 
       <p class="events-year">2026</p>
@@ -178,13 +184,13 @@ footer {
 
     <hr class="rule">
 
-    <div style="margin-bottom:32px;">
+    <div class="reveal" style="margin-bottom:32px;animation-delay:.30s;">
       <h2>represented at</h2>
       <div class="venue-name"><a href="https://www.phoenixgalleryart.com/collections/david-nicholson">phoenix gallery</a></div>
       <div class="venue-addr">825 massachusetts, lawrence, ks 66044</div>
     </div>
 
-    <div style="margin-bottom:32px;">
+    <div class="reveal" style="margin-bottom:32px;animation-delay:.38s;">
       <h2>past</h2>
       <p class="events-year">2026</p>
       <div class="event">
@@ -237,28 +243,45 @@ footer {
 
 <div id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="/hero-pool.js"></script>
+<script>
 const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
-async function loadHero() {
+function showHero(p) {
   const wrap = document.getElementById('splash-wrap');
   const cap  = document.getElementById('splash-cap');
+  const img = document.createElement('img');
+  img.className = 'splash-img';
+  img.alt = 'painting by David Nicholson';
+  img.referrerPolicy = 'no-referrer';
+  img.decoding = 'async';
+  img.fetchPriority = 'high';
+  img.onload = () => { wrap.classList.add('loaded'); };
+  img.onerror = () => {};
+  img.src = p.img;
+  wrap.appendChild(img);            // insert now so the browser paints progressively
+  cap.textContent = p.title || '';
+  cap.style.display = '';
+}
+
+function pickHero() {
+  const pool = window.__HERO_POOL__;
+  if (!Array.isArray(pool) || !pool.length) return null;
+  const day = Math.floor(Date.now() / 86400000);   // rotates once per day
+  return pool[day % pool.length];
+}
+
+async function loadHero() {
+  const local = pickHero();
+  if (local && local.img) { showHero(local); return; }
+  // Fallback if the build pool is missing (e.g. first deploy or stale cache)
   try {
     const r = await fetch(LAMBDA + '/hero');
     if (!r.ok) throw 0;
     const p = await r.json();
     if (!p.img) throw 0;
-    const img = document.createElement('img');
-    img.className = 'splash-img';
-    img.alt = 'painting by David Nicholson';
-    img.referrerPolicy = 'no-referrer';
-    img.src = p.img;
-    img.onload = () => {
-      wrap.appendChild(img);
-      cap.textContent = p.title || '';
-      cap.style.display = '';
-    };
-    img.onerror = () => {};
+    showHero(p);
   } catch {
     // no hero — page looks fine without it
   }

@@ -127,6 +127,18 @@ async function main() {
   }
 
   console.log(`Generated ${count} print pages in prints/`);
+
+  // Hero pool: small static list the homepage picks from (daily rotation),
+  // so the hero never waits on a live catalog fetch. Prefer recent years.
+  const withImg = products.filter(p => p.img);
+  const recent  = withImg.filter(p => p.year && [2025, 2026].includes(parseInt(p.year)));
+  const pool    = (recent.length ? recent : withImg).map(p => ({ img: p.img, title: p.title }));
+  fs.writeFileSync(
+    path.join(process.cwd(), 'hero-pool.js'),
+    `window.__HERO_POOL__ = ${JSON.stringify(pool)};\n`,
+    'utf8'
+  );
+  console.log(`Wrote hero-pool.js with ${pool.length} entries`);
 }
 
 main().catch(e => {
