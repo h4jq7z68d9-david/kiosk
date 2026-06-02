@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="DNA Admin">
-<meta name="theme-color" content="#f8f6f3">
+<meta name="theme-color" content="#f1f3f5">
 <link rel="manifest" href="/admin.webmanifest">
 <link rel="apple-touch-icon" href="/admin-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -17,23 +17,24 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f8f6f3;
-    --bg2: #f0ede8;
-    --bg3: #e8e4de;
-    --ink: #1a2a3a;
-    --ink2: #7a8a99;
+    --bg: #f1f3f5;
+    --bg2: #e7eaed;
+    --bg3: #dde2e6;
+    --ink: #2b3640;
+    --ink2: #586470;
     --ink3: #b0bac4;
-    --accent: #e07030;
-    --accent-dim: #f0a870;
+    --accent: #e6b400;
+    --accent-ink: #b58600;
+    --accent-dim: #f2d24d;
     --green: #2d7a4f;
     --red: #c0392b;
-    --border: rgba(26,42,58,0.12);
-    --border-mid: rgba(26,42,58,0.2);
+    --border: rgba(43,54,64,0.12);
+    --border-mid: rgba(43,54,64,0.2);
     --font: 'DM Sans', sans-serif;
     --mono: 'DM Mono', monospace;
     --radius: 8px;
-    --shadow: 0 2px 8px rgba(26,42,58,0.08);
-    --shadow-lg: 0 8px 32px rgba(26,42,58,0.14);
+    --shadow: 0 2px 8px rgba(43,54,64,0.08);
+    --shadow-lg: 0 8px 32px rgba(43,54,64,0.14);
   }
 
   body {
@@ -81,7 +82,7 @@
   }
   .topbar-left { display: flex; align-items: center; gap: 16px; }
   .topbar .wordmark { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
-  .topbar .badge { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px; }
+  .topbar .badge { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); color: var(--ink); padding: 2px 8px; border-radius: 4px; }
   .btn-logout { font-family: var(--font); font-size: 12px; font-weight: 500; color: var(--ink2); background: none; border: none; cursor: pointer; letter-spacing: 0.04em; padding: 4px 0; }
   .btn-logout:hover { color: var(--ink); }
 
@@ -114,8 +115,8 @@
     border: 1.5px solid var(--border-mid); border-radius: 20px;
     background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s;
   }
-  .rate-preset:hover { border-color: var(--accent); color: var(--accent); }
-  .rate-preset.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .rate-preset:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .rate-preset.active { background: var(--accent); border-color: var(--accent); color: var(--ink); }
   .rate-note { font-size: 12px; color: var(--ink3); margin-left: auto; }
 
   /* ── SUMMARY CARDS ── */
@@ -126,7 +127,7 @@
   .card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 20px 16px; }
   .card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); margin-bottom: 8px; }
   .card-value { font-family: var(--mono); font-size: 26px; font-weight: 500; color: var(--ink); line-height: 1; }
-  .card-value.accent { color: var(--accent); }
+  .card-value.accent { color: var(--accent-ink); }
   .card-sub { font-size: 12px; color: var(--ink3); margin-top: 6px; }
 
   /* ── CHART ── */
@@ -155,7 +156,7 @@
     transition: color 0.15s, border-color 0.15s;
   }
   .tab-btn:hover { color: var(--ink); }
-  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn.active { color: var(--accent-ink); border-bottom-color: var(--accent); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
@@ -174,7 +175,7 @@
   .table-search input:focus { border-color: var(--accent); background: white; }
   .btn-primary {
     font-family: var(--font); font-size: 13px; font-weight: 500;
-    background: var(--accent); color: white; border: none; border-radius: 6px;
+    background: var(--accent); color: var(--ink); border: none; border-radius: 6px;
     padding: 8px 16px; cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
   }
   .btn-primary:hover { opacity: 0.88; }
@@ -183,7 +184,7 @@
     padding: 5px 10px; border-radius: 5px; border: 1.5px solid var(--border-mid);
     background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; white-space: nowrap;
   }
-  .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-sm:hover { border-color: var(--accent); color: var(--accent-ink); }
   .btn-sm.danger:hover { border-color: var(--red); color: var(--red); }
 
   table { width: 100%; border-collapse: collapse; }
@@ -194,7 +195,7 @@
     white-space: nowrap; cursor: pointer; user-select: none;
   }
   th:hover { color: var(--ink); }
-  th.sorted { color: var(--accent); }
+  th.sorted { color: var(--accent-ink); }
   th .sort-arrow { font-size: 10px; margin-left: 3px; }
   td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
@@ -211,7 +212,7 @@
     background: none; font-size: 14px; line-height: 1; color: var(--ink2); cursor: pointer;
     display: flex; align-items: center; justify-content: center; transition: all 0.1s; flex-shrink: 0;
   }
-  .stock-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .stock-btn:hover { border-color: var(--accent); color: var(--accent-ink); }
 
   .orig-sold { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 3px; background: var(--green); color: white; letter-spacing: 0.04em; }
   .orig-gallery { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 3px; background: #3b82f6; color: white; letter-spacing: 0.04em; }
@@ -228,7 +229,7 @@
   .sale-date { font-family: var(--mono); font-size: 12px; color: var(--ink2); min-width: 80px; }
   .sale-type { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em; }
   .sale-type.original { background: var(--ink); color: white; }
-  .sale-type.large { background: var(--accent); color: white; }
+  .sale-type.large { background: var(--accent); color: var(--ink); }
   .sale-type.small { background: var(--accent-dim); color: white; }
   .sale-channel { font-size: 12px; color: var(--ink2); text-transform: capitalize; }
   .sale-price { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--green); margin-left: auto; }
@@ -243,7 +244,7 @@
 
   /* ── MODALS ── */
   .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(26,42,58,0.4);
+    position: fixed; inset: 0; background: rgba(43,54,64,0.4);
     z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px;
   }
   .modal { background: white; border-radius: 12px; box-shadow: var(--shadow-lg); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
@@ -275,8 +276,8 @@
   }
   .filter-bar-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); margin-right: 4px; white-space: nowrap; }
   .filter-chip { font-family: var(--font); font-size: 12px; font-weight: 500; padding: 4px 11px; border: 1.5px solid var(--border-mid); border-radius: 20px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; white-space: nowrap; }
-  .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
-  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .filter-chip:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: var(--ink); }
 
   .empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); font-size: 14px; }
 
@@ -301,12 +302,12 @@
 
   .receipt-link {
     display: inline-flex; align-items: center; gap: 4px;
-    font-size: 12px; color: var(--accent); background: none;
+    font-size: 12px; color: var(--accent-ink); background: none;
     border: 1px solid var(--accent); border-radius: 4px; padding: 2px 7px;
     cursor: pointer; font-family: var(--font);
     transition: all 0.12s;
   }
-  .receipt-link:hover { background: var(--accent); color: white; }
+  .receipt-link:hover { background: var(--accent); color: var(--ink); }
   .receipt-none { font-size: 12px; color: var(--ink3); }
 
   /* ── RECEIPT LIGHTBOX ── */
@@ -352,7 +353,7 @@
   .upload-zone.has-file { border-color: var(--green); background: #f0fdf4; }
   .upload-zone input[type="file"] { display: none; }
   .upload-zone-label { font-size: 13px; color: var(--ink2); }
-  .upload-zone-label strong { color: var(--accent); }
+  .upload-zone-label strong { color: var(--accent-ink); }
   .upload-zone-filename { font-size: 12px; font-family: var(--mono); color: var(--green); margin-top: 6px; }
 
   /* Mileage calc preview */
@@ -1170,7 +1171,7 @@ function renderPrintsTab() {
     return '<thead><tr>' + COLS.map(c => {
       const active = printsSort.col === c.key;
       const arrow = active ? (printsSort.dir === 1 ? ' ↑' : ' ↓') : '';
-      const activeStyle = active ? ';color:var(--accent)' : '';
+      const activeStyle = active ? ';color:var(--accent-ink)' : '';
       return '<th style="text-align:' + c.align + ';cursor:pointer;user-select:none' + activeStyle + '" onclick="printsSortBy(\'' + c.key + '\')">' + c.label + arrow + '</th>';
     }).join('') + '</tr></thead>';
   }
@@ -1179,8 +1180,8 @@ function renderPrintsTab() {
     return set.map(r => {
       const lgStockStyle = r.lgStock < GOAL_LARGE ? 'color:var(--red);font-weight:600' : '';
       const smStockStyle = r.smStock < GOAL_SMALL ? 'color:var(--red);font-weight:600' : '';
-      const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
-      const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
+      const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent-ink)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
+      const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent-ink)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
       const lastSaleDisplay = r.lastSaleTs ? r.lastSaleLabel : '—';
       return `<tr>
         <td style="font-size:13px">${r.p.title}</td>
@@ -1207,7 +1208,7 @@ function renderPrintsTab() {
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
           <span style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink2)">All Prints</span>
           <div style="display:flex;align-items:center;gap:16px">
-            <button onclick="printsClearSort()" style="font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0">✕ Clear sort</button>
+            <button onclick="printsClearSort()" style="font-size:12px;color:var(--accent-ink);background:none;border:none;cursor:pointer;padding:0">✕ Clear sort</button>
             <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small</span>
           </div>
         </div>
@@ -1625,7 +1626,7 @@ function renderTable() {
           </div>
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px" onclick="event.stopPropagation()">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2)">
-              <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''} style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
+              <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''} style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer">
               Mom's Prints
             </label>
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)">
@@ -1745,7 +1746,7 @@ function renderExpTable() {
   tbody.innerHTML = list.map(e => {
     const amt = Number(e.amount||0);
     const receiptInline = e.receiptUrl
-      ? `<button onclick="openReceiptLightbox('${esc(e.receiptUrl)}', event)" style="font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;margin-left:6px;padding:0;font-family:var(--font)" title="View receipt">📎</button>`
+      ? `<button onclick="openReceiptLightbox('${esc(e.receiptUrl)}', event)" style="font-size:12px;color:var(--accent-ink);background:none;border:none;cursor:pointer;margin-left:6px;padding:0;font-family:var(--font)" title="View receipt">📎</button>`
       : '';
     return `<tr onclick="openEditExpModal('${e.id}')" style="cursor:pointer">
       <td class="mono dim">${e.date || '—'}</td>
@@ -2483,7 +2484,7 @@ function renderSalesLog() {
   const fmt = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   summary.innerHTML = `
     <span style="font-size:12px;color:var(--ink2)"><strong style="color:var(--ink);font-family:var(--mono)">${rows.length}</strong> sales</span>
-    <span style="font-size:12px;color:var(--ink2)">Revenue <strong style="color:var(--accent);font-family:var(--mono)">${fmt(totalRevenue)}</strong></span>
+    <span style="font-size:12px;color:var(--ink2)">Revenue <strong style="color:var(--accent-ink);font-family:var(--mono)">${fmt(totalRevenue)}</strong></span>
     <span style="font-size:12px;color:var(--ink2)">Net <strong style="color:var(--green);font-family:var(--mono)">${fmt(totalNet)}</strong></span>
   `;
 

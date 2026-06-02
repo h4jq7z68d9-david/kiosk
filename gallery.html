@@ -69,8 +69,8 @@ function getEpik() {
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f8f6f3; --surface: #ede9e3; --border: #ddd8d0; --border-mid: #ccc6bc;
-  --ink: #1a2a3a; --ink2: #5e6b78; --ink3: #64707c; --accent: #e07030;
+  --bg: #f1f3f5; --surface: #e4e8ec; --border: #d0d6dc; --border-mid: #c2c9d0;
+  --ink: #2b3640; --ink2: #586470; --ink3: #697480; --accent: #e6b400; --accent-ink: #b58600;
   --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif; --nav-h: 56px;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -88,7 +88,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .nav-btn:hover { border-color: var(--ink); }
 .nav-cart { position: relative; background: none; border: none; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 .nav-cart svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #fff; border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
+.nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: var(--ink); border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
 .nav-cart-count.on { display: block; }
 
 /* LAYOUT — sidebar + grid */
@@ -128,7 +128,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   display: block;
 }
 .year-btn:hover { color: var(--ink2); }
-.year-btn.active { color: var(--accent); font-weight: 500; }
+.year-btn.active { color: var(--accent-ink); font-weight: 500; }
 
 /* MOBILE JUMP BAR — replaces sidebar on small screens */
 .filter-bar-mobile {
@@ -168,7 +168,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
     display: inline-block;
   }
   .filter-pill:hover { color: var(--ink2); }
-  .filter-pill.active { color: var(--accent); font-weight: 500; }
+  .filter-pill.active { color: var(--accent-ink); font-weight: 500; }
 }
 
 /* YEAR SECTION HEADINGS */
@@ -266,7 +266,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 /* DETAIL MODAL — desktop */
 #detail-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.78); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
 #detail-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.28s, visibility 0s; }
-#detail-sheet { position: relative; background: #f5f2ed; border-radius: 18px; width: 92%; max-width: 1100px; max-height: 92vh; display: flex; flex-direction: row; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3); }
+#detail-sheet { position: relative; background: #f1f3f5; border-radius: 18px; width: 92%; max-width: 1100px; max-height: 92vh; display: flex; flex-direction: row; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3); }
 
 /* MOBILE — bottom sheet */
 @media (max-width: 680px) {
@@ -281,41 +281,41 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
   .img-nav { display: flex; }
 }
 
-.modal-close { position: absolute; top: 14px; right: 14px; z-index: 20; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.08); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #6b6560; transition: background 0.15s; }
+.modal-close { position: absolute; top: 14px; right: 14px; z-index: 20; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.08); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #697480; transition: background 0.15s; }
 .modal-close:active { background: rgba(0,0,0,0.15); }
-.modal-img-pane { flex: 1.1; min-width: 0; background: #f5f2ed; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: zoom-in; }
+.modal-img-pane { flex: 1.1; min-width: 0; background: #f1f3f5; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: zoom-in; }
 .modal-img-pane img { width: 100%; height: 100%; object-fit: contain; display: block; padding: 32px; max-height: 92vh; }
-.img-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.12); border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; color: #1a1917; font-size: 20px; transition: background 0.15s; }
+.img-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.12); border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; color: #2b3640; font-size: 20px; transition: background 0.15s; }
 .img-nav:active { background: rgba(0,0,0,0.22); }
 .img-nav-prev { left: 10px; }
 .img-nav-next { right: 10px; }
 .modal-info-pane { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; border-left: 1px solid rgba(0,0,0,0.06); overflow-y: auto; }
 .modal-info-pane::-webkit-scrollbar { width: 0; }
 .modal-info-inner { padding: 32px 28px 36px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
-.d-title { font-family: var(--font); font-size: 22px; font-weight: 500; color: #1a1917; line-height: 1.2; letter-spacing: 0.01em; }
-.d-desc { font-family: var(--font); font-size: 14px; font-weight: 300; color: #6b6560; line-height: 1.7; }
+.d-title { font-family: var(--font); font-size: 22px; font-weight: 500; color: #2b3640; line-height: 1.2; letter-spacing: 0.01em; }
+.d-desc { font-family: var(--font); font-size: 14px; font-weight: 300; color: #697480; line-height: 1.7; }
 
 /* VARIANT SELECTOR */
-.variant-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #6b6560; }
+.variant-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #697480; }
 .variant-btns { display: flex; flex-wrap: wrap; gap: 8px; }
 .variant-btn { background: rgba(0,0,0,0.04); border: 1.5px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 8px 14px; font-family: var(--font); font-size: 13px; font-weight: 400; color: #4a4744; cursor: pointer; transition: all 0.15s; white-space: normal; line-height: 1.3; }
-.variant-btn:hover { border-color: #1a1917; }
-.variant-btn.selected { background: #1a1917; border-color: #1a1917; color: #f5f2ed; }
-.d-price-display { font-size: 22px; font-weight: 400; color: #1a1917; letter-spacing: -0.01em; }
+.variant-btn:hover { border-color: #2b3640; }
+.variant-btn.selected { background: #2b3640; border-color: #2b3640; color: #f1f3f5; }
+.d-price-display { font-size: 22px; font-weight: 400; color: #2b3640; letter-spacing: -0.01em; }
 
 /* SHARE ROW */
 .share-row { display: flex; gap: 10px; align-items: center; }
-.original-avail-link { display: block; text-align: right; font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 0.04em; text-decoration: none; margin-top: 2px; }
+.original-avail-link { display: block; text-align: right; font-size: 12px; font-weight: 500; color: var(--accent-ink); letter-spacing: 0.04em; text-decoration: none; margin-top: 2px; }
 .original-avail-link:hover { text-decoration: underline; }
 #original-avail-row:not(:empty) { padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); margin-bottom: 4px; }
-.share-label { font-size: 11px; font-weight: 500; letter-spacing: 0.10em; text-transform: lowercase; color: #6b6560; margin-right: 2px; }
+.share-label { font-size: 11px; font-weight: 500; letter-spacing: 0.10em; text-transform: lowercase; color: #697480; margin-right: 2px; }
 .share-btn { display: flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 8px; border: 1.5px solid rgba(0,0,0,0.12); background: transparent; font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: #4a4744; cursor: pointer; text-decoration: none; transition: all 0.15s; white-space: nowrap; }
-.share-btn:hover { border-color: #1a1917; color: #1a1917; }
+.share-btn:hover { border-color: #2b3640; color: #2b3640; }
 .share-btn svg { flex-shrink: 0; }
 
 /* BUY SECTION */
 .buy-section { margin-top: auto; padding-top: 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(0,0,0,0.08); }
-.btn-add { display: block; width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
+.btn-add { display: block; width: 100%; background: var(--accent); color: var(--ink); border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
 .btn-add:hover { opacity: 0.85; }
 
 /* FULLSCREEN */
@@ -331,30 +331,30 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 /* CART MODAL */
 #cart-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); visibility: hidden; opacity: 0; transition: opacity 0.25s, visibility 0s linear 0.25s; display: flex; align-items: center; justify-content: center; padding: 24px; }
 #cart-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.25s, visibility 0s; }
-#cart-sheet { background: #f5f2ed; border-radius: 16px; width: 100%; max-width: 520px; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 100px rgba(0,0,0,0.7); }
+#cart-sheet { background: #f1f3f5; border-radius: 16px; width: 100%; max-width: 520px; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 100px rgba(0,0,0,0.7); }
 @media (max-width: 600px) {
   #cart-overlay { padding: 0; align-items: flex-end; }
   #cart-sheet { border-radius: 20px 20px 0 0; max-height: 90dvh; max-width: 100%; }
 }
 .cart-header { display: flex; align-items: center; padding: 22px 22px 14px; flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
-.cart-header h2 { font-family: var(--font); font-size: 20px; font-weight: 700; color: #1a1917; flex: 1; }
-.cart-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #6b6560; }
+.cart-header h2 { font-family: var(--font); font-size: 20px; font-weight: 700; color: #2b3640; flex: 1; }
+.cart-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #697480; }
 .cart-items { flex: 1; overflow-y: auto; padding: 16px 22px; display: flex; flex-direction: column; gap: 12px; }
 .cart-items::-webkit-scrollbar { width: 0; }
 .cart-item { display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.03); border-radius: 10px; padding: 12px; border: 1px solid rgba(0,0,0,0.06); }
 .cart-item-img { width: 56px; height: 56px; object-fit: contain; border-radius: 6px; background: #e8e4df; flex-shrink: 0; }
 .cart-item-info { flex: 1; min-width: 0; }
-.cart-item-title { font-family: var(--font); font-size: 14px; font-weight: 700; color: #1a1917; line-height: 1.2; }
-.cart-item-size { font-size: 12px; color: #6b6560; margin-top: 3px; }
-.cart-item-price { font-size: 15px; font-weight: 500; color: #1a1917; white-space: nowrap; }
-.cart-item-remove { background: none; border: none; cursor: pointer; color: #6b6560; font-size: 16px; padding: 4px; flex-shrink: 0; transition: color 0.15s; }
-.cart-item-remove:hover { color: #1a1917; }
-.cart-empty { text-align: center; padding: 40px 20px; color: #6b6560; font-size: 14px; font-style: italic; }
+.cart-item-title { font-family: var(--font); font-size: 14px; font-weight: 700; color: #2b3640; line-height: 1.2; }
+.cart-item-size { font-size: 12px; color: #697480; margin-top: 3px; }
+.cart-item-price { font-size: 15px; font-weight: 500; color: #2b3640; white-space: nowrap; }
+.cart-item-remove { background: none; border: none; cursor: pointer; color: #697480; font-size: 16px; padding: 4px; flex-shrink: 0; transition: color 0.15s; }
+.cart-item-remove:hover { color: #2b3640; }
+.cart-empty { text-align: center; padding: 40px 20px; color: #697480; font-size: 14px; font-style: italic; }
 .cart-footer { padding: 16px 22px 22px; border-top: 1px solid rgba(0,0,0,0.07); flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
 .cart-total { display: flex; justify-content: space-between; align-items: baseline; }
-.cart-total-label { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: lowercase; color: #6b6560; }
-.cart-total-amount { font-size: 24px; font-weight: 400; color: #1a1917; }
-.btn-checkout { display: block; width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
+.cart-total-label { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: lowercase; color: #697480; }
+.cart-total-amount { font-size: 24px; font-weight: 400; color: #2b3640; }
+.btn-checkout { display: block; width: 100%; background: var(--accent); color: var(--ink); border: none; border-radius: 10px; padding: 16px; text-align: center; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.15s; }
 .btn-checkout:hover { opacity: 0.85; }
 .btn-checkout:disabled { opacity: 0.4; cursor: default; }
 
@@ -365,7 +365,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 .footer-gb-btn:hover { color: var(--ink); }
 
 /* TOAST */
-#toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f8f6f3; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
+#toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f1f3f5; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 </style>
@@ -422,7 +422,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
         <div class="variant-label" id="variant-label" style="display:none">size</div>
         <div class="variant-btns" id="d-variants"></div>
         <div class="d-price-display" id="d-price"></div>
-        <div style="font-size:12px;color:#6b6560;letter-spacing:0.03em;">Giclée prints are signed and dated, matted and ready to frame.</div>
+        <div style="font-size:12px;color:#697480;letter-spacing:0.03em;">Giclée prints are signed and dated, matted and ready to frame.</div>
         <div class="share-row" id="share-row"></div>
         <div class="buy-section" id="buy-section">
           <div id="original-avail-row"></div>
@@ -984,24 +984,24 @@ loadProducts();
 
 <!-- GUESTBOOK MODAL -->
 <div id="gb-overlay" onclick="gbOverlayClick(event)" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);visibility:hidden;opacity:0;transition:opacity 0.28s,visibility 0s linear 0.28s;display:flex;align-items:center;justify-content:center;padding:24px;">
-<div id="gb-sheet" style="background:#f5f2ed;border-radius:16px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+<div id="gb-sheet" style="background:#f1f3f5;border-radius:16px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
   <div style="display:flex;align-items:center;padding:26px 26px 14px;gap:10px;flex-shrink:0;">
-    <div style="font-family:var(--font);font-size:22px;font-weight:700;color:#1a1917;flex:1;">guest book</div>
-    <button onclick="closeGB()" style="width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6560;">✕</button>
+    <div style="font-family:var(--font);font-size:22px;font-weight:700;color:#2b3640;flex:1;">guest book</div>
+    <button onclick="closeGB()" style="width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#697480;">✕</button>
   </div>
   <div style="flex:1;overflow-y:auto;padding:0 26px 32px;display:flex;flex-direction:column;gap:14px;">
     <div style="display:flex;flex-direction:column;gap:12px;">
-      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">name</label>
-        <input id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
-      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">email</label>
-        <input id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
-      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#6b6560;margin-bottom:5px;display:block;">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#6b6560">(optional)</span></label>
-        <textarea id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#1a1917;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;resize:none;min-height:80px;line-height:1.5;"></textarea></div>
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#697480;margin-bottom:5px;display:block;">name</label>
+        <input id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#2b3640;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#697480;margin-bottom:5px;display:block;">email</label>
+        <input id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#2b3640;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;"></div>
+      <div><label style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:lowercase;color:#697480;margin-bottom:5px;display:block;">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#697480">(optional)</span></label>
+        <textarea id="g-msg" placeholder="Favourite piece, what brought you here…" spellcheck="false" style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;color:#2b3640;font-family:var(--font);font-size:16px;padding:12px 14px;outline:none;width:100%;-webkit-appearance:none;resize:none;min-height:80px;line-height:1.5;"></textarea></div>
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
-        <input id="g-subscribe" type="checkbox" style="width:17px;height:17px;flex-shrink:0;accent-color:#1a1917;cursor:pointer;">
-        <span style="font-size:12px;color:#6b6560;letter-spacing:0.04em;line-height:1.4;">casually stay informed — occasional notes on new work &amp; upcoming events</span>
+        <input id="g-subscribe" type="checkbox" style="width:17px;height:17px;flex-shrink:0;accent-color:#2b3640;cursor:pointer;">
+        <span style="font-size:12px;color:#697480;letter-spacing:0.04em;line-height:1.4;">casually stay informed — occasional notes on new work &amp; upcoming events</span>
       </label>
-      <button id="gb-submit-btn" onclick="submitGB()" style="background:var(--accent);border:none;border-radius:10px;color:#fff;padding:15px;font-family:var(--font);font-size:15px;font-weight:500;letter-spacing:0.02em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
+      <button id="gb-submit-btn" onclick="submitGB()" style="background:var(--accent);border:none;border-radius:10px;color:var(--ink);padding:15px;font-family:var(--font);font-size:15px;font-weight:500;letter-spacing:0.02em;text-transform:lowercase;cursor:pointer;width:100%;margin-top:4px;">sign the guest book</button>
     </div>
   </div>
 </div>
