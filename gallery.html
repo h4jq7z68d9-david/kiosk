@@ -552,7 +552,18 @@ function renderGrid() {
         const img = document.createElement('img');
         img.alt = p.desc || p.title;
         img.referrerPolicy = 'no-referrer';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        let tries = 0;
         img.onload = () => img.classList.add('loaded');
+        img.onerror = () => {
+          if (tries < 3) {
+            tries++;
+            setTimeout(() => {
+              img.src = p.img + (p.img.includes('?') ? '&' : '?') + 'retry=' + tries;
+            }, 500 * tries);
+          }
+        };
         img.src = p.img;
         card.appendChild(img);
       }

@@ -1,115 +1,120 @@
 # Kiosk Project Summary
 
-## What's Live
+## What’s Live
 
-| URL | Purpose |
-|---|---|
-| https://davidnicholsonart.com | Main entry point / homepage (index.html) — primary public site |
-| https://davidnicholsonart.com/gallery.html | Public print gallery with cart + checkout |
-| https://davidnicholsonart.com/shop.html | Shop page |
-| https://davidnicholsonart.com/shipping.html | Shipping & returns info |
-| https://davidnicholsonart.com/kiosk.html | iPad kiosk for art fairs |
-| https://davidnicholsonart.com/admin.html | Admin dashboard — password gated (172377) |
-| https://davidnicholsonart.com/prints/{slug}.html | Per-product pages with OG tags — redirect to gallery modal |
-| https://davidnicholsonart.com/varied-readings.html | Varied Readings show page — interactive tile flip animation |
-| https://kiosk.davidnicholsonllc.com | Legacy URL — still works, same content |
+|URL                                                 |Purpose                                                       |
+|----------------------------------------------------|--------------------------------------------------------------|
+|<https://davidnicholsonart.com>                     |Main entry point / homepage (index.html) — primary public site|
+|<https://davidnicholsonart.com/gallery.html>        |Public print gallery with cart + checkout                     |
+|<https://davidnicholsonart.com/shop.html>           |Shop page                                                     |
+|<https://davidnicholsonart.com/shipping.html>       |Shipping & returns info                                       |
+|<https://davidnicholsonart.com/kiosk.html>          |iPad kiosk for art fairs                                      |
+|<https://davidnicholsonart.com/admin.html>          |Admin dashboard — password gated (172377)                     |
+|<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal    |
+|<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — interactive tile flip animation   |
+|<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                        |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
 **Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3, deploys Lambda, and invalidates both CloudFront distributions in ~60 seconds.
 
----
+-----
 
 ## AWS Infrastructure
 
-| Resource | Value |
-|---|---|
-| AWS Account | 892204037842 |
-| S3 Bucket | kiosk.davidnicholsonllc (us-east-2) |
-| CloudFront Distribution — davidnicholsonart.com | E2EJH38GWGPEPG (dbhpvmx9kl58h.cloudfront.net) |
-| CloudFront Distribution — kiosk.davidnicholsonllc.com | E31J8ASEUTGXD9 (d33vrz1flme0j4.cloudfront.net) |
-| SSL Cert — davidnicholsonart.com | ACM us-east-1, covers apex + www, auto-renews |
-| SSL Cert — kiosk.davidnicholsonllc.com | ACM us-east-1, auto-renews |
-| IAM Role | github-kiosk-deploy — has S3, CloudFront invalidation, and Lambda UpdateFunctionCode permissions |
+|Resource                                             |Value                                                                                           |
+|-----------------------------------------------------|------------------------------------------------------------------------------------------------|
+|AWS Account                                          |892204037842                                                                                    |
+|S3 Bucket                                            |kiosk.davidnicholsonllc (us-east-2)                                                             |
+|CloudFront Distribution — davidnicholsonart.com      |E2EJH38GWGPEPG (dbhpvmx9kl58h.cloudfront.net)                                                   |
+|CloudFront Distribution — kiosk.davidnicholsonllc.com|E31J8ASEUTGXD9 (d33vrz1flme0j4.cloudfront.net)                                                  |
+|SSL Cert — davidnicholsonart.com                     |ACM us-east-1, covers apex + www, auto-renews                                                   |
+|SSL Cert — kiosk.davidnicholsonllc.com               |ACM us-east-1, auto-renews                                                                      |
+|IAM Role                                             |github-kiosk-deploy — has S3, CloudFront invalidation, and Lambda UpdateFunctionCode permissions|
 
 **CloudFront E2EJH38GWGPEPG behaviors (in order):**
 
-| Precedence | Path | Origin | Notes |
-|---|---|---|---|
-| 0 | /products | API Gateway | Lambda products endpoint |
-| 1 | /hero | API Gateway | Lambda hero endpoint |
-| 2 | /image* | API Gateway | Lambda image proxy — forwards query string |
-| 3 | /feed.xml | API Gateway | Lambda feed endpoint |
-| 4 | /admin/* | API Gateway | Lambda admin endpoints |
-| 5 | /prints/* | S3 | Per-product OG redirect pages |
-| 6 | /receipts/* | S3 | Receipt file storage — publicly readable via CloudFront |
-| 7 | Default (*) | S3 | All other static files |
+|Precedence|Path       |Origin     |Notes                                                  |
+|----------|-----------|-----------|-------------------------------------------------------|
+|0         |/products  |API Gateway|Lambda products endpoint                               |
+|1         |/hero      |API Gateway|Lambda hero endpoint                                   |
+|2         |/image*    |API Gateway|Lambda image proxy — forwards query string             |
+|3         |/feed.xml  |API Gateway|Lambda feed endpoint                                   |
+|4         |/admin/*   |API Gateway|Lambda admin endpoints                                 |
+|5         |/prints/*  |S3         |Per-product OG redirect pages                          |
+|6         |/receipts/*|S3         |Receipt file storage — publicly readable via CloudFront|
+|7         |Default (*)|S3         |All other static files                                 |
 
 **DNS:** `davidnicholsonart.com` is registered with AWS and DNS is in Route 53. Both apex and www point to CloudFront distribution E2EJH38GWGPEPG.
 
-**ACM validation tip:** When requesting a cert, the "Create records in Route 53" button only works if a hosted zone already exists. After setting nameservers, NS records in Route 53 Registered Domains must match the hosted zone NS records exactly — no trailing dots.
+**ACM validation tip:** When requesting a cert, the “Create records in Route 53” button only works if a hosted zone already exists. After setting nameservers, NS records in Route 53 Registered Domains must match the hosted zone NS records exactly — no trailing dots.
 
 **To update any file:**
-1. Edit the file
-2. `git add . && git commit -m "your message" && git push`
-3. GitHub Actions deploys to S3 + invalidates both CloudFront distributions automatically
-4. Live in ~60 seconds
 
----
+1. Edit the file
+1. `git add . && git commit -m "your message" && git push`
+1. GitHub Actions deploys to S3 + invalidates both CloudFront distributions automatically
+1. Live in ~60 seconds
+
+-----
 
 ## GitHub Actions Auto-Deploy
 
 Fully configured. Push any file to the repo → live in ~60 seconds.
+
 - IAM role: `github-kiosk-deploy` (OIDC, no static keys)
 - Repo secret set: `AWS_ROLE_ARN`
 - Workflow file: `.github/workflows/deploy.yml`
 - Syncs `*.html`, `prints/*.html`, `*.png`, `*.jpg`, `*.xml`, `*.txt`, `*.js`, `*.webmanifest` files to S3
 - Zips and deploys `index.mjs` to Lambda function `dna-kiosk`
 - Invalidates both distributions: E31J8ASEUTGXD9 and E2EJH38GWGPEPG
-- **Generate print pages step:** runs `generate-prints.js` before S3 sync — fetches catalog from Lambda API Gateway URL directly (bypasses CloudFront), writes `prints/*.html` files locally, S3 sync picks them up
+- **Generate print pages step:** runs `generate-prints.js` before S3 sync — fetches catalog from Lambda API Gateway URL directly (bypasses CloudFront), writes `prints/*.html` and `hero-pool.js` locally, S3 sync picks them up
 
----
+-----
 
 ## Square
 
-| Item | Value |
-|---|---|
-| Square Online Store | https://david-nicholson-art.square.site |
-| Application ID | `sq0idp-6D-Q6hGLP9tk-medwFpxvQ` |
-| Production Access Token | `EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53` |
-| Location ID | `LYVD3ZGR3X4KE` |
+|Item                   |Value                                                             |
+|-----------------------|------------------------------------------------------------------|
+|Square Online Store    |<https://david-nicholson-art.square.site>                         |
+|Application ID         |`sq0idp-6D-Q6hGLP9tk-medwFpxvQ`                                   |
+|Production Access Token|`EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53`|
+|Location ID            |`LYVD3ZGR3X4KE`                                                   |
 
 **Product URL pattern:**
+
 ```
 https://david-nicholson-art.square.site/product/{slug}/{ITEM_ID}
 ```
+
 Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda generates this automatically.
 
-**Originals:** Excluded from API/kiosk by detecting single "Default Title" variation.
+**Originals:** Excluded from API/kiosk by detecting single “Default Title” variation.
 
 **Images:** Product images are hosted by Square. No dependency on Shopify CDN.
 
 **Product descriptions:** All 40 prints have customer-facing product descriptions and SEO descriptions entered in Square (completed 2025-03-23). Reference file: `painting-descriptions.md` in repo.
 
----
+-----
 
 ## Pinterest
 
-| Item | Value |
-|---|---|
-| Account | Business account, claimed domain davidnicholsonart.com |
-| Domain verification tag | `<meta name="p:domain_verify" content="e2ca69d5bcbd54035f416124bf0b4508">` (in index.html) |
-| Feed URL | `https://davidnicholsonart.com/feed.xml` |
-| Tag advertiser ID | 549769596185 |
+|Item                   |Value                                                                                     |
+|-----------------------|------------------------------------------------------------------------------------------|
+|Account                |Business account, claimed domain davidnicholsonart.com                                    |
+|Domain verification tag|`<meta name="p:domain_verify" content="e2ca69d5bcbd54035f416124bf0b4508">` (in index.html)|
+|Feed URL               |`https://davidnicholsonart.com/feed.xml`                                                  |
+|Tag advertiser ID      |549769596185                                                                              |
 
 **Notes:**
+
 - Pinterest Tag live in gallery.html — fires 4 events: `pagevisit` (page load), `pagevisit` with `product_id` (product modal open), `addtocart`, `checkout`; all include `click_id` (epik) when present
 - Base `pagevisit` on page load only includes `click_id` if `epik` param is present in URL — omits key entirely when absent (Pinterest treats explicit `undefined` differently)
 - Conversion source health requires all 3 event types fired by real users in last 30 days — without ad traffic this will stay yellow
 - Verified Merchant Program — ✓ verified April 2026
-- 3 dead Shopify catalogs exist on Pinterest account — harmless, can't be deleted without Shopify app
+- 3 dead Shopify catalogs exist on Pinterest account — harmless, can’t be deleted without Shopify app
 - Share button on product modal links to `/prints/{slug}.html` — Pinterest receives correct image URL and description
 
----
+-----
 
 ## Per-Product Print Pages (`/prints/`)
 
@@ -118,14 +123,16 @@ Static HTML files generated at build time by `generate-prints.js`. One file per 
 **Purpose:** Provide per-product OG tags for Facebook/Pinterest share previews, Google SEO, and ad creative. Without these, all share links show the generic gallery OG image.
 
 **How it works:**
+
 1. `generate-prints.js` runs in GitHub Actions before S3 sync
-2. Fetches product catalog from Lambda API Gateway URL directly (not through CloudFront — CloudFront blocks GitHub Actions IPs)
-3. Generates `prints/{slug}.html` for each product with OG tags + `window.location.replace()` redirect
-4. Redirect URL uses `?view={ITEM_ID}` param — opens the product modal in gallery.html
-5. S3 sync uploads `prints/*.html` to S3
-6. CloudFront behavior `/prints/*` routes to S3
+1. Fetches product catalog from Lambda API Gateway URL directly (not through CloudFront — CloudFront blocks GitHub Actions IPs)
+1. Generates `prints/{slug}.html` for each product with OG tags + `window.location.replace()` redirect
+1. Redirect URL uses `?view={ITEM_ID}` param — opens the product modal in gallery.html
+1. S3 sync uploads `prints/*.html` to S3
+1. CloudFront behavior `/prints/*` routes to S3
 
 **Redirect flow:**
+
 - User clicks share link → hits `/prints/beer-drinker.html`
 - Browser reads OG tags (Facebook/Pinterest scrape these)
 - `window.location.replace()` redirects to `gallery.html?view=ITEM_ID`
@@ -138,18 +145,19 @@ Static HTML files generated at build time by `generate-prints.js`. One file per 
 
 **Facebook share preview:** Shows product image and title correctly. Image may appear cropped because paintings are square and Facebook link previews are landscape (1200×630). Not fixable without creating custom cropped OG images per product.
 
----
+-----
 
 ## Lambda (`dna-kiosk`)
 
-| Item | Value |
-|---|---|
-| Function name | `dna-kiosk` |
-| Runtime | nodejs22.x, us-east-1 |
-| Role | `arn:aws:iam::892204037842:role/dna-kiosk-role` |
-| API Gateway URL | `https://doqg3wcta7.execute-api.us-east-1.amazonaws.com` |
+|Item           |Value                                                   |
+|---------------|--------------------------------------------------------|
+|Function name  |`dna-kiosk`                                             |
+|Runtime        |nodejs22.x, us-east-1                                   |
+|Role           |`arn:aws:iam::892204037842:role/dna-kiosk-role`         |
+|API Gateway URL|`https://doqg3wcta7.execute-api.us-east-1.amazonaws.com`|
 
 **Environment variables:**
+
 ```
 SQUARE_TOKEN=EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53
 SQUARE_LOC=LYVD3ZGR3X4KE
@@ -162,12 +170,13 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 **`API_URL` is critical:** Controls the domain used when building image proxy URLs (`/image?id=...`). Must be set to `https://davidnicholsonart.com` so image URLs use the CloudFront domain instead of the raw API Gateway domain. Pinterest rejects API Gateway domains in `image_url` fields.
 
 **Endpoints:**
+
 - `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, rawImg, url, variations, year`
 - `GET /feed` and `GET /feed.xml` — returns RSS/XML product catalog for Pinterest/Google; served publicly via CloudFront at `https://davidnicholsonart.com/feed.xml`
 - `GET /hero` — returns a single random product with an image `{img, title, id}` — filtered to 2025–2026 prints, falls back to full catalog
 - `GET /image?id=X` — proxies Square CDN image to avoid hotlink 403s; query string must be forwarded by CloudFront (Origin request policy: AllViewerExceptHostHeader)
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
-- `POST /guestbook` — saves to DynamoDB (`dna-guestbook`) + emails david@davidnicholsonart.com; stores `name, email, note, subscribed (BOOL)`
+- `POST /guestbook` — saves to DynamoDB (`dna-guestbook`) + emails [david@davidnicholsonart.com](mailto:david@davidnicholsonart.com); stores `name, email, note, subscribed (BOOL)`
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}`
 - `GET /admin/paintings` — all paintings with sales joined
 - `POST /admin/paintings` — add painting
@@ -192,56 +201,58 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 
 **Email sender:** All emails send as `"David Nicholson Art" <david@davidnicholsonart.com>`. Display name set in code; address set via `SES_FROM` env var.
 
----
+-----
 
 ## Google Merchant Center
 
-| Item | Value |
-|---|---|
-| Account | Existing account, davidnicholsonart.com claimed and verified |
-| Feed URL | `https://davidnicholsonart.com/feed.xml?v=1` |
-| Feed type | Scheduled fetch, daily, XML |
+|Item     |Value                                                       |
+|---------|------------------------------------------------------------|
+|Account  |Existing account, davidnicholsonart.com claimed and verified|
+|Feed URL |`https://davidnicholsonart.com/feed.xml?v=1`                |
+|Feed type|Scheduled fetch, daily, XML                                 |
 
 **Notes:**
+
 - Same Lambda `/feed.xml` endpoint used for both Pinterest and Google
-- `?v=1` query string required — Google's URL validator rejected the bare URL without it; bump to `?v=2` etc. to force a re-fetch if needed
+- `?v=1` query string required — Google’s URL validator rejected the bare URL without it; bump to `?v=2` etc. to force a re-fetch if needed
 - Missing GTIN warnings are expected and acceptable for handmade/art items
 
----
+-----
 
 ## SES (Email)
 
 - Domain `davidnicholsonart.com` verified in SES ✓
 - **Production access approved ✓** — guestbook notifications and send-link emails are live
-- Sends from `david@davidnicholsonart.com` with display name "David Nicholson Art"
+- Sends from `david@davidnicholsonart.com` with display name “David Nicholson Art”
 
----
+-----
 
 ## SNS (SMS)
 
-| Item | Value |
-|---|---|
-| Phone number | +18444767251 |
-| Type | Toll-free |
-| Phone number ID | phone-0c0649f801484987accc2fbeb0f0ed3b |
-| ARN | arn:aws:sms-voice:us-east-1:892204037842:phone-number/phone-0c0649f801484987accc2fbeb0f0ed3b |
-| Status | Pending carrier registration (up to 15 business days) |
-| Monthly fee | $2.00 |
+|Item           |Value                                                                                       |
+|---------------|--------------------------------------------------------------------------------------------|
+|Phone number   |+18444767251                                                                                |
+|Type           |Toll-free                                                                                   |
+|Phone number ID|phone-0c0649f801484987accc2fbeb0f0ed3b                                                      |
+|ARN            |arn:aws:sms-voice:us-east-1:892204037842:phone-number/phone-0c0649f801484987accc2fbeb0f0ed3b|
+|Status         |Pending carrier registration (up to 15 business days)                                       |
+|Monthly fee    |$2.00                                                                                       |
 
 Lambda `sendSMS` updated with `OriginationNumber: '+18444767251'`. SMS will work once carrier registration clears.
 
----
+-----
 
-## Email — david@davidnicholsonart.com
+## Email — [david@davidnicholsonart.com](mailto:david@davidnicholsonart.com)
 
 Set up via iCloud+ custom domain. DNS records added to Route 53:
+
 - TXT: `apple-domain=...` verification + SPF record
 - MX: `mx01.mail.icloud.com.` and `mx02.mail.icloud.com.` (both priority 10)
 - CNAME: `sig1._domainkey` → iCloud DKIM
 
 Sends and receives from Apple Mail on all devices.
 
----
+-----
 
 ## Favicon
 
@@ -250,7 +261,7 @@ Sends and receives from Apple Mail on all devices.
 - Both files in repo root, deployed to S3 via GitHub Actions
 - Tags added to all HTML files
 
----
+-----
 
 ## SEO & Analytics
 
@@ -264,15 +275,16 @@ Sends and receives from Apple Mail on all devices.
 - **kiosk.html** — has `noindex, nofollow` meta tag; excluded from sitemap
 - **Product image alt text** — gallery.html uses Square product description as `alt` text on all images (falls back to title if no description)
 
----
+-----
 
 ## Shopify — Cancelled
 
 Shopify has been cancelled. All product images were already in Square — no image migration needed.
+
 - Facebook/Instagram shops reconnected to Square ✓
 - Pinterest shop reconnected via custom feed ✓
 
----
+-----
 
 ## HTML Files
 
@@ -281,15 +293,17 @@ All are single-file, no framework — intentional, keep it that way.
 **Session workflow:** Claude generates files here, David downloads and pushes to GitHub. GitHub is NOT the source of truth during a session — the latest file Claude produced is. At the start of each session, upload all files from the repo as a starting point.
 
 ### index.html (homepage)
+
 - Hero column width: 820px
 - Hero calls Lambda `GET /hero` for a single random product image — fast, no full catalog fetch
 - Image appears at natural aspect ratio (`height: auto`) — no fixed placeholder, no skeleton
 - Caption (print title) appears only after image loads
 - `referrerPolicy = 'no-referrer'` on hero image to avoid S3 403
-- Guest book POSTs to Lambda; includes newsletter opt-in checkbox ("casually stay informed") — `subscribed` bool stored in DynamoDB
+- Guest book POSTs to Lambda; includes newsletter opt-in checkbox (“casually stay informed”) — `subscribed` bool stored in DynamoDB
 - Contact link uses split string `'mai'+'lto:david@davidnicholsonart.com'` to prevent Cloudflare email obfuscation injection
 
 ### gallery.html (public gallery)
+
 - Fetches from Lambda `GET /products`
 - Sort: year descending, then alphabetical within same year
 - Year sidebar filter — sticky left sidebar with year buttons
@@ -298,15 +312,15 @@ All are single-file, no framework — intentional, keep it that way.
 - Cart clears from localStorage after successful checkout
 - Tap print → bottom sheet modal on mobile, side-by-side on desktop
   - Variant selector (size buttons) with name + price
-  - "Add to cart" button — adds selected variant, closes modal, returns to grid
+  - “Add to cart” button — adds selected variant, closes modal, returns to grid
   - Swipe left/right to browse on mobile
   - Click image → fullscreen shadowbox
 - **Fullscreen shadowbox:** left/right arrows + swipe to navigate; tap background or ✕ to close
 - Cart modal: shows all items with thumbnail, title, size, price, remove button, running total
 - Checkout button → POSTs to Lambda `/checkout` → redirects to Square hosted checkout
 - Checkout redirect URL: `https://davidnicholsonart.com/gallery.html?success=1`
-- Product modal title and description use DM Sans (var(--font)) — not serif
-- Product modal shows description + "Giclée prints are signed and dated, matted and ready to frame."
+- Product modal title and description use DM Sans (var(–font)) — not serif
+- Product modal shows description + “Giclée prints are signed and dated, matted and ready to frame.”
 - **Shuffle button** — below year filters in sidebar; shuffles current filtered set (Fisher-Yates); active state orange; SVG inline bowed-arrow icon (placeholder, swap when better icon found)
 - Share URLs point to `/prints/{slug}.html` — provides correct OG preview on share
 - `?view={ITEM_ID}` param opens product modal directly — used by `/prints/` redirect pages
@@ -316,42 +330,47 @@ All are single-file, no framework — intentional, keep it that way.
 - Footer buttons white text/border; contact link uses split string
 
 ### kiosk.html (art fair iPad)
+
 - Fetches from Lambda (with service worker offline cache)
 - Detail modal: title + product description + giclée note + QR code
 - Send-link (email/SMS) uses `p.url`
 - Guest book POSTs to Lambda → email notification; includes newsletter opt-in
-- Export CSV hidden behind triple-tap on "Guest Book" title
+- Export CSV hidden behind triple-tap on “Guest Book” title
 - Service worker cache key: `dna-v3`
 - **Service worker blocks external image requests** — SW only passes through fonts, cdnjs, and Lambda API
 
 ### admin.html (admin dashboard)
+
 - Password gate: `172377`
 - **Always open at `https://davidnicholsonart.com/admin.html`** (apex, no www) — Safari CORS redirect cache issue
 - **PWA:** installable as home screen app on iPhone/iPad via Safari → Share → Add to Home Screen
-  - `admin.webmanifest` — app manifest (name: "DNA Admin", theme: #f8f6f3, orange icon)
+  - `admin.webmanifest` — app manifest (name: “DNA Admin”, theme: #f8f6f3, orange icon)
   - `admin-sw.js` — service worker caches admin shell; passes all `/admin/*` API calls and S3 receipt URLs through to network
   - `admin-icon.png` — 512×512 orange DN icon
   - Safe area insets applied to topbar and main padding for iPhone notch
 - **PWA mode behavior:** when launched from home screen (`navigator.standalone`), goes straight to Expenses & Mileage tab, hides Dashboard and Inventory tabs — full admin still accessible in Safari
 
 **Five-tab layout:**
+
 - **Dashboard tab** — revenue cards (originals sold, large/small prints sold, print inventory, top large print, top small print, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter). Expense cards load in background on login so dashboard is always populated.
-- **Inventory tab** — dual rate adjuster (standard + large ≥30") + sortable/filterable painting table with inline editing; `↓ CSV` export; `🏷 Tags` button for price tag printing
+- **Inventory tab** — dual rate adjuster (standard + large ≥30”) + sortable/filterable painting table with inline editing; `↓ CSV` export; `🏷 Tags` button for price tag printing
 - **Expenses & Mileage tab** — expense and mileage tables; tap any row to open edit modal; delete inside modal
-- **Prints tab** — all paintings shown (no stock filter); sorted into four tables by stock tier (Out of Stock → Low Stock → Below Goal → Stocked), ranked by popularity score (70% sales volume, 30% recency) within each tier. "Zero stock only" checkbox filters to paintings where both sizes are at 0. Click any column header to collapse tiers into a single sortable flat table; "✕ Clear sort" returns to tiered view. Print Lg/Print Sm columns show how many to print to reach goal (2 large, 3 small); stock shown in red when below goal.
+- **Prints tab** — all paintings shown (no stock filter); sorted into four tables by stock tier (Out of Stock → Low Stock → Below Goal → Stocked), ranked by popularity score (70% sales volume, 30% recency) within each tier. “Zero stock only” checkbox filters to paintings where both sizes are at 0. Click any column header to collapse tiers into a single sortable flat table; “✕ Clear sort” returns to tiered view. Print Lg/Print Sm columns show how many to print to reach goal (2 large, 3 small); stock shown in red when below goal.
 - **Sales Log tab** — filterable table of all sales; filters: date range (from/to), channel (all/art fair/online/gallery), state (all/KS/MO); summary bar shows count, total revenue, net; CSV export. Use cases: art fair debrief, monthly KS sales tax, year-end taxes.
 
 **Inventory features:**
+
 - All paintings sortable by title, year, price, rounded price
-- Filters: Never sold, Sold, Original available, Low print stock, Mom doesn't have
-- Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom's Prints checkbox) + sale history
+- Filters: Never sold, Sold, Original available, Low print stock, Mom doesn’t have
+- Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom’s Prints checkbox) + sale history
 - Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net; art fair channel tracks state (KS/MO)
 - Stock +/− buttons autosave immediately (floor at 0)
 - Logging a new print sale automatically decrements the matching size stock by 1 (can go negative — intentional)
-- **🏷 Tags button** in Inventory tab header: opens a printable Avery 5371/5871 price tag sheet (3.5×2", 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
+- **🏷 Tags button** in Inventory tab header: opens a printable Avery 5371/5871 price tag sheet (3.5×2”, 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
 - CSV export: title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
 
 **Expense features:**
+
 - Categories: Printing, Framing, Art Supplies, Art Fair Fees, Retail & Packaging, Equipment, Marketing, Licenses & Fees, Insurance, Website & Software, Travel, Other
 - Color-coded category badges
 - Tap row to edit; delete button inside edit modal (not on row)
@@ -365,18 +384,21 @@ All are single-file, no framework — intentional, keep it that way.
 - CSV export: date, category, description, amount, receipt URL — receipt URLs are clickable CloudFront links
 
 **Mileage features:**
+
 - IRS standard rate hardcoded per year at top of script (`IRS_RATE_BY_YEAR`) — update each January
 - 2025/2026 rate: $0.70/mile; 2024: $0.67/mile
-- Deduction auto-calculated per entry using rate for that entry's year
+- Deduction auto-calculated per entry using rate for that entry’s year
 - Tap row to edit; delete button inside edit modal
 - CSV export includes date, purpose, miles, IRS rate, deduction, notes
 
 **Data storage:**
+
 - Expenses and mileage stored in DynamoDB `dna-expenses` table (single table, `type` field = `expense` or `mileage`)
 - Receipt files in S3 `receipts/` prefix, served via CloudFront
 - Inventory/sales stored in DynamoDB via Lambda API (`dna-paintings`, `dna-sales`)
 
 **Historical data loaded:**
+
 - 2024: 6 expense records
 - 2025: 71 expense records + 2 mileage entries (488 miles Lawrence + 40 Westport/KC, $341.60 deduction)
 - 2026: 23 expense records from Hurdlr import ($4,049.02 total) — no receipt links yet, add manually
@@ -385,6 +407,7 @@ All are single-file, no framework — intentional, keep it that way.
 **Admin token:** `dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE` — stored as Lambda env var `ADMIN_TOKEN`; currently bypassed (passed as `?token=` query param); auth enforcement deferred
 
 ### varied-readings.html (show page)
+
 - Standalone page for the Varied Readings show, April 24, 2026
 - 10 paintings in 5 diptych pairs, all base64 embedded
 - 4×4 tile grid, each tile has independent sequence index
@@ -392,30 +415,32 @@ All are single-file, no framework — intentional, keep it that way.
 - Click any tile to advance it one step in the sequence
 - Pairs: Junction & Terminal, Early Still & U.S. 50 East, Johnson Drive 6am & 6:01am, KS Wind Farm 1 & 2, Sunflower 1 & 2
 - Links to phoenixgalleryart.com for gallery info
-- No nav — standalone experience, "david nicholson" footer links back to index.html
+- No nav — standalone experience, “david nicholson” footer links back to index.html
 
 ### generate-prints.js (build script)
+
 - Runs in GitHub Actions before S3 sync
 - Fetches from `API_URL` (raw API Gateway URL) — NOT through CloudFront (CloudFront blocks GitHub Actions IPs)
 - Writes `prints/{slug}.html` per product
 - Each file: OG meta tags + `window.location.replace("gallery.html?view=ITEM_ID")`
 - Slug logic matches gallery.html share button slug generation
+- **Also writes `hero-pool.js`** (repo root, June 2026): `window.__HERO_POOL__ = [{img,title}]` for 2025–26 prints (fallback: all prints with images). The homepage loads it and picks a daily-rotating hero client-side — keeps the slow uncached `/hero` Lambda catalog fetch off the hot path. Deployed by the same `*.js` S3 sync.
 
----
+-----
 
 ## DynamoDB Tables
 
-| Table | Purpose |
-|---|---|
-| `dna-paintings` | All paintings + `__config__` record (stores `rate` and optional `rateLarge`) |
-| `dna-sales` | Sales records with `paintingId` foreign key + GSI `paintingId-index` |
-| `dna-guestbook` | Guest book entries |
-| `dna-orders` | Square order records |
-| `dna-expenses` | Expenses and mileage — single table, `type` field = `expense` or `mileage` |
+|Table          |Purpose                                                                     |
+|---------------|----------------------------------------------------------------------------|
+|`dna-paintings`|All paintings + `__config__` record (stores `rate` and optional `rateLarge`)|
+|`dna-sales`    |Sales records with `paintingId` foreign key + GSI `paintingId-index`        |
+|`dna-guestbook`|Guest book entries                                                          |
+|`dna-orders`   |Square order records                                                        |
+|`dna-expenses` |Expenses and mileage — single table, `type` field = `expense` or `mileage`  |
 
 All tables: PAY_PER_REQUEST, us-east-1.
 
----
+-----
 
 ## Receipt Storage (S3 + CloudFront)
 
@@ -424,25 +449,30 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - Publicly readable via CloudFront — no S3 public access needed
 - Filename convention: `{date}_{amount}_{category}.{ext}`
 - Pre-signed PUT URL generated by Lambda `POST /admin/expenses/receipt-url`
-- Old Hurdlr receipt links (2024–2025) point to Hurdlr's S3 — may expire eventually
+- Old Hurdlr receipt links (2024–2025) point to Hurdlr’s S3 — may expire eventually
 - 2026 receipts: add manually via admin, will get proper CloudFront URLs
 
----
+-----
 
 ## IAM — Key Policies
 
 **`dna-kiosk-role`** (Lambda execution role):
+
 - `dna-dynamodb-paintings` — read/write on `dna-paintings` and `dna-sales`
 - `dna-expenses-access` — read/write on `dna-expenses` + S3 PutObject/GetObject on `receipts/*`
 
 **`lambda-deploy` user** (local seed scripts):
+
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
 
----
+-----
 
 ## Pending — In Order of Priority
 
-- [ ] **SNS — build SMS endpoint + UI** — carrier registration submitted May 21 2026; once approved, build `/sms` Lambda endpoint and "text me this link" UI in gallery/kiosk; sample message: "Check out this piece: https://davidnicholsonart.com/gallery.html?product=abc123"
+- [ ] **SNS — build SMS endpoint + UI** — carrier registration submitted May 21 2026; toll-free verification flagged the opt-in consent language (must show: recipient enters their own number, single transactional message, no repeat texts / no marketing, msg+data rates, STOP/HELP). Compliant language drafted June 1 2026 — use when building the UI:
+  - **On-page consent (at the phone field):** “By entering your mobile number and tapping Send, you consent to receive a single text message containing the link you requested from David Nicholson Art. This is a one-time message — not a subscription. You will not receive repeat texts, promotions, or marketing. Message and data rates may apply. Reply HELP for help, STOP to opt out.”
+  - **Sample message body:** “David Nicholson Art: here’s the piece you asked about — [link]. One-time message, no further texts. Reply STOP to opt out.”
+  - Once verification clears, build `/sms` Lambda endpoint and “text me this link” UI in gallery/kiosk.
 - [ ] **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session, planned)
 - [ ] **Meta Ads** — ~$5/day, paused
 - [ ] **Pinterest Ads** — ~$30/day minimum, paused
@@ -451,40 +481,64 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
 
----
+-----
+
+## Completed This Session (June 1 2026)
+
+**Hero image performance — daily-rotating build-time pool**
+
+- ✓ **Root cause** — homepage hero painted only after two serial uncached round trips: `loadHero()` → raw API Gateway `/hero` (never CDN-cached, cold-start-prone, re-fetched the entire Square catalog to pick one painting) → then set `img.src` → second hop to `/image?id=`. Image was also only appended on `onload`, so no progressive paint and the preload scanner never saw it.
+- ✓ **`generate-prints.js`** — now also writes `hero-pool.js` to repo root at build time: `window.__HERO_POOL__ = [{img,title}]` for 2025–26 prints (falls back to all prints with images). Picked up by the existing `*.js` S3 sync; regenerated every deploy.
+- ✓ **`index.html`** — loads `hero-pool.js`, picks one painting **client-side, rotating daily** (`Math.floor(Date.now()/86400000) % pool.length`), inserts the `<img>` immediately (progressive paint) with `fetchpriority="high"` / `decoding="async"`, reserves a square box to avoid layout shift, and `preconnect`s to davidnicholsonart.com. Old live `/hero` fetch kept as fallback if the pool file is missing. No Lambda change. Net: the only hot-path request is the (CloudFront-cached) image; because everyone gets the same painting on a given day it stays cache-warm.
+
+**SMS opt-in language** — see updated SNS item under Pending; toll-free verification flagged opt-in wording, compliant one-time/transactional language drafted.
+
+**Public site styling pass (fair-season, first-time visitors)**
+
+- ✓ **AA contrast (site-wide tokens)** — secondary grays were failing WCAG AA on the `#f8f6f3` bg (`--ink2 #7a8a99` = 3.3:1, `--ink3 #9aa0a8` = 2.4:1). Darkened to **`--ink2 #5e6b78`** (5.06:1) and **`--ink3 #64707c`** (4.69:1) in both `index.html` and `gallery.html`. In gallery modal/cart, the `#a8a39d` micro-labels (size/share/optional/giclée note, 2.2:1 on the `#f5f2ed` sheet) bumped to `#6b6560` (5.1:1).
+- ✓ **index.html — container** — kept the original **left-anchored** layout (`margin: 0`, desktop `padding: 0 40px 60px 10%`) per David’s preference; centering was tried (`margin: 0 auto`) and reverted. Added a mobile breakpoint (`@media max-width:600px → padding: 0 20px 60px`) to fix the phone squeeze, which was the real issue.
+- ✓ **index.html — primary CTA = Instagram** — under the title, “follow on instagram” is now the filled orange primary, “view gallery” the outline secondary (with arrow). Rationale: business-card scans already land people on the site, so the face-up button adds value by giving a one-tap follow. Hero image still links to gallery. Old `.follow-btn` class renamed `.cta-secondary`.
+- ✓ **index.html — staggered load reveal** — repurposed the unused `sk` keyframe into a `reveal` fade-up; staggered across title→about→future→represented→past; gated behind `prefers-reduced-motion`; no-base-opacity so content never gets stuck hidden if animation doesn’t run.
+- ✓ **gallery.html — type unified to Jost** — was DM Sans + Playfair Display; switched font link + `--font` token to Jost and retired the `--serif` token (cart/guestbook/product titles now Jost). Homepage and gallery now read as one brand.
+- ✓ **gallery.html — staggered reveal** — same `reveal` keyframe applied per year-section as it renders (`revealIdx`, capped at ~0.4s), reduced-motion guarded.
+- ✓ **Decision: gallery stays a pure image wall** — no card titles/prices/buttons added (David’s call).
+- ✓ **gallery.html — image load resilience** — card images were firing ~40 simultaneous `/image?id=` requests; on a cold cache the proxy (CloudFront → Lambda → Square) throttled and ~1/3 failed, rendering blank with no recovery (refresh “fixed” it by warming the cache). Added `loading="lazy"` + `decoding="async"` to spread the requests, and an `onerror` retry (up to 3×, backoff, cache-busting `retry=N` param) so transient blanks self-heal without a manual refresh. Not caused by the styling pass.
+
+**Files touched:** `index.html`, `generate-prints.js`, `gallery.html` (+ new generated `hero-pool.js`).
+
+-----
 
 ## Completed This Session (April 14 2026)
 
-- ✓ **Admin inventory Original column** — now driven by Square `Original Available` attribute; green "sold" badge when false/unset, blank when true; filter chip updated to match
+- ✓ **Admin inventory Original column** — now driven by Square `Original Available` attribute; green “sold” badge when false/unset, blank when true; filter chip updated to match
 - ✓ **Dashboard Originals Sold/In Stock** — both now use Square `originalAvail` data instead of DynamoDB sales records
 - ✓ **`originalAvail` in Lambda `/products`** — `buildProductList` reads Square `Original Available` custom attribute and includes `originalAvail: true/false` on every product
 - ✓ **`originalAvail` in Lambda `adminGetPaintings`** — fetches Square catalog in parallel, merges `originalAvail` onto each painting by normalized title match
-- ✓ **Gallery modal "original available →" link** — appears below share buttons when `p.originalAvail` is true; links to originals.html; right-aligned orange text with arrow
-- ✓ **originals.html renamed "Available Originals"** — title, h1, OG/Twitter tags updated; subtitle is plain text (no link)
-- ✓ **originals.html contact link** — "contact" mailto link with painting title as subject and title/medium+dims/price as body, stacked one per line
+- ✓ **Gallery modal “original available →” link** — appears below share buttons when `p.originalAvail` is true; links to originals.html; right-aligned orange text with arrow
+- ✓ **originals.html renamed “Available Originals”** — title, h1, OG/Twitter tags updated; subtitle is plain text (no link)
+- ✓ **originals.html contact link** — “contact” mailto link with painting title as subject and title/medium+dims/price as body, stacked one per line
 - ✓ **originals.html click behavior** — thumbnail click opens lightbox; contact click opens mailto; row click does nothing; row no longer shows pointer or hover highlight
-- ✓ **originals.html nav** — back arrow links to gallery.html and reads "prints"; instagram button reads "follow on instagram"
-- ✓ **originals.html footer** — added "david nicholson" link to index.html
-- ✓ **gallery.html footer** — added "available originals" link to originals.html before shipping & returns
-- ✓ **Receipt upload feedback** — save button disables and shows "Uploading…" during S3 PUT; zone shows ⏳/✓/✗; PUT response checked for errors
+- ✓ **originals.html nav** — back arrow links to gallery.html and reads “prints”; instagram button reads “follow on instagram”
+- ✓ **originals.html footer** — added “david nicholson” link to index.html
+- ✓ **gallery.html footer** — added “available originals” link to originals.html before shipping & returns
+- ✓ **Receipt upload feedback** — save button disables and shows “Uploading…” during S3 PUT; zone shows ⏳/✓/✗; PUT response checked for errors
 - ✓ **S3 sync receipt bug fixed** — `--exclude "receipts/*"` added to deploy.yml before `--delete`; previous deploys were wiping all uploaded receipts
 - ✓ **DynamoDB title corrections** — all 6 painting titles corrected via admin UI
 - ✓ **admin-sw.js cache** — bump to `dna-admin-v4` after pushing admin.html changes this session
-
 
 ## Completed This Session (May 22 2026)
 
 - ✓ **Prints tab — show all paintings** — removed filter that required stock > 0 or a print sale; all paintings now appear in the Prints tab regardless of stock (the point is to show what needs to be printed)
 - ✓ **🏷 Tags button moved to Inventory tab** — removed from topbar; now sits in the Inventory tab header alongside ↓ CSV and + Add Painting; topbar now only has + Sale and sign out
 - ✓ **Sales Log tab** — new fifth tab; filterable table of all sales with date range (from/to), channel (all/art fair/online/gallery), and state (all/KS/MO) filters; summary bar shows sale count, total revenue, and net; CSV export; covers art fair debrief, monthly KS sales tax reporting, and year-end taxes
-- ✓ **Art fair state field** — sale modal shows KS/MO state dropdown when channel is "Art fair"; state saved with sale record; shown inline in inventory expand row (e.g. "Art fair · KS"); edit modal restores state correctly
+- ✓ **Art fair state field** — sale modal shows KS/MO state dropdown when channel is “Art fair”; state saved with sale record; shown inline in inventory expand row (e.g. “Art fair · KS”); edit modal restores state correctly
 - ✓ **Lambda — state field in sales** — `adminAddSale` and `adminUpdateSale` now destructure and persist `state` field to DynamoDB `dna-sales`
 - ✓ **Square auto-sync confirmed** — new paintings added in Square automatically appear in admin Inventory on next load (Lambda `adminGetPaintings` auto-creates DynamoDB records by title match); no sync button needed; Prints tab shows them once they exist in inventory
-- ✓ **Admin SW cache key** — bump to `dna-admin-v6` after deploying this session's admin.html
+- ✓ **Admin SW cache key** — bump to `dna-admin-v6` after deploying this session’s admin.html
 
 ## Completed This Session (May 21 2026)
 
-- ✓ **index.html — Varied Readings moved to past** — removed from future section; added 2026 year header in past with "varied readings at phoenix gallery" / lawrence, ks; same link (/varied-readings.html), no arrow
+- ✓ **index.html — Varied Readings moved to past** — removed from future section; added 2026 year header in past with “varied readings at phoenix gallery” / lawrence, ks; same link (/varied-readings.html), no arrow
 - ✓ **index.html — Crossroads Night Market added** — july 3rd, 4th & 5th, kansas city, mo; link to kccrossroads.org/night-market/; future section now ascending: OP art fair → Crossroads
 - ✓ **index.html — Phoenix Gallery represented link updated** — now points to /collections/david-nicholson page
 - ✓ **SNS carrier registration submitted** — form completed (use case: transactional notifications); was sitting incomplete since March 19; check back in ~1 week
@@ -492,24 +546,24 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Completed This Session (May 9 2026)
 
-- ✓ **Dual pricing** — second "Large (≥30") / sq in" rate field in inventory rate bar; if either dimension ≥ 30, `effectiveRate(p)` uses `rateLarge` instead of `rate`; both rates saved to DynamoDB `__config__`; inventory table, sort, CSV export, and price tags all use effective rate per painting
+- ✓ **Dual pricing** — second “Large (≥30”) / sq in” rate field in inventory rate bar; if either dimension ≥ 30, `effectiveRate(p)` uses `rateLarge` instead of `rate`; both rates saved to DynamoDB `__config__`; inventory table, sort, CSV export, and price tags all use effective rate per painting
 - ✓ **Rate bar inputs** — changed from number spinners to plain text fields (`inputmode="decimal"`); larger, squarish, centered text
-- ✓ **Sale → stock decrement** — logging a new print sale (large or small) decrements that size's stock count by 1 immediately; no floor (can go negative); edit-sale does not touch stock
-- ✓ **🏷 Tags button** — prints Avery 5371/5871 price tags (3.5×2", 10/sheet) for all currently-available originals; shows title, year, medium + " on canvas" (appended only if not already present), dimensions, original price; skips sold originals
+- ✓ **Sale → stock decrement** — logging a new print sale (large or small) decrements that size’s stock count by 1 immediately; no floor (can go negative); edit-sale does not touch stock
+- ✓ **🏷 Tags button** — prints Avery 5371/5871 price tags (3.5×2”, 10/sheet) for all currently-available originals; shows title, year, medium + “ on canvas” (appended only if not already present), dimensions, original price; skips sold originals
 - ✓ **Medium in adminGetPaintings** — `medium` field from Square `Medium` custom attribute now correctly merged onto existing DynamoDB painting records (was missing from the `.map()` return; only auto-created records had it)
-- ✓ **Medium display logic** — appends " on canvas" if Square `Medium` value doesn't already contain "on canvas"; falls back to "oil on canvas" if attribute is empty
+- ✓ **Medium display logic** — appends “ on canvas” if Square `Medium` value doesn’t already contain “on canvas”; falls back to “oil on canvas” if attribute is empty
 - ✓ **Admin SW cache key** — bumped to `dna-admin-v5`
 
 ## Completed This Session (May 4 2026)
 
-- ✓ **Prints tab** — new fourth tab in admin.html; four separate tables by stock tier (Out of Stock / Low Stock / Below Goal / Stocked); ranked by popularity score (70% sales volume, 30% recency) within each tier; "Zero stock only" checkbox filters to both-sizes-at-zero; column header click collapses to flat sortable table with "✕ Clear sort" to return; Print Lg/Print Sm columns show quantity needed to reach goal (2 large, 3 small); stock in red when below goal
-- ✓ **Dashboard top print cards** — two new cards: Top Large Print and Top Small Print, showing title and units sold; show "—" when no sales recorded yet
+- ✓ **Prints tab** — new fourth tab in admin.html; four separate tables by stock tier (Out of Stock / Low Stock / Below Goal / Stocked); ranked by popularity score (70% sales volume, 30% recency) within each tier; “Zero stock only” checkbox filters to both-sizes-at-zero; column header click collapses to flat sortable table with “✕ Clear sort” to return; Print Lg/Print Sm columns show quantity needed to reach goal (2 large, 3 small); stock in red when below goal
+- ✓ **Dashboard top print cards** — two new cards: Top Large Print and Top Small Print, showing title and units sold; show “—” when no sales recorded yet
 
 ## Completed This Session (April 15 2026)
 
 - ✓ **Receipt lightbox** — tapping 📎 receipt now opens an in-app lightbox instead of navigating away; image receipts show inline; PDF receipts show Open in browser link; close via ✕ button, backdrop tap, or Escape key
 - ✓ **Receipt share sheet** — ⬆️ Share button in lightbox fetches receipt as blob and invokes native iOS share sheet (`navigator.share({ files })`); supports both JPG and PDF; falls back to URL share then window.open
-- ✓ **Google brand exclusion** — "David Nicholson" brand approved and applied as exclusion on Performance Max campaign
+- ✓ **Google brand exclusion** — “David Nicholson” brand approved and applied as exclusion on Performance Max campaign
 - ✓ **Google Merchant Center feed** — manual fetch triggered; product type warnings cleared
 - ✓ **2026 receipts** — all 23 expense records updated with receipts via admin PWA
 - ✓ **Receipt persistence** — confirmed receipts survive deploy (S3 sync bug was the cause, now fixed)
@@ -521,7 +575,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **Square custom attributes created** — `Width (in)`, `Height (in)`, `Medium`, `Original Available` (toggle); all paintings being filled in
 - ✓ **Square title standardization** — all 6 DynamoDB titles corrected to match Square canonical names
 
----
+-----
 
 ## Previously Completed — Site-wide light theme & gallery redesign
 
@@ -539,42 +593,42 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ Pinterest Verified Merchant — ✓ verified April 2026
 - ✓ CloudFront Pro upgrade — ✓ April 2026; 25-behavior limit no longer a constraint
 
----
+-----
 
 ## Cloudflare Note
 
 `davidnicholsonllc.com` was previously on Cloudflare. Cloudflare injects email obfuscation scripts. Workaround: all mailto links use split-string JS (`'mai'+'lto:...'`). **Do not use plain `href="mailto:..."` links anywhere.**
 
----
+-----
 
 ## iPad Art Fair Setup
 
-1. Open https://davidnicholsonart.com/kiosk.html in Safari
-2. Let all prints load on good WiFi (populates offline cache)
-3. Safari → Share → Add to Home Screen
-4. Settings → Accessibility → Guided Access to lock iPad to kiosk
+1. Open <https://davidnicholsonart.com/kiosk.html> in Safari
+1. Let all prints load on good WiFi (populates offline cache)
+1. Safari → Share → Add to Home Screen
+1. Settings → Accessibility → Guided Access to lock iPad to kiosk
 
 ## iPhone Admin Setup
 
-1. Open https://davidnicholsonart.com/admin.html in Safari
-2. Safari → Share → Add to Home Screen
-3. Opens full-screen as "DNA Admin" with orange DN icon
-4. Launches directly to Expenses & Mileage tab — tap + Add Expense to log immediately
-5. Full admin (all tabs) always available by opening admin.html in Safari directly
+1. Open <https://davidnicholsonart.com/admin.html> in Safari
+1. Safari → Share → Add to Home Screen
+1. Opens full-screen as “DNA Admin” with orange DN icon
+1. Launches directly to Expenses & Mileage tab — tap + Add Expense to log immediately
+1. Full admin (all tabs) always available by opening admin.html in Safari directly
 
----
+-----
 
 ## Key Principles
 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **Single-file HTML** — no frameworks, no build pipeline for HTML files, keep it that way
-- **Always ask which file** — if a request doesn't specify which HTML file to update, ask before making changes
+- **Always ask which file** — if a request doesn’t specify which HTML file to update, ask before making changes
 - **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }`
 - **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
 - **S3 bucket is in us-east-2** — despite most other resources being in us-east-1
 - **IAM role must explicitly list both CloudFront distribution ARNs** for invalidation to work
 - **S3 bucket name is `kiosk.davidnicholsonllc`** (no .com)
-- **`davidnicholsonart.com` is served by E2EJH38GWGPEPG** — not E31J8ASEUTGXD9 (that's the kiosk legacy domain)
+- **`davidnicholsonart.com` is served by E2EJH38GWGPEPG** — not E31J8ASEUTGXD9 (that’s the kiosk legacy domain)
 - **CloudFront /image* must forward query strings** — set Origin request policy to AllViewerExceptHostHeader; without this Lambda never receives the `?id=` param and returns 404
 - **API_URL Lambda env var** — must be `https://davidnicholsonart.com`; controls image URL domain; Pinterest rejects raw API Gateway URLs
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
@@ -584,19 +638,23 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 - **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
-- **Debug order: check the code first** — when something isn't working after a push, review the code for bugs before assuming the deploy didn't complete or the user made an error. Both Claude and David make mistakes; neither is infallible. Start with the code.
+- **Debug order: check the code first** — when something isn’t working after a push, review the code for bugs before assuming the deploy didn’t complete or the user made an error. Both Claude and David make mistakes; neither is infallible. Start with the code.
+- **Public site uses Jost** — both `index.html` and `gallery.html` run on the Jost font stack (`'Jost', Futura, 'Trebuchet MS', Arial, sans-serif`); gallery was unified away from DM Sans + Playfair in June 2026. Keep new public pages on Jost for brand cohesion.
+- **Secondary-text grays are AA-locked** — `--ink2: #5e6b78` and `--ink3: #64707c` on the `#f8f6f3` bg, `#6b6560` for muted labels on the `#f5f2ed` modal/cart sheet. These clear WCAG AA; do NOT revert to the old `#7a8a99` / `#9aa0a8` / `#a8a39d`, which failed contrast.
+- **Homepage hero** — daily-rotating, sourced from build-time `hero-pool.js`, not a live Lambda call (see generate-prints.js); rotates per UTC day, so it’s not a per-visit random.
+- **Gallery card images: lazy + retry** — the `/image` proxy throttles under the ~40-request burst a full grid fires on a cold CloudFront cache, leaving random blanks. Card `<img>`s use `loading="lazy"` to spread requests and an `onerror` retry (backoff + cache-busting param) to self-heal. Don’t remove these.
 
----
+-----
 
 ## Contacts & Accounts
 
-| Service | Detail |
-|---|---|
-| Instagram | @dave_nichol_son |
-| Personal email | david@davidnicholsonart.com (iCloud+ custom domain) |
-| Notification email | david@davidnicholsonart.com |
-| Send-from email | david@davidnicholsonart.com |
-| Square Online | https://david-nicholson-art.square.site |
-| GitHub repo | https://github.com/h4jq7z68d9-david/kiosk |
-| Google Analytics | G-FL5BKJFVXF, Stream ID 14175458930 |
-| Google Search Console | davidnicholsonart.com, verified via GA tag |
+|Service              |Detail                                                                                   |
+|---------------------|-----------------------------------------------------------------------------------------|
+|Instagram            |@dave_nichol_son                                                                         |
+|Personal email       |[david@davidnicholsonart.com](mailto:david@davidnicholsonart.com) (iCloud+ custom domain)|
+|Notification email   |[david@davidnicholsonart.com](mailto:david@davidnicholsonart.com)                        |
+|Send-from email      |[david@davidnicholsonart.com](mailto:david@davidnicholsonart.com)                        |
+|Square Online        |<https://david-nicholson-art.square.site>                                                |
+|GitHub repo          |<https://github.com/h4jq7z68d9-david/kiosk>                                              |
+|Google Analytics     |G-FL5BKJFVXF, Stream ID 14175458930                                                      |
+|Google Search Console|davidnicholsonart.com, verified via GA tag                                               |
