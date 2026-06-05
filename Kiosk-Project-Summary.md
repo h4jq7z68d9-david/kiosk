@@ -2,17 +2,17 @@
 
 ## What’s Live
 
-|URL                                                 |Purpose                                                       |
-|----------------------------------------------------|--------------------------------------------------------------|
-|<https://davidnicholsonart.com>                     |Main entry point / homepage (index.html) — primary public site|
-|<https://davidnicholsonart.com/gallery.html>        |Public print gallery with cart + checkout                     |
-|<https://davidnicholsonart.com/shop.html>           |Shop page                                                     |
-|<https://davidnicholsonart.com/shipping.html>       |Shipping & returns info                                       |
-|<https://davidnicholsonart.com/kiosk.html>          |iPad kiosk for art fairs                                      |
-|<https://davidnicholsonart.com/admin.html>          |Admin dashboard — password gated (172377)                     |
-|<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal    |
-|<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — interactive tile flip animation   |
-|<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                        |
+|URL                                                 |Purpose                                                        |
+|----------------------------------------------------|---------------------------------------------------------------|
+|<https://davidnicholsonart.com>                     |Main entry point / homepage (index.html) — primary public site |
+|<https://davidnicholsonart.com/gallery.html>        |Public print gallery with cart + checkout                      |
+|<https://davidnicholsonart.com/shop.html>           |Shop page                                                      |
+|<https://davidnicholsonart.com/shipping.html>       |Shipping & returns info                                        |
+|<https://davidnicholsonart.com/kiosk.html>          |iPad kiosk for art fairs                                       |
+|<https://davidnicholsonart.com/admin.html>          |Admin dashboard — password gated (172377)                      |
+|<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal     |
+|<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)|
+|<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                         |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
 **Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3, deploys Lambda, and invalidates both CloudFront distributions in ~60 seconds.
@@ -172,6 +172,7 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 **Endpoints:**
 
 - `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, rawImg, url, variations, year`
+- `GET /originals` — Square items with the `Original Available` toggle true; price is **computed**, not stored per painting: `Math.ceil(width × height × effRate / 50) × 50`, where `effRate = rateLarge` if `rateLarge` is set AND a side ≥ 30”, else base `rate`. Reads both `rate` and `rateLarge` from the `__config__` record so it matches admin.html’s `effectiveRate()` / `retail()`. originals.html fetches this directly from API Gateway (not via CloudFront), so config changes show on next load. **Fixed June 2026:** previously used only base `rate`, so large paintings (≥30”) ignored the large rate set in admin.
 - `GET /feed` and `GET /feed.xml` — returns RSS/XML product catalog for Pinterest/Google; served publicly via CloudFront at `https://davidnicholsonart.com/feed.xml`
 - `GET /hero` — returns a single random product with an image `{img, title, id}` — filtered to 2025–2026 prints, falls back to full catalog
 - `GET /image?id=X` — proxies Square CDN image to avoid hotlink 403s; query string must be forwarded by CloudFront (Origin request policy: AllViewerExceptHostHeader)
@@ -408,14 +409,14 @@ All are single-file, no framework — intentional, keep it that way.
 
 ### varied-readings.html (show page)
 
-- Standalone page for the Varied Readings show, April 24, 2026
-- 10 paintings in 5 diptych pairs, all base64 embedded
-- 4×4 tile grid, each tile has independent sequence index
-- Snake flip animation: even pairs top-down, odd pairs bottom-up
-- Click any tile to advance it one step in the sequence
-- Pairs: Junction & Terminal, Early Still & U.S. 50 East, Johnson Drive 6am & 6:01am, KS Wind Farm 1 & 2, Sunflower 1 & 2
-- Links to phoenixgalleryart.com for gallery info
-- No nav — standalone experience, “david nicholson” footer links back to index.html
+- Standalone retrospective page for the Varied Readings show (Phoenix Gallery, Lawrence KS, April 2026)
+- **Reworked June 2026:** replaced the old canvas tile-flip diptych animation with a static blog-style layout. File dropped from ~2.9 MB (base64-embedded) to ~5 KB.
+- Layout: site `<nav>` chrome (back-link “david nicholson” → index + instagram, no cart — matches originals.html) → blog-style title block (“varied readings” h1 + “April 2026 · Phoenix Gallery” meta line) → left-aligned body-text statement (DM Sans) → three full-width images stacked in order with a staggered CSS fade-in (respects `prefers-reduced-motion`) → full-bleed bordered site `<footer>` (© david nicholson + shipping & returns + contact mailto)
+- Statement copy: “Varied Readings presented work in pairs, each grouping an exploration of adjacent subject matter approached from shifting compositional and chromatic vantage points.”
+- Images served from `https://davidnicholsonart.com/4_26_varied_readings/{1,2,3}.jpeg` — manually uploaded to the S3 bucket (us-east-2), referenced by URL (not base64), apex domain only
+- No nav, no JS, single-file inline CSS — same light theme/fonts as the rest of the site
+- **Deploy gotcha:** the `deploy.yml` S3 sync only includes `*.jpg`, NOT `*.jpeg`. So these `.jpeg` images are neither uploaded from the repo nor deleted by `--delete` — they live purely as manual S3 uploads and persist across deploys. To make them repo-managed later, add `--include "*.jpeg"` to the sync. (Note: `--include "*.jpg"` matches nested paths, so any `.jpg` in S3 that’s absent from the repo *would* be wiped by `--delete`, except `receipts/*` which is explicitly excluded.)
+- Old animation details (no longer in use): 10 paintings in 5 diptych pairs (Junction & Terminal, Early Still & U.S. 50 East, Johnson Drive 6am & 6:01am, KS Wind Farm 1 & 2, Sunflower 1 & 2), 4×4 snake-flip tile grid, click-to-advance
 
 ### generate-prints.js (build script)
 
