@@ -2330,7 +2330,7 @@ function esc(str) {
 function printPriceTags() {
   const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
 
-  const cards = list.filter(p => p.originalAvail === true).map(p => {
+  const tags = list.filter(p => p.originalAvail === true).map(p => {
     const price = retail(p);
     const dims  = p.width + ' × ' + p.height + ' in';
     const med   = p.medium ? (p.medium.toLowerCase().includes('on canvas') ? esc(p.medium) : esc(p.medium) + ' on canvas') : 'Oil on canvas';
@@ -2341,7 +2341,19 @@ function printPriceTags() {
       + '<div class="meta">' + dims + '</div>'
       + '<div class="price">$' + price.toLocaleString() + '</div>'
       + '</div>';
-  }).join('');
+  });
+
+  if (!tags.length) {
+    alert('No available originals to print tags for.\nTags print only for paintings marked "original available".');
+    return;
+  }
+
+  // Chunk into explicit one-page sheets of 10 so each page break lands between
+  // cards, never through a card. Each sheet is exactly the printable area.
+  let sheets = '';
+  for (let i = 0; i < tags.length; i += 10) {
+    sheets += '<div class="sheet">' + tags.slice(i, i + 10).join('') + '</div>';
+  }
 
   const html = '<!DOCTYPE html>\n'
     + '<html>\n<head>\n<meta charset="UTF-8">\n'
@@ -2349,37 +2361,33 @@ function printPriceTags() {
     + '<style>\n'
     + '@page { size: letter; margin: 0.5in 0.75in; }\n'
     + '* { box-sizing: border-box; margin: 0; padding: 0; }\n'
-    + 'body { font-family: Georgia, serif; background: white; }\n'
-    + '.grid {\n'
+    + 'html, body { font-family: Georgia, serif; background: white; }\n'
+    + '.sheet {\n'
     + '  display: grid;\n'
     + '  grid-template-columns: repeat(2, 3.5in);\n'
-    + '  grid-template-rows: repeat(5, 2in);\n'
-    + '  column-gap: 0;\n'
-    + '  row-gap: 0;\n'
+    + '  grid-auto-rows: 2in;\n'
+    + '  column-gap: 0; row-gap: 0;\n'
+    + '  height: 10in;\n'                       // 11in page minus 0.5in top/bottom margins
+    + '  overflow: hidden;\n'
+    + '  break-after: page;\n'
+    + '  page-break-after: always;\n'
     + '}\n'
+    + '.sheet:last-child { break-after: auto; page-break-after: auto; }\n'
     + '.card {\n'
     + '  width: 3.5in; height: 2in;\n'
     + '  padding: 0.24in 0.28in;\n'
     + '  border: 0.5pt solid #ccc;\n'
     + '  display: flex; flex-direction: column;\n'
     + '  overflow: hidden;\n'
+    + '  break-inside: avoid; page-break-inside: avoid;\n'
     + '}\n'
     + '.title { font-size: 14pt; font-weight: bold; line-height: 1.2; margin-bottom: 7pt; }\n'
     + '.meta { font-size: 9.5pt; color: #444; line-height: 1.45; }\n'
     + '.price { font-size: 15pt; font-weight: bold; margin-top: auto; }\n'
-    + '.price.sold { font-size: 10pt; color: #888; font-weight: normal; font-style: italic; }\n'
-    + '.prints { font-size: 7.5pt; color: #777; margin-top: 4pt; font-family: Arial, sans-serif; }\n'
-    + '.price.sold { font-size: 10pt; color: #888; font-weight: normal; font-style: italic; }\n'
-    + '.prints { font-size: 7.5pt; color: #777; margin-top: 4pt; font-family: Arial, sans-serif; }\n'
     + '@media print { .card { border-color: transparent; } }\n'
     + '</style>\n</head>\n<body>\n'
-    + '<div class="grid">' + cards + '</div>\n'
+    + sheets + '\n'
     + '</body>\n</html>';
-
-  if (!cards) {
-    alert('No available originals to print tags for.\nTags print only for paintings marked "original available".');
-    return;
-  }
 
   // Print via a hidden iframe (srcdoc) rather than a popped window.
   // Reliable on Safari/Chrome on Mac & iPad: avoids popup blockers and the
