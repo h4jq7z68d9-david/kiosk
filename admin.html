@@ -2333,16 +2333,14 @@ function printPriceTags() {
   const cards = list.filter(p => p.originalAvail === true).map(p => {
     const price = retail(p);
     const dims  = p.width + ' × ' + p.height + ' in';
-    const med   = p.medium ? (p.medium.toLowerCase().includes('on canvas') ? esc(p.medium) : esc(p.medium) + ' on canvas') : 'oil on canvas';
-    const year  = p.year || '';
-    const meta2 = (year ? year : '') + (year && med ? ' · ' : '') + (med || '');
+    const med   = p.medium ? (p.medium.toLowerCase().includes('on canvas') ? esc(p.medium) : esc(p.medium) + ' on canvas') : 'Oil on canvas';
 
-    return '<div class="card"><div class="card-inner">'
+    return '<div class="card">'
       + '<div class="title">' + esc(p.title) + '</div>'
-      + '<div class="meta">' + meta2 + '</div>'
+      + '<div class="meta">' + med + '</div>'
       + '<div class="meta">' + dims + '</div>'
       + '<div class="price">$' + price.toLocaleString() + '</div>'
-      + '</div></div>';
+      + '</div>';
   }).join('');
 
   const html = '<!DOCTYPE html>\n'
@@ -2361,22 +2359,16 @@ function printPriceTags() {
     + '}\n'
     + '.card {\n'
     + '  width: 3.5in; height: 2in;\n'
-    + '  position: relative;\n'
+    + '  padding: 0.24in 0.28in;\n'
     + '  border: 0.5pt solid #ccc;\n'
+    + '  display: flex; flex-direction: column;\n'
     + '  overflow: hidden;\n'
     + '}\n'
-    + '.card-inner {\n'
-    + '  position: absolute; left: 50%; top: 50%;\n'
-    + '  width: 2in; height: 3.5in;\n'                 // portrait reading size (swapped dims)
-    + '  transform: translate(-50%, -50%) rotate(90deg);\n'  // rotate to fill the 3.5x2 cell
-    + '  transform-origin: center center;\n'
-    + '  padding: 0.22in 0.18in;\n'
-    + '  display: flex; flex-direction: column; justify-content: center;\n'
-    + '  overflow: hidden;\n'
-    + '}\n'
-    + '.title { font-size: 13pt; font-weight: bold; line-height: 1.2; margin-bottom: 6pt; }\n'
-    + '.meta { font-size: 8pt; color: #555; line-height: 1.4; font-style: italic; }\n'
-    + '.price { font-size: 15pt; font-weight: bold; margin-top: 6pt; }\n'
+    + '.title { font-size: 14pt; font-weight: bold; line-height: 1.2; margin-bottom: 7pt; }\n'
+    + '.meta { font-size: 9.5pt; color: #444; line-height: 1.45; }\n'
+    + '.price { font-size: 15pt; font-weight: bold; margin-top: auto; }\n'
+    + '.price.sold { font-size: 10pt; color: #888; font-weight: normal; font-style: italic; }\n'
+    + '.prints { font-size: 7.5pt; color: #777; margin-top: 4pt; font-family: Arial, sans-serif; }\n'
     + '.price.sold { font-size: 10pt; color: #888; font-weight: normal; font-style: italic; }\n'
     + '.prints { font-size: 7.5pt; color: #777; margin-top: 4pt; font-family: Arial, sans-serif; }\n'
     + '@media print { .card { border-color: transparent; } }\n'
