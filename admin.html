@@ -494,6 +494,7 @@
           <div style="display:flex;gap:8px;align-items:center">
             <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
             <button class="btn-sm" onclick="printPriceTags()">🏷 Tags</button>
+            <button class="btn-sm" onclick="downloadPriceTagsPDF()" title="Download price tags as a PDF aligned to Avery 5871">📄 Tags PDF</button>
             <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
           </div>
         </div>
@@ -2356,7 +2357,7 @@ function printPriceTags() {
     + '  display: grid;\n'
     + '  grid-template-columns: repeat(2, 3.5in);\n'
     + '  grid-template-rows: repeat(5, 2in);\n'
-    + '  column-gap: 0.25in;\n'
+    + '  column-gap: 0;\n'
     + '  row-gap: 0;\n'
     + '}\n'
     + '.card {\n'
@@ -2398,6 +2399,96 @@ function printPriceTags() {
   };
   frame.srcdoc = html;
   document.body.appendChild(frame);
+}
+
+// ── Lazy-load jsPDF (cdnjs is allowed by the service worker) ──
+let _jspdfPromise = null;
+function loadJsPDF() {
+  if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+  if (_jspdfPromise) return _jspdfPromise;
+  _jspdfPromise = new Promise(function(resolve, reject) {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload = function() {
+      if (window.jspdf && window.jspdf.jsPDF) resolve(window.jspdf.jsPDF);
+      else reject(new Error('PDF library loaded but unavailable'));
+    };
+    s.onerror = function() { reject(new Error('could not reach the PDF library')); };
+    document.head.appendChild(s);
+  });
+  return _jspdfPromise;
+}
+
+// Download price tags as a PDF aligned to the Avery 5871 grid:
+// 2 cols x 5 rows of 3.5x2in cards, 0.75in side margins, 0.5in top margin, NO gutters.
+// Print at 100% / Actual Size (no "fit to page") for the cards to register to the sheet.
+async function downloadPriceTagsPDF() {
+  const list = [...db.paintings]
+    .filter(p => p.originalAvail === true)
+    .sort((a,b) => a.title.localeCompare(b.title));
+
+  if (!list.length) {
+    alert('No available originals to make tags for.\nTags include only paintings marked "original available".');
+    return;
+  }
+
+  let jsPDF;
+  try {
+    jsPDF = await loadJsPDF();
+  } catch(e) {
+    alert('Could not build the PDF (' + e.message + ').\nCheck your connection and try again.');
+    return;
+  }
+
+  const doc = new jsPDF({ unit: 'in', format: 'letter', orientation: 'portrait' });
+
+  const cardW = 3.5;
+  const colX  = [0.75, 4.25];                // left edge of each column — no gutter (Avery 5871)
+  const rowY  = [0.5, 2.5, 4.5, 6.5, 8.5];   // top edge of each row — no gutter
+  const inset = 0.25;
+  const perPage = 10;
+  const maxW  = cardW - inset * 2;
+
+  list.forEach((p, i) => {
+    const slot = i % perPage;
+    if (slot === 0 && i > 0) doc.addPage();
+    const col = slot % 2;
+    const row = Math.floor(slot / 2);
+    const x = colX[col] + inset;
+    let   y = rowY[row] + 0.78;   // vertically center the ~4-line block in the 2in card
+
+    const price = '$' + retail(p).toLocaleString();
+    const dims  = p.width + ' \u00d7 ' + p.height + ' in';
+    const med   = p.medium ? (p.medium.toLowerCase().includes('on canvas') ? p.medium : p.medium + ' on canvas') : 'oil on canvas';
+    const year  = p.year || '';
+    const meta  = (year ? year : '') + (year && med ? ' \u00b7 ' : '') + (med || '');
+
+    // Title (truncate with ellipsis if it overruns the card)
+    doc.setFont('times', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(20, 20, 20);
+    let title = p.title;
+    if (doc.getTextWidth(title) > maxW) {
+      while (title.length > 4 && doc.getTextWidth(title + '\u2026') > maxW) title = title.slice(0, -1);
+      title = title.replace(/\s+\S*$/, '') + '\u2026';
+    }
+    doc.text(title, x, y);
+
+    // Meta (year · medium, then dimensions)
+    doc.setFont('times', 'italic');
+    doc.setFontSize(8);
+    doc.setTextColor(90, 90, 90);
+    if (meta) { y += 0.2; doc.text(meta, x, y); }
+    y += 0.16; doc.text(dims, x, y);
+
+    // Price
+    doc.setFont('times', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(20, 20, 20);
+    y += 0.34; doc.text(price, x, y);
+  });
+
+  doc.save('price-tags-5871.pdf');
 }
 
 // ═══════════════════════════════════════════
