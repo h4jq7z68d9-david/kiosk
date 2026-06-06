@@ -2376,10 +2376,28 @@ function printPriceTags() {
     + '<div class="grid">' + cards + '</div>\n'
     + '</body>\n</html>';
 
-  const w = window.open('', '_blank');
-  w.document.write(html);
-  w.document.close();
-  setTimeout(function() { w.print(); }, 400);
+  if (!cards) {
+    alert('No available originals to print tags for.\nTags print only for paintings marked "original available".');
+    return;
+  }
+
+  // Print via a hidden iframe (srcdoc) rather than a popped window.
+  // Reliable on Safari/Chrome on Mac & iPad: avoids popup blockers and the
+  // about:blank "no origin" print failure that surfaces as a failed print job.
+  const existing = document.getElementById('print-frame');
+  if (existing) existing.remove();
+  const frame = document.createElement('iframe');
+  frame.id = 'print-frame';
+  frame.setAttribute('aria-hidden', 'true');
+  frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
+  frame.onload = function() {
+    const fw = frame.contentWindow;
+    fw.focus();
+    fw.print();
+    setTimeout(function() { frame.remove(); }, 1000);
+  };
+  frame.srcdoc = html;
+  document.body.appendChild(frame);
 }
 
 // ═══════════════════════════════════════════
