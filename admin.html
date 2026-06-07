@@ -1178,13 +1178,11 @@ function renderPrintsTab() {
 
   function buildRows(set, GOAL_LARGE, GOAL_SMALL) {
     return set.map(r => {
-      const belowGoal = r.lgStock < GOAL_LARGE || r.smStock < GOAL_SMALL;
-      const titleStyle = belowGoal ? 'font-size:13px;color:var(--red);font-weight:600' : 'font-size:13px';
       const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent-ink)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
       const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent-ink)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
       const lastSaleDisplay = r.lastSaleTs ? r.lastSaleLabel : '—';
       return `<tr>
-        <td style="${titleStyle}">${r.p.title}</td>
+        <td style="font-size:13px">${r.p.title}</td>
         <td class="mono" style="text-align:center">${r.lgSold}</td>
         <td class="mono" style="text-align:center">${r.smSold}</td>
         <td class="dim" style="text-align:center;font-size:12px">${lastSaleDisplay}</td>
@@ -1215,7 +1213,6 @@ function renderPrintsTab() {
         <div class="table-section"><div style="overflow-x:auto"><table>${buildThead('all')}
           <tbody>${buildRows(sorted, GOAL_LARGE, GOAL_SMALL)}</tbody>
         </table></div></div>
-        <div style="margin-top:10px;font-size:12px;color:var(--ink3)">Title in red = below goal.</div>
       </div>`;
   } else {
     // Separate table per tier
@@ -1239,7 +1236,7 @@ function renderPrintsTab() {
           0 small
         </label>
       </div>
-      <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small · Title in red = below goal · Click any column to sort</span>
+      <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small · Click any column to sort</span>
     </div>`;
 
     visibleTiers.forEach(tier => {
