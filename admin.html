@@ -1219,18 +1219,31 @@ function renderPrintsTab() {
       </div>`;
   } else {
     // Separate table per tier
-    const zeroOnly = document.getElementById('prints-zero-only')?.checked;
-    const visibleTiers = zeroOnly ? TIERS.filter(t => t.id === 0) : TIERS;
+    const zeroLarge = document.getElementById('prints-zero-large')?.checked;
+    const zeroSmall = document.getElementById('prints-zero-small')?.checked;
+    const anyZeroFilter = zeroLarge || zeroSmall;
+    const passesZeroFilter = r => {
+      if (zeroLarge && r.lgStock !== 0) return false;
+      if (zeroSmall && r.smStock !== 0) return false;
+      return true;
+    };
+    const visibleTiers = anyZeroFilter ? TIERS.filter(t => t.id === 0) : TIERS;
     let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
-        <input type="checkbox" id="prints-zero-only" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroOnly ? 'checked' : ''}>
-        Zero stock only
-      </label>
+      <div style="display:flex;align-items:center;gap:14px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" id="prints-zero-large" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroLarge ? 'checked' : ''}>
+          0 large
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" id="prints-zero-small" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroSmall ? 'checked' : ''}>
+          0 small
+        </label>
+      </div>
       <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small · Stock in red = below goal · Click any column to sort</span>
     </div>`;
 
     visibleTiers.forEach(tier => {
-      const tierRows = sortRows(rows.filter(r => r.tier === tier.id && (!zeroOnly || r.bothZero)));
+      const tierRows = sortRows(rows.filter(r => r.tier === tier.id && passesZeroFilter(r)));
       if (!tierRows.length) return;
       html += `
         <div>
