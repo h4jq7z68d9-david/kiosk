@@ -8,27 +8,36 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#2b3640;--paper:#f1f3f5;--hiviz:#e6b400;--accent-ink:#b58600;--line:#cdd4da;--card:#ffffff;--muted:#5b6770}
+  :root{--ink:#2b3640;--paper:#f1f3f5;--hiviz:#e6b400;--accent-ink:#b58600;--line:#cdd4da;--card:#fff;--muted:#5b6770}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0}
   body{background:var(--paper);color:var(--ink);font-family:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:300;line-height:1.45;padding:16px}
   .wrap{max-width:1500px;margin:0 auto}
   h1{font-size:21px;font-weight:700;margin:0 0 2px}
-  .sub{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .sub{font-size:13px;color:var(--muted);margin:0 0 12px}
 
-  /* layout bar */
-  .layoutbar{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px}
-  .layoutrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
-  .nameinput{font-family:inherit;font-size:14px;font-weight:500;padding:6px 8px;border:1px solid var(--line);border-radius:6px;width:170px;color:var(--ink)}
+  /* toolbar */
+  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px}
+  .btn{font-family:inherit;font-size:13px;font-weight:500;padding:7px 13px;border-radius:7px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink);white-space:nowrap}
+  .btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn-sm{font-family:inherit;font-size:12px;font-weight:500;padding:5px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);white-space:nowrap}
+  .status{font-size:12px;color:var(--muted);margin-left:4px}
+  .status b{color:var(--ink)}
+
+  /* save panel */
+  .save-panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:none;align-items:center;gap:8px;flex-wrap:wrap}
+  .save-panel.open{display:flex}
+  .nameinput{font-family:inherit;font-size:14px;font-weight:500;padding:7px 10px;border:1px solid var(--line);border-radius:7px;flex:1 1 200px;min-width:140px;color:var(--ink)}
   .nameinput:focus{outline:none;border-color:var(--accent-ink)}
-  .layoutsel{font-family:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);cursor:pointer;max-width:180px}
-  .savebar{font-size:12px;color:var(--muted);margin-top:6px}
-  .savebar b{color:var(--ink);font-weight:600}
 
-  /* controls */
-  .ctrls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
-  .btn{font-family:inherit;font-size:13px;font-weight:500;padding:7px 13px;border-radius:7px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink)}
+  /* load panel */
+  .load-panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+  .load-panel.open{display:block}
+  .load-panel h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 10px}
+  .load-list{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto}
+  .load-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:#fafbfc}
+  .load-row-name{flex:1 1 auto;font-size:14px;font-weight:500;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .empty-note{font-size:13px;color:var(--muted);padding:4px 0}
 
   /* main layout */
   .layout{display:flex;gap:16px;align-items:flex-start}
@@ -83,23 +92,29 @@
 <body>
 <div class="wrap">
   <h1>Booth Planner</h1>
-  <p class="sub">Tap a painting then tap a wall to place it — or drag it across. Drag placed pieces to reposition; tap ✕ to remove.</p>
+  <p class="sub">Tap a painting then tap a wall to place it — or drag it across. Drag to reposition; tap ✕ to remove.</p>
 
-  <div class="layoutbar">
-    <div class="layoutrow">
-      <span class="lbl">Layout</span>
-      <input type="text" id="layoutName" class="nameinput" placeholder="Name this layout">
-      <select id="layoutSelect" class="layoutsel"></select>
-      <button class="btn" id="btnNew">+ New</button>
-      <button class="btn" id="btnCopyLink">Copy link</button>
-      <button class="btn" id="btnShareBlank">Share blank</button>
-    </div>
-    <div class="savebar" id="savebar">Loading…</div>
-  </div>
-
-  <div class="ctrls">
+  <div class="toolbar">
+    <button class="btn btn-primary" id="btnSave">Save</button>
+    <button class="btn" id="btnOpenLoad">Open saved</button>
+    <button class="btn" id="btnShareBlank">Share blank</button>
     <button class="btn" id="reload">Reload catalog</button>
     <button class="btn" id="clear">Clear walls</button>
+    <span class="status" id="status"></span>
+  </div>
+
+  <div class="save-panel" id="savePanel">
+    <input type="text" class="nameinput" id="saveName" placeholder="Name this layout…" maxlength="80">
+    <button class="btn btn-primary" id="btnConfirmSave">Save layout</button>
+    <button class="btn" id="btnCancelSave">Cancel</button>
+  </div>
+
+  <div class="load-panel" id="loadPanel">
+    <h3>Saved layouts</h3>
+    <div class="load-list" id="loadList"></div>
+    <div style="margin-top:10px">
+      <button class="btn" id="btnCloseLoad">Close</button>
+    </div>
   </div>
 
   <div class="layout">
@@ -124,162 +139,146 @@
 const API       = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/originals';
 const API_BOOTH = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/booth-layout';
 const FT = 12, GAPpx = 10;
-const LS_KEY     = 'dna-booth-layout-v1';  // legacy local backup
-const LS_INDEX   = 'dna-booth-index';       // [{id,name}] known layouts on this device
-const LS_CURRENT = 'dna-booth-current';     // id of last active layout
+const LS_INDEX = 'dna-booth-index';  // [{id,name}] layouts known on this device
+const LS_KEY   = 'dna-booth-layout-v1'; // local backup
 
 const WALLS = [
-  {name:'Left wall (10×8)',   wIn:10*FT, hIn:8*FT, el:null, pieces:[]},
-  {name:'Center wall (7×8)',  wIn:7*FT,  hIn:8*FT, el:null, pieces:[]},
-  {name:'Right wall (10×8)',  wIn:10*FT, hIn:8*FT, el:null, pieces:[]},
+  {name:'Left wall (10×8)',  wIn:10*FT, hIn:8*FT, el:null, pieces:[]},
+  {name:'Center wall (7×8)', wIn:7*FT,  hIn:8*FT, el:null, pieces:[]},
+  {name:'Right wall (10×8)', wIn:10*FT, hIn:8*FT, el:null, pieces:[]},
 ];
 const totalWin = WALLS.reduce((a,w)=>a+w.wIn,0);
 
-let scale=2.6, catalog=[], armed=null, uidc=0;
-let suppressWallTap=false, booting=true;
-let currentId=null, currentTitle='Untitled layout';
-let serverSaveTimer=null;
+let scale=2.6, catalog=[], armed=null, uidc=0, suppressWallTap=false, booting=true;
+let currentId=null, currentTitle='';
 
 const $  = id => document.getElementById(id);
 const isBig    = p => p.w>=30 || p.h>=30;
 const isPlaced = p => WALLS.some(w=>w.pieces.some(pc=>pc.pid===p.id));
-const genId    = () => crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2);
+const genId    = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2));
 
-// ---------- localStorage guards ----------
 function lsGet(k){ try{return localStorage.getItem(k);}catch{return null;} }
-function lsSet(k,v){ try{localStorage.setItem(k,v);return true;}catch{return false;} }
+function lsSet(k,v){ try{localStorage.setItem(k,v);}catch{} }
 
-// ---------- local layout index ----------
+// ---------- local index ----------
 function getIndex(){ try{return JSON.parse(lsGet(LS_INDEX)||'[]');}catch{return[];} }
 function setIndex(a){ lsSet(LS_INDEX,JSON.stringify(a)); }
 function addToIndex(id,name){
   const arr=getIndex().filter(x=>x.id!==id);
-  arr.unshift({id,name:name||'Untitled'});
+  arr.unshift({id,name:name||'Untitled',savedAt:Date.now()});
   setIndex(arr);
 }
-function refreshSelect(){
-  const sel=$('layoutSelect'), idx=getIndex();
-  sel.innerHTML = idx.length
-    ? idx.map(x=>`<option value="${x.id}"${x.id===currentId?' selected':''}>${x.name||'Untitled'}</option>`).join('')
-    : '<option disabled>No saved layouts yet</option>';
-}
+function removeFromIndex(id){ setIndex(getIndex().filter(x=>x.id!==id)); renderLoadList(); }
 
-// ---------- server I/O ----------
+// ---------- server ----------
 async function serverLoad(id){
   try{
     const r=await fetch(`${API_BOOTH}?id=${encodeURIComponent(id)}`);
     if(!r.ok) return null;
-    const d=await r.json(); return d.layout||null;
+    return (await r.json()).layout||null;
   }catch{return null;}
 }
 async function serverSave(id,title,wallsJson){
   try{
-    const r=await fetch(API_BOOTH,{
-      method:'PUT',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({id,title,wallsJson})
-    }); return r.ok;
+    const r=await fetch(API_BOOTH,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,title,wallsJson})});
+    return r.ok;
   }catch{return false;}
 }
-
-// ---------- save flow ----------
 function wallsToJson(){
   return JSON.stringify(WALLS.map(w=>w.pieces.map(p=>({pid:p.pid,title:p.title,w:p.w,h:p.h,img:p.img,xIn:p.xIn,yIn:p.yIn}))));
 }
-function saveLocalState(){
-  lsSet(LS_KEY, JSON.stringify({v:1,savedAt:Date.now(),walls:JSON.parse(wallsToJson())}));
+function saveLocalBackup(){
+  lsSet(LS_KEY,JSON.stringify({v:1,savedAt:Date.now(),walls:JSON.parse(wallsToJson())}));
 }
-function loadLegacy(){ try{return JSON.parse(lsGet(LS_KEY)||'null');}catch{return null;} }
+function safeParseWalls(json){ try{return JSON.parse(json||'[]');}catch{return[];} }
+function setStatus(html){ $('status').innerHTML=html; }
 
-function scheduleSave(){
-  if(booting) return;
-  saveLocalState();
-  showSaved(null,'saving');
-  clearTimeout(serverSaveTimer);
-  serverSaveTimer=setTimeout(doServerSave,1500);
+// ---------- save panel ----------
+function openSavePanel(){
+  closePanels();
+  $('saveName').value=currentTitle||'';
+  $('savePanel').classList.add('open');
+  setTimeout(()=>$('saveName').focus(),50);
 }
-async function doServerSave(){
+function closeSavePanel(){ $('savePanel').classList.remove('open'); }
+
+async function confirmSave(){
+  const name=$('saveName').value.trim();
+  if(!name){ $('saveName').focus(); return; }
+  currentTitle=name;
   if(!currentId){
     currentId=genId();
-    lsSet(LS_CURRENT,currentId);
     history.replaceState(null,'',`?id=${currentId}`);
-    addToIndex(currentId,currentTitle);
-    refreshSelect();
   }
+  $('btnConfirmSave').textContent='Saving…'; $('btnConfirmSave').disabled=true;
   const ok=await serverSave(currentId,currentTitle,wallsToJson());
-  if(ok){ addToIndex(currentId,currentTitle); showSaved(Date.now(),'cloud'); }
-  else showSaved(null,'local');
-}
-async function immediateServerSave(){
-  clearTimeout(serverSaveTimer);
-  await doServerSave();
-}
-function showSaved(ts,status){
-  const bar=$('savebar');
-  if(status==='saving') bar.innerHTML='Saving…';
-  else if(status==='cloud'){
-    const t=ts?new Date(ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'';
-    bar.innerHTML=`Saved to cloud · <b>${t}</b>`;
-  } else if(status==='local') bar.innerHTML='Saved locally · cloud unavailable';
-  else bar.innerHTML=status||'';
+  $('btnConfirmSave').textContent='Save layout'; $('btnConfirmSave').disabled=false;
+  if(ok){
+    saveLocalBackup();
+    addToIndex(currentId,currentTitle);
+    closeSavePanel();
+    const t=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+    setStatus(`<b>"${currentTitle}"</b> saved · ${t} · bookmark this URL to reopen`);
+  } else {
+    setStatus('Save failed — check network and try again.');
+  }
 }
 
-// ---------- layout management ----------
-function safeParseWalls(json){
-  try{return JSON.parse(json||'[]');}catch{return [];}
+// ---------- load panel ----------
+function openLoadPanel(){
+  closePanels();
+  renderLoadList();
+  $('loadPanel').classList.add('open');
 }
-async function newLayout(){
-  await immediateServerSave();
-  currentId=genId(); currentTitle='Untitled layout';
-  $('layoutName').value=currentTitle;
-  WALLS.forEach(w=>w.pieces=[]);
-  lsSet(LS_CURRENT,currentId);
-  history.replaceState(null,'',`?id=${currentId}`);
-  addToIndex(currentId,currentTitle);
-  refreshSelect();
-  buildScene();
-  $('savebar').innerHTML='New layout — place paintings and it will save automatically.';
-  $('layoutName').focus(); $('layoutName').select();
+function closeLoadPanel(){ $('loadPanel').classList.remove('open'); }
+
+function renderLoadList(){
+  const idx=getIndex(), ll=$('loadList'); ll.innerHTML='';
+  if(!idx.length){
+    ll.innerHTML='<div class="empty-note">No saved layouts on this device yet.</div>'; return;
+  }
+  idx.forEach(({id,name,savedAt})=>{
+    const date=savedAt?new Date(savedAt).toLocaleDateString([],{month:'short',day:'numeric'}):'';
+    const row=document.createElement('div'); row.className='load-row';
+    const nm=document.createElement('div'); nm.className='load-row-name';
+    nm.textContent=(name||'Untitled')+(date?' · '+date:'');
+    const btnOpen=document.createElement('button'); btnOpen.className='btn-sm'; btnOpen.textContent='Open';
+    btnOpen.onclick=()=>{ closeLoadPanel(); loadLayout(id); };
+    const btnLink=document.createElement('button'); btnLink.className='btn-sm'; btnLink.textContent='Copy link';
+    btnLink.onclick=()=>copyLayoutLink(id);
+    const btnDel=document.createElement('button'); btnDel.className='btn-sm'; btnDel.style.color='#d6453d'; btnDel.textContent='×';
+    btnDel.onclick=()=>removeFromIndex(id);
+    row.appendChild(nm); row.appendChild(btnOpen); row.appendChild(btnLink); row.appendChild(btnDel);
+    ll.appendChild(row);
+  });
 }
-async function switchToLayout(id){
-  if(id===currentId) return;
-  await immediateServerSave();
-  showSaved(null,'Loading…');
+async function loadLayout(id){
+  setStatus('Loading…');
   const data=await serverLoad(id);
-  if(!data){$('savebar').textContent='Could not load layout.';refreshSelect();return;}
+  if(!data){ setStatus('Could not load layout — try again.'); return; }
   currentId=id; currentTitle=data.title||'Untitled';
-  $('layoutName').value=currentTitle;
+  history.replaceState(null,'',`?id=${id}`);
+  addToIndex(id,currentTitle);
   const ws=safeParseWalls(data.wallsJson);
   WALLS.forEach((w,i)=>{w.pieces=(ws[i]||[]).map(p=>({uid:++uidc,...p}));});
-  lsSet(LS_CURRENT,currentId);
-  history.replaceState(null,'',`?id=${currentId}`);
-  addToIndex(currentId,currentTitle);
-  refreshSelect();
-  buildScene();
-  renderList();
-  showSaved(data.updatedAt,'cloud');
+  buildScene(); renderList();
+  setStatus(`<b>"${currentTitle}"</b> loaded.`);
 }
-function copyLink(){
-  if(!currentId){$('savebar').textContent='Nothing saved yet — place a painting first.';return;}
-  try{
-    navigator.clipboard.writeText(location.href).then(()=>{
-      $('savebar').innerHTML='Link copied!';
-      setTimeout(()=>showSaved(null,'cloud'),2000);
-    });
-  }catch{$('savebar').textContent=location.href;}
+function copyLayoutLink(id){
+  const url=`${location.origin}${location.pathname}?id=${id}`;
+  navigator.clipboard?.writeText(url).then(()=>setStatus('Link copied!'));
 }
+function closePanels(){ closeSavePanel(); closeLoadPanel(); }
+
 function shareBlank(){
   const url=location.origin+location.pathname;
-  try{
-    navigator.clipboard.writeText(url).then(()=>{
-      $('savebar').innerHTML='Blank link copied — send it to friends so they can build their own layout.';
-    });
-  }catch{$('savebar').textContent=url;}
+  navigator.clipboard?.writeText(url).then(()=>setStatus('Blank link copied — send to friends.'));
 }
 
 // ---------- scale ----------
 function computeScale(){
-  const sceneW=$('sceneInner').parentElement.clientWidth-4;
-  scale=Math.max(1.3,Math.min(3.4,(sceneW-GAPpx*(WALLS.length-1))/totalWin));
+  const w=$('sceneInner').parentElement.clientWidth-4;
+  scale=Math.max(1.3,Math.min(3.4,(w-GAPpx*(WALLS.length-1))/totalWin));
 }
 
 // ---------- build walls ----------
@@ -306,7 +305,7 @@ async function load(){
     catalog=(d.originals||[]).filter(o=>!o.atGallery).map(o=>({id:o.id,title:o.title||'Untitled',w:o.width||null,h:o.height||null,img:o.img||null}));
     $('loadMsg').style.display='none';
   }catch{
-    $('loadMsg').textContent='Catalog unavailable (offline?). Using generic sizes.';
+    $('loadMsg').textContent='Catalog unavailable (offline?).';
     catalog=[
       {id:'g1',title:'30×40',w:30,h:40,img:null},{id:'g2',title:'22×28',w:22,h:28,img:null},
       {id:'g3',title:'18×24',w:18,h:24,img:null},{id:'g4',title:'11×14',w:11,h:14,img:null},
@@ -315,7 +314,7 @@ async function load(){
   renderList();
 }
 function renderList(){
-  const q=$('search').value.trim().toLowerCase(), list=$('list'); list.innerHTML='';
+  const q=$('search').value.trim().toLowerCase(), ll=$('list'); ll.innerHTML='';
   catalog.filter(p=>!q||p.title.toLowerCase().includes(q)).forEach(p=>{
     const it=document.createElement('div');
     it.className='pitem'+(p===armed?' armed':'')+(isPlaced(p)?' used':'');
@@ -325,7 +324,7 @@ function renderList(){
     const dm=document.createElement('div'); dm.className='pdim'+((p.w&&p.h)?'':' nodim');
     dm.textContent=(p.w&&p.h)?`${p.w}×${p.h} in`:'no size set';
     meta.appendChild(t); meta.appendChild(dm); it.appendChild(th); it.appendChild(meta);
-    attachListDrag(it,p); list.appendChild(it);
+    attachListDrag(it,p); ll.appendChild(it);
   });
 }
 
@@ -338,9 +337,9 @@ function onWallTap(e,idx){
 }
 
 // ---------- placement ----------
-function place(src,idx,cx,cy,centerOnPoint){
+function place(src,idx,cx,cy,center){
   const w=src.w||24,h=src.h||30,wall=WALLS[idx];
-  let xIn=centerOnPoint?cx-w/2:cx, yIn=centerOnPoint?cy-h/2:cy;
+  let xIn=center?cx-w/2:cx, yIn=center?cy-h/2:cy;
   xIn=Math.max(0,Math.min(wall.wIn-w,xIn)); yIn=Math.max(0,Math.min(wall.hIn-h,yIn));
   wall.pieces.push({uid:++uidc,pid:src.id,title:src.title,w,h,img:src.img,xIn,yIn});
   renderAllPieces(); renderList();
@@ -360,20 +359,17 @@ function renderAllPieces(){
       d.appendChild(cap); d.appendChild(rm); attachPieceDrag(d,w,pc); w.el.appendChild(d);
     });
   });
-  flagOverlaps(); updateReadout(); scheduleSave();
+  flagOverlaps(); updateReadout(); saveLocalBackup();
 }
-function removePiece(w,pc){
-  w.pieces=w.pieces.filter(x=>x!==pc); renderAllPieces(); renderList();
-}
+function removePiece(w,pc){ w.pieces=w.pieces.filter(x=>x!==pc); renderAllPieces(); renderList(); }
 
-// ---------- overlap + readout ----------
 function flagOverlaps(){
   WALLS.forEach(w=>{
     const nodes=[...w.el.querySelectorAll('.placed')]; nodes.forEach(n=>n.classList.remove('overlap'));
     for(let i=0;i<w.pieces.length;i++)for(let j=i+1;j<w.pieces.length;j++){
       const a=w.pieces[i],b=w.pieces[j];
       if(a.xIn<b.xIn+b.w&&a.xIn+a.w>b.xIn&&a.yIn<b.yIn+b.h&&a.yIn+a.h>b.yIn){
-        nodes[i]?.classList.add('overlap'); nodes[j]?.classList.add('overlap');
+        nodes[i]?.classList.add('overlap');nodes[j]?.classList.add('overlap');
       }
     }
   });
@@ -391,17 +387,12 @@ function updateReadout(){
     cont.appendChild(el);
   });
   const cov=areaTot?artTot/areaTot*100:0;
-  $('overall').innerHTML=`<b>${count}</b> pieces total · <b>${cov.toFixed(0)}%</b> coverage — ${verdict(cov)}`;
+  $('overall').innerHTML=`<b>${count}</b> pieces · <b>${cov.toFixed(0)}%</b> total coverage — ${verdict(cov)}`;
   $('overall').className='verdict '+(cov>62?'bad':cov<35?'warn':'');
 }
-function verdict(c){
-  if(!c) return 'empty';
-  if(c<35) return 'sparse — room for more';
-  if(c>62) return 'crowded — pull one or two';
-  return 'balanced spacing';
-}
+function verdict(c){ if(!c)return 'empty'; if(c<35)return 'sparse'; if(c>62)return 'crowded'; return 'balanced'; }
 
-// ---------- drag engine ----------
+// ---------- drag ----------
 let drag=null;
 function attachListDrag(el,p){
   el.addEventListener('pointerdown',e=>{
@@ -453,73 +444,38 @@ function onDragUp(e){
 function insideWall(w,x,y){const r=w.el.getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;}
 
 // ---------- events ----------
-$('search').addEventListener('input',renderList);
-$('reload').addEventListener('click',load);
-$('clear').addEventListener('click',async()=>{WALLS.forEach(w=>w.pieces=[]);armed=null;renderAllPieces();renderList();});
-$('btnNew').addEventListener('click',newLayout);
-$('btnCopyLink').addEventListener('click',copyLink);
-$('btnShareBlank').addEventListener('click',shareBlank);
-$('layoutName').addEventListener('change',()=>{
-  currentTitle=$('layoutName').value.trim()||'Untitled layout';
-  $('layoutName').value=currentTitle;
-  if(currentId) addToIndex(currentId,currentTitle);
-  refreshSelect(); scheduleSave();
-});
-$('layoutSelect').addEventListener('change',e=>switchToLayout(e.target.value));
+$('btnSave').addEventListener('click', openSavePanel);
+$('btnConfirmSave').addEventListener('click', confirmSave);
+$('btnCancelSave').addEventListener('click', closeSavePanel);
+$('saveName').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmSave(); if(e.key==='Escape') closeSavePanel(); });
+$('btnOpenLoad').addEventListener('click', openLoadPanel);
+$('btnCloseLoad').addEventListener('click', closeLoadPanel);
+$('btnShareBlank').addEventListener('click', shareBlank);
+$('search').addEventListener('input', renderList);
+$('reload').addEventListener('click', load);
+$('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=null; renderAllPieces(); renderList(); });
 let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
 
 // ---------- init ----------
 (async function init(){
   booting=true;
   const urlId=new URLSearchParams(location.search).get('id');
-  let loaded=null;
-
   if(urlId){
-    $('savebar').textContent='Loading layout…';
-    loaded=await serverLoad(urlId);
-    // Always keep the id from the URL — don't abandon it if server is temporarily unreachable
-    currentId=urlId;
-    lsSet(LS_CURRENT,currentId);
-    if(loaded){
-      currentTitle=loaded.title||'Untitled';
+    setStatus('Loading…');
+    const data=await serverLoad(urlId);
+    if(data){
+      currentId=urlId; currentTitle=data.title||'Untitled';
       addToIndex(currentId,currentTitle);
+      const ws=safeParseWalls(data.wallsJson);
+      WALLS.forEach((w,i)=>{w.pieces=(ws[i]||[]).map(p=>({uid:++uidc,...p}));});
+      setStatus(`<b>"${currentTitle}"</b> loaded · bookmark this URL to reopen`);
     } else {
-      $('savebar').textContent='Could not reach cloud — working from local backup.';
-    }
-  } else {
-    const lastId=lsGet(LS_CURRENT);
-    if(lastId){
-      $('savebar').textContent='Loading your last layout…';
-      loaded=await serverLoad(lastId);
-      // Keep the id regardless — prevents a new layout being minted on every failed load
-      currentId=lastId;
-      history.replaceState(null,'',`?id=${lastId}`);
-      if(loaded){
-        currentTitle=loaded.title||'Untitled';
-        addToIndex(currentId,currentTitle);
-      } else {
-        $('savebar').textContent='Could not reach cloud — working from local backup.';
-      }
+      setStatus('Layout not found.');
     }
   }
-
-  if(loaded){
-    const ws=safeParseWalls(loaded.wallsJson);
-    WALLS.forEach((w,i)=>{w.pieces=(ws[i]||[]).map(p=>({uid:++uidc,...p}));});
-  } else {
-    // Restore from local backup regardless of whether we have a cloud id
-    const legacy=loadLegacy();
-    if(legacy?.walls) WALLS.forEach((w,i)=>{w.pieces=(legacy.walls[i]||[]).map(p=>({uid:++uidc,...p}));});
-  }
-
-  $('layoutName').value=currentTitle;
-  refreshSelect();
   buildScene();
   booting=false;
   load();
-  if(loaded) showSaved(loaded.updatedAt,'cloud');
-  else if(currentId) showSaved(null,'local');
-  else $('savebar').innerHTML='Place a painting to create and save a layout.';
 })();
 </script>
 </body>
