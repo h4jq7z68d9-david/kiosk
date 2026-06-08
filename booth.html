@@ -57,9 +57,6 @@
   .walltag{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.03em}
   .wall{position:relative;background:#fcfdfd;border:1px solid var(--line);border-radius:3px;box-shadow:inset 0 -10px 18px -14px rgba(43,54,64,.35)}
   .wall.hot{border-color:var(--hiviz);background:#fffdf2}
-  .guide{position:absolute;left:0;right:0;border-top:1px dashed #c3ccd2;pointer-events:none}
-  .guide.eye{border-top:1px dashed var(--accent-ink);opacity:.7}
-  .guide-lab{position:absolute;right:3px;font-size:9px;color:var(--muted);transform:translateY(-100%);pointer-events:none}
   .placed{position:absolute;background:#dfe4e8 center/cover no-repeat;border:1.5px solid var(--ink);box-sizing:border-box;cursor:grab;touch-action:none;overflow:hidden}
   .placed.big{border-color:var(--hiviz);border-width:2px}
   .placed.overlap{border-color:#d6453d;box-shadow:0 0 0 2px rgba(214,69,61,.3)}
@@ -87,10 +84,6 @@
   <p class="sub">Tap a painting then tap a wall to place it — or drag it across. Drag placed pieces to reposition; tap ✕ to remove. Your layout saves automatically on this device.</p>
 
   <div class="ctrls">
-    <label>Gap target (in)<input type="number" id="gap" value="6" min="0" step="1"></label>
-    <label>Floor clearance (in)<input type="number" id="floor" value="36" min="0" step="1"></label>
-    <label>Eye level (in)<input type="number" id="eye" value="58" min="0" step="1"></label>
-    <label><input type="checkbox" id="snap" checked> Snap to eye level</label>
     <button class="btn" id="reload">Reload catalog</button>
     <button class="btn" id="clear">Clear all walls</button>
   </div>
@@ -109,7 +102,7 @@
       <div class="readout">
         <div class="wallstats" id="wallstats"></div>
         <div id="overall" class="verdict"></div>
-        <div class="hint">Walls: left &amp; right are 10×10 ft, middle is 7×10 ft, shown to scale. Dashed gold line is eye level. Lower the floor clearance to widen the band if you want to stack. Red outline = pieces overlapping.</div>
+        <div class="hint">Walls: left &amp; right are 10×8 ft, middle is 7×8 ft, shown to scale. Place pieces anywhere on the open wall. Red outline = overlapping pieces.</div>
       </div>
     </div>
   </div>
@@ -120,9 +113,9 @@ const API = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/originals';
 const FT = 12, GAPpx = 10, LS_KEY = 'dna-booth-layout-v1';
 
 const WALLS = [
-  {name:'Left wall (10×10)',  wIn:10*FT, hIn:10*FT, el:null, pieces:[]},
-  {name:'Center wall (7×10)', wIn:7*FT,  hIn:10*FT, el:null, pieces:[]},
-  {name:'Right wall (10×10)', wIn:10*FT, hIn:10*FT, el:null, pieces:[]},
+  {name:'Left wall (10×8)',  wIn:10*FT, hIn:8*FT, el:null, pieces:[]},
+  {name:'Center wall (7×8)', wIn:7*FT,  hIn:8*FT, el:null, pieces:[]},
+  {name:'Right wall (10×8)', wIn:10*FT, hIn:8*FT, el:null, pieces:[]},
 ];
 const totalWin = WALLS.reduce((a,w)=>a+w.wIn,0);
 
@@ -140,7 +133,6 @@ function saveState(){
   if(booting) return;
   const data = {
     v:1, savedAt:Date.now(),
-    controls:{gap:num('gap'),floor:num('floor'),eye:num('eye'),snap:$('snap').checked},
     walls: WALLS.map(w=>w.pieces.map(p=>({pid:p.pid,title:p.title,w:p.w,h:p.h,img:p.img,xIn:p.xIn,yIn:p.yIn})))
   };
   const okSave = lsSet(LS_KEY, JSON.stringify(data));
@@ -173,19 +165,10 @@ function buildScene(){
     const tag=document.createElement('div'); tag.className='walltag'; tag.textContent=w.name;
     const wall=document.createElement('div'); wall.className='wall';
     wall.style.width=(w.wIn*scale)+'px'; wall.style.height=(w.hIn*scale)+'px'; wall.dataset.idx=i;
-    addGuide(wall, num('eye'),'eye','eye '+num('eye')+'"');
-    addGuide(wall, num('floor'),'flo','floor +'+num('floor')+'"');
     wall.addEventListener('click', e=>onWallTap(e,i));
     w.el=wall; col.appendChild(tag); col.appendChild(wall); inner.appendChild(col);
   });
   renderAllPieces();
-}
-function addGuide(wall, fromBottomIn, kind, label){
-  const w=WALLS[+wall.dataset.idx], topIn=(w.hIn-fromBottomIn);
-  const g=document.createElement('div'); g.className='guide'+(kind==='eye'?' eye':'');
-  g.style.top=(topIn*scale)+'px'; wall.appendChild(g);
-  const l=document.createElement('div'); l.className='guide-lab';
-  l.style.top=(topIn*scale)+'px'; l.textContent=label; wall.appendChild(l);
 }
 
 // ---------- catalog ----------
@@ -234,7 +217,6 @@ function onWallTap(e, idx){
 function place(src, idx, cx, cy, centerOnPoint){
   const w=src.w||24, h=src.h||30, wall=WALLS[idx];
   let xIn=centerOnPoint?cx-w/2:cx, yIn=centerOnPoint?cy-h/2:cy;
-  if($('snap').checked) yIn=(wall.hIn-num('eye'))-h/2;
   xIn=Math.max(0,Math.min(wall.wIn-w,xIn)); yIn=Math.max(0,Math.min(wall.hIn-h,yIn));
   wall.pieces.push({uid:++uidc, pid:src.id, title:src.title, w, h, img:src.img, xIn, yIn});
   renderAllPieces(); renderList();
@@ -342,16 +324,11 @@ function insideWall(w,x,y){ const r=w.el.getBoundingClientRect(); return x>=r.le
 $('search').addEventListener('input', renderList);
 $('reload').addEventListener('click', load);
 $('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=null; renderAllPieces(); renderList(); });
-['gap','floor','eye','snap'].forEach(id=>$(id).addEventListener('change', buildScene));
 let rz; window.addEventListener('resize', ()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
 
 // ---------- init (restore saved layout) ----------
 (function init(){
   const saved=loadSaved();
-  if(saved?.controls){
-    $('gap').value=saved.controls.gap; $('floor').value=saved.controls.floor;
-    $('eye').value=saved.controls.eye; $('snap').checked=!!saved.controls.snap;
-  }
   buildScene();
   if(saved?.walls){
     saved.walls.forEach((arr,i)=>{ if(WALLS[i]) WALLS[i].pieces=arr.map(p=>({uid:++uidc,...p})); });
