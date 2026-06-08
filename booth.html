@@ -303,7 +303,7 @@ async function load(){
   $('loadMsg').style.display='block'; $('loadMsg').textContent='Loading catalog…';
   try{
     const r=await fetch(API,{cache:'no-store'}); const d=await r.json();
-    catalog=(d.originals||[]).map(o=>({id:o.id,title:o.title||'Untitled',w:o.width||null,h:o.height||null,img:o.img||null}));
+    catalog=(d.originals||[]).filter(o=>!o.atGallery).map(o=>({id:o.id,title:o.title||'Untitled',w:o.width||null,h:o.height||null,img:o.img||null}));
     $('loadMsg').style.display='none';
   }catch{
     $('loadMsg').textContent='Catalog unavailable (offline?). Using generic sizes.';

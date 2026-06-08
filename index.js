@@ -242,10 +242,11 @@ async function getProducts() {
 async function getOriginals() {
   const SELF = process.env.API_URL || 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
 
-  const [itemsRes, imagesRes, configRes] = await Promise.all([
+  const [itemsRes, imagesRes, configRes, paintingsRes] = await Promise.all([
     squareGet(`/v2/catalog/list?types=ITEM&location_id=${SQUARE_LOC}`),
     squareGet(`/v2/catalog/list?types=IMAGE`),
     dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } })),
+    dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE, ProjectionExpression: 'squareId, atGallery, title' })),
   ]);
 
   const rate = configRes.Item?.rate ?? null;
@@ -254,6 +255,17 @@ async function getOriginals() {
   const imageMap = {};
   for (const img of (imagesRes.objects || [])) {
     if (img.image_data?.url) imageMap[img.id] = img.image_data.url;
+  }
+
+  // Build sets of Square IDs / titles for paintings currently at a gallery
+  const normT = t => (t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const gallerySquareIds   = new Set();
+  const galleryNormTitles  = new Set();
+  for (const p of (paintingsRes.Items || [])) {
+    if (p.atGallery) {
+      if (p.squareId) gallerySquareIds.add(p.squareId);
+      if (p.title)    galleryNormTitles.add(normT(p.title));
+    }
   }
 
   // Read a named custom attribute value from an object
@@ -294,6 +306,8 @@ async function getOriginals() {
       price = Math.ceil((width * height * effRate) / 50) * 50;
     }
 
+    const atGallery = gallerySquareIds.has(obj.id) || galleryNormTitles.has(normT(item.name)) || null;
+
     originals.push({
       id:     obj.id,
       title:  item.name,
@@ -305,6 +319,7 @@ async function getOriginals() {
       height,
       medium,
       price,
+      atGallery,
     });
   }
 
