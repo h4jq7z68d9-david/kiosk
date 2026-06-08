@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="robots" content="noindex,nofollow">
+<title>Booth Planner — David Nicholson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2b3640; --paper:#f1f3f5; --hiviz:#e6b400; --accent-ink:#b58600;
+    --line:#cdd4da; --card:#ffffff; --muted:#5b6770;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-weight:300;line-height:1.45;padding:16px;
+  }
+  .wrap{max-width:1500px;margin:0 auto}
+  h1{font-size:21px;font-weight:700;margin:0 0 2px}
+  .sub{font-size:13px;color:var(--muted);margin:0 0 14px}
+  .layout{display:flex;gap:16px;align-items:flex-start}
+  @media(max-width:820px){.layout{flex-direction:column}}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;flex:0 0 280px;align-self:stretch}
+  @media(max-width:820px){.panel{flex:1 1 auto;width:100%}}
+  .panel h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px}
+  .search{width:100%;font-family:inherit;font-size:14px;padding:8px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px}
+  .search:focus{outline:none;border-color:var(--accent-ink)}
+  .list{max-height:60vh;overflow-y:auto;touch-action:pan-y;display:flex;flex-direction:column;gap:6px;padding-right:2px}
+  @media(max-width:820px){.list{max-height:170px;flex-direction:row;overflow-x:auto;overflow-y:hidden;touch-action:pan-x}}
+  .pitem{display:flex;gap:9px;align-items:center;padding:6px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+  @media(max-width:820px){.pitem{flex:0 0 200px}}
+  .pitem.armed{border-color:var(--hiviz);box-shadow:0 0 0 2px rgba(230,180,0,.35)}
+  .pitem.used{opacity:.42}
+  .pthumb{width:42px;height:42px;flex:0 0 42px;border-radius:4px;background:#e7ebee center/cover no-repeat;border:1px solid var(--line)}
+  .pmeta{min-width:0}
+  .ptitle{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pdim{font-size:11px;color:var(--muted)}
+  .pdim.nodim{color:var(--accent-ink)}
+
+  .ctrls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:6px;font-size:13px}
+  .ctrls label{display:flex;align-items:center;gap:6px;font-weight:500}
+  .ctrls input[type=number]{width:62px;font-family:inherit;font-size:14px;padding:5px 6px;border:1px solid var(--line);border-radius:6px}
+  .ctrls input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent-ink)}
+  .btn{font-family:inherit;font-size:13px;font-weight:500;padding:7px 13px;border-radius:7px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink)}
+  .savebar{font-size:12px;color:var(--muted);margin-bottom:12px}
+  .savebar b{color:var(--ink);font-weight:600}
+
+  .stage{flex:1 1 auto;min-width:0}
+  .scene{width:100%;overflow-x:auto;padding-bottom:6px}
+  .sceneInner{display:flex;align-items:flex-end;gap:10px}
+  .wallcol{display:flex;flex-direction:column;gap:5px}
+  .walltag{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.03em}
+  .wall{position:relative;background:#fcfdfd;border:1px solid var(--line);border-radius:3px;box-shadow:inset 0 -10px 18px -14px rgba(43,54,64,.35)}
+  .wall.hot{border-color:var(--hiviz);background:#fffdf2}
+  .guide{position:absolute;left:0;right:0;border-top:1px dashed #c3ccd2;pointer-events:none}
+  .guide.eye{border-top:1px dashed var(--accent-ink);opacity:.7}
+  .guide-lab{position:absolute;right:3px;font-size:9px;color:var(--muted);transform:translateY(-100%);pointer-events:none}
+  .placed{position:absolute;background:#dfe4e8 center/cover no-repeat;border:1.5px solid var(--ink);box-sizing:border-box;cursor:grab;touch-action:none;overflow:hidden}
+  .placed.big{border-color:var(--hiviz);border-width:2px}
+  .placed.overlap{border-color:#d6453d;box-shadow:0 0 0 2px rgba(214,69,61,.3)}
+  .placed .cap{position:absolute;left:0;right:0;bottom:0;background:rgba(43,54,64,.78);color:#fff;font-size:9px;line-height:1.2;padding:2px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .placed .rm{position:absolute;top:1px;right:1px;width:16px;height:16px;border-radius:50%;background:rgba(43,54,64,.85);color:#fff;font-size:11px;line-height:16px;text-align:center;cursor:pointer}
+  .ghost{position:fixed;z-index:999;pointer-events:none;background:#dfe4e8 center/cover no-repeat;border:2px solid var(--hiviz);opacity:.82;border-radius:2px}
+
+  .readout{margin-top:12px;font-size:13px}
+  .wallstats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+  .wstat{flex:1 1 150px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+  .wstat .nm{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  .wstat .big{font-size:17px;font-weight:700}
+  .bar{height:6px;border-radius:3px;background:#e7ebee;margin-top:5px;overflow:hidden}
+  .bar > i{display:block;height:100%;background:var(--accent-ink)}
+  .verdict{font-size:13px;color:var(--muted);margin-top:2px}
+  .verdict.warn{color:var(--accent-ink);font-weight:500}
+  .verdict.bad{color:#d6453d;font-weight:500}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+  #loadMsg{font-size:13px;color:var(--muted);padding:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Booth Planner</h1>
+  <p class="sub">Tap a painting then tap a wall to place it — or drag it across. Drag placed pieces to reposition; tap ✕ to remove. Your layout saves automatically on this device.</p>
+
+  <div class="ctrls">
+    <label>Gap target (in)<input type="number" id="gap" value="6" min="0" step="1"></label>
+    <label>Floor clearance (in)<input type="number" id="floor" value="36" min="0" step="1"></label>
+    <label>Eye level (in)<input type="number" id="eye" value="58" min="0" step="1"></label>
+    <label><input type="checkbox" id="snap" checked> Snap to eye level</label>
+    <button class="btn" id="reload">Reload catalog</button>
+    <button class="btn" id="clear">Clear all walls</button>
+  </div>
+  <div class="savebar" id="savebar">Layout saves automatically.</div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Your originals</h2>
+      <input class="search" id="search" placeholder="Filter by title…">
+      <div id="loadMsg">Loading catalog…</div>
+      <div class="list" id="list"></div>
+    </div>
+
+    <div class="stage">
+      <div class="scene"><div class="sceneInner" id="sceneInner"></div></div>
+      <div class="readout">
+        <div class="wallstats" id="wallstats"></div>
+        <div id="overall" class="verdict"></div>
+        <div class="hint">Walls: left &amp; right are 10×10 ft, middle is 7×10 ft, shown to scale. Dashed gold line is eye level. Lower the floor clearance to widen the band if you want to stack. Red outline = pieces overlapping.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/originals';
+const FT = 12, GAPpx = 10, LS_KEY = 'dna-booth-layout-v1';
+
+const WALLS = [
+  {name:'Left wall (10×10)',  wIn:10*FT, hIn:10*FT, el:null, pieces:[]},
+  {name:'Center wall (7×10)', wIn:7*FT,  hIn:10*FT, el:null, pieces:[]},
+  {name:'Right wall (10×10)', wIn:10*FT, hIn:10*FT, el:null, pieces:[]},
+];
+const totalWin = WALLS.reduce((a,w)=>a+w.wIn,0);
+
+let scale = 2.6, catalog = [], armed = null, uidc = 0, suppressWallTap = false, booting = true;
+
+const $ = id => document.getElementById(id);
+const num = id => parseFloat($(id).value)||0;
+const isBig = p => (p.w>=30 || p.h>=30);
+const isPlaced = p => WALLS.some(w=>w.pieces.some(pc=>pc.pid===p.id));
+
+// ---------- persistence (guarded so it degrades gracefully if storage is blocked) ----------
+function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+function lsSet(k,v){ try{localStorage.setItem(k,v);return true;}catch(e){return false;} }
+function saveState(){
+  if(booting) return;
+  const data = {
+    v:1, savedAt:Date.now(),
+    controls:{gap:num('gap'),floor:num('floor'),eye:num('eye'),snap:$('snap').checked},
+    walls: WALLS.map(w=>w.pieces.map(p=>({pid:p.pid,title:p.title,w:p.w,h:p.h,img:p.img,xIn:p.xIn,yIn:p.yIn})))
+  };
+  const okSave = lsSet(LS_KEY, JSON.stringify(data));
+  showSaved(okSave ? data.savedAt : null);
+}
+function loadSaved(){ const r=lsGet(LS_KEY); if(!r) return null; try{return JSON.parse(r);}catch(e){return null;} }
+function showSaved(ts){
+  const bar=$('savebar');
+  if(ts){
+    const t=new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+    bar.innerHTML=`Layout saved on this device · <b>${t}</b>`;
+  } else {
+    bar.textContent='Layout saves automatically (storage unavailable in this view — changes won’t persist here).';
+  }
+}
+
+// ---------- scale ----------
+function computeScale(){
+  const sceneW = $('sceneInner').parentElement.clientWidth - 4;
+  scale = Math.max(1.3, Math.min(3.4,(sceneW - GAPpx*(WALLS.length-1)) / totalWin));
+}
+
+// ---------- build walls ----------
+function buildScene(){
+  computeScale();
+  const inner = $('sceneInner'); inner.innerHTML='';
+  inner.style.width = (totalWin*scale + GAPpx*(WALLS.length-1)) + 'px';
+  WALLS.forEach((w,i)=>{
+    const col=document.createElement('div'); col.className='wallcol';
+    const tag=document.createElement('div'); tag.className='walltag'; tag.textContent=w.name;
+    const wall=document.createElement('div'); wall.className='wall';
+    wall.style.width=(w.wIn*scale)+'px'; wall.style.height=(w.hIn*scale)+'px'; wall.dataset.idx=i;
+    addGuide(wall, num('eye'),'eye','eye '+num('eye')+'"');
+    addGuide(wall, num('floor'),'flo','floor +'+num('floor')+'"');
+    wall.addEventListener('click', e=>onWallTap(e,i));
+    w.el=wall; col.appendChild(tag); col.appendChild(wall); inner.appendChild(col);
+  });
+  renderAllPieces();
+}
+function addGuide(wall, fromBottomIn, kind, label){
+  const w=WALLS[+wall.dataset.idx], topIn=(w.hIn-fromBottomIn);
+  const g=document.createElement('div'); g.className='guide'+(kind==='eye'?' eye':'');
+  g.style.top=(topIn*scale)+'px'; wall.appendChild(g);
+  const l=document.createElement('div'); l.className='guide-lab';
+  l.style.top=(topIn*scale)+'px'; l.textContent=label; wall.appendChild(l);
+}
+
+// ---------- catalog ----------
+async function load(){
+  $('loadMsg').style.display='block'; $('loadMsg').textContent='Loading catalog…';
+  try{
+    const r=await fetch(API,{cache:'no-store'}); const d=await r.json();
+    catalog=(d.originals||[]).map(o=>({id:o.id,title:o.title||'Untitled',w:o.width||null,h:o.height||null,img:o.img||null}));
+    $('loadMsg').style.display='none';
+  }catch(e){
+    $('loadMsg').textContent='Catalog unavailable (offline?). Using generic sizes.';
+    catalog=[
+      {id:'g1',title:'30×40 block',w:30,h:40,img:null},
+      {id:'g2',title:'22×28 block',w:22,h:28,img:null},
+      {id:'g3',title:'18×24 block',w:18,h:24,img:null},
+      {id:'g4',title:'11×14 block',w:11,h:14,img:null},
+      {id:'g5',title:'9×12 block', w:9, h:12,img:null},
+    ];
+  }
+  renderList();
+}
+function renderList(){
+  const q=$('search').value.trim().toLowerCase(), list=$('list'); list.innerHTML='';
+  catalog.filter(p=>!q||p.title.toLowerCase().includes(q)).forEach(p=>{
+    const it=document.createElement('div');
+    it.className='pitem'+(p===armed?' armed':'')+(isPlaced(p)?' used':'');
+    const th=document.createElement('div'); th.className='pthumb'; if(p.img) th.style.backgroundImage=`url("${p.img}")`;
+    const meta=document.createElement('div'); meta.className='pmeta';
+    const t=document.createElement('div'); t.className='ptitle'; t.textContent=p.title;
+    const dm=document.createElement('div'); dm.className='pdim'+((p.w&&p.h)?'':' nodim');
+    dm.textContent=(p.w&&p.h)?`${p.w}×${p.h} in`:'no size set — defaults 24×30';
+    meta.appendChild(t); meta.appendChild(dm); it.appendChild(th); it.appendChild(meta);
+    attachListDrag(it,p); list.appendChild(it);
+  });
+}
+
+// ---------- tap-to-place ----------
+function onWallTap(e, idx){
+  if(suppressWallTap||!armed) return;
+  const rect=WALLS[idx].el.getBoundingClientRect();
+  place(armed, idx,(e.clientX-rect.left)/scale,(e.clientY-rect.top)/scale, true);
+  armed=null; renderList();
+}
+
+// ---------- placement ----------
+function place(src, idx, cx, cy, centerOnPoint){
+  const w=src.w||24, h=src.h||30, wall=WALLS[idx];
+  let xIn=centerOnPoint?cx-w/2:cx, yIn=centerOnPoint?cy-h/2:cy;
+  if($('snap').checked) yIn=(wall.hIn-num('eye'))-h/2;
+  xIn=Math.max(0,Math.min(wall.wIn-w,xIn)); yIn=Math.max(0,Math.min(wall.hIn-h,yIn));
+  wall.pieces.push({uid:++uidc, pid:src.id, title:src.title, w, h, img:src.img, xIn, yIn});
+  renderAllPieces(); renderList();
+}
+function renderAllPieces(){
+  WALLS.forEach(w=>{
+    [...w.el.querySelectorAll('.placed')].forEach(n=>n.remove());
+    w.pieces.forEach(pc=>{
+      const d=document.createElement('div'); d.className='placed'+(isBig(pc)?' big':'');
+      d.style.left=(pc.xIn*scale)+'px'; d.style.top=(pc.yIn*scale)+'px';
+      d.style.width=(pc.w*scale)+'px'; d.style.height=(pc.h*scale)+'px';
+      if(pc.img) d.style.backgroundImage=`url("${pc.img}")`;
+      const cap=document.createElement('div'); cap.className='cap'; cap.textContent=pc.title;
+      const rm=document.createElement('div'); rm.className='rm'; rm.textContent='×';
+      rm.addEventListener('pointerdown',ev=>ev.stopPropagation());
+      rm.addEventListener('click',ev=>{ev.stopPropagation(); removePiece(w,pc);});
+      d.appendChild(cap); d.appendChild(rm); attachPieceDrag(d,w,pc); w.el.appendChild(d);
+    });
+  });
+  flagOverlaps(); updateReadout(); saveState();
+}
+function removePiece(w,pc){ w.pieces=w.pieces.filter(x=>x!==pc); renderAllPieces(); renderList(); }
+
+function flagOverlaps(){
+  WALLS.forEach(w=>{
+    const nodes=[...w.el.querySelectorAll('.placed')]; nodes.forEach(n=>n.classList.remove('overlap'));
+    for(let i=0;i<w.pieces.length;i++)for(let j=i+1;j<w.pieces.length;j++){
+      const a=w.pieces[i],b=w.pieces[j];
+      if(a.xIn<b.xIn+b.w&&a.xIn+a.w>b.xIn&&a.yIn<b.yIn+b.h&&a.yIn+a.h>b.yIn){
+        nodes[i]?.classList.add('overlap'); nodes[j]?.classList.add('overlap');
+      }
+    }
+  });
+}
+function updateReadout(){
+  const cont=$('wallstats'); cont.innerHTML=''; let artTot=0,areaTot=0,count=0;
+  WALLS.forEach(w=>{
+    const art=w.pieces.reduce((a,p)=>a+p.w*p.h,0), area=w.wIn*w.hIn;
+    artTot+=art; areaTot+=area; count+=w.pieces.length;
+    const cov=area?art/area*100:0;
+    const el=document.createElement('div'); el.className='wstat';
+    el.innerHTML=`<div class="nm">${w.name}</div><div class="big">${cov.toFixed(0)}%</div>
+      <div class="bar"><i style="width:${Math.min(100,cov)}%"></i></div>
+      <div class="verdict">${w.pieces.length} pieces · ${verdict(cov)}</div>`;
+    cont.appendChild(el);
+  });
+  const cov=areaTot?artTot/areaTot*100:0;
+  $('overall').innerHTML=`<b>${count}</b> pieces total · <b>${cov.toFixed(0)}%</b> coverage across all three walls — ${verdict(cov)}`;
+  $('overall').className='verdict '+(cov>62?'bad':cov<35?'warn':'');
+}
+function verdict(c){ if(c===0)return 'empty'; if(c<35)return 'sparse — room for more'; if(c>62)return 'crowded — pull one or two'; return 'balanced spacing'; }
+
+// ---------- drag engine ----------
+let drag=null;
+function attachListDrag(el,p){
+  el.addEventListener('pointerdown',e=>{
+    if(e.button!==undefined&&e.button!==0)return;
+    drag={payload:{id:p.id,title:p.title,w:p.w,h:p.h,img:p.img,catObj:p}, fromWall:null, fromPiece:null, ghost:null, started:false, sx:e.clientX, sy:e.clientY, w:(p.w||24), h:(p.h||30)};
+    window.addEventListener('pointermove',onDragMove); window.addEventListener('pointerup',onDragUp,{once:true});
+  });
+}
+function attachPieceDrag(el,wall,pc){
+  el.addEventListener('pointerdown',e=>{
+    if(e.target.classList.contains('rm'))return;
+    if(e.button!==undefined&&e.button!==0)return;
+    drag={payload:{id:pc.pid,title:pc.title,w:pc.w,h:pc.h,img:pc.img}, fromWall:wall, fromPiece:pc, ghost:null, started:false, sx:e.clientX, sy:e.clientY, w:pc.w, h:pc.h};
+    window.addEventListener('pointermove',onDragMove); window.addEventListener('pointerup',onDragUp,{once:true});
+  });
+}
+function onDragMove(e){
+  if(!drag)return;
+  if(!drag.started){
+    if(Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)<8)return;
+    drag.started=true; document.body.style.userSelect='none';
+    if(drag.fromPiece){ drag.fromWall.pieces=drag.fromWall.pieces.filter(x=>x!==drag.fromPiece); renderAllPieces(); }
+    const g=document.createElement('div'); g.className='ghost';
+    g.style.width=(drag.w*scale)+'px'; g.style.height=(drag.h*scale)+'px';
+    if(drag.payload.img) g.style.backgroundImage=`url("${drag.payload.img}")`;
+    document.body.appendChild(g); drag.ghost=g;
+  }
+  drag.ghost.style.left=(e.clientX-drag.w*scale/2)+'px';
+  drag.ghost.style.top =(e.clientY-drag.h*scale/2)+'px';
+  WALLS.forEach(w=>w.el.classList.toggle('hot', insideWall(w,e.clientX,e.clientY)));
+}
+function onDragUp(e){
+  window.removeEventListener('pointermove',onDragMove); document.body.style.userSelect='';
+  if(!drag)return;
+  WALLS.forEach(w=>w.el.classList.remove('hot'));
+  if(!drag.started){
+    if(!drag.fromPiece){ armed=(armed===drag.payload.catObj)?null:drag.payload.catObj; renderList(); }
+    drag=null; return;
+  }
+  if(drag.ghost) drag.ghost.remove();
+  const target=WALLS.findIndex(w=>insideWall(w,e.clientX,e.clientY));
+  if(target>=0){
+    const rect=WALLS[target].el.getBoundingClientRect();
+    place(drag.payload, target,(e.clientX-rect.left)/scale,(e.clientY-rect.top)/scale, true);
+  } else if(drag.fromPiece){ drag.fromWall.pieces.push(drag.fromPiece); renderAllPieces(); }
+  suppressWallTap=true; setTimeout(()=>suppressWallTap=false,120);
+  drag=null;
+}
+function insideWall(w,x,y){ const r=w.el.getBoundingClientRect(); return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom; }
+
+// ---------- events ----------
+$('search').addEventListener('input', renderList);
+$('reload').addEventListener('click', load);
+$('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=null; renderAllPieces(); renderList(); });
+['gap','floor','eye','snap'].forEach(id=>$(id).addEventListener('change', buildScene));
+let rz; window.addEventListener('resize', ()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
+
+// ---------- init (restore saved layout) ----------
+(function init(){
+  const saved=loadSaved();
+  if(saved?.controls){
+    $('gap').value=saved.controls.gap; $('floor').value=saved.controls.floor;
+    $('eye').value=saved.controls.eye; $('snap').checked=!!saved.controls.snap;
+  }
+  buildScene();
+  if(saved?.walls){
+    saved.walls.forEach((arr,i)=>{ if(WALLS[i]) WALLS[i].pieces=arr.map(p=>({uid:++uidc,...p})); });
+    renderAllPieces();
+  }
+  showSaved(saved?.savedAt || null);
+  booting=false;
+  load();
+})();
+</script>
+</body>
+</html>

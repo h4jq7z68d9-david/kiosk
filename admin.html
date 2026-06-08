@@ -399,6 +399,7 @@
       <span class="badge">Admin</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
+      <a class="btn-sm" href="/booth.html" style="text-decoration:none">Booth Planner</a>
       <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="openQuickSaleModal()">+ Sale</button>
       <button class="btn-logout" onclick="logout()">sign out</button>
     </div>
@@ -1136,12 +1137,6 @@ function renderPrintsTab() {
     r.score = Math.round(((r.totalSold / maxSold) * 0.7 + r.recencyScore * 0.3) * 100);
   });
 
-  const TIERS = [
-    { id: 0, label: 'Out of Stock',       color: 'var(--red)',    desc: 'At least one size at zero' },
-    { id: 1, label: 'Low Stock',          color: 'var(--accent)', desc: '1 remaining in at least one size' },
-    { id: 2, label: 'Below Goal',         color: 'var(--ink2)',   desc: 'Has stock but under goal' },
-    { id: 3, label: 'Stocked',            color: 'var(--ink3)',   desc: 'At or above goal on both sizes' },
-  ];
 
   const COLS = [
     { key: 'title',    label: 'Title',    align: 'left',   val: r => r.p.title },
@@ -1195,37 +1190,18 @@ function renderPrintsTab() {
     }).join('');
   }
 
-  const isSorting = !!printsSort.col;
   const container = document.getElementById('prints-container');
+  const zeroLarge = document.getElementById('prints-zero-large')?.checked;
+  const zeroSmall = document.getElementById('prints-zero-small')?.checked;
+  const passesZeroFilter = r => {
+    if (zeroLarge && r.lgStock !== 0) return false;
+    if (zeroSmall && r.smStock !== 0) return false;
+    return true;
+  };
+  const sorted = sortRows(rows.filter(passesZeroFilter));
 
-  if (isSorting) {
-    // Single flat sorted table
-    const sorted = sortRows([...rows]);
-    container.innerHTML = `
-      <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink2)">All Prints</span>
-          <div style="display:flex;align-items:center;gap:16px">
-            <button onclick="printsClearSort()" style="font-size:12px;color:var(--accent-ink);background:none;border:none;cursor:pointer;padding:0">✕ Clear sort</button>
-            <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small</span>
-          </div>
-        </div>
-        <div class="table-section"><div style="overflow-x:auto"><table>${buildThead('all')}
-          <tbody>${buildRows(sorted, GOAL_LARGE, GOAL_SMALL)}</tbody>
-        </table></div></div>
-      </div>`;
-  } else {
-    // Separate table per tier
-    const zeroLarge = document.getElementById('prints-zero-large')?.checked;
-    const zeroSmall = document.getElementById('prints-zero-small')?.checked;
-    const anyZeroFilter = zeroLarge || zeroSmall;
-    const passesZeroFilter = r => {
-      if (zeroLarge && r.lgStock !== 0) return false;
-      if (zeroSmall && r.smStock !== 0) return false;
-      return true;
-    };
-    const visibleTiers = anyZeroFilter ? TIERS.filter(t => t.id === 0) : TIERS;
-    let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+  container.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
       <div style="display:flex;align-items:center;gap:14px">
         <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
           <input type="checkbox" id="prints-zero-large" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroLarge ? 'checked' : ''}>
@@ -1235,27 +1211,13 @@ function renderPrintsTab() {
           <input type="checkbox" id="prints-zero-small" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroSmall ? 'checked' : ''}>
           0 small
         </label>
+        ${printsSort.col ? `<button onclick="printsClearSort()" style="font-size:12px;color:var(--accent-ink);background:none;border:none;cursor:pointer;padding:0">✕ Clear sort</button>` : ''}
       </div>
       <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small · Click any column to sort</span>
-    </div>`;
-
-    visibleTiers.forEach(tier => {
-      const tierRows = sortRows(rows.filter(r => r.tier === tier.id && passesZeroFilter(r)));
-      if (!tierRows.length) return;
-      html += `
-        <div>
-          <div style="margin-bottom:8px">
-            <span style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${tier.color}">${tier.label}</span>
-            <span style="font-size:11px;color:var(--ink3);margin-left:8px">${tier.desc}</span>
-            <span style="font-size:11px;color:var(--ink3);margin-left:8px">(${tierRows.length})</span>
-          </div>
-          <div class="table-section"><div style="overflow-x:auto"><table>${buildThead(tier.id)}
-            <tbody>${buildRows(tierRows, GOAL_LARGE, GOAL_SMALL)}</tbody>
-          </table></div></div>
-        </div>`;
-    });
-    container.innerHTML = html;
-  }
+    </div>
+    <div class="table-section"><div style="overflow-x:auto"><table>${buildThead('all')}
+      <tbody>${buildRows(sorted, GOAL_LARGE, GOAL_SMALL)}</tbody>
+    </table></div></div>`;
 }
 
 function printsSortBy(col) {
