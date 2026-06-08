@@ -477,20 +477,28 @@ let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(bui
   if(urlId){
     $('savebar').textContent='Loading layout…';
     loaded=await serverLoad(urlId);
+    // Always keep the id from the URL — don't abandon it if server is temporarily unreachable
+    currentId=urlId;
+    lsSet(LS_CURRENT,currentId);
     if(loaded){
-      currentId=urlId; currentTitle=loaded.title||'Untitled';
-      addToIndex(currentId,currentTitle); lsSet(LS_CURRENT,currentId);
+      currentTitle=loaded.title||'Untitled';
+      addToIndex(currentId,currentTitle);
     } else {
-      $('savebar').textContent='Layout not found — starting blank.';
+      $('savebar').textContent='Could not reach cloud — working from local backup.';
     }
   } else {
     const lastId=lsGet(LS_CURRENT);
     if(lastId){
       $('savebar').textContent='Loading your last layout…';
       loaded=await serverLoad(lastId);
+      // Keep the id regardless — prevents a new layout being minted on every failed load
+      currentId=lastId;
+      history.replaceState(null,'',`?id=${lastId}`);
       if(loaded){
-        currentId=lastId; currentTitle=loaded.title||'Untitled';
-        history.replaceState(null,'',`?id=${lastId}`);
+        currentTitle=loaded.title||'Untitled';
+        addToIndex(currentId,currentTitle);
+      } else {
+        $('savebar').textContent='Could not reach cloud — working from local backup.';
       }
     }
   }
@@ -498,9 +506,8 @@ let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(bui
   if(loaded){
     const ws=safeParseWalls(loaded.wallsJson);
     WALLS.forEach((w,i)=>{w.pieces=(ws[i]||[]).map(p=>({uid:++uidc,...p}));});
-    addToIndex(currentId,currentTitle);
-  } else if(!urlId){
-    // Migrate any legacy localStorage layout
+  } else {
+    // Restore from local backup regardless of whether we have a cloud id
     const legacy=loadLegacy();
     if(legacy?.walls) WALLS.forEach((w,i)=>{w.pieces=(legacy.walls[i]||[]).map(p=>({uid:++uidc,...p}));});
   }
@@ -511,7 +518,8 @@ let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(bui
   booting=false;
   load();
   if(loaded) showSaved(loaded.updatedAt,'cloud');
-  else if(!currentId) $('savebar').innerHTML='Place a painting to create and save a layout.';
+  else if(currentId) showSaved(null,'local');
+  else $('savebar').innerHTML='Place a painting to create and save a layout.';
 })();
 </script>
 </body>
