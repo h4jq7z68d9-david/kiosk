@@ -499,6 +499,8 @@ $('btnOpenLoad').addEventListener('click', openLoadPanel);
 $('btnCloseLoad').addEventListener('click', closeLoadPanel);
 $('btnShareBlank').addEventListener('click', shareBlank);
 $('search').addEventListener('input', renderList);
+$('listPrev').addEventListener('click', () => { $('list').scrollLeft -= 210; });
+$('listNext').addEventListener('click', () => { $('list').scrollLeft += 210; });
 $('reload').addEventListener('click', load);
 $('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=null; renderAllPieces(); renderList(); });
 let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
