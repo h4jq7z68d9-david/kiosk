@@ -456,6 +456,12 @@ $('reload').addEventListener('click', load);
 $('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=null; renderAllPieces(); renderList(); });
 let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
 
+// Unregister any service worker controlling this page — booth.html doesn't need one
+// and the admin/kiosk SWs interfere with cross-origin PUT requests
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+}
+
 // ---------- init ----------
 (async function init(){
   booting=true;
