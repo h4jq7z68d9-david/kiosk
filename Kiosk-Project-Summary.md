@@ -2,17 +2,18 @@
 
 ## What’s Live
 
-|URL                                                 |Purpose                                                        |
-|----------------------------------------------------|---------------------------------------------------------------|
-|<https://davidnicholsonart.com>                     |Main entry point / homepage (index.html) — primary public site |
-|<https://davidnicholsonart.com/gallery.html>        |Public print gallery with cart + checkout                      |
-|<https://davidnicholsonart.com/shop.html>           |Shop page                                                      |
-|<https://davidnicholsonart.com/shipping.html>       |Shipping & returns info                                        |
-|<https://davidnicholsonart.com/kiosk.html>          |iPad kiosk for art fairs                                       |
-|<https://davidnicholsonart.com/admin.html>          |Admin dashboard — password gated (172377)                      |
-|<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal     |
-|<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)|
-|<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                         |
+|URL                                                 |Purpose                                                          |
+|----------------------------------------------------|-----------------------------------------------------------------|
+|<https://davidnicholsonart.com>                     |Main entry point / homepage (index.html) — primary public site   |
+|<https://davidnicholsonart.com/gallery.html>        |Public print gallery with cart + checkout                        |
+|<https://davidnicholsonart.com/shop.html>           |Shop page                                                        |
+|<https://davidnicholsonart.com/shipping.html>       |Shipping & returns info                                          |
+|<https://davidnicholsonart.com/kiosk.html>          |iPad kiosk for art fairs                                         |
+|<https://davidnicholsonart.com/admin.html>          |Admin dashboard — password gated (172377)                        |
+|<https://davidnicholsonart.com/booth.html>          |Booth planner — art fair wall layout tool (noindex, admin-linked)|
+|<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal       |
+|<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)  |
+|<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                           |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
 **Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3, deploys Lambda, and invalidates both CloudFront distributions in ~60 seconds.
@@ -33,16 +34,18 @@ The site is deployed and working. Push changes to GitHub — deploy is automatic
 
 **CloudFront E2EJH38GWGPEPG behaviors (in order):**
 
-|Precedence|Path       |Origin     |Notes                                                  |
-|----------|-----------|-----------|-------------------------------------------------------|
-|0         |/products  |API Gateway|Lambda products endpoint                               |
-|1         |/hero      |API Gateway|Lambda hero endpoint                                   |
-|2         |/image*    |API Gateway|Lambda image proxy — forwards query string             |
-|3         |/feed.xml  |API Gateway|Lambda feed endpoint                                   |
-|4         |/admin/*   |API Gateway|Lambda admin endpoints                                 |
-|5         |/prints/*  |S3         |Per-product OG redirect pages                          |
-|6         |/receipts/*|S3         |Receipt file storage — publicly readable via CloudFront|
-|7         |Default (*)|S3         |All other static files                                 |
+|Precedence|Path           |Origin     |Notes                                                  |
+|----------|---------------|-----------|-------------------------------------------------------|
+|0         |/products      |API Gateway|Lambda products endpoint                               |
+|1         |/hero          |API Gateway|Lambda hero endpoint                                   |
+|2         |/image*        |API Gateway|Lambda image proxy — forwards query string             |
+|3         |/feed.xml      |API Gateway|Lambda feed endpoint                                   |
+|4         |/admin/*       |API Gateway|Lambda admin endpoints                                 |
+|5         |/booth-layout* |API Gateway|Booth layout save/load/delete — same-origin avoids CORS|
+|6         |/booth-layouts*|API Gateway|Booth layout list endpoint                             |
+|7         |/prints/*      |S3         |Per-product OG redirect pages                          |
+|8         |/receipts/*    |S3         |Receipt file storage — publicly readable via CloudFront|
+|9         |Default (*)    |S3         |All other static files                                 |
 
 **DNS:** `davidnicholsonart.com` is registered with AWS and DNS is in Route 53. Both apex and www point to CloudFront distribution E2EJH38GWGPEPG.
 
@@ -179,6 +182,10 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 - `POST /send-link` — sends email (SES) or SMS (SNS) with product link
 - `POST /guestbook` — saves to DynamoDB (`dna-guestbook`) + emails [david@davidnicholsonart.com](mailto:david@davidnicholsonart.com); stores `name, email, note, subscribed (BOOL)`
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}`
+- `GET /booth-layout?id=X` — fetch a saved booth layout from DynamoDB
+- `PUT /booth-layout` — save/overwrite a booth layout `{id, title, wallsJson}`
+- `DELETE /booth-layout?id=X` — delete a booth layout from DynamoDB
+- `GET /booth-layouts` — list all saved layouts `[{id, title, updatedAt}]` sorted newest first
 - `GET /admin/paintings` — all paintings with sales joined
 - `POST /admin/paintings` — add painting
 - `PUT /admin/paintings/{id}` — update painting
@@ -431,13 +438,14 @@ All are single-file, no framework — intentional, keep it that way.
 
 ## DynamoDB Tables
 
-|Table          |Purpose                                                                     |
-|---------------|----------------------------------------------------------------------------|
-|`dna-paintings`|All paintings + `__config__` record (stores `rate` and optional `rateLarge`)|
-|`dna-sales`    |Sales records with `paintingId` foreign key + GSI `paintingId-index`        |
-|`dna-guestbook`|Guest book entries                                                          |
-|`dna-orders`   |Square order records                                                        |
-|`dna-expenses` |Expenses and mileage — single table, `type` field = `expense` or `mileage`  |
+|Table              |Purpose                                                                     |
+|-------------------|----------------------------------------------------------------------------|
+|`dna-paintings`    |All paintings + `__config__` record (stores `rate` and optional `rateLarge`)|
+|`dna-sales`        |Sales records with `paintingId` foreign key + GSI `paintingId-index`        |
+|`dna-guestbook`    |Guest book entries                                                          |
+|`dna-orders`       |Square order records                                                        |
+|`dna-expenses`     |Expenses and mileage — single table, `type` field = `expense` or `mileage`  |
+|`dna-booth-layouts`|Art fair wall layout plans — `id` (PK), `title`, `wallsJson`, `updatedAt`   |
 
 All tables: PAY_PER_REQUEST, us-east-1.
 
@@ -461,6 +469,9 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 - `dna-dynamodb-paintings` — read/write on `dna-paintings` and `dna-sales`
 - `dna-expenses-access` — read/write on `dna-expenses` + S3 PutObject/GetObject on `receipts/*`
+- `booth-layouts-access` (inline, added June 2026) — GetItem, PutItem, DeleteItem, Scan on `dna-booth-layouts`
+
+**Note:** `lambda-deploy` user also has a `booth-layouts-access` inline policy — this was added to the wrong entity (deploy user, not execution role) and is harmless but redundant.
 
 **`lambda-deploy` user** (local seed scripts):
 
@@ -480,9 +491,31 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## On the Horizon
 
+- **Booth planner — wall size toggles** — currently hardcoded to 10×8 (sides) and 7×8 (center); add UI controls so different booth configurations can be set per layout
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
 
 -----
+
+## Completed This Session (June 9 2026)
+
+**Booth Planner (`booth.html`) — complete build**
+
+New standalone page for pre-fair layout planning. Noindex, linked from admin topbar (Booth Planner button, left of + Sale). No PWA/SW dependency — unregisters any active SW on load so admin/kiosk SWs don’t interfere.
+
+- ✓ **Three-wall layout** — Left 10×8, Center 7×8, Right 10×8 ft, shown to scale in browser. Walls sized correctly to match real panel height (8 ft) rather than booth footprint (10 ft).
+- ✓ **Live catalog from `/originals`** — painting list with thumbnails, real Square dimensions. Phoenix Gallery paintings excluded via `atGallery` field added to `getOriginals` response (DynamoDB scan of `dna-paintings` cross-referenced by squareId + normalized title).
+- ✓ **title reserved word fix** — DynamoDB `ProjectionExpression` aliases `title` as `#t` in ExpressionAttributeNames; previously threw a ValidationException silently killing `/originals`.
+- ✓ **Drag & tap placement** — tap to arm a painting (gold highlight), tap wall to place; or drag from palette directly onto wall. Placed pieces drag to reposition; tap ✕ to remove. Touch scroll fixed: palette items use `touch-action: pan-y` + `pointercancel` handler so vertical list scroll works without accidentally picking up paintings.
+- ✓ **Coverage readout** — per-wall coverage %, sparse/balanced/crowded verdict, overlap detection (red outline).
+- ✓ **Server-side layout storage** — new DynamoDB table `dna-booth-layouts` (PK: `id`, fields: `title`, `wallsJson`, `updatedAt`). Lambda routes: `GET/PUT/DELETE /booth-layout`, `GET /booth-layouts`.
+- ✓ **CloudFront behaviors** — `/booth-layout*` and `/booth-layouts*` added to E2EJH38GWGPEPG pointing to API Gateway. **Critical:** booth.html calls `davidnicholsonart.com/booth-layout` (same-origin via CloudFront), not the raw API Gateway URL. This avoids CORS preflight failures — admin.html always used same-origin calls so PUT CORS had never been tested on this Lambda.
+- ✓ **Named multi-layout save/load** — Save button prompts for a name, saves to DynamoDB, URL gains `?id=UUID`. “Open saved” fetches all layouts from server (`GET /booth-layouts`) so any device sees the full list without needing a URL. Layout select dropdown in toolbar for quick switching.
+- ✓ **Server delete** — `DELETE /booth-layout?id=X` removes from DynamoDB; × in Open saved panel calls it.
+- ✓ **SW unregister** — booth.html detects any active SW (admin or kiosk), unregisters all, and auto-reloads so the page runs SW-free. Prevents admin-sw and kiosk SW from intercepting API calls.
+- ✓ **Admin SW v22** — `/booth-layout` path added to passthrough list; kiosk SW fixed to handle all API methods (not just GET).
+- ✓ **IAM** — `dna-kiosk-role` inline policy `booth-layouts-access`: GetItem, PutItem, DeleteItem, Scan on `dna-booth-layouts` table.
+- ✓ **Prints tab simplified** — removed the four color-coded tier sections (Out of Stock red, Low Stock yellow, etc.). Prints now render as one sortable flat table; only controls are the two checkboxes (0 large / 0 small). Tier grouping was redundant once the stock columns are visible.
+- ✓ **atGallery in `/originals`** — Lambda now scans `dna-paintings` in parallel, builds a gallery set by squareId + normalized title, tags each painting `atGallery: true` if matched. Booth planner filters these out; originals.html behavior unchanged (still shows them).
 
 ## Completed This Session (June 1 2026)
 
@@ -635,7 +668,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v6`; bump in `admin-sw.js` after significant admin.html changes
+- **Admin SW cache key** — currently `dna-admin-v22`; bump in `admin-sw.js` after significant admin.html changes
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 - **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
