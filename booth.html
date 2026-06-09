@@ -456,10 +456,14 @@ $('reload').addEventListener('click', load);
 $('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=null; renderAllPieces(); renderList(); });
 let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
 
-// Unregister any service worker controlling this page — booth.html doesn't need one
-// and the admin/kiosk SWs interfere with cross-origin PUT requests
+// booth.html has no offline needs and the admin/kiosk SWs block cross-origin PUT requests.
+// Unregister any active SW and reload once so this session runs completely SW-free.
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    if (regs.length > 0) {
+      Promise.all(regs.map(r => r.unregister())).then(() => location.reload());
+    }
+  });
 }
 
 // ---------- init ----------
