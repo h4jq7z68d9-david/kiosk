@@ -1,5 +1,5 @@
-// Admin PWA Service Worker — cache version: dna-admin-v20
-const CACHE = 'dna-admin-v20';
+// Admin PWA Service Worker — cache version: dna-admin-v21
+const CACHE = 'dna-admin-v21';
 const SHELL = [
   '/admin.html',
   '/admin.webmanifest',
@@ -32,7 +32,8 @@ self.addEventListener('fetch', e => {
   // Always pass API and S3 calls through to network
   if (url.pathname.startsWith('/admin/') ||
       url.hostname === 's3.amazonaws.com' ||
-      url.hostname.endsWith('.s3.us-east-2.amazonaws.com')) {
+      url.hostname.endsWith('.s3.us-east-2.amazonaws.com') ||
+      url.hostname.endsWith('.execute-api.us-east-1.amazonaws.com')) {
     e.respondWith(fetch(e.request));
     return;
   }
