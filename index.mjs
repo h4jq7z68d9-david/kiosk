@@ -353,6 +353,22 @@ async function putBoothLayout(body) {
   return ok({ saved: true });
 }
 
+async function deleteBoothLayout(id) {
+  if (!id) return err('Missing id', 400);
+  await dynamo.send(new DeleteCommand({ TableName: BOOTH_TABLE, Key: { id } }));
+  return ok({ deleted: true });
+}
+
+async function listBoothLayouts() {
+  const res = await dynamo.send(new ScanCommand({
+    TableName: BOOTH_TABLE,
+    ProjectionExpression: 'id, #t, updatedAt',
+    ExpressionAttributeNames: { '#t': 'title' },
+  }));
+  const layouts = (res.Items || []).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  return ok({ layouts });
+}
+
 
 async function getFeed() {
   const products = await buildProductList();
@@ -887,6 +903,8 @@ export const handler = async (event) => {
     if (method === 'GET'  && path === '/originals')                       return await getOriginals();
     if (method === 'GET'  && path === '/booth-layout')                    return await getBoothLayout(event.queryStringParameters?.id);
     if (method === 'PUT'  && path === '/booth-layout')                    return await putBoothLayout(JSON.parse(event.body || '{}'));
+    if (method === 'DELETE' && path === '/booth-layout')                 return await deleteBoothLayout(event.queryStringParameters?.id);
+    if (method === 'GET'  && path === '/booth-layouts')                  return await listBoothLayouts();
     if (method === 'GET'  && (path === '/feed' || path === '/feed.xml'))  return await getFeed();
     if (method === 'GET'  && path === '/cart')                            return await cartRedirect(event.queryStringParameters);
     if (method === 'GET'  && path === '/hero')                            return await getHero();

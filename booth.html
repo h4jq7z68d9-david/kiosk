@@ -139,7 +139,8 @@
 
 <script>
 const API       = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com/originals';
-const API_BOOTH = 'https://davidnicholsonart.com/booth-layout';
+const API_BOOTH      = 'https://davidnicholsonart.com/booth-layout';
+const API_BOOTH_LIST = 'https://davidnicholsonart.com/booth-layouts';
 const FT = 12, GAPpx = 10;
 const LS_INDEX = 'dna-booth-index';  // [{id,name}] layouts known on this device
 const LS_KEY   = 'dna-booth-layout-v1'; // local backup
@@ -244,15 +245,25 @@ async function confirmSave(){
 }
 
 // ---------- load panel ----------
-function openLoadPanel(){
+async function openLoadPanel(){
   closePanels();
-  renderLoadList();
   $('loadPanel').classList.add('open');
+  $('loadList').innerHTML='<div class="empty-note">Loading…</div>';
+  try{
+    const r=await fetch(API_BOOTH_LIST);
+    const d=await r.json();
+    const layouts=(d.layouts||[]).map(l=>({id:l.id,name:l.title||'Untitled',savedAt:l.updatedAt}));
+    layouts.forEach(l=>addToIndex(l.id,l.name));
+    refreshSelect();
+    renderLoadList(layouts);
+  }catch{
+    renderLoadList(null);
+  }
 }
 function closeLoadPanel(){ $('loadPanel').classList.remove('open'); }
 
-function renderLoadList(){
-  const idx=getIndex(), ll=$('loadList'); ll.innerHTML='';
+function renderLoadList(serverLayouts){
+  const idx=serverLayouts||getIndex(), ll=$('loadList'); ll.innerHTML='';
   if(!idx.length){
     ll.innerHTML='<div class="empty-note">No saved layouts on this device yet.</div>'; return;
   }
