@@ -18,6 +18,7 @@
 
   /* toolbar */
   .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px}
+  .layoutsel{font-family:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);cursor:pointer;max-width:200px}
   .btn{font-family:inherit;font-size:13px;font-weight:500;padding:7px 13px;border-radius:7px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink);white-space:nowrap}
   .btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
   .btn-sm{font-family:inherit;font-size:12px;font-weight:500;padding:5px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);white-space:nowrap}
@@ -96,6 +97,7 @@
 
   <div class="toolbar">
     <button class="btn btn-primary" id="btnSave">Save</button>
+    <select id="layoutSelect" class="layoutsel" style="display:none"></select>
     <button class="btn" id="btnOpenLoad">Open saved</button>
     <button class="btn" id="btnShareBlank">Share blank</button>
     <button class="btn" id="reload">Reload catalog</button>
@@ -170,6 +172,14 @@ function addToIndex(id,name){
 }
 function removeFromIndex(id){ setIndex(getIndex().filter(x=>x.id!==id)); renderLoadList(); }
 
+function refreshSelect(){
+  const sel=$('layoutSelect'), idx=getIndex();
+  if(!idx.length){ sel.style.display='none'; return; }
+  sel.style.display='';
+  const cur=currentId;
+  sel.innerHTML=idx.map(x=>`<option value="${x.id}"${x.id===cur?' selected':''}>${x.name||'Untitled'}</option>`).join('');
+}
+
 // ---------- server ----------
 async function serverLoad(id){
   try{
@@ -216,9 +226,10 @@ async function confirmSave(){
   if(ok){
     saveLocalBackup();
     addToIndex(currentId,currentTitle);
+    refreshSelect();
     closeSavePanel();
     const t=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
-    setStatus(`<b>"${currentTitle}"</b> saved · ${t} · bookmark this URL to reopen`);
+    setStatus(`<b>"${currentTitle}"</b> saved · ${t}`);
   } else {
     setStatus('Save failed — check network and try again.');
   }
@@ -259,6 +270,7 @@ async function loadLayout(id){
   currentId=id; currentTitle=data.title||'Untitled';
   history.replaceState(null,'',`?id=${id}`);
   addToIndex(id,currentTitle);
+  refreshSelect();
   const ws=safeParseWalls(data.wallsJson);
   WALLS.forEach((w,i)=>{w.pieces=(ws[i]||[]).map(p=>({uid:++uidc,...p}));});
   buildScene(); renderList();
@@ -445,6 +457,7 @@ function insideWall(w,x,y){const r=w.el.getBoundingClientRect();return x>=r.left
 
 // ---------- events ----------
 $('btnSave').addEventListener('click', openSavePanel);
+$('layoutSelect').addEventListener('change', e=>{ if(e.target.value!==currentId) loadLayout(e.target.value); });
 $('btnConfirmSave').addEventListener('click', confirmSave);
 $('btnCancelSave').addEventListener('click', closeSavePanel);
 $('saveName').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmSave(); if(e.key==='Escape') closeSavePanel(); });
@@ -484,6 +497,7 @@ if ('serviceWorker' in navigator) {
     }
   }
   buildScene();
+  refreshSelect();
   booting=false;
   load();
 })();
