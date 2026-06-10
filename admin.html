@@ -294,11 +294,13 @@
   .cat-retail        { background: #ecfdf5; color: #064e3b; }
   .cat-equipment     { background: #f1f5f9; color: #334155; }
   .cat-marketing     { background: #fef3c7; color: #92400e; }
+  .cat-advertising   { background: #cffafe; color: #0e7490; }
   .cat-licenses      { background: #ffedd5; color: #9a3412; }
   .cat-insurance     { background: #e0f2fe; color: #0369a1; }
   .cat-website       { background: #f0fdf4; color: #15803d; }
   .cat-travel        { background: #fff7ed; color: #c2410c; }
   .cat-other         { background: #f3f4f6; color: #374151; }
+  .adv-reminder { align-items: center; gap: 12px; font-size: 14px; color: #92400e; background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; }
 
   .receipt-link {
     display: inline-flex; align-items: center; gap: 4px;
@@ -421,6 +423,11 @@
     <!-- ══ TAB: DASHBOARD ══ -->
     <div class="tab-panel active" id="tab-dashboard">
       <div style="padding-top:24px">
+        <div class="adv-reminder" id="adv-reminder" style="display:none">
+          <span style="font-weight:600;flex-shrink:0">⚠ Reminder</span>
+          <span id="adv-reminder-text"></span>
+          <button onclick="openExpModalAdv()" style="margin-left:auto;flex-shrink:0;font-family:var(--font);font-size:13px;font-weight:500;background:#92400e;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer">Add advertising expense</button>
+        </div>
         <div class="cards" id="cards"></div>
         <div class="cards" id="dash-exp-cards"></div>
 
@@ -555,6 +562,7 @@
                 <option>Art Fair Fees</option>
                 <option>Retail &amp; Packaging</option>
                 <option>Equipment</option>
+                <option>Advertising</option>
                 <option>Marketing</option>
                 <option>Licenses &amp; Fees</option>
                 <option>Insurance</option>
@@ -842,6 +850,7 @@
             <option>Art Fair Fees</option>
             <option>Retail &amp; Packaging</option>
             <option>Equipment</option>
+            <option>Advertising</option>
             <option>Marketing</option>
             <option>Licenses &amp; Fees</option>
             <option>Insurance</option>
@@ -894,6 +903,7 @@
             <option>Art Fair Fees</option>
             <option>Retail &amp; Packaging</option>
             <option>Equipment</option>
+            <option>Advertising</option>
             <option>Marketing</option>
             <option>Licenses &amp; Fees</option>
             <option>Insurance</option>
@@ -979,6 +989,7 @@ const CAT_CLASS = {
   'Retail & Packaging': 'cat-retail',
   'Equipment':          'cat-equipment',
   'Marketing':          'cat-marketing',
+  'Advertising':        'cat-advertising',
   'Licenses & Fees':    'cat-licenses',
   'Insurance':          'cat-insurance',
   'Website & Software': 'cat-website',
@@ -1736,6 +1747,24 @@ function renderExpenses() {
   renderExpTable();
   renderRecurTable();
   renderMileTable();
+  renderAdvReminder();
+}
+
+// Remind to log advertising spend for the current month if none exists yet.
+function renderAdvReminder() {
+  const el = document.getElementById('adv-reminder');
+  if (!el) return;
+  const month = new Date().toISOString().slice(0,7);
+  const has = expState.expenses.some(e => e.category === 'Advertising' && (e.date||'').startsWith(month));
+  if (has) { el.style.display = 'none'; return; }
+  const label = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  document.getElementById('adv-reminder-text').textContent = `No Advertising expense logged for ${label} yet.`;
+  el.style.display = 'flex';
+}
+
+function openExpModalAdv() {
+  openExpModal();
+  document.getElementById('exp-category').value = 'Advertising';
 }
 
 function renderDashExpCards() {
