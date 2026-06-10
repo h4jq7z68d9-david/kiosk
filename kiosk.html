@@ -249,14 +249,10 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
           <div class="sheet-qr-inner" id="d-qr" style="cursor:pointer" onclick="openProductUrl()"></div>
           <div class="sheet-qr-hint">Scan to order online</div>
           <div class="send-link-wrap">
-            <div class="send-link-label">Or send the link to yourself</div>
+            <div class="send-link-label">Or email the link to yourself</div>
             <div class="send-link-row">
               <input class="send-link-input" id="send-email" type="email" placeholder="Email" autocomplete="off" autocapitalize="none" spellcheck="false">
-              <button class="send-link-btn" onclick="sendLink('email')">Send</button>
-            </div>
-            <div class="send-link-row">
-              <input class="send-link-input" id="send-phone" type="tel" placeholder="Phone number" autocomplete="off">
-              <button class="send-link-btn" onclick="sendLink('sms')">Text</button>
+              <button class="send-link-btn" onclick="sendLink()">Send</button>
             </div>
             <div class="send-link-confirm" id="send-confirm"></div>
           </div>
@@ -370,7 +366,7 @@ function renderDetail(p) {
   inner.innerHTML = p.img
     ? `<div class="viewer-slide"><img src="${p.img}" alt=""></div>`
     : `<div class="viewer-slide" style="min-height:220px;display:flex;align-items:center;justify-content:center;"><div class="ph" style="font-size:44px;color:#4a4744">🖼</div></div>`;
-  const url = p.url || 'https://david-nicholson-art.square.site';
+  const url = pieceUrl(p);
   const qel = document.getElementById('d-qr');
   qel.innerHTML = '';
   makeQR(qel, url, 140);
@@ -392,7 +388,7 @@ function slideNav(dir) {
   document.getElementById('d-name').textContent = p.title;
   const vid = p.variations?.[0]?.id;
   curVariationId = vid || null;
-  const url = p.url || 'https://davidnicholsonart.com/gallery.html';
+  const url = pieceUrl(p);
   const qel = document.getElementById('d-qr');
   qel.innerHTML = '';
   makeQR(qel, url, 140);
@@ -439,33 +435,28 @@ function initSwipe() {
   viewer.addEventListener('pointercancel', () => { ptrId = null; ptrDragging = false; });
 }
 
-function openProductUrl() {
-  const p = products[curIdx];
-  if (p?.url) window.open(p.url, '_blank');
+function pieceUrl(p) {
+  return p && p.id
+    ? 'https://davidnicholsonart.com/gallery.html?view=' + encodeURIComponent(p.id)
+    : 'https://davidnicholsonart.com/gallery.html';
 }
 
-async function sendLink(method) {
+function openProductUrl() {
+  const p = products[curIdx];
+  if (p) window.open(pieceUrl(p), '_blank');
+}
+
+async function sendLink() {
   const p = products[curIdx];
   if (!p) return;
-  const vid = curVariationId || p.variations?.[0]?.id;
-  const url = p.url || 'https://davidnicholsonart.com/gallery.html';
-  if (method === 'email') {
-    const email = document.getElementById('send-email').value.trim();
-    if (!email || !email.includes('@')) { showConfirm('Please enter a valid email', false); return; }
-    try {
-      await fetch(LAMBDA_URL + '/send-link', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'email', to:email, url, title:p.title }) });
-      document.getElementById('send-email').value = '';
-      showConfirm('Sent!', true);
-    } catch { showConfirm('Could not send — try again', false); }
-  } else {
-    const phone = document.getElementById('send-phone').value.trim().replace(/\D/g,'');
-    if (phone.length < 10) { showConfirm('Please enter a valid phone number', false); return; }
-    try {
-      await fetch(LAMBDA_URL + '/send-link', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'sms', to:phone, url, title:p.title }) });
-      document.getElementById('send-phone').value = '';
-      showConfirm('Sent!', true);
-    } catch { showConfirm('Could not send — try again', false); }
-  }
+  const url = pieceUrl(p);
+  const email = document.getElementById('send-email').value.trim();
+  if (!email || !email.includes('@')) { showConfirm('Please enter a valid email', false); return; }
+  try {
+    await fetch(LAMBDA_URL + '/send-link', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'email', to:email, url, title:p.title }) });
+    document.getElementById('send-email').value = '';
+    showConfirm('Sent!', true);
+  } catch { showConfirm('Could not send — try again', false); }
 }
 
 function showConfirm(msg, success) {
