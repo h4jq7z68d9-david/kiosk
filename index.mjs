@@ -771,9 +771,10 @@ async function adminUpdateConfig(body, cors) {
 async function adminGetExpenses(cors) {
   const res = await dynamo.send(new ScanCommand({ TableName: EXPENSES_TABLE }));
   const items = res.Items || [];
-  const expenses = items.filter(x => x.type === 'expense');
-  const mileage  = items.filter(x => x.type === 'mileage');
-  return ok({ expenses, mileage }, cors);
+  const expenses  = items.filter(x => x.type === 'expense');
+  const mileage   = items.filter(x => x.type === 'mileage');
+  const recurring = items.filter(x => x.type === 'recurring');
+  return ok({ expenses, mileage, recurring }, cors);
 }
 
 async function adminAddExpense(body, cors) {
@@ -799,6 +800,86 @@ async function adminUpdateExpense(id, body, cors) {
 async function adminDeleteExpense(id, cors) {
   await dynamo.send(new DeleteCommand({ TableName: EXPENSES_TABLE, Key: { id } }));
   return ok({ deleted: true }, cors);
+}
+
+// ── Recurring expenses (stored in dna-expenses as type:'recurring') ──
+function clampDay(d) {
+  d = parseInt(d, 10);
+  if (!Number.isFinite(d)) d = 1;
+  return Math.min(28, Math.max(1, d)); // cap at 28 so every month is valid
+}
+function currentMonth() {
+  return new Date().toISOString().slice(0, 7); // 'YYYY-MM' (UTC)
+}
+
+async function adminAddRecurring(body, cors) {
+  const { category, desc, amount, dayOfMonth, active } = body;
+  if (amount == null) return err('Missing required fields', 400, cors);
+  const item = {
+    id: 'r' + Date.now() + Math.random().toString(36).slice(2, 5),
+    type: 'recurring',
+    category: category || 'Other',
+    desc: desc || '',
+    amount: Number(amount),
+    dayOfMonth: clampDay(dayOfMonth),
+    active: active !== false,
+    lastRun: '', // 'YYYY-MM' of the last month an expense was generated
+  };
+  await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
+  return ok({ recurring: item }, cors);
+}
+
+async function adminUpdateRecurring(id, body, cors) {
+  const existing = await dynamo.send(new GetCommand({ TableName: EXPENSES_TABLE, Key: { id } }));
+  if (!existing.Item || existing.Item.type !== 'recurring') return err('Not found', 404, cors);
+  const { category, desc, amount, dayOfMonth, active } = body;
+  const item = {
+    ...existing.Item,
+    category:   category   != null ? (category || 'Other') : existing.Item.category,
+    desc:       desc       != null ? desc                  : existing.Item.desc,
+    amount:     amount     != null ? Number(amount)        : existing.Item.amount,
+    dayOfMonth: dayOfMonth != null ? clampDay(dayOfMonth)  : existing.Item.dayOfMonth,
+    active:     active     != null ? !!active              : existing.Item.active,
+  };
+  await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
+  return ok({ recurring: item }, cors);
+}
+
+async function adminDeleteRecurring(id, cors) {
+  await dynamo.send(new DeleteCommand({ TableName: EXPENSES_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
+// Create this month's expense for every active recurring def not yet run this month.
+// Idempotent: the lastRun guard means re-running in the same month is a no-op.
+async function generateRecurring() {
+  const month = currentMonth();
+  const res = await dynamo.send(new ScanCommand({ TableName: EXPENSES_TABLE }));
+  const defs = (res.Items || []).filter(x => x.type === 'recurring' && x.active && x.lastRun !== month);
+  const created = [];
+  for (const d of defs) {
+    const day = String(clampDay(d.dayOfMonth)).padStart(2, '0');
+    const expense = {
+      id: 'e' + Date.now() + Math.random().toString(36).slice(2, 5),
+      type: 'expense',
+      date: `${month}-${day}`,
+      category: d.category || 'Other',
+      desc: d.desc || '',
+      amount: Number(d.amount),
+      receiptUrl: '',
+      recurringId: d.id,
+      auto: true,
+    };
+    await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: expense }));
+    await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: { ...d, lastRun: month } }));
+    created.push(expense);
+  }
+  return created;
+}
+
+async function adminRunRecurring(cors) {
+  const created = await generateRecurring();
+  return ok({ generated: created.length, expenses: created }, cors);
 }
 
 async function adminAddMileage(body, cors) {
@@ -876,6 +957,12 @@ async function adminDeleteGalleryStock(id, cors) {
 
 // ── Router ──
 export const handler = async (event) => {
+  // EventBridge scheduled trigger → generate this month's recurring expenses
+  if (event && event.task === 'recurring') {
+    const created = await generateRecurring();
+    console.log('Recurring generated:', created.length);
+    return { generated: created.length };
+  }
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
   console.log('Request:', method, path);
@@ -941,6 +1028,18 @@ export const handler = async (event) => {
         const expId = expenseMatch[1];
         if (method === 'PUT')    return await adminUpdateExpense(expId, b(), cors);
         if (method === 'DELETE') return await adminDeleteExpense(expId, cors);
+      }
+
+      // Recurring expenses
+      if (method === 'GET'  && path === '/admin/recurring')      return await adminGetExpenses(cors); // recurring is in the expenses payload
+      if (method === 'POST' && path === '/admin/recurring')      return await adminAddRecurring(b(), cors);
+      if (method === 'POST' && path === '/admin/recurring/run')  return await adminRunRecurring(cors);
+
+      const recurringMatch = path.match(/^\/admin\/recurring\/([^/]+)$/);
+      if (recurringMatch && recurringMatch[1] !== 'run') {
+        const rid = recurringMatch[1];
+        if (method === 'PUT')    return await adminUpdateRecurring(rid, b(), cors);
+        if (method === 'DELETE') return await adminDeleteRecurring(rid, cors);
       }
 
       // Mileage

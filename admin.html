@@ -583,6 +583,35 @@
           </div>
         </div>
 
+        <!-- Recurring table -->
+        <div class="table-section" style="margin-bottom:24px">
+          <div class="table-header">
+            <div>
+              <div class="section-title" style="margin:0">Recurring</div>
+              <div style="font-size:12px;color:var(--ink3);margin-top:2px">Added to Expenses automatically each month</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button class="btn-sm" onclick="runRecurringNow()" title="Create this month's recurring expenses now">▶ Run this month</button>
+              <button class="btn-primary" onclick="openRecurModal()">+ Add Recurring</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Day</th>
+                  <th style="width:64px">Active</th>
+                  <th style="width:32px"></th>
+                </tr>
+              </thead>
+              <tbody id="recur-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- Mileage table -->
         <div class="table-section">
           <div class="table-header">
@@ -845,6 +874,52 @@
 </div>
 
 <!-- ══════════════════════════════════════════
+     RECURRING MODAL
+════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="recur-modal" style="display:none" onclick="closeModalOnBackdrop(event,'recur-modal')">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="recur-modal-title">Add Recurring</h2>
+      <button class="modal-close" onclick="closeModal('recur-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field">
+          <label>Category</label>
+          <select id="recur-category">
+            <option>Printing</option>
+            <option>Framing</option>
+            <option>Art Supplies</option>
+            <option>Art Fair Fees</option>
+            <option>Retail &amp; Packaging</option>
+            <option>Equipment</option>
+            <option>Marketing</option>
+            <option>Licenses &amp; Fees</option>
+            <option>Insurance</option>
+            <option>Website &amp; Software</option>
+            <option>Travel</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label>Day of month <span style="font-weight:400;color:var(--ink3)">(1–28)</span></label><input type="number" id="recur-day" min="1" max="28" step="1" placeholder="1"></div>
+      </div>
+      <div class="field"><label>Description <span style="font-weight:400;color:var(--ink3)">(optional)</span></label><textarea id="recur-desc" placeholder="e.g. Business insurance" rows="2"></textarea></div>
+      <div class="field"><label>Amount ($)</label><input type="number" id="recur-amount" placeholder="0.00" min="0" step="0.01"></div>
+      <div style="margin-bottom:16px;display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="recur-active" checked style="width:18px;height:18px;cursor:pointer">
+        <label for="recur-active" style="font-size:13px;color:var(--ink2);cursor:pointer;margin:0">Active — auto-add to Expenses each month</label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" id="recur-delete-btn" onclick="deleteRecurFromModal()" style="display:none;color:var(--red);border-color:var(--red)">Delete</button>
+      <div style="flex:1"></div>
+      <button class="btn-cancel" onclick="closeModal('recur-modal')">Cancel</button>
+      <button class="btn-primary" id="recur-save-btn" onclick="saveRecurring()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
      MILEAGE MODAL
 ════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="mile-modal" style="display:none" onclick="closeModalOnBackdrop(event,'mile-modal')">
@@ -1025,13 +1100,13 @@ const MILEAGE_SEED = [
 //  STATE
 // ═══════════════════════════════════════════
 let db = { paintings: [], rate: 1.10, rateLarge: null };
-let expState = { expenses: [], mileage: [], seeded: false };
+let expState = { expenses: [], mileage: [], recurring: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
 let activeFilter = null, expandedId = null;
 let salePaintingId = null, editSaleId = null;
 let expSortField = 'date', expSortDir = 'desc';
 let mileSortField = 'date', mileSortDir = 'desc';
-let editExpId = null, editMileId = null;
+let editExpId = null, editMileId = null, editRecurId = null;
 let pendingReceiptFile = null;
 let loading = false;
 let expLoaded = false; // track whether we've fetched expenses from API yet
@@ -1243,8 +1318,9 @@ async function loadExpenses() {
   setLoading(true);
   try {
     const data = await api('GET', '/expenses');
-    expState.expenses = data.expenses || [];
-    expState.mileage  = data.mileage  || [];
+    expState.expenses  = data.expenses  || [];
+    expState.mileage   = data.mileage   || [];
+    expState.recurring = data.recurring || [];
     expLoaded = true;
 
     // First-time migration: if backend is empty, seed all historical data
@@ -1656,6 +1732,7 @@ function populateExpYearFilter() {
 function renderExpenses() {
   renderExpCards();
   renderExpTable();
+  renderRecurTable();
   renderMileTable();
 }
 
@@ -1675,8 +1752,14 @@ function renderDashExpCards() {
     `<div class="card-sub"><span class="cat-badge ${CAT_CLASS[cat]||'cat-other'}">${cat}</span> <span style="font-family:var(--mono);font-size:12px">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>`
   ).join('');
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const activeRecur = (expState.recurring||[]).filter(r => r.active).sort((a,b) => Number(b.amount||0) - Number(a.amount||0));
+  const recurMonthly = activeRecur.reduce((s,r) => s + Number(r.amount||0), 0);
+  const recurItemsHtml = activeRecur.map(r =>
+    `<div class="card-sub" style="display:flex;justify-content:space-between;gap:8px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.desc||r.category)}</span><span style="font-family:var(--mono);font-size:12px;flex-shrink:0">${fmt(Number(r.amount||0))}</span></div>`
+  ).join('');
   el.innerHTML = `
     <div class="card"><div class="card-label">Total Expenses</div><div class="card-value accent">${fmt(totalExp)}</div><div class="card-sub">${expState.expenses.length} records</div></div>
+    <div class="card"><div class="card-label">Recurring / month</div><div class="card-value">${fmt(recurMonthly)}</div><div style="margin-top:6px">${recurItemsHtml || '<div class="card-sub">none set</div>'}</div></div>
     <div class="card"><div class="card-label">Top Categories</div><div style="margin-top:4px">${topCatHtml || '<div class="card-sub">—</div>'}</div></div>
     <div class="card"><div class="card-label">Miles Driven</div><div class="card-value">${totalMiles.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:1})}</div><div class="card-sub">${expState.mileage.length} trips</div></div>
     <div class="card"><div class="card-label">Mileage Deduction</div><div class="card-value accent">${fmt(totalMileDeduction)}</div><div class="card-sub">IRS standard rate</div></div>
@@ -1922,6 +2005,125 @@ async function deleteExpenseFromModal() {
     renderExpenses();
   } catch(err) {
     alert('Failed to delete: ' + err.message);
+  }
+}
+
+// ═══════════════════════════════════════════
+//  RECURRING EXPENSES
+// ═══════════════════════════════════════════
+function renderRecurTable() {
+  const tbody = document.getElementById('recur-table-body');
+  if (!tbody) return;
+  const list = (expState.recurring||[]).slice().sort((a,b) => Number(b.amount||0) - Number(a.amount||0));
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No recurring expenses yet.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(r => {
+    const amt = Number(r.amount||0);
+    const toggle = r.active
+      ? `<button onclick="toggleRecurring('${r.id}', event)" style="font-size:11px;font-weight:600;color:var(--green);background:none;border:1.5px solid var(--green);border-radius:6px;padding:3px 9px;cursor:pointer;font-family:var(--font)">On</button>`
+      : `<button onclick="toggleRecurring('${r.id}', event)" style="font-size:11px;font-weight:600;color:var(--ink3);background:none;border:1.5px solid var(--border-mid);border-radius:6px;padding:3px 9px;cursor:pointer;font-family:var(--font)">Off</button>`;
+    return `<tr onclick="openEditRecurModal('${r.id}')" style="cursor:pointer${r.active?'':';opacity:.55'}">
+      <td><span class="cat-badge ${CAT_CLASS[r.category]||'cat-other'}">${esc(r.category)}</span></td>
+      <td style="font-size:13px;color:var(--ink2)">${esc(r.desc||'')}</td>
+      <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td class="mono dim">${r.dayOfMonth||1}</td>
+      <td onclick="event.stopPropagation()">${toggle}</td>
+      <td></td>
+    </tr>`;
+  }).join('');
+}
+
+function openRecurModal() {
+  editRecurId = null;
+  document.getElementById('recur-modal-title').textContent = 'Add Recurring';
+  document.getElementById('recur-save-btn').textContent = 'Save';
+  document.getElementById('recur-category').value = 'Insurance';
+  document.getElementById('recur-day').value = 1;
+  document.getElementById('recur-desc').value = '';
+  document.getElementById('recur-amount').value = '';
+  document.getElementById('recur-active').checked = true;
+  document.getElementById('recur-delete-btn').style.display = 'none';
+  document.getElementById('recur-modal').style.display = 'flex';
+}
+
+function openEditRecurModal(id) {
+  const r = (expState.recurring||[]).find(x => x.id === id);
+  if (!r) return;
+  editRecurId = id;
+  document.getElementById('recur-modal-title').textContent = 'Edit Recurring';
+  document.getElementById('recur-save-btn').textContent = 'Save Changes';
+  document.getElementById('recur-category').value = r.category || 'Other';
+  document.getElementById('recur-day').value = r.dayOfMonth || 1;
+  document.getElementById('recur-desc').value = r.desc || '';
+  document.getElementById('recur-amount').value = r.amount || '';
+  document.getElementById('recur-active').checked = r.active !== false;
+  document.getElementById('recur-delete-btn').style.display = 'inline-block';
+  document.getElementById('recur-modal').style.display = 'flex';
+}
+
+async function saveRecurring() {
+  const category   = document.getElementById('recur-category').value;
+  const dayOfMonth = parseInt(document.getElementById('recur-day').value, 10) || 1;
+  const desc       = document.getElementById('recur-desc').value.trim();
+  const amount     = parseFloat(document.getElementById('recur-amount').value);
+  const active     = document.getElementById('recur-active').checked;
+  if (isNaN(amount) || amount < 0) { alert('Enter a valid amount.'); return; }
+  try {
+    if (editRecurId) {
+      const data = await api('PUT', `/recurring/${editRecurId}`, { category, desc, amount, dayOfMonth, active });
+      const idx = expState.recurring.findIndex(x => x.id === editRecurId);
+      if (idx !== -1) expState.recurring[idx] = data.recurring;
+    } else {
+      const data = await api('POST', '/recurring', { category, desc, amount, dayOfMonth, active });
+      expState.recurring.push(data.recurring);
+    }
+  } catch(e) {
+    alert('Failed to save recurring expense: ' + e.message);
+    return;
+  }
+  closeModal('recur-modal');
+  renderExpenses();
+}
+
+async function toggleRecurring(id, event) {
+  if (event) event.stopPropagation();
+  const r = (expState.recurring||[]).find(x => x.id === id);
+  if (!r) return;
+  try {
+    const data = await api('PUT', `/recurring/${id}`, { active: !r.active });
+    const idx = expState.recurring.findIndex(x => x.id === id);
+    if (idx !== -1) expState.recurring[idx] = data.recurring;
+    renderExpenses();
+  } catch(e) {
+    alert('Failed to update: ' + e.message);
+  }
+}
+
+async function deleteRecurFromModal() {
+  if (!editRecurId) return;
+  if (!confirm('Delete this recurring expense? Expenses already generated are not affected.')) return;
+  closeModal('recur-modal');
+  try {
+    await api('DELETE', `/recurring/${editRecurId}`);
+    expState.recurring = expState.recurring.filter(x => x.id !== editRecurId);
+    renderExpenses();
+  } catch(e) {
+    alert('Failed to delete: ' + e.message);
+  }
+}
+
+async function runRecurringNow() {
+  if (!confirm("Create this month's recurring expenses now? Items already added this month are skipped.")) return;
+  try {
+    const data = await api('POST', '/recurring/run');
+    await loadExpenses();
+    alert(data.generated > 0
+      ? `Added ${data.generated} expense${data.generated === 1 ? '' : 's'} for this month.`
+      : 'Nothing to add — all active recurring items already exist for this month.');
+  } catch(e) {
+    alert('Run failed: ' + e.message);
   }
 }
 
