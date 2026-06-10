@@ -591,7 +591,7 @@
               <div style="font-size:12px;color:var(--ink3);margin-top:2px">Added to Expenses automatically each month</div>
             </div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button class="btn-sm" onclick="runRecurringNow()" title="Create this month's recurring expenses now">▶ Run this month</button>
+              <button class="btn-sm" onclick="generateExpenses()" title="Create any missing monthly expenses from each item's start month through this month">↺ Generate expenses</button>
               <button class="btn-primary" onclick="openRecurModal()">+ Add Recurring</button>
             </div>
           </div>
@@ -603,6 +603,7 @@
                   <th>Description</th>
                   <th>Amount</th>
                   <th>Day</th>
+                  <th>Start</th>
                   <th style="width:64px">Active</th>
                   <th style="width:32px"></th>
                 </tr>
@@ -903,6 +904,7 @@
         </div>
         <div class="field"><label>Day of month <span style="font-weight:400;color:var(--ink3)">(1–28)</span></label><input type="number" id="recur-day" min="1" max="28" step="1" placeholder="1"></div>
       </div>
+      <div class="field"><label>Start month <span style="font-weight:400;color:var(--ink3)">(first month to generate from)</span></label><input type="month" id="recur-start"></div>
       <div class="field"><label>Description <span style="font-weight:400;color:var(--ink3)">(optional)</span></label><textarea id="recur-desc" placeholder="e.g. Business insurance" rows="2"></textarea></div>
       <div class="field"><label>Amount ($)</label><input type="number" id="recur-amount" placeholder="0.00" min="0" step="0.01"></div>
       <div style="margin-bottom:16px;display:flex;align-items:center;gap:8px">
@@ -2016,7 +2018,7 @@ function renderRecurTable() {
   if (!tbody) return;
   const list = (expState.recurring||[]).slice().sort((a,b) => Number(b.amount||0) - Number(a.amount||0));
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No recurring expenses yet.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No recurring expenses yet.</div></td></tr>';
     return;
   }
   tbody.innerHTML = list.map(r => {
@@ -2029,6 +2031,7 @@ function renderRecurTable() {
       <td style="font-size:13px;color:var(--ink2)">${esc(r.desc||'')}</td>
       <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
       <td class="mono dim">${r.dayOfMonth||1}</td>
+      <td class="mono dim">${r.startMonth||'—'}</td>
       <td onclick="event.stopPropagation()">${toggle}</td>
       <td></td>
     </tr>`;
@@ -2041,6 +2044,7 @@ function openRecurModal() {
   document.getElementById('recur-save-btn').textContent = 'Save';
   document.getElementById('recur-category').value = 'Insurance';
   document.getElementById('recur-day').value = 1;
+  document.getElementById('recur-start').value = new Date().toISOString().slice(0,7);
   document.getElementById('recur-desc').value = '';
   document.getElementById('recur-amount').value = '';
   document.getElementById('recur-active').checked = true;
@@ -2056,6 +2060,7 @@ function openEditRecurModal(id) {
   document.getElementById('recur-save-btn').textContent = 'Save Changes';
   document.getElementById('recur-category').value = r.category || 'Other';
   document.getElementById('recur-day').value = r.dayOfMonth || 1;
+  document.getElementById('recur-start').value = r.startMonth || new Date().toISOString().slice(0,7);
   document.getElementById('recur-desc').value = r.desc || '';
   document.getElementById('recur-amount').value = r.amount || '';
   document.getElementById('recur-active').checked = r.active !== false;
@@ -2066,17 +2071,18 @@ function openEditRecurModal(id) {
 async function saveRecurring() {
   const category   = document.getElementById('recur-category').value;
   const dayOfMonth = parseInt(document.getElementById('recur-day').value, 10) || 1;
+  const startMonth = document.getElementById('recur-start').value;
   const desc       = document.getElementById('recur-desc').value.trim();
   const amount     = parseFloat(document.getElementById('recur-amount').value);
   const active     = document.getElementById('recur-active').checked;
   if (isNaN(amount) || amount < 0) { alert('Enter a valid amount.'); return; }
   try {
     if (editRecurId) {
-      const data = await api('PUT', `/recurring/${editRecurId}`, { category, desc, amount, dayOfMonth, active });
+      const data = await api('PUT', `/recurring/${editRecurId}`, { category, desc, amount, dayOfMonth, startMonth, active });
       const idx = expState.recurring.findIndex(x => x.id === editRecurId);
       if (idx !== -1) expState.recurring[idx] = data.recurring;
     } else {
-      const data = await api('POST', '/recurring', { category, desc, amount, dayOfMonth, active });
+      const data = await api('POST', '/recurring', { category, desc, amount, dayOfMonth, startMonth, active });
       expState.recurring.push(data.recurring);
     }
   } catch(e) {
@@ -2114,16 +2120,16 @@ async function deleteRecurFromModal() {
   }
 }
 
-async function runRecurringNow() {
-  if (!confirm("Create this month's recurring expenses now? Items already added this month are skipped.")) return;
+async function generateExpenses() {
+  if (!confirm("Generate monthly expenses for every active recurring item, from each item's start month through this month? Months already created are skipped.")) return;
   try {
     const data = await api('POST', '/recurring/run');
     await loadExpenses();
     alert(data.generated > 0
-      ? `Added ${data.generated} expense${data.generated === 1 ? '' : 's'} for this month.`
-      : 'Nothing to add — all active recurring items already exist for this month.');
+      ? `Created ${data.generated} expense${data.generated === 1 ? '' : 's'}.`
+      : 'Nothing to create — everything is already up to date.');
   } catch(e) {
-    alert('Run failed: ' + e.message);
+    alert('Generate failed: ' + e.message);
   }
 }
 
