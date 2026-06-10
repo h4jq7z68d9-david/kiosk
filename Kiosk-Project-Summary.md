@@ -194,10 +194,14 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 - `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale
 - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
 - `GET/PUT /admin/config` — price/sq in rate (`rate`) and large-painting rate (`rateLarge`, optional); both stored in DynamoDB `__config__` record
-- `GET /admin/expenses` — returns `{ expenses, mileage }` from `dna-expenses` table
+- `GET /admin/expenses` — returns `{ expenses, mileage, recurring }` from `dna-expenses` table
 - `POST /admin/expenses` — add expense record
 - `PUT /admin/expenses/{id}` — update expense
 - `DELETE /admin/expenses/{id}` — delete expense
+- `GET/POST /admin/recurring` — list / add recurring def (`type:'recurring'` in `dna-expenses`)
+- `PUT/DELETE /admin/recurring/{id}` — update / delete recurring def
+- `POST /admin/recurring/run` — generate missing monthly expenses for all active defs (idempotent)
+- **Scheduled (not HTTP):** EventBridge Scheduler `dna-recurring-expenses` invokes the Lambda with `{"task":"recurring"}`; handler runs `generateAllRecurring()` before any HTTP routing
 - `POST /admin/mileage` — add mileage entry
 - `PUT /admin/mileage/{id}` — update mileage entry
 - `DELETE /admin/mileage/{id}` — delete mileage entry
@@ -474,7 +478,6 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Pending — In Order of Priority
 
-- [ ] **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session, planned)
 - [ ] **Meta Ads** — ~$5/day, paused
 - [ ] **Pinterest Ads** — ~$30/day minimum, paused
 
@@ -500,6 +503,24 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 - ✓ New **Walls** button opens a panel: per-wall width steppers + one shared height stepper (1-ft steps; width 4–20 ft, height 6–10 ft). Resizing rescales the scene live and clamps placed pieces back onto shrunken walls. “Reset to 10·7·10” restores defaults.
 - ✓ Wall dimensions now persist per layout. Save format bumped to `{v:2, dims:[{w,h}], pieces:[[...]]}`; `parseLayout()`/`applyLayout()` load it and stay backward-compatible with legacy array-only saves (which open at the default 10·7·10 × 8). `wallName(w)` renders live dims in tags/readout; `totalWin()` is now a function so scale recomputes on resize. Removed dead `safeParseWalls`.
+
+**Recurring expenses — shipped (`index.mjs` + `admin.html`)**
+
+- ✓ No new table: recurring definitions live in `dna-expenses` as `type:'recurring'` (alongside `expense`/`mileage`). Fields: `category, desc, amount, dayOfMonth (1–28, clamped), startMonth (YYYY-MM), active, lastRun`.
+- ✓ Endpoints: `GET/POST /admin/recurring`, `PUT/DELETE /admin/recurring/{id}`, `POST /admin/recurring/run`. Recurring defs are also included in the `/admin/expenses` payload (`{ expenses, mileage, recurring }`).
+- ✓ `generateAllRecurring()` brings every active def current: one expense per month from each def’s `startMonth` through the current month, dated with the def’s `dayOfMonth`. Idempotent via a per-month existence check (`recurringId` + month) — re-running, backfilling, and the cron never duplicate. Generated rows are normal `type:'expense'` records tagged `recurringId` + `auto:true`, fully editable and included in the CSV export.
+- ✓ Admin UI: **Recurring** section in the Expenses & Mileage tab (add/edit modal: category, amount, day-of-month, start month, active; inline On/Off toggle; single **↺ Generate expenses** button). Dashboard gains a **Recurring / month** card listing active items + monthly total.
+- ✓ EventBridge **Scheduler** schedule `dna-recurring-expenses`: `cron(0 6 1 * ? *)` America/Chicago → Lambda `dna-kiosk`, constant input `{"task":"recurring"}`. Handler detects `event.task === 'recurring'` at the top and runs the generator. No new Lambda IAM (DynamoDB already covered); Scheduler’s auto-created role grants invoke. The cron is only a monthly wake-up — start months and day-of-month are handled in code, so the cron date matches nothing by design.
+- ✓ Design note: dropped an initial January-only “Backfill year” button in favor of per-item `startMonth` + one “Generate expenses” that fills each item from its own start.
+
+**Advertising category + reminder (`admin.html`)**
+
+- ✓ New **Advertising** expense category (teal `cat-advertising` badge) added to the filter, expense modal, recurring modal, and `CAT_CLASS`. No Lambda change — category is a free-text stored string.
+- ✓ Dashboard reminder banner: shows “No Advertising expense logged for {Month Year} yet” whenever the current month has no Advertising expense; the **Add advertising expense** button opens the modal pre-set to Advertising. Current-month only (no nagging about past months); clears automatically once an entry exists (manual or recurring).
+
+**Deploy footgun found: stale `index.js`**
+
+- ✓ The repo tracks both `index.js` (old, pre-SNS-cleanup) and `index.mjs` (current). The workflow deploys **only** `index.mjs` (`zip lambda.zip index.mjs`). Editing `index.js` does nothing — this caused a session where `startMonth` wouldn’t save (new frontend, stale Lambda). **TODO: `git rm index.js`** to remove the footgun. Always edit `index.mjs`.
 
 -----
 
@@ -675,7 +696,8 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v22`; bump in `admin-sw.js` after significant admin.html changes
+- **Admin SW cache key** — currently `dna-admin-v25`; bump in `admin-sw.js` after every admin.html change
+- **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 - **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
