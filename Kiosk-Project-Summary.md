@@ -89,7 +89,7 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 https://david-nicholson-art.square.site/product/{slug}/{ITEM_ID}
 ```
 
-Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda generates this automatically.
+Slug = item name lowercased, non-alphanumeric replaced with hyphens. Lambda generates this automatically. (As of June 10 2026 the kiosk no longer routes visitors to this URL — QR/email point to davidnicholsonart.com; the Square store remains the commerce backend and `/products` still returns this `url` field.)
 
 **Originals:** Excluded from API/kiosk by detecting single “Default Title” variation.
 
@@ -179,7 +179,7 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 - `GET /feed` and `GET /feed.xml` — returns RSS/XML product catalog for Pinterest/Google; served publicly via CloudFront at `https://davidnicholsonart.com/feed.xml`
 - `GET /hero` — returns a single random product with an image `{img, title, id}` — filtered to 2025–2026 prints, falls back to full catalog
 - `GET /image?id=X` — proxies Square CDN image to avoid hotlink 403s; query string must be forwarded by CloudFront (Origin request policy: AllViewerExceptHostHeader)
-- `POST /send-link` — sends email (SES) or SMS (SNS) with product link
+- `POST /send-link` — sends email (SES) with product link (email-only; the `sms`/SNS path was removed June 10 2026)
 - `POST /guestbook` — saves to DynamoDB (`dna-guestbook`) + emails [david@davidnicholsonart.com](mailto:david@davidnicholsonart.com); stores `name, email, note, subscribed (BOOL)`
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}`
 - `GET /booth-layout?id=X` — fetch a saved booth layout from DynamoDB
@@ -235,18 +235,11 @@ ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
 
 -----
 
-## SNS (SMS)
+## SMS — retired (June 10 2026)
 
-|Item           |Value                                                                                       |
-|---------------|--------------------------------------------------------------------------------------------|
-|Phone number   |+18444767251                                                                                |
-|Type           |Toll-free                                                                                   |
-|Phone number ID|phone-0c0649f801484987accc2fbeb0f0ed3b                                                      |
-|ARN            |arn:aws:sms-voice:us-east-1:892204037842:phone-number/phone-0c0649f801484987accc2fbeb0f0ed3b|
-|Status         |Pending carrier registration (up to 15 business days)                                       |
-|Monthly fee    |$2.00                                                                                       |
+The toll-free SMS plan was dropped in favor of QR + email. Toll-free verification repeatedly rejected the opt-in as “mandatory not optional” — and for a “text me this link” feature there is no flow where the visitor gets the link *without* opting in, so it could never pass cleanly. The kiosk QR (already present) plus the existing SES email link cover the same need with no carrier dependency.
 
-Lambda `sendSMS` updated with `OriginationNumber: '+18444767251'`. SMS will work once carrier registration clears.
+Cleanup completed this session: toll-free number `+18444767251` released in AWS End User Messaging SMS; Lambda SNS code removed (import, client, `sendSMS`, the `sms` branch in `/send-link`); `AmazonSNSFullAccess` detached from `dna-kiosk-role`. No SMS code or infrastructure remains.
 
 -----
 
@@ -341,7 +334,7 @@ All are single-file, no framework — intentional, keep it that way.
 
 - Fetches from Lambda (with service worker offline cache)
 - Detail modal: title + product description + giclée note + QR code
-- Send-link (email/SMS) uses `p.url`
+- QR code, tap-to-open, and email-link all build `davidnicholsonart.com/gallery.html?view={id}` via `pieceUrl(p)` (opens the exact piece on the own domain) — no longer the Square `p.url`. Email-only; SMS button removed June 10 2026
 - Guest book POSTs to Lambda → email notification; includes newsletter opt-in
 - Export CSV hidden behind triple-tap on “Guest Book” title
 - Service worker cache key: `dna-v3`
@@ -481,18 +474,32 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Pending — In Order of Priority
 
-- [ ] **SNS — build SMS endpoint + UI** — carrier registration submitted May 21 2026; toll-free verification flagged the opt-in consent language (must show: recipient enters their own number, single transactional message, no repeat texts / no marketing, msg+data rates, STOP/HELP). Compliant language drafted June 1 2026 — use when building the UI:
-  - **On-page consent (at the phone field):** “By entering your mobile number and tapping Send, you consent to receive a single text message containing the link you requested from David Nicholson Art. This is a one-time message — not a subscription. You will not receive repeat texts, promotions, or marketing. Message and data rates may apply. Reply HELP for help, STOP to opt out.”
-  - **Sample message body:** “David Nicholson Art: here’s the piece you asked about — [link]. One-time message, no further texts. Reply STOP to opt out.”
-  - Once verification clears, build `/sms` Lambda endpoint and “text me this link” UI in gallery/kiosk.
 - [ ] **Recurring expenses** — monthly Insurance, Website & Software subscriptions; needs: `recurring` DynamoDB table, EventBridge monthly trigger, Lambda auto-create, admin UI to manage entries (~2–3 hour session, planned)
 - [ ] **Meta Ads** — ~$5/day, paused
 - [ ] **Pinterest Ads** — ~$30/day minimum, paused
 
 ## On the Horizon
 
-- **Booth planner — wall size toggles** — currently hardcoded to 10×8 (sides) and 7×8 (center); add UI controls so different booth configurations can be set per layout
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
+
+-----
+
+## Completed This Session (June 10 2026)
+
+**Kiosk taken off the Square storefront**
+
+- ✓ kiosk.html QR code, tap-to-open, and email-link now build `davidnicholsonart.com/gallery.html?view={id}` via a new `pieceUrl(p)` helper, instead of the Square `p.url`. Opens the exact scanned piece on the own domain with the site cart + Square payment-link checkout. Chosen over the `prints/{slug}.html` page (which only redirects to the same `?view=` target) to avoid coupling the kiosk to build-time slug-dedup. If Square ever changes terms on the hosted storefront, the booth flow is unaffected.
+
+**SMS / toll-free retired — replaced by QR + email** (details under “SMS — retired” above)
+
+- ✓ Removed the dead SMS “Text” button + phone input from kiosk.html; `sendLink()` is now email-only.
+- ✓ Lambda `index.mjs`: removed SNS import, client, `sendSMS`, and the `sms` branch in `/send-link`.
+- ✓ Toll-free `+18444767251` released; `AmazonSNSFullAccess` detached from `dna-kiosk-role`.
+
+**Booth planner — wall size toggles (shipped)**
+
+- ✓ New **Walls** button opens a panel: per-wall width steppers + one shared height stepper (1-ft steps; width 4–20 ft, height 6–10 ft). Resizing rescales the scene live and clamps placed pieces back onto shrunken walls. “Reset to 10·7·10” restores defaults.
+- ✓ Wall dimensions now persist per layout. Save format bumped to `{v:2, dims:[{w,h}], pieces:[[...]]}`; `parseLayout()`/`applyLayout()` load it and stay backward-compatible with legacy array-only saves (which open at the default 10·7·10 × 8). `wallName(w)` renders live dims in tags/readout; `totalWin()` is now a function so scale recomputes on resize. Removed dead `safeParseWalls`.
 
 -----
 
@@ -525,7 +532,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - ✓ **`generate-prints.js`** — now also writes `hero-pool.js` to repo root at build time: `window.__HERO_POOL__ = [{img,title}]` for 2025–26 prints (falls back to all prints with images). Picked up by the existing `*.js` S3 sync; regenerated every deploy.
 - ✓ **`index.html`** — loads `hero-pool.js`, picks one painting **client-side, rotating daily** (`Math.floor(Date.now()/86400000) % pool.length`), inserts the `<img>` immediately (progressive paint) with `fetchpriority="high"` / `decoding="async"`, reserves a square box to avoid layout shift, and `preconnect`s to davidnicholsonart.com. Old live `/hero` fetch kept as fallback if the pool file is missing. No Lambda change. Net: the only hot-path request is the (CloudFront-cached) image; because everyone gets the same painting on a given day it stays cache-warm.
 
-**SMS opt-in language** — see updated SNS item under Pending; toll-free verification flagged opt-in wording, compliant one-time/transactional language drafted.
+**SMS opt-in language** — see “SMS — retired” (June 10 2026); toll-free verification flagged opt-in wording, compliant one-time/transactional language drafted.
 
 **Public site styling pass (fair-season, first-time visitors)**
 
