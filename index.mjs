@@ -1,6 +1,5 @@
 import https from 'https';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
-import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand, ScanCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
@@ -44,7 +43,6 @@ const CORS = {
 };
 
 const ses       = new SESClient({ region: 'us-east-1' });
-const sns       = new SNSClient({ region: 'us-east-1' });
 const s3        = new S3Client({ region: 'us-east-2' });
 const dynamoRaw = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo    = DynamoDBDocumentClient.from(dynamoRaw);
@@ -119,14 +117,6 @@ async function sendEmail({ to, subject, body }) {
     Source: `"David Nicholson Art" <${SES_FROM}>`,
     Destination: { ToAddresses: [to] },
     Message: { Subject: { Data: subject }, Body: { Text: { Data: body } } }
-  }));
-}
-
-async function sendSMS({ phone, message }) {
-  await sns.send(new PublishCommand({
-    PhoneNumber: phone.startsWith('+') ? phone : '+1' + phone.replace(/\D/g,''),
-    Message: message,
-    OriginationNumber: '+18444767251',
   }));
 }
 
@@ -463,15 +453,10 @@ async function proxyImage(imageId) {
 async function sendLink(body) {
   const { type, to, url, title } = body;
   if (!type || !to || !url) return err('Missing required fields');
+  if (type !== 'email') return err('Invalid type');
+  if (!to.includes('@')) return err('Invalid email');
   const text = `Here's the print you were looking at:\n\n${title || 'David Nicholson Art'}\n${url}\n\ndavidnicholsonart.com`;
-  if (type === 'email') {
-    if (!to.includes('@')) return err('Invalid email');
-    await sendEmail({ to, subject: 'Print from David Nicholson Art', body: text });
-  } else if (type === 'sms') {
-    await sendSMS({ phone: to, message: `Print from David Nicholson Art: ${url}` });
-  } else {
-    return err('Invalid type');
-  }
+  await sendEmail({ to, subject: 'Print from David Nicholson Art', body: text });
   return ok({ sent: true });
 }
 
