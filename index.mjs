@@ -1,4 +1,5 @@
 import https from 'https';
+import { timingSafeEqual } from 'crypto';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand, ScanCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
@@ -50,9 +51,36 @@ const dynamo    = DynamoDBDocumentClient.from(dynamoRaw);
 function ok(body, c)             { return { statusCode: 200, headers: { ...(c||CORS), 'Content-Type': 'application/json' }, body: JSON.stringify(body) }; }
 function err(msg, status=500, c) { return { statusCode: status, headers: c||CORS, body: JSON.stringify({ error: msg }) }; }
 
+// Timing-safe string comparison (lengths may differ)
+function safeEqual(a, b) {
+  const bufA = Buffer.from(String(a));
+  const bufB = Buffer.from(String(b));
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
+}
+
 function checkAdminAuth(event) {
-  // Token auth disabled — relying on password gate in admin.html
-  return true;
+  const token = event.queryStringParameters?.token
+    || event.headers?.['x-admin-token']
+    || event.headers?.['X-Admin-Token']
+    || '';
+  if (!ADMIN_TOKEN || !token) return false;
+  return safeEqual(token, ADMIN_TOKEN);
+}
+
+// POST /admin/verify-password — public endpoint (no token required).
+// Checks the submitted PIN against the PASSWORD env var; on success returns
+// the ADMIN_TOKEN, which the frontend then sends on all /admin/* calls.
+// This keeps both the PIN and the token out of public HTML source.
+async function adminVerifyPassword(body, cors) {
+  const password = body?.password;
+  const envPassword = process.env.PASSWORD;
+  if (!envPassword) return err('Server not configured', 500, cors);
+  if (!password)    return err('Password required', 400, cors);
+  if (safeEqual(password, envPassword)) {
+    return ok({ verified: true, token: ADMIN_TOKEN }, cors);
+  }
+  return err('Incorrect password', 401, cors);
 }
 
 // ── Square helpers ──
@@ -1012,6 +1040,9 @@ export const handler = async (event) => {
     if (method === 'POST' && path === '/send-link')                       return await sendLink(JSON.parse(event.body || '{}'));
     if (method === 'POST' && path === '/guestbook')                       return await guestbook(JSON.parse(event.body || '{}'));
     if (method === 'POST' && path === '/checkout')                        return await checkout(JSON.parse(event.body || '{}'));
+
+    // Admin password verification — public (no token); must come before the auth-gated /admin block
+    if (method === 'POST' && path === '/admin/verify-password') return await adminVerifyPassword(JSON.parse(event.body || '{}'), cors);
 
     // Admin routes
     if (path.startsWith('/admin')) {

@@ -2,18 +2,18 @@
 
 ## What’s Live
 
-|URL                                                 |Purpose                                                          |
-|----------------------------------------------------|-----------------------------------------------------------------|
-|<https://davidnicholsonart.com>                     |Main entry point / homepage (index.html) — primary public site   |
-|<https://davidnicholsonart.com/gallery.html>        |Public print gallery with cart + checkout                        |
-|<https://davidnicholsonart.com/shop.html>           |Shop page                                                        |
-|<https://davidnicholsonart.com/shipping.html>       |Shipping & returns info                                          |
-|<https://davidnicholsonart.com/kiosk.html>          |iPad kiosk for art fairs                                         |
-|<https://davidnicholsonart.com/admin.html>          |Admin dashboard — password gated (172377)                        |
-|<https://davidnicholsonart.com/booth.html>          |Booth planner — art fair wall layout tool (noindex, admin-linked)|
-|<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal       |
-|<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)  |
-|<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                           |
+|URL                                                 |Purpose                                                                                      |
+|----------------------------------------------------|---------------------------------------------------------------------------------------------|
+|<https://davidnicholsonart.com>                     |Main entry point / homepage (index.html) — primary public site                               |
+|<https://davidnicholsonart.com/gallery.html>        |Public print gallery with cart + checkout                                                    |
+|<https://davidnicholsonart.com/shop.html>           |LEGACY — archived dark-theme gallery; noindexed, banner links to gallery.html. Do not update.|
+|<https://davidnicholsonart.com/shipping.html>       |Shipping & returns info                                                                      |
+|<https://davidnicholsonart.com/kiosk.html>          |iPad kiosk for art fairs                                                                     |
+|<https://davidnicholsonart.com/admin.html>          |Admin dashboard — PIN gated (verified server-side)                                           |
+|<https://davidnicholsonart.com/booth.html>          |Booth planner — art fair wall layout tool (noindex, admin-linked)                            |
+|<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal                                   |
+|<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)                              |
+|<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                                                       |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
 **Deploy:** Push to GitHub → GitHub Actions auto-deploys to S3, deploys Lambda, and invalidates both CloudFront distributions in ~60 seconds.
@@ -76,12 +76,12 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 
 ## Square
 
-|Item                   |Value                                                             |
-|-----------------------|------------------------------------------------------------------|
-|Square Online Store    |<https://david-nicholson-art.square.site>                         |
-|Application ID         |`sq0idp-6D-Q6hGLP9tk-medwFpxvQ`                                   |
-|Production Access Token|`EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53`|
-|Location ID            |`LYVD3ZGR3X4KE`                                                   |
+|Item                   |Value                                                                            |
+|-----------------------|---------------------------------------------------------------------------------|
+|Square Online Store    |<https://david-nicholson-art.square.site>                                        |
+|Application ID         |`sq0idp-6D-Q6hGLP9tk-medwFpxvQ`                                                  |
+|Production Access Token|Stored in Lambda env var `SQUARE_TOKEN` — see AWS console (do not commit to repo)|
+|Location ID            |`LYVD3ZGR3X4KE`                                                                  |
 
 **Product URL pattern:**
 
@@ -159,15 +159,16 @@ Static HTML files generated at build time by `generate-prints.js`. One file per 
 |Role           |`arn:aws:iam::892204037842:role/dna-kiosk-role`         |
 |API Gateway URL|`https://doqg3wcta7.execute-api.us-east-1.amazonaws.com`|
 
-**Environment variables:**
+**Environment variables** (values live in the Lambda console only — never commit secrets to the repo):
 
 ```
-SQUARE_TOKEN=EAAAl92H7EIacTMeOgSxuIcLAxZlfv5DAG7OhNhxC97Qk6YnJJAFQ5QZruKwvh53
-SQUARE_LOC=LYVD3ZGR3X4KE
-SES_FROM=david@davidnicholsonart.com
-NOTIFY_EMAIL=david@davidnicholsonart.com
-API_URL=https://davidnicholsonart.com
-ADMIN_TOKEN=dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE
+SQUARE_TOKEN  = Square production access token (see AWS console)
+SQUARE_LOC    = LYVD3ZGR3X4KE
+SES_FROM      = david@davidnicholsonart.com
+NOTIFY_EMAIL  = david@davidnicholsonart.com
+API_URL       = https://davidnicholsonart.com
+ADMIN_TOKEN   = admin API token (see AWS console)
+PASSWORD      = admin.html PIN (see AWS console) — added June 11 2026
 ```
 
 **`API_URL` is critical:** Controls the domain used when building image proxy URLs (`/image?id=...`). Must be set to `https://davidnicholsonart.com` so image URLs use the CloudFront domain instead of the raw API Gateway domain. Pinterest rejects API Gateway domains in `image_url` fields.
@@ -275,7 +276,7 @@ Sends and receives from Apple Mail on all devices.
 - **Google Search Console** — verified via GA tag; sitemap submitted and confirmed fetched
 - **Open Graph** — `og-image.jpg` (1200×630, Shuttlecock No. 2) in repo root; OG + Twitter card tags on index.html and gallery.html
 - **Per-product OG tags** — `/prints/{slug}.html` files have product-specific title, description, and image for Facebook/Pinterest share previews and Google SEO
-- **sitemap.xml** — lists index.html, gallery.html, shop.html, shipping.html
+- **sitemap.xml** — lists index.html, gallery.html, shipping.html (shop.html removed June 11 2026 — legacy, noindexed)
 - **robots.txt** — allows all crawlers, disallows kiosk.html, references sitemap
 - **kiosk.html** — has `noindex, nofollow` meta tag; excluded from sitemap
 - **Product image alt text** — gallery.html uses Square product description as `alt` text on all images (falls back to title if no description)
@@ -346,7 +347,7 @@ All are single-file, no framework — intentional, keep it that way.
 
 ### admin.html (admin dashboard)
 
-- Password gate: `172377`
+- Password gate: PIN verified server-side via `POST /admin/verify-password` (PIN lives only in Lambda env var `PASSWORD`; on success Lambda returns `ADMIN_TOKEN`, which the page sends as `?token=` on all `/admin/*` calls)
 - **Always open at `https://davidnicholsonart.com/admin.html`** (apex, no www) — Safari CORS redirect cache issue
 - **PWA:** installable as home screen app on iPhone/iPad via Safari → Share → Add to Home Screen
   - `admin.webmanifest` — app manifest (name: “DNA Admin”, theme: #f8f6f3, orange icon)
@@ -409,7 +410,7 @@ All are single-file, no framework — intentional, keep it that way.
 - 2026: 23 expense records from Hurdlr import ($4,049.02 total) — no receipt links yet, add manually
 - Total: 100 expenses seeded via `seed-expenses.js`
 
-**Admin token:** `dna-admin-k7x2mP9qR4wL8nJ3vF6tY1hB5cZ0sE` — stored as Lambda env var `ADMIN_TOKEN`; currently bypassed (passed as `?token=` query param); auth enforcement deferred
+**Admin token:** stored as Lambda env var `ADMIN_TOKEN` (value in AWS console only). **Enforced server-side as of June 11 2026** — `checkAdminAuth()` validates `?token=` / `X-Admin-Token` with a timing-safe comparison; all `/admin/*` routes return 401 without it. The frontend obtains the token at login via `/admin/verify-password`.
 
 ### varied-readings.html (show page)
 
@@ -484,6 +485,21 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ## On the Horizon
 
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
+
+-----
+
+## Completed This Session (June 11 2026)
+
+**Maintainability review + security fixes**
+
+- ✓ **Server-side admin auth enforced (`index.mjs`)** — `checkAdminAuth()` now actually validates the token (was `return true`). Accepts `?token=` or `X-Admin-Token` header, compares to `ADMIN_TOKEN` env var with `crypto.timingSafeEqual`. All `/admin/*` routes 401 without a valid token.
+- ✓ **PIN moved out of public HTML (`index.mjs` + `admin.html`)** — new public endpoint `POST /admin/verify-password` checks the submitted PIN against new Lambda env var `PASSWORD` (timing-safe) and returns `{verified:true, token:ADMIN_TOKEN}`. admin.html no longer contains `PASSWORD` or `ADMIN_TOKEN` constants; on login it fetches the token and keeps it in a JS variable (`sessionToken`) for the page session. Auto-submit at 6 digits preserved; in-flight guard prevents double-submit; 401 on any API call logs out with “Session expired.”
+- ✓ **Logout clears the token** — closing/reloading the page requires the PIN again (token lives only in memory, not storage).
+- ✓ **Admin SW cache key** — bumped to `dna-admin-v26`.
+- ✓ **shop.html marked LEGACY** — noindex/nofollow meta, source-comment header (“do not add features here; update gallery.html”), visible archived-banner linking to gallery.html, removed from sitemap.xml. Kept for old links.
+- ✓ **Secrets scrubbed from this doc** — Square production token, admin token, and PIN values removed; doc now points to Lambda env vars. NOTE: old values remain in git history — rotating the Square token is recommended (reminder set).
+
+**AWS step required (manual):** add Lambda env var `PASSWORD` to `dna-kiosk` before deploying — see below.
 
 -----
 
@@ -696,7 +712,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v25`; bump in `admin-sw.js` after every admin.html change
+- **Admin SW cache key** — currently `dna-admin-v26`; bump in `admin-sw.js` after every admin.html change
 - **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
