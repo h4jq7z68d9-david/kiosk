@@ -689,6 +689,7 @@
                   <th>State</th>
                   <th style="text-align:right">Price</th>
                   <th style="text-align:right">Net</th>
+                  <th style="width:32px"></th>
                 </tr>
               </thead>
               <tbody id="sl-table-body"></tbody>
@@ -2744,7 +2745,7 @@ function renderSalesLog() {
   `;
 
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No sales match the current filters.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">No sales match the current filters.</div></td></tr>';
     return;
   }
 
@@ -2764,6 +2765,7 @@ function renderSalesLog() {
       <td class="mono dim">${s.state || '—'}</td>
       <td style="text-align:right">${priceHtml}</td>
       <td style="text-align:right;font-family:var(--mono);font-size:13px;color:var(--green)">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td style="text-align:center"><button class="sale-del" onclick="openEditSaleModal('${painting.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button></td>
     </tr>`;
   }).join('');
 }
