@@ -298,6 +298,18 @@ All are single-file, no framework — intentional, keep it that way.
 
 **Session workflow:** Claude generates files here, David downloads and pushes to GitHub. GitHub is NOT the source of truth during a session — the latest file Claude produced is. At the start of each session, upload all files from the repo as a starting point.
 
+### Artist Style & Bio
+
+**Style label:** "Regionalist Pop" — David's chosen term for use at art fairs and in conversation. Regionalist subject matter (everyday Midwestern places and people, vernacular scenes) combined with Pop Art's visual language and color confidence. Work is representational but not realistic — forms are distilled and simplified, color is observed then intensified.
+
+**About statement (index.html + meta descriptions):**
+> david nicholson is a kansas-based regionalist pop painter working from observation, using distilled, simplified compositions and color to express and reinterpret
+
+**Meta description (og:description + twitter:description):**
+> Kansas-based regionalist pop painter working from observation. Prints available online and at art fairs across the KC area.
+
+-----
+
 ### index.html (homepage)
 
 - Hero column width: 820px
