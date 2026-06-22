@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Varied Readings — David Nicholson</title>
-<meta name="description" content="Varied Readings — paintings in pairs by David Nicholson. Phoenix Gallery, Lawrence, KS, April 2026.">
-<meta property="og:title" content="Varied Readings — David Nicholson">
-<meta property="og:description" content="Work in pairs. Phoenix Gallery, Lawrence KS.">
+<title>Art Westport 2025 — David Nicholson</title>
+<meta name="description" content="Art Westport, September 5–7, 2025. Photos and work by David Nicholson.">
+<meta property="og:title" content="Art Westport 2025 — David Nicholson">
+<meta property="og:description" content="Art Westport, September 5–7, 2025. Kansas City, MO.">
 <meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
 <link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,18 +21,10 @@
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font);
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding-top: var(--nav-h);
+  background: var(--bg); color: var(--ink); font-family: var(--font);
+  font-weight: 300; -webkit-font-smoothing: antialiased;
+  min-height: 100vh; display: flex; flex-direction: column; padding-top: var(--nav-h);
 }
-
-/* NAV — matches site chrome */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
 @media (min-width: 701px) { nav { padding: 0 40px; } }
 @media (min-width: 1100px) { nav { padding: 0 60px; } }
@@ -40,80 +32,23 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .nav-links { display: flex; align-items: center; gap: 8px; }
 .nav-btn { background: none; border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
 .nav-btn:hover { border-color: var(--ink); }
-
-main {
-  flex: 1;
-  width: 100%;
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 40px;
-  box-sizing: border-box;
-}
-
-.lead {
-  margin: 48px 0 8px;
-  text-align: center;
-}
-.show-title {
-  font-size: clamp(26px, 5vw, 40px);
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  text-transform: lowercase;
-  color: var(--ink);
-  line-height: 1.15;
-}
-.show-meta {
-  margin: 14px 0 0;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: lowercase;
-  color: var(--ink3);
-  line-height: 1.7;
-}
-.show-meta a { color: var(--accent-ink); text-decoration: none; }
-.lead p {
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 1.85;
-  color: var(--ink2);
-  margin-top: 20px;
-}
-
-.plates {
-  margin: 56px 0 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 56px;
-}
-.plate {
-  width: 100%;
-  opacity: 0;
-  transform: translateY(18px);
-  animation: rise 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-}
+main { flex: 1; width: 100%; max-width: 780px; margin: 0 auto; padding: 0 40px; box-sizing: border-box; }
+.lead { margin: 48px 0 8px; text-align: center; }
+.show-title { font-size: clamp(26px, 5vw, 40px); font-weight: 300; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); line-height: 1.15; }
+.show-meta { margin: 14px 0 0; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink3); line-height: 1.7; }
+.plates { margin: 56px 0 8px; display: flex; flex-direction: column; gap: 56px; }
+.plate { width: 100%; opacity: 0; transform: translateY(18px); animation: rise 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
 .plate:nth-child(1) { animation-delay: 0.10s; }
 .plate:nth-child(2) { animation-delay: 0.28s; }
 .plate:nth-child(3) { animation-delay: 0.46s; }
-.plate img {
-  display: block;
-  width: 100%;
-  height: auto;
-  background: #e7eaed;
-}
-@keyframes rise {
-  to { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .plate { animation: none; opacity: 1; transform: none; }
-}
-
-/* FOOTER — full bleed, matches site chrome */
+.plate:nth-child(4) { animation-delay: 0.64s; }
+.plate img { display: block; width: 100%; height: auto; background: #e7eaed; }
+@keyframes rise { to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .plate { animation: none; opacity: 1; transform: none; } }
 footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 28px 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
 .footer-link { background: none; border: none; color: var(--ink2); font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; padding: 0; cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
 .footer-link:hover { color: var(--ink); }
-
 @media (max-width: 600px) {
   main { padding: 0 20px; }
   .lead { margin-top: 36px; }
@@ -134,20 +69,22 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 28px 40
 
 <main>
   <div class="lead">
-    <h1 class="show-title">varied readings</h1>
-    <div class="show-meta">april 24th &ndash; may 22nd, 2026<br><a href="https://www.phoenixgalleryart.com" target="_blank" rel="noopener">phoenix gallery &mdash; lawrence, ks</a></div>
-    <p>Varied Readings presented work in pairs, each grouping an exploration of adjacent subject matter approached from shifting compositional and chromatic vantage points.</p>
+    <h1 class="show-title">art westport</h1>
+    <div class="show-meta">september 5th, 6th &amp; 7th, 2025<br>kansas city, mo</div>
   </div>
 
   <div class="plates">
     <figure class="plate">
-      <img src="https://davidnicholsonart.com/4_26_varied_readings/1.jpeg" alt="Varied Readings at Phoenix Gallery, Lawrence, KS" loading="lazy">
+      <img src="https://davidnicholsonart.com/past/westport2025_1.jpeg" alt="Art Westport 2025" loading="lazy">
     </figure>
     <figure class="plate">
-      <img src="https://davidnicholsonart.com/4_26_varied_readings/2.jpeg" alt="Varied Readings at Phoenix Gallery, Lawrence, KS" loading="lazy">
+      <img src="https://davidnicholsonart.com/past/westport2025_2.jpeg" alt="Art Westport 2025" loading="lazy">
     </figure>
     <figure class="plate">
-      <img src="https://davidnicholsonart.com/4_26_varied_readings/3.jpeg" alt="Varied Readings at Phoenix Gallery, Lawrence, KS" loading="lazy">
+      <img src="https://davidnicholsonart.com/past/westport2025_3.jpeg" alt="Art Westport 2025" loading="lazy">
+    </figure>
+    <figure class="plate">
+      <img src="https://davidnicholsonart.com/past/westport2025_4.jpeg" alt="Art Westport 2025" loading="lazy">
     </figure>
   </div>
 </main>
