@@ -2446,7 +2446,7 @@ function openQuickSaleModal() {
   // Populate painting picker from db
   const sel = document.getElementById('sale-painting-select');
   sel.innerHTML = '<option value="">— select —</option>';
-  const sorted = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
+  const sorted = [...db.paintings].sort((a,b) => (a.title||'').localeCompare(b.title||''));
   sorted.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.id; opt.textContent = p.title;
@@ -2541,7 +2541,7 @@ async function saveSale() {
       p.sales.push(data.sale);
       // Decrement print stock for new print sales (can go negative — intentional)
       const saleType = saleData.type;
-      if (saleType === 'large' || saleType === 'small') {
+      if ((saleType === 'large' || saleType === 'small') && p.stock) {
         p.stock[saleType] = (p.stock[saleType] || 0) - 1;
         api('PUT', `/paintings/${salePaintingId}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '' })
           .catch(e => console.error('Stock decrement failed:', e));
@@ -2569,7 +2569,7 @@ function esc(str) {
 //  PRICE TAGS (Avery 5371 — 3.5×2", 10/sheet)
 // ═══════════════════════════════════════════
 function printPriceTags() {
-  const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
+  const list = [...db.paintings].filter(p => !p.marketItem).sort((a,b) => (a.title||'').localeCompare(b.title||''));
 
   const cards = list.filter(p => p.originalAvail === true).map(p => {
     const price = retail(p);
@@ -2804,8 +2804,7 @@ let gsData = []; // all gallery stock records
 let gsLoaded = false;
 
 async function loadGalleryStock() {
-  const res = await fetch('/admin/gallery-stock');
-  const json = await res.json();
+  const json = await api('GET', '/gallery-stock');
   gsData = json.stock || [];
   gsLoaded = true;
 }
@@ -2891,11 +2890,7 @@ async function gsAdjust(paintingId, size, delta) {
   rec[field] = Math.max(0, (Number(rec[field]) || 0) + delta);
   renderGalleryStock();
 
-  await fetch('/admin/gallery-stock', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paintingId: rec.paintingId, galleryName: rec.galleryName, stockSm: rec.stockSm, stockLg: rec.stockLg }),
-  });
+  await api('PUT', '/gallery-stock', { paintingId: rec.paintingId, galleryName: rec.galleryName, stockSm: rec.stockSm, stockLg: rec.stockLg });
 }
 
 function exportGalleryStockCsv() {
