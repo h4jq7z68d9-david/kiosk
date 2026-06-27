@@ -360,6 +360,7 @@ All are single-file, no framework — intentional, keep it that way.
 ### admin.html (admin dashboard)
 
 - Password gate: PIN verified server-side via `POST /admin/verify-password` (PIN lives only in Lambda env var `PASSWORD`; on success Lambda returns `ADMIN_TOKEN`, which the page sends as `?token=` on all `/admin/*` calls)
+- **All admin API calls must go through the `api()` helper**, which appends `?token=` and prefixes `API_BASE` (= `https://davidnicholsonart.com/admin`). Pass the path WITHOUT the `/admin` prefix (e.g. `api('GET','/gallery-stock')`, `api('GET','/paintings')`) — `API_BASE` already supplies it. Never use a raw relative `fetch('/admin/…')`: it skips the token and 401s.
 - **Always open at `https://davidnicholsonart.com/admin.html`** (apex, no www) — Safari CORS redirect cache issue
 - **PWA:** installable as home screen app on iPhone/iPad via Safari → Share → Add to Home Screen
   - `admin.webmanifest` — app manifest (name: “DNA Admin”, theme: #f8f6f3, orange icon)
@@ -450,7 +451,7 @@ All are single-file, no framework — intentional, keep it that way.
 
 |Table              |Purpose                                                                     |
 |-------------------|----------------------------------------------------------------------------|
-|`dna-paintings`    |All paintings + `__config__` record (stores `rate` and optional `rateLarge`)|
+|`dna-paintings`    |All paintings + `__config__` record (stores `rate` and optional `rateLarge`). Records with `marketItem: true` (Boolean) are hidden from Inventory/Prints/Gallery Stock and exist only to anchor manual market sales in the Sales Log — e.g. `manual_sale` for small originals sold at markets. `title` must be String type.|
 |`dna-sales`        |Sales records with `paintingId` foreign key + GSI `paintingId-index`        |
 |`dna-guestbook`    |Guest book entries                                                          |
 |`dna-orders`       |Square order records                                                        |
@@ -497,6 +498,25 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ## On the Horizon
 
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
+
+-----
+
+## Completed This Session (June 26 2026)
+
+**Market-item support + gallery-stock auth fix**
+
+Goal: sell small originals at first market via a manual Square line item, track them in the Sales Log only — keep them out of Inventory, Prints, Gallery Stock, and the public/kiosk feeds.
+
+- ✓ **`marketItem` flag (admin.html)** — paintings with `marketItem: true` are filtered out of the Inventory tab, Prints tab, Gallery Stock (render + CSV), dashboard stock/count math (`renderCards` now builds a `realPaintings` list excluding them), inventory CSV export, and price-tag printing. They still appear in the Sales Log (which iterates all paintings) and in the sale-modal painting picker (so a market sale can be logged against them).
+- ✓ **`manual_sale` placeholder record (`dna-paintings`)** — single record, `id: manual_sale`, `marketItem: true` (Boolean), `title` "Small Original (Market)". All market small-original sales attach to it as `dna-sales` children. **Title MUST be type String (S)** — a String Set (SS) breaks every `.localeCompare` render. No `stock` field needed (code is now guarded).
+- ✓ **`Market Item` Square custom attribute (`index.mjs`)** — `getAttr('Market Item') === true` now read into `squareData.marketItem`; the auto-create loop skips Square items flagged true, so "Large Print" / "Small Print" quick-charge line items no longer get auto-created into `dna-paintings`. (Existing Large/Small Print records must be deleted manually once; they won't return.)
+- ✓ **Defensive guards (admin.html)** — every `p.stock.large/small` → `p.stock?.…`; every `p.sales.forEach/filter` → `(p.sales||[])`; title sorts → `(a.title||'')`. A malformed/market record can no longer crash a render.
+- ✓ **Gallery-stock auth bug fixed (admin.html)** — `loadGalleryStock` and `gsAdjust` were using raw `fetch('/admin/gallery-stock')` (relative path, **no token**) instead of the `api()` helper. This 401'd once the relative-path routing stopped working, blanking the Gallery Stock tab. Now routed through `api('GET'/'PUT', '/gallery-stock')` — `API_BASE` already ends in `/admin`, so the path is `/gallery-stock` (NOT `/admin/gallery-stock`, which would double the prefix). Authenticated and consistent with all other calls.
+- ✓ **Admin SW cache key** — bumped to `dna-admin-v30`.
+
+**Debug note:** symptoms (empty inventory, zeroed gallery stock, dead sale button, missing dashboard revenue) were all downstream of unguarded `.stock`/`.title` access on the market record plus the unauthenticated gallery-stock fetch. The "missing total revenue" was a red herring — the dashboard has no single Total Revenue card by design (revenue is split into fair/online/gallery cards). Root cause of the final breakage: `title` added in DynamoDB as a String Set instead of a String.
+
+**Manual steps (David):** create `Market Item` boolean custom attribute in Square + set true on Large Print and Small Print; delete the existing Large Print / Small Print records from `dna-paintings`.
 
 -----
 
@@ -724,7 +744,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v26`; bump in `admin-sw.js` after every admin.html change
+- **Admin SW cache key** — currently `dna-admin-v30`; bump in `admin-sw.js` after every admin.html change
 - **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
