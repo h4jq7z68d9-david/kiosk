@@ -634,6 +634,7 @@ async function adminGetPaintings(cors) {
       squareId:     obj.id,
       title:        item.name,
       originalAvail: getAttr('Original Available') === true,
+      marketItem:   getAttr('Market Item') === true,
       year:         getAttr('Year') || extractYear(obj) || '',
       width:        parseFloat(getAttr('Width')) || null,
       height:       parseFloat(getAttr('Height')) || null,
@@ -688,6 +689,7 @@ async function adminGetPaintings(cors) {
   const autoCreatePromises = [];
   for (const sq of Object.values(squareById)) {
     if (matchedSquareIds.has(sq.squareId)) continue;
+    if (sq.marketItem) continue;
     const id   = 'p' + Date.now() + Math.floor(Math.random() * 1000);
     const item = {
       id,

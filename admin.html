@@ -1220,7 +1220,7 @@ function renderPrintsTab() {
   const GOAL_LARGE = 2;
   const GOAL_SMALL = 3;
 
-  const paintings = (db.paintings || []);
+  const paintings = (db.paintings || []).filter(p => !p.marketItem);
 
   const now = Date.now();
   const MS_PER_DAY = 86400000;
@@ -1671,7 +1671,7 @@ function renderChart() {
 }
 
 function renderTable() {
-  let list = applyFilter(db.paintings);
+  let list = applyFilter(db.paintings.filter(p => !p.marketItem));
   list = sortedPaintings(list);
   ['title','year','cost','retail'].forEach(f => {
     const el = document.getElementById('sort-'+f);
@@ -2831,6 +2831,7 @@ function renderGalleryStock() {
   }
 
   const rows = db.paintings
+    .filter(p => !p.marketItem)
     .slice()
     .sort((a, b) => a.title.localeCompare(b.title))
     .map(p => {
@@ -2899,6 +2900,7 @@ async function gsAdjust(paintingId, size, delta) {
 function exportGalleryStockCsv() {
   const gallery = document.getElementById('gs-gallery-filter').value;
   const rows = db.paintings
+    .filter(p => !p.marketItem)
     .slice()
     .sort((a, b) => a.title.localeCompare(b.title))
     .map(p => {
