@@ -1671,7 +1671,7 @@ function renderChart() {
 }
 
 function renderTable() {
-  let list = applyFilter(db.paintings.filter(p => !p.marketItem));
+  let list = applyFilter((db.paintings || []).filter(p => !p.marketItem));
   list = sortedPaintings(list);
   ['title','year','cost','retail'].forEach(f => {
     const el = document.getElementById('sort-'+f);
