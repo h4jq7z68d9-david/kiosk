@@ -1486,7 +1486,7 @@ function applyFilter(list) {
   if (activeFilter === 'never-sold')     return list.filter(p => p.sales.length === 0);
   if (activeFilter === 'sold')           return list.filter(p => p.sales.length > 0);
   if (activeFilter === 'original-avail') return list.filter(p => originalAvailInSquare(p));
-  if (activeFilter === 'low-stock')      return list.filter(p => (p.stock.large||0) === 0 || (p.stock.small||0) === 0);
+  if (activeFilter === 'low-stock')      return list.filter(p => (p.stock?.large||0) === 0 || (p.stock?.small||0) === 0);
   if (activeFilter === 'no-moms')        return list.filter(p => !p.momsHas);
   if (activeFilter === 'at-gallery')     return list.filter(p => !!p.atGallery);
   return list;
@@ -1539,11 +1539,12 @@ function render() {
 }
 
 function renderCards() {
-  const origSold = db.paintings.filter(p => p.originalAvail !== true).length;
+  const realPaintings = db.paintings.filter(p => !p.marketItem);
+  const origSold = realPaintings.filter(p => p.originalAvail !== true).length;
   let totalRev = 0, largeSold = 0, smallSold = 0;
   let revFair = 0, revOnline = 0, revGallery = 0;
   db.paintings.forEach(p => {
-    p.sales.forEach(s => {
+    (p.sales || []).forEach(s => {
       const net = saleNet(s);
       totalRev += net;
       if (s.type === 'large') largeSold++;
@@ -1553,16 +1554,16 @@ function renderCards() {
       if (s.channel === 'gallery') revGallery += net;
     });
   });
-  const totalLarge = db.paintings.reduce((s,p) => s + (p.stock.large||0), 0);
-  const totalSmall = db.paintings.reduce((s,p) => s + (p.stock.small||0), 0);
-  const originalsInStock = db.paintings.filter(p => p.originalAvail === true).length;
+  const totalLarge = realPaintings.reduce((s,p) => s + (p.stock?.large||0), 0);
+  const totalSmall = realPaintings.reduce((s,p) => s + (p.stock?.small||0), 0);
+  const originalsInStock = realPaintings.filter(p => p.originalAvail === true).length;
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
 
   // Top print by size
   const lgCounts = {}, smCounts = {};
-  db.paintings.forEach(p => {
-    lgCounts[p.id] = { title: p.title, count: p.sales.filter(s => s.type === 'large').length };
-    smCounts[p.id] = { title: p.title, count: p.sales.filter(s => s.type === 'small').length };
+  realPaintings.forEach(p => {
+    lgCounts[p.id] = { title: p.title, count: (p.sales || []).filter(s => s.type === 'large').length };
+    smCounts[p.id] = { title: p.title, count: (p.sales || []).filter(s => s.type === 'small').length };
   });
   const topLg = Object.values(lgCounts).sort((a,b) => b.count - a.count)[0];
   const topSm = Object.values(smCounts).sort((a,b) => b.count - a.count)[0];
@@ -2659,7 +2660,7 @@ function downloadCsv(filename, rows) {
 }
 
 function exportInventoryCsv() {
-  const list = [...db.paintings].sort((a,b) => a.title.localeCompare(b.title));
+  const list = [...db.paintings].filter(p => !p.marketItem).sort((a,b) => a.title.localeCompare(b.title));
   const header = ['Title','Month','Year','Width','Height','Sq In','Price','Rounded',
                   'Lg Stock','Sm Stock','Lg Sold','Sm Sold','Original Sold'];
   const rows = list.map(p => {
