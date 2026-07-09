@@ -1987,6 +1987,26 @@ function onReceiptFileChange(event) {
   document.getElementById('exp-upload-zone').classList.add('has-file');
 }
 
+// iOS Safari's camera-capture flow occasionally hands us a file labeled
+// image/jpeg (with a .jpg name) that is still actually HEIC-encoded under
+// the hood — the browser's own claimed type/extension can't be trusted.
+// Re-encoding through a canvas guarantees we upload a real, decodable JPEG,
+// and lets a genuinely corrupt capture fail loudly instead of silently
+// uploading unusable bytes.
+async function normalizeImageFile(file) {
+  if (!file.type.startsWith('image/')) return file; // leave PDFs etc. alone
+  const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  const canvas = document.createElement('canvas');
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  canvas.getContext('2d').drawImage(bitmap, 0, 0);
+  bitmap.close && bitmap.close();
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.9));
+  if (!blob) throw new Error('Could not process image');
+  const base = (file.name || 'receipt').replace(/\.[^.]+$/, '');
+  return new File([blob], base + '.jpg', { type: 'image/jpeg' });
+}
+
 async function saveExpense() {
   const date     = document.getElementById('exp-date').value;
   const category = document.getElementById('exp-category').value;
@@ -2006,14 +2026,20 @@ async function saveExpense() {
     saveBtn.textContent = 'Uploading…';
     filenameEl.textContent = '⏳ uploading…';
     try {
+      let uploadFile = pendingReceiptFile;
+      try {
+        uploadFile = await normalizeImageFile(pendingReceiptFile);
+      } catch (imgErr) {
+        throw new Error('Photo could not be processed — it may not have captured correctly. Please retake it or choose a different photo.');
+      }
       const { uploadUrl, fileUrl } = await api('POST', '/expenses/receipt-url', {
-        filename: pendingReceiptFile.name,
-        contentType: pendingReceiptFile.type || 'application/octet-stream',
+        filename: uploadFile.name,
+        contentType: uploadFile.type || 'application/octet-stream',
         date: document.getElementById('exp-date').value,
         amount: parseFloat(document.getElementById('exp-amount').value) || 0,
         category: document.getElementById('exp-category').value,
       });
-      const putRes = await fetch(uploadUrl, { method: 'PUT', body: pendingReceiptFile, headers: { 'Content-Type': pendingReceiptFile.type || 'application/octet-stream' } });
+      const putRes = await fetch(uploadUrl, { method: 'PUT', body: uploadFile, headers: { 'Content-Type': uploadFile.type || 'application/octet-stream' } });
       if (!putRes.ok) throw new Error('S3 upload failed (' + putRes.status + ')');
       receiptUrl = fileUrl;
       filenameEl.textContent = '✓ uploaded';
