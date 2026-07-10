@@ -238,6 +238,7 @@ async function buildProductList() {
       url,
       variations,
       year:       extractYear(obj),
+      createdAt:  obj.created_at || '',
       originalAvail,
     });
   }
@@ -246,6 +247,7 @@ async function buildProductList() {
     const ya = a.year ? parseInt(a.year) : 0;
     const yb = b.year ? parseInt(b.year) : 0;
     if (yb !== ya) return yb - ya;
+    if (a.createdAt !== b.createdAt) return (b.createdAt || '').localeCompare(a.createdAt || '');
     return a.title.localeCompare(b.title);
   });
 
