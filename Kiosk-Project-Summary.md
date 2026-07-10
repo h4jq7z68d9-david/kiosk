@@ -492,12 +492,60 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Pending — In Order of Priority
 
-- [ ] **Meta Ads** — ~$5/day, paused
-- [ ] **Pinterest Ads** — ~$30/day minimum, paused
+- [ ] **Meta/Instagram Ads — launching now** — $25/week test campaign, 4-week minimum run. Setup and creative plan are in "Completed This Session (July 10 2026)" below. After 4 weeks: review per-ad results, double down on winners, pause losers, log spend under the Advertising expense category.
+- [ ] **Admin panel mobile/UX overhaul** — admin.html has grown to five dense tabs and is hard to use on iPad/iPhone (surfaced when trying to export the sales CSV on iPad). Ideas: split into more pages/views, rework tables for touch, make exports easier to reach on mobile. Scope TBD — discuss before building.
+- [ ] **Pinterest Ads** — ~$30/day minimum, paused (too expensive for now)
 
 ## On the Horizon
 
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
+
+-----
+
+## Completed This Session (July 10 2026)
+
+**Instagram/Meta ad campaign — planned and ready to launch**
+
+Strategy session (no code changes). Decision: keep the full-time job, grow the art business as a long-game side track, and start driving online demand with a small paid test. Consulting/SaaS side-business ideas were explored and deliberately shelved — not to-dos.
+
+**Campaign structure (Meta Ads Manager):**
+
+- One campaign → one ad set ($25/week budget, Conversions objective) → **five ads, one print image each**. Meta auto-shifts budget to whichever ad converts — this answers "which print should I promote" with data instead of guessing. Not a carousel (carousel hides per-print performance).
+- Targeting: broad art/illustration/painting/design interests, ages 18–60, US (+ anywhere with prior sales)
+- Each ad links to gallery.html — ideally the specific print via `/prints/{slug}.html` or `?view=` deep link
+- Run 4 weeks minimum before judging; check daily the first week only
+- Same copy pool pasted into all five ads (Ads Manager allows up to 5 primary texts + 5 headlines per ad and mix-and-matches); the image is the only variable being tested
+
+**Ad creative — five prints, chosen from sales-log analysis (CSV export, July 2026):**
+
+1. **KS Wind Farm No. 2** — top print seller (4 sales), repeat gallery seller
+2. **KS Wind Farm No. 1** — one of only two prints ever sold *online* (full $60) — proven online converter
+3. **For the Next Hour** — the other online sale, plus a fair sale
+4. **U.S. 50 East** — 2 large fair sales at full price
+5. **Commuter** — sold prints *and* the original (Utility Pastel and Alley Western Auto share this pattern — good alternates)
+
+Key data insight: sales are breadth-driven — on a fair day David sells ~10 *different* prints, one each, not multiples of one. So limited editions were rejected as a strategy; the print-everything catalog approach stays. The bottleneck is overall demand/discovery, hence advertising.
+
+**Final ad copy (lowercase brand voice, "regionalist pop" positioning mixed with plain-language options so the data shows which converts):**
+
+Primary text options:
+1. "wind farms, highways, and quiet streets — the midwest, painted in oil. prints from $35."
+2. "the places you drive past every day. worth a longer look. prints from $35."
+3. "regionalist pop — the midwest in bright, saturated oil. wind farms, highways, quiet streets. prints from $35."
+4. "grant wood meets pop color. paintings of the everyday midwest. prints from $35."
+5. "a utility pole at 6am can be beautiful. prints from $35."
+
+Headlines: "the midwest, painted" · "regionalist pop" · "prints from $35" · "art of ordinary places"
+
+Description (rarely shown on IG placements): "painted in oil. printed to last."
+
+**Where copy goes in Ads Manager:** Primary text = caption above the image (hook must land in first ~125 chars); Headline = bold line next to the Shop Now button; Description = small gray text (mostly Facebook-only).
+
+**Follow-ups:**
+
+- Log ad spend under the **Advertising** expense category (dashboard reminder banner already nags monthly)
+- After 4 weeks: pull per-ad results, keep winners, note whether the "regionalist pop" copy or plain copy converts better
+- New to-do added to Pending: **admin panel mobile/UX overhaul** (exporting the sales CSV on iPad was painful — admin has outgrown its five-tab single-page layout)
 
 -----
 
