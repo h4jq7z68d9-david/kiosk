@@ -82,7 +82,7 @@ a { color: inherit; text-decoration: none; }
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 12px; }
 @media (min-width: 701px) { nav { padding: 0 40px; } }
 @media (min-width: 1100px) { nav { padding: 0 60px; } }
-.nav-title { font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: 0.05em; text-transform: lowercase; white-space: nowrap; flex: 1; }
+.nav-title { font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: 0.05em; text-transform: lowercase; white-space: nowrap; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .nav-center { flex: 1; min-width: 0; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
 .nav-btn { background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 8px 20px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff; cursor: pointer; white-space: nowrap; transition: background 0.2s, border-color 0.2s; text-decoration: none; display: inline-block; }
 .nav-btn:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
@@ -90,6 +90,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .nav-cart svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #fff; border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
 .nav-cart-count.on { display: block; }
+.nav-links { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 
 /* LAYOUT — sidebar + grid */
 .page-body {
@@ -360,10 +361,14 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .btn-checkout:disabled { opacity: 0.4; cursor: default; }
 
 /* FOOTER */
-footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
-.footer-gb-btn { background: none; border: none; color: var(--ink2); font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; padding: 0; cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
-.footer-gb-btn:hover { color: var(--ink); }
+footer { border-top: 1px solid var(--border); padding: 64px 24px 48px; }
+.f-inner { max-width: 1200px; margin: 0 auto; }
+.f-cols { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 40px; }
+.f-brand { font-size: clamp(26px, 3vw, 36px); font-weight: 700; text-transform: lowercase; letter-spacing: -0.01em; }
+.f-links { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.f-links a, .f-links button { font-size: 15px; font-weight: 400; text-transform: lowercase; color: var(--ink2); background: none; border: none; padding: 0; font-family: var(--font); cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
+.f-links a:hover, .f-links button:hover { color: var(--ink); }
+.f-legal { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--ink3); letter-spacing: 0.06em; }
 
 /* TOAST */
 #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f1f3f5; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
@@ -377,11 +382,13 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px 48px; display: 
 
 <nav>
   <a class="nav-title" href="/index.html"><span style="margin-right:8px;font-size:16px;">&#8592;</span>david nicholson</a>
-  <a class="nav-btn" href="https://instagram.com/dave_nichol_son"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
-  <button class="nav-cart" onclick="openCart()" aria-label="cart">
+  <div class="nav-links">
+    <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
+    <button class="nav-cart" onclick="openCart()" aria-label="cart">
     <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-    <span class="nav-cart-count" id="cart-count">0</span>
-  </button>
+      <span class="nav-cart-count" id="cart-count">0</span>
+    </button>
+  </div>
 </nav>
 
 <!-- MOBILE JUMP BAR — visible only on ≤600px -->
@@ -935,6 +942,13 @@ function handleIncomingProduct() {
   }, 400);
 }
 
+function handleCartParam() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('cart') !== '1') return;
+  history.replaceState(null, '', '/gallery.html');
+  openCart();
+}
+
 function handleViewParam() {
   const params = new URLSearchParams(window.location.search);
   const viewId = params.get('view');
@@ -972,6 +986,7 @@ async function loadProducts() {
     renderGrid();
     updateCartCount();
     handleViewParam();
+    handleCartParam();
     handleIncomingProduct();
     setTimeout(initScrollSpy, 100);
   } catch {
@@ -1009,12 +1024,17 @@ loadProducts();
 </div>
 
 <footer>
-  <span class="footer-copy">&copy; 2026 david nicholson</span>
-  <div style="display:flex;gap:16px;align-items:center;">
-    <a class="footer-gb-btn" href="/originals.html">available originals</a>
-    <a class="footer-gb-btn" href="/shipping.html">shipping &amp; returns</a>
-    <button class="footer-gb-btn" onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
-    <button class="footer-gb-btn" onclick="openGB()">guest book</button>
+  <div class="f-inner">
+    <div class="f-cols">
+      <p class="f-brand">david nicholson</p>
+      <div class="f-links">
+        <a href="/originals.html">available originals</a>
+        <a href="/shipping.html">shipping &amp; returns</a>
+        <button onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
+        <button onclick="openGB()">guest book</button>
+      </div>
+    </div>
+    <p class="f-legal">&copy; 2026 david nicholson</p>
   </div>
 </footer>
 

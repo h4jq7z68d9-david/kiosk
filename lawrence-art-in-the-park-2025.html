@@ -14,10 +14,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f1f3f5; --surface: #e4e8ec; --border: #d0d6dc; --border-mid: #c2c9d0;
+  --bg: #ffffff; --surface: #eef1f4; --border: #dfe4e9; --border-mid: #cfd6dd;
   --ink: #2b3640; --ink2: #586470; --ink3: #697480;
-  --accent: #e6b400; --accent-ink: #b58600;
-  --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif; --nav-h: 56px;
+  --accent: #2f4f75; --accent-hi: #3d5f88; --accent-ink: #33557d;
+  --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif; --nav-h: 62px;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -25,13 +25,25 @@ body {
   font-weight: 300; -webkit-font-smoothing: antialiased;
   min-height: 100vh; display: flex; flex-direction: column; padding-top: var(--nav-h);
 }
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: var(--bg); padding: 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 12px; }
 @media (min-width: 701px) { nav { padding: 0 40px; } }
 @media (min-width: 1100px) { nav { padding: 0 60px; } }
-.nav-title { font-size: 20px; font-weight: 400; color: var(--ink); letter-spacing: 0.06em; text-transform: lowercase; white-space: nowrap; flex: 1; text-decoration: none; display: flex; align-items: center; }
-.nav-links { display: flex; align-items: center; gap: 8px; }
-.nav-btn { background: none; border: 1px solid var(--border-mid); border-radius: 20px; padding: 7px 18px; font-family: var(--font); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
-.nav-btn:hover { border-color: var(--ink); }
+.nav-title { font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: 0.05em; text-transform: lowercase; white-space: nowrap; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; text-decoration: none; display: flex; align-items: center; }
+.nav-cart { position: relative; background: none; border: none; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; text-decoration: none; }
+.nav-cart svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #fff; border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
+.nav-cart-count.on { display: block; }
+.nav-links { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.nav-btn { background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 8px 20px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff; cursor: pointer; white-space: nowrap; transition: background 0.2s, border-color 0.2s; text-decoration: none; display: inline-block; }
+.nav-btn:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
+@media (max-width: 700px) { .nav-title { font-size: 17px; } }
+@media (max-width: 500px) {
+  .nav-title { font-size: 14px; letter-spacing: 0.03em; }
+  .nav-btn { font-size: 11px; padding: 6px 12px; letter-spacing: 0.08em; }
+  .nav-btn .btn-text-long { display: none; }
+  .nav-btn .btn-text-short { display: inline; }
+}
+@media (min-width: 501px) { .btn-text-short { display: none; } }
 main { flex: 1; width: 100%; max-width: 780px; margin: 0 auto; padding: 0 40px; box-sizing: border-box; }
 .lead { margin: 48px 0 8px; text-align: center; }
 .show-title { font-size: clamp(26px, 5vw, 40px); font-weight: 300; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); line-height: 1.15; }
@@ -43,16 +55,20 @@ main { flex: 1; width: 100%; max-width: 780px; margin: 0 auto; padding: 0 40px; 
 .plate img { display: block; width: 100%; height: auto; background: #e7eaed; }
 @keyframes rise { to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .plate { animation: none; opacity: 1; transform: none; } }
-footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 28px 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.footer-copy { font-size: 12px; color: var(--ink3); letter-spacing: 0.06em; }
-.footer-link { background: none; border: none; color: var(--ink2); font-family: var(--font); font-size: 12px; font-weight: 400; letter-spacing: 0.12em; text-transform: lowercase; padding: 0; cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
-.footer-link:hover { color: var(--ink); }
+footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 24px 48px; }
+.f-inner { max-width: 1200px; margin: 0 auto; }
+.f-cols { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 40px; }
+.f-brand { font-size: clamp(26px, 3vw, 36px); font-weight: 700; text-transform: lowercase; letter-spacing: -0.01em; }
+.f-links { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.f-links a, .f-links button { font-size: 15px; font-weight: 400; text-transform: lowercase; color: var(--ink2); background: none; border: none; padding: 0; font-family: var(--font); cursor: pointer; transition: color 0.2s; text-decoration: none; display: inline-block; }
+.f-links a:hover, .f-links button:hover { color: var(--ink); }
+.f-legal { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--ink3); letter-spacing: 0.06em; }
 @media (max-width: 600px) {
   main { padding: 0 20px; }
   .lead { margin-top: 36px; }
   .show-title { font-size: 24px; }
   .plates { gap: 36px; margin-top: 44px; }
-  footer { padding: 24px 20px 40px; }
+  footer { padding: 48px 20px 40px; }
 }
 </style>
 </head>
@@ -61,7 +77,11 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 28px 40
 <nav>
   <a class="nav-title" href="/index.html"><span style="margin-right:8px;font-size:16px;">&#8592;</span>david nicholson</a>
   <div class="nav-links">
-    <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener">follow on instagram</a>
+    <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
+    <a class="nav-cart" href="/gallery.html?cart=1" aria-label="cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="nav-cart-count" id="cart-count">0</span>
+    </a>
   </div>
 </nav>
 
@@ -82,12 +102,30 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 28px 40
 </main>
 
 <footer>
-  <span class="footer-copy">&copy; 2026 david nicholson</span>
-  <div style="display:flex;gap:16px;align-items:center;">
-    <a class="footer-link" href="/shipping.html">shipping &amp; returns</a>
-    <button class="footer-link" onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
+  <div class="f-inner">
+    <div class="f-cols">
+      <p class="f-brand">david nicholson</p>
+      <div class="f-links">
+        <a href="/gallery.html">gallery</a>
+        <a href="/originals.html">available originals</a>
+        <a href="/shipping.html">shipping &amp; returns</a>
+        <button onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
+      </div>
+    </div>
+    <p class="f-legal">&copy; 2026 david nicholson</p>
   </div>
 </footer>
 
+<script>
+/* cart badge — reads the same store the gallery writes to */
+(function () {
+  var n = 0;
+  try { n = (JSON.parse(localStorage.getItem('dna_cart')) || []).length; } catch (e) {}
+  var el = document.getElementById('cart-count');
+  if (!el) return;
+  el.textContent = n;
+  el.classList.toggle('on', n > 0);
+})();
+</script>
 </body>
 </html>

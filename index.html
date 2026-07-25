@@ -73,10 +73,6 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94)
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 62px; }
 .brand { font-size: 19px; font-weight: 500; letter-spacing: 0.05em; text-transform: lowercase; }
 .nav-links { display: flex; align-items: center; gap: 28px; }
-.nav-links a, .nav-links button { font-size: 14px; font-weight: 400; letter-spacing: 0.08em; text-transform: lowercase; color: var(--ink2); background: none; border: none; padding: 0; font-family: var(--font); cursor: pointer; transition: color 0.2s; }
-.nav-links a:hover, .nav-links button:hover { color: var(--ink); }
-.nav-links .nav-hide { display: none; }
-@media (min-width: 720px) { .nav-links .nav-hide { display: inline; } }
 .pill { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff !important; background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 9px 22px; transition: background 0.2s, border-color 0.2s; }
 .pill:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
 
@@ -90,8 +86,7 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94)
 h1.display { font-size: clamp(48px, 10.5vw, 132px); font-weight: 700; line-height: 0.98; letter-spacing: -0.015em; text-transform: lowercase; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
 
-/* ---------- eyebrow + big statement ---------- */
-.eyebrow { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: lowercase; color: var(--accent-ink); margin-bottom: 20px; }
+/* ---------- about ---------- */
 .statement { padding: 72px 0 80px; border-top: 1px solid var(--border); }
 .about-text { font-size: 20px; font-weight: 300; line-height: 1.8; color: var(--ink); max-width: 700px; }
 
@@ -99,7 +94,7 @@ h1.display { font-size: clamp(48px, 10.5vw, 132px); font-weight: 700; line-heigh
 .events { padding: 72px 0 90px; border-top: 1px solid var(--border); }
 .ev-cols { display: grid; grid-template-columns: 1fr; gap: 56px; }
 @media (min-width: 820px) { .ev-cols { grid-template-columns: 1fr 1fr; } }
-.ev-h { font-size: clamp(30px, 4.4vw, 52px); font-weight: 700; letter-spacing: -0.01em; text-transform: lowercase; margin-bottom: 28px; }
+.sec-h { font-size: clamp(30px, 4.4vw, 52px); font-weight: 700; letter-spacing: -0.01em; text-transform: lowercase; margin-bottom: 28px; }
 .ev-year { font-size: 14px; font-weight: 500; letter-spacing: 0.14em; color: var(--ink3); text-transform: lowercase; margin-bottom: 14px; }
 .ev { padding: 18px 0; border-top: 1px solid var(--border); }
 .ev:last-of-type { border-bottom: 1px solid var(--border); }
@@ -159,8 +154,6 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
   <div class="wrap nav-inner">
     <a class="brand" href="/">david nicholson</a>
     <div class="nav-links">
-      <a class="nav-hide" href="/shipping.html">shipping &amp; returns</a>
-      <button class="nav-hide" onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
       <a class="pill" href="/gallery.html">view gallery</a>
     </div>
   </div>
@@ -179,7 +172,7 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
 <!-- ABOUT / STATEMENT -->
 <section class="statement">
   <div class="wrap">
-    <p class="eyebrow">about</p>
+    <h2 class="sec-h rv">about</h2>
     <p class="about-text rv">david nicholson is a kansas-based regionalist pop painter working from observation, using distilled, simplified compositions and color to express and reinterpret</p>
   </div>
 </section>
@@ -189,7 +182,7 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
   <div class="wrap">
     <div class="ev-cols">
       <div class="rv">
-        <h2 class="ev-h">future</h2>
+        <h2 class="sec-h">future</h2>
         <p class="ev-year">2026</p>
         <div class="ev">
           <div class="ev-date">september 11th &ndash; 13th</div>
@@ -251,9 +244,10 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
     <div class="f-cols">
       <p class="f-brand">david nicholson</p>
       <div class="f-links">
+        <a href="/gallery.html">gallery</a>
+        <a href="/originals.html">available originals</a>
         <a href="/shipping.html">shipping &amp; returns</a>
         <button onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
-        <a href="https://instagram.com/dave_nichol_son">follow on instagram</a>
       </div>
     </div>
     <p class="f-legal">&copy; 2026 david nicholson</p>
