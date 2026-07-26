@@ -78,7 +78,10 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94)
 
 /* ---------- hero ---------- */
 .hero-media { display: block; width: 100%; height: 58vh; min-height: 320px; background: var(--surface); overflow: hidden; cursor: pointer; }
-.hero-media img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.25s; }
+/* wide screens crop hardest, so give the band more height there; phones already
+   show the whole painting and a taller band would only push the name off screen */
+@media (min-width: 820px) { .hero-media { height: min(87vh, calc(100vh - 190px)); max-height: 900px; } }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; transition: opacity 0.25s; }
 .hero-media:hover img { opacity: 0.92; }
 .hero-cap { font-size: 13px; color: var(--ink3); letter-spacing: 0.06em; padding: 10px 24px 0; }
 @media (min-width: 900px) { .hero-cap { padding: 10px 48px 0; } }
