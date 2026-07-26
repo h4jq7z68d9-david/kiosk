@@ -456,6 +456,13 @@ Public study deck for color relationships and color science — supports the pai
 
 **Behavior:** 4 tappable choices (correct + 3 decoys), instant right/wrong, running score in the header; keys 1–4 answer, ←/→ navigate, S shuffles; footer filter narrows to any single group. Swatch front faces use a Pantone-style chip layout (color block, white label strip, name + hex lower-right).
 
+**Card ordering — deliberate, don't "simplify" it:** the deck is dealt **shuffled by default**. In raw generation order the deck runs concept-by-concept (20 complementary cards, then 20 analogous…), so the first several cards all share one answer and the quiz becomes guessable by position instead of by reading the swatches. Two guards:
+
+1. `color_deck.py` builders iterate **treatment-major** (hue varies fastest), so consecutive same-concept cards aren't six near-identical value studies of one hue pair.
+2. `spread()` in the app shuffles, then does a **local repair pass** that swaps only the cards which would sit next to a card with the same answer. Measured: ~0.28 adjacent repeats per 175-card deal.
+
+An earlier "always draw from the largest remaining group" greedy was tried and **rejected** — it hits zero adjacent repeats but front-loads the biggest group into a perfectly alternating deal (complementary on every other card), which is just as exploitable as a run. Randomness matters more here than a zero score.
+
 **Styling:** rethemed to the live site tokens (white bg, `--ink #2b3640`, `--accent #2f4f75`, Jost). Swatch/demo colors are content and must stay literal — never restyle those to brand colors.
 
 **Print companion (not in repo):** a `color_deck.py` generator produces PDF versions — 3-up on US Letter with cut lines, and a one-card-per-page 3×5 index-card template. The Albers effects are screen-only and excluded from print.
@@ -535,6 +542,8 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **Footer nav — “color theory” link added** to `index.html`, `gallery.html`, `originals.html`, `shipping.html`, `varied-readings.html`, and the new page itself. Inserted before “contact” on each. Note the footers are NOT identical: `originals.html` uses `onclick="contact()"` (not the split-string mailto), and `shipping.html` has no self-link, so the anchor line differs per file.
 - ✓ **`sitemap.xml`** — added `color-theory.html` (priority 0.5, monthly). The app file is intentionally omitted (noindex).
 - ✓ **Steering doc palette correction** — the “Key Principles” entry still prescribed the retired warm theme (`--bg #f8f6f3`, `--accent #e07030` orange, `--ink2 #5e6b78` / `--ink3 #64707c`). The live site has been white / `#2b3640` ink / `#2f4f75` steel-blue accent for some time. Principle rewritten with the current tokens + measured AA ratios (ink 12.3:1, ink2 6.05:1, ink3 4.76:1, accent 8.41:1 on white) and an explicit note that the orange palette in the April/June 2026 session logs is historical. Verified identical tokens across all five public pages before rewriting.
+
+- ✓ **Card ordering fixed (caught by David)** — the deck opened with four near-identical red/green cards, all Complementary. Two causes: builders looped hue-outer/treatment-inner so all six value treatments of one hue pair clustered; and the deck was dealt in generation order, so the first 20 cards shared one answer and the quiz was guessable by position. Fixed by making builders treatment-major (hue varies fastest) and dealing shuffled by default with a local repair pass (`spread()`). See the `color-theory.html` section for why the "largest group first" greedy was rejected.
 
 **Iframe rationale:** the deck app uses generic element selectors (`header`, `main`, `button`, `footer`); inlining it into a site page would collide with site CSS. The iframe seals it off, which is why the two-file split exists.
 
