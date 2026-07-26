@@ -3,12 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Varied Readings — David Nicholson</title>
-<meta name="description" content="Varied Readings — paintings in pairs by David Nicholson. Phoenix Gallery, Lawrence, KS, April 2026.">
-<meta property="og:title" content="Varied Readings — David Nicholson">
-<meta property="og:description" content="Work in pairs. Phoenix Gallery, Lawrence KS.">
+<title>Color Theory — David Nicholson</title>
+<meta name="description" content="A color theory study deck by David Nicholson — name the color relationship, then flip for the answer. The color thinking behind the paintings.">
+<meta property="og:title" content="Color Theory — David Nicholson">
+<meta property="og:description" content="A study deck for color relationships and the science behind them.">
 <meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FL5BKJFVXF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FL5BKJFVXF');
+</script>
+
 <link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -53,72 +64,16 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 }
 @media (min-width: 501px) { .btn-text-short { display: none; } }
 
-main {
-  flex: 1;
-  width: 100%;
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 40px;
-  box-sizing: border-box;
-}
+main { flex: 1; width: 100%; display: flex; flex-direction: column; }
 
-.lead {
-  margin: 48px 0 8px;
-  text-align: center;
-}
-.show-title {
-  font-size: clamp(26px, 5vw, 40px);
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  text-transform: lowercase;
-  color: var(--ink);
-  line-height: 1.15;
-}
-.show-meta {
-  margin: 14px 0 0;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: lowercase;
-  color: var(--ink3);
-  line-height: 1.7;
-}
-.show-meta a { color: var(--accent-ink); text-decoration: none; }
-.lead p {
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 1.85;
-  color: var(--ink2);
-  margin-top: 20px;
-}
+/* intro */
+.lead { width: 100%; max-width: 780px; margin: 0 auto; padding: 48px 40px 0; text-align: center; }
+.show-title { font-size: clamp(26px, 5vw, 40px); font-weight: 300; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); line-height: 1.15; }
+.lead p { font-size: 16px; font-weight: 300; line-height: 1.8; color: var(--ink2); margin-top: 18px; }
 
-.plates {
-  margin: 56px 0 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 56px;
-}
-.plate {
-  width: 100%;
-  opacity: 0;
-  transform: translateY(18px);
-  animation: rise 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-}
-.plate:nth-child(1) { animation-delay: 0.10s; }
-.plate:nth-child(2) { animation-delay: 0.28s; }
-.plate:nth-child(3) { animation-delay: 0.46s; }
-.plate img {
-  display: block;
-  width: 100%;
-  height: auto;
-  background: #e7eaed;
-}
-@keyframes rise {
-  to { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .plate { animation: none; opacity: 1; transform: none; }
-}
+/* deck frame */
+.deck-wrap { width: 100%; max-width: 880px; margin: 28px auto 8px; padding: 0 20px; }
+.deck { width: 100%; height: min(78vh, 720px); min-height: 560px; border: 1px solid var(--border); border-radius: 12px; background: #fff; display: block; }
 
 /* FOOTER — full bleed, matches site chrome */
 footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 24px 48px; }
@@ -131,10 +86,10 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 24
 .f-legal { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--ink3); letter-spacing: 0.06em; }
 
 @media (max-width: 600px) {
-  main { padding: 0 20px; }
-  .lead { margin-top: 36px; }
+  .lead { padding: 36px 20px 0; }
   .show-title { font-size: 24px; }
-  .plates { gap: 36px; margin-top: 44px; }
+  .deck-wrap { padding: 0 12px; margin-top: 20px; }
+  .deck { height: 82vh; min-height: 520px; border-radius: 10px; }
   footer { padding: 48px 20px 40px; }
 }
 </style>
@@ -154,21 +109,12 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 24
 
 <main>
   <div class="lead">
-    <h1 class="show-title">varied readings</h1>
-    <div class="show-meta">april 24th &ndash; may 22nd, 2026<br><a href="https://www.phoenixgalleryart.com" target="_blank" rel="noopener">phoenix gallery &mdash; lawrence, ks</a></div>
-    <p>Varied Readings presented work in pairs, each grouping an exploration of adjacent subject matter approached from shifting compositional and chromatic vantage points.</p>
+    <h1 class="show-title">color theory</h1>
+    <p>a small study deck for color relationships and the science behind them. read the swatches, name the relationship, then flip for the answer &mdash; the same color thinking that goes into the paintings.</p>
   </div>
 
-  <div class="plates">
-    <figure class="plate">
-      <img src="https://davidnicholsonart.com/4_26_varied_readings/1.jpeg" alt="Varied Readings at Phoenix Gallery, Lawrence, KS" loading="lazy">
-    </figure>
-    <figure class="plate">
-      <img src="https://davidnicholsonart.com/4_26_varied_readings/2.jpeg" alt="Varied Readings at Phoenix Gallery, Lawrence, KS" loading="lazy">
-    </figure>
-    <figure class="plate">
-      <img src="https://davidnicholsonart.com/4_26_varied_readings/3.jpeg" alt="Varied Readings at Phoenix Gallery, Lawrence, KS" loading="lazy">
-    </figure>
+  <div class="deck-wrap">
+    <iframe class="deck" src="/color-theory-app.html" title="color theory study deck" loading="lazy"></iframe>
   </div>
 </main>
 

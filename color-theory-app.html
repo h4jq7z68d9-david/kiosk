@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>color theory deck — david nicholson</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wall:#ffffff; --wall-hi:#f4f6f8; --ink:#2b3640; --muted:#586470;
+    --line:#dfe4e9; --card:#ffffff; --chip-dark:#2b3640;
+    --accent:#2f4f75; --accent-hi:#3d5f88;
+    --display:'Jost',Futura,'Trebuchet MS',Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,'Segoe UI Mono',monospace;
+    --body:'Jost',Futura,'Trebuchet MS',Arial,sans-serif;
+    --shadow:0 1px 2px rgba(43,54,64,.08),0 18px 40px -14px rgba(43,54,64,.20);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:
+      radial-gradient(120% 90% at 50% -10%,var(--wall-hi),var(--wall) 60%);
+    color:var(--ink);font-family:var(--body);
+    display:flex;flex-direction:column;min-height:100dvh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---- top bar ---- */
+  header{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:20px clamp(16px,4vw,40px) 0;gap:16px;
+  }
+  .brand{font-family:var(--mono);font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+  .brand b{color:var(--ink);font-weight:500}
+  .counter{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--muted)}
+  .counter b{color:var(--ink);font-weight:500}
+
+  /* ---- stage ---- */
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:12px clamp(16px,4vw,40px);gap:18px}
+  .stage{width:min(560px,92vw);perspective:1800px}
+  .flip{position:relative;width:100%;height:min(336px,55.2vw);
+    transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.7,.2,1);
+    cursor:pointer}
+  .flip.revealed{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    border-radius:10px;overflow:hidden;background:var(--card);box-shadow:var(--shadow)}
+  .back{transform:rotateY(180deg)}
+  .fade{height:100%;transition:opacity .16s ease}
+  .fade.out{opacity:0}
+
+  /* ---- front: pantone-style swatches ---- */
+  .swatches{display:flex;width:100%;height:100%}
+  .sw{position:relative;flex:1 1 0;min-width:0}          /* color = inline background */
+  .sw+.sw .label::before{content:"";position:absolute;left:0;top:8px;bottom:8px;
+    width:1px;background:#E4E0D6}
+  .sw .label{position:absolute;left:0;right:0;bottom:0;height:34%;min-height:38px;background:#fff;
+    display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;
+    padding:6px 9px}
+  .sw .nm{font-family:var(--display);font-weight:600;font-size:clamp(9px,2.3vw,13px);
+    line-height:1.05;text-align:right;color:#1a1a1c;max-width:100%;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sw .hx{font-family:var(--mono);font-size:clamp(7px,1.7vw,9px);color:#8b877e;margin-top:2px}
+  .cardno{position:absolute;left:9px;bottom:7px;font-family:var(--mono);
+    font-size:9px;color:#b4afa3;letter-spacing:.05em}
+
+  /* ---- front: science ---- */
+  .sci-front{width:100%;height:100%;background:var(--chip-dark);color:#F4F3F1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+  .sci-front .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:#7E828C}
+  .sci-front .term{font-family:var(--display);font-weight:600;
+    font-size:clamp(20px,5.4vw,30px);line-height:1.1;margin:16px 0 0;max-width:90%}
+
+  /* ---- back ---- */
+  .back-in{width:100%;height:100%;padding:clamp(16px,3.6vw,26px);display:flex;flex-direction:column}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .rel{font-family:var(--display);font-weight:700;font-size:clamp(20px,5vw,30px);
+    line-height:1.05;margin:4px 0 14px;letter-spacing:-.01em}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .chip .sq{width:38px;height:38px;border-radius:5px;border:1px solid rgba(0,0,0,.12)}
+  .chip .chx{font-family:var(--mono);font-size:9px;color:#57534c}
+  .chip .cnm{font-family:var(--body);font-size:9px;color:#8b877e;max-width:56px;text-align:center;line-height:1.1}
+  .defn{font-family:var(--body);font-size:clamp(12px,2.6vw,14px);line-height:1.5;color:#2b2925;margin:0}
+  .tip{font-family:var(--body);font-style:italic;font-size:clamp(11px,2.4vw,13px);
+    line-height:1.45;color:#5a4f7a;margin:10px 0 0}
+  .meta{margin-top:auto;font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+    color:#9a958a;text-transform:uppercase}
+
+  .prompt{font-family:var(--body);font-size:14px;color:var(--muted);min-height:20px;text-align:center}
+  .prompt b{color:var(--ink);font-weight:600}
+
+  /* ---- controls ---- */
+  .controls{display:flex;align-items:center;gap:14px}
+  button{font-family:var(--body);cursor:pointer;border:1px solid var(--line);
+    background:#fff;color:var(--ink);border-radius:999px;transition:transform .1s ease,background .15s ease,border-color .15s ease}
+  button:hover{background:var(--wall-hi)}
+  button:active{transform:translateY(1px)}
+  .arrow{width:52px;height:52px;font-size:20px;display:grid;place-items:center;line-height:1}
+  .primary{height:52px;padding:0 26px;font-size:15px;font-weight:600;
+    background:var(--accent);color:#fff;border-color:var(--accent);min-width:150px}
+  .primary:hover{background:var(--accent-hi)}
+  button:focus-visible{outline:2px solid #4a4a4a;outline-offset:2px}
+
+  /* ---- footer tools ---- */
+  footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:0 16px 22px}
+  .tool{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:8px 12px;color:var(--muted)}
+  select.tool{background:#fff;-webkit-appearance:none;appearance:none;padding-right:26px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23726E66'/></svg>");
+    background-repeat:no-repeat;background-position:right 10px center}
+  .tool.on{color:var(--ink);border-color:var(--ink)}
+
+  .score{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+  .score b{color:var(--ink);font-weight:500}
+  .choices{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+    width:min(560px,92vw);min-height:44px}
+  .choice{font-family:var(--body);font-size:14px;padding:10px 16px;border:1px solid var(--line);
+    background:#fff;color:var(--ink);border-radius:999px;cursor:pointer;
+    transition:background .15s ease,border-color .15s ease,transform .1s ease}
+  .choice:hover{background:var(--wall-hi)}
+  .choice:active{transform:translateY(1px)}
+  .choice:disabled{cursor:default}
+  .choice.correct{background:#E7F1E4;border-color:#3FA535;color:#256b2a;font-weight:600}
+  .choice.wrong{background:#F6E7E5;border-color:#C0392B;color:#9c2b20}
+  .choice:focus-visible{outline:2px solid #4a4a4a;outline-offset:2px}
+
+  /* ---- demo layouts (Itten contrasts / Albers interactions) ---- */
+  .grounds{display:flex;width:100%;height:100%}
+  .grounds .g{flex:1;display:flex;align-items:center;justify-content:center}
+  .grounds .sample{width:44%;height:min(148px,24.3vw);border-radius:2px}
+  .bands{display:flex;width:100%;height:100%}
+  .bands>div{height:100%}
+  .adj{display:flex;width:100%;height:100%}
+  .adj>div{flex:1;height:100%}
+  .afterimg{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  .fix{width:13px;height:13px;border-radius:50%;background:rgba(0,0,0,.55);
+    box-shadow:0 0 0 2px rgba(255,255,255,.55)}
+  .ai-hint{position:absolute;left:0;right:0;bottom:10px;text-align:center;
+    font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:rgba(255,255,255,.92)}
+  .ai-back{display:flex;flex-direction:column;height:100%}
+  .ai-field{flex:1;background:#fff;display:flex;align-items:center;justify-content:center}
+  .ai-note{padding:11px clamp(14px,3vw,22px) 13px;font-family:var(--body);
+    font-size:clamp(11px,2.3vw,12.5px);line-height:1.4;color:#2b2925}
+  .ai-note b{font-family:var(--display);font-weight:600}
+
+  @media (max-width:420px){
+    .arrow{width:46px;height:46px}
+    .primary{min-width:120px;padding:0 18px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .flip{transition:none}
+    .fade{transition:none}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand"><b>color theory deck</b> &nbsp;/&nbsp; study</div>
+    <div class="counter"><b id="pos">001</b> / <span id="total">148</span>
+      &nbsp;&middot;&nbsp; <span class="score">Score <b id="score">0/0</b></span></div>
+  </header>
+
+  <main>
+    <div class="stage">
+      <div class="flip" id="flip" role="button" tabindex="0" aria-label="Flashcard. Press to reveal or advance.">
+        <div class="face front"><div class="fade" id="frontIn"></div></div>
+        <div class="face back"><div class="fade" id="backIn"></div></div>
+      </div>
+    </div>
+    <div class="prompt" id="prompt"></div>
+    <div class="choices" id="choices"></div>
+    <div class="controls">
+      <button class="arrow" id="prev" aria-label="Previous">&#8249;</button>
+      <button class="primary" id="next">Reveal</button>
+      <button class="arrow" id="fwd" aria-label="Next card" title="Skip to next card">&#8250;</button>
+    </div>
+  </main>
+
+  <footer>
+    <select class="tool" id="filter" aria-label="Filter cards"></select>
+    <button class="tool" id="shuffle">Shuffle</button>
+    <button class="tool" id="order">In order</button>
+  </footer>
+
+<script>
+const DECK = [{"n":1,"suit":"visual","concept":"Complementary","swatches":[{"name":"Red","hex":"#E23B2E"},{"name":"Green","hex":"#3FA535"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":2,"suit":"visual","concept":"Complementary","swatches":[{"name":"Red","hex":"#EF938C"},{"name":"Green","hex":"#95CE90"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":3,"suit":"visual","concept":"Complementary","swatches":[{"name":"Red","hex":"#BB574F"},{"name":"Green","hex":"#599653"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":4,"suit":"visual","concept":"Complementary","swatches":[{"name":"Red","hex":"#DC6960"},{"name":"Green","hex":"#6CB265"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":5,"suit":"visual","concept":"Complementary","swatches":[{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Blue-Green","hex":"#83CABF"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":6,"suit":"visual","concept":"Complementary","swatches":[{"name":"Red-Orange","hex":"#BE6D4E"},{"name":"Blue-Green","hex":"#459286"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":7,"suit":"visual","concept":"Complementary","swatches":[{"name":"Red-Orange","hex":"#B54B22"},{"name":"Blue-Green","hex":"#177B6C"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":8,"suit":"visual","concept":"Complementary","swatches":[{"name":"Orange","hex":"#F08A24"},{"name":"Blue","hex":"#2E6DB4"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":9,"suit":"visual","concept":"Complementary","swatches":[{"name":"Orange","hex":"#844C14"},{"name":"Blue","hex":"#193C63"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":10,"suit":"visual","concept":"Complementary","swatches":[{"name":"Orange","hex":"#BB6C1C"},{"name":"Blue","hex":"#24558C"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":11,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Blue-Violet","hex":"#4B4BA8"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  high contrast"},{"n":12,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow-Orange","hex":"#FAD583"},{"name":"Blue-Violet","hex":"#9C9CCF"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":13,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow-Orange","hex":"#C79F45"},{"name":"Blue-Violet","hex":"#606098"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":14,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow-Orange","hex":"#EABC56"},{"name":"Blue-Violet","hex":"#7575B4"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":15,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow","hex":"#F6E283"},{"name":"Violet","hex":"#B69CCB"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":16,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow","hex":"#C3AD45"},{"name":"Violet","hex":"#7D6093"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":17,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow","hex":"#BA9E17"},{"name":"Violet","hex":"#603A7D"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":18,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow-Green","hex":"#A6C523"},{"name":"Red-Violet","hex":"#B23A78"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":19,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow-Green","hex":"#5B6C13"},{"name":"Red-Violet","hex":"#622042"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  low contrast"},{"n":20,"suit":"visual","concept":"Complementary","swatches":[{"name":"Yellow-Green","hex":"#819A1B"},{"name":"Red-Violet","hex":"#8B2D5E"}],"definition":"Hues directly opposite on the wheel. Maximum contrast — they intensify each other.","tip":"Mute one and let the other lead — full-strength complements can vibrate.","meta":"warm + cool  •  medium contrast"},{"n":21,"suit":"visual","concept":"Analogous","swatches":[{"name":"Red-Violet","hex":"#B23A78"},{"name":"Red","hex":"#E23B2E"},{"name":"Red-Orange","hex":"#E8602C"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"warm + cool  •  low contrast"},{"n":22,"suit":"visual","concept":"Analogous","swatches":[{"name":"Red-Violet","hex":"#D593B5"},{"name":"Red","hex":"#EF938C"},{"name":"Red-Orange","hex":"#F2A88B"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"warm + cool  •  low contrast"},{"n":23,"suit":"visual","concept":"Analogous","swatches":[{"name":"Red","hex":"#E23B2E"},{"name":"Red-Orange","hex":"#E8602C"},{"name":"Orange","hex":"#F08A24"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all warm  •  medium contrast"},{"n":24,"suit":"visual","concept":"Analogous","swatches":[{"name":"Red","hex":"#7C2019"},{"name":"Red-Orange","hex":"#803518"},{"name":"Orange","hex":"#844C14"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all warm  •  low contrast"},{"n":25,"suit":"visual","concept":"Analogous","swatches":[{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Orange","hex":"#F7BF87"},{"name":"Yellow-Orange","hex":"#FAD583"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all warm  •  medium contrast"},{"n":26,"suit":"visual","concept":"Analogous","swatches":[{"name":"Orange","hex":"#F08A24"},{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Yellow","hex":"#EFCB1E"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all warm  •  medium contrast"},{"n":27,"suit":"visual","concept":"Analogous","swatches":[{"name":"Orange","hex":"#F7BF87"},{"name":"Yellow-Orange","hex":"#FAD583"},{"name":"Yellow","hex":"#F6E283"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all warm  •  medium contrast"},{"n":28,"suit":"visual","concept":"Analogous","swatches":[{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Yellow","hex":"#EFCB1E"},{"name":"Yellow-Green","hex":"#A6C523"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all warm  •  low contrast"},{"n":29,"suit":"visual","concept":"Analogous","swatches":[{"name":"Yellow-Orange","hex":"#876210"},{"name":"Yellow","hex":"#837010"},{"name":"Yellow-Green","hex":"#5B6C13"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all warm  •  low contrast"},{"n":30,"suit":"visual","concept":"Analogous","swatches":[{"name":"Yellow","hex":"#F6E283"},{"name":"Yellow-Green","hex":"#CEDF86"},{"name":"Green","hex":"#95CE90"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"warm + cool  •  medium contrast"},{"n":31,"suit":"visual","concept":"Analogous","swatches":[{"name":"Yellow-Green","hex":"#A6C523"},{"name":"Green","hex":"#3FA535"},{"name":"Blue-Green","hex":"#1E9E8A"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"warm + cool  •  medium contrast"},{"n":32,"suit":"visual","concept":"Analogous","swatches":[{"name":"Yellow-Green","hex":"#CEDF86"},{"name":"Green","hex":"#95CE90"},{"name":"Blue-Green","hex":"#83CABF"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"warm + cool  •  medium contrast"},{"n":33,"suit":"visual","concept":"Analogous","swatches":[{"name":"Green","hex":"#3FA535"},{"name":"Blue-Green","hex":"#1E9E8A"},{"name":"Blue","hex":"#2E6DB4"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all cool  •  low contrast"},{"n":34,"suit":"visual","concept":"Analogous","swatches":[{"name":"Green","hex":"#235B1D"},{"name":"Blue-Green","hex":"#10574C"},{"name":"Blue","hex":"#193C63"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all cool  •  low contrast"},{"n":35,"suit":"visual","concept":"Analogous","swatches":[{"name":"Blue-Green","hex":"#83CABF"},{"name":"Blue","hex":"#8CAFD6"},{"name":"Blue-Violet","hex":"#9C9CCF"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all cool  •  medium contrast"},{"n":36,"suit":"visual","concept":"Analogous","swatches":[{"name":"Blue","hex":"#2E6DB4"},{"name":"Blue-Violet","hex":"#4B4BA8"},{"name":"Violet","hex":"#7B4BA0"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all cool  •  low contrast"},{"n":37,"suit":"visual","concept":"Analogous","swatches":[{"name":"Blue","hex":"#8CAFD6"},{"name":"Blue-Violet","hex":"#9C9CCF"},{"name":"Violet","hex":"#B69CCB"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all cool  •  low contrast"},{"n":38,"suit":"visual","concept":"Analogous","swatches":[{"name":"Blue-Violet","hex":"#4B4BA8"},{"name":"Violet","hex":"#7B4BA0"},{"name":"Red-Violet","hex":"#B23A78"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all cool  •  low contrast"},{"n":39,"suit":"visual","concept":"Analogous","swatches":[{"name":"Blue-Violet","hex":"#29295C"},{"name":"Violet","hex":"#442958"},{"name":"Red-Violet","hex":"#622042"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"all cool  •  low contrast"},{"n":40,"suit":"visual","concept":"Analogous","swatches":[{"name":"Violet","hex":"#B69CCB"},{"name":"Red-Violet","hex":"#D593B5"},{"name":"Red","hex":"#EF938C"}],"definition":"Neighboring hues on the wheel. Naturally harmonious and low-tension.","tip":"Pick one to dominate, one to support, one as accent.","meta":"warm + cool  •  low contrast"},{"n":41,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red","hex":"#E23B2E"},{"name":"Yellow","hex":"#EFCB1E"},{"name":"Blue","hex":"#2E6DB4"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  high contrast"},{"n":42,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red","hex":"#EF938C"},{"name":"Yellow","hex":"#F6E283"},{"name":"Blue","hex":"#8CAFD6"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":43,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red","hex":"#7C2019"},{"name":"Yellow","hex":"#837010"},{"name":"Blue","hex":"#193C63"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  low contrast"},{"n":44,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red","hex":"#BB574F"},{"name":"Yellow","hex":"#C3AD45"},{"name":"Blue","hex":"#4F759F"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":45,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red","hex":"#B02E24"},{"name":"Yellow","hex":"#BA9E17"},{"name":"Blue","hex":"#24558C"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":46,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red-Orange","hex":"#E8602C"},{"name":"Yellow-Green","hex":"#A6C523"},{"name":"Blue-Violet","hex":"#4B4BA8"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":47,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Yellow-Green","hex":"#CEDF86"},{"name":"Blue-Violet","hex":"#9C9CCF"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":48,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red-Orange","hex":"#803518"},{"name":"Yellow-Green","hex":"#5B6C13"},{"name":"Blue-Violet","hex":"#29295C"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  low contrast"},{"n":49,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red-Orange","hex":"#BE6D4E"},{"name":"Yellow-Green","hex":"#97A948"},{"name":"Blue-Violet","hex":"#606098"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":50,"suit":"visual","concept":"Triadic","swatches":[{"name":"Red-Orange","hex":"#B54B22"},{"name":"Yellow-Green","hex":"#819A1B"},{"name":"Blue-Violet","hex":"#3A3A83"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":51,"suit":"visual","concept":"Triadic","swatches":[{"name":"Orange","hex":"#F08A24"},{"name":"Green","hex":"#3FA535"},{"name":"Violet","hex":"#7B4BA0"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":52,"suit":"visual","concept":"Triadic","swatches":[{"name":"Orange","hex":"#F7BF87"},{"name":"Green","hex":"#95CE90"},{"name":"Violet","hex":"#B69CCB"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":53,"suit":"visual","concept":"Triadic","swatches":[{"name":"Orange","hex":"#844C14"},{"name":"Green","hex":"#235B1D"},{"name":"Violet","hex":"#442958"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  low contrast"},{"n":54,"suit":"visual","concept":"Triadic","swatches":[{"name":"Orange","hex":"#C38649"},{"name":"Green","hex":"#599653"},{"name":"Violet","hex":"#7D6093"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  low contrast"},{"n":55,"suit":"visual","concept":"Triadic","swatches":[{"name":"Orange","hex":"#BB6C1C"},{"name":"Green","hex":"#318129"},{"name":"Violet","hex":"#603A7D"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  low contrast"},{"n":56,"suit":"visual","concept":"Triadic","swatches":[{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Blue-Green","hex":"#1E9E8A"},{"name":"Red-Violet","hex":"#B23A78"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":57,"suit":"visual","concept":"Triadic","swatches":[{"name":"Yellow-Orange","hex":"#FAD583"},{"name":"Blue-Green","hex":"#83CABF"},{"name":"Red-Violet","hex":"#D593B5"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":58,"suit":"visual","concept":"Triadic","swatches":[{"name":"Yellow-Orange","hex":"#876210"},{"name":"Blue-Green","hex":"#10574C"},{"name":"Red-Violet","hex":"#622042"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  low contrast"},{"n":59,"suit":"visual","concept":"Triadic","swatches":[{"name":"Yellow-Orange","hex":"#C79F45"},{"name":"Blue-Green","hex":"#459286"},{"name":"Red-Violet","hex":"#9E567B"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":60,"suit":"visual","concept":"Triadic","swatches":[{"name":"Yellow-Orange","hex":"#C08C17"},{"name":"Blue-Green","hex":"#177B6C"},{"name":"Red-Violet","hex":"#8B2D5E"}],"definition":"Three hues evenly spaced 120° apart. Vivid but balanced.","tip":"Let one hue rule; use the other two as accents to avoid a circus.","meta":"warm + cool  •  medium contrast"},{"n":61,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Red","hex":"#E23B2E"},{"name":"Yellow-Green","hex":"#A6C523"},{"name":"Blue-Green","hex":"#1E9E8A"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":62,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Red","hex":"#EF938C"},{"name":"Yellow-Green","hex":"#CEDF86"},{"name":"Blue-Green","hex":"#83CABF"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":63,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Red-Orange","hex":"#E8602C"},{"name":"Green","hex":"#3FA535"},{"name":"Blue","hex":"#2E6DB4"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  low contrast"},{"n":64,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Red-Orange","hex":"#803518"},{"name":"Green","hex":"#235B1D"},{"name":"Blue","hex":"#193C63"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  low contrast"},{"n":65,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Orange","hex":"#F7BF87"},{"name":"Blue-Green","hex":"#83CABF"},{"name":"Blue-Violet","hex":"#9C9CCF"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":66,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Blue","hex":"#2E6DB4"},{"name":"Violet","hex":"#7B4BA0"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  high contrast"},{"n":67,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Yellow-Orange","hex":"#FAD583"},{"name":"Blue","hex":"#8CAFD6"},{"name":"Violet","hex":"#B69CCB"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":68,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Yellow","hex":"#EFCB1E"},{"name":"Blue-Violet","hex":"#4B4BA8"},{"name":"Red-Violet","hex":"#B23A78"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  high contrast"},{"n":69,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Yellow","hex":"#837010"},{"name":"Blue-Violet","hex":"#29295C"},{"name":"Red-Violet","hex":"#622042"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  low contrast"},{"n":70,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Yellow-Green","hex":"#CEDF86"},{"name":"Violet","hex":"#B69CCB"},{"name":"Red","hex":"#EF938C"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":71,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Green","hex":"#3FA535"},{"name":"Red-Violet","hex":"#B23A78"},{"name":"Red-Orange","hex":"#E8602C"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  low contrast"},{"n":72,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Green","hex":"#95CE90"},{"name":"Red-Violet","hex":"#D593B5"},{"name":"Red-Orange","hex":"#F2A88B"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  low contrast"},{"n":73,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Blue-Green","hex":"#1E9E8A"},{"name":"Red","hex":"#E23B2E"},{"name":"Orange","hex":"#F08A24"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":74,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Blue-Green","hex":"#10574C"},{"name":"Red","hex":"#7C2019"},{"name":"Orange","hex":"#844C14"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  low contrast"},{"n":75,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Blue","hex":"#8CAFD6"},{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Yellow-Orange","hex":"#FAD583"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":76,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Blue-Violet","hex":"#4B4BA8"},{"name":"Orange","hex":"#F08A24"},{"name":"Yellow","hex":"#EFCB1E"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  high contrast"},{"n":77,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Blue-Violet","hex":"#9C9CCF"},{"name":"Orange","hex":"#F7BF87"},{"name":"Yellow","hex":"#F6E283"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  high contrast"},{"n":78,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Violet","hex":"#7B4BA0"},{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Yellow-Green","hex":"#A6C523"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  high contrast"},{"n":79,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Violet","hex":"#442958"},{"name":"Yellow-Orange","hex":"#876210"},{"name":"Yellow-Green","hex":"#5B6C13"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  low contrast"},{"n":80,"suit":"visual","concept":"Split-Complementary","swatches":[{"name":"Red-Violet","hex":"#D593B5"},{"name":"Yellow","hex":"#F6E283"},{"name":"Green","hex":"#95CE90"}],"definition":"A base hue plus the two hues flanking its complement. Strong contrast, easier to balance.","tip":"Ideal for a focal point: place the lone base hue where you want the eye.","meta":"warm + cool  •  medium contrast"},{"n":81,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red","hex":"#E23B2E"},{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Green","hex":"#3FA535"},{"name":"Blue-Violet","hex":"#4B4BA8"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  high contrast"},{"n":82,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red","hex":"#EF938C"},{"name":"Yellow-Orange","hex":"#FAD583"},{"name":"Green","hex":"#95CE90"},{"name":"Blue-Violet","hex":"#9C9CCF"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":83,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red","hex":"#7C2019"},{"name":"Yellow-Orange","hex":"#876210"},{"name":"Green","hex":"#235B1D"},{"name":"Blue-Violet","hex":"#29295C"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  low contrast"},{"n":84,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red","hex":"#BB574F"},{"name":"Yellow-Orange","hex":"#C79F45"},{"name":"Green","hex":"#599653"},{"name":"Blue-Violet","hex":"#606098"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":85,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red","hex":"#B02E24"},{"name":"Yellow-Orange","hex":"#C08C17"},{"name":"Green","hex":"#318129"},{"name":"Blue-Violet","hex":"#3A3A83"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":86,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red","hex":"#DC6960"},{"name":"Yellow-Orange","hex":"#EABC56"},{"name":"Green","hex":"#6CB265"},{"name":"Blue-Violet","hex":"#7575B4"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":87,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red-Orange","hex":"#E8602C"},{"name":"Yellow","hex":"#EFCB1E"},{"name":"Blue-Green","hex":"#1E9E8A"},{"name":"Violet","hex":"#7B4BA0"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  high contrast"},{"n":88,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Yellow","hex":"#F6E283"},{"name":"Blue-Green","hex":"#83CABF"},{"name":"Violet","hex":"#B69CCB"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":89,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red-Orange","hex":"#803518"},{"name":"Yellow","hex":"#837010"},{"name":"Blue-Green","hex":"#10574C"},{"name":"Violet","hex":"#442958"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  low contrast"},{"n":90,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red-Orange","hex":"#BE6D4E"},{"name":"Yellow","hex":"#C3AD45"},{"name":"Blue-Green","hex":"#459286"},{"name":"Violet","hex":"#7D6093"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":91,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red-Orange","hex":"#B54B22"},{"name":"Yellow","hex":"#BA9E17"},{"name":"Blue-Green","hex":"#177B6C"},{"name":"Violet","hex":"#603A7D"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":92,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Red-Orange","hex":"#E0835F"},{"name":"Yellow","hex":"#E5CC56"},{"name":"Blue-Green","hex":"#56ADA0"},{"name":"Violet","hex":"#9575AF"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":93,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Orange","hex":"#F08A24"},{"name":"Yellow-Green","hex":"#A6C523"},{"name":"Blue","hex":"#2E6DB4"},{"name":"Red-Violet","hex":"#B23A78"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":94,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Orange","hex":"#F7BF87"},{"name":"Yellow-Green","hex":"#CEDF86"},{"name":"Blue","hex":"#8CAFD6"},{"name":"Red-Violet","hex":"#D593B5"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":95,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Orange","hex":"#844C14"},{"name":"Yellow-Green","hex":"#5B6C13"},{"name":"Blue","hex":"#193C63"},{"name":"Red-Violet","hex":"#622042"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  low contrast"},{"n":96,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Orange","hex":"#C38649"},{"name":"Yellow-Green","hex":"#97A948"},{"name":"Blue","hex":"#4F759F"},{"name":"Red-Violet","hex":"#9E567B"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":97,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Orange","hex":"#BB6C1C"},{"name":"Yellow-Green","hex":"#819A1B"},{"name":"Blue","hex":"#24558C"},{"name":"Red-Violet","hex":"#8B2D5E"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":98,"suit":"visual","concept":"Tetradic (Square)","swatches":[{"name":"Orange","hex":"#E5A059"},{"name":"Yellow-Green","hex":"#B3C858"},{"name":"Blue","hex":"#608BBC"},{"name":"Red-Violet","hex":"#BB6893"}],"definition":"Two complementary pairs, 90° apart. Rich — works best with one hue dominant.","tip":"Balance warm against cool across the four; never split evenly.","meta":"warm + cool  •  medium contrast"},{"n":99,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Red","hex":"#EF938C"},{"name":"Red","hex":"#DC6960"},{"name":"Red","hex":"#E23B2E"},{"name":"Red","hex":"#B02E24"},{"name":"Red","hex":"#7C2019"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  medium contrast"},{"n":100,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Red","hex":"#EF938C"},{"name":"Red","hex":"#BB574F"},{"name":"Red","hex":"#DC6960"},{"name":"Red","hex":"#B02E24"},{"name":"Red","hex":"#7C2019"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  medium contrast"},{"n":101,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Red-Orange","hex":"#E0835F"},{"name":"Red-Orange","hex":"#E8602C"},{"name":"Red-Orange","hex":"#B54B22"},{"name":"Red-Orange","hex":"#803518"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":102,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Red-Orange","hex":"#BE6D4E"},{"name":"Red-Orange","hex":"#E0835F"},{"name":"Red-Orange","hex":"#B54B22"},{"name":"Red-Orange","hex":"#803518"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":103,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Orange","hex":"#F7BF87"},{"name":"Orange","hex":"#E5A059"},{"name":"Orange","hex":"#F08A24"},{"name":"Orange","hex":"#BB6C1C"},{"name":"Orange","hex":"#844C14"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":104,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Yellow-Orange","hex":"#FAD583"},{"name":"Yellow-Orange","hex":"#EABC56"},{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Yellow-Orange","hex":"#C08C17"},{"name":"Yellow-Orange","hex":"#876210"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":105,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Yellow-Orange","hex":"#FAD583"},{"name":"Yellow-Orange","hex":"#C79F45"},{"name":"Yellow-Orange","hex":"#EABC56"},{"name":"Yellow-Orange","hex":"#C08C17"},{"name":"Yellow-Orange","hex":"#876210"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":106,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Yellow","hex":"#F6E283"},{"name":"Yellow","hex":"#E5CC56"},{"name":"Yellow","hex":"#EFCB1E"},{"name":"Yellow","hex":"#BA9E17"},{"name":"Yellow","hex":"#837010"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":107,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Yellow","hex":"#F6E283"},{"name":"Yellow","hex":"#C3AD45"},{"name":"Yellow","hex":"#E5CC56"},{"name":"Yellow","hex":"#BA9E17"},{"name":"Yellow","hex":"#837010"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":108,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Yellow-Green","hex":"#CEDF86"},{"name":"Yellow-Green","hex":"#B3C858"},{"name":"Yellow-Green","hex":"#A6C523"},{"name":"Yellow-Green","hex":"#819A1B"},{"name":"Yellow-Green","hex":"#5B6C13"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all warm  •  high contrast"},{"n":109,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Green","hex":"#95CE90"},{"name":"Green","hex":"#6CB265"},{"name":"Green","hex":"#3FA535"},{"name":"Green","hex":"#318129"},{"name":"Green","hex":"#235B1D"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  high contrast"},{"n":110,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Green","hex":"#95CE90"},{"name":"Green","hex":"#599653"},{"name":"Green","hex":"#6CB265"},{"name":"Green","hex":"#318129"},{"name":"Green","hex":"#235B1D"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  high contrast"},{"n":111,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Blue-Green","hex":"#83CABF"},{"name":"Blue-Green","hex":"#56ADA0"},{"name":"Blue-Green","hex":"#1E9E8A"},{"name":"Blue-Green","hex":"#177B6C"},{"name":"Blue-Green","hex":"#10574C"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  high contrast"},{"n":112,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Blue-Green","hex":"#83CABF"},{"name":"Blue-Green","hex":"#459286"},{"name":"Blue-Green","hex":"#56ADA0"},{"name":"Blue-Green","hex":"#177B6C"},{"name":"Blue-Green","hex":"#10574C"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  high contrast"},{"n":113,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Blue","hex":"#8CAFD6"},{"name":"Blue","hex":"#608BBC"},{"name":"Blue","hex":"#2E6DB4"},{"name":"Blue","hex":"#24558C"},{"name":"Blue","hex":"#193C63"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  medium contrast"},{"n":114,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Blue-Violet","hex":"#9C9CCF"},{"name":"Blue-Violet","hex":"#7575B4"},{"name":"Blue-Violet","hex":"#4B4BA8"},{"name":"Blue-Violet","hex":"#3A3A83"},{"name":"Blue-Violet","hex":"#29295C"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  medium contrast"},{"n":115,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Blue-Violet","hex":"#9C9CCF"},{"name":"Blue-Violet","hex":"#606098"},{"name":"Blue-Violet","hex":"#7575B4"},{"name":"Blue-Violet","hex":"#3A3A83"},{"name":"Blue-Violet","hex":"#29295C"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  medium contrast"},{"n":116,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Violet","hex":"#B69CCB"},{"name":"Violet","hex":"#9575AF"},{"name":"Violet","hex":"#7B4BA0"},{"name":"Violet","hex":"#603A7D"},{"name":"Violet","hex":"#442958"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  medium contrast"},{"n":117,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Violet","hex":"#B69CCB"},{"name":"Violet","hex":"#7D6093"},{"name":"Violet","hex":"#9575AF"},{"name":"Violet","hex":"#603A7D"},{"name":"Violet","hex":"#442958"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  medium contrast"},{"n":118,"suit":"visual","concept":"Monochromatic","swatches":[{"name":"Red-Violet","hex":"#D593B5"},{"name":"Red-Violet","hex":"#BB6893"},{"name":"Red-Violet","hex":"#B23A78"},{"name":"Red-Violet","hex":"#8B2D5E"},{"name":"Red-Violet","hex":"#622042"}],"definition":"One hue across a range of values and saturations. Unified and calm.","tip":"Vary value more than feels necessary — value does the heavy lifting.","meta":"all cool  •  medium contrast"},{"n":119,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red","hex":"#E23B2E"},{"name":"Green","hex":"#3FA535"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":120,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red","hex":"#EF938C"},{"name":"Blue-Green","hex":"#83CABF"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":121,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red","hex":"#7C2019"},{"name":"Blue","hex":"#193C63"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":122,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red","hex":"#BB574F"},{"name":"Blue-Violet","hex":"#606098"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":123,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red-Orange","hex":"#F2A88B"},{"name":"Green","hex":"#95CE90"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":124,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red-Orange","hex":"#803518"},{"name":"Blue-Green","hex":"#10574C"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":125,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red-Orange","hex":"#BE6D4E"},{"name":"Blue","hex":"#4F759F"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":126,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Red-Orange","hex":"#B54B22"},{"name":"Blue-Violet","hex":"#3A3A83"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":127,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Orange","hex":"#844C14"},{"name":"Green","hex":"#235B1D"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":128,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Orange","hex":"#C38649"},{"name":"Blue-Green","hex":"#459286"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":129,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Orange","hex":"#BB6C1C"},{"name":"Blue","hex":"#24558C"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":130,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Orange","hex":"#E5A059"},{"name":"Blue-Violet","hex":"#7575B4"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  medium contrast"},{"n":131,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow-Orange","hex":"#C79F45"},{"name":"Green","hex":"#599653"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":132,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow-Orange","hex":"#C08C17"},{"name":"Blue-Green","hex":"#177B6C"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  low contrast"},{"n":133,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow-Orange","hex":"#EABC56"},{"name":"Blue","hex":"#608BBC"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  medium contrast"},{"n":134,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow-Orange","hex":"#F6B31E"},{"name":"Blue-Violet","hex":"#4B4BA8"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  high contrast"},{"n":135,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow","hex":"#BA9E17"},{"name":"Green","hex":"#318129"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  medium contrast"},{"n":136,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow","hex":"#E5CC56"},{"name":"Blue-Green","hex":"#56ADA0"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  medium contrast"},{"n":137,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow","hex":"#EFCB1E"},{"name":"Blue","hex":"#2E6DB4"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  high contrast"},{"n":138,"suit":"visual","concept":"Warm–Cool Contrast","swatches":[{"name":"Yellow","hex":"#F6E283"},{"name":"Blue-Violet","hex":"#9C9CCF"}],"definition":"A warm hue set against a cool one. Warms advance, cools recede — the basis of depth.","tip":"Push warms forward and cools back to fake distance and form.","meta":"warm + cool  •  high contrast"},{"n":139,"suit":"science","term":"Additive Color (RGB)","body":"Mixing light. Red, green and blue light combine toward white — more light, brighter result. R+G = yellow, G+B = cyan, R+B = magenta, all three = white. Used by screens, projectors and stage lighting.","tip":"Paint does the opposite: pigments subtract light, so mixing darkens."},{"n":140,"suit":"science","term":"Subtractive Color (CMY / RYB)","body":"Mixing pigment or ink. Each layer absorbs (subtracts) wavelengths, so more mixing moves toward black or mud. Printing uses cyan-magenta-yellow plus black (K); traditional painting uses red-yellow-blue.","tip":"This is why your mixes get duller and darker as you add more colors."},{"n":141,"suit":"science","term":"Wavelength & the Spectrum","body":"Visible light spans about 380–700 nm. Long wavelengths look red (~700 nm), short look violet (~400 nm); green sits mid-spectrum (~550 nm) where the eye is most sensitive. A hue is roughly its dominant wavelength.","tip":"'Warm' long-wavelength light literally carries less energy than 'cool' violet."},{"n":142,"suit":"science","term":"Simultaneous Contrast","body":"A color's look changes with what surrounds it. The same gray reads lighter on black and darker on white; a hue pushes its neighbor toward the opposite. Josef Albers built a whole teaching method on this effect.","tip":"Judge every color in context on the canvas, never alone on the palette."},{"n":143,"suit":"science","term":"Metamerism","body":"Two colors can match under one light and clash under another, because different wavelength mixes can produce the same cone response. A mix matched at your studio window may look wrong under gallery LEDs.","tip":"Check your key mixes under the light the work will finally hang in."},{"n":144,"suit":"science","term":"Afterimage & Opponent Process","body":"Stare at red, look away, and you see a cyan-green ghost. Vision codes color in opposing pairs — red/green, blue/yellow, black/white. This is why complements feel 'complete' and why afterimages appear.","tip":"A tired eye literally supplies the complement — use it to plan vibration."},{"n":145,"suit":"science","term":"Trichromacy","body":"Human color vision runs on three cone types, most sensitive to long (red), medium (green) and short (blue) wavelengths. Every color you see is a ratio of their responses — which is why three primaries can imitate millions of colors.","tip":"Three well-chosen primaries plus white can mix most of what you need."},{"n":146,"suit":"science","term":"Gamut","body":"The full set of colors a medium can actually produce. The eye sees more than any screen or pigment set can reproduce; sRGB, CMYK and your palette each have limits.","tip":"Some brilliant on-screen colors simply can't be printed or mixed — plan around it."},{"n":147,"suit":"science","term":"Value & Chroma","body":"Munsell's three axes: hue (which color), value (light to dark) and chroma (intensity, dull to vivid). Value reads first and carries a composition.","tip":"Nail your values before fussing over hue — a photo in grayscale tells the truth."},{"n":148,"suit":"science","term":"Color Temperature","body":"Light itself has a temperature in Kelvin: ~2700K looks warm/orange (candle, tungsten), ~6500K looks cool/blue (overcast daylight). Note the reversal — low Kelvin is 'warm.' It shifts every local color in a scene.","tip":"Set your white balance mentally: know your light before you trust a color."}];
+
+/* ---- web-only additions: Itten's Seven Contrasts + Albers interactions ---- */
+const CONTRAST_DEF = {
+  "Contrast of Hue":"Pure, undiluted hues set side by side \u2014 the simplest, boldest contrast.",
+  "Light\u2013Dark":"Contrast of value, light against dark \u2014 independent of hue.",
+  "Cold\u2013Warm":"Warm hues set against cool ones.",
+  "Complementary":"Opposite hues that intensify \u2014 and neutralize \u2014 each other.",
+  "Simultaneous":"A strong hue forces its complement onto a neutral or adjacent color.",
+  "Saturation":"Vivid, saturated color against dull, muted color.",
+  "Extension":"Contrast of proportion \u2014 how much area each color is given."
+};
+const CONTRAST_TIP = {
+  "Contrast of Hue":"Strongest with the primaries; separate with black or white to organize it.",
+  "Light\u2013Dark":"Squint \u2014 if the values don't separate, the design goes flat.",
+  "Cold\u2013Warm":"The engine of depth: warms advance, cools recede.",
+  "Complementary":"Mixed they gray out; side by side they vibrate.",
+  "Simultaneous":"A gray never stays neutral next to a strong hue.",
+  "Saturation":"One pure note reads loudest surrounded by muted tones.",
+  "Extension":"Balance by area \u2014 a little yellow offsets a lot of violet (~1:3)."
+};
+function contrastCard(name, layout, data){
+  return Object.assign({kind:'contrast', group:'contrast', name,
+    definition:CONTRAST_DEF[name], tip:CONTRAST_TIP[name], layout}, data);
+}
+const S = (name,hex)=>({name,hex});
+
+const CONTRASTS = [
+  // Contrast of Hue
+  contrastCard("Contrast of Hue","swatches",{swatches:[S("Red","#E23B2E"),S("Yellow","#EFCB1E"),S("Blue","#2E6DB4")]}),
+  contrastCard("Contrast of Hue","swatches",{swatches:[S("Orange","#F08A24"),S("Green","#3FA535"),S("Violet","#7B4BA0")]}),
+  contrastCard("Contrast of Hue","swatches",{swatches:[S("Red","#E23B2E"),S("Yellow","#EFCB1E"),S("Green","#3FA535"),S("Blue","#2E6DB4")]}),
+  // Light-Dark
+  contrastCard("Light\u2013Dark","swatches",{swatches:[S("Near-white","#F2F0EA"),S("Mid gray","#9A968E"),S("Near-black","#201F1C")]}),
+  contrastCard("Light\u2013Dark","swatches",{swatches:[S("Pale Yellow","#F7E58C"),S("Deep Violet","#3A2A55")]}),
+  contrastCard("Light\u2013Dark","swatches",{swatches:[S("Light Blue","#AFC8E6"),S("Deep Blue","#16345F")]}),
+  // Cold-Warm
+  contrastCard("Cold\u2013Warm","swatches",{swatches:[S("Orange","#F08A24"),S("Blue-Green","#1E9E8A")]}),
+  contrastCard("Cold\u2013Warm","swatches",{swatches:[S("Red","#E23B2E"),S("Blue","#2E6DB4")]}),
+  contrastCard("Cold\u2013Warm","swatches",{swatches:[S("Yellow-Orange","#F6B31E"),S("Blue-Violet","#4B4BA8")]}),
+  // Complementary
+  contrastCard("Complementary","swatches",{swatches:[S("Red","#E23B2E"),S("Green","#3FA535")]}),
+  contrastCard("Complementary","swatches",{swatches:[S("Orange","#F08A24"),S("Blue","#2E6DB4")]}),
+  contrastCard("Complementary","swatches",{swatches:[S("Yellow","#EFCB1E"),S("Violet","#7B4BA0")]}),
+  // Saturation
+  contrastCard("Saturation","swatches",{swatches:[S("Pure Red","#E23B2E"),S("Muted Red","#B45E55")]}),
+  contrastCard("Saturation","swatches",{swatches:[S("Pure Blue","#2E6DB4"),S("Muted Blue","#5A7CA3")]}),
+  contrastCard("Saturation","swatches",{swatches:[S("Pure Green","#3FA535"),S("Muted Green","#599653")]}),
+  // Simultaneous (identical gray sample on two grounds)
+  contrastCard("Simultaneous","grounds",{sample:"#8C8C8C",groundA:"#E23B2E",groundB:"#3FA535"}),
+  contrastCard("Simultaneous","grounds",{sample:"#8C8C8C",groundA:"#EFCB1E",groundB:"#2E6DB4"}),
+  contrastCard("Simultaneous","grounds",{sample:"#8C8C8C",groundA:"#7B4BA0",groundB:"#F08A24"}),
+  // Extension (unequal areas, Goethe light ratios)
+  contrastCard("Extension","proportion",{bands:[{hex:"#EFCB1E",frac:1},{hex:"#7B4BA0",frac:3}]}),
+  contrastCard("Extension","proportion",{bands:[{hex:"#F08A24",frac:1},{hex:"#2E6DB4",frac:2}]}),
+  contrastCard("Extension","proportion",{bands:[{hex:"#E23B2E",frac:1},{hex:"#3FA535",frac:1}]})
+];
+
+const ALBERS = [
+  {kind:'albers', name:"One Color as Two", layout:'grounds',
+   sample:"#B99A6B", groundA:"#6E4B2A", groundB:"#D9C9A8",
+   body:"The center square is the identical color on both sides. Its ground changes how light and warm it looks \u2014 proof that color is relative, never absolute.",
+   tip:"Judge a color only in its final context, not on the palette."},
+  {kind:'albers', name:"Vibrating Boundary", layout:'adj',
+   a:"#E23B2E", b:"#2FA33A",
+   body:"Two complements at nearly equal value make the shared edge flicker and buzz. Striking in small doses, exhausting in large ones.",
+   tip:"A thin neutral line between buzzing complements calms the vibration."},
+  {kind:'albers', name:"Vanishing Boundary", layout:'adj',
+   a:"#6E86A6", b:"#6E9A86",
+   body:"Two colors close in value let their shared edge dissolve, so forms blur and merge \u2014 the opposite of the vibrating boundary.",
+   tip:"Close values quiet a composition; wide values sharpen it."},
+  {kind:'albers', name:"Bezold Effect", layout:'bezold',
+   mid:"#B23A78",
+   body:"Change one color in a pattern \u2014 here just the line color \u2014 and the whole field shifts lighter or darker, though the dominant color is identical on both sides.",
+   tip:"In a pattern, one small accent color can swing the entire mood."},
+  {kind:'albers', name:"Afterimage", layout:'afterimage',
+   color:"#17A44A",
+   body:"Fixing on a saturated color fatigues those cones; look at white and you see its complement \u2014 green yields a magenta-red ghost. The eye supplies the opposite.",
+   tip:"Stare, then look away: the afterimage previews the perfect complement."},
+  {kind:'albers', name:"Transparency Illusion", layout:'bands3',
+   a:"#2E6DB4", m:"#4E7E74", b:"#EFCB1E",
+   body:"The middle band reads as the blue seen through the yellow \u2014 a felt transparency, though every band is a flat, opaque color.",
+   tip:"A convincing 'middle mixture' color fakes overlapping glass or glaze."}
+];
+
+const EXTRA = CONTRASTS.concat(ALBERS);
+EXTRA.forEach((c,k)=>{ c.n = DECK.length + k + 1; });
+const CARDS = DECK.concat(EXTRA);
+
+const $ = s => document.querySelector(s);
+const flip = $('#flip'), frontIn = $('#frontIn'), backIn = $('#backIn');
+const prompt = $('#prompt'), choicesEl = $('#choices'),
+      pos = $('#pos'), totalEl = $('#total'), scoreEl = $('#score'), nextBtn = $('#next');
+
+let work = CARDS.slice();
+let i = 0, answered = false, chosen = null, curChoices = [];
+let score = { correct: 0, attempted: 0 };
+
+const VISUAL_CONCEPTS = [...new Set(DECK.filter(c=>c.suit==='visual').map(c=>c.concept))];
+const CONTRAST_NAMES = ["Contrast of Hue","Light\u2013Dark","Cold\u2013Warm","Complementary","Simultaneous","Saturation","Extension"];
+const cardKind = c => c.kind ? c.kind : (c.suit==='science' ? 'science' : 'relationship');
+const isMC = c => { const k=cardKind(c); return k==='relationship' || k==='contrast'; };
+const answerOf = c => cardKind(c)==='contrast' ? c.name : c.concept;
+const poolOf = c => cardKind(c)==='contrast' ? CONTRAST_NAMES : VISUAL_CONCEPTS;
+const pad = n => String(n).padStart(3,'0');
+const shuffleArr = a => { for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];} return a; };
+
+function swatchesFront(c){
+  const cols = c.swatches.map(s => `
+    <div class="sw" style="background:${s.hex}">
+      <div class="label"><div class="nm">${s.name}</div><div class="hx">${s.hex}</div></div>
+    </div>`).join('');
+  return `<div class="swatches">${cols}<div class="cardno">${pad(c.n)}</div></div>`;
+}
+function groundsFront(sample, gA, gB){
+  return `<div class="grounds">
+    <div class="g" style="background:${gA}"><div class="sample" style="background:${sample}"></div></div>
+    <div class="g" style="background:${gB}"><div class="sample" style="background:${sample}"></div></div>
+  </div>`;
+}
+function bandsFront(bands){
+  return `<div class="bands">${bands.map(b=>`<div style="flex:${b.frac};background:${b.hex}"></div>`).join('')}</div>`;
+}
+function adjFront(a, b){
+  return `<div class="adj"><div style="background:${a}"></div><div style="background:${b}"></div></div>`;
+}
+function bezoldFront(mid){
+  return `<div class="adj">
+    <div style="background-color:${mid};background-image:repeating-linear-gradient(45deg,#fff 0 7px,transparent 7px 16px)"></div>
+    <div style="background-color:${mid};background-image:repeating-linear-gradient(45deg,#000 0 7px,transparent 7px 16px)"></div>
+  </div>`;
+}
+function afterimageFront(color){
+  return `<div class="afterimg" style="background:${color}">
+    <div class="fix"></div>
+    <div class="ai-hint">Stare at the dot ~15s, then Reveal</div>
+  </div>`;
+}
+
+function frontHTML(c){
+  const k = cardKind(c);
+  if(k === 'science'){
+    return `<div class="sci-front"><div class="eyebrow">Color Science</div><div class="term">${c.term}</div></div>`;
+  }
+  if(k === 'albers'){
+    if(c.layout === 'grounds') return groundsFront(c.sample, c.groundA, c.groundB);
+    if(c.layout === 'adj')     return adjFront(c.a, c.b);
+    if(c.layout === 'bezold')  return bezoldFront(c.mid);
+    if(c.layout === 'afterimage') return afterimageFront(c.color);
+    if(c.layout === 'bands3')  return bandsFront([{hex:c.a,frac:1},{hex:c.m,frac:1.25},{hex:c.b,frac:1}]);
+  }
+  if(k === 'contrast'){
+    if(c.layout === 'grounds')    return groundsFront(c.sample, c.groundA, c.groundB);
+    if(c.layout === 'proportion') return bandsFront(c.bands);
+    return swatchesFront(c);
+  }
+  return swatchesFront(c);   // relationship
+}
+
+function chipsHTML(sw){
+  return sw.map(s => `
+    <div class="chip">
+      <div class="sq" style="background:${s.hex}"></div>
+      <div class="chx">${s.hex}</div>
+      <div class="cnm">${s.name}</div>
+    </div>`).join('');
+}
+function backHTML(c){
+  const k = cardKind(c);
+  if(k === 'science'){
+    return `<div class="back-in">
+      <div class="eyebrow">Color Science</div>
+      <div class="rel">${c.term}</div>
+      <p class="defn">${c.body}</p>
+      <p class="tip">Tip: ${c.tip}</p>
+    </div>`;
+  }
+  if(k === 'albers'){
+    if(c.layout === 'afterimage'){
+      return `<div class="ai-back">
+        <div class="ai-field"><div class="fix"></div></div>
+        <div class="ai-note"><b>Afterimage.</b> ${c.body}</div>
+      </div>`;
+    }
+    return `<div class="back-in">
+      <div class="eyebrow">Albers &middot; Interaction</div>
+      <div class="rel">${c.name}</div>
+      <p class="defn">${c.body}</p>
+      <p class="tip">Tip: ${c.tip}</p>
+    </div>`;
+  }
+  if(k === 'contrast'){
+    const chips = c.swatches ? `<div class="chips">${chipsHTML(c.swatches)}</div>` : '';
+    return `<div class="back-in">
+      <div class="eyebrow">Itten &middot; Seven Contrasts</div>
+      <div class="rel">${c.name}</div>
+      ${chips}
+      <p class="defn">${c.definition}</p>
+      <p class="tip">Tip: ${c.tip}</p>
+    </div>`;
+  }
+  return `<div class="back-in">
+    <div class="eyebrow">Relationship</div>
+    <div class="rel">${c.concept}</div>
+    <div class="chips">${chipsHTML(c.swatches)}</div>
+    <p class="defn">${c.definition}</p>
+    <p class="tip">Tip: ${c.tip}</p>
+    <div class="meta">${c.meta.replace(/•/g,'&middot;')}</div>
+  </div>`;
+}
+
+function paint(){
+  const c = work[i];
+  frontIn.innerHTML = frontHTML(c);
+  backIn.innerHTML = backHTML(c);
+  pos.textContent = pad(i+1);
+  totalEl.textContent = work.length;
+  if(isMC(c) && !answered) curChoices = buildChoices(c);
+  renderChoices();
+  flip.classList.toggle('revealed', answered);
+  updateChrome();
+}
+
+function buildChoices(card){
+  const correct = answerOf(card);
+  const others = shuffleArr(poolOf(card).filter(x => x !== correct)).slice(0,3);
+  return shuffleArr([correct, ...others]);
+}
+
+function renderChoices(){
+  const c = work[i];
+  if(!isMC(c) || answered){ choicesEl.style.display='none'; choicesEl.innerHTML=''; return; }
+  choicesEl.style.display='flex';
+  choicesEl.innerHTML = curChoices.map(o => `<button class="choice" data-c="${o}">${o}</button>`).join('');
+  choicesEl.querySelectorAll('.choice').forEach(b => b.onclick = () => choose(b.dataset.c));
+}
+
+function choose(opt){
+  if(answered) return;
+  const c = work[i], correct = answerOf(c);
+  answered = true; chosen = opt;
+  score.attempted++; if(opt === correct) score.correct++;
+  choicesEl.querySelectorAll('.choice').forEach(b => {
+    b.disabled = true;
+    if(b.dataset.c === correct) b.classList.add('correct');
+    else if(b.dataset.c === opt) b.classList.add('wrong');
+  });
+  updateChrome();
+  setTimeout(() => { choicesEl.style.display='none'; flip.classList.add('revealed'); updateChrome(); }, 750);
+}
+
+function reveal(){
+  if(answered) return;
+  answered = true;
+  flip.classList.add('revealed');
+  updateChrome();
+}
+
+function updateChrome(){
+  const c = work[i], k = cardKind(c);
+  scoreEl.textContent = `${score.correct}/${score.attempted}`;
+  if(!answered){
+    prompt.innerHTML =
+      k === 'science'      ? 'What is it? <b>Reveal</b> for the answer.' :
+      k === 'albers'       ? 'What do you notice? <b>Reveal</b> to explain.' :
+      k === 'contrast'     ? 'Which contrast is this?' :
+                             'Which relationship do these show?';
+  } else if(isMC(c)){
+    const correct = answerOf(c);
+    prompt.innerHTML = chosen === correct
+      ? '\u2713 Correct'
+      : `Not quite \u2014 it\u2019s <b>${correct}</b>`;
+  } else {
+    prompt.innerHTML = '&nbsp;';
+  }
+  if(answered){ nextBtn.style.display=''; nextBtn.textContent = 'Next \u203A'; }
+  else if(!isMC(c)){ nextBtn.style.display=''; nextBtn.textContent = 'Reveal'; }
+  else { nextBtn.style.display='none'; }   // MC: must pick a choice
+}
+
+function advance(step){
+  frontIn.classList.add('out'); backIn.classList.add('out'); choicesEl.style.opacity='0';
+  setTimeout(()=>{
+    i = (i + step + work.length) % work.length;
+    flip.style.transition = 'none';
+    answered = false; chosen = null;
+    flip.classList.remove('revealed');
+    void flip.offsetWidth;                 // force reflow
+    flip.style.transition = '';
+    choicesEl.style.opacity='';
+    paint();
+    frontIn.classList.remove('out'); backIn.classList.remove('out');
+  }, 150);
+}
+
+function next(){
+  const c = work[i];
+  if(answered) advance(1);
+  else if(!isMC(c)) reveal();
+  // MC & unanswered: pick a choice first
+}
+function prev(){ advance(-1); }
+
+$('#next').onclick = next;
+$('#prev').onclick = prev;
+$('#fwd').onclick = ()=>advance(1);
+flip.onclick = ()=>{
+  const c = work[i];
+  if(answered) advance(1);
+  else if(!isMC(c)) reveal();
+};
+
+document.addEventListener('keydown', e=>{
+  const t = e.target.tagName;
+  if(t === 'SELECT' || t === 'BUTTON') return;
+  const c = work[i];
+  if(e.key >= '1' && e.key <= '4'){
+    if(isMC(c) && !answered){ const o = curChoices[+e.key-1]; if(o) choose(o); }
+    return;
+  }
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='Enter'){ e.preventDefault(); next(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); prev(); }
+  else if(e.key.toLowerCase()==='s'){ doShuffle(); }
+});
+
+/* ---- filter / order ---- */
+const filter = $('#filter');
+const opts = ['All cards', ...VISUAL_CONCEPTS, 'Itten contrasts', 'Albers interactions', 'Color science'];
+filter.innerHTML = opts.map(o=>`<option>${o}</option>`).join('');
+
+function setWork(){
+  const v = filter.value;
+  if(v==='All cards') work = CARDS.slice();
+  else if(v==='Color science') work = CARDS.filter(c=>c.suit==='science');
+  else if(v==='Itten contrasts') work = CARDS.filter(c=>cardKind(c)==='contrast');
+  else if(v==='Albers interactions') work = CARDS.filter(c=>cardKind(c)==='albers');
+  else work = CARDS.filter(c=>c.concept===v);
+}
+function reset(resetScore){
+  if(resetScore) score = { correct:0, attempted:0 };
+  i=0; answered=false; chosen=null; paint();
+}
+filter.onchange = ()=>{ setWork(); reset(true); };
+
+/* ---- shuffle / order ---- */
+function doShuffle(){
+  shuffleArr(work);
+  reset(false);
+  $('#shuffle').classList.add('on'); $('#order').classList.remove('on');
+}
+$('#shuffle').onclick = doShuffle;
+$('#order').onclick = ()=>{ setWork(); reset(false);
+  $('#order').classList.add('on'); $('#shuffle').classList.remove('on'); };
+
+paint();
+</script>
+</body>
+</html>

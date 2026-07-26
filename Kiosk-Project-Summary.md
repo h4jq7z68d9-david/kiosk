@@ -13,6 +13,8 @@
 |<https://davidnicholsonart.com/booth.html>          |Booth planner — art fair wall layout tool (noindex, admin-linked)                            |
 |<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal                                   |
 |<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)                              |
+|<https://davidnicholsonart.com/color-theory.html>   |Color theory study deck — site-chrome wrapper; embeds color-theory-app.html in an iframe     |
+|<https://davidnicholsonart.com/color-theory-app.html>|The deck app itself — noindex; meant to be viewed inside color-theory.html                  |
 |<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                                                       |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
@@ -436,6 +438,28 @@ All are single-file, no framework — intentional, keep it that way.
 - **Deploy gotcha:** the `deploy.yml` S3 sync only includes `*.jpg`, NOT `*.jpeg`. So these `.jpeg` images are neither uploaded from the repo nor deleted by `--delete` — they live purely as manual S3 uploads and persist across deploys. To make them repo-managed later, add `--include "*.jpeg"` to the sync. (Note: `--include "*.jpg"` matches nested paths, so any `.jpg` in S3 that’s absent from the repo *would* be wiped by `--delete`, except `receipts/*` which is explicitly excluded.)
 - Old animation details (no longer in use): 10 paintings in 5 diptych pairs (Junction & Terminal, Early Still & U.S. 50 East, Johnson Drive 6am & 6:01am, KS Wind Farm 1 & 2, Sunflower 1 & 2), 4×4 snake-flip tile grid, click-to-advance
 
+### color-theory.html + color-theory-app.html (color theory study deck)
+
+Public study deck for color relationships and color science — supports the painting practice and gives fair visitors something to play with.
+
+**Two-file split (intentional):**
+
+- `color-theory.html` — the real page. Standard site chrome: fixed `<nav>` with “← david nicholson” back-link + instagram button + cart badge (matches `varied-readings.html` / `originals.html`), lowercase intro paragraph, then the deck in a bordered panel, then the full-bleed site `<footer>`. Has GA, favicons, and OG tags.
+- `color-theory-app.html` — the deck app, embedded via `<iframe>`. Kept separate because the app uses generic selectors (`header`, `button`, `main`, `footer`) that would collide with site CSS if inlined. Carries `<meta name="robots" content="noindex">` so it never competes with the wrapper page in search.
+
+**Deck contents (~175 cards, all generated/authored in-file — no API, no backend):**
+
+- **Relationship cards** (multiple choice, “which relationship do these show?”) — complementary, analogous, triadic, split-complementary, tetradic, monochromatic, warm–cool contrast. Built from a 12-hue artist’s (RYB) wheel so complements read the painter’s way (red/green, orange/blue, yellow/violet), across tints/shades/tones so the relationship is learned rather than one memorized pair.
+- **Itten’s Seven Contrasts** (multiple choice, “which contrast is this?”) — hue, light–dark, cold–warm, complementary, simultaneous, saturation, extension. Decoys drawn only from the contrast pool.
+- **Albers interaction demos** (tap-to-reveal, not scored) — one color as two, vibrating boundary, vanishing boundary, Bezold effect, interactive afterimage, transparency illusion.
+- **Color science** (tap-to-reveal, not scored) — additive/subtractive, wavelength, simultaneous contrast, metamerism, afterimage/opponent process, trichromacy, gamut, value & chroma, color temperature.
+
+**Behavior:** 4 tappable choices (correct + 3 decoys), instant right/wrong, running score in the header; keys 1–4 answer, ←/→ navigate, S shuffles; footer filter narrows to any single group. Swatch front faces use a Pantone-style chip layout (color block, white label strip, name + hex lower-right).
+
+**Styling:** rethemed to the live site tokens (white bg, `--ink #2b3640`, `--accent #2f4f75`, Jost). Swatch/demo colors are content and must stay literal — never restyle those to brand colors.
+
+**Print companion (not in repo):** a `color_deck.py` generator produces PDF versions — 3-up on US Letter with cut lines, and a one-card-per-page 3×5 index-card template. The Albers effects are screen-only and excluded from print.
+
 ### generate-prints.js (build script)
 
 - Runs in GitHub Actions before S3 sync
@@ -499,6 +523,22 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ## On the Horizon
 
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
+
+-----
+
+## Completed This Session (July 26 2026)
+
+**Color theory study deck — new public page**
+
+- ✓ **`color-theory.html`** (new) — site-chrome wrapper page: fixed nav with back-link + instagram + cart badge, lowercase intro, bordered deck panel, full-bleed site footer. GA + favicons + OG tags included.
+- ✓ **`color-theory-app.html`** (new) — the deck itself (~175 cards), embedded via iframe, `noindex`. Rethemed from its original warm/Space-Grotesk look to the live site tokens (white bg, `--ink #2b3640`, `--accent #2f4f75`, Jost). Swatch colors deliberately left literal.
+- ✓ **Footer nav — “color theory” link added** to `index.html`, `gallery.html`, `originals.html`, `shipping.html`, `varied-readings.html`, and the new page itself. Inserted before “contact” on each. Note the footers are NOT identical: `originals.html` uses `onclick="contact()"` (not the split-string mailto), and `shipping.html` has no self-link, so the anchor line differs per file.
+- ✓ **`sitemap.xml`** — added `color-theory.html` (priority 0.5, monthly). The app file is intentionally omitted (noindex).
+- ✓ **Steering doc palette correction** — the “Key Principles” entry still prescribed the retired warm theme (`--bg #f8f6f3`, `--accent #e07030` orange, `--ink2 #5e6b78` / `--ink3 #64707c`). The live site has been white / `#2b3640` ink / `#2f4f75` steel-blue accent for some time. Principle rewritten with the current tokens + measured AA ratios (ink 12.3:1, ink2 6.05:1, ink3 4.76:1, accent 8.41:1 on white) and an explicit note that the orange palette in the April/June 2026 session logs is historical. Verified identical tokens across all five public pages before rewriting.
+
+**Iframe rationale:** the deck app uses generic element selectors (`header`, `main`, `button`, `footer`); inlining it into a site page would collide with site CSS. The iframe seals it off, which is why the two-file split exists.
+
+**Bug worth remembering (cost two rounds):** the deck's swatch fronts rendered as name labels with no color. Cause was a height chain — the card sized via CSS `aspect-ratio` with absolutely-positioned faces, and an inner wrapper (`.fade`) had no height, so `height:100%` on the swatches resolved to zero and the color blocks collapsed. Fix: explicit card height, `height:100%` on the wrapper, and paint the color as the swatch's own `background` rather than a child block. Same class of bug bit the Albers “grounds” sample square (percentage height inside a flex parent) — also given an explicit height. **General lesson:** percentage heights need an unbroken chain of resolved heights; when a colored box vanishes, walk the ancestor chain before suspecting the color values.
 
 -----
 
@@ -798,8 +838,8 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
 - **S3 sync `--delete` wipes receipts** — deploy.yml must include `--exclude "receipts/*"` after the `--include "*.jpg"` line; without it every deploy deletes all uploaded receipts
 - **Debug order: check the code first** — when something isn’t working after a push, review the code for bugs before assuming the deploy didn’t complete or the user made an error. Both Claude and David make mistakes; neither is infallible. Start with the code.
-- **Public site uses Jost** — both `index.html` and `gallery.html` run on the Jost font stack (`'Jost', Futura, 'Trebuchet MS', Arial, sans-serif`); gallery was unified away from DM Sans + Playfair in June 2026. Keep new public pages on Jost for brand cohesion.
-- **Secondary-text grays are AA-locked** — `--ink2: #5e6b78` and `--ink3: #64707c` on the `#f8f6f3` bg, `#6b6560` for muted labels on the `#f5f2ed` modal/cart sheet. These clear WCAG AA; do NOT revert to the old `#7a8a99` / `#9aa0a8` / `#a8a39d`, which failed contrast.
+- **Public site uses Jost** — all public pages run the Jost font stack (`'Jost', Futura, 'Trebuchet MS', Arial, sans-serif`); gallery was unified away from DM Sans + Playfair in June 2026. Keep new public pages on Jost for brand cohesion.
+- **Public site palette (current — verify against `index.html`)** — `--bg: #ffffff`, `--surface: #eef1f4`, `--border: #dfe4e9`, `--ink: #2b3640`, `--ink2: #586470`, `--ink3: #697480`, `--accent: #2f4f75` (steel blue), `--accent-hi: #3d5f88`, `--accent-ink: #33557d`. Identical across `index.html`, `gallery.html`, `originals.html`, `shipping.html`, `varied-readings.html`, `color-theory.html`. All clear WCAG AA on white (ink 12.3:1, ink2 6.05:1, ink3 4.76:1, accent 8.41:1) — don't lighten the grays. **NOTE:** the old warm/orange theme (`--bg: #f8f6f3`, `--accent: #e07030`, `--ink2: #5e6b78` / `--ink3: #64707c`) is HISTORICAL — it appears in the April/June 2026 session logs below and is no longer live. Match the live files, not those log entries.
 - **Homepage hero** — daily-rotating, sourced from build-time `hero-pool.js`, not a live Lambda call (see generate-prints.js); rotates per UTC day, so it’s not a per-visit random.
 - **Gallery card images: lazy + retry** — the `/image` proxy throttles under the ~40-request burst a full grid fires on a cold CloudFront cache, leaving random blanks. Card `<img>`s use `loading="lazy"` to spread requests and an `onerror` retry (backoff + cache-busting param) to self-heal. Don’t remove these.
 
