@@ -92,9 +92,9 @@ h1.display { font-size: clamp(48px, 10.5vw, 132px); font-weight: 700; line-heigh
 
 /* ---------- events ---------- */
 .events { padding: 72px 0 90px; border-top: 1px solid var(--border); }
-.ev-cols { display: grid; grid-template-columns: 1fr; gap: 56px; }
-@media (min-width: 820px) { .ev-cols { grid-template-columns: 1fr 1fr; } }
+.ev-list { max-width: 720px; }
 .sec-h { font-size: clamp(30px, 4.4vw, 52px); font-weight: 700; letter-spacing: -0.01em; text-transform: lowercase; margin-bottom: 28px; }
+.ev-year.stacked-year { margin-top: 36px; }
 .ev-year { font-size: 14px; font-weight: 500; letter-spacing: 0.14em; color: var(--ink3); text-transform: lowercase; margin-bottom: 14px; }
 .ev { padding: 18px 0; border-top: 1px solid var(--border); }
 .ev:last-of-type { border-bottom: 1px solid var(--border); }
@@ -103,13 +103,8 @@ h1.display { font-size: clamp(48px, 10.5vw, 132px); font-weight: 700; line-heigh
 .ev-name a { color: var(--ink); transition: color 0.2s; }
 .ev-name a:hover { color: var(--accent-ink); }
 .ev-loc { font-size: 15px; color: var(--ink2); margin-top: 2px; }
-.sub-h { font-size: clamp(20px, 2.6vw, 28px); font-weight: 700; text-transform: lowercase; margin: 44px 0 14px; }
-.sub-h:first-child { margin-top: 0; }
-.venue-big { font-size: clamp(20px, 2.4vw, 26px); font-weight: 500; text-transform: lowercase; }
-.venue-big a { color: var(--ink); }
-.venue-big a:hover { color: var(--accent-ink); }
-.venue-addr { font-size: 15px; color: var(--ink2); margin-top: 4px; }
-.past-list .ev { padding: 14px 0; }
+.ev-block { margin-top: 72px; }
+.venue-addr { font-size: 15px; color: var(--ink2); margin-top: 2px; }
 
 /* ---------- guest book band ---------- */
 .gb-band { background: var(--ink); color: #f1f3f5; padding: 80px 0 90px; }
@@ -177,13 +172,24 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
   </div>
 </section>
 
-<!-- FUTURE / REPRESENTED AT / PAST -->
+<!-- CURRENTLY / FUTURE / PAST -->
 <section class="events" id="events">
   <div class="wrap">
-    <div class="ev-cols">
-      <div class="rv">
-        <h2 class="sec-h">future</h2>
-        <p class="ev-year">2026</p>
+
+    <div class="rv">
+      <h2 class="sec-h">currently</h2>
+      <div class="ev-list">
+        <div class="ev">
+          <div class="ev-name"><a href="https://www.phoenixgalleryart.com/collections/david-nicholson">phoenix gallery</a></div>
+          <div class="venue-addr">825 massachusetts, lawrence, ks 66044</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rv ev-block">
+      <h2 class="sec-h">future</h2>
+      <p class="ev-year">2026</p>
+      <div class="ev-list">
         <div class="ev">
           <div class="ev-date">september 11th &ndash; 13th</div>
           <div class="ev-name"><a href="https://westportkcmo.com/art-westport/">art westport</a></div>
@@ -195,33 +201,34 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
           <div class="ev-loc">lawrence, ks</div>
         </div>
       </div>
-      <div class="rv">
-        <p class="sub-h">represented at</p>
-        <div class="venue-big"><a href="https://www.phoenixgalleryart.com/collections/david-nicholson">phoenix gallery</a></div>
-        <div class="venue-addr">825 massachusetts, lawrence, ks 66044</div>
-        <p class="sub-h">past</p>
-        <div class="past-list">
-          <p class="ev-year">2026</p>
-          <div class="ev">
-            <div class="ev-name"><a href="/overland-park-2026.html">downtown overland park art fair</a></div>
-            <div class="ev-loc">overland park, ks</div>
-          </div>
-          <div class="ev">
-            <div class="ev-name"><a href="/varied-readings.html">varied readings at phoenix gallery</a></div>
-            <div class="ev-loc">lawrence, ks</div>
-          </div>
-          <p class="ev-year" style="margin-top:20px;">2025</p>
-          <div class="ev">
-            <div class="ev-name"><a href="/lawrence-art-in-the-park-2025.html">art in the park</a></div>
-            <div class="ev-loc">lawrence, ks</div>
-          </div>
-          <div class="ev">
-            <div class="ev-name"><a href="/art-westport-2025.html">art westport</a></div>
-            <div class="ev-loc">kansas city, mo</div>
-          </div>
+    </div>
+
+    <div class="rv ev-block">
+      <h2 class="sec-h">past</h2>
+      <p class="ev-year">2026</p>
+      <div class="ev-list">
+        <div class="ev">
+          <div class="ev-name"><a href="/overland-park-2026.html">downtown overland park art fair</a></div>
+          <div class="ev-loc">overland park, ks</div>
+        </div>
+        <div class="ev">
+          <div class="ev-name"><a href="/varied-readings.html">varied readings at phoenix gallery</a></div>
+          <div class="ev-loc">lawrence, ks</div>
+        </div>
+      </div>
+      <p class="ev-year stacked-year">2025</p>
+      <div class="ev-list">
+        <div class="ev">
+          <div class="ev-name"><a href="/lawrence-art-in-the-park-2025.html">art in the park</a></div>
+          <div class="ev-loc">lawrence, ks</div>
+        </div>
+        <div class="ev">
+          <div class="ev-name"><a href="/art-westport-2025.html">art westport</a></div>
+          <div class="ev-loc">kansas city, mo</div>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 
