@@ -69,12 +69,21 @@ img { display: block; max-width: 100%; }
 @media (min-width: 900px) { .wrap { padding: 0 48px; } }
 
 /* ---------- nav ---------- */
-nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 20px; }
+@media (min-width: 701px) { nav { padding: 0 40px; } }
+@media (min-width: 1100px) { nav { padding: 0 60px; } }
+@media (max-width: 500px) { nav { padding: 0 16px; } }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 62px; }
 .brand { font-size: 19px; font-weight: 500; letter-spacing: 0.05em; text-transform: lowercase; }
 .nav-links { display: flex; align-items: center; gap: 28px; }
 .pill { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff !important; background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 9px 22px; transition: background 0.2s, border-color 0.2s; }
 .pill:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
+@media (max-width: 500px) {
+  nav .pill { font-size: 11px; padding: 6px 12px; letter-spacing: 0.08em; }
+  nav .pill .btn-text-long { display: none; }
+  nav .pill .btn-text-short { display: inline; }
+}
+@media (min-width: 501px) { .btn-text-short { display: none; } }
 
 /* ---------- hero ---------- */
 .hero-media { display: block; width: 100%; height: 58vh; min-height: 320px; background: var(--surface); overflow: hidden; cursor: pointer; }
@@ -86,7 +95,9 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94)
 .hero-cap { font-size: 13px; color: var(--ink3); letter-spacing: 0.06em; padding: 10px 24px 0; }
 @media (min-width: 900px) { .hero-cap { padding: 10px 48px 0; } }
 .hero-text { padding-top: 44px; padding-bottom: 80px; }
-h1.display { font-size: clamp(48px, 10.5vw, 132px); font-weight: 700; line-height: 0.98; letter-spacing: -0.015em; text-transform: lowercase; }
+h1.display { font-size: clamp(36px, 8.4vw, 96px); font-weight: 700; line-height: 1.0; letter-spacing: -0.015em; text-transform: lowercase; }
+/* one line from tablet width up; wraps naturally on phones */
+@media (min-width: 700px) { h1.display { white-space: nowrap; font-size: min(8.4vw, 96px); } }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
 
 /* ---------- about ---------- */
@@ -149,10 +160,10 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
 <body>
 
 <nav>
-  <div class="wrap nav-inner">
+  <div class="nav-inner">
     <a class="brand" href="/">david nicholson</a>
     <div class="nav-links">
-      <a class="pill" href="/gallery.html">view gallery</a>
+      <a class="pill" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
     </div>
   </div>
 </nav>
@@ -161,9 +172,9 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
 <a class="hero-media" href="/gallery.html" aria-label="view gallery"><img id="hero-img" alt=""></a>
 <p class="hero-cap" id="hero-cap"></p>
 <header class="hero-text wrap">
-  <h1 class="display rv">david<br>nicholson</h1>
+  <h1 class="display rv">david nicholson</h1>
   <div class="hero-ctas rv">
-    <a class="pill" href="https://instagram.com/dave_nichol_son">follow on instagram</a>
+    <a class="pill" href="/gallery.html">view gallery</a>
   </div>
 </header>
 
@@ -257,7 +268,6 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
         <a href="/gallery.html">gallery</a>
         <a href="/originals.html">available originals</a>
         <a href="/shipping.html">shipping &amp; returns</a>
-        <a href="/color-theory.html">color theory</a>
         <button onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
       </div>
     </div>
