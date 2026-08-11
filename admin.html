@@ -514,6 +514,9 @@
           <button class="filter-chip" id="fc-low-stock"      onclick="setFilter('low-stock')">Low print stock</button>
           <button class="filter-chip" id="fc-no-moms"        onclick="setFilter('no-moms')">Mom doesn't have</button>
           <button class="filter-chip" id="fc-at-gallery"     onclick="setFilter('at-gallery')">At gallery</button>
+          <select id="dim-filter" onchange="setDimFilter(this.value)" style="font-family:var(--font);font-size:12px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-mid);border-radius:20px;background:none;color:var(--ink2);cursor:pointer;outline:none">
+            <option value="">All dimensions</option>
+          </select>
         </div>
         <div style="overflow-x:auto">
           <table>
@@ -522,7 +525,7 @@
                 <th style="width:28px"></th>
                 <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
                 <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
-                <th class="col-hide">Dimensions</th>
+                <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
                 <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
                 <th onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
                 <th>Lg stock</th>
@@ -1160,6 +1163,7 @@ let db = { paintings: [], rate: 1.10, rateLarge: null };
 let priceLists = [];
 let expState = { expenses: [], mileage: [], recurring: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
+let dimFilter = '';
 let activeFilter = null, expandedId = null;
 let salePaintingId = null, editSaleId = null;
 let expSortField = 'date', expSortDir = 'desc';
@@ -1504,6 +1508,7 @@ function sortedPaintings(list) {
     let av, bv;
     if (sortField === 'title')  { av = a.title.toLowerCase(); bv = b.title.toLowerCase(); }
     else if (sortField === 'year')   { av = a.year; bv = b.year; }
+    else if (sortField === 'dims')   { av = a.width * 10000 + a.height; bv = b.width * 10000 + b.height; }
     else if (sortField === 'cost')   { av = cost(a); bv = cost(b); }
     else if (sortField === 'retail') { av = retail(a); bv = retail(b); }
     else { av = a[sortField]; bv = b[sortField]; }
@@ -1521,6 +1526,25 @@ function setFilter(f) {
   updateFilterChips();
   renderTable();
 }
+function setDimFilter(val) {
+  dimFilter = val;
+  renderTable();
+}
+function populateDimFilterOptions() {
+  const sel = document.getElementById('dim-filter');
+  if (!sel) return;
+  const prev = dimFilter;
+  const dims = [...new Set(
+    db.paintings.filter(p => !p.marketItem).map(p => `${p.width}×${p.height}`)
+  )].sort((a, b) => {
+    const [aw, ah] = a.split('×').map(Number);
+    const [bw, bh] = b.split('×').map(Number);
+    return aw - bw || ah - bh;
+  });
+  sel.innerHTML = '<option value="">All dimensions</option>' + dims.map(d => `<option value="${d}">${d}</option>`).join('');
+  if (dims.includes(prev)) { sel.value = prev; dimFilter = prev; }
+  else { sel.value = ''; dimFilter = ''; }
+}
 function updateFilterChips() {
   ['never-sold','sold','original-avail','low-stock','no-moms','at-gallery'].forEach(f => {
     const el = document.getElementById('fc-' + f);
@@ -1528,6 +1552,7 @@ function updateFilterChips() {
   });
 }
 function applyFilter(list) {
+  if (dimFilter) list = list.filter(p => `${p.width}×${p.height}` === dimFilter);
   if (!activeFilter) return list;
   if (activeFilter === 'never-sold')     return list.filter(p => p.sales.length === 0);
   if (activeFilter === 'sold')           return list.filter(p => p.sales.length > 0);
@@ -1570,6 +1595,7 @@ async function init() {
   document.getElementById('irs-rate-display').textContent =
     '$' + DEFAULT_IRS_RATE.toFixed(2) + '/mile (2026)';
 
+  populateDimFilterOptions();
   render();
 
   // Load expenses in background so dashboard cards populate on login
@@ -2405,6 +2431,7 @@ async function deletePainting(id) {
   if (!confirm(msg)) return;
   db.paintings = db.paintings.filter(x => x.id !== id);
   if (expandedId === id) expandedId = null;
+  populateDimFilterOptions();
   render();
   try { await api('DELETE', `/paintings/${id}`); }
   catch(e) { alert('Failed to delete painting: ' + e.message); }
@@ -2438,6 +2465,7 @@ async function saveNewPainting() {
     setLoading(true);
     const data = await api('POST', '/paintings', body);
     db.paintings.push({ ...data.painting, sales: [] });
+    populateDimFilterOptions();
     closeModal('add-modal'); render();
   } catch(e) { alert('Failed to add painting: ' + e.message); }
   finally { setLoading(false); }
@@ -2462,6 +2490,7 @@ async function savePaintingEdits(id) {
   if (!width || !height) { alert('Dimensions are required.'); return; }
   if (overrideRaw !== '' && (isNaN(priceOverride) || priceOverride < 0)) { alert('Price override must be a positive number.'); return; }
   Object.assign(p, { title, month, year, width, height, momsHas, atGallery, stock: { large, small }, priceOverride });
+  populateDimFilterOptions();
   render();
   try { await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas, atGallery, priceOverride }); }
   catch(e) { alert('Failed to save changes: ' + e.message); }
@@ -2729,6 +2758,7 @@ async function reloadPaintings() {
   db.paintings = data.paintings;
   db.rate = data.rate ?? db.rate;
   db.rateLarge = data.rateLarge ?? db.rateLarge;
+  populateDimFilterOptions();
   render();
 }
 
