@@ -501,7 +501,8 @@
           <div class="section-title" style="margin:0">Inventory</div>
           <div style="display:flex;gap:8px;align-items:center">
             <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
-            <button class="btn-sm" onclick="printPriceTags()">🏷 Tags</button>
+            <button class="btn-sm" onclick="openPriceListModal()">$ Price Lists</button>
+            <button class="btn-sm" onclick="openTagsModal()">🏷 Tags</button>
             <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
           </div>
         </div>
@@ -962,6 +963,47 @@
   </div>
 </div>
 
+<!-- Price Lists modal -->
+<div class="modal-backdrop" id="pricelist-modal" style="display:none" onclick="closeModalOnBackdrop(event,'pricelist-modal')">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-head">
+      <h2>Price Lists</h2>
+      <button class="modal-close" onclick="closeModal('pricelist-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row" style="align-items:end">
+        <div class="field" style="flex:1"><label>Save current prices as</label><input type="text" id="pricelist-new-name" placeholder="e.g. Fair pricing"></div>
+        <button class="btn-primary" onclick="saveNewPriceList()">Save</button>
+      </div>
+      <div id="pricelist-list" style="margin-top:18px;display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('pricelist-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tags selection modal -->
+<div class="modal-backdrop" id="tags-modal" style="display:none" onclick="closeModalOnBackdrop(event,'tags-modal')">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-head">
+      <h2>Select Prints for Tags</h2>
+      <button class="modal-close" onclick="closeModal('tags-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:14px;margin-bottom:12px">
+        <button class="btn-sm" onclick="setAllTagChecks(true)">Select all</button>
+        <button class="btn-sm" onclick="setAllTagChecks(false)">Deselect all</button>
+      </div>
+      <div id="tags-select-list" style="display:flex;flex-direction:column;gap:2px;max-height:50vh;overflow-y:auto"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('tags-modal')">Cancel</button>
+      <button class="btn-primary" onclick="printSelectedTags()">Print Tags</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════
 //  CONSTANTS
@@ -1115,6 +1157,7 @@ const MILEAGE_SEED = [
 //  STATE
 // ═══════════════════════════════════════════
 let db = { paintings: [], rate: 1.10, rateLarge: null };
+let priceLists = [];
 let expState = { expenses: [], mileage: [], recurring: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
 let activeFilter = null, expandedId = null;
@@ -1420,7 +1463,10 @@ function chunk(arr, size) {
 function sqIn(p) { return p.width * p.height; }
 function effectiveRate(p) { return (db.rateLarge != null && (p.width >= 30 || p.height >= 30)) ? db.rateLarge : db.rate; }
 function cost(p, rate) { return sqIn(p) * (rate !== undefined ? rate : effectiveRate(p)); }
-function retail(p, rate) { return Math.ceil(cost(p, rate) / 50) * 50; }
+function retail(p, rate) {
+  if (rate === undefined && p.priceOverride != null) return p.priceOverride;
+  return Math.ceil(cost(p, rate) / 50) * 50;
+}
 function originalSold(p) { return p.sales.some(s => s.type === 'original'); }
 function originalAvailInSquare(p) { return p.originalAvail === true; }
 function saleNet(s) { if (s.channel === 'gallery' && s.net != null) return Number(s.net); return Number(s.price); }
@@ -1695,7 +1741,7 @@ function renderTable() {
         <td class="dim col-hide">${p.month ? p.month.slice(0,3)+' ' : ''}${p.year}</td>
         <td class="mono col-hide">${p.width}×${p.height}</td>
         <td class="mono">$${c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-        <td class="mono">$${r.toLocaleString()}</td>
+        <td class="mono">$${r.toLocaleString()}${p.priceOverride != null ? ' <span title="Price override active" style="color:var(--accent)">●</span>' : ''}</td>
         <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','large',-1)">−</button><span class="stock-num ${(p.stock.large||0)===0?'zero':''}">${p.stock.large||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','large',1)">+</button></div></td>
         <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',-1)">−</button><span class="stock-num ${(p.stock.small||0)===0?'zero':''}">${p.stock.small||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',1)">+</button></div></td>
         <td class="mono dim">${lgSold||'—'}</td>
@@ -1708,7 +1754,7 @@ function renderTable() {
       rows += `
         <tr class="expand-row"><td colspan="11"><div class="expand-inner">
           <div class="sub-title" style="margin-bottom:12px">Painting Details</div>
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">TITLE</div><input type="text" value="${esc(p.title)}" id="edit-title-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">MONTH</div><select id="edit-month-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none;appearance:none">${monthOpts}</select></div>
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">YEAR</div><input type="number" value="${p.year}" id="edit-year-${p.id}" min="2000" max="2099" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
@@ -1716,6 +1762,7 @@ function renderTable() {
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">HEIGHT</div><input type="number" value="${p.height}" id="edit-height-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">LARGE</div><input type="number" value="${p.stock.large||0}" id="edit-large-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">SMALL</div><input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">PRICE OVERRIDE</div><input type="number" value="${p.priceOverride != null ? p.priceOverride : ''}" id="edit-override-${p.id}" min="0" placeholder="auto: $${retail(p)}" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
           </div>
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px" onclick="event.stopPropagation()">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2)">
@@ -2408,12 +2455,15 @@ async function savePaintingEdits(id) {
   const small  = parseInt(document.getElementById('edit-small-'  + id).value) || 0;
   const momsHas = document.getElementById('edit-moms-' + id).checked;
   const atGallery = document.getElementById('edit-gallery-' + id).value || '';
+  const overrideRaw = document.getElementById('edit-override-' + id).value.trim();
+  const priceOverride = overrideRaw === '' ? null : parseFloat(overrideRaw);
   if (!title) { alert('Title is required.'); return; }
   if (!year || year < 2000) { alert('Year is required.'); return; }
   if (!width || !height) { alert('Dimensions are required.'); return; }
-  Object.assign(p, { title, month, year, width, height, momsHas, atGallery, stock: { large, small } });
+  if (overrideRaw !== '' && (isNaN(priceOverride) || priceOverride < 0)) { alert('Price override must be a positive number.'); return; }
+  Object.assign(p, { title, month, year, width, height, momsHas, atGallery, stock: { large, small }, priceOverride });
   render();
-  try { await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas, atGallery }); }
+  try { await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas, atGallery, priceOverride }); }
   catch(e) { alert('Failed to save changes: ' + e.message); }
 }
 
@@ -2592,10 +2642,135 @@ function esc(str) {
 
 
 // ═══════════════════════════════════════════
+//  PRICE LISTS (named alternate price sets)
+// ═══════════════════════════════════════════
+async function openPriceListModal() {
+  document.getElementById('pricelist-new-name').value = '';
+  document.getElementById('pricelist-list').innerHTML = '<div style="color:var(--ink3);font-size:13px">Loading…</div>';
+  document.getElementById('pricelist-modal').style.display = 'flex';
+  try {
+    const data = await api('GET', '/price-lists');
+    priceLists = data.priceLists || [];
+    renderPriceListModal();
+  } catch(e) {
+    document.getElementById('pricelist-list').innerHTML = '<div style="color:var(--red);font-size:13px">Failed to load: ' + esc(e.message) + '</div>';
+  }
+}
+
+function renderPriceListModal() {
+  const el = document.getElementById('pricelist-list');
+  if (!priceLists.length) { el.innerHTML = '<div style="color:var(--ink3);font-size:13px">No saved price lists yet.</div>'; return; }
+  el.innerHTML = priceLists.map(pl => {
+    const count = Object.keys(pl.prices || {}).length;
+    const when = pl.updatedAt || pl.createdAt;
+    const dateStr = when ? new Date(when).toLocaleDateString() : '';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border-mid);border-radius:8px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:13px;color:var(--ink)">${esc(pl.name)}</div>
+        <div style="font-size:11px;color:var(--ink3)">${count} painting${count===1?'':'s'}${dateStr ? ' · saved '+dateStr : ''}</div>
+      </div>
+      <button class="btn-sm" onclick="applyPriceList('${pl.id}')">Apply</button>
+      <button class="btn-sm" onclick="updatePriceListSnapshot('${pl.id}')">Update</button>
+      <button class="btn-sm danger" onclick="deletePriceList('${pl.id}')">Delete</button>
+    </div>`;
+  }).join('');
+}
+
+function currentPriceSnapshot() {
+  const prices = {};
+  db.paintings.filter(p => !p.marketItem).forEach(p => { prices[p.id] = retail(p); });
+  return prices;
+}
+
+async function saveNewPriceList() {
+  const name = document.getElementById('pricelist-new-name').value.trim();
+  if (!name) { alert('Enter a name for this price list.'); return; }
+  try {
+    const data = await api('POST', '/price-lists', { name, prices: currentPriceSnapshot() });
+    priceLists.push(data.priceList);
+    renderPriceListModal();
+  } catch(e) { alert('Failed to save price list: ' + e.message); }
+}
+
+async function updatePriceListSnapshot(id) {
+  if (!confirm('Overwrite this list with the currently displayed prices?')) return;
+  try {
+    const data = await api('PUT', `/price-lists/${id}`, { prices: currentPriceSnapshot() });
+    const idx = priceLists.findIndex(pl => pl.id === id);
+    if (idx >= 0) priceLists[idx] = data.priceList;
+    renderPriceListModal();
+  } catch(e) { alert('Failed to update price list: ' + e.message); }
+}
+
+async function applyPriceList(id) {
+  const pl = priceLists.find(x => x.id === id);
+  if (!pl) return;
+  const count = Object.keys(pl.prices || {}).length;
+  if (!confirm(`Apply "${pl.name}" — this overrides prices for ${count} painting${count===1?'':'s'}. Continue?`)) return;
+  try {
+    await api('POST', `/price-lists/${id}/apply`);
+    await reloadPaintings();
+    closeModal('pricelist-modal');
+  } catch(e) { alert('Failed to apply price list: ' + e.message); }
+}
+
+async function deletePriceList(id) {
+  const pl = priceLists.find(x => x.id === id);
+  if (!confirm(`Delete price list "${pl ? pl.name : ''}"? This can't be undone.`)) return;
+  try {
+    await api('DELETE', `/price-lists/${id}`);
+    priceLists = priceLists.filter(x => x.id !== id);
+    renderPriceListModal();
+  } catch(e) { alert('Failed to delete price list: ' + e.message); }
+}
+
+async function reloadPaintings() {
+  const data = await api('GET', '/paintings');
+  db.paintings = data.paintings;
+  db.rate = data.rate ?? db.rate;
+  db.rateLarge = data.rateLarge ?? db.rateLarge;
+  render();
+}
+
+// ═══════════════════════════════════════════
+//  TAG SELECTION (choose which paintings get price tags)
+// ═══════════════════════════════════════════
+function eligibleTagPaintings() {
+  return [...db.paintings].filter(p => !p.marketItem && p.originalAvail === true).sort((a,b) => (a.title||'').localeCompare(b.title||''));
+}
+
+function openTagsModal() {
+  const list = eligibleTagPaintings();
+  if (!list.length) {
+    alert('No available originals to print tags for.\nTags print only for paintings marked "original available".');
+    return;
+  }
+  document.getElementById('tags-select-list').innerHTML = list.map(p => `
+    <label style="display:flex;align-items:center;gap:10px;padding:7px 4px;font-size:13px;color:var(--ink);cursor:pointer;border-bottom:1px solid var(--border)">
+      <input type="checkbox" class="tag-check" value="${p.id}" checked style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer;flex-shrink:0">
+      <span style="flex:1">${esc(p.title)}</span>
+      <span class="mono" style="color:var(--ink2)">$${retail(p).toLocaleString()}</span>
+    </label>`).join('');
+  document.getElementById('tags-modal').style.display = 'flex';
+}
+
+function setAllTagChecks(val) {
+  document.querySelectorAll('#tags-select-list .tag-check').forEach(cb => cb.checked = val);
+}
+
+function printSelectedTags() {
+  const ids = [...document.querySelectorAll('#tags-select-list .tag-check:checked')].map(cb => cb.value);
+  if (!ids.length) { alert('Select at least one painting to print tags for.'); return; }
+  closeModal('tags-modal');
+  printPriceTags(ids);
+}
+
+// ═══════════════════════════════════════════
 //  PRICE TAGS (Avery 5371 — 3.5×2", 10/sheet)
 // ═══════════════════════════════════════════
-function printPriceTags() {
-  const list = [...db.paintings].filter(p => !p.marketItem).sort((a,b) => (a.title||'').localeCompare(b.title||''));
+function printPriceTags(ids) {
+  let list = [...db.paintings].filter(p => !p.marketItem).sort((a,b) => (a.title||'').localeCompare(b.title||''));
+  if (ids) { const idSet = new Set(ids); list = list.filter(p => idSet.has(p.id)); }
 
   const cards = list.filter(p => p.originalAvail === true).map(p => {
     const price = retail(p);

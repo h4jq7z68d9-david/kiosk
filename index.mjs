@@ -266,7 +266,7 @@ async function getOriginals() {
     squareGet(`/v2/catalog/list?types=ITEM&location_id=${SQUARE_LOC}`),
     squareGet(`/v2/catalog/list?types=IMAGE`),
     dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } })),
-    dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE, ProjectionExpression: 'squareId, atGallery, #t', ExpressionAttributeNames: { '#t': 'title' } })),
+    dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE, ProjectionExpression: 'squareId, atGallery, #t, priceOverride', ExpressionAttributeNames: { '#t': 'title' } })),
   ]);
 
   const rate = configRes.Item?.rate ?? null;
@@ -277,14 +277,21 @@ async function getOriginals() {
     if (img.image_data?.url) imageMap[img.id] = img.image_data.url;
   }
 
-  // Build sets of Square IDs / titles for paintings currently at a gallery
+  // Build sets of Square IDs / titles for paintings currently at a gallery,
+  // plus a price-override lookup keyed by Square ID and normalized title
   const normT = t => (t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const gallerySquareIds   = new Set();
   const galleryNormTitles  = new Set();
+  const overrideBySquareId = {};
+  const overrideByTitle    = {};
   for (const p of (paintingsRes.Items || [])) {
     if (p.atGallery) {
       if (p.squareId) gallerySquareIds.add(p.squareId);
       if (p.title)    galleryNormTitles.add(normT(p.title));
+    }
+    if (p.priceOverride != null) {
+      if (p.squareId) overrideBySquareId[p.squareId] = p.priceOverride;
+      if (p.title)    overrideByTitle[normT(p.title)] = p.priceOverride;
     }
   }
 
@@ -319,8 +326,11 @@ async function getOriginals() {
     const height = parseFloat(getAttr(obj, 'Height')) || null;
     const medium = getAttr(obj, 'Medium') || null;
 
+    const override = overrideBySquareId[obj.id] ?? overrideByTitle[normT(item.name)] ?? null;
     let price = null;
-    if (rate && width && height) {
+    if (override != null) {
+      price = override;
+    } else if (rate && width && height) {
       // Match admin's effectiveRate(): large rate applies when a side is >= 30"
       const effRate = (rateLarge != null && (width >= 30 || height >= 30)) ? rateLarge : rate;
       price = Math.ceil((width * height * effRate) / 50) * 50;
@@ -659,7 +669,7 @@ async function adminGetPaintings(cors) {
   const backfillPromises = [];
 
   const paintings = (paintingsRes.Items || [])
-    .filter(p => p.id !== '__config__')
+    .filter(p => p.id !== '__config__' && p.type !== 'priceList')
     .map(p => {
       const sq = (p.squareId && squareById[p.squareId])
         || squareByTitle[normTitle(p.title)]
@@ -724,20 +734,76 @@ async function adminGetPaintings(cors) {
 }
 
 async function adminAddPainting(body, cors) {
-  const { title, month, year, width, height, stock, momsHas, atGallery } = body;
+  const { title, month, year, width, height, stock, momsHas, atGallery, priceOverride } = body;
   if (!title || !year || !width || !height) return err('Missing required fields', 400, cors);
   const id = 'p' + Date.now();
   const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas, atGallery: atGallery || '' };
+  if (priceOverride != null && !isNaN(priceOverride)) item.priceOverride = Number(priceOverride);
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
   return ok({ painting: item }, cors);
 }
 
 async function adminUpdatePainting(id, body, cors) {
-  const { title, month, year, width, height, stock, momsHas, atGallery } = body;
+  const { title, month, year, width, height, stock, momsHas, atGallery, priceOverride } = body;
   if (!title || !year || !width || !height) return err('Missing required fields', 400, cors);
   const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas, atGallery: atGallery || '' };
+  if (priceOverride != null && !isNaN(priceOverride)) item.priceOverride = Number(priceOverride);
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
   return ok({ painting: item }, cors);
+}
+
+// ── Price Lists (named alternate price sets, e.g. "Fair pricing" vs "Online") ──
+// Stored as items in the paintings table with id prefix 'pricelist_' so no new
+// table/infra is needed. Shape: { id, type:'priceList', name, prices:{paintingId:price}, createdAt, updatedAt }
+async function adminGetPriceLists(cors) {
+  const res = await dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE }));
+  const lists = (res.Items || []).filter(p => p.type === 'priceList');
+  lists.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  return ok({ priceLists: lists }, cors);
+}
+
+async function adminAddPriceList(body, cors) {
+  const { name, prices } = body;
+  if (!name || !name.trim()) return err('Name is required', 400, cors);
+  if (!prices || typeof prices !== 'object') return err('Missing prices', 400, cors);
+  const id = 'pricelist_' + Date.now();
+  const item = { id, type: 'priceList', name: name.trim(), prices, createdAt: new Date().toISOString() };
+  await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
+  return ok({ priceList: item }, cors);
+}
+
+async function adminUpdatePriceList(id, body, cors) {
+  const existing = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id } }));
+  if (!existing.Item || existing.Item.type !== 'priceList') return err('Price list not found', 404, cors);
+  const { name, prices } = body;
+  const item = {
+    ...existing.Item,
+    name: name != null && name.trim() ? name.trim() : existing.Item.name,
+    prices: prices && typeof prices === 'object' ? prices : existing.Item.prices,
+    updatedAt: new Date().toISOString(),
+  };
+  await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
+  return ok({ priceList: item }, cors);
+}
+
+async function adminDeletePriceList(id, cors) {
+  await dynamo.send(new DeleteCommand({ TableName: PAINTINGS_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
+async function adminApplyPriceList(id, cors) {
+  const res = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id } }));
+  if (!res.Item || res.Item.type !== 'priceList') return err('Price list not found', 404, cors);
+  const prices = res.Item.prices || {};
+  const entries = Object.entries(prices);
+  let applied = 0;
+  for (const [paintingId, price] of entries) {
+    const p = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: paintingId } }));
+    if (!p.Item || p.Item.type === 'priceList') continue;
+    await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: { ...p.Item, priceOverride: Number(price) } }));
+    applied++;
+  }
+  return ok({ applied }, cors);
 }
 
 async function adminDeletePainting(id, cors) {
@@ -1067,6 +1133,20 @@ export const handler = async (event) => {
         const paintingId = paintingMatch[1];
         if (method === 'PUT')    return await adminUpdatePainting(paintingId, b(), cors);
         if (method === 'DELETE') return await adminDeletePainting(paintingId, cors);
+      }
+
+      // Price Lists
+      if (method === 'GET'  && path === '/admin/price-lists') return await adminGetPriceLists(cors);
+      if (method === 'POST' && path === '/admin/price-lists') return await adminAddPriceList(b(), cors);
+
+      const priceListApplyMatch = path.match(/^\/admin\/price-lists\/([^/]+)\/apply$/);
+      if (priceListApplyMatch && method === 'POST') return await adminApplyPriceList(priceListApplyMatch[1], cors);
+
+      const priceListMatch = path.match(/^\/admin\/price-lists\/([^/]+)$/);
+      if (priceListMatch) {
+        const plId = priceListMatch[1];
+        if (method === 'PUT')    return await adminUpdatePriceList(plId, b(), cors);
+        if (method === 'DELETE') return await adminDeletePriceList(plId, cors);
       }
 
       const salesListMatch = path.match(/^\/admin\/paintings\/([^/]+)\/sales$/);
