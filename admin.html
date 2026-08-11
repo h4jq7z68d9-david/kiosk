@@ -500,9 +500,10 @@
         <div class="table-header">
           <div class="section-title" style="margin:0">Inventory</div>
           <div style="display:flex;gap:8px;align-items:center">
+            <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
             <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
             <button class="btn-sm" onclick="openPriceListModal()">$ Price Lists</button>
-            <button class="btn-sm" onclick="openTagsModal()">🏷 Tags</button>
+            <button class="btn-sm" onclick="printTagsForSelected()">🏷 Tags</button>
             <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
           </div>
         </div>
@@ -522,6 +523,7 @@
           <table>
             <thead>
               <tr>
+                <th style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
                 <th style="width:28px"></th>
                 <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
                 <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
@@ -986,26 +988,6 @@
   </div>
 </div>
 
-<!-- Tags selection modal -->
-<div class="modal-backdrop" id="tags-modal" style="display:none" onclick="closeModalOnBackdrop(event,'tags-modal')">
-  <div class="modal" style="max-width:520px">
-    <div class="modal-head">
-      <h2>Select Prints for Tags</h2>
-      <button class="modal-close" onclick="closeModal('tags-modal')">×</button>
-    </div>
-    <div class="modal-body">
-      <div style="display:flex;gap:14px;margin-bottom:12px">
-        <button class="btn-sm" onclick="setAllTagChecks(true)">Select all</button>
-        <button class="btn-sm" onclick="setAllTagChecks(false)">Deselect all</button>
-      </div>
-      <div id="tags-select-list" style="display:flex;flex-direction:column;gap:2px;max-height:50vh;overflow-y:auto"></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-cancel" onclick="closeModal('tags-modal')">Cancel</button>
-      <button class="btn-primary" onclick="printSelectedTags()">Print Tags</button>
-    </div>
-  </div>
-</div>
 
 <script>
 // ═══════════════════════════════════════════
@@ -1164,6 +1146,8 @@ let priceLists = [];
 let expState = { expenses: [], mileage: [], recurring: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
 let dimFilter = '';
+let selectedIds = new Set();
+let lastRenderedIds = [];
 let activeFilter = null, expandedId = null;
 let salePaintingId = null, editSaleId = null;
 let expSortField = 'date', expSortDir = 'desc';
@@ -1746,12 +1730,14 @@ function renderChart() {
 function renderTable() {
   let list = applyFilter((db.paintings || []).filter(p => !p.marketItem));
   list = sortedPaintings(list);
-  ['title','year','cost','retail'].forEach(f => {
+  lastRenderedIds = list.map(p => p.id);
+  ['title','year','dims','cost','retail'].forEach(f => {
     const el = document.getElementById('sort-'+f);
     if (el) el.textContent = sortField === f ? (sortDir === 'asc' ? '↑' : '↓') : '';
   });
   const tbody = document.getElementById('table-body');
-  if (!list.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">No paintings found.</div></td></tr>'; return; }
+  updateSelectionUi(list);
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state">No paintings found.</div></td></tr>'; return; }
   let rows = '';
   list.forEach(p => {
     const c = cost(p), r = retail(p);
@@ -1762,6 +1748,7 @@ function renderTable() {
     const smSold = p.sales.filter(s => s.type === 'small').length;
     rows += `
       <tr class="painting-row" onclick="toggleExpand('${p.id}')">
+        <td onclick="event.stopPropagation()"><input type="checkbox" class="row-select" ${selectedIds.has(p.id)?'checked':''} onchange="toggleRowSelect('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></td>
         <td><span class="expand-arrow ${isOpen?'open':''}">▶</span></td>
         <td><strong>${esc(p.title)}</strong></td>
         <td class="dim col-hide">${p.month ? p.month.slice(0,3)+' ' : ''}${p.year}</td>
@@ -1778,7 +1765,7 @@ function renderTable() {
       const monthOpts = ['','January','February','March','April','May','June','July','August','September','October','November','December']
         .map(m => `<option value="${m}" ${p.month===m?'selected':''}>${m||'—'}</option>`).join('');
       rows += `
-        <tr class="expand-row"><td colspan="11"><div class="expand-inner">
+        <tr class="expand-row"><td colspan="12"><div class="expand-inner">
           <div class="sub-title" style="margin-bottom:12px">Painting Details</div>
           <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">TITLE</div><input type="text" value="${esc(p.title)}" id="edit-title-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
@@ -2763,35 +2750,45 @@ async function reloadPaintings() {
 }
 
 // ═══════════════════════════════════════════
-//  TAG SELECTION (choose which paintings get price tags)
+//  ROW SELECTION (checkboxes drive which paintings print tags)
 // ═══════════════════════════════════════════
-function eligibleTagPaintings() {
-  return [...db.paintings].filter(p => !p.marketItem && p.originalAvail === true).sort((a,b) => (a.title||'').localeCompare(b.title||''));
+function toggleRowSelect(id, checked) {
+  if (checked) selectedIds.add(id); else selectedIds.delete(id);
+  updateSelectionUi();
 }
 
-function openTagsModal() {
-  const list = eligibleTagPaintings();
-  if (!list.length) {
-    alert('No available originals to print tags for.\nTags print only for paintings marked "original available".');
-    return;
+function toggleSelectAll(checked) {
+  lastRenderedIds.forEach(id => checked ? selectedIds.add(id) : selectedIds.delete(id));
+  renderTable();
+}
+
+function clearSelection() {
+  selectedIds.clear();
+  renderTable();
+}
+
+function updateSelectionUi(list) {
+  const ids = list ? list.map(p => p.id) : lastRenderedIds;
+  const cb = document.getElementById('select-all-cb');
+  if (cb) {
+    const allSelected = ids.length > 0 && ids.every(id => selectedIds.has(id));
+    const someSelected = ids.some(id => selectedIds.has(id));
+    cb.checked = allSelected;
+    cb.indeterminate = someSelected && !allSelected;
   }
-  document.getElementById('tags-select-list').innerHTML = list.map(p => `
-    <label style="display:flex;align-items:center;gap:10px;padding:7px 4px;font-size:13px;color:var(--ink);cursor:pointer;border-bottom:1px solid var(--border)">
-      <input type="checkbox" class="tag-check" value="${p.id}" checked style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer;flex-shrink:0">
-      <span style="flex:1">${esc(p.title)}</span>
-      <span class="mono" style="color:var(--ink2)">$${retail(p).toLocaleString()}</span>
-    </label>`).join('');
-  document.getElementById('tags-modal').style.display = 'flex';
+  const countEl = document.getElementById('select-count');
+  if (countEl) {
+    countEl.innerHTML = selectedIds.size
+      ? `${selectedIds.size} selected · <a href="#" onclick="clearSelection();return false" style="color:var(--ink3);text-decoration:underline">clear</a>`
+      : '';
+  }
 }
 
-function setAllTagChecks(val) {
-  document.querySelectorAll('#tags-select-list .tag-check').forEach(cb => cb.checked = val);
-}
-
-function printSelectedTags() {
-  const ids = [...document.querySelectorAll('#tags-select-list .tag-check:checked')].map(cb => cb.value);
-  if (!ids.length) { alert('Select at least one painting to print tags for.'); return; }
-  closeModal('tags-modal');
+function printTagsForSelected() {
+  if (!selectedIds.size) { alert('Select paintings using the checkboxes on the left, then click Tags.'); return; }
+  const ids = [...selectedIds];
+  const eligible = db.paintings.filter(p => ids.includes(p.id) && p.originalAvail === true);
+  if (!eligible.length) { alert('None of the selected paintings are marked "Original available" — tags only print for available originals.'); return; }
   printPriceTags(ids);
 }
 
