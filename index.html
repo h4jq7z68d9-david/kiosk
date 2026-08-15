@@ -136,6 +136,10 @@ textarea.gb-in { resize: none; min-height: 90px; line-height: 1.5; }
 
 /* ---------- footer ---------- */
 footer { border-top: 1px solid var(--border); padding: 64px 0 48px; }
+footer .wrap { padding: 0 20px; }
+@media (min-width: 701px) { footer .wrap { padding: 0 40px; } }
+@media (min-width: 1100px) { footer .wrap { padding: 0 60px; } }
+@media (max-width: 500px) { footer .wrap { padding: 0 16px; } }
 .f-cols { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 40px; }
 .f-brand { font-size: clamp(26px, 3vw, 36px); font-weight: 700; text-transform: lowercase; letter-spacing: -0.01em; }
 .f-links { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }

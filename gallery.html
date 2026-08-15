@@ -80,8 +80,8 @@ a { color: inherit; text-decoration: none; }
 
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 12px; }
-@media (min-width: 701px) { nav { padding: 0 40px; } }
-@media (min-width: 1100px) { nav { padding: 0 60px; } }
+@media (min-width: 701px) { nav { padding: 0 40px; } footer { padding-left: 40px; padding-right: 40px; } }
+@media (min-width: 1100px) { nav { padding: 0 60px; } footer { padding-left: 60px; padding-right: 60px; } }
 .nav-title { font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: 0.05em; text-transform: lowercase; white-space: nowrap; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; height: 100%; display: flex; align-items: center; }
 .nav-center { flex: 1; min-width: 0; text-align: center; font-size: 14px; font-weight: 400; letter-spacing: 0.1em; text-transform: lowercase; color: var(--ink2); }
 .nav-btn { background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 8px 20px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff; cursor: pointer; white-space: nowrap; transition: background 0.2s, border-color 0.2s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; min-height: 40px; box-sizing: border-box; }
@@ -360,7 +360,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .btn-checkout:disabled { opacity: 0.4; cursor: default; }
 
 /* FOOTER */
-footer { border-top: 1px solid var(--border); padding: 64px 24px 48px; }
+footer { border-top: 1px solid var(--border); padding: 64px 20px 48px; }
 .f-inner { max-width: 1200px; margin: 0 auto; }
 .f-cols { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 40px; }
 .f-brand { font-size: clamp(26px, 3vw, 36px); font-weight: 700; text-transform: lowercase; letter-spacing: -0.01em; }
