@@ -74,12 +74,12 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94)
 @media (min-width: 1100px) { nav { padding: 0 60px; } }
 @media (max-width: 500px) { nav { padding: 0 16px; } }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 62px; }
-.brand { font-size: 19px; font-weight: 500; letter-spacing: 0.05em; text-transform: lowercase; }
+.brand { font-size: 19px; font-weight: 500; letter-spacing: 0.05em; text-transform: lowercase; height: 100%; display: flex; align-items: center; }
 .nav-links { display: flex; align-items: center; gap: 28px; }
-.pill { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff !important; background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 9px 22px; transition: background 0.2s, border-color 0.2s; }
+.pill { display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff !important; background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 9px 22px; min-height: 40px; box-sizing: border-box; transition: background 0.2s, border-color 0.2s; }
 .pill:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
 @media (max-width: 500px) {
-  nav .pill { font-size: 11px; padding: 6px 12px; letter-spacing: 0.08em; }
+  nav .pill { font-size: 11px; padding: 6px 16px; letter-spacing: 0.08em; min-height: 40px; }
   nav .pill .btn-text-long { display: none; }
   nav .pill .btn-text-short { display: inline; }
 }
@@ -114,8 +114,8 @@ h1.display { font-size: clamp(36px, 8.4vw, 96px); font-weight: 700; line-height:
 .ev:last-of-type { border-bottom: 1px solid var(--border); }
 .ev-date { font-size: 14px; color: var(--ink3); letter-spacing: 0.06em; }
 .ev-name { font-size: clamp(20px, 2.4vw, 26px); font-weight: 500; text-transform: lowercase; margin-top: 3px; }
-.ev-name a { color: var(--ink); transition: color 0.2s; }
-.ev-name a:hover { color: var(--accent-ink); }
+.ev-name a { color: var(--accent-ink); transition: color 0.2s; }
+.ev-name a:hover { color: var(--accent-hi); }
 .ev-loc { font-size: 15px; color: var(--ink2); margin-top: 2px; }
 .ev-block { margin-top: 72px; }
 .venue-addr { font-size: 15px; color: var(--ink2); margin-top: 2px; }
