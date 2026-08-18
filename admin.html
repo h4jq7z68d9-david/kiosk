@@ -771,6 +771,7 @@
         <div class="field"><label>Large prints in stock</label><input type="number" id="add-large" placeholder="0" min="0"></div>
         <div class="field"><label>Small prints in stock</label><input type="number" id="add-small" placeholder="0" min="0"></div>
       </div>
+      <div class="field"><label>Gallery stock # (optional)</label><input type="text" id="add-gallerystock" placeholder="e.g. 214"></div>
     </div>
     <div class="modal-foot">
       <button class="btn-cancel" onclick="closeModal('add-modal')">Cancel</button>
@@ -1759,7 +1760,7 @@ function renderTable() {
         <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',-1)">−</button><span class="stock-num ${(p.stock.small||0)===0?'zero':''}">${p.stock.small||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',1)">+</button></div></td>
         <td class="mono dim">${lgSold||'—'}</td>
         <td class="mono dim">${smSold||'—'}</td>
-        <td>${p.atGallery ? `<span class="orig-gallery">${esc(p.atGallery)}</span>` : squareAvail ? '' : '<span class="orig-sold">sold</span>'}</td>
+        <td>${p.atGallery ? `<span class="orig-gallery">${esc(p.atGallery)}${p.galleryStockNo ? ' #' + esc(p.galleryStockNo) : ''}</span>` : squareAvail ? '' : '<span class="orig-sold">sold</span>'}</td>
       </tr>`;
     if (isOpen) {
       const monthOpts = ['','January','February','March','April','May','June','July','August','September','October','November','December']
@@ -1788,6 +1789,10 @@ function renderTable() {
                 <option value="" ${!p.atGallery?'selected':''}>—</option>
                 <option value="Phoenix Gallery" ${p.atGallery==='Phoenix Gallery'?'selected':''}>Phoenix Gallery</option>
               </select>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)">
+              Stock #
+              <input type="text" value="${esc(p.galleryStockNo || '')}" id="edit-gallerystock-${p.id}" placeholder="e.g. 214" style="width:90px;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:5px 10px;background:white;color:var(--ink);outline:none">
             </label>
             <button class="btn-sm" onclick="savePaintingEdits('${p.id}')">Save changes</button>
             <button class="btn-sm danger" onclick="deletePainting('${p.id}')">Delete painting</button>
@@ -2395,7 +2400,7 @@ async function adjStock(e, id, size, delta) {
   p.stock[size] = Math.max(0, (p.stock[size] || 0) + delta);
   renderTable(); renderCards();
   try {
-    await api('PUT', `/paintings/${id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '' });
+    await api('PUT', `/paintings/${id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '', galleryStockNo: p.galleryStockNo || '' });
   } catch(e) { alert('Failed to save stock change: ' + e.message); }
 }
 
@@ -2432,6 +2437,7 @@ function openAddModal() {
   document.getElementById('add-height').value = '';
   document.getElementById('add-large').value = '0';
   document.getElementById('add-small').value = '0';
+  document.getElementById('add-gallerystock').value = '';
   document.getElementById('add-modal').style.display = 'flex';
 }
 async function saveNewPainting() {
@@ -2447,6 +2453,7 @@ async function saveNewPainting() {
     month: document.getElementById('add-month').value,
     stock: { large: parseInt(document.getElementById('add-large').value) || 0, small: parseInt(document.getElementById('add-small').value) || 0 },
     momsHas: false,
+    galleryStockNo: document.getElementById('add-gallerystock').value.trim(),
   };
   try {
     setLoading(true);
@@ -2470,16 +2477,17 @@ async function savePaintingEdits(id) {
   const small  = parseInt(document.getElementById('edit-small-'  + id).value) || 0;
   const momsHas = document.getElementById('edit-moms-' + id).checked;
   const atGallery = document.getElementById('edit-gallery-' + id).value || '';
+  const galleryStockNo = document.getElementById('edit-gallerystock-' + id).value.trim();
   const overrideRaw = document.getElementById('edit-override-' + id).value.trim();
   const priceOverride = overrideRaw === '' ? null : parseFloat(overrideRaw);
   if (!title) { alert('Title is required.'); return; }
   if (!year || year < 2000) { alert('Year is required.'); return; }
   if (!width || !height) { alert('Dimensions are required.'); return; }
   if (overrideRaw !== '' && (isNaN(priceOverride) || priceOverride < 0)) { alert('Price override must be a positive number.'); return; }
-  Object.assign(p, { title, month, year, width, height, momsHas, atGallery, stock: { large, small }, priceOverride });
+  Object.assign(p, { title, month, year, width, height, momsHas, atGallery, galleryStockNo, stock: { large, small }, priceOverride });
   populateDimFilterOptions();
   render();
-  try { await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas, atGallery, priceOverride }); }
+  try { await api('PUT', `/paintings/${id}`, { title, month, year, width, height, stock: { large, small }, momsHas, atGallery, galleryStockNo, priceOverride }); }
   catch(e) { alert('Failed to save changes: ' + e.message); }
 }
 
@@ -2635,7 +2643,7 @@ async function saveSale() {
       const saleType = saleData.type;
       if ((saleType === 'large' || saleType === 'small') && p.stock) {
         p.stock[saleType] = (p.stock[saleType] || 0) - 1;
-        api('PUT', `/paintings/${salePaintingId}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '' })
+        api('PUT', `/paintings/${salePaintingId}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '', galleryStockNo: p.galleryStockNo || '' })
           .catch(e => console.error('Stock decrement failed:', e));
       }
     }
@@ -2890,7 +2898,7 @@ function downloadCsv(filename, rows) {
 function exportInventoryCsv() {
   const list = [...db.paintings].filter(p => !p.marketItem).sort((a,b) => a.title.localeCompare(b.title));
   const header = ['Title','Month','Year','Width','Height','Sq In','Price','Rounded',
-                  'Lg Stock','Sm Stock','Lg Sold','Sm Sold','Original Sold'];
+                  'Lg Stock','Sm Stock','Lg Sold','Sm Sold','Original Sold','At Gallery','Gallery Stock #'];
   const rows = list.map(p => {
     const sq = p.width * p.height;
     const lgSold = p.sales.filter(s => s.type === 'large').length;
@@ -2898,7 +2906,7 @@ function exportInventoryCsv() {
     const origSold = p.sales.some(s => s.type === 'original') ? 'Yes' : 'No';
     return [p.title, p.month || '', p.year, p.width, p.height, sq,
             effectiveRate(p).toFixed(2), Math.ceil(sq * effectiveRate(p) / 50) * 50, p.stock.large || 0, p.stock.small || 0,
-            lgSold, smSold, origSold];
+            lgSold, smSold, origSold, p.atGallery || '', p.galleryStockNo || ''];
   });
   downloadCsv('inventory.csv', [header, ...rows]);
 }

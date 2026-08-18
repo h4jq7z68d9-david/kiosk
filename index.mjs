@@ -734,19 +734,19 @@ async function adminGetPaintings(cors) {
 }
 
 async function adminAddPainting(body, cors) {
-  const { title, month, year, width, height, stock, momsHas, atGallery, priceOverride } = body;
+  const { title, month, year, width, height, stock, momsHas, atGallery, galleryStockNo, priceOverride } = body;
   if (!title || !year || !width || !height) return err('Missing required fields', 400, cors);
   const id = 'p' + Date.now();
-  const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas, atGallery: atGallery || '' };
+  const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas, atGallery: atGallery || '', galleryStockNo: galleryStockNo || '' };
   if (priceOverride != null && !isNaN(priceOverride)) item.priceOverride = Number(priceOverride);
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
   return ok({ painting: item }, cors);
 }
 
 async function adminUpdatePainting(id, body, cors) {
-  const { title, month, year, width, height, stock, momsHas, atGallery, priceOverride } = body;
+  const { title, month, year, width, height, stock, momsHas, atGallery, galleryStockNo, priceOverride } = body;
   if (!title || !year || !width || !height) return err('Missing required fields', 400, cors);
-  const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas, atGallery: atGallery || '' };
+  const item = { id, title, month: month || '', year, width, height, stock: stock || { large: 0, small: 0 }, momsHas: !!momsHas, atGallery: atGallery || '', galleryStockNo: galleryStockNo || '' };
   if (priceOverride != null && !isNaN(priceOverride)) item.priceOverride = Number(priceOverride);
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
   return ok({ painting: item }, cors);
