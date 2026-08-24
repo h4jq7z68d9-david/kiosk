@@ -1463,16 +1463,20 @@ function saleNet(s) { if (s.channel === 'gallery' && s.net != null) return Numbe
 // ═══════════════════════════════════════════
 //  RATE
 // ═══════════════════════════════════════════
+let saveRatesTimer = null;
 function setRate(val) {
   db.rate = val;
-  document.getElementById('rate-input').value = val.toFixed(2);
-  saveRates();
+  saveRatesDebounced();
   render();
 }
 function setRateLarge(val) {
   db.rateLarge = isNaN(val) || val <= 0 ? null : val;
-  saveRates();
+  saveRatesDebounced();
   render();
+}
+function saveRatesDebounced() {
+  clearTimeout(saveRatesTimer);
+  saveRatesTimer = setTimeout(saveRates, 500);
 }
 function saveRates() {
   const body = { rate: db.rate };
@@ -1571,10 +1575,16 @@ async function init() {
     const v = parseFloat(this.value);
     if (!isNaN(v) && v > 0) setRate(v);
   });
+  document.getElementById('rate-input').addEventListener('blur', function() {
+    this.value = db.rate.toFixed(2);
+  });
   if (db.rateLarge != null) document.getElementById('rate-large-input').value = db.rateLarge.toFixed(2);
   document.getElementById('rate-large-input').addEventListener('input', function() {
     const v = parseFloat(this.value);
     setRateLarge(isNaN(v) ? null : v);
+  });
+  document.getElementById('rate-large-input').addEventListener('blur', function() {
+    this.value = db.rateLarge != null ? db.rateLarge.toFixed(2) : '';
   });
 
   document.getElementById('irs-rate-display').textContent =
