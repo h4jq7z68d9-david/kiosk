@@ -202,6 +202,7 @@
     <select class="tool" id="filter" aria-label="Filter cards"></select>
     <button class="tool" id="shuffle">Shuffle</button>
     <button class="tool" id="order">In order</button>
+    <button class="tool" id="hardmode" title="Type the answer instead of picking it">Hard Mode</button>
   </footer>
 
 <script>
@@ -312,6 +313,7 @@ const prompt = $('#prompt'), choicesEl = $('#choices'),
 let work = CARDS.slice();
 let i = 0, answered = false, chosen = null, curChoices = [];
 let score = { correct: 0, attempted: 0 };
+let hardMode = false;
 
 const VISUAL_CONCEPTS = [...new Set(DECK.filter(c=>c.suit==='visual').map(c=>c.concept))];
 const CONTRAST_NAMES = ["Contrast of Hue","Light\u2013Dark","Cold\u2013Warm","Complementary","Simultaneous","Saturation","Extension"];
@@ -322,29 +324,31 @@ const poolOf = c => cardKind(c)==='contrast' ? CONTRAST_NAMES : VISUAL_CONCEPTS;
 const pad = n => String(n).padStart(3,'0');
 const shuffleArr = a => { for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];} return a; };
 
-/* Group key used to avoid dealing the same answer back-to-back.
-   Without this, a run of identical answers makes the quiz guessable by position. */
+/* Group key used to spread out repeats. For MC cards this is the answer itself
+   (concept/contrast name); for flip-only cards (science, Albers) it's the kind. */
 const groupKey = c => isMC(c) ? answerOf(c) : cardKind(c);
 
-/* Shuffle, then repair only the adjacent collisions.
-   Deliberately NOT a "largest group first" greedy: that produces a perfectly
-   periodic deal (the biggest group lands on every other card), which is just as
-   guessable as a run. This keeps the order genuinely random and only swaps the
-   few cards that would otherwise sit next to a card with the same answer. */
+/* Round-robin deal by group, instead of a flat shuffle repaired only at
+   adjacent collisions. Cards are bucketed by groupKey, each bucket shuffled
+   internally, then one card is dealt from each non-empty bucket per "round" —
+   with the bucket order itself reshuffled every round so the deal never
+   settles into a predictable rotation. This guarantees no group can cluster
+   (its repeat spacing is at minimum the number of buckets still in play),
+   while staying genuinely random rather than mechanically periodic. */
 function spread(arr){
-  const a = shuffleArr(arr.slice());
-  const k = i => (i >= 0 && i < a.length) ? groupKey(a[i]) : null;
-  for(let i = 1; i < a.length; i++){
-    if(k(i) !== k(i-1)) continue;
-    for(let j = i + 1; j < a.length; j++){
-      // a[j] must be safe at position i, and a[i] must be safe at position j
-      if(k(j) === k(i-1) || k(j) === k(i+1)) continue;
-      if(k(i) === k(j-1) || k(i) === k(j+1)) continue;
-      [a[i], a[j]] = [a[j], a[i]];
-      break;
-    }
+  const bucketMap = new Map();
+  arr.forEach(c => {
+    const key = groupKey(c);
+    if(!bucketMap.has(key)) bucketMap.set(key, []);
+    bucketMap.get(key).push(c);
+  });
+  const buckets = [...bucketMap.values()].map(b => shuffleArr(b.slice()));
+  const result = [];
+  while (buckets.some(b => b.length)){
+    const order = shuffleArr(buckets.map((_, idx) => idx).filter(idx => buckets[idx].length));
+    for (const idx of order) result.push(buckets[idx].shift());
   }
-  return a;
+  return result;
 }
 
 function swatchesFront(c){
@@ -467,15 +471,31 @@ function paint(){
 
 function buildChoices(card){
   const correct = answerOf(card);
-  const others = shuffleArr(poolOf(card).filter(x => x !== correct)).slice(0,3);
+  // 5 distractors + the correct answer = 6 options (up from 4), so recognizing
+  // "one of the two I remember" isn't enough to guess right.
+  const others = shuffleArr(poolOf(card).filter(x => x !== correct)).slice(0,5);
   return shuffleArr([correct, ...others]);
 }
+
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const normalizeAns = s => s.toLowerCase().replace(/[\u2013\u2014-]/g,' ').replace(/[()]/g,'').replace(/\s+/g,' ').trim();
 
 function renderChoices(){
   const c = work[i];
   if(!isMC(c) || answered){ choicesEl.style.display='none'; choicesEl.innerHTML=''; return; }
   choicesEl.style.display='flex';
-  choicesEl.innerHTML = curChoices.map(o => `<button class="choice" data-c="${o}">${o}</button>`).join('');
+  if (hardMode){
+    choicesEl.innerHTML = `
+      <input type="text" id="hardAnswer" class="choice" style="min-width:220px;flex:1 1 220px;text-align:center;cursor:text" placeholder="Type the answer…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="choice" id="hardSubmit">Submit</button>`;
+    const inp = document.getElementById('hardAnswer');
+    const submit = () => { if (inp.value.trim()) chooseFreeText(inp.value); };
+    document.getElementById('hardSubmit').onclick = submit;
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); submit(); } });
+    inp.focus();
+    return;
+  }
+  choicesEl.innerHTML = curChoices.map(o => `<button class="choice" data-c="${esc(o)}">${esc(o)}</button>`).join('');
   choicesEl.querySelectorAll('.choice').forEach(b => b.onclick = () => choose(b.dataset.c));
 }
 
@@ -491,6 +511,17 @@ function choose(opt){
   });
   updateChrome();
   setTimeout(() => { choicesEl.style.display='none'; flip.classList.add('revealed'); updateChrome(); }, 750);
+}
+
+function chooseFreeText(raw){
+  if(answered) return;
+  const c = work[i], correct = answerOf(c);
+  const isRight = normalizeAns(raw) === normalizeAns(correct);
+  answered = true; chosen = isRight ? correct : raw;
+  score.attempted++; if(isRight) score.correct++;
+  choicesEl.innerHTML = `<div class="choice ${isRight?'correct':'wrong'}" style="cursor:default">${esc(raw)}${isRight ? '' : ' → ' + esc(correct)}</div>`;
+  updateChrome();
+  setTimeout(() => { choicesEl.style.display='none'; flip.classList.add('revealed'); updateChrome(); }, 900);
 }
 
 function reveal(){
@@ -599,6 +630,14 @@ function doShuffle(){
 $('#shuffle').onclick = doShuffle;
 $('#order').onclick = ()=>{ setWork(); reset(false);
   $('#order').classList.add('on'); $('#shuffle').classList.remove('on'); };
+
+/* Hard Mode: MC cards switch from tappable choices to a free-text answer,
+   graded with light normalization (case, hyphen/en-dash, whitespace). */
+$('#hardmode').onclick = () => {
+  hardMode = !hardMode;
+  $('#hardmode').classList.toggle('on', hardMode);
+  if (!answered) renderChoices();
+};
 
 /* Deal shuffled by default — in generation order the deck runs concept-by-concept,
    which makes the answer guessable from position rather than from the swatches. */
