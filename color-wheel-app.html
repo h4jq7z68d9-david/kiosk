@@ -32,7 +32,7 @@
   .brand{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
   .brand b{color:var(--ink);font-weight:500}
 
-  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px clamp(16px,4vw,40px) 20px;gap:18px}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px clamp(16px,4vw,40px) 20px;gap:16px}
 
   .wheelsel{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
   .wsel-btn{font-family:var(--body);font-size:13px;font-weight:500;cursor:pointer;
@@ -41,26 +41,40 @@
   .wsel-btn:hover{background:var(--wall-hi)}
   .wsel-btn.on{background:var(--ink);border-color:var(--ink);color:#fff}
 
-  .stage{width:min(560px,92vw);display:flex;flex-direction:column;align-items:center;gap:16px}
-  .wheel-frame{position:relative;width:min(380px,78vw);aspect-ratio:1/1}
+  .stage{width:min(560px,92vw);display:flex;flex-direction:column;align-items:center;gap:14px}
+
+  .wheel-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+  .hbtn{font-family:var(--body);font-size:12.5px;font-weight:500;cursor:pointer;
+    border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;
+    padding:7px 14px;transition:background .15s ease,border-color .15s ease}
+  .hbtn:hover{background:var(--wall-hi)}
+  .hbtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .itoggle{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;user-select:none}
+  .itoggle input{accent-color:var(--accent);cursor:pointer}
+
+  .wheel-frame{position:relative;width:min(380px,78vw);aspect-ratio:1/1;touch-action:none}
   .wheel-frame svg{width:100%;height:100%;overflow:visible}
-  .wedge{cursor:pointer;stroke:#fff;stroke-width:1.5;transition:opacity .15s ease}
-  .wedge:hover{opacity:.88}
-  .wedge.dim{opacity:.34}
-  .wedge.hi{stroke:var(--ink);stroke-width:2.5}
+  .disc{cursor:grab}
+  .disc:active{cursor:grabbing}
   .overlay-line{fill:none;stroke:rgba(43,54,64,.55);stroke-width:1.4;pointer-events:none}
   .overlay-line.hex{stroke-dasharray:3 4}
-  .center-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;fill:var(--muted)}
+  .knob{fill:var(--ink);stroke:#fff;stroke-width:2}
+  .drag-hint{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;fill:var(--muted)}
 
   .info{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(16px,3.6vw,22px);min-height:112px}
   .info .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .info .name{font-family:var(--display);font-weight:700;font-size:clamp(19px,4.6vw,25px);letter-spacing:-.01em;margin:4px 0 8px}
-  .info .row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-  .info .sw{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
-  .info .hex{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .swrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .swchip{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
+  .swchip .sq{width:40px;height:40px;border-radius:8px;border:1px solid rgba(0,0,0,.12)}
+  .swchip .lbl{font-size:11px;font-weight:500;text-align:center;line-height:1.2}
+  .swchip .role{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
   .info .defn{font-size:14px;line-height:1.5;color:#2b2925;margin:0}
   .info .tip{font-style:italic;font-size:13px;line-height:1.5;color:#4a5568;margin-top:8px}
   .info .placeholder{font-size:13.5px;color:var(--muted);line-height:1.5}
+  .info .row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .info .sw{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
+  .info .hex{font-family:var(--mono);font-size:12px;color:var(--muted)}
 
   .mc-controls{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:16px clamp(16px,3.6vw,22px);display:none;flex-direction:column;gap:12px}
   .mc-controls.on{display:flex}
@@ -86,18 +100,26 @@
 
   <main>
     <div class="wheelsel" id="wheelsel">
-      <button class="wsel-btn on" data-w="ryb">RYB Wheel</button>
-      <button class="wsel-btn" data-w="itten">Itten's Wheel</button>
+      <button class="wsel-btn on" data-w="wheel">Color Wheel</button>
       <button class="wsel-btn" data-w="munsell">Munsell Hue Circle</button>
     </div>
 
     <div class="stage">
-      <div class="wheel-frame">
-        <svg viewBox="-110 -110 220 220" id="wheelSvg"></svg>
+      <div class="wheel-controls" id="wheelControls">
+        <button class="hbtn on" data-h="complementary">Complementary</button>
+        <button class="hbtn" data-h="analogous">Analogous</button>
+        <button class="hbtn" data-h="triadic">Triadic</button>
+        <button class="hbtn" data-h="splitComp">Split-Complementary</button>
+        <button class="hbtn" data-h="tetradic">Tetradic</button>
+        <label class="itoggle"><input type="checkbox" id="ittenToggle"> Itten construction</label>
+      </div>
+
+      <div class="wheel-frame" id="wheelFrame">
+        <svg viewBox="-115 -115 230 230" id="wheelSvg"></svg>
       </div>
 
       <div class="info" id="info">
-        <div class="placeholder">Tap a wedge to see the hue's name, hex value, and how it's built.</div>
+        <div class="placeholder">Drag the wheel to rotate the windows — each one reveals a color in the current harmony.</div>
       </div>
 
       <div class="mc-controls" id="mcControls">
@@ -124,7 +146,7 @@
   </main>
 
   <footer>
-    <div class="tool-note" id="footNote">Twelve hues, evenly spaced: 3 primaries, 3 secondaries, 6 tertiaries. Every relationship in the flashcard deck is built from this wheel.</div>
+    <div class="tool-note" id="footNote">Drag the wheel like the disc on a physical color wheel — the cutout windows show you which hues make up the harmony as you spin.</div>
   </footer>
 
 <script>
@@ -160,20 +182,32 @@ const MUNSELL10 = [
   {code:"RP", name:"Red-Purple",    hex:"#B23A78"},
 ];
 
-const ROLE_TEXT = {
-  primary:   "A primary hue — it can't be mixed from any other colors. Every other hue on the wheel is built starting here.",
-  secondary: "A secondary hue — made by mixing the two primaries on either side of it.",
-  tertiary:  "A tertiary hue — made by mixing a primary with the secondary next to it.",
+/* Harmony templates: window positions given as wedge-offsets from a base
+   wedge (each offset is 30° of rotation). These are the shapes a physical
+   harmony-finder disc would have punched into it. */
+const HARMONIES = {
+  complementary: { label: "Complementary", offsets: [0, 6],
+    defn: "Two hues taken from directly opposite sides of the color wheel.",
+    tip: "Mute one and let the other lead — full-strength complements can vibrate." },
+  analogous: { label: "Analogous", offsets: [-1, 0, 1],
+    defn: "Three hues that sit right next to each other on the wheel.",
+    tip: "Pick one to dominate, one to support, one as accent." },
+  triadic: { label: "Triadic", offsets: [0, 4, 8],
+    defn: "Three hues spaced evenly around the wheel, forming a triangle.",
+    tip: "Let one hue rule; use the other two as accents to avoid a circus." },
+  splitComp: { label: "Split-Complementary", offsets: [0, 5, 7],
+    defn: "A base hue, plus the two hues sitting on either side of its opposite.",
+    tip: "Ideal for a focal point: place the lone base hue where you want the eye." },
+  tetradic: { label: "Tetradic (Square)", offsets: [0, 3, 6, 9],
+    defn: "Four hues arranged as two complementary pairs, forming a square.",
+    tip: "Balance warm against cool across the four; never split evenly." },
 };
 
-const FOOT_NOTES = {
-  ryb: "Twelve hues, evenly spaced: 3 primaries, 3 secondaries, 6 tertiaries. Every relationship in the flashcard deck is built from this wheel.",
-  itten: "Itten's construction: a triangle joins the 3 primaries, a hexagon joins the primaries and secondaries. Tap a wedge to see it and its complement, 180° opposite.",
-  munsell: "Munsell adds two more axes to hue: value (light↔dark) and chroma (dull↔vivid). Pick a hue, then drag the sliders to see how the swatch shifts.",
-};
-
-let mode = 'ryb';
-let mcHue = null; // currently selected hue for Munsell value/chroma controls
+let mode = 'wheel';
+let harmonyKey = 'complementary';
+let showItten = false;
+let rotation = 0;       // degrees, disc rotation (0 = north, clockwise positive)
+let mcHue = null;       // currently selected hue for Munsell value/chroma controls
 
 function polar(cx, cy, r, deg){
   const rad = (deg - 90) * Math.PI / 180;
@@ -184,6 +218,18 @@ function wedgePath(r0, r1, a0, a1){
   const [x2,y2] = polar(0,0,r0,a1), [x3,y3] = polar(0,0,r0,a0);
   const large = (a1 - a0) > 180 ? 1 : 0;
   return `M ${x0} ${y0} A ${r1} ${r1} 0 ${large} 1 ${x1} ${y1} L ${x2} ${y2} A ${r0} ${r0} 0 ${large} 0 ${x3} ${y3} Z`;
+}
+/* Pointer position -> angle in the same convention as the wedges (0 = north,
+   clockwise positive), so drag rotation and wedge geometry always agree. */
+function pointerAngle(cx, cy, px, py){
+  const dx = px - cx, dy = py - cy;
+  return (Math.atan2(dx, -dy) * 180 / Math.PI + 360) % 360;
+}
+function shortestDelta(a, b){
+  let d = (b - a) % 360;
+  if (d > 180) d -= 360;
+  if (d < -180) d += 360;
+  return d;
 }
 
 /* ---- hex <-> hsl, for the Munsell value/chroma preview ---- */
@@ -216,93 +262,133 @@ function hslToHex(h, s, l){
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
 }
 
+/* ═══════════════════════════════════════════
+   COLOR WHEEL (interactive harmony dial)
+   ═══════════════════════════════════════════ */
+function renderWheelBase(){
+  const step = 30;
+  return HUES12.map((hue, idx) => {
+    const a0 = idx * step, a1 = a0 + step;
+    return `<path d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}" stroke="#fff" stroke-width="1.5"></path>`;
+  }).join('');
+}
+function ittenOverlay(){
+  if (!showItten) return '';
+  const primaryIdx = [0,4,8];
+  const hexIdx = [0,2,4,6,8,10];
+  const midR = 65;
+  const triPts = primaryIdx.map(i => polar(0,0,midR, i*30 + 15)).map(p=>p.join(',')).join(' ');
+  const hexPts = hexIdx.map(i => polar(0,0,midR, i*30 + 15)).map(p=>p.join(',')).join(' ');
+  return `
+    <polygon class="overlay-line" points="${hexPts}"></polygon>
+    <polygon class="overlay-line hex" points="${triPts}"></polygon>`;
+}
+function discPathD(offsets){
+  // Outer ring + center hole + each window wedge, all as one evenodd path:
+  // overlapping subpaths cancel out (XOR), punching a hole at each window.
+  let d = `M ${polar(0,0,105,0).join(' ')} A 105 105 0 1 1 ${polar(0,0,105,180).join(' ')} A 105 105 0 1 1 ${polar(0,0,105,360).join(' ')} Z `;
+  d += `M ${polar(0,0,29,0).join(' ')} A 29 29 0 1 0 ${polar(0,0,29,180).join(' ')} A 29 29 0 1 0 ${polar(0,0,29,360).join(' ')} Z `;
+  offsets.forEach(off => {
+    const idx = ((off % 12) + 12) % 12;
+    const a0 = idx * 30, a1 = a0 + 30;
+    d += wedgePath(30,100,a0,a1) + ' ';
+  });
+  return d;
+}
 function renderWheel(){
   const svg = $('#wheelSvg');
-  const n = mode === 'munsell' ? MUNSELL10.length : 12;
-  const hues = mode === 'munsell' ? MUNSELL10 : HUES12;
-  const step = 360 / n;
-  let paths = hues.map((hue, idx) => {
-    const a0 = idx * step, a1 = a0 + step;
-    return `<path class="wedge" data-i="${idx}" d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}"></path>`;
-  }).join('');
-
-  let overlay = '';
-  if (mode === 'itten'){
-    // Triangle joining the 3 primaries (Red, Yellow, Blue = indices 0, 4, 8),
-    // hexagon joining primaries + secondaries (every other wedge).
-    const primaryIdx = [0,4,8];
-    const hexIdx = [0,2,4,6,8,10];
-    const midR = 65;
-    const triPts = primaryIdx.map(i => polar(0,0,midR, i*step + step/2)).map(p=>p.join(',')).join(' ');
-    const hexPts = hexIdx.map(i => polar(0,0,midR, i*step + step/2)).map(p=>p.join(',')).join(' ');
-    overlay = `
-      <polygon class="overlay-line" points="${hexPts}"></polygon>
-      <polygon class="overlay-line hex" points="${triPts}"></polygon>`;
-  }
-
-  svg.innerHTML = paths + overlay + `<circle r="29" fill="#fff" stroke="rgba(43,54,64,.18)"></circle>`;
-
-  svg.querySelectorAll('.wedge').forEach(el => {
-    el.addEventListener('click', () => selectWedge(parseInt(el.dataset.i,10)));
-  });
-
-  $('#mcControls').classList.toggle('on', mode === 'munsell');
-  $('#footNote').textContent = FOOT_NOTES[mode];
-  clearSelection();
+  const h = HARMONIES[harmonyKey];
+  svg.innerHTML = `
+    <g id="wheelBase">${renderWheelBase()}</g>
+    <g id="discGroup" class="disc" style="transform:rotate(${rotation}deg)">
+      <path d="${discPathD(h.offsets)}" fill="#f4f1ea" fill-rule="evenodd" opacity="0.94"></path>
+      <circle class="knob" r="6" cx="0" cy="-100"></circle>
+    </g>
+    ${ittenOverlay()}
+    <circle r="29" fill="none" stroke="rgba(43,54,64,.18)"></circle>`;
+  attachDrag();
+  updateWheelInfo();
 }
-
-function clearSelection(){
-  $('#info').innerHTML = '<div class="placeholder">Tap a wedge to see the hue\u2019s name, hex value, and how it\u2019s built.</div>';
-  document.querySelectorAll('.wedge').forEach(el => el.classList.remove('dim','hi'));
+function hueAtOffset(offset){
+  const idx = Math.floor((((offset*30 + rotation) % 360) + 360) % 360 / 30) % 12;
+  return HUES12[idx];
 }
-
-function selectWedge(idx){
-  const hues = mode === 'munsell' ? MUNSELL10 : HUES12;
-  const n = hues.length;
-  const hue = hues[idx];
-  const wedges = document.querySelectorAll('.wedge');
-
-  if (mode === 'itten'){
-    const compIdx = (idx + n/2) % n;
-    wedges.forEach((el,i) => {
-      el.classList.toggle('dim', i !== idx && i !== compIdx);
-      el.classList.toggle('hi', i === idx || i === compIdx);
-    });
-    const compHue = hues[compIdx];
-    $('#info').innerHTML = `
-      <div class="eyebrow">Itten &middot; Complementary Pair</div>
-      <div class="name">${hue.name} &amp; ${compHue.name}</div>
-      <div class="row"><div class="sw" style="background:${hue.hex}"></div><div class="hex">${hue.hex}</div></div>
-      <div class="row"><div class="sw" style="background:${compHue.hex}"></div><div class="hex">${compHue.hex}</div></div>
-      <p class="defn">${hue.name} sits 180° from ${compHue.name} — directly opposite on the wheel. Mixed together they cancel toward gray; placed side by side they intensify each other.</p>
-      <p class="tip">Tip: ${ROLE_TEXT[hue.role] || ''}</p>`;
-    return;
-  }
-
-  wedges.forEach((el,i) => {
-    el.classList.toggle('dim', i !== idx);
-    el.classList.toggle('hi', i === idx);
-  });
-
-  if (mode === 'munsell'){
-    mcHue = hue;
-    $('#info').innerHTML = `
-      <div class="eyebrow">Munsell Hue</div>
-      <div class="name">${hue.name} <span style="font-family:var(--mono);font-size:14px;color:var(--muted)">(${hue.code})</span></div>
-      <div class="row"><div class="sw" style="background:${hue.hex}"></div><div class="hex">${hue.hex}</div></div>
-      <p class="defn">Use the Value and Chroma sliders below to see this hue lightened, darkened, or dulled toward gray.</p>`;
-    updateMunsellPreview();
-    return;
-  }
-
-  // RYB
+function updateWheelInfo(){
+  const h = HARMONIES[harmonyKey];
+  const hues = h.offsets.map(hueAtOffset);
+  const chips = hues.map(hue => `
+    <div class="swchip">
+      <div class="sq" style="background:${hue.hex}"></div>
+      <div class="lbl">${hue.name}</div>
+      <div class="role">${hue.role}</div>
+    </div>`).join('');
   $('#info').innerHTML = `
-    <div class="eyebrow">RYB Wheel</div>
-    <div class="name">${hue.name}</div>
-    <div class="row"><div class="sw" style="background:${hue.hex}"></div><div class="hex">${hue.hex}</div></div>
-    <p class="defn">${ROLE_TEXT[hue.role]}</p>`;
+    <div class="eyebrow">${h.label}</div>
+    <div class="swrow">${chips}</div>
+    <p class="defn">${h.defn}</p>
+    <p class="tip">Tip: ${h.tip}</p>`;
 }
 
+/* ---- drag to rotate ---- */
+let dragging = false, dragStartPointer = 0, dragStartRotation = 0;
+function attachDrag(){
+  const frame = $('#wheelFrame');
+  if (frame.dataset.bound) return;
+  frame.dataset.bound = '1';
+  frame.addEventListener('pointerdown', e => {
+    if (mode !== 'wheel') return;
+    dragging = true;
+    frame.setPointerCapture(e.pointerId);
+    const rect = frame.getBoundingClientRect();
+    const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+    dragStartPointer = pointerAngle(cx, cy, e.clientX, e.clientY);
+    dragStartRotation = rotation;
+  });
+  frame.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const rect = frame.getBoundingClientRect();
+    const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+    const cur = pointerAngle(cx, cy, e.clientX, e.clientY);
+    const delta = shortestDelta(dragStartPointer, cur);
+    let next = (dragStartRotation + delta + 360) % 360;
+    // Light magnetic snap to the 12 named hues (every 30°).
+    const nearest = Math.round(next / 30) * 30;
+    if (Math.abs(shortestDelta(next, nearest)) < 4) next = nearest % 360;
+    rotation = next;
+    $('#discGroup').style.transform = `rotate(${rotation}deg)`;
+    updateWheelInfo();
+  });
+  const stop = () => { dragging = false; };
+  frame.addEventListener('pointerup', stop);
+  frame.addEventListener('pointercancel', stop);
+}
+
+/* ═══════════════════════════════════════════
+   MUNSELL HUE CIRCLE (separate, value/chroma tool)
+   ═══════════════════════════════════════════ */
+function renderMunsell(){
+  const svg = $('#wheelSvg');
+  const step = 36;
+  const paths = MUNSELL10.map((hue, idx) => {
+    const a0 = idx * step, a1 = a0 + step;
+    return `<path class="wedge" data-i="${idx}" d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}" stroke="#fff" stroke-width="1.5" style="cursor:pointer"></path>`;
+  }).join('');
+  svg.innerHTML = paths + `<circle r="29" fill="#fff" stroke="rgba(43,54,64,.18)"></circle>`;
+  svg.querySelectorAll('.wedge').forEach(el => {
+    el.addEventListener('click', () => selectMunsellWedge(parseInt(el.dataset.i,10)));
+  });
+  $('#info').innerHTML = '<div class="placeholder">Tap a hue to see it, then use the sliders to lighten, darken, or dull it toward gray.</div>';
+}
+function selectMunsellWedge(idx){
+  const hue = MUNSELL10[idx];
+  mcHue = hue;
+  $('#info').innerHTML = `
+    <div class="eyebrow">Munsell Hue</div>
+    <div class="name">${hue.name} <span style="font-family:var(--mono);font-size:14px;color:var(--muted)">(${hue.code})</span></div>
+    <div class="row"><div class="sw" style="background:${hue.hex}"></div><div class="hex">${hue.hex}</div></div>
+    <p class="defn">Use the Value and Chroma sliders below to see this hue lightened, darkened, or dulled toward gray.</p>`;
+  updateMunsellPreview();
+}
 function updateMunsellPreview(){
   if (!mcHue) return;
   const value = parseInt($('#mcValue').value, 10);
@@ -310,26 +396,53 @@ function updateMunsellPreview(){
   $('#mcValueVal').textContent = value;
   $('#mcChromaVal').textContent = chroma;
   const {h, s} = hexToHsl(mcHue.hex);
-  const l = value / 10;               // 0 = black, 10 = white
-  const sAdj = s * (chroma / 10);     // 0 = gray, 10 = full original saturation
+  const l = value / 10;
+  const sAdj = s * (chroma / 10);
   const resultHex = hslToHex(h, sAdj, l);
   $('#mcSwatch').style.background = resultHex;
   $('#mcHex').textContent = resultHex;
   $('#mcNotation').textContent = `${mcHue.code} · value ${value}/10 · chroma ${chroma}/10 (approx.)`;
 }
-
 $('#mcValue').addEventListener('input', updateMunsellPreview);
 $('#mcChroma').addEventListener('input', updateMunsellPreview);
+
+/* ═══════════════════════════════════════════
+   MODE / CONTROL WIRING
+   ═══════════════════════════════════════════ */
+const FOOT_NOTES = {
+  wheel: "Drag the wheel like the disc on a physical color wheel — the cutout windows show you which hues make up the harmony as you spin.",
+  munsell: "Munsell adds two more axes to hue: value (light↔dark) and chroma (dull↔vivid). Pick a hue, then drag the sliders to see how the swatch shifts.",
+};
+
+function render(){
+  $('#wheelControls').style.display = mode === 'wheel' ? 'flex' : 'none';
+  $('#mcControls').classList.toggle('on', mode === 'munsell');
+  $('#footNote').textContent = FOOT_NOTES[mode];
+  if (mode === 'wheel') renderWheel(); else renderMunsell();
+}
 
 $('#wheelsel').addEventListener('click', e => {
   const btn = e.target.closest('.wsel-btn');
   if (!btn) return;
   mode = btn.dataset.w;
   document.querySelectorAll('.wsel-btn').forEach(b => b.classList.toggle('on', b === btn));
+  render();
+});
+
+$('#wheelControls').addEventListener('click', e => {
+  const btn = e.target.closest('.hbtn');
+  if (!btn) return;
+  harmonyKey = btn.dataset.h;
+  document.querySelectorAll('.hbtn').forEach(b => b.classList.toggle('on', b === btn));
   renderWheel();
 });
 
-renderWheel();
+$('#ittenToggle').addEventListener('change', e => {
+  showItten = e.target.checked;
+  renderWheel();
+});
+
+render();
 </script>
 </body>
 </html>
