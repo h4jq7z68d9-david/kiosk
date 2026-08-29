@@ -84,9 +84,18 @@
   .mc-row label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);width:64px;flex-shrink:0}
   .mc-row input[type=range]{flex:1;accent-color:var(--accent)}
   .mc-row .val{font-family:var(--mono);font-size:12px;color:var(--ink);width:28px;text-align:right;flex-shrink:0}
+  .mc-panels{display:flex;gap:18px;flex-wrap:wrap}
+  .mc-panel{flex:1 1 200px;min-width:180px;display:flex;flex-direction:column;gap:10px}
+  .mc-panel-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
   .mc-preview{display:flex;align-items:center;gap:12px}
-  .mc-preview .sw{width:56px;height:56px;border-radius:10px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
-  .mc-preview .mc-hex{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .mc-preview .sw{width:48px;height:48px;border-radius:10px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
+  .mc-preview .mc-hex{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .mc-grid-wrap{display:flex;gap:6px;align-items:flex-start}
+  .mc-axis-v{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;padding:2px 0}
+  .mc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;flex:1}
+  .mc-cell{aspect-ratio:1/1;border-radius:3px;cursor:pointer;border:2px solid transparent;padding:0}
+  .mc-cell.active{border-color:var(--ink)}
+  .mc-axis-c{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--muted);text-align:center;margin-left:14px}
   .mc-note{font-size:12px;color:var(--muted);line-height:1.5}
 
   footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px 22px;text-align:center}
@@ -122,6 +131,12 @@
         <label class="itoggle"><input type="checkbox" id="ittenToggle"> Itten construction</label>
       </div>
 
+      <div class="wheel-controls" id="mcTopControls" style="display:none">
+        <label class="itoggle"><input type="checkbox" id="mcCompareToggle"> Compare two hues</label>
+        <button class="hbtn on" data-t="A" id="mcTargetA">Wheel sets: Hue A</button>
+        <button class="hbtn" data-t="B" id="mcTargetB" style="display:none">Wheel sets: Hue B</button>
+      </div>
+
       <div class="wheel-frame" id="wheelFrame">
         <svg viewBox="-115 -115 230 230" id="wheelSvg"></svg>
       </div>
@@ -131,24 +146,13 @@
       </div>
 
       <div class="mc-controls" id="mcControls">
-        <div class="mc-preview">
-          <div class="sw" id="mcSwatch"></div>
-          <div>
-            <div class="mc-hex" id="mcHex">—</div>
-            <div class="mc-hex" id="mcNotation">—</div>
-          </div>
-        </div>
-        <div class="mc-row">
-          <label>Value</label>
+        <div class="mc-row" id="mcValueRow">
+          <label id="mcValueLabel">Value</label>
           <input type="range" id="mcValue" min="0" max="10" step="1" value="5">
           <span class="val" id="mcValueVal">5</span>
         </div>
-        <div class="mc-row">
-          <label>Chroma</label>
-          <input type="range" id="mcChroma" min="0" max="10" step="1" value="8">
-          <span class="val" id="mcChromaVal">8</span>
-        </div>
-        <div class="mc-note">Value runs black → white, chroma runs gray → vivid. This is an artistic approximation of Munsell's system for visual reference, not exact Munsell notation.</div>
+        <div class="mc-panels" id="mcPanels"></div>
+        <div class="mc-note">Rows step by value (light↔dark), columns step by chroma (gray↔vivid) — tap a cell to jump straight to it, or fine-tune with the sliders. This is an artistic approximation of Munsell's system for visual reference, not exact Munsell notation.</div>
       </div>
     </div>
   </main>
@@ -223,7 +227,6 @@ let harmonyKey = 'none';
 let pickedHue = null;   // currently tapped hue in Free Wheel mode
 let showItten = false;
 let rotation = 0;       // degrees, disc rotation (0 = north, clockwise positive)
-let mcHue = null;       // currently selected hue for Munsell value/chroma controls
 
 function polar(cx, cy, r, deg){
   const rad = (deg - 90) * Math.PI / 180;
@@ -403,8 +406,16 @@ function attachDrag(){
 }
 
 /* ═══════════════════════════════════════════
-   MUNSELL HUE CIRCLE (separate, value/chroma tool)
+   MUNSELL HUE CIRCLE (value/chroma grid, with optional two-hue compare)
    ═══════════════════════════════════════════ */
+let mcCompare = false;
+let mcTarget = 'A';                          // which slot the wheel click sets
+let mcHueA = null, mcHueB = null;            // selected hue per slot
+let mcValueShared = 5;                       // shared value axis (0-10)
+let mcChromaA = 8, mcChromaB = 8;            // chroma per slot (0-10)
+const MC_STEPS = [10, 8, 6, 4, 2, 0];        // grid rows, top (light) to bottom (dark)
+const MC_CSTEPS = [0, 2, 4, 6, 8, 10];       // grid columns, left (gray) to right (vivid)
+
 function renderMunsell(){
   const svg = $('#wheelSvg');
   const step = 36;
@@ -416,34 +427,109 @@ function renderMunsell(){
   svg.querySelectorAll('.wedge').forEach(el => {
     el.addEventListener('click', () => selectMunsellWedge(parseInt(el.dataset.i,10)));
   });
-  $('#info').innerHTML = '<div class="placeholder">Tap a hue to see it, then use the sliders to lighten, darken, or dull it toward gray.</div>';
+  $('#info').innerHTML = '<div class="placeholder">Tap a hue to see it, then use the grid or sliders to lighten, darken, or dull it toward gray.</div>';
+  $('#mcTopControls').style.display = 'flex';
+  renderMcPanels();
 }
 function selectMunsellWedge(idx){
   const hue = MUNSELL10[idx];
-  mcHue = hue;
+  if (mcTarget === 'B' && mcCompare) mcHueB = hue; else mcHueA = hue;
   $('#info').innerHTML = `
     <div class="eyebrow">Munsell Hue</div>
     <div class="name">${hue.name} <span style="font-family:var(--mono);font-size:14px;color:var(--muted)">(${hue.code})</span></div>
     <div class="row"><div class="sw" style="background:${hue.hex}"></div><div class="hex">${hue.hex}</div></div>
-    <p class="defn">Use the Value and Chroma sliders below to see this hue lightened, darkened, or dulled toward gray.</p>`;
-  updateMunsellPreview();
+    <p class="defn">Use the grid or sliders below to see this hue lightened, darkened, or dulled toward gray.</p>`;
+  renderMcPanels();
 }
-function updateMunsellPreview(){
-  if (!mcHue) return;
-  const value = parseInt($('#mcValue').value, 10);
-  const chroma = parseInt($('#mcChroma').value, 10);
-  $('#mcValueVal').textContent = value;
-  $('#mcChromaVal').textContent = chroma;
-  const {h, s} = hexToHsl(mcHue.hex);
-  const l = value / 10;
-  const sAdj = s * (chroma / 10);
-  const resultHex = hslToHex(h, sAdj, l);
-  $('#mcSwatch').style.background = resultHex;
-  $('#mcHex').textContent = resultHex;
-  $('#mcNotation').textContent = `${mcHue.code} · value ${value}/10 · chroma ${chroma}/10 (approx.)`;
+function mcSwatchHex(hue, value, chroma){
+  const {h, s} = hexToHsl(hue.hex);
+  return hslToHex(h, s * (chroma / 10), value / 10);
 }
-$('#mcValue').addEventListener('input', updateMunsellPreview);
-$('#mcChroma').addEventListener('input', updateMunsellPreview);
+function mcGridHtml(slot, hue, value, chroma){
+  const cells = [];
+  MC_STEPS.forEach(v => {
+    MC_CSTEPS.forEach(c => {
+      const active = v === Math.round(value/2)*2 && c === Math.round(chroma/2)*2;
+      cells.push(`<button class="mc-cell${active ? ' active' : ''}" style="background:${mcSwatchHex(hue,v,c)}" data-slot="${slot}" data-v="${v}" data-c="${c}"></button>`);
+    });
+  });
+  return `
+    <div class="mc-grid-wrap">
+      <div class="mc-axis-v">value ↑</div>
+      <div>
+        <div class="mc-grid">${cells.join('')}</div>
+        <div class="mc-axis-c">chroma →</div>
+      </div>
+    </div>`;
+}
+function mcPanelHtml(slot, hue){
+  if (!hue) {
+    return `<div class="mc-panel"><div class="mc-panel-label">Hue ${slot}</div><div class="placeholder" style="font-size:12.5px">Tap a hue on the wheel to fill this slot.</div></div>`;
+  }
+  const value = mcValueShared;
+  const chroma = slot === 'A' ? mcChromaA : mcChromaB;
+  const resultHex = mcSwatchHex(hue, value, chroma);
+  return `
+    <div class="mc-panel">
+      <div class="mc-panel-label">Hue ${slot} · ${hue.name} (${hue.code})</div>
+      <div class="mc-preview">
+        <div class="sw" style="background:${resultHex}"></div>
+        <div>
+          <div class="mc-hex">${resultHex}</div>
+          <div class="mc-hex">value ${value}/10 · chroma ${chroma}/10 (approx.)</div>
+        </div>
+      </div>
+      <div class="mc-row">
+        <label>Chroma</label>
+        <input type="range" class="mc-chroma-slider" data-slot="${slot}" min="0" max="10" step="1" value="${chroma}">
+        <span class="val" id="mcChromaVal${slot}">${chroma}</span>
+      </div>
+      ${mcGridHtml(slot, hue, value, chroma)}
+    </div>`;
+}
+function renderMcPanels(){
+  $('#mcValueLabel').textContent = mcCompare ? 'Value (both)' : 'Value';
+  $('#mcValue').value = mcValueShared;
+  $('#mcValueVal').textContent = mcValueShared;
+  const panels = [mcPanelHtml('A', mcHueA)];
+  if (mcCompare) panels.push(mcPanelHtml('B', mcHueB));
+  $('#mcPanels').innerHTML = panels.join('');
+
+  $('#mcPanels').querySelectorAll('.mc-chroma-slider').forEach(el => {
+    el.addEventListener('input', e => {
+      const slot = e.target.dataset.slot;
+      const v = parseInt(e.target.value, 10);
+      if (slot === 'A') mcChromaA = v; else mcChromaB = v;
+      renderMcPanels();
+    });
+  });
+  $('#mcPanels').querySelectorAll('.mc-cell').forEach(el => {
+    el.addEventListener('click', () => {
+      const slot = el.dataset.slot;
+      mcValueShared = parseInt(el.dataset.v, 10);
+      const c = parseInt(el.dataset.c, 10);
+      if (slot === 'A') mcChromaA = c; else mcChromaB = c;
+      renderMcPanels();
+    });
+  });
+}
+$('#mcValue').addEventListener('input', e => {
+  mcValueShared = parseInt(e.target.value, 10);
+  renderMcPanels();
+});
+$('#mcCompareToggle').addEventListener('change', e => {
+  mcCompare = e.target.checked;
+  $('#mcTargetB').style.display = mcCompare ? '' : 'none';
+  if (!mcCompare) { mcTarget = 'A'; $('#mcTargetA').classList.add('on'); $('#mcTargetB').classList.remove('on'); }
+  renderMcPanels();
+});
+$('#mcTopControls').addEventListener('click', e => {
+  const btn = e.target.closest('.hbtn');
+  if (!btn || !btn.dataset.t) return;
+  mcTarget = btn.dataset.t;
+  $('#mcTargetA').classList.toggle('on', mcTarget === 'A');
+  $('#mcTargetB').classList.toggle('on', mcTarget === 'B');
+});
 
 /* ═══════════════════════════════════════════
    MODE / CONTROL WIRING
@@ -461,6 +547,7 @@ function updateFootNote(){
 
 function render(){
   $('#wheelControls').style.display = mode === 'wheel' ? 'flex' : 'none';
+  $('#mcTopControls').style.display = mode === 'munsell' ? 'flex' : 'none';
   $('#mcControls').classList.toggle('on', mode === 'munsell');
   updateFootNote();
   if (mode === 'wheel') renderWheel(); else renderMunsell();
