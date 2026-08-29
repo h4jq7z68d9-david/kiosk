@@ -28,45 +28,48 @@
     -webkit-font-smoothing:antialiased;
   }
 
-  header{display:flex;justify-content:space-between;align-items:baseline;padding:20px clamp(16px,4vw,40px) 0;gap:16px}
+  header{display:flex;justify-content:space-between;align-items:baseline;padding:14px clamp(16px,4vw,40px) 0;gap:16px}
   .brand{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
   .brand b{color:var(--ink);font-weight:500}
 
-  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:14px clamp(16px,4vw,40px) 20px;gap:16px}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px clamp(16px,4vw,40px) 16px;gap:12px}
 
-  .stage{width:min(560px,92vw);display:flex;flex-direction:column;align-items:center;gap:14px}
+  .stage{width:min(560px,92vw);display:flex;flex-direction:column;align-items:center;gap:12px}
 
-  .wheel-frame{position:relative;width:min(380px,78vw);aspect-ratio:1/1;touch-action:none;cursor:grab}
+  .wheel-frame{position:relative;width:min(320px,66vw);aspect-ratio:1/1;touch-action:none;cursor:grab}
   .wheel-frame:active{cursor:grabbing}
   .wheel-frame svg{width:100%;height:100%;overflow:visible}
-  .wedge{cursor:pointer;transition:opacity .12s ease}
+  .wedge{cursor:pointer;transition:opacity .12s ease,stroke .15s ease,stroke-width .15s ease}
   .wedge:hover{opacity:.88}
-  .needle{pointer-events:none}
-  .needle .hub{fill:#fff;stroke:var(--ink);stroke-width:2.5}
-  .needle .arm{stroke:var(--ink);stroke-width:4;stroke-linecap:round}
+  .tick{stroke:rgba(43,54,64,.28);stroke-width:1.5}
+  .needle{pointer-events:none;filter:drop-shadow(0 3px 4px rgba(43,54,64,.35))}
+  .needle .hub-ring{fill:#fff;stroke:var(--ink);stroke-width:2.5}
+  .needle .hub-dot{fill:var(--ink)}
+  .needle .arm{fill:var(--ink)}
   .needle .tip{fill:var(--ink);stroke:#fff;stroke-width:2}
 
-  .readout{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(16px,3.6vw,22px);display:flex;flex-direction:column;gap:14px}
-  .base-row{display:flex;align-items:center;gap:14px}
-  .base-row .sw{width:56px;height:56px;border-radius:12px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
-  .base-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .base-name{font-family:var(--display);font-weight:700;font-size:clamp(20px,4.8vw,26px);letter-spacing:-.01em}
-  .base-hex{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .readout{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(14px,3.2vw,20px);display:flex;flex-direction:column;gap:10px}
+  .base-row{display:flex;align-items:center;gap:12px}
+  .base-row .sw{width:48px;height:48px;border-radius:11px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
+  .base-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .base-name{font-family:var(--display);font-weight:700;font-size:clamp(18px,4.4vw,24px);letter-spacing:-.01em}
+  .base-hex{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
 
-  .rel-row{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--line)}
-  .rel-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);width:100px;flex-shrink:0;line-height:1.3}
-  .rel-chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
-  .rel-chip{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:52px}
-  .rel-chip .sq{width:34px;height:34px;border-radius:7px;border:1px solid rgba(0,0,0,.12)}
-  .rel-chip .lbl{font-size:10px;font-weight:500;text-align:center;line-height:1.15;color:var(--ink)}
+  .rel-row{display:flex;align-items:center;gap:10px;padding-top:9px;border-top:1px solid var(--line)}
+  .rel-label{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);width:88px;flex-shrink:0;line-height:1.25}
+  .rel-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+  .rel-chip{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:42px}
+  .rel-chip .sq{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,.12)}
+  .rel-chip .lbl{font-size:9px;font-weight:500;text-align:center;line-height:1.1;color:var(--ink)}
 
-  footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px 22px;text-align:center}
-  .tool-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted);max-width:480px;line-height:1.6}
+  footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px 16px;text-align:center}
+  .tool-note{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);max-width:480px;line-height:1.5}
 
   @media (max-width:420px){
-    .rel-label{width:78px;font-size:10px}
-    .rel-chip{min-width:44px}
-    .rel-chip .sq{width:28px;height:28px}
+    .wheel-frame{width:min(260px,60vw)}
+    .rel-label{width:72px;font-size:9.5px}
+    .rel-chip{min-width:38px}
+    .rel-chip .sq{width:24px;height:24px}
   }
 </style>
 </head>
@@ -146,6 +149,13 @@ const RELATIONSHIPS = [
   { label: "Tetradic",      offsets: [3, 6, 9] },
 ];
 
+function tickMarks(){
+  return Array.from({length:12}, (_, i) => {
+    const a = i * 30;
+    const [x0,y0] = polar(0,0,101,a), [x1,y1] = polar(0,0,109,a);
+    return `<line class="tick" x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}"></line>`;
+  }).join('');
+}
 function renderWheel(){
   const svg = $('#wheelSvg');
   const step = 30;
@@ -155,10 +165,12 @@ function renderWheel(){
   }).join('');
   svg.innerHTML = `
     <g id="wheelBase">${wedges}</g>
+    ${tickMarks()}
     <g id="needleGroup" class="needle" style="transform:rotate(${rotation}deg)">
-      <line class="arm" x1="0" y1="0" x2="0" y2="-95"></line>
-      <circle class="tip" r="7" cx="0" cy="-95"></circle>
-      <circle class="hub" r="11" cx="0" cy="0"></circle>
+      <path class="arm" d="M -4,-6 L 0,-92 L 4,-6 Z"></path>
+      <circle class="tip" r="6" cx="0" cy="-92"></circle>
+      <circle class="hub-ring" r="12" cx="0" cy="0"></circle>
+      <circle class="hub-dot" r="4" cx="0" cy="0"></circle>
     </g>`;
   svg.querySelectorAll('.wedge').forEach(el => {
     el.addEventListener('click', () => {
@@ -171,6 +183,15 @@ function renderWheel(){
   updateReadout();
 }
 
+function updateActiveWedge(){
+  const activeIdx = Math.floor((((rotation % 360) + 360) % 360) / 30) % 12;
+  $('#wheelSvg').querySelectorAll('.wedge').forEach(el => {
+    const isActive = parseInt(el.dataset.i, 10) === activeIdx;
+    el.setAttribute('stroke', isActive ? 'var(--ink)' : '#fff');
+    el.setAttribute('stroke-width', isActive ? '3' : '1.5');
+  });
+}
+
 function chipHtml(hue){
   return `
     <div class="rel-chip">
@@ -179,6 +200,7 @@ function chipHtml(hue){
     </div>`;
 }
 function updateReadout(){
+  updateActiveWedge();
   const base = hueAtOffset(0);
   const rows = RELATIONSHIPS.map(rel => {
     const chips = rel.offsets.map(o => chipHtml(hueAtOffset(o))).join('');
