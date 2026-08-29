@@ -281,6 +281,14 @@
 
   .empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); font-size: 14px; }
 
+  .view-toggle { display: flex; gap: 2px; background: var(--bg2); border: 1.5px solid var(--border-mid); border-radius: 8px; padding: 2px; }
+  .view-toggle-btn { font-family: var(--font); font-size: 12px; font-weight: 600; padding: 6px 14px; border: none; border-radius: 6px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; }
+  .view-toggle-btn.active { background: var(--ink); color: white; }
+
+  .checklist-banner { margin: 14px 24px 0; padding: 12px 16px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--accent); display: flex; flex-direction: column; gap: 6px; }
+  .checklist-banner-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .checklist-progress { font-size: 12px; color: var(--ink2); font-family: var(--mono); white-space: nowrap; }
+
   /* Category badge */
   .cat-badge {
     display: inline-block; font-size: 11px; font-weight: 500;
@@ -415,9 +423,7 @@
       <button class="tab-btn active" id="tab-dashboard-btn" onclick="switchTab('dashboard')">Dashboard</button>
       <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
       <button class="tab-btn" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
-      <button class="tab-btn" id="tab-prints-btn" onclick="switchTab('prints')">Prints</button>
       <button class="tab-btn" id="tab-saleslog-btn" onclick="switchTab('saleslog')">Sales Log</button>
-      <button class="tab-btn" id="tab-gallerystock-btn" onclick="switchTab('gallerystock')">Gallery Stock</button>
     </div>
 
     <!-- ══ TAB: DASHBOARD ══ -->
@@ -483,70 +489,112 @@
 
     <!-- ══ TAB: INVENTORY ══ -->
     <div class="tab-panel" id="tab-inventory">
-      <div class="rate-bar" style="border-top-left-radius:0;border-top-right-radius:0;margin-bottom:0">
-        <label>Price / sq in</label>
-        <div class="rate-input-wrap">
-          <span>$</span>
-          <input type="text" inputmode="decimal" id="rate-input" value="1.10" style="-webkit-appearance:none;-moz-appearance:textfield">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;flex-wrap:wrap;gap:10px">
+        <div class="view-toggle" id="inv-view-toggle">
+          <button class="view-toggle-btn active" id="inv-view-list-btn" onclick="setInvView('list')">List</button>
+          <button class="view-toggle-btn" id="inv-view-gallery-btn" onclick="setInvView('gallery')">Gallery Stock</button>
         </div>
-        <label style="margin-left:16px">Large (≥30") / sq in</label>
-        <div class="rate-input-wrap">
-          <span>$</span>
-          <input type="text" inputmode="decimal" id="rate-large-input" placeholder="same" style="-webkit-appearance:none;-moz-appearance:textfield">
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn-sm" onclick="openChecklistListModal()">📋 Checklists</button>
+          <button class="btn-sm" onclick="openChecklistCreateModal()">+ Checklist</button>
         </div>
-        <span class="rate-note">Adjusts price &amp; rounded columns for all paintings</span>
       </div>
-      <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
-        <div class="table-header">
-          <div class="section-title" style="margin:0">Inventory</div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
-            <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
-            <button class="btn-sm" onclick="openPriceListModal()">$ Price Lists</button>
-            <button class="btn-sm" onclick="printTagsForSelected()">🏷 Tags</button>
-            <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
+
+      <!-- ── VIEW: LIST ── -->
+      <div id="inv-view-list">
+        <div id="checklist-banner" style="display:none"></div>
+        <div class="rate-bar" style="border-top-left-radius:0;border-top-right-radius:0;margin-bottom:0">
+          <label>Price / sq in</label>
+          <div class="rate-input-wrap">
+            <span>$</span>
+            <input type="text" inputmode="decimal" id="rate-input" value="1.10" style="-webkit-appearance:none;-moz-appearance:textfield">
+          </div>
+          <label style="margin-left:16px">Large (≥30") / sq in</label>
+          <div class="rate-input-wrap">
+            <span>$</span>
+            <input type="text" inputmode="decimal" id="rate-large-input" placeholder="same" style="-webkit-appearance:none;-moz-appearance:textfield">
+          </div>
+          <span class="rate-note">Adjusts price &amp; rounded columns for all paintings</span>
+        </div>
+        <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
+          <div class="table-header">
+            <div class="section-title" style="margin:0">Inventory</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
+              <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
+              <button class="btn-sm" onclick="openPriceListModal()">$ Price Lists</button>
+              <button class="btn-sm" onclick="printTagsForSelected()">🏷 Tags</button>
+              <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
+            </div>
+          </div>
+          <div class="filter-bar" id="filter-bar">
+            <span class="filter-bar-label">Filter</span>
+            <button class="filter-chip" id="fc-type-prints"    onclick="setTypeFilter('prints')">Prints</button>
+            <button class="filter-chip" id="fc-type-originals" onclick="setTypeFilter('originals')">Originals</button>
+            <span id="status-filter-group" style="display:none;gap:6px">
+              <button class="filter-chip" id="fc-status-sold"   onclick="setStatusFilter('sold')">Sold</button>
+              <button class="filter-chip" id="fc-status-unsold" onclick="setStatusFilter('unsold')">Unsold</button>
+            </span>
+            <span style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
+            <button class="filter-chip" id="fc-no-moms"    onclick="toggleBoolFilter('moms')">Mom doesn't have</button>
+            <button class="filter-chip" id="fc-at-gallery" onclick="toggleBoolFilter('gallery')">At gallery</button>
+            <select id="dim-filter" onchange="setDimFilter(this.value)" style="font-family:var(--font);font-size:12px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-mid);border-radius:20px;background:none;color:var(--ink2);cursor:pointer;outline:none">
+              <option value="">All dimensions</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
+                  <th style="width:28px"></th>
+                  <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
+                  <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
+                  <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
+                  <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
+                  <th onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
+                  <th>Lg stock</th>
+                  <th>Sm stock</th>
+                  <th>Lg sold</th>
+                  <th>Sm sold</th>
+                  <th>Original</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
           </div>
         </div>
-        <div class="filter-bar" id="filter-bar">
-          <span class="filter-bar-label">Filter</span>
-          <button class="filter-chip" id="fc-never-sold"     onclick="setFilter('never-sold')">Never sold</button>
-          <button class="filter-chip" id="fc-sold"           onclick="setFilter('sold')">Sold</button>
-          <button class="filter-chip" id="fc-original-avail" onclick="setFilter('original-avail')">Original available</button>
-          <button class="filter-chip" id="fc-low-stock"      onclick="setFilter('low-stock')">Low print stock</button>
-          <button class="filter-chip" id="fc-no-moms"        onclick="setFilter('no-moms')">Mom doesn't have</button>
-          <button class="filter-chip" id="fc-at-gallery"     onclick="setFilter('at-gallery')">At gallery</button>
-          <select id="dim-filter" onchange="setDimFilter(this.value)" style="font-family:var(--font);font-size:12px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-mid);border-radius:20px;background:none;color:var(--ink2);cursor:pointer;outline:none">
-            <option value="">All dimensions</option>
-          </select>
-        </div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
-                <th style="width:28px"></th>
-                <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
-                <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
-                <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
-                <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
-                <th onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
-                <th>Lg stock</th>
-                <th>Sm stock</th>
-                <th>Lg sold</th>
-                <th>Sm sold</th>
-                <th>Original</th>
-              </tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-          </table>
-        </div>
       </div>
-    </div>
 
-    <!-- ══ TAB: PRINTS ══ -->
-    <div class="tab-panel" id="tab-prints">
-      <div style="padding-top:24px;display:flex;flex-direction:column;gap:24px" id="prints-container">
-        <!-- injected by renderPrintsTab() -->
+      <!-- ── VIEW: GALLERY STOCK ── -->
+      <div id="inv-view-gallery" style="display:none">
+        <div style="padding-top:24px">
+          <div class="table-section">
+            <div class="table-header">
+              <div class="section-title" style="margin:0">Gallery Stock</div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <select id="gs-gallery-filter" onchange="renderGalleryStock()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
+                  <option value="Phoenix Gallery">Phoenix Gallery</option>
+                </select>
+                <button class="btn-sm" onclick="exportGalleryStockCsv()">↓ CSV</button>
+              </div>
+            </div>
+            <div id="gs-summary" style="padding:10px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--ink2)"></div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Painting</th>
+                    <th style="text-align:center">Small</th>
+                    <th style="text-align:center">Large</th>
+                    <th style="text-align:center">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="gs-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -707,36 +755,6 @@
 
   </div><!-- /main -->
 </div><!-- /app -->
-
-    <div class="tab-panel" id="tab-gallerystock">
-      <div style="padding-top:24px">
-        <div class="table-section">
-          <div class="table-header">
-            <div class="section-title" style="margin:0">Gallery Stock</div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <select id="gs-gallery-filter" onchange="renderGalleryStock()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
-                <option value="Phoenix Gallery">Phoenix Gallery</option>
-              </select>
-              <button class="btn-sm" onclick="exportGalleryStockCsv()">↓ CSV</button>
-            </div>
-          </div>
-          <div id="gs-summary" style="padding:10px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--ink2)"></div>
-          <div style="overflow-x:auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>Painting</th>
-                  <th style="text-align:center">Small</th>
-                  <th style="text-align:center">Large</th>
-                  <th style="text-align:center">Total</th>
-                </tr>
-              </thead>
-              <tbody id="gs-table-body"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
 
 <!-- ══════════════════════════════════════════
      INVENTORY MODALS
@@ -989,6 +1007,44 @@
   </div>
 </div>
 
+<!-- CHECKLIST: create -->
+<div class="modal-backdrop" id="checklist-create-modal" style="display:none" onclick="closeModalOnBackdrop(event,'checklist-create-modal')">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-head">
+      <h2>Create Checklist</h2>
+      <button class="modal-close" onclick="closeModal('checklist-create-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>Name</label><input type="text" id="checklist-new-title" placeholder="e.g. Fair prep — Sept"></div>
+      <div class="field"><label>Narrative</label><textarea id="checklist-new-narrative" rows="3" placeholder="e.g. prints, COA"></textarea></div>
+      <div style="margin-top:14px">
+        <div style="font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:0.04em;margin-bottom:8px">SELECTED PAINTINGS · SET PRINT QTY (OPTIONAL)</div>
+        <div id="checklist-item-rows" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('checklist-create-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveNewChecklist()">Save Checklist</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST: list -->
+<div class="modal-backdrop" id="checklist-list-modal" style="display:none" onclick="closeModalOnBackdrop(event,'checklist-list-modal')">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-head">
+      <h2>Checklists</h2>
+      <button class="modal-close" onclick="closeModal('checklist-list-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="checklist-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('checklist-list-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
 
 <script>
 // ═══════════════════════════════════════════
@@ -1147,7 +1203,16 @@ let priceLists = [];
 let expState = { expenses: [], mileage: [], recurring: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
 let dimFilter = '';
+let typeFilter = '';   // '' | 'prints' | 'originals'
+let statusFilter = ''; // '' | 'sold' | 'unsold'
+let momsFilterOn = false;
+let galleryFilterOn = false;
+let invView = 'list'; // 'list' | 'gallery'
 let selectedIds = new Set();
+let checklists = [];
+let checklistsLoaded = false;
+let activeChecklistId = null;
+let checklistDraftItems = []; // [{paintingId, title, qtyLarge, qtySmall}] while building a new checklist
 let lastRenderedIds = [];
 let activeFilter = null, expandedId = null;
 let salePaintingId = null, editSaleId = null;
@@ -1232,159 +1297,23 @@ function logout() {
 //  TABS
 // ═══════════════════════════════════════════
 function switchTab(tab) {
-  ['dashboard','inventory','expenses','prints','saleslog','gallerystock'].forEach(t => {
+  ['dashboard','inventory','expenses','saleslog'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
   if (tab === 'expenses' && !expLoaded) loadExpenses();
   else if (tab === 'expenses') renderExpenses();
-  else if (tab === 'prints') renderPrintsTab();
   else if (tab === 'saleslog') renderSalesLog();
-  else if (tab === 'gallerystock') renderGalleryStock();
+  else if (tab === 'inventory') { if (invView === 'gallery') renderGalleryStock(); else renderTable(); }
 }
 
-// ═══════════════════════════════════════════
-//  PRINTS TAB
-// ═══════════════════════════════════════════
-const printsSort = { col: null, dir: 1 }; // col: field name, dir: 1=asc -1=desc
-
-function renderPrintsTab() {
-  const GOAL_LARGE = 2;
-  const GOAL_SMALL = 3;
-
-  const paintings = (db.paintings || []).filter(p => !p.marketItem);
-
-  const now = Date.now();
-  const MS_PER_DAY = 86400000;
-  const RECENCY_WINDOW = 365;
-
-  const rows = paintings.map(p => {
-    const printSales = (p.sales || []).filter(s => s.type === 'large' || s.type === 'small');
-    const lgSold = printSales.filter(s => s.type === 'large').length;
-    const smSold = printSales.filter(s => s.type === 'small').length;
-    const totalSold = lgSold + smSold;
-
-    const dates = printSales.map(s => s.date ? new Date(s.date).getTime() : 0).filter(Boolean);
-    const lastSaleTs = dates.length ? Math.max(...dates) : 0;
-    const lastSaleLabel = lastSaleTs ? new Date(lastSaleTs).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
-    const daysSinceSale = lastSaleTs ? (now - lastSaleTs) / MS_PER_DAY : RECENCY_WINDOW;
-    const recencyScore = Math.max(0, 1 - (daysSinceSale / RECENCY_WINDOW));
-
-    const lgStock = p.stock?.large || 0;
-    const smStock = p.stock?.small || 0;
-    const printLg = Math.max(0, GOAL_LARGE - lgStock);
-    const printSm = Math.max(0, GOAL_SMALL - smStock);
-    const bothZero = lgStock === 0 && smStock === 0;
-    const hasZero  = lgStock === 0 || smStock === 0;
-    const hasOne   = !bothZero && (lgStock === 1 || smStock === 1);
-    const belowGoal = lgStock < GOAL_LARGE || smStock < GOAL_SMALL;
-    const tier = hasZero ? 0 : hasOne ? 1 : belowGoal ? 2 : 3;
-
-    return { p, lgSold, smSold, totalSold, lastSaleLabel, lastSaleTs, recencyScore, lgStock, smStock, printLg, printSm, bothZero, hasZero, hasOne, tier, score: 0 };
-  });
-
-  const maxSold = Math.max(1, ...rows.map(r => r.totalSold));
-  rows.forEach(r => {
-    r.score = Math.round(((r.totalSold / maxSold) * 0.7 + r.recencyScore * 0.3) * 100);
-  });
-
-
-  const COLS = [
-    { key: 'title',    label: 'Title',    align: 'left',   val: r => r.p.title },
-    { key: 'lgSold',   label: 'Lg Sold',  align: 'center', val: r => r.lgSold },
-    { key: 'smSold',   label: 'Sm Sold',  align: 'center', val: r => r.smSold },
-    { key: 'lastSale', label: 'Last Sale',align: 'center', val: r => r.lastSaleTs },
-    { key: 'lgStock',  label: 'Lg Stock', align: 'center', val: r => r.lgStock },
-    { key: 'smStock',  label: 'Sm Stock', align: 'center', val: r => r.smStock },
-    { key: 'printLg',  label: 'Print Lg', align: 'center', val: r => r.printLg },
-    { key: 'printSm',  label: 'Print Sm', align: 'center', val: r => r.printSm },
-    { key: 'score',    label: 'Score',    align: 'center', val: r => r.score },
-  ];
-
-  function sortRows(set) {
-    if (!printsSort.col) {
-      return set.sort((a, b) => b.score - a.score);
-    }
-    const col = COLS.find(c => c.key === printsSort.col);
-    return set.sort((a, b) => {
-      const av = col.val(a), bv = col.val(b);
-      if (typeof av === 'string') return printsSort.dir * av.localeCompare(bv);
-      return printsSort.dir * (av - bv);
-    });
-  }
-
-  function buildThead(tierId) {
-    return '<thead><tr>' + COLS.map(c => {
-      const active = printsSort.col === c.key;
-      const arrow = active ? (printsSort.dir === 1 ? ' ↑' : ' ↓') : '';
-      const activeStyle = active ? ';color:var(--accent-ink)' : '';
-      return '<th style="text-align:' + c.align + ';cursor:pointer;user-select:none' + activeStyle + '" onclick="printsSortBy(\'' + c.key + '\')">' + c.label + arrow + '</th>';
-    }).join('') + '</tr></thead>';
-  }
-
-  function buildRows(set, GOAL_LARGE, GOAL_SMALL) {
-    return set.map(r => {
-      const printLgCell = r.printLg > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent-ink)">${r.printLg}</span>` : `<span style="color:var(--ink3)">—</span>`;
-      const printSmCell = r.printSm > 0 ? `<span style="font-family:var(--mono);font-weight:600;color:var(--accent-ink)">${r.printSm}</span>` : `<span style="color:var(--ink3)">—</span>`;
-      const lastSaleDisplay = r.lastSaleTs ? r.lastSaleLabel : '—';
-      return `<tr>
-        <td style="font-size:13px">${r.p.title}</td>
-        <td class="mono" style="text-align:center">${r.lgSold}</td>
-        <td class="mono" style="text-align:center">${r.smSold}</td>
-        <td class="dim" style="text-align:center;font-size:12px">${lastSaleDisplay}</td>
-        <td class="mono" style="text-align:center">${r.lgStock}</td>
-        <td class="mono" style="text-align:center">${r.smStock}</td>
-        <td style="text-align:center">${printLgCell}</td>
-        <td style="text-align:center">${printSmCell}</td>
-        <td class="mono" style="text-align:center;font-size:12px;color:var(--ink2)">${r.score}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  const container = document.getElementById('prints-container');
-  const zeroLarge = document.getElementById('prints-zero-large')?.checked;
-  const zeroSmall = document.getElementById('prints-zero-small')?.checked;
-  const passesZeroFilter = r => {
-    if (zeroLarge && r.lgStock !== 0) return false;
-    if (zeroSmall && r.smStock !== 0) return false;
-    return true;
-  };
-  const sorted = sortRows(rows.filter(passesZeroFilter));
-
-  container.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;align-items:center;gap:14px">
-        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
-          <input type="checkbox" id="prints-zero-large" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroLarge ? 'checked' : ''}>
-          0 large
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);cursor:pointer">
-          <input type="checkbox" id="prints-zero-small" onchange="renderPrintsTab()" style="cursor:pointer" ${zeroSmall ? 'checked' : ''}>
-          0 small
-        </label>
-        ${printsSort.col ? `<button onclick="printsClearSort()" style="font-size:12px;color:var(--accent-ink);background:none;border:none;cursor:pointer;padding:0">✕ Clear sort</button>` : ''}
-      </div>
-      <span style="font-size:12px;color:var(--ink3)">Goal: <span style="font-family:var(--mono)">2</span> large · <span style="font-family:var(--mono)">3</span> small · Click any column to sort</span>
-    </div>
-    <div class="table-section"><div style="overflow-x:auto"><table>${buildThead('all')}
-      <tbody>${buildRows(sorted, GOAL_LARGE, GOAL_SMALL)}</tbody>
-    </table></div></div>`;
-}
-
-function printsSortBy(col) {
-  if (printsSort.col === col) {
-    printsSort.dir *= -1;
-  } else {
-    printsSort.col = col;
-    printsSort.dir = col === 'title' ? 1 : -1; // default: alpha asc for title, desc for numbers
-  }
-  renderPrintsTab();
-}
-
-function printsClearSort() {
-  printsSort.col = null;
-  printsSort.dir = 1;
-  renderPrintsTab();
+function setInvView(view) {
+  invView = view;
+  document.getElementById('inv-view-list-btn').classList.toggle('active', view === 'list');
+  document.getElementById('inv-view-gallery-btn').classList.toggle('active', view === 'gallery');
+  document.getElementById('inv-view-list').style.display = view === 'list' ? '' : 'none';
+  document.getElementById('inv-view-gallery').style.display = view === 'gallery' ? '' : 'none';
+  if (view === 'gallery') renderGalleryStock();
 }
 
 // ═══════════════════════════════════════════
@@ -1510,8 +1439,20 @@ function sortedPaintings(list) {
 // ═══════════════════════════════════════════
 //  FILTERS (inventory)
 // ═══════════════════════════════════════════
-function setFilter(f) {
-  activeFilter = activeFilter === f ? null : f;
+function setTypeFilter(t) {
+  typeFilter = typeFilter === t ? '' : t;
+  statusFilter = ''; // reset status when switching/clearing type
+  updateFilterChips();
+  renderTable();
+}
+function setStatusFilter(s) {
+  statusFilter = statusFilter === s ? '' : s;
+  updateFilterChips();
+  renderTable();
+}
+function toggleBoolFilter(f) {
+  if (f === 'moms')    momsFilterOn = !momsFilterOn;
+  if (f === 'gallery') galleryFilterOn = !galleryFilterOn;
   updateFilterChips();
   renderTable();
 }
@@ -1535,20 +1476,33 @@ function populateDimFilterOptions() {
   else { sel.value = ''; dimFilter = ''; }
 }
 function updateFilterChips() {
-  ['never-sold','sold','original-avail','low-stock','no-moms','at-gallery'].forEach(f => {
-    const el = document.getElementById('fc-' + f);
-    if (el) el.classList.toggle('active', activeFilter === f);
-  });
+  const elPrints = document.getElementById('fc-type-prints');
+  const elOrigs  = document.getElementById('fc-type-originals');
+  if (elPrints) elPrints.classList.toggle('active', typeFilter === 'prints');
+  if (elOrigs)  elOrigs.classList.toggle('active', typeFilter === 'originals');
+  const statusGroup = document.getElementById('status-filter-group');
+  if (statusGroup) statusGroup.style.display = typeFilter ? 'inline-flex' : 'none';
+  const elSold   = document.getElementById('fc-status-sold');
+  const elUnsold = document.getElementById('fc-status-unsold');
+  if (elSold)   elSold.classList.toggle('active', statusFilter === 'sold');
+  if (elUnsold) elUnsold.classList.toggle('active', statusFilter === 'unsold');
+  const elMoms = document.getElementById('fc-no-moms');
+  const elGal  = document.getElementById('fc-at-gallery');
+  if (elMoms) elMoms.classList.toggle('active', momsFilterOn);
+  if (elGal)  elGal.classList.toggle('active', galleryFilterOn);
 }
 function applyFilter(list) {
   if (dimFilter) list = list.filter(p => `${p.width}×${p.height}` === dimFilter);
-  if (!activeFilter) return list;
-  if (activeFilter === 'never-sold')     return list.filter(p => p.sales.length === 0);
-  if (activeFilter === 'sold')           return list.filter(p => p.sales.length > 0);
-  if (activeFilter === 'original-avail') return list.filter(p => originalAvailInSquare(p));
-  if (activeFilter === 'low-stock')      return list.filter(p => (p.stock?.large||0) === 0 || (p.stock?.small||0) === 0);
-  if (activeFilter === 'no-moms')        return list.filter(p => !p.momsHas);
-  if (activeFilter === 'at-gallery')     return list.filter(p => !!p.atGallery);
+  if (momsFilterOn)    list = list.filter(p => !p.momsHas);
+  if (galleryFilterOn) list = list.filter(p => !!p.atGallery);
+  if (typeFilter === 'prints') {
+    const printSaleCount = p => (p.sales||[]).filter(s => s.type === 'large' || s.type === 'small').length;
+    if (statusFilter === 'sold')   list = list.filter(p => printSaleCount(p) > 0);
+    if (statusFilter === 'unsold') list = list.filter(p => printSaleCount(p) === 0);
+  } else if (typeFilter === 'originals') {
+    if (statusFilter === 'sold')   list = list.filter(p => p.originalAvail === false);
+    if (statusFilter === 'unsold') list = list.filter(p => p.originalAvail === true);
+  }
   return list;
 }
 
@@ -1739,7 +1693,15 @@ function renderChart() {
 }
 
 function renderTable() {
+  const checklist = activeChecklistId ? checklists.find(c => c.id === activeChecklistId) : null;
+  if (!checklist) activeChecklistId = null;
+  renderChecklistBanner(checklist);
+
   let list = applyFilter((db.paintings || []).filter(p => !p.marketItem));
+  if (checklist) {
+    const idSet = new Set(checklist.items.map(i => i.paintingId));
+    list = list.filter(p => idSet.has(p.id));
+  }
   list = sortedPaintings(list);
   lastRenderedIds = list.map(p => p.id);
   ['title','year','dims','cost','retail'].forEach(f => {
@@ -1757,11 +1719,21 @@ function renderTable() {
     const isOpen = expandedId === p.id;
     const lgSold = p.sales.filter(s => s.type === 'large').length;
     const smSold = p.sales.filter(s => s.type === 'small').length;
+    const clItem = checklist ? checklist.items.find(i => i.paintingId === p.id) : null;
+    const qtyBadge = clItem && (clItem.qtyLarge || clItem.qtySmall)
+      ? `<span style="font-size:11px;color:var(--accent-ink);font-family:var(--mono);margin-left:8px;white-space:nowrap">${clItem.qtyLarge ? clItem.qtyLarge + 'L ' : ''}${clItem.qtySmall ? clItem.qtySmall + 'S' : ''}</span>`
+      : '';
+    const titleCell = clItem
+      ? `<label style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="event.stopPropagation()">
+           <input type="checkbox" ${clItem.done ? 'checked' : ''} onchange="toggleChecklistItemDone('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
+           <strong style="${clItem.done ? 'text-decoration:line-through;color:var(--ink3)' : ''}">${esc(p.title)}</strong>${qtyBadge}
+         </label>`
+      : `<strong>${esc(p.title)}</strong>`;
     rows += `
       <tr class="painting-row" onclick="toggleExpand('${p.id}')">
         <td onclick="event.stopPropagation()"><input type="checkbox" class="row-select" ${selectedIds.has(p.id)?'checked':''} onchange="toggleRowSelect('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></td>
         <td><span class="expand-arrow ${isOpen?'open':''}">▶</span></td>
-        <td><strong>${esc(p.title)}</strong></td>
+        <td>${titleCell}</td>
         <td class="dim col-hide">${p.month ? p.month.slice(0,3)+' ' : ''}${p.year}</td>
         <td class="mono col-hide">${p.width}×${p.height}</td>
         <td class="mono">$${c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
@@ -2811,6 +2783,163 @@ function printTagsForSelected() {
 }
 
 // ═══════════════════════════════════════════
+//  CHECKLISTS
+// ═══════════════════════════════════════════
+async function loadChecklists() {
+  const data = await api('GET', '/checklists');
+  checklists = data.checklists || [];
+  checklistsLoaded = true;
+}
+
+function openChecklistCreateModal() {
+  if (!selectedIds.size) { alert('Select paintings using the checkboxes on the left, then click + Checklist.'); return; }
+  const ids = [...selectedIds];
+  const byId = Object.fromEntries(db.paintings.map(p => [p.id, p]));
+  checklistDraftItems = ids
+    .filter(id => byId[id])
+    .map(id => ({ paintingId: id, title: byId[id].title, qtyLarge: 0, qtySmall: 0 }))
+    .sort((a, b) => a.title.localeCompare(b.title));
+  document.getElementById('checklist-new-title').value = '';
+  document.getElementById('checklist-new-narrative').value = '';
+  renderChecklistItemRows();
+  document.getElementById('checklist-create-modal').style.display = 'flex';
+}
+
+function renderChecklistItemRows() {
+  const el = document.getElementById('checklist-item-rows');
+  el.innerHTML = checklistDraftItems.map((it, idx) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1.5px solid var(--border-mid);border-radius:8px">
+      <div style="flex:1;font-size:13px;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(it.title)}</div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:11px;color:var(--ink3)">Lg</span>
+        <button class="stock-btn" onclick="adjChecklistDraftQty(${idx},'qtyLarge',-1)">−</button>
+        <span style="font-family:var(--mono);font-size:13px;min-width:14px;text-align:center">${it.qtyLarge}</span>
+        <button class="stock-btn" onclick="adjChecklistDraftQty(${idx},'qtyLarge',1)">+</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:11px;color:var(--ink3)">Sm</span>
+        <button class="stock-btn" onclick="adjChecklistDraftQty(${idx},'qtySmall',-1)">−</button>
+        <span style="font-family:var(--mono);font-size:13px;min-width:14px;text-align:center">${it.qtySmall}</span>
+        <button class="stock-btn" onclick="adjChecklistDraftQty(${idx},'qtySmall',1)">+</button>
+      </div>
+    </div>`).join('');
+}
+
+function adjChecklistDraftQty(idx, field, delta) {
+  checklistDraftItems[idx][field] = Math.max(0, (checklistDraftItems[idx][field] || 0) + delta);
+  renderChecklistItemRows();
+}
+
+async function saveNewChecklist() {
+  const title = document.getElementById('checklist-new-title').value.trim() || 'Untitled checklist';
+  const narrative = document.getElementById('checklist-new-narrative').value.trim();
+  const items = checklistDraftItems.map(it => ({ ...it, done: false }));
+  try {
+    const data = await api('POST', '/checklists', { title, narrative, items });
+    checklists.unshift(data.checklist);
+    clearSelection();
+    closeModal('checklist-create-modal');
+    activeChecklistId = data.checklist.id;
+    renderTable();
+  } catch (e) { alert('Failed to save checklist: ' + e.message); }
+}
+
+async function openChecklistListModal() {
+  document.getElementById('checklist-list-modal').style.display = 'flex';
+  document.getElementById('checklist-list').innerHTML = '<div style="color:var(--ink3);font-size:13px">Loading…</div>';
+  try {
+    if (!checklistsLoaded) await loadChecklists();
+    renderChecklistListModal();
+  } catch (e) {
+    document.getElementById('checklist-list').innerHTML = '<div style="color:var(--red);font-size:13px">Failed to load: ' + esc(e.message) + '</div>';
+  }
+}
+
+function renderChecklistListModal() {
+  const el = document.getElementById('checklist-list');
+  if (!checklists.length) { el.innerHTML = '<div style="color:var(--ink3);font-size:13px">No saved checklists yet.</div>'; return; }
+  el.innerHTML = checklists.map(cl => {
+    const done = cl.items.filter(i => i.done).length;
+    const when = cl.updatedAt || cl.createdAt;
+    const dateStr = when ? new Date(when).toLocaleDateString() : '';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border-mid);border-radius:8px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:13px;color:var(--ink)">${esc(cl.title)}</div>
+        <div style="font-size:11px;color:var(--ink3)">${done}/${cl.items.length} done${dateStr ? ' · saved ' + dateStr : ''}</div>
+      </div>
+      <button class="btn-sm" onclick="openChecklist('${cl.id}')">Open</button>
+      <button class="btn-sm danger" onclick="deleteChecklist('${cl.id}')">Delete</button>
+    </div>`;
+  }).join('');
+}
+
+function openChecklist(id) {
+  activeChecklistId = id;
+  closeModal('checklist-list-modal');
+  setInvView('list');
+  renderTable();
+}
+
+function closeChecklist() {
+  activeChecklistId = null;
+  renderTable();
+}
+
+async function deleteChecklist(id) {
+  if (!confirm('Delete this checklist? This cannot be undone.')) return;
+  try {
+    await api('DELETE', '/checklists/' + id);
+    checklists = checklists.filter(c => c.id !== id);
+    if (activeChecklistId === id) activeChecklistId = null;
+    renderChecklistListModal();
+    renderTable();
+  } catch (e) { alert('Failed to delete checklist: ' + e.message); }
+}
+
+async function toggleChecklistItemDone(paintingId, done) {
+  const cl = checklists.find(c => c.id === activeChecklistId);
+  if (!cl) return;
+  const item = cl.items.find(i => i.paintingId === paintingId);
+  if (!item) return;
+  item.done = done;
+  renderChecklistBanner(cl);
+  try {
+    await api('PUT', '/checklists/' + cl.id, { items: cl.items });
+  } catch (e) {
+    item.done = !done; // revert on failure
+    renderTable();
+    alert('Failed to save: ' + e.message);
+  }
+}
+
+function renderChecklistBanner(checklist) {
+  const el = document.getElementById('checklist-banner');
+  const filterBar = document.getElementById('filter-bar');
+  if (!checklist) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    if (filterBar) filterBar.style.display = '';
+    return;
+  }
+  if (filterBar) filterBar.style.display = 'none';
+  const done = checklist.items.filter(i => i.done).length;
+  el.className = 'checklist-banner';
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <div class="checklist-banner-top">
+      <div>
+        <div style="font-weight:700;font-size:14px">${esc(checklist.title)}</div>
+        ${checklist.narrative ? `<div style="font-size:13px;color:var(--ink2);margin-top:2px;white-space:pre-wrap">${esc(checklist.narrative)}</div>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <span class="checklist-progress">${done}/${checklist.items.length} done</span>
+        <button class="btn-sm danger" onclick="deleteChecklist('${checklist.id}')">Delete</button>
+        <button class="btn-sm" onclick="closeChecklist()">✕ Close</button>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
 //  PRICE TAGS (Avery 5371 — 3.5×2", 10/sheet)
 // ═══════════════════════════════════════════
 function printPriceTags(ids) {
@@ -3169,7 +3298,6 @@ const isPWA = !!window.navigator.standalone;
 if (isPWA) {
   document.getElementById('tab-dashboard-btn').style.display = 'none';
   document.getElementById('tab-inventory-btn').style.display = 'none';
-  document.getElementById('tab-gallerystock-btn').style.display = 'none';
   switchTab('expenses');
 }
 

@@ -17,6 +17,7 @@ const SALES_TABLE     = 'dna-sales';
 const EXPENSES_TABLE  = 'dna-expenses';
 const GALLERY_TABLE   = 'dna-gallery-stock';
 const BOOTH_TABLE     = 'dna-booth-layouts';
+const CHECKLISTS_TABLE = 'dna-checklists';
 const RECEIPTS_BUCKET = 'kiosk.davidnicholsonllc';
 const RECEIPTS_PREFIX = 'receipts/';
 
@@ -900,6 +901,60 @@ async function adminDeleteExpense(id, cors) {
   return ok({ deleted: true }, cors);
 }
 
+// ── Admin: Checklists ──
+
+function sanitizeChecklistItems(items) {
+  return Array.isArray(items) ? items.map(i => ({
+    paintingId: i.paintingId,
+    title: i.title || '',
+    qtyLarge: Number(i.qtyLarge) || 0,
+    qtySmall: Number(i.qtySmall) || 0,
+    done: !!i.done,
+  })) : [];
+}
+
+async function adminGetChecklists(cors) {
+  const res = await dynamo.send(new ScanCommand({ TableName: CHECKLISTS_TABLE }));
+  const checklists = (res.Items || []).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  return ok({ checklists }, cors);
+}
+
+async function adminAddChecklist(body, cors) {
+  const { title, narrative, items } = body;
+  const id = 'cl' + Date.now() + Math.random().toString(36).slice(2, 6);
+  const now = Date.now();
+  const item = {
+    id,
+    title: (title || 'Untitled checklist').slice(0, 120),
+    narrative: (narrative || '').slice(0, 2000),
+    items: sanitizeChecklistItems(items),
+    createdAt: now,
+    updatedAt: now,
+  };
+  await dynamo.send(new PutCommand({ TableName: CHECKLISTS_TABLE, Item: item }));
+  return ok({ checklist: item }, cors);
+}
+
+async function adminUpdateChecklist(id, body, cors) {
+  const existing = await dynamo.send(new GetCommand({ TableName: CHECKLISTS_TABLE, Key: { id } }));
+  if (!existing.Item) return err('Not found', 404, cors);
+  const { title, narrative, items } = body;
+  const item = {
+    ...existing.Item,
+    title: title !== undefined ? String(title).slice(0, 120) : existing.Item.title,
+    narrative: narrative !== undefined ? String(narrative).slice(0, 2000) : existing.Item.narrative,
+    items: items !== undefined ? sanitizeChecklistItems(items) : existing.Item.items,
+    updatedAt: Date.now(),
+  };
+  await dynamo.send(new PutCommand({ TableName: CHECKLISTS_TABLE, Item: item }));
+  return ok({ checklist: item }, cors);
+}
+
+async function adminDeleteChecklist(id, cors) {
+  await dynamo.send(new DeleteCommand({ TableName: CHECKLISTS_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
 // ── Recurring expenses (stored in dna-expenses as type:'recurring') ──
 function clampDay(d) {
   d = parseInt(d, 10);
@@ -1201,6 +1256,17 @@ export const handler = async (event) => {
 
       const galleryStockMatch = path.match(/^\/admin\/gallery-stock\/(.+)$/);
       if (galleryStockMatch && method === 'DELETE') return await adminDeleteGalleryStock(decodeURIComponent(galleryStockMatch[1]), cors);
+
+      // Checklists
+      if (method === 'GET'  && path === '/admin/checklists') return await adminGetChecklists(cors);
+      if (method === 'POST' && path === '/admin/checklists') return await adminAddChecklist(b(), cors);
+
+      const checklistMatch = path.match(/^\/admin\/checklists\/([^/]+)$/);
+      if (checklistMatch) {
+        const clId = checklistMatch[1];
+        if (method === 'PUT')    return await adminUpdateChecklist(clId, b(), cors);
+        if (method === 'DELETE') return await adminDeleteChecklist(clId, cors);
+      }
 
       return err('Not found', 404, cors);
     }
