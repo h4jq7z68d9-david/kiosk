@@ -20,7 +20,7 @@
     --shadow:0 1px 2px rgba(43,54,64,.08),0 18px 40px -14px rgba(43,54,64,.20);
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html,body{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
   body{
     margin:0;background:radial-gradient(120% 90% at 50% -10%,var(--wall-hi),var(--wall) 60%);
     color:var(--ink);font-family:var(--body);
@@ -32,7 +32,7 @@
   .brand{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
   .brand b{color:var(--ink);font-weight:500}
 
-  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px clamp(16px,4vw,40px) 20px;gap:16px}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:14px clamp(16px,4vw,40px) 20px;gap:16px}
 
   .wheelsel{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
   .wsel-btn{font-family:var(--body);font-size:13px;font-weight:500;cursor:pointer;
@@ -56,6 +56,8 @@
   .wheel-frame svg{width:100%;height:100%;overflow:visible}
   .disc{cursor:grab}
   .disc:active{cursor:grabbing}
+  .freewedge, .wedge{transition:opacity .12s ease}
+  .freewedge:hover, .wedge:hover{opacity:.88}
   .overlay-line{fill:none;stroke:rgba(43,54,64,.55);stroke-width:1.4;pointer-events:none}
   .overlay-line.hex{stroke-dasharray:3 4}
   .knob{fill:var(--ink);stroke:#fff;stroke-width:2}
@@ -90,7 +92,12 @@
   footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px 22px;text-align:center}
   .tool-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted);max-width:480px;line-height:1.6}
 
-  @media (max-width:420px){ .info .name{font-size:19px} }
+  @media (max-width:420px){
+    .info .name{font-size:19px}
+    .hbtn{font-size:11.5px;padding:6px 10px}
+    .wheel-controls{gap:6px}
+    .wsel-btn{font-size:12px;padding:8px 14px}
+  }
 </style>
 </head>
 <body>
@@ -106,7 +113,8 @@
 
     <div class="stage">
       <div class="wheel-controls" id="wheelControls">
-        <button class="hbtn on" data-h="complementary">Complementary</button>
+        <button class="hbtn on" data-h="none">Free Wheel</button>
+        <button class="hbtn" data-h="complementary">Complementary</button>
         <button class="hbtn" data-h="analogous">Analogous</button>
         <button class="hbtn" data-h="triadic">Triadic</button>
         <button class="hbtn" data-h="splitComp">Split-Complementary</button>
@@ -119,7 +127,7 @@
       </div>
 
       <div class="info" id="info">
-        <div class="placeholder">Drag the wheel to rotate the windows — each one reveals a color in the current harmony.</div>
+        <div class="placeholder">This is the full wheel — tap any hue to see its name, hex value, and how it's built. Pick a harmony above when you want the rotating dial.</div>
       </div>
 
       <div class="mc-controls" id="mcControls">
@@ -146,7 +154,7 @@
   </main>
 
   <footer>
-    <div class="tool-note" id="footNote">Drag the wheel like the disc on a physical color wheel — the cutout windows show you which hues make up the harmony as you spin.</div>
+    <div class="tool-note" id="footNote">Tap any wedge to see it up close, or pick a harmony above to try the rotating dial.</div>
   </footer>
 
 <script>
@@ -185,7 +193,14 @@ const MUNSELL10 = [
 /* Harmony templates: window positions given as wedge-offsets from a base
    wedge (each offset is 30° of rotation). These are the shapes a physical
    harmony-finder disc would have punched into it. */
+const ROLE_TEXT = {
+  primary:   "A primary hue — it can't be mixed from any other colors. Every other hue on the wheel is built starting here.",
+  secondary: "A secondary hue — made by mixing the two primaries on either side of it.",
+  tertiary:  "A tertiary hue — made by mixing a primary with the secondary next to it.",
+};
+
 const HARMONIES = {
+  none: { label: "Free Wheel", offsets: null },
   complementary: { label: "Complementary", offsets: [0, 6],
     defn: "Two hues taken from directly opposite sides of the color wheel.",
     tip: "Mute one and let the other lead — full-strength complements can vibrate." },
@@ -204,7 +219,8 @@ const HARMONIES = {
 };
 
 let mode = 'wheel';
-let harmonyKey = 'complementary';
+let harmonyKey = 'none';
+let pickedHue = null;   // currently tapped hue in Free Wheel mode
 let showItten = false;
 let rotation = 0;       // degrees, disc rotation (0 = north, clockwise positive)
 let mcHue = null;       // currently selected hue for Munsell value/chroma controls
@@ -269,7 +285,8 @@ function renderWheelBase(){
   const step = 30;
   return HUES12.map((hue, idx) => {
     const a0 = idx * step, a1 = a0 + step;
-    return `<path d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}" stroke="#fff" stroke-width="1.5"></path>`;
+    const cls = harmonyKey === 'none' ? 'class="freewedge" style="cursor:pointer"' : '';
+    return `<path ${cls} data-i="${idx}" d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}" stroke="#fff" stroke-width="1.5"></path>`;
   }).join('');
 }
 function ittenOverlay(){
@@ -298,14 +315,24 @@ function discPathD(offsets){
 function renderWheel(){
   const svg = $('#wheelSvg');
   const h = HARMONIES[harmonyKey];
-  svg.innerHTML = `
-    <g id="wheelBase">${renderWheelBase()}</g>
+  const discHtml = h.offsets ? `
     <g id="discGroup" class="disc" style="transform:rotate(${rotation}deg)">
       <path d="${discPathD(h.offsets)}" fill="#f4f1ea" fill-rule="evenodd" opacity="0.94"></path>
       <circle class="knob" r="6" cx="0" cy="-100"></circle>
-    </g>
+    </g>` : '';
+  svg.innerHTML = `
+    <g id="wheelBase">${renderWheelBase()}</g>
+    ${discHtml}
     ${ittenOverlay()}
     <circle r="29" fill="none" stroke="rgba(43,54,64,.18)"></circle>`;
+  if (harmonyKey === 'none') {
+    svg.querySelectorAll('.freewedge').forEach(el => {
+      el.addEventListener('click', () => {
+        pickedHue = HUES12[parseInt(el.dataset.i, 10)];
+        updateWheelInfo();
+      });
+    });
+  }
   attachDrag();
   updateWheelInfo();
 }
@@ -315,6 +342,18 @@ function hueAtOffset(offset){
 }
 function updateWheelInfo(){
   const h = HARMONIES[harmonyKey];
+  if (harmonyKey === 'none') {
+    if (!pickedHue) {
+      $('#info').innerHTML = '<div class="placeholder">This is the full wheel — tap any hue to see its name, hex value, and how it\u2019s built. Pick a harmony above when you want the rotating dial.</div>';
+      return;
+    }
+    $('#info').innerHTML = `
+      <div class="eyebrow">Free Wheel</div>
+      <div class="row"><div class="sw" style="background:${pickedHue.hex}"></div><div class="hex">${pickedHue.hex}</div></div>
+      <div class="name" style="margin:2px 0 8px">${pickedHue.name}</div>
+      <p class="defn">${ROLE_TEXT[pickedHue.role]}</p>`;
+    return;
+  }
   const hues = h.offsets.map(hueAtOffset);
   const chips = hues.map(hue => `
     <div class="swchip">
@@ -336,7 +375,7 @@ function attachDrag(){
   if (frame.dataset.bound) return;
   frame.dataset.bound = '1';
   frame.addEventListener('pointerdown', e => {
-    if (mode !== 'wheel') return;
+    if (mode !== 'wheel' || harmonyKey === 'none') return;
     dragging = true;
     frame.setPointerCapture(e.pointerId);
     const rect = frame.getBoundingClientRect();
@@ -410,14 +449,20 @@ $('#mcChroma').addEventListener('input', updateMunsellPreview);
    MODE / CONTROL WIRING
    ═══════════════════════════════════════════ */
 const FOOT_NOTES = {
-  wheel: "Drag the wheel like the disc on a physical color wheel — the cutout windows show you which hues make up the harmony as you spin.",
+  wheel: "Tap any wedge to see it up close, or pick a harmony above to try the rotating dial.",
+  wheelHarmony: "Drag the wheel like the disc on a physical color wheel — the cutout windows show you which hues make up the harmony as you spin.",
   munsell: "Munsell adds two more axes to hue: value (light↔dark) and chroma (dull↔vivid). Pick a hue, then drag the sliders to see how the swatch shifts.",
 };
+
+function updateFootNote(){
+  if (mode === 'munsell') { $('#footNote').textContent = FOOT_NOTES.munsell; return; }
+  $('#footNote').textContent = harmonyKey === 'none' ? FOOT_NOTES.wheel : FOOT_NOTES.wheelHarmony;
+}
 
 function render(){
   $('#wheelControls').style.display = mode === 'wheel' ? 'flex' : 'none';
   $('#mcControls').classList.toggle('on', mode === 'munsell');
-  $('#footNote').textContent = FOOT_NOTES[mode];
+  updateFootNote();
   if (mode === 'wheel') renderWheel(); else renderMunsell();
 }
 
@@ -434,6 +479,7 @@ $('#wheelControls').addEventListener('click', e => {
   if (!btn) return;
   harmonyKey = btn.dataset.h;
   document.querySelectorAll('.hbtn').forEach(b => b.classList.toggle('on', b === btn));
+  updateFootNote();
   renderWheel();
 });
 
