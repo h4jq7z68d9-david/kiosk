@@ -9,28 +9,32 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="DNA Admin">
-<meta name="theme-color" content="#f1f3f5">
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="/admin.webmanifest">
 <link rel="apple-touch-icon" href="/admin-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f1f3f5;
-    --bg2: #e7eaed;
-    --bg3: #dde2e6;
+    --bg: #ffffff;
+    --bg2: #eef1f4;
+    --bg3: #e3e7ec;
     --ink: #2b3640;
     --ink2: #586470;
-    --ink3: #b0bac4;
-    --accent: #e6b400;
-    --accent-ink: #b58600;
-    --accent-dim: #f2d24d;
+    --ink3: #97a3b0;
+    --accent: #2f4f75;
+    --accent-hi: #3d5f88;
+    --accent-lo: #274261;
+    --accent-ink: #33557d;
+    --accent-dim: #a9c0da;
+    --accent-pale: #dde6ee;
     --green: #2d7a4f;
     --red: #c0392b;
     --border: rgba(43,54,64,0.12);
     --border-mid: rgba(43,54,64,0.2);
-    --font: 'DM Sans', sans-serif;
+    --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif;
     --mono: 'DM Mono', monospace;
     --radius: 8px;
     --shadow: 0 2px 8px rgba(43,54,64,0.08);
@@ -39,6 +43,7 @@
 
   body {
     font-family: var(--font);
+    font-weight: 300;
     background: var(--bg);
     color: var(--ink);
     font-size: 14px;
@@ -82,7 +87,7 @@
   }
   .topbar-left { display: flex; align-items: center; gap: 16px; }
   .topbar .wordmark { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
-  .topbar .badge { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); color: var(--ink); padding: 2px 8px; border-radius: 4px; }
+  .topbar .badge { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent-pale); color: var(--accent-ink); padding: 2px 8px; border-radius: 4px; }
   .btn-logout { font-family: var(--font); font-size: 12px; font-weight: 500; color: var(--ink2); background: none; border: none; cursor: pointer; letter-spacing: 0.04em; padding: 4px 0; }
   .btn-logout:hover { color: var(--ink); }
 
@@ -116,7 +121,7 @@
     background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s;
   }
   .rate-preset:hover { border-color: var(--accent); color: var(--accent-ink); }
-  .rate-preset.active { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+  .rate-preset.active { background: var(--accent); border-color: var(--accent); color: white; }
   .rate-note { font-size: 12px; color: var(--ink3); margin-left: auto; }
 
   /* ── SUMMARY CARDS ── */
@@ -175,7 +180,7 @@
   .table-search input:focus { border-color: var(--accent); background: white; }
   .btn-primary {
     font-family: var(--font); font-size: 13px; font-weight: 500;
-    background: var(--accent); color: var(--ink); border: none; border-radius: 6px;
+    background: var(--accent); color: white; border: none; border-radius: 6px;
     padding: 8px 16px; cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
   }
   .btn-primary:hover { opacity: 0.88; }
@@ -229,8 +234,8 @@
   .sale-date { font-family: var(--mono); font-size: 12px; color: var(--ink2); min-width: 80px; }
   .sale-type { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em; }
   .sale-type.original { background: var(--ink); color: white; }
-  .sale-type.large { background: var(--accent); color: var(--ink); }
-  .sale-type.small { background: var(--accent-dim); color: white; }
+  .sale-type.large { background: var(--accent); color: white; }
+  .sale-type.small { background: var(--accent-hi); color: white; }
   .sale-channel { font-size: 12px; color: var(--ink2); text-transform: capitalize; }
   .sale-price { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--green); margin-left: auto; }
   .sale-gross { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
@@ -277,13 +282,13 @@
   .filter-bar-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); margin-right: 4px; white-space: nowrap; }
   .filter-chip { font-family: var(--font); font-size: 12px; font-weight: 500; padding: 4px 11px; border: 1.5px solid var(--border-mid); border-radius: 20px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; white-space: nowrap; }
   .filter-chip:hover { border-color: var(--accent); color: var(--accent-ink); }
-  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
 
   .empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); font-size: 14px; }
 
   .view-toggle { display: flex; gap: 2px; background: var(--bg2); border: 1.5px solid var(--border-mid); border-radius: 8px; padding: 2px; }
   .view-toggle-btn { font-family: var(--font); font-size: 12px; font-weight: 600; padding: 6px 14px; border: none; border-radius: 6px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; }
-  .view-toggle-btn.active { background: var(--ink); color: white; }
+  .view-toggle-btn.active { background: var(--accent); color: white; }
 
   .checklist-banner { margin: 14px 24px 0; padding: 12px 16px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--accent); display: flex; flex-direction: column; gap: 6px; }
   .checklist-banner-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
@@ -317,7 +322,7 @@
     cursor: pointer; font-family: var(--font);
     transition: all 0.12s;
   }
-  .receipt-link:hover { background: var(--accent); color: var(--ink); }
+  .receipt-link:hover { background: var(--accent); color: white; }
   .receipt-none { font-size: 12px; color: var(--ink3); }
 
   /* ── RECEIPT LIGHTBOX ── */
@@ -409,7 +414,6 @@
       <span class="badge">Admin</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
-      <a class="btn-sm" href="/booth.html" style="text-decoration:none">Booth Planner</a>
       <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="openQuickSaleModal()">+ Sale</button>
       <button class="btn-logout" onclick="logout()">sign out</button>
     </div>
@@ -424,6 +428,7 @@
       <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
       <button class="tab-btn" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
       <button class="tab-btn" id="tab-saleslog-btn" onclick="switchTab('saleslog')">Sales Log</button>
+      <button class="tab-btn" id="tab-booth-btn" onclick="switchTab('booth')">Booth Planner</button>
     </div>
 
     <!-- ══ TAB: DASHBOARD ══ -->
@@ -435,9 +440,8 @@
           <button onclick="openExpModalAdv()" style="margin-left:auto;flex-shrink:0;font-family:var(--font);font-size:13px;font-weight:500;background:#92400e;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer">Add advertising expense</button>
         </div>
         <div class="cards" id="cards"></div>
-        <div class="cards" id="dash-exp-cards"></div>
 
-        <!-- REVENUE CHART -->
+        <!-- REVENUE BUBBLE -->
         <div class="chart-section">
           <div style="display:flex;align-items:flex-start;gap:20px">
             <div style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
@@ -459,9 +463,10 @@
               <div class="chart-wrap" id="chart"></div>
             </div>
           </div>
+          <div class="cards" id="chart-rev-breakdown" style="margin-top:16px"></div>
         </div>
 
-        <!-- EXPENSE CHART -->
+        <!-- EXPENSES BUBBLE (mileage folded in as sub-category) -->
         <div class="chart-section">
           <div style="display:flex;align-items:flex-start;gap:20px">
             <div style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
@@ -483,20 +488,17 @@
               <div class="chart-wrap" id="exp-chart"></div>
             </div>
           </div>
+          <div class="cards" id="chart-exp-breakdown" style="margin-top:16px"></div>
         </div>
       </div>
     </div>
 
     <!-- ══ TAB: INVENTORY ══ -->
     <div class="tab-panel" id="tab-inventory">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;flex-wrap:wrap;gap:10px">
+      <div style="padding:14px 24px 0">
         <div class="view-toggle" id="inv-view-toggle">
           <button class="view-toggle-btn active" id="inv-view-list-btn" onclick="setInvView('list')">List</button>
           <button class="view-toggle-btn" id="inv-view-gallery-btn" onclick="setInvView('gallery')">Gallery Stock</button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn-sm" onclick="openChecklistListModal()">📋 Checklists</button>
-          <button class="btn-sm" onclick="openChecklistCreateModal()">+ Checklist</button>
         </div>
       </div>
 
@@ -519,8 +521,10 @@
         <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
           <div class="table-header">
             <div class="section-title" style="margin:0">Inventory</div>
-            <div style="display:flex;gap:8px;align-items:center">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
+              <button class="btn-sm" onclick="openChecklistListModal()">📋 Checklists</button>
+              <button class="btn-sm" onclick="openChecklistCreateModal()">+ Checklist</button>
               <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
               <button class="btn-sm" onclick="openPriceListModal()">$ Price Lists</button>
               <button class="btn-sm" onclick="printTagsForSelected()">🏷 Tags</button>
@@ -751,6 +755,11 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ══ TAB: BOOTH PLANNER ══ -->
+    <div class="tab-panel" id="tab-booth">
+      <iframe id="booth-iframe" title="Booth Planner" style="width:100%;height:calc(100vh - 150px);min-height:600px;border:none;display:block"></iframe>
     </div>
 
   </div><!-- /main -->
@@ -1297,7 +1306,7 @@ function logout() {
 //  TABS
 // ═══════════════════════════════════════════
 function switchTab(tab) {
-  ['dashboard','inventory','expenses','saleslog'].forEach(t => {
+  ['dashboard','inventory','expenses','saleslog','booth'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
@@ -1305,6 +1314,10 @@ function switchTab(tab) {
   else if (tab === 'expenses') renderExpenses();
   else if (tab === 'saleslog') renderSalesLog();
   else if (tab === 'inventory') { if (invView === 'gallery') renderGalleryStock(); else renderTable(); }
+  else if (tab === 'booth') {
+    const ifr = document.getElementById('booth-iframe');
+    if (ifr && !ifr.src) ifr.src = '/booth.html';
+  }
 }
 
 function setInvView(view) {
@@ -1562,23 +1575,16 @@ function render() {
 function renderCards() {
   const realPaintings = db.paintings.filter(p => !p.marketItem);
   const origSold = realPaintings.filter(p => p.originalAvail !== true).length;
-  let totalRev = 0, largeSold = 0, smallSold = 0;
-  let revFair = 0, revOnline = 0, revGallery = 0;
+  let largeSold = 0, smallSold = 0;
   db.paintings.forEach(p => {
     (p.sales || []).forEach(s => {
-      const net = saleNet(s);
-      totalRev += net;
       if (s.type === 'large') largeSold++;
       if (s.type === 'small') smallSold++;
-      if (s.channel === 'fair')    revFair    += net;
-      if (s.channel === 'online')  revOnline  += net;
-      if (s.channel === 'gallery') revGallery += net;
     });
   });
   const totalLarge = realPaintings.reduce((s,p) => s + (p.stock?.large||0), 0);
   const totalSmall = realPaintings.reduce((s,p) => s + (p.stock?.small||0), 0);
   const originalsInStock = realPaintings.filter(p => p.originalAvail === true).length;
-  const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
 
   // Top print by size
   const lgCounts = {}, smCounts = {};
@@ -1602,9 +1608,6 @@ function renderCards() {
     <div class="card"><div class="card-label">Print Inventory</div><div class="card-value">${totalLarge + totalSmall}</div><div class="card-sub">${totalLarge} large · ${totalSmall} small</div></div>
     ${topLgCard}
     ${topSmCard}
-    <div class="card"><div class="card-label">Art Fair Revenue</div><div class="card-value">${fmt(revFair)}</div><div class="card-sub">channel</div></div>
-    <div class="card"><div class="card-label">Online Revenue</div><div class="card-value">${fmt(revOnline)}</div><div class="card-sub">channel</div></div>
-    <div class="card"><div class="card-label">Gallery Revenue</div><div class="card-value">${fmt(revGallery)}</div><div class="card-sub">net to you</div></div>
   `;
 }
 
@@ -1646,15 +1649,19 @@ function renderExpChart() {
 
   const keys = Object.keys(buckets).sort();
   const el = document.getElementById('exp-chart');
-  if (!el) return;
-  if (!keys.length) { el.innerHTML = '<div class="chart-empty">No expenses yet</div>'; return; }
-  const max = Math.max(...keys.map(k => buckets[k]));
-  el.innerHTML = keys.map(k => {
-    const pct = max > 0 ? (buckets[k] / max) * 120 : 0;
-    const [y, m] = k.split('-');
-    const label = MONTHS[parseInt(m)-1].slice(0,3) + ' ' + y.slice(2);
-    return `<div class="chart-col"><div class="chart-bar" style="height:${Math.max(4,pct)}px;background:var(--red);opacity:0.75" title="${label}: $${buckets[k].toLocaleString()}"></div><div class="chart-label">${label}</div></div>`;
-  }).join('');
+  if (el) {
+    if (!keys.length) { el.innerHTML = '<div class="chart-empty">No expenses yet</div>'; }
+    else {
+      const max = Math.max(...keys.map(k => buckets[k]));
+      el.innerHTML = keys.map(k => {
+        const pct = max > 0 ? (buckets[k] / max) * 120 : 0;
+        const [y, m] = k.split('-');
+        const label = MONTHS[parseInt(m)-1].slice(0,3) + ' ' + y.slice(2);
+        return `<div class="chart-col"><div class="chart-bar" style="height:${Math.max(4,pct)}px;background:var(--red);opacity:0.75" title="${label}: $${buckets[k].toLocaleString()}"></div><div class="chart-label">${label}</div></div>`;
+      }).join('');
+    }
+  }
+  renderDashExpCards();
 }
 
 function renderChart() {
@@ -1662,6 +1669,7 @@ function renderChart() {
   const toVal   = document.getElementById('chart-to').value;
   const buckets = {};
   let filteredRev = 0, filteredCount = 0, allRev = 0, allCount = 0;
+  let revFair = 0, revOnline = 0, revGallery = 0;
   db.paintings.forEach(p => {
     p.sales.forEach(s => {
       const net = saleNet(s);
@@ -1672,6 +1680,9 @@ function renderChart() {
       if (toVal   && key > toVal)   return;
       buckets[key] = (buckets[key] || 0) + net;
       filteredRev += net; filteredCount++;
+      if (s.channel === 'fair')    revFair    += net;
+      if (s.channel === 'online')  revOnline  += net;
+      if (s.channel === 'gallery') revGallery += net;
     });
   });
   const isFiltered = fromVal || toVal;
@@ -1682,14 +1693,24 @@ function renderChart() {
   document.getElementById('chart-rev-sub').textContent = displayCount + ' sale' + (displayCount !== 1 ? 's' : '') + (isFiltered ? ' in range' : ' logged');
   const keys = Object.keys(buckets).sort();
   const el = document.getElementById('chart');
-  if (!keys.length) { el.innerHTML = '<div class="chart-empty">No sales in this range</div>'; return; }
-  const max = Math.max(...keys.map(k => buckets[k]));
-  el.innerHTML = keys.map(k => {
-    const pct = max > 0 ? (buckets[k] / max) * 120 : 0;
-    const [y, m] = k.split('-');
-    const label = MONTHS[parseInt(m)-1].slice(0,3) + ' ' + y.slice(2);
-    return `<div class="chart-col"><div class="chart-bar" style="height:${Math.max(4,pct)}px" title="${label}: $${buckets[k].toLocaleString()}"></div><div class="chart-label">${label}</div></div>`;
-  }).join('');
+  if (!keys.length) { el.innerHTML = '<div class="chart-empty">No sales in this range</div>'; }
+  else {
+    const max = Math.max(...keys.map(k => buckets[k]));
+    el.innerHTML = keys.map(k => {
+      const pct = max > 0 ? (buckets[k] / max) * 120 : 0;
+      const [y, m] = k.split('-');
+      const label = MONTHS[parseInt(m)-1].slice(0,3) + ' ' + y.slice(2);
+      return `<div class="chart-col"><div class="chart-bar" style="height:${Math.max(4,pct)}px" title="${label}: $${buckets[k].toLocaleString()}"></div><div class="chart-label">${label}</div></div>`;
+    }).join('');
+  }
+  const brEl = document.getElementById('chart-rev-breakdown');
+  if (brEl) {
+    brEl.innerHTML = `
+      <div class="card"><div class="card-label">Art Fair</div><div class="card-value" style="font-size:19px">${fmt(revFair)}</div><div class="card-sub">channel${isFiltered ? ' · in range' : ''}</div></div>
+      <div class="card"><div class="card-label">Online</div><div class="card-value" style="font-size:19px">${fmt(revOnline)}</div><div class="card-sub">channel${isFiltered ? ' · in range' : ''}</div></div>
+      <div class="card"><div class="card-label">Gallery</div><div class="card-value" style="font-size:19px">${fmt(revGallery)}</div><div class="card-sub">net to you${isFiltered ? ' · in range' : ''}</div></div>
+    `;
+  }
 }
 
 function renderTable() {
@@ -1847,32 +1868,40 @@ function openExpModalAdv() {
 }
 
 function renderDashExpCards() {
-  const el = document.getElementById('dash-exp-cards');
+  const el = document.getElementById('chart-exp-breakdown');
   if (!el) return;
-  const totalExp = expState.expenses.reduce((s,e) => s + Number(e.amount||0), 0);
-  const totalMiles = expState.mileage.reduce((s,m) => s + Number(m.miles||0), 0);
-  const totalMileDeduction = expState.mileage.reduce((s,m) => {
+  const fromVal = document.getElementById('exp-chart-from')?.value || '';
+  const toVal   = document.getElementById('exp-chart-to')?.value || '';
+  const isFiltered = fromVal || toVal;
+  const inRange = d => { const k = (d||'').slice(0,7); return (!fromVal || k >= fromVal) && (!toVal || k <= toVal); };
+
+  const filteredExpenses = expState.expenses.filter(e => inRange(e.date));
+  const filteredMileage  = expState.mileage.filter(m => inRange(m.date));
+
+  const totalMiles = filteredMileage.reduce((s,m) => s + Number(m.miles||0), 0);
+  const totalMileDeduction = filteredMileage.reduce((s,m) => {
     const y = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
     return s + Number(m.miles||0) * irsRate(y);
   }, 0);
+
   const byCat = {};
-  expState.expenses.forEach(e => { byCat[e.category] = (byCat[e.category]||0) + Number(e.amount||0); });
-  const topCats = Object.entries(byCat).sort((a,b) => b[1]-a[1]).slice(0,3);
+  filteredExpenses.forEach(e => { byCat[e.category] = (byCat[e.category]||0) + Number(e.amount||0); });
+  const topCats = Object.entries(byCat).sort((a,b) => b[1]-a[1]).slice(0,4);
   const topCatHtml = topCats.map(([cat, amt]) =>
     `<div class="card-sub"><span class="cat-badge ${CAT_CLASS[cat]||'cat-other'}">${cat}</span> <span style="font-family:var(--mono);font-size:12px">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>`
   ).join('');
+
   const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   const activeRecur = (expState.recurring||[]).filter(r => r.active).sort((a,b) => Number(b.amount||0) - Number(a.amount||0));
   const recurMonthly = activeRecur.reduce((s,r) => s + Number(r.amount||0), 0);
   const recurItemsHtml = activeRecur.map(r =>
     `<div class="card-sub" style="display:flex;justify-content:space-between;gap:8px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.desc||r.category)}</span><span style="font-family:var(--mono);font-size:12px;flex-shrink:0">${fmt(Number(r.amount||0))}</span></div>`
   ).join('');
+
   el.innerHTML = `
-    <div class="card"><div class="card-label">Total Expenses</div><div class="card-value accent">${fmt(totalExp)}</div><div class="card-sub">${expState.expenses.length} records</div></div>
-    <div class="card"><div class="card-label">Recurring / month</div><div class="card-value">${fmt(recurMonthly)}</div><div style="margin-top:6px">${recurItemsHtml || '<div class="card-sub">none set</div>'}</div></div>
     <div class="card"><div class="card-label">Top Categories</div><div style="margin-top:4px">${topCatHtml || '<div class="card-sub">—</div>'}</div></div>
-    <div class="card"><div class="card-label">Miles Driven</div><div class="card-value">${totalMiles.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:1})}</div><div class="card-sub">${expState.mileage.length} trips</div></div>
-    <div class="card"><div class="card-label">Mileage Deduction</div><div class="card-value accent">${fmt(totalMileDeduction)}</div><div class="card-sub">IRS standard rate</div></div>
+    <div class="card"><div class="card-label">Recurring / month</div><div class="card-value" style="font-size:19px">${fmt(recurMonthly)}</div><div style="margin-top:6px">${recurItemsHtml || '<div class="card-sub">none set</div>'}</div></div>
+    <div class="card"><div class="card-label">Mileage</div><div class="card-value" style="font-size:19px">${fmt(totalMileDeduction)}</div><div class="card-sub">${totalMiles.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:1})} mi · ${filteredMileage.length} trips${isFiltered ? ' · in range' : ''}</div></div>
   `;
 }
 
