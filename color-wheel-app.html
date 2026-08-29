@@ -166,13 +166,6 @@ function renderWheel(){
       <circle class="hub-ring" r="12" cx="0" cy="0"></circle>
       <circle class="hub-dot" r="4" cx="0" cy="0"></circle>
     </g>`;
-  svg.querySelectorAll('.wedge').forEach(el => {
-    el.addEventListener('click', () => {
-      rotation = parseInt(el.dataset.i, 10) * 30 + 15;
-      $('#needleGroup').style.transform = `rotate(${rotation}deg)`;
-      updateReadout();
-    });
-  });
   attachDrag();
   updateReadout();
 }
@@ -206,14 +199,19 @@ function updateReadout(){
   $('#readout').innerHTML = rows;
 }
 
-/* ---- drag to spin the needle ---- */
-let dragging = false, dragStartPointer = 0, dragStartRotation = 0;
+/* ---- drag to spin the needle, or tap a wedge directly ----
+   Both gestures go through the same pointer events (rather than mixing
+   setPointerCapture-based dragging with separate <path> click listeners) —
+   pointer capture on the frame can swallow the click that would otherwise
+   land on a child wedge, which is exactly what broke mouse taps before. */
+let dragging = false, dragMoved = false, dragStartPointer = 0, dragStartRotation = 0;
 function attachDrag(){
   const frame = $('#wheelFrame');
   if (frame.dataset.bound) return;
   frame.dataset.bound = '1';
   frame.addEventListener('pointerdown', e => {
     dragging = true;
+    dragMoved = false;
     frame.setPointerCapture(e.pointerId);
     const rect = frame.getBoundingClientRect();
     const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
@@ -226,6 +224,7 @@ function attachDrag(){
     const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
     const cur = pointerAngle(cx, cy, e.clientX, e.clientY);
     const delta = shortestDelta(dragStartPointer, cur);
+    if (Math.abs(delta) > 2) dragMoved = true;
     let next = (dragStartRotation + delta + 360) % 360;
     // Light magnetic snap to the 12 named hues (every 30°).
     const nearest = Math.round(next / 30) * 30;
@@ -234,9 +233,23 @@ function attachDrag(){
     $('#needleGroup').style.transform = `rotate(${rotation}deg)`;
     updateReadout();
   });
-  const stop = () => { dragging = false; };
-  frame.addEventListener('pointerup', stop);
-  frame.addEventListener('pointercancel', stop);
+  frame.addEventListener('pointerup', e => {
+    if (dragging && !dragMoved) {
+      // A tap rather than a drag — jump straight to whichever wedge was hit.
+      const rect = frame.getBoundingClientRect();
+      const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+      const scale = rect.width / 230; // svg viewBox units -> pixels
+      const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+      if (dist <= 100 * scale * 1.08) {
+        const idx = Math.floor(dragStartPointer / 30) % 12;
+        rotation = idx * 30 + 15;
+        $('#needleGroup').style.transform = `rotate(${rotation}deg)`;
+        updateReadout();
+      }
+    }
+    dragging = false;
+  });
+  frame.addEventListener('pointercancel', () => { dragging = false; });
 }
 
 renderWheel();
