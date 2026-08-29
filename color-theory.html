@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Color Theory — David Nicholson</title>
-<meta name="description" content="A color theory study deck by David Nicholson — name the color relationship, then flip for the answer. The color thinking behind the paintings.">
+<meta name="description" content="An interactive color wheel and color theory study deck by David Nicholson — explore hue relationships, then test yourself with the flashcards.">
 <meta property="og:title" content="Color Theory — David Nicholson">
-<meta property="og:description" content="A study deck for color relationships and the science behind them.">
+<meta property="og:description" content="An interactive color wheel and study deck for color relationships and the science behind them.">
 <meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
 
 <!-- Google Analytics -->
@@ -18,8 +18,14 @@
   gtag('config', 'G-FL5BKJFVXF');
 </script>
 
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Color Wheel">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="/color-theory.webmanifest">
 <link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
-<link rel="apple-touch-icon" sizes="180x180" href="favicon180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="color-wheel-icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -104,6 +110,35 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   .ct-toggle-btn { padding: 9px 16px; font-size: 12px; }
   footer { padding: 48px 20px 40px; }
 }
+
+/* Add-to-Home-Screen banner — a small app-like install callout */
+#a2hs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 200;
+  display: none; justify-content: center; padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+#a2hs.show { display: flex; }
+.a2hs-card {
+  pointer-events: auto;
+  width: 100%; max-width: 460px;
+  background: rgba(255,255,255,0.98); backdrop-filter: blur(10px);
+  border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(43,54,64,0.18);
+  padding: 14px 14px 14px 12px;
+  display: flex; align-items: center; gap: 12px;
+  animation: a2hs-up 0.3s ease;
+}
+@keyframes a2hs-up { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.a2hs-icon { width: 44px; height: 44px; border-radius: 11px; flex-shrink: 0; box-shadow: 0 1px 3px rgba(43,54,64,0.2); }
+.a2hs-text { flex: 1; min-width: 0; }
+.a2hs-title { font-size: 13.5px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.a2hs-sub { font-size: 12px; color: var(--ink2); line-height: 1.4; margin-top: 2px; }
+.a2hs-sub .a2hs-share-icon { display: inline-flex; vertical-align: -3px; width: 15px; height: 15px; margin: 0 2px; }
+.a2hs-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.a2hs-install { font-family: var(--font); font-size: 12.5px; font-weight: 500; letter-spacing: 0.02em; background: var(--accent); color: #fff; border: none; border-radius: 999px; padding: 9px 16px; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+.a2hs-install:hover { background: var(--accent-hi); }
+.a2hs-close { background: none; border: none; color: var(--ink3); font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 6px; flex-shrink: 0; }
+.a2hs-close:hover { color: var(--ink); }
 </style>
 </head>
 <body>
@@ -122,20 +157,20 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 <main>
   <div class="lead">
     <h1 class="show-title">color theory</h1>
-    <p>a color wheel for reference, and a study deck for color relationships and the science behind them. read the swatches, name the relationship, then flip for the answer.</p>
+    <p>an interactive color wheel for reference, plus a study deck for color relationships and the science behind them. spin the wheel to explore, or flip through the flashcards to test yourself.</p>
   </div>
 
   <div class="ct-toggle">
-    <button class="ct-toggle-btn" id="ct-wheel-btn" onclick="ctShow('wheel')">color wheel</button>
-    <button class="ct-toggle-btn active" id="ct-cards-btn" onclick="ctShow('cards')">flashcards</button>
+    <button class="ct-toggle-btn active" id="ct-wheel-btn" onclick="ctShow('wheel')">color wheel</button>
+    <button class="ct-toggle-btn" id="ct-cards-btn" onclick="ctShow('cards')">flashcards</button>
   </div>
 
-  <div class="deck-wrap hidden" id="ct-wheel-wrap">
-    <iframe class="deck wheel-deck" id="ct-wheel-frame" title="interactive color wheel reference" loading="lazy"></iframe>
+  <div class="deck-wrap" id="ct-wheel-wrap">
+    <iframe class="deck wheel-deck" src="/color-wheel-app.html" title="interactive color wheel reference" loading="lazy"></iframe>
   </div>
 
-  <div class="deck-wrap" id="ct-cards-wrap">
-    <iframe class="deck" src="/color-theory-app.html" title="color theory study deck" loading="lazy"></iframe>
+  <div class="deck-wrap hidden" id="ct-cards-wrap">
+    <iframe class="deck" id="ct-cards-frame" title="color theory study deck" loading="lazy"></iframe>
   </div>
 </main>
 
@@ -158,6 +193,20 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   </div>
 </footer>
 
+<div id="a2hs">
+  <div class="a2hs-card">
+    <img class="a2hs-icon" src="/color-wheel-icon-192.png" alt="">
+    <div class="a2hs-text">
+      <div class="a2hs-title">Add Color Wheel to your Home Screen</div>
+      <div class="a2hs-sub" id="a2hs-sub"></div>
+    </div>
+    <div class="a2hs-actions">
+      <button class="a2hs-install" id="a2hs-install" style="display:none">Install</button>
+      <button class="a2hs-close" id="a2hs-close" aria-label="Dismiss">×</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* cart badge — reads the same store the gallery writes to */
 (function () {
@@ -169,17 +218,76 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   el.classList.toggle('on', n > 0);
 })();
 
-/* color wheel / flashcards toggle — wheel iframe loads on first view */
+/* color wheel / flashcards toggle — wheel loads eagerly (it's the default
+   view now); flashcards iframe loads lazily on first switch to it */
 function ctShow(which) {
   document.getElementById('ct-wheel-btn').classList.toggle('active', which === 'wheel');
   document.getElementById('ct-cards-btn').classList.toggle('active', which === 'cards');
   document.getElementById('ct-wheel-wrap').classList.toggle('hidden', which !== 'wheel');
   document.getElementById('ct-cards-wrap').classList.toggle('hidden', which !== 'cards');
-  if (which === 'wheel') {
-    var frame = document.getElementById('ct-wheel-frame');
-    if (!frame.src) frame.src = '/color-wheel-app.html';
+  if (which === 'cards') {
+    var frame = document.getElementById('ct-cards-frame');
+    if (!frame.src) frame.src = '/color-theory-app.html';
   }
 }
+
+/* ── Add to Home Screen banner ──
+   Safari (iOS/iPadOS) has no install API — we can only show instructions.
+   Chrome/Edge on Android (and desktop) fire beforeinstallprompt, which we
+   can trigger programmatically from a real "Install" button. Either way,
+   skip it entirely if the app is already running standalone, or if the
+   person already dismissed it once on this device. */
+(function () {
+  var DISMISS_KEY = 'dna-color-wheel-a2hs-dismissed';
+  var banner = document.getElementById('a2hs');
+  var sub = document.getElementById('a2hs-sub');
+  var installBtn = document.getElementById('a2hs-install');
+  var closeBtn = document.getElementById('a2hs-close');
+
+  function isStandalone() {
+    return window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  }
+  function isIOS() {
+    return /iP(hone|od|ad)/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS reports as Mac
+  }
+  function isMobile() {
+    return isIOS() || /Android/.test(navigator.userAgent);
+  }
+
+  if (isStandalone() || localStorage.getItem(DISMISS_KEY) || !isMobile()) return;
+
+  var deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    sub.textContent = '';
+    installBtn.style.display = '';
+    banner.classList.add('show');
+  });
+
+  if (isIOS()) {
+    sub.innerHTML = 'Tap <span class="a2hs-share-icon">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 8l5-5 5 5"/><rect x="4" y="12" width="16" height="9" rx="2"/></svg>' +
+      '</span> Share, then "Add to Home Screen"';
+    banner.classList.add('show');
+  }
+
+  installBtn.addEventListener('click', function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(function () {
+      deferredPrompt = null;
+      banner.classList.remove('show');
+    });
+  });
+
+  closeBtn.addEventListener('click', function () {
+    localStorage.setItem(DISMISS_KEY, '1');
+    banner.classList.remove('show');
+  });
+})();
 </script>
 </body>
 </html>

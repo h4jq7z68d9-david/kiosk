@@ -1,0 +1,24 @@
+{
+  "name": "Color Wheel — David Nicholson",
+  "short_name": "Color Wheel",
+  "description": "An interactive color wheel and color theory study deck by David Nicholson.",
+  "start_url": "/color-theory.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/color-wheel-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/color-wheel-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
