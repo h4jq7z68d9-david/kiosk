@@ -48,13 +48,9 @@
   .needle .arm{fill:var(--ink)}
 
   .readout{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(14px,3.2vw,20px);display:flex;flex-direction:column;gap:10px}
-  .base-row{display:flex;align-items:center;gap:12px}
-  .base-row .sw{width:48px;height:48px;border-radius:11px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
-  .base-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-  .base-name{font-family:var(--display);font-weight:700;font-size:clamp(18px,4.4vw,24px);letter-spacing:-.01em}
-  .base-hex{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
 
   .rel-row{display:flex;align-items:center;gap:10px;padding-top:9px;border-top:1px solid var(--line)}
+  .rel-row:first-child{padding-top:0;border-top:none}
   .rel-label{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);width:88px;flex-shrink:0;line-height:1.25}
   .rel-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
   .rel-chip{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:42px}
@@ -141,11 +137,11 @@ function hueAtOffset(offset){
 }
 
 const RELATIONSHIPS = [
-  { label: "Complementary", offsets: [6] },
-  { label: "Analogous",     offsets: [-1, 1] },
-  { label: "Triadic",       offsets: [4, 8] },
-  { label: "Split-Comp.",   offsets: [5, 7] },
-  { label: "Tetradic",      offsets: [3, 6, 9] },
+  { label: "Complementary", offsets: [0, 6] },
+  { label: "Analogous",     offsets: [-1, 0, 1] },
+  { label: "Triadic",       offsets: [0, 4, 8] },
+  { label: "Split-Comp.",   offsets: [0, 5, 7] },
+  { label: "Tetradic",      offsets: [0, 3, 6, 9] },
 ];
 
 function tickMarks(){
@@ -199,7 +195,6 @@ function chipHtml(hue){
 }
 function updateReadout(){
   updateActiveWedge();
-  const base = hueAtOffset(0);
   const rows = RELATIONSHIPS.map(rel => {
     const chips = rel.offsets.map(o => chipHtml(hueAtOffset(o))).join('');
     return `
@@ -208,16 +203,7 @@ function updateReadout(){
         <div class="rel-chips">${chips}</div>
       </div>`;
   }).join('');
-  $('#readout').innerHTML = `
-    <div class="base-row">
-      <div class="sw" style="background:${base.hex}"></div>
-      <div>
-        <div class="base-eyebrow">Base hue</div>
-        <div class="base-name">${base.name}</div>
-        <div class="base-hex">${base.hex}</div>
-      </div>
-    </div>
-    ${rows}`;
+  $('#readout').innerHTML = rows;
 }
 
 /* ---- drag to spin the needle ---- */
