@@ -139,6 +139,28 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .a2hs-install:hover { background: var(--accent-hi); }
 .a2hs-close { background: none; border: none; color: var(--ink3); font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 6px; flex-shrink: 0; }
 .a2hs-close:hover { color: var(--ink); }
+
+/* GUESTBOOK MODAL */
+#gb-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); visibility: hidden; opacity: 0; transition: opacity 0.28s, visibility 0s linear 0.28s; display: flex; align-items: center; justify-content: center; padding: 24px; }
+#gb-overlay.on { visibility: visible; opacity: 1; transition: opacity 0.28s, visibility 0s; }
+#gb-sheet { background: #ffffff; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.7); }
+.gb-header { display: flex; align-items: center; padding: 26px 26px 14px; flex-shrink: 0; gap: 10px; }
+.gb-header h2 { font-size: 22px; font-weight: 400; letter-spacing: 0.01em; text-transform: lowercase; color: #2b3640; flex: 1; margin-bottom: 0; }
+.gb-close { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.07); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #697480; }
+.gb-scroll { flex: 1; overflow-y: auto; padding: 0 26px 32px; display: flex; flex-direction: column; gap: 14px; }
+.gb-scroll::-webkit-scrollbar { width: 0; }
+.gb-form { display: flex; flex-direction: column; gap: 12px; }
+.gb-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #697480; margin-bottom: 5px; display: block; }
+.gb-input, .gb-ta { background: rgba(255,255,255,0.7); border: 1.5px solid rgba(0,0,0,0.1); border-radius: 6px; color: #2b3640; font-family: var(--font); font-size: 16px; padding: 12px 14px; outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none; }
+.gb-input:focus, .gb-ta:focus { border-color: #aab2b9; background: #fff; }
+.gb-input::placeholder, .gb-ta::placeholder { color: #a4adb4; }
+.gb-ta { resize: none; min-height: 86px; line-height: 1.5; }
+.gb-submit { background: var(--accent); border: none; border-radius: 10px; color: #fff; padding: 15px; font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; text-transform: lowercase; cursor: pointer; width: 100%; margin-top: 4px; transition: opacity 0.15s; }
+.gb-submit:hover { opacity: 0.85; }
+
+/* TOAST */
+#toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f1f3f5; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap; transition: opacity 0.2s, transform 0.2s; }
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -184,8 +206,8 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
         <a href="/gallery.html">gallery</a>
         <a href="/originals.html">available originals</a>
         <a href="/shipping.html">shipping &amp; returns</a>
-        <a href="/color-theory.html">color theory</a>
         <button onclick="window.location='mai'+'lto:'+'david@'+'davidnicholsonart.com'">contact</button>
+        <button onclick="openGB()">guest book</button>
       </div>
     </div>
     <p class="f-legal">&copy; 2026 david nicholson</p>
@@ -205,6 +227,30 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
     </div>
   </div>
 </div>
+
+<!-- GUESTBOOK MODAL -->
+<div id="gb-overlay" onclick="gbOverlayClick(event)">
+  <div id="gb-sheet">
+    <div class="gb-header">
+      <h2>guest book</h2>
+      <button class="gb-close" onclick="closeGB()">&#x2715;</button>
+    </div>
+    <div class="gb-scroll">
+      <div class="gb-form">
+        <div><label class="gb-label" for="g-name">name</label><input class="gb-input" id="g-name" type="text" placeholder="Your name" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+        <div><label class="gb-label" for="g-email">email</label><input class="gb-input" id="g-email" type="email" placeholder="your@email.com" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
+        <div><label class="gb-label" for="g-msg">note <span style="font-weight:300;text-transform:none;letter-spacing:0;color:#aab2b9">(optional)</span></label><textarea class="gb-ta" id="g-msg" placeholder="Favourite piece, what brought you here&hellip;" spellcheck="false"></textarea></div>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
+          <input id="g-subscribe" type="checkbox" style="width:17px;height:17px;flex-shrink:0;accent-color:#2b3640;cursor:pointer;">
+          <span style="font-size:12px;color:#697480;letter-spacing:0.04em;line-height:1.4;">casually stay informed &mdash; occasional notes on new work &amp; upcoming events</span>
+        </label>
+        <button class="gb-submit" id="gb-submit-btn" onclick="submitGB()">sign the guest book</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
 /* cart badge — reads the same store the gallery writes to */
@@ -287,6 +333,49 @@ function ctShow(which) {
     banner.classList.remove('show');
   });
 })();
+
+/* GUESTBOOK */
+const LAMBDA = 'https://doqg3wcta7.execute-api.us-east-1.amazonaws.com';
+
+let gbSubmitting = false;
+function openGB() { document.getElementById('gb-overlay').classList.add('on'); }
+function closeGB() { document.getElementById('gb-overlay').classList.remove('on'); }
+function gbOverlayClick(e) { if (e.target === document.getElementById('gb-overlay')) closeGB(); }
+
+async function submitGB() {
+  if (gbSubmitting) return;
+  const name       = document.getElementById('g-name').value.trim();
+  const email      = document.getElementById('g-email').value.trim();
+  const note       = document.getElementById('g-msg').value.trim();
+  const subscribed = document.getElementById('g-subscribe').checked;
+  if (!name)                          { toast('please enter your name'); return; }
+  if (!email || !email.includes('@')) { toast('please enter a valid email'); return; }
+  gbSubmitting = true;
+  const btn = document.getElementById('gb-submit-btn');
+  btn.textContent = 'signing…'; btn.style.opacity = '0.6';
+  try {
+    const r = await fetch(LAMBDA + '/guestbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, note, subscribed }),
+    });
+    if (!r.ok) throw 0;
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-email').value = '';
+    document.getElementById('g-msg').value = '';
+    document.getElementById('g-subscribe').checked = false;
+    toast('thanks for signing!');
+    setTimeout(closeGB, 1200);
+  } catch {
+    toast('something went wrong — try again');
+  } finally {
+    gbSubmitting = false;
+    btn.textContent = 'sign the guest book'; btn.style.opacity = '';
+  }
+}
+
+let toastTimer;
+function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
 </body>
 </html>
