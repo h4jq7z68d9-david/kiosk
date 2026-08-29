@@ -286,8 +286,8 @@
 
   .empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); font-size: 14px; }
 
-  .view-toggle { display: flex; gap: 2px; background: var(--bg2); border: 1.5px solid var(--border-mid); border-radius: 8px; padding: 2px; }
-  .view-toggle-btn { font-family: var(--font); font-size: 12px; font-weight: 600; padding: 6px 14px; border: none; border-radius: 6px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; }
+  .view-toggle { display: flex; gap: 2px; background: var(--bg2); border: 1.5px solid var(--border-mid); border-radius: 8px; padding: 2px; width: 100%; }
+  .view-toggle-btn { flex: 1; font-family: var(--font); font-size: 12px; font-weight: 600; padding: 8px 14px; border: none; border-radius: 6px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; }
   .view-toggle-btn.active { background: var(--accent); color: white; }
 
   .checklist-banner { margin: 14px 24px 0; padding: 12px 16px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--accent); display: flex; flex-direction: column; gap: 6px; }
@@ -495,7 +495,7 @@
 
     <!-- ══ TAB: INVENTORY ══ -->
     <div class="tab-panel" id="tab-inventory">
-      <div style="padding:14px 24px 0">
+      <div style="padding-top:14px">
         <div class="view-toggle" id="inv-view-toggle">
           <button class="view-toggle-btn active" id="inv-view-list-btn" onclick="setInvView('list')">List</button>
           <button class="view-toggle-btn" id="inv-view-gallery-btn" onclick="setInvView('gallery')">Gallery Stock</button>
@@ -523,11 +523,9 @@
             <div class="section-title" style="margin:0">Inventory</div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
-              <button class="btn-sm" onclick="openChecklistListModal()">📋 Checklists</button>
-              <button class="btn-sm" onclick="openChecklistCreateModal()">+ Checklist</button>
-              <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV">↓ CSV</button>
-              <button class="btn-sm" onclick="openPriceListModal()">$ Price Lists</button>
-              <button class="btn-sm" onclick="printTagsForSelected()">🏷 Tags</button>
+              <button class="btn-sm" onclick="openChecklistModal()">Checklist</button>
+              <button class="btn-sm" onclick="openPriceListModal()">Price List</button>
+              <button class="btn-sm" onclick="printTagsForSelected()">Price Tags</button>
               <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
             </div>
           </div>
@@ -545,6 +543,7 @@
             <select id="dim-filter" onchange="setDimFilter(this.value)" style="font-family:var(--font);font-size:12px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-mid);border-radius:20px;background:none;color:var(--ink2);cursor:pointer;outline:none">
               <option value="">All dimensions</option>
             </select>
+            <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV" style="margin-left:auto">↓ CSV</button>
           </div>
           <div style="overflow-x:auto">
             <table>
@@ -770,7 +769,7 @@
 ════════════════════════════════════════════ -->
 
 <div class="modal-backdrop" id="add-modal" style="display:none" onclick="closeModalOnBackdrop(event,'add-modal')">
-  <div class="modal">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-head">
       <h2>Add Painting</h2>
       <button class="modal-close" onclick="closeModal('add-modal')">×</button>
@@ -808,7 +807,7 @@
 </div>
 
 <div class="modal-backdrop" id="sale-modal" style="display:none" onclick="closeModalOnBackdrop(event,'sale-modal')">
-  <div class="modal">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-head">
       <h2 id="sale-modal-title">Log Sale</h2>
       <button class="modal-close" onclick="closeModal('sale-modal')">×</button>
@@ -868,7 +867,7 @@
      EXPENSE MODAL
 ════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="exp-modal" style="display:none" onclick="closeModalOnBackdrop(event,'exp-modal')">
-  <div class="modal">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-head">
       <h2 id="exp-modal-title">Add Expense</h2>
       <button class="modal-close" onclick="closeModal('exp-modal')">×</button>
@@ -922,7 +921,7 @@
      RECURRING MODAL
 ════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="recur-modal" style="display:none" onclick="closeModalOnBackdrop(event,'recur-modal')">
-  <div class="modal">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-head">
       <h2 id="recur-modal-title">Add Recurring</h2>
       <button class="modal-close" onclick="closeModal('recur-modal')">×</button>
@@ -970,7 +969,7 @@
      MILEAGE MODAL
 ════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="mile-modal" style="display:none" onclick="closeModalOnBackdrop(event,'mile-modal')">
-  <div class="modal">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-head">
       <h2 id="mile-modal-title">Log Mileage</h2>
       <button class="modal-close" onclick="closeModal('mile-modal')">×</button>
@@ -998,15 +997,15 @@
 
 <!-- Price Lists modal -->
 <div class="modal-backdrop" id="pricelist-modal" style="display:none" onclick="closeModalOnBackdrop(event,'pricelist-modal')">
-  <div class="modal" style="max-width:560px">
+  <div class="modal" style="max-width:560px" onclick="event.stopPropagation()">
     <div class="modal-head">
       <h2>Price Lists</h2>
       <button class="modal-close" onclick="closeModal('pricelist-modal')">×</button>
     </div>
     <div class="modal-body">
-      <div class="field-row" style="align-items:end">
-        <div class="field" style="flex:1"><label>Save current prices as</label><input type="text" id="pricelist-new-name" placeholder="e.g. Fair pricing"></div>
-        <button class="btn-primary" onclick="saveNewPriceList()">Save</button>
+      <div style="display:flex;align-items:flex-end;gap:12px">
+        <div class="field" style="flex:1;margin-bottom:0"><label>Save current prices as</label><input type="text" id="pricelist-new-name" placeholder="e.g. Fair pricing"></div>
+        <button class="btn-primary" onclick="saveNewPriceList()" style="flex-shrink:0">Save</button>
       </div>
       <div id="pricelist-list" style="margin-top:18px;display:flex;flex-direction:column;gap:8px"></div>
     </div>
@@ -1017,43 +1016,34 @@
 </div>
 
 <!-- CHECKLIST: create -->
-<div class="modal-backdrop" id="checklist-create-modal" style="display:none" onclick="closeModalOnBackdrop(event,'checklist-create-modal')">
-  <div class="modal" style="max-width:560px">
+<!-- CHECKLIST: create + saved list, one modal (matches Price List pattern) -->
+<div class="modal-backdrop" id="checklist-modal" style="display:none" onclick="closeModalOnBackdrop(event,'checklist-modal')">
+  <div class="modal" style="max-width:560px" onclick="event.stopPropagation()">
     <div class="modal-head">
-      <h2>Create Checklist</h2>
-      <button class="modal-close" onclick="closeModal('checklist-create-modal')">×</button>
+      <h2>Checklist</h2>
+      <button class="modal-close" onclick="closeModal('checklist-modal')">×</button>
     </div>
     <div class="modal-body">
-      <div class="field"><label>Name</label><input type="text" id="checklist-new-title" placeholder="e.g. Fair prep — Sept"></div>
-      <div class="field"><label>Narrative</label><textarea id="checklist-new-narrative" rows="3" placeholder="e.g. prints, COA"></textarea></div>
-      <div style="margin-top:14px">
-        <div style="font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:0.04em;margin-bottom:8px">SELECTED PAINTINGS · SET PRINT QTY (OPTIONAL)</div>
-        <div id="checklist-item-rows" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto"></div>
+      <div id="checklist-create-section">
+        <div class="field"><label>Save selection as</label><input type="text" id="checklist-new-title" placeholder="e.g. Fair prep — Sept"></div>
+        <div class="field"><label>Narrative</label><textarea id="checklist-new-narrative" rows="3" placeholder="e.g. prints, COA"></textarea></div>
+        <div style="margin-top:14px">
+          <div style="font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:0.04em;margin-bottom:8px">SELECTED PAINTINGS · SET PRINT QTY (OPTIONAL)</div>
+          <div id="checklist-item-rows" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto"></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:14px">
+          <button class="btn-primary" onclick="saveNewChecklist()">Save Checklist</button>
+        </div>
       </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-cancel" onclick="closeModal('checklist-create-modal')">Cancel</button>
-      <button class="btn-primary" onclick="saveNewChecklist()">Save Checklist</button>
-    </div>
-  </div>
-</div>
-
-<!-- CHECKLIST: list -->
-<div class="modal-backdrop" id="checklist-list-modal" style="display:none" onclick="closeModalOnBackdrop(event,'checklist-list-modal')">
-  <div class="modal" style="max-width:560px">
-    <div class="modal-head">
-      <h2>Checklists</h2>
-      <button class="modal-close" onclick="closeModal('checklist-list-modal')">×</button>
-    </div>
-    <div class="modal-body">
+      <div id="checklist-empty-note" style="display:none;font-size:13px;color:var(--ink3)">Select paintings using the checkboxes on the left, then reopen Checklist to save a new one.</div>
+      <div style="font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:0.04em;margin:20px 0 8px">SAVED CHECKLISTS</div>
       <div id="checklist-list" style="display:flex;flex-direction:column;gap:8px"></div>
     </div>
     <div class="modal-foot">
-      <button class="btn-cancel" onclick="closeModal('checklist-list-modal')">Close</button>
+      <button class="btn-cancel" onclick="closeModal('checklist-modal')">Close</button>
     </div>
   </div>
 </div>
-
 
 <script>
 // ═══════════════════════════════════════════
@@ -2820,18 +2810,34 @@ async function loadChecklists() {
   checklistsLoaded = true;
 }
 
-function openChecklistCreateModal() {
-  if (!selectedIds.size) { alert('Select paintings using the checkboxes on the left, then click + Checklist.'); return; }
-  const ids = [...selectedIds];
-  const byId = Object.fromEntries(db.paintings.map(p => [p.id, p]));
-  checklistDraftItems = ids
-    .filter(id => byId[id])
-    .map(id => ({ paintingId: id, title: byId[id].title, qtyLarge: 0, qtySmall: 0 }))
-    .sort((a, b) => a.title.localeCompare(b.title));
-  document.getElementById('checklist-new-title').value = '';
-  document.getElementById('checklist-new-narrative').value = '';
-  renderChecklistItemRows();
-  document.getElementById('checklist-create-modal').style.display = 'flex';
+async function openChecklistModal() {
+  const createSection = document.getElementById('checklist-create-section');
+  const emptyNote = document.getElementById('checklist-empty-note');
+  if (selectedIds.size) {
+    const ids = [...selectedIds];
+    const byId = Object.fromEntries(db.paintings.map(p => [p.id, p]));
+    checklistDraftItems = ids
+      .filter(id => byId[id])
+      .map(id => ({ paintingId: id, title: byId[id].title, qtyLarge: 0, qtySmall: 0 }))
+      .sort((a, b) => a.title.localeCompare(b.title));
+    document.getElementById('checklist-new-title').value = '';
+    document.getElementById('checklist-new-narrative').value = '';
+    renderChecklistItemRows();
+    createSection.style.display = '';
+    emptyNote.style.display = 'none';
+  } else {
+    createSection.style.display = 'none';
+    emptyNote.style.display = '';
+  }
+
+  document.getElementById('checklist-modal').style.display = 'flex';
+  document.getElementById('checklist-list').innerHTML = '<div style="color:var(--ink3);font-size:13px">Loading…</div>';
+  try {
+    if (!checklistsLoaded) await loadChecklists();
+    renderChecklistListModal();
+  } catch (e) {
+    document.getElementById('checklist-list').innerHTML = '<div style="color:var(--red);font-size:13px">Failed to load: ' + esc(e.message) + '</div>';
+  }
 }
 
 function renderChecklistItemRows() {
@@ -2867,21 +2873,10 @@ async function saveNewChecklist() {
     const data = await api('POST', '/checklists', { title, narrative, items });
     checklists.unshift(data.checklist);
     clearSelection();
-    closeModal('checklist-create-modal');
+    closeModal('checklist-modal');
     activeChecklistId = data.checklist.id;
     renderTable();
   } catch (e) { alert('Failed to save checklist: ' + e.message); }
-}
-
-async function openChecklistListModal() {
-  document.getElementById('checklist-list-modal').style.display = 'flex';
-  document.getElementById('checklist-list').innerHTML = '<div style="color:var(--ink3);font-size:13px">Loading…</div>';
-  try {
-    if (!checklistsLoaded) await loadChecklists();
-    renderChecklistListModal();
-  } catch (e) {
-    document.getElementById('checklist-list').innerHTML = '<div style="color:var(--red);font-size:13px">Failed to load: ' + esc(e.message) + '</div>';
-  }
 }
 
 function renderChecklistListModal() {
@@ -2904,7 +2899,7 @@ function renderChecklistListModal() {
 
 function openChecklist(id) {
   activeChecklistId = id;
-  closeModal('checklist-list-modal');
+  closeModal('checklist-modal');
   setInvView('list');
   renderTable();
 }
