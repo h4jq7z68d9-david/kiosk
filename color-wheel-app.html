@@ -46,7 +46,6 @@
   .needle .hub-ring{fill:#fff;stroke:var(--ink);stroke-width:2.5}
   .needle .hub-dot{fill:var(--ink)}
   .needle .arm{fill:var(--ink)}
-  .needle .tip{fill:var(--ink);stroke:#fff;stroke-width:2}
 
   .readout{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(14px,3.2vw,20px);display:flex;flex-direction:column;gap:10px}
   .base-row{display:flex;align-items:center;gap:12px}
@@ -168,7 +167,6 @@ function renderWheel(){
     ${tickMarks()}
     <g id="needleGroup" class="needle" style="transform:rotate(${rotation}deg)">
       <path class="arm" d="M -4,-6 L 0,-92 L 4,-6 Z"></path>
-      <circle class="tip" r="6" cx="0" cy="-92"></circle>
       <circle class="hub-ring" r="12" cx="0" cy="0"></circle>
       <circle class="hub-dot" r="4" cx="0" cy="0"></circle>
     </g>`;

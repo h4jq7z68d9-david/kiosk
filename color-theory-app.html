@@ -20,7 +20,7 @@
     --shadow:0 1px 2px rgba(43,54,64,.08),0 18px 40px -14px rgba(43,54,64,.20);
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html,body{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
   body{
     margin:0;background:
       radial-gradient(120% 90% at 50% -10%,var(--wall-hi),var(--wall) 60%);
@@ -41,7 +41,7 @@
   .counter b{color:var(--ink);font-weight:500}
 
   /* ---- stage ---- */
-  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
     padding:12px clamp(16px,4vw,40px);gap:18px}
   .stage{width:min(560px,92vw);perspective:1800px}
   /* Card height is set per breakpoint rather than from a 5:3 ratio: the answer
