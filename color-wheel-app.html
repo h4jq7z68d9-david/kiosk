@@ -34,78 +34,39 @@
 
   main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:14px clamp(16px,4vw,40px) 20px;gap:16px}
 
-  .wheelsel{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-  .wsel-btn{font-family:var(--body);font-size:13px;font-weight:500;cursor:pointer;
-    border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;
-    padding:9px 18px;transition:background .15s ease,border-color .15s ease}
-  .wsel-btn:hover{background:var(--wall-hi)}
-  .wsel-btn.on{background:var(--ink);border-color:var(--ink);color:#fff}
-
   .stage{width:min(560px,92vw);display:flex;flex-direction:column;align-items:center;gap:14px}
 
-  .wheel-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
-  .hbtn{font-family:var(--body);font-size:12.5px;font-weight:500;cursor:pointer;
-    border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;
-    padding:7px 14px;transition:background .15s ease,border-color .15s ease}
-  .hbtn:hover{background:var(--wall-hi)}
-  .hbtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
-  .itoggle{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;user-select:none}
-  .itoggle input{accent-color:var(--accent);cursor:pointer}
-
-  .wheel-frame{position:relative;width:min(380px,78vw);aspect-ratio:1/1;touch-action:none}
+  .wheel-frame{position:relative;width:min(380px,78vw);aspect-ratio:1/1;touch-action:none;cursor:grab}
+  .wheel-frame:active{cursor:grabbing}
   .wheel-frame svg{width:100%;height:100%;overflow:visible}
-  .disc{cursor:grab}
-  .disc:active{cursor:grabbing}
-  .freewedge, .wedge{transition:opacity .12s ease}
-  .freewedge:hover, .wedge:hover{opacity:.88}
-  .overlay-line{fill:none;stroke:rgba(43,54,64,.55);stroke-width:1.4;pointer-events:none}
-  .overlay-line.hex{stroke-dasharray:3 4}
-  .knob{fill:var(--ink);stroke:#fff;stroke-width:2}
-  .drag-hint{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;fill:var(--muted)}
+  .wedge{cursor:pointer;transition:opacity .12s ease}
+  .wedge:hover{opacity:.88}
+  .needle{pointer-events:none}
+  .needle .hub{fill:#fff;stroke:var(--ink);stroke-width:2.5}
+  .needle .arm{stroke:var(--ink);stroke-width:4;stroke-linecap:round}
+  .needle .tip{fill:var(--ink);stroke:#fff;stroke-width:2}
 
-  .info{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(16px,3.6vw,22px);min-height:112px}
-  .info .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .info .name{font-family:var(--display);font-weight:700;font-size:clamp(19px,4.6vw,25px);letter-spacing:-.01em;margin:4px 0 8px}
-  .swrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-  .swchip{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
-  .swchip .sq{width:40px;height:40px;border-radius:8px;border:1px solid rgba(0,0,0,.12)}
-  .swchip .lbl{font-size:11px;font-weight:500;text-align:center;line-height:1.2}
-  .swchip .role{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-  .info .defn{font-size:14px;line-height:1.5;color:#2b2925;margin:0}
-  .info .tip{font-style:italic;font-size:13px;line-height:1.5;color:#4a5568;margin-top:8px}
-  .info .placeholder{font-size:13.5px;color:var(--muted);line-height:1.5}
-  .info .row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-  .info .sw{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
-  .info .hex{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .readout{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(16px,3.6vw,22px);display:flex;flex-direction:column;gap:14px}
+  .base-row{display:flex;align-items:center;gap:14px}
+  .base-row .sw{width:56px;height:56px;border-radius:12px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
+  .base-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .base-name{font-family:var(--display);font-weight:700;font-size:clamp(20px,4.8vw,26px);letter-spacing:-.01em}
+  .base-hex{font-family:var(--mono);font-size:12px;color:var(--muted)}
 
-  .mc-controls{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:16px clamp(16px,3.6vw,22px);display:none;flex-direction:column;gap:12px}
-  .mc-controls.on{display:flex}
-  .mc-row{display:flex;align-items:center;gap:12px}
-  .mc-row label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);width:64px;flex-shrink:0}
-  .mc-row input[type=range]{flex:1;accent-color:var(--accent)}
-  .mc-row .val{font-family:var(--mono);font-size:12px;color:var(--ink);width:28px;text-align:right;flex-shrink:0}
-  .mc-panels{display:flex;gap:18px;flex-wrap:wrap}
-  .mc-panel{flex:1 1 200px;min-width:180px;display:flex;flex-direction:column;gap:10px}
-  .mc-panel-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-  .mc-preview{display:flex;align-items:center;gap:12px}
-  .mc-preview .sw{width:48px;height:48px;border-radius:10px;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
-  .mc-preview .mc-hex{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
-  .mc-grid-wrap{display:flex;gap:6px;align-items:flex-start}
-  .mc-axis-v{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;padding:2px 0}
-  .mc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;flex:1}
-  .mc-cell{aspect-ratio:1/1;border-radius:3px;cursor:pointer;border:2px solid transparent;padding:0}
-  .mc-cell.active{border-color:var(--ink)}
-  .mc-axis-c{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--muted);text-align:center;margin-left:14px}
-  .mc-note{font-size:12px;color:var(--muted);line-height:1.5}
+  .rel-row{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--line)}
+  .rel-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);width:100px;flex-shrink:0;line-height:1.3}
+  .rel-chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+  .rel-chip{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:52px}
+  .rel-chip .sq{width:34px;height:34px;border-radius:7px;border:1px solid rgba(0,0,0,.12)}
+  .rel-chip .lbl{font-size:10px;font-weight:500;text-align:center;line-height:1.15;color:var(--ink)}
 
   footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px 22px;text-align:center}
   .tool-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted);max-width:480px;line-height:1.6}
 
   @media (max-width:420px){
-    .info .name{font-size:19px}
-    .hbtn{font-size:11.5px;padding:6px 10px}
-    .wheel-controls{gap:6px}
-    .wsel-btn{font-size:12px;padding:8px 14px}
+    .rel-label{width:78px;font-size:10px}
+    .rel-chip{min-width:44px}
+    .rel-chip .sq{width:28px;height:28px}
   }
 </style>
 </head>
@@ -115,50 +76,17 @@
   </header>
 
   <main>
-    <div class="wheelsel" id="wheelsel">
-      <button class="wsel-btn on" data-w="wheel">Color Wheel</button>
-      <button class="wsel-btn" data-w="munsell">Munsell Hue Circle</button>
-    </div>
-
     <div class="stage">
-      <div class="wheel-controls" id="wheelControls">
-        <button class="hbtn on" data-h="none">Free Wheel</button>
-        <button class="hbtn" data-h="complementary">Complementary</button>
-        <button class="hbtn" data-h="analogous">Analogous</button>
-        <button class="hbtn" data-h="triadic">Triadic</button>
-        <button class="hbtn" data-h="splitComp">Split-Complementary</button>
-        <button class="hbtn" data-h="tetradic">Tetradic</button>
-        <label class="itoggle"><input type="checkbox" id="ittenToggle"> Itten construction</label>
-      </div>
-
-      <div class="wheel-controls" id="mcTopControls" style="display:none">
-        <label class="itoggle"><input type="checkbox" id="mcCompareToggle"> Compare two hues</label>
-        <button class="hbtn on" data-t="A" id="mcTargetA">Wheel sets: Hue A</button>
-        <button class="hbtn" data-t="B" id="mcTargetB" style="display:none">Wheel sets: Hue B</button>
-      </div>
-
       <div class="wheel-frame" id="wheelFrame">
         <svg viewBox="-115 -115 230 230" id="wheelSvg"></svg>
       </div>
 
-      <div class="info" id="info">
-        <div class="placeholder">This is the full wheel — tap any hue to see its name, hex value, and how it's built. Pick a harmony above when you want the rotating dial.</div>
-      </div>
-
-      <div class="mc-controls" id="mcControls">
-        <div class="mc-row" id="mcValueRow">
-          <label id="mcValueLabel">Value</label>
-          <input type="range" id="mcValue" min="0" max="10" step="1" value="5">
-          <span class="val" id="mcValueVal">5</span>
-        </div>
-        <div class="mc-panels" id="mcPanels"></div>
-        <div class="mc-note">Rows step by value (light↔dark), columns step by chroma (gray↔vivid) — tap a cell to jump straight to it, or fine-tune with the sliders. This is an artistic approximation of Munsell's system for visual reference, not exact Munsell notation.</div>
-      </div>
+      <div class="readout" id="readout"></div>
     </div>
   </main>
 
   <footer>
-    <div class="tool-note" id="footNote">Tap any wedge to see it up close, or pick a harmony above to try the rotating dial.</div>
+    <div class="tool-note">Drag the needle around the wheel — or tap any hue directly — to see its relationships update live.</div>
   </footer>
 
 <script>
@@ -167,66 +95,21 @@ const $ = s => document.querySelector(s);
 /* Same 12-hue palette used throughout the flashcard deck, so the wheel and
    the cards always agree with each other. */
 const HUES12 = [
-  {name:"Red",          hex:"#E23B2E", role:"primary"},
-  {name:"Red-Orange",   hex:"#E8602C", role:"tertiary"},
-  {name:"Orange",       hex:"#F08A24", role:"secondary"},
-  {name:"Yellow-Orange",hex:"#F6B31E", role:"tertiary"},
-  {name:"Yellow",       hex:"#EFCB1E", role:"primary"},
-  {name:"Yellow-Green", hex:"#A6C523", role:"tertiary"},
-  {name:"Green",        hex:"#3FA535", role:"secondary"},
-  {name:"Blue-Green",   hex:"#1E9E8A", role:"tertiary"},
-  {name:"Blue",         hex:"#2E6DB4", role:"primary"},
-  {name:"Blue-Violet",  hex:"#4B4BA8", role:"tertiary"},
-  {name:"Violet",       hex:"#7B4BA0", role:"secondary"},
-  {name:"Red-Violet",   hex:"#B23A78", role:"tertiary"},
+  {name:"Red",          hex:"#E23B2E"},
+  {name:"Red-Orange",   hex:"#E8602C"},
+  {name:"Orange",       hex:"#F08A24"},
+  {name:"Yellow-Orange",hex:"#F6B31E"},
+  {name:"Yellow",       hex:"#EFCB1E"},
+  {name:"Yellow-Green", hex:"#A6C523"},
+  {name:"Green",        hex:"#3FA535"},
+  {name:"Blue-Green",   hex:"#1E9E8A"},
+  {name:"Blue",         hex:"#2E6DB4"},
+  {name:"Blue-Violet",  hex:"#4B4BA8"},
+  {name:"Violet",       hex:"#7B4BA0"},
+  {name:"Red-Violet",   hex:"#B23A78"},
 ];
 
-const MUNSELL10 = [
-  {code:"R",  name:"Red",           hex:"#E23B2E"},
-  {code:"YR", name:"Yellow-Red",    hex:"#F08A24"},
-  {code:"Y",  name:"Yellow",        hex:"#EFCB1E"},
-  {code:"GY", name:"Green-Yellow",  hex:"#A6C523"},
-  {code:"G",  name:"Green",         hex:"#3FA535"},
-  {code:"BG", name:"Blue-Green",    hex:"#1E9E8A"},
-  {code:"B",  name:"Blue",          hex:"#2E6DB4"},
-  {code:"PB", name:"Purple-Blue",   hex:"#4B4BA8"},
-  {code:"P",  name:"Purple",        hex:"#7B4BA0"},
-  {code:"RP", name:"Red-Purple",    hex:"#B23A78"},
-];
-
-/* Harmony templates: window positions given as wedge-offsets from a base
-   wedge (each offset is 30° of rotation). These are the shapes a physical
-   harmony-finder disc would have punched into it. */
-const ROLE_TEXT = {
-  primary:   "A primary hue — it can't be mixed from any other colors. Every other hue on the wheel is built starting here.",
-  secondary: "A secondary hue — made by mixing the two primaries on either side of it.",
-  tertiary:  "A tertiary hue — made by mixing a primary with the secondary next to it.",
-};
-
-const HARMONIES = {
-  none: { label: "Free Wheel", offsets: null },
-  complementary: { label: "Complementary", offsets: [0, 6],
-    defn: "Two hues taken from directly opposite sides of the color wheel.",
-    tip: "Mute one and let the other lead — full-strength complements can vibrate." },
-  analogous: { label: "Analogous", offsets: [-1, 0, 1],
-    defn: "Three hues that sit right next to each other on the wheel.",
-    tip: "Pick one to dominate, one to support, one as accent." },
-  triadic: { label: "Triadic", offsets: [0, 4, 8],
-    defn: "Three hues spaced evenly around the wheel, forming a triangle.",
-    tip: "Let one hue rule; use the other two as accents to avoid a circus." },
-  splitComp: { label: "Split-Complementary", offsets: [0, 5, 7],
-    defn: "A base hue, plus the two hues sitting on either side of its opposite.",
-    tip: "Ideal for a focal point: place the lone base hue where you want the eye." },
-  tetradic: { label: "Tetradic (Square)", offsets: [0, 3, 6, 9],
-    defn: "Four hues arranged as two complementary pairs, forming a square.",
-    tip: "Balance warm against cool across the four; never split evenly." },
-};
-
-let mode = 'wheel';
-let harmonyKey = 'none';
-let pickedHue = null;   // currently tapped hue in Free Wheel mode
-let showItten = false;
-let rotation = 0;       // degrees, disc rotation (0 = north, clockwise positive)
+let rotation = 0; // degrees, needle angle (0 = north/Red, clockwise positive)
 
 function polar(cx, cy, r, deg){
   const rad = (deg - 90) * Math.PI / 180;
@@ -250,135 +133,80 @@ function shortestDelta(a, b){
   if (d < -180) d += 360;
   return d;
 }
-
-/* ---- hex <-> hsl, for the Munsell value/chroma preview ---- */
-function hexToHsl(hex){
-  let r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
-  const max = Math.max(r,g,b), min = Math.min(r,g,b);
-  let h, s, l = (max+min)/2;
-  if(max===min){ h=s=0; }
-  else{
-    const d = max-min;
-    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
-    switch(max){
-      case r: h = (g-b)/d + (g<b?6:0); break;
-      case g: h = (b-r)/d + 2; break;
-      default: h = (r-g)/d + 4;
-    }
-    h *= 60;
-  }
-  return {h, s, l};
-}
-function hslToHex(h, s, l){
-  s = Math.max(0, Math.min(1,s)); l = Math.max(0, Math.min(1,l));
-  const c = (1 - Math.abs(2*l-1)) * s;
-  const x = c * (1 - Math.abs((h/60) % 2 - 1));
-  const m = l - c/2;
-  let r,g,b;
-  if(h<60){ r=c;g=x;b=0 } else if(h<120){ r=x;g=c;b=0 } else if(h<180){ r=0;g=c;b=x }
-  else if(h<240){ r=0;g=x;b=c } else if(h<300){ r=x;g=0;b=c } else { r=c;g=0;b=x }
-  const toHex = v => Math.round((v+m)*255).toString(16).padStart(2,'0');
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
-}
-
-/* ═══════════════════════════════════════════
-   COLOR WHEEL (interactive harmony dial)
-   ═══════════════════════════════════════════ */
-function renderWheelBase(){
-  const step = 30;
-  return HUES12.map((hue, idx) => {
-    const a0 = idx * step, a1 = a0 + step;
-    const cls = harmonyKey === 'none' ? 'class="freewedge" style="cursor:pointer"' : '';
-    return `<path ${cls} data-i="${idx}" d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}" stroke="#fff" stroke-width="1.5"></path>`;
-  }).join('');
-}
-function ittenOverlay(){
-  if (!showItten) return '';
-  const primaryIdx = [0,4,8];
-  const hexIdx = [0,2,4,6,8,10];
-  const midR = 65;
-  const triPts = primaryIdx.map(i => polar(0,0,midR, i*30 + 15)).map(p=>p.join(',')).join(' ');
-  const hexPts = hexIdx.map(i => polar(0,0,midR, i*30 + 15)).map(p=>p.join(',')).join(' ');
-  return `
-    <polygon class="overlay-line" points="${hexPts}"></polygon>
-    <polygon class="overlay-line hex" points="${triPts}"></polygon>`;
-}
-function discPathD(offsets){
-  // Outer ring + center hole + each window wedge, all as one evenodd path:
-  // overlapping subpaths cancel out (XOR), punching a hole at each window.
-  let d = `M ${polar(0,0,105,0).join(' ')} A 105 105 0 1 1 ${polar(0,0,105,180).join(' ')} A 105 105 0 1 1 ${polar(0,0,105,360).join(' ')} Z `;
-  d += `M ${polar(0,0,29,0).join(' ')} A 29 29 0 1 0 ${polar(0,0,29,180).join(' ')} A 29 29 0 1 0 ${polar(0,0,29,360).join(' ')} Z `;
-  offsets.forEach(off => {
-    const idx = ((off % 12) + 12) % 12;
-    const a0 = idx * 30, a1 = a0 + 30;
-    d += wedgePath(30,100,a0,a1) + ' ';
-  });
-  return d;
-}
-function renderWheel(){
-  const svg = $('#wheelSvg');
-  const h = HARMONIES[harmonyKey];
-  const discHtml = h.offsets ? `
-    <g id="discGroup" class="disc" style="transform:rotate(${rotation}deg)">
-      <path d="${discPathD(h.offsets)}" fill="#f4f1ea" fill-rule="evenodd" opacity="0.94"></path>
-      <circle class="knob" r="6" cx="0" cy="-100"></circle>
-    </g>` : '';
-  svg.innerHTML = `
-    <g id="wheelBase">${renderWheelBase()}</g>
-    ${discHtml}
-    ${ittenOverlay()}
-    <circle r="29" fill="none" stroke="rgba(43,54,64,.18)"></circle>`;
-  if (harmonyKey === 'none') {
-    svg.querySelectorAll('.freewedge').forEach(el => {
-      el.addEventListener('click', () => {
-        pickedHue = HUES12[parseInt(el.dataset.i, 10)];
-        updateWheelInfo();
-      });
-    });
-  }
-  attachDrag();
-  updateWheelInfo();
-}
 function hueAtOffset(offset){
   const idx = Math.floor((((offset*30 + rotation) % 360) + 360) % 360 / 30) % 12;
   return HUES12[idx];
 }
-function updateWheelInfo(){
-  const h = HARMONIES[harmonyKey];
-  if (harmonyKey === 'none') {
-    if (!pickedHue) {
-      $('#info').innerHTML = '<div class="placeholder">This is the full wheel — tap any hue to see its name, hex value, and how it\u2019s built. Pick a harmony above when you want the rotating dial.</div>';
-      return;
-    }
-    $('#info').innerHTML = `
-      <div class="eyebrow">Free Wheel</div>
-      <div class="row"><div class="sw" style="background:${pickedHue.hex}"></div><div class="hex">${pickedHue.hex}</div></div>
-      <div class="name" style="margin:2px 0 8px">${pickedHue.name}</div>
-      <p class="defn">${ROLE_TEXT[pickedHue.role]}</p>`;
-    return;
-  }
-  const hues = h.offsets.map(hueAtOffset);
-  const chips = hues.map(hue => `
-    <div class="swchip">
-      <div class="sq" style="background:${hue.hex}"></div>
-      <div class="lbl">${hue.name}</div>
-      <div class="role">${hue.role}</div>
-    </div>`).join('');
-  $('#info').innerHTML = `
-    <div class="eyebrow">${h.label}</div>
-    <div class="swrow">${chips}</div>
-    <p class="defn">${h.defn}</p>
-    <p class="tip">Tip: ${h.tip}</p>`;
+
+const RELATIONSHIPS = [
+  { label: "Complementary", offsets: [6] },
+  { label: "Analogous",     offsets: [-1, 1] },
+  { label: "Triadic",       offsets: [4, 8] },
+  { label: "Split-Comp.",   offsets: [5, 7] },
+  { label: "Tetradic",      offsets: [3, 6, 9] },
+];
+
+function renderWheel(){
+  const svg = $('#wheelSvg');
+  const step = 30;
+  const wedges = HUES12.map((hue, idx) => {
+    const a0 = idx * step, a1 = a0 + step;
+    return `<path class="wedge" data-i="${idx}" d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}" stroke="#fff" stroke-width="1.5"></path>`;
+  }).join('');
+  svg.innerHTML = `
+    <g id="wheelBase">${wedges}</g>
+    <g id="needleGroup" class="needle" style="transform:rotate(${rotation}deg)">
+      <line class="arm" x1="0" y1="0" x2="0" y2="-95"></line>
+      <circle class="tip" r="7" cx="0" cy="-95"></circle>
+      <circle class="hub" r="11" cx="0" cy="0"></circle>
+    </g>`;
+  svg.querySelectorAll('.wedge').forEach(el => {
+    el.addEventListener('click', () => {
+      rotation = parseInt(el.dataset.i, 10) * 30 + 15;
+      $('#needleGroup').style.transform = `rotate(${rotation}deg)`;
+      updateReadout();
+    });
+  });
+  attachDrag();
+  updateReadout();
 }
 
-/* ---- drag to rotate ---- */
+function chipHtml(hue){
+  return `
+    <div class="rel-chip">
+      <div class="sq" style="background:${hue.hex}"></div>
+      <div class="lbl">${hue.name}</div>
+    </div>`;
+}
+function updateReadout(){
+  const base = hueAtOffset(0);
+  const rows = RELATIONSHIPS.map(rel => {
+    const chips = rel.offsets.map(o => chipHtml(hueAtOffset(o))).join('');
+    return `
+      <div class="rel-row">
+        <div class="rel-label">${rel.label}</div>
+        <div class="rel-chips">${chips}</div>
+      </div>`;
+  }).join('');
+  $('#readout').innerHTML = `
+    <div class="base-row">
+      <div class="sw" style="background:${base.hex}"></div>
+      <div>
+        <div class="base-eyebrow">Base hue</div>
+        <div class="base-name">${base.name}</div>
+        <div class="base-hex">${base.hex}</div>
+      </div>
+    </div>
+    ${rows}`;
+}
+
+/* ---- drag to spin the needle ---- */
 let dragging = false, dragStartPointer = 0, dragStartRotation = 0;
 function attachDrag(){
   const frame = $('#wheelFrame');
   if (frame.dataset.bound) return;
   frame.dataset.bound = '1';
   frame.addEventListener('pointerdown', e => {
-    if (mode !== 'wheel' || harmonyKey === 'none') return;
     dragging = true;
     frame.setPointerCapture(e.pointerId);
     const rect = frame.getBoundingClientRect();
@@ -397,185 +225,15 @@ function attachDrag(){
     const nearest = Math.round(next / 30) * 30;
     if (Math.abs(shortestDelta(next, nearest)) < 4) next = nearest % 360;
     rotation = next;
-    $('#discGroup').style.transform = `rotate(${rotation}deg)`;
-    updateWheelInfo();
+    $('#needleGroup').style.transform = `rotate(${rotation}deg)`;
+    updateReadout();
   });
   const stop = () => { dragging = false; };
   frame.addEventListener('pointerup', stop);
   frame.addEventListener('pointercancel', stop);
 }
 
-/* ═══════════════════════════════════════════
-   MUNSELL HUE CIRCLE (value/chroma grid, with optional two-hue compare)
-   ═══════════════════════════════════════════ */
-let mcCompare = false;
-let mcTarget = 'A';                          // which slot the wheel click sets
-let mcHueA = null, mcHueB = null;            // selected hue per slot
-let mcValueShared = 5;                       // shared value axis (0-10)
-let mcChromaA = 8, mcChromaB = 8;            // chroma per slot (0-10)
-const MC_STEPS = [10, 8, 6, 4, 2, 0];        // grid rows, top (light) to bottom (dark)
-const MC_CSTEPS = [0, 2, 4, 6, 8, 10];       // grid columns, left (gray) to right (vivid)
-
-function renderMunsell(){
-  const svg = $('#wheelSvg');
-  const step = 36;
-  const paths = MUNSELL10.map((hue, idx) => {
-    const a0 = idx * step, a1 = a0 + step;
-    return `<path class="wedge" data-i="${idx}" d="${wedgePath(30,100,a0,a1)}" fill="${hue.hex}" stroke="#fff" stroke-width="1.5" style="cursor:pointer"></path>`;
-  }).join('');
-  svg.innerHTML = paths + `<circle r="29" fill="#fff" stroke="rgba(43,54,64,.18)"></circle>`;
-  svg.querySelectorAll('.wedge').forEach(el => {
-    el.addEventListener('click', () => selectMunsellWedge(parseInt(el.dataset.i,10)));
-  });
-  $('#info').innerHTML = '<div class="placeholder">Tap a hue to see it, then use the grid or sliders to lighten, darken, or dull it toward gray.</div>';
-  $('#mcTopControls').style.display = 'flex';
-  renderMcPanels();
-}
-function selectMunsellWedge(idx){
-  const hue = MUNSELL10[idx];
-  if (mcTarget === 'B' && mcCompare) mcHueB = hue; else mcHueA = hue;
-  $('#info').innerHTML = `
-    <div class="eyebrow">Munsell Hue</div>
-    <div class="name">${hue.name} <span style="font-family:var(--mono);font-size:14px;color:var(--muted)">(${hue.code})</span></div>
-    <div class="row"><div class="sw" style="background:${hue.hex}"></div><div class="hex">${hue.hex}</div></div>
-    <p class="defn">Use the grid or sliders below to see this hue lightened, darkened, or dulled toward gray.</p>`;
-  renderMcPanels();
-}
-function mcSwatchHex(hue, value, chroma){
-  const {h, s} = hexToHsl(hue.hex);
-  return hslToHex(h, s * (chroma / 10), value / 10);
-}
-function mcGridHtml(slot, hue, value, chroma){
-  const cells = [];
-  MC_STEPS.forEach(v => {
-    MC_CSTEPS.forEach(c => {
-      const active = v === Math.round(value/2)*2 && c === Math.round(chroma/2)*2;
-      cells.push(`<button class="mc-cell${active ? ' active' : ''}" style="background:${mcSwatchHex(hue,v,c)}" data-slot="${slot}" data-v="${v}" data-c="${c}"></button>`);
-    });
-  });
-  return `
-    <div class="mc-grid-wrap">
-      <div class="mc-axis-v">value ↑</div>
-      <div>
-        <div class="mc-grid">${cells.join('')}</div>
-        <div class="mc-axis-c">chroma →</div>
-      </div>
-    </div>`;
-}
-function mcPanelHtml(slot, hue){
-  if (!hue) {
-    return `<div class="mc-panel"><div class="mc-panel-label">Hue ${slot}</div><div class="placeholder" style="font-size:12.5px">Tap a hue on the wheel to fill this slot.</div></div>`;
-  }
-  const value = mcValueShared;
-  const chroma = slot === 'A' ? mcChromaA : mcChromaB;
-  const resultHex = mcSwatchHex(hue, value, chroma);
-  return `
-    <div class="mc-panel">
-      <div class="mc-panel-label">Hue ${slot} · ${hue.name} (${hue.code})</div>
-      <div class="mc-preview">
-        <div class="sw" style="background:${resultHex}"></div>
-        <div>
-          <div class="mc-hex">${resultHex}</div>
-          <div class="mc-hex">value ${value}/10 · chroma ${chroma}/10 (approx.)</div>
-        </div>
-      </div>
-      <div class="mc-row">
-        <label>Chroma</label>
-        <input type="range" class="mc-chroma-slider" data-slot="${slot}" min="0" max="10" step="1" value="${chroma}">
-        <span class="val" id="mcChromaVal${slot}">${chroma}</span>
-      </div>
-      ${mcGridHtml(slot, hue, value, chroma)}
-    </div>`;
-}
-function renderMcPanels(){
-  $('#mcValueLabel').textContent = mcCompare ? 'Value (both)' : 'Value';
-  $('#mcValue').value = mcValueShared;
-  $('#mcValueVal').textContent = mcValueShared;
-  const panels = [mcPanelHtml('A', mcHueA)];
-  if (mcCompare) panels.push(mcPanelHtml('B', mcHueB));
-  $('#mcPanels').innerHTML = panels.join('');
-
-  $('#mcPanels').querySelectorAll('.mc-chroma-slider').forEach(el => {
-    el.addEventListener('input', e => {
-      const slot = e.target.dataset.slot;
-      const v = parseInt(e.target.value, 10);
-      if (slot === 'A') mcChromaA = v; else mcChromaB = v;
-      renderMcPanels();
-    });
-  });
-  $('#mcPanels').querySelectorAll('.mc-cell').forEach(el => {
-    el.addEventListener('click', () => {
-      const slot = el.dataset.slot;
-      mcValueShared = parseInt(el.dataset.v, 10);
-      const c = parseInt(el.dataset.c, 10);
-      if (slot === 'A') mcChromaA = c; else mcChromaB = c;
-      renderMcPanels();
-    });
-  });
-}
-$('#mcValue').addEventListener('input', e => {
-  mcValueShared = parseInt(e.target.value, 10);
-  renderMcPanels();
-});
-$('#mcCompareToggle').addEventListener('change', e => {
-  mcCompare = e.target.checked;
-  $('#mcTargetB').style.display = mcCompare ? '' : 'none';
-  if (!mcCompare) { mcTarget = 'A'; $('#mcTargetA').classList.add('on'); $('#mcTargetB').classList.remove('on'); }
-  renderMcPanels();
-});
-$('#mcTopControls').addEventListener('click', e => {
-  const btn = e.target.closest('.hbtn');
-  if (!btn || !btn.dataset.t) return;
-  mcTarget = btn.dataset.t;
-  $('#mcTargetA').classList.toggle('on', mcTarget === 'A');
-  $('#mcTargetB').classList.toggle('on', mcTarget === 'B');
-});
-
-/* ═══════════════════════════════════════════
-   MODE / CONTROL WIRING
-   ═══════════════════════════════════════════ */
-const FOOT_NOTES = {
-  wheel: "Tap any wedge to see it up close, or pick a harmony above to try the rotating dial.",
-  wheelHarmony: "Drag the wheel like the disc on a physical color wheel — the cutout windows show you which hues make up the harmony as you spin.",
-  munsell: "Munsell adds two more axes to hue: value (light↔dark) and chroma (dull↔vivid). Pick a hue, then drag the sliders to see how the swatch shifts.",
-};
-
-function updateFootNote(){
-  if (mode === 'munsell') { $('#footNote').textContent = FOOT_NOTES.munsell; return; }
-  $('#footNote').textContent = harmonyKey === 'none' ? FOOT_NOTES.wheel : FOOT_NOTES.wheelHarmony;
-}
-
-function render(){
-  $('#wheelControls').style.display = mode === 'wheel' ? 'flex' : 'none';
-  $('#mcTopControls').style.display = mode === 'munsell' ? 'flex' : 'none';
-  $('#mcControls').classList.toggle('on', mode === 'munsell');
-  updateFootNote();
-  if (mode === 'wheel') renderWheel(); else renderMunsell();
-}
-
-$('#wheelsel').addEventListener('click', e => {
-  const btn = e.target.closest('.wsel-btn');
-  if (!btn) return;
-  mode = btn.dataset.w;
-  document.querySelectorAll('.wsel-btn').forEach(b => b.classList.toggle('on', b === btn));
-  render();
-});
-
-$('#wheelControls').addEventListener('click', e => {
-  const btn = e.target.closest('.hbtn');
-  if (!btn) return;
-  harmonyKey = btn.dataset.h;
-  document.querySelectorAll('.hbtn').forEach(b => b.classList.toggle('on', b === btn));
-  updateFootNote();
-  renderWheel();
-});
-
-$('#ittenToggle').addEventListener('change', e => {
-  showItten = e.target.checked;
-  renderWheel();
-});
-
-render();
+renderWheel();
 </script>
 </body>
 </html>
