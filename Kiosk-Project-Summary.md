@@ -827,6 +827,8 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 
 ## Key Principles
 
+- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching `color-wheel-app.html`. Covers the wheel-position mixing math, why real pigment physics (spectral.js) was tried and reverted, the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
+
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **Single-file HTML** — no frameworks, no build pipeline for HTML files, keep it that way
 - **Always ask which file** — if a request doesn’t specify which HTML file to update, ask before making changes
