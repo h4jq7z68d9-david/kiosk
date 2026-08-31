@@ -87,7 +87,22 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
 .deck-wrap { width: 100%; max-width: 880px; margin: 20px auto 8px; padding: 0 20px; }
 .deck-wrap.hidden { display: none; }
 .deck { width: 100%; height: 740px; min-height: 700px; border: 1px solid var(--border); border-radius: 12px; background: #fff; display: block; }
-.wheel-deck { height: 780px; min-height: 0; }
+/* The wheel iframe's own box is a large fixed height that JS never
+   touches — see the note further down by wheel-deck-clip. It carries no
+   border/background of its own; that's on the clipping wrapper instead,
+   since the wrapper is what's actually shaped to the visible box now. */
+.wheel-deck { height: 2600px; border: none; border-radius: 0; background: transparent; }
+/* wheel-deck-clip is the element JS actually resizes (see fitToContent).
+   iOS Safari has a real, documented quirk where resizing an <iframe>'s
+   own box can require one "wake up" tap on it before a real tap inside
+   registers — since a resize happens on nearly every interaction with
+   this app (adding a mix color, expanding a relationship, etc.), that
+   quirk turned into needing to double-tap almost everything. Resizing
+   this wrapper instead, and leaving the iframe element itself at one
+   constant height forever, sidesteps it entirely: the visible box still
+   tracks content height exactly (overflow:hidden clips the iframe's
+   unused excess), but the iframe DOM node itself never changes size. */
+.wheel-deck-clip { width: 100%; height: 780px; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
 
 /* FOOTER — full bleed, matches site chrome */
 footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20px 48px; }
@@ -104,15 +119,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   .show-title { font-size: 24px; }
   .deck-wrap { padding: 0 12px; margin-top: 16px; }
   .deck { height: 860px; min-height: 860px; border-radius: 10px; }
-  /* min-height: 0 here (not a tall fallback) — the wheel iframe's height
-     is fully JS-driven (see the fitToContent script below), which sets an
-     inline height that already overrides the `height` above. min-height
-     is a separate property JS never touched, so leaving a large one here
-     used to force the box to at least this tall no matter how short the
-     actual content was — on many phones that alone was close to the
-     whole visible screen. Only the (non-dynamic) flashcards `.deck` still
-     needs a real static height. */
-  .wheel-deck { height: 720px; min-height: 0; }
+  .wheel-deck-clip { height: 720px; border-radius: 10px; }
   .ct-toggle-btn { padding: 9px 16px; font-size: 12px; }
   footer { padding: 48px 20px 40px; }
 }
@@ -164,7 +171,9 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   </div>
 
   <div class="deck-wrap" id="ct-wheel-wrap">
-    <iframe class="deck wheel-deck" src="/color-wheel-app.html" title="interactive color wheel reference" loading="lazy"></iframe>
+    <div class="wheel-deck-clip" id="wheelDeckClip">
+      <iframe class="deck wheel-deck" src="/color-wheel-app.html" title="interactive color wheel reference" loading="lazy"></iframe>
+    </div>
   </div>
 
   <div class="deck-wrap hidden" id="ct-cards-wrap">
@@ -263,21 +272,24 @@ function ctShow(which) {
    box by a sub-pixel amount can still, in principle, ping-pong. */
 (function () {
   var frame = document.querySelector('.wheel-deck');
-  if (!frame) return;
+  var clip = document.getElementById('wheelDeckClip');
+  if (!frame || !clip) return;
   function fitToContent() {
     try {
       var doc = frame.contentDocument;
       if (!doc || !doc.documentElement) return;
       var h = doc.documentElement.scrollHeight;
       var target = h > 0 ? h + 4 : 700;
-      if (Math.abs(target - frame.getBoundingClientRect().height) < 2) return;
-      frame.style.height = target + 'px';
+      // Resize the clipping wrapper, never the iframe itself — see the
+      // wheel-deck-clip CSS comment for why.
+      if (Math.abs(target - clip.getBoundingClientRect().height) < 2) return;
+      clip.style.height = target + 'px';
     } catch (err) { /* not same-origin for some reason — CSS fallback height stays */ }
   }
   frame.addEventListener('load', function () {
     fitToContent();
     try {
-      // Deferred with rAF: mutating the iframe's height synchronously
+      // Deferred with rAF: mutating the wrapper's height synchronously
       // inside a ResizeObserver callback is the textbook way to trigger
       // "ResizeObserver loop limit exceeded" — deferring one frame keeps
       // the resize notification and the resulting DOM write in separate
