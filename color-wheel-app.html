@@ -461,10 +461,27 @@ function hslToRgb(h,s,l){
    hues; 0 = fully cancel, e.g. two exact complements at 50/50, or a full
    red/yellow/blue triad at equal thirds — both genuinely read as muddy).
    This is the same math whether 2, 3, or 4 colors are active. */
+/* Continuous color math (blend results, relationship-partner colors) is
+   deliberately anchored to the full 24-hue set — NAME_HUES/NAME_STEP,
+   fixed constants, never the display's activeHues()/stepDeg(). The
+   3/6/12/24 toggle controls how many wedges the dial *shows* and which
+   positions a needle can snap to; it was never meant to limit what the
+   app is capable of naming or coloring a blend as. A 3-hue dial only
+   offers Red/Yellow/Blue as ingredients, but Red+Yellow still needs to
+   compute as, and be called, Orange — there's no version of "keep it
+   simple" that's served by pretending Orange doesn't exist because the
+   dial only has three wedges on it. (Bug this fixes: at wheelSize 3 or 6,
+   this used to interpolate/name against only that reduced set, so a
+   secondary color would get pulled toward and mislabeled as whichever
+   primary happened to be nearest — Red+Yellow read as "Yellow," Blue+
+   Yellow as "Yellow," Red+Blue as "Blue.") */
+const NAME_HUES = HUES24;
+const NAME_STEP = 360 / 24;
+
 function wheelHslAt(deg){
   deg = ((deg % 360) + 360) % 360;
-  const sd = stepDeg(), hues = activeHues();
-  const lo = Math.floor(deg / sd) % wheelSize, hi = (lo + 1) % wheelSize, frac = (deg % sd) / sd;
+  const sd = NAME_STEP, hues = NAME_HUES;
+  const lo = Math.floor(deg / sd) % 24, hi = (lo + 1) % 24, frac = (deg % sd) / sd;
   const cLo = hexToRgb(hues[lo].hex), cHi = hexToRgb(hues[hi].hex);
   const hslLo = rgbToHsl(cLo.r, cLo.g, cLo.b), hslHi = rgbToHsl(cHi.r, cHi.g, cHi.b);
   let d = hslHi.h - hslLo.h;
@@ -503,8 +520,8 @@ function hexFromBlend(angle, magnitude){
   return rgbToHex(rgb.r, rgb.g, rgb.b);
 }
 function nearestHueNameForAngle(angle){
-  const idx = Math.round(((angle % 360) + 360) % 360 / stepDeg()) % wheelSize;
-  return activeHues()[idx].name;
+  const idx = Math.round(((angle % 360) + 360) % 360 / NAME_STEP) % 24;
+  return NAME_HUES[idx].name;
 }
 /* For a color that's been through shade()'s deliberate cool-black bias, the
    wheel-angle recipe no longer tells the whole story — Yellow darkened
@@ -514,18 +531,20 @@ function nearestHueNameForAngle(angle){
    because our own black bias is simple and controlled — tested and
    confirmed it doesn't cause the kind of cross-family jump we hit with
    spectral.js (Orange+black stays "Orange" at every tested level; only
-   Yellow's genuinely-crossed-to-green case actually renames). */
+   Yellow's genuinely-crossed-to-green case actually renames). Always
+   checked against the full 24-hue set (NAME_HUES), same reasoning as
+   wheelHslAt above — the dial can be showing 3 wedges and the name should
+   still be able to say "Yellow-Green." */
 function nearestHueNameForRawHue(h01){
   let best = 0, bestDist = Infinity;
-  const hues = activeHues();
-  for (let i = 0; i < wheelSize; i++) {
-    const c = hexToRgb(hues[i].hex);
+  for (let i = 0; i < 24; i++) {
+    const c = hexToRgb(NAME_HUES[i].hex);
     const hsl = rgbToHsl(c.r, c.g, c.b);
     let d = Math.abs(hsl.h - h01);
     if (d > 0.5) d = 1 - d;
     if (d < bestDist) { bestDist = d; best = i; }
   }
-  return hues[best].name;
+  return NAME_HUES[best].name;
 }
 /* A heavily crushed mix (two true complements, or a full primary triad)
    genuinely reads as gray/brown to the eye regardless of which hue it
