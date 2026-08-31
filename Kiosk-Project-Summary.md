@@ -533,6 +533,76 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (August 31 2026)
+
+**Color wheel: retired the iframe architecture entirely (mobile bug chain)**
+
+Started as a request to fix mobile scrolling on the color wheel tool
+inside `color-theory.html`'s "Wheel" tab, and escalated through a chain of
+narrower fixes before the actual root cause (the iframe itself) was
+addressed:
+
+- ✓ **3/6/12/24 hue-count toggle added** — `HUES3`/`HUES6` pulled from
+  `HUES12` at indices [0,4,8] (primaries) and [0,2,4,6,8,10]
+  (primaries+secondaries), same pattern as the existing `HUES24`. Default
+  changed to 6.
+- ✓ **Naming/mixing bug fixed** — at reduced hue counts (3/6), mixed
+  results were being colored *and* named against only that reduced set,
+  so e.g. Red+Yellow read as "Yellow" instead of Orange (no "Orange" in a
+  3-name vocabulary). Fixed by separating concerns: the dial's hue count
+  now only controls what you can pick as an ingredient; the actual blend
+  color and its name are always computed against the full 24-hue wheel
+  (`NAME_HUES`/`NAME_STEP` constants, independent of the display
+  `wheelSize`). Verified Red+Yellow→Orange, Yellow+Blue→Green,
+  Red+Blue→Violet.
+- ✓ **iframe resize feedback loop found and fixed** — the "fit iframe to
+  content" script and the child's own `body{min-height:100dvh}` fed each
+  other: parent sets iframe height → child's rendered height changes
+  (because it's pinned to a % of the iframe's own current height) →
+  `ResizeObserver` (watching exactly that) fires → parent sets a new
+  height → repeat, surfacing as "Uncaught Script error" spam in the
+  console, far more than the handful of edits leading up to it would
+  suggest.
+- ✓ **iOS double-tap bug found (root cause, not patched)** — resizing an
+  `<iframe>` element's own box is a known WebKit quirk that can eat the
+  next tap inside it; since this app resizes on nearly every interaction
+  (adding a mix color, expanding a relationship), that turned into
+  needing to double-tap almost everything, most visibly "+ Mix."
+- ✓ **Root cause identified: the iframe architecture itself.** Each fix
+  above solved one symptom and re-triggered another (fixing the resize
+  loop broke exact-fit sizing again; fixing sizing needed the iframe to
+  resize, which re-triggered the tap-eating bug). The three goals — box
+  exactly fits content, only the page scrolls, taps never need repeating
+  — turned out to structurally conflict as long as a same-origin iframe
+  plus JS-measured resizing was in the loop.
+- ✓ **Fix: retired `/color-wheel-app.html` as a standalone page and
+  iframe target entirely; inlined the wheel directly into
+  `color-theory.html`.** No more cross-document height measuring, no
+  `ResizeObserver`, no double-scroll, no iframe-resize tap bug — it's now
+  plain page content, sized and scrolled the same as everything else on
+  the page. Two things made this safe:
+  - `header`/`main`/`footer` (and their bare-tag CSS rules) renamed to
+    `.wheel-header`/`.wheel-main`/`.wheel-footer`, since `color-theory.html`
+    already has its own real `<main>`/`<footer>` with their own bare-tag
+    rules that would otherwise collide directly.
+  - The wheel's own `:root` CSS variables rescoped to `.wheel-app`
+    instead of global, and its entire `<script>` wrapped in one IIFE, so
+    none of its ~70 top-level functions/consts (the `$` helper included)
+    leak onto `window` and risk colliding with `color-theory.html`'s own
+    script.
+- ✓ **`Color-Wheel-App-Reference.md` and this doc updated** to point at
+  the new location (inline in `color-theory.html`) instead of the retired
+  standalone file.
+
+**Lesson for next time:** when a same-origin-iframe embed starts
+generating a chain of mobile-only bugs that each fix seems to re-trigger
+another one of, stop patching symptoms and ask whether the iframe itself
+is structurally necessary. Here it wasn't — it existed only to avoid a
+CSS selector collision, which a rename fixes in a few minutes and
+permanently removes the whole bug category.
+
+-----
+
 ## Completed This Session (July 26 2026)
 
 **Color theory study deck — new public page**
@@ -827,7 +897,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 
 ## Key Principles
 
-- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching `color-wheel-app.html`. Covers the wheel-position mixing math, why real pigment physics (spectral.js) was tried and reverted, the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
+- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. As of August 2026 the wheel is inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the wheel-position mixing math, why real pigment physics (spectral.js) was tried and reverted, the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **Single-file HTML** — no frameworks, no build pipeline for HTML files, keep it that way

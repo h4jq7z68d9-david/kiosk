@@ -2,22 +2,57 @@
 
 ## Where this lives
 
-- **`color-wheel-app.html`** — the tool itself. Single-file HTML, no build
-  pipeline, no framework. Everything in this document is about this file.
 - **`color-theory.html`** — site-chrome wrapper (nav/header/footer matching
-  the rest of the public site). Has two tabs: "Wheel" embeds
-  `color-wheel-app.html` in an iframe; "Cards" lazily loads
-  `color-theory-app.html` (a separate flashcard study deck) on first switch.
+  the rest of the public site) AND, as of August 2026, the wheel app itself.
+  Has two tabs: "Wheel" shows the wheel app inline, directly in the page —
+  no iframe; "Cards" lazily loads `color-theory-app.html` (a separate
+  flashcard study deck) into its own iframe on first switch.
 - **`color-theory-app.html`** — the flashcard deck. Not covered here; it's a
   sibling tool, not part of the wheel's own code.
 
-If you're starting a session to work on the wheel, read this document before
-diving into `color-wheel-app.html`'s source — a lot of what looks like an
-odd choice in the code (a non-neutral "black," saturation normalized to an
-oddly specific 74%, naming that reads a color's actual pixels instead of its
-recipe) is the result of real back-and-forth, not a guess. The reasoning
-matters as much as the code, because several early instincts here turned
-out to be wrong in instructive ways.
+**`color-wheel-app.html` no longer exists.** It used to be a standalone
+single-file page, embedded into `color-theory.html`'s "Wheel" tab via a
+same-origin iframe. That iframe was the site of a long, painful chain of
+mobile bugs — nested/double scrolling, a resize feedback loop
+(`ResizeObserver` triggering the very resize it was watching for, via the
+child's `min-height:100dvh` being relative to the iframe's own current
+size), and a WebKit quirk where resizing an `<iframe>` element eats the
+next tap inside it (which is why "+ Mix" needed two taps). Each fix solved
+one symptom and re-triggered another, because the root problem was
+architectural, not any one bug. The fix was to retire the iframe and the
+standalone file entirely and inline the wheel directly into
+`color-theory.html`'s markup/CSS/JS — normal page content now, sized and
+scrolled the same as everything else on the page, with no cross-document
+communication of any kind. There is now exactly one copy of this code, and
+it lives in `color-theory.html`.
+
+Two things were needed to inline it safely, both still visible in
+`color-theory.html` if you go looking:
+- **Scoping.** The wheel app's own `<header>`/`<main>`/`<footer>` tags and
+  bare-tag CSS selectors were renamed to `.wheel-header`/`.wheel-main`/
+  `.wheel-footer` classes, because the host page already has its own real
+  `<main>`/`<footer>` with their own bare-tag rules — sharing those tag
+  names would have collided directly. Its `:root` CSS variables became
+  `.wheel-app { --wall: ...; }` instead, scoped to the wheel's own wrapper
+  rather than global, even though a few of them (`--ink`, `--accent`,
+  `--accent-hi`) happen to already match the site's own tokens exactly.
+- **An IIFE around the whole script.** Every top-level `function`/`const`/
+  `let` in the wheel's script — `activeHues`, `blendAngles`, the `$`
+  helper, all of it — used to live in its own iframe's isolated global
+  scope. Inlined into the same document as `color-theory.html`'s own
+  script, those would otherwise become real globals on `window` and risk
+  colliding with it, now or in some future edit. Wrapping the whole thing
+  in `(function () { ... })();` keeps it exactly as self-contained as it
+  was as a separate file.
+
+If you're starting a session to work on the wheel, read this document
+before diving into the wheel section of `color-theory.html`'s source — a
+lot of what looks like an odd choice in the code (a non-neutral "black,"
+saturation normalized to an oddly specific 74%, naming that reads a
+color's actual pixels instead of its recipe) is the result of real
+back-and-forth, not a guess. The reasoning matters as much as the code,
+because several early instincts here turned out to be wrong in
+instructive ways.
 
 -----
 
@@ -304,8 +339,10 @@ itself gets blocked.
 
 ## If you're picking this up fresh
 
-Read this document, then skim `color-wheel-app.html`'s inline comments —
-almost every non-obvious constant or formula has a comment explaining why,
-often referencing a specific rejected alternative. If something here looks
-like it could be simplified, there's a real chance it already was simpler
-once, and got more specific for a reason. Check before changing it back.
+Read this document, then skim the wheel section of `color-theory.html`'s
+inline comments (inside the `.wheel-app` markup, CSS, and the big inlined
+IIFE near the end of the main `<script>`) — almost every non-obvious
+constant or formula has a comment explaining why, often referencing a
+specific rejected alternative. If something here looks like it could be
+simplified, there's a real chance it already was simpler once, and got
+more specific for a reason. Check before changing it back.
