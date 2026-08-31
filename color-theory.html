@@ -257,8 +257,20 @@ function ctShow(which) {
       // collapsing an expanded flashcard). Collapse first so the
       // measurement reflects the content's true natural height.
       frame.style.height = '0px';
-      var h = doc.documentElement.scrollHeight;
-      frame.style.height = (h > 0 ? h : 700) + 'px';
+      // Read scrollHeight one frame later, not synchronously. Collapsing
+      // to 0px and immediately reading back can catch mobile Safari
+      // mid-reflow and return a too-small number, which — combined with
+      // the child page no longer scrolling internally (see
+      // color-wheel-app.html) — used to clip the bottom of the app
+      // instead of just growing the box. A couple of px of slack is added
+      // on top for the same reason: better a hair of empty space than a
+      // clipped control.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          var h = doc.documentElement.scrollHeight;
+          frame.style.height = (h > 0 ? h + 4 : 700) + 'px';
+        });
+      });
     } catch (err) { /* not same-origin for some reason — CSS fallback height stays */ }
   }
   frame.addEventListener('load', function () {

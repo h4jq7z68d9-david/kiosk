@@ -39,7 +39,7 @@
   .wheel-card{width:100%;background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:clamp(14px,3.2vw,20px);display:flex;justify-content:center}
   .wheel-card-inner{display:flex;flex-direction:column;align-items:center;gap:10px}
   .wheel-toggle{display:flex;background:var(--wall-hi);border-radius:20px;padding:3px;gap:2px}
-  .wheel-toggle-btn{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 14px;border-radius:16px;border:none;background:transparent;color:var(--muted);cursor:pointer}
+  .wheel-toggle-btn{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 11px;border-radius:16px;border:none;background:transparent;color:var(--muted);cursor:pointer}
   .wheel-toggle-btn.active{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(43,54,64,.15)}
 
   .wheel-frame{position:relative;width:min(320px,66vw);aspect-ratio:1/1;touch-action:none;cursor:grab}
@@ -133,7 +133,9 @@
       <div class="wheel-card">
         <div class="wheel-card-inner">
           <div class="wheel-toggle">
-            <button class="wheel-toggle-btn active" data-size="12">12</button>
+            <button class="wheel-toggle-btn" data-size="3">3</button>
+            <button class="wheel-toggle-btn active" data-size="6">6</button>
+            <button class="wheel-toggle-btn" data-size="12">12</button>
             <button class="wheel-toggle-btn" data-size="24">24</button>
           </div>
           <div class="wheel-frame" id="wheelFrame">
@@ -208,15 +210,42 @@ const HUES24 = (() => {
   }
   return arr;
 })();
+/* HUES3 and HUES6 are not separate palettes either — same trick as HUES24,
+   just subtracting instead of interpolating. Primaries sit at HUES12
+   indices 0/4/8 (Red/Yellow/Blue, 120° apart) and secondaries at 2/6/10
+   (Orange/Green/Violet, 120° apart, offset 60° from the primaries) — both
+   already evenly spaced in the 12-hue wheel by construction, so pulling
+   them out loses no geometry: HUES3 is primaries only, HUES6 is primaries
+   + secondaries, and every position in both is pixel-identical to its
+   12-hue source, same as HUES24 is to HUES12. There is no HUES9 — 12 isn't
+   evenly divisible into a 9-step wheel, so no clean subset exists.
+   stepDeg() naturally becomes 120°/60° for these, and everything that
+   already reads through activeHues()/stepDeg() (wedges, needle snap,
+   relationships) needs no further change. The one place resolution reads
+   through the numbers directly is relationship-partner naming
+   (nearestHueNameForAngle/colorName): a Split-Comp. or Tetradic offset
+   won't always land on one of only 3 or 6 named positions, so its chip
+   gets labeled with whichever of those is nearest even though the swatch
+   itself is a true continuous blend, not that named hue. Deliberate, not
+   a bug — there's no requirement that a relationship color already exist
+   as a wedge on the current wheel, and the color itself is always
+   correct; only the label gets coarser at lower resolutions, consistent
+   with the wheel having fewer names to draw from at all. */
+const HUES3 = [0, 4, 8].map(i => HUES12[i]);
+const HUES6 = [0, 2, 4, 6, 8, 10].map(i => HUES12[i]);
+
 function activeHues(){
-  return wheelSize === 24 ? HUES24 : HUES12;
+  if (wheelSize === 24) return HUES24;
+  if (wheelSize === 6)  return HUES6;
+  if (wheelSize === 3)  return HUES3;
+  return HUES12;
 }
 function stepDeg(){
   return 360 / wheelSize;
 }
 
 let rotation = 0; // degrees, Base needle angle (0 = north/Red, clockwise positive)
-let wheelSize = 12; // 12 or 24 — toggled by the wheel-size switch
+let wheelSize = 6; // 3, 6, 12, or 24 — toggled by the wheel-size switch
 let mixing = false; // extra needles only exist once Mix is pressed
 let mixNeedles = []; // rotation angles for each additional color, in the order added
 let mixRatios = []; // mixRatios[i] = share of mixNeedles[i] when it was blended in; same length as mixNeedles
@@ -640,12 +669,14 @@ function renderWheel(){
   renderNeedles();
   updateAll();
 }
-/* Switching resolution: every 12-hue position is still exactly the same
-   color at 24-hue (it's a strict superset), so 12->24 is lossless. Going
-   24->12 can move a needle that was sitting on a tertiary hue to its
-   nearest surviving 12-hue position — an expected, visible consequence of
-   reducing resolution, not a bug. Re-snap happens after wheelSize changes
-   so snappedAngle uses the new resolution's step size. */
+/* Switching resolution: 3/6/12/24 are all nested subsets of one another
+   (see HUES3/HUES6/HUES24 above), so moving to a higher resolution never
+   changes a needle's actual color. Moving to a lower one can — a needle
+   sitting on a hue that doesn't survive at the new resolution (e.g. Orange
+   on the way from 12 down to 3) snaps to its nearest surviving position.
+   Expected, visible consequence of reducing resolution, not a bug.
+   Re-snap happens after wheelSize changes so snappedAngle uses the new
+   resolution's step size. */
 function setWheelSize(newSize){
   wheelSize = newSize;
   rotation = snappedAngle(rotation);
@@ -1300,6 +1331,22 @@ function attachDrag(){
 
 renderWheel();
 updatePalette();
+
+/* When embedded in color-theory.html's iframe, the parent page measures
+   this document's scrollHeight and sets the iframe's box to match exactly
+   — the parent, not this document, is meant to own scrolling. If this
+   document can also scroll internally (the overflow-y:auto set above,
+   which exists so the page still scrolls normally when opened on its own
+   at /color-wheel-app.html), any small mismatch between the parent's
+   measured height and the real content height shows up as a second,
+   awkward nested scrollbar inside a too-short box instead of the whole
+   page scrolling. Turning off this document's own scrolling only when
+   it's actually inside a frame removes that failure mode entirely: worst
+   case is a couple of px of clipping, never a stuck inner window. */
+if (window.self !== window.top) {
+  document.documentElement.style.overflowY = 'hidden';
+  document.body.style.overflowY = 'hidden';
+}
 </script>
 </body>
 </html>
