@@ -1365,6 +1365,18 @@ updatePalette();
 if (window.self !== window.top) {
   document.documentElement.style.overflowY = 'hidden';
   document.body.style.overflowY = 'hidden';
+  // min-height:100dvh (set in the CSS above, for standalone visits) ties
+  // this page's rendered height to whatever height the iframe currently
+  // happens to be. That's a real feedback loop once the parent starts
+  // measuring and resizing the iframe: parent sets a height -> that
+  // changes this document's own viewport -> which changes this
+  // document's rendered height because of min-height:100dvh -> the
+  // parent's ResizeObserver (watching exactly that) fires -> parent sets
+  // a new height -> repeat, indefinitely. Dropping the floor here means
+  // this document's real height is intrinsic to its content only, never
+  // to the size of the box it happens to be sitting in, so the parent's
+  // measurement is stable and the loop has nothing to feed on.
+  document.body.style.minHeight = '0';
 }
 </script>
 </body>
