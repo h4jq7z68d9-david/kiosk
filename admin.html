@@ -1784,7 +1784,7 @@ function renderTable() {
     const smSold = p.sales.filter(s => s.type === 'small').length;
     const clItem = checklist ? checklist.items.find(i => i.paintingId === p.id) : null;
     const qtyBadge = clItem && (clItem.qtyLarge || clItem.qtySmall)
-      ? `<span style="font-size:11px;color:var(--accent-ink);font-family:var(--mono);margin-left:8px;white-space:nowrap">${clItem.qtyLarge ? clItem.qtyLarge + 'L ' : ''}${clItem.qtySmall ? clItem.qtySmall + 'S' : ''}</span>`
+      ? `<span style="font-size:11px;font-weight:700;color:white;background:var(--accent);border-radius:999px;padding:2px 8px;margin-left:8px;white-space:nowrap;font-family:var(--mono)">${clItem.qtyLarge ? clItem.qtyLarge + 'L ' : ''}${clItem.qtySmall ? clItem.qtySmall + 'S' : ''}</span>`
       : '';
     const titleCell = clItem
       ? `<label style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="event.stopPropagation()">
@@ -3013,16 +3013,28 @@ async function addSelectionToChecklist() {
   } catch (e) { alert('Failed to add to checklist: ' + e.message); }
 }
 
+function resetFiltersAndSelection() {
+  dimFilter = '';
+  typeFilter = '';
+  statusFilter = '';
+  momsFilterOn = false;
+  galleryFilterOn = false;
+  zeroLargeFilterOn = false;
+  zeroSmallFilterOn = false;
+  clearSelection();
+  updateFilterChips();
+}
+
 function openChecklist(id) {
   activeChecklistId = id;
+  resetFiltersAndSelection();
   closeModal('checklist-modal');
   setInvView('list');
-  renderTable();
 }
 
 function closeChecklist() {
   activeChecklistId = null;
-  renderTable();
+  resetFiltersAndSelection();
 }
 
 async function deleteChecklist(id) {
