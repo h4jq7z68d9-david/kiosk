@@ -164,6 +164,7 @@
   .tab-btn.active { color: var(--accent-ink); border-bottom-color: var(--accent); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
+  .tab-select { display: none; }
 
   /* ── TABLE SECTION ── */
   .table-section { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
@@ -392,6 +393,17 @@
     .col-hide { display: none; }
     .rate-note { display: none; }
   }
+
+  @media (max-width: 600px) {
+    .tab-bar { display: none; }
+    .tab-select {
+      display: block; width: 100%; font-family: var(--font); font-size: 15px; font-weight: 500;
+      padding: 10px 12px; border: 1.5px solid var(--border-mid); border-radius: 8px;
+      background: white; color: var(--accent-ink); margin-bottom: 16px;
+    }
+    .filter-bar { row-gap: 10px; }
+    .filter-chip, .btn-sm, .btn-primary { padding-top: 8px; padding-bottom: 8px; }
+  }
 </style>
 </head>
 <body>
@@ -430,6 +442,13 @@
       <button class="tab-btn" id="tab-saleslog-btn" onclick="switchTab('saleslog')">Sales Log</button>
       <button class="tab-btn" id="tab-booth-btn" onclick="switchTab('booth')">Booth Planner</button>
     </div>
+    <select class="tab-select" id="tab-select" onchange="switchTab(this.value)">
+      <option value="dashboard">Dashboard</option>
+      <option value="inventory">Inventory</option>
+      <option value="expenses">Expenses &amp; Mileage</option>
+      <option value="saleslog">Sales Log</option>
+      <option value="booth">Booth Planner</option>
+    </select>
 
     <!-- ══ TAB: DASHBOARD ══ -->
     <div class="tab-panel active" id="tab-dashboard">
@@ -1312,6 +1331,8 @@ function switchTab(tab) {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
+  const sel = document.getElementById('tab-select');
+  if (sel) sel.value = tab;
   if (tab === 'expenses' && !expLoaded) loadExpenses();
   else if (tab === 'expenses') renderExpenses();
   else if (tab === 'saleslog') renderSalesLog();
@@ -3352,6 +3373,8 @@ const isPWA = !!window.navigator.standalone;
 if (isPWA) {
   document.getElementById('tab-dashboard-btn').style.display = 'none';
   document.getElementById('tab-inventory-btn').style.display = 'none';
+  const tsel = document.getElementById('tab-select');
+  if (tsel) { tsel.querySelector('option[value="dashboard"]').remove(); tsel.querySelector('option[value="inventory"]').remove(); }
   switchTab('expenses');
 }
 
