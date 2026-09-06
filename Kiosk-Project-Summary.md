@@ -383,12 +383,15 @@ All are single-file, no framework — intentional, keep it that way.
 
 - All paintings sortable by title, year, price, rounded price
 - Filters: Never sold, Sold, Original available, Low print stock, Mom doesn’t have
+- **Prints filter mode** — Prints/Originals chips reveal a Sold/Unsold sub-filter; Prints mode additionally reveals "0 large" / "0 small" boolean chips (added September 2026) filtering to `stock.large === 0` / `stock.small === 0`; all combinable with dimension/moms/gallery filters
 - Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom’s Prints checkbox) + sale history
+- **Row expand indicator** — flat blue chevron (rotates 90° open), replaced the old muted `▶` triangle glyph September 2026
 - Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net; art fair channel tracks state (KS/MO)
 - Stock +/− buttons autosave immediately (floor at 0)
 - Logging a new print sale automatically decrements the matching size stock by 1 (can go negative — intentional)
 - **🏷 Tags button** in Inventory tab header: opens a printable Avery 5371/5871 price tag sheet (3.5×2”, 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
 - CSV export: title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
+- **Gallery Stock tab sort (September 2026)** — rows with any print stock at the selected gallery now sort to the top (by title), zero-stock rows sink below (still dimmed); previously the list was alphabetical only regardless of stock
 
 **Expense features:**
 
@@ -399,7 +402,7 @@ All are single-file, no framework — intentional, keep it that way.
 - Receipt files stored in S3 under `receipts/` prefix, served via CloudFront at `https://davidnicholsonart.com/receipts/...`
 - Receipt filename convention: `{date}_{amount}_{category}.{ext}` — e.g. `2026-04-08_145.00_printing.jpg`
 - Receipt links are publicly accessible — safe to share in CSV with accountant
-- 📎 icon appears inline in description column on mobile so receipts are tappable without hidden column
+- Flat blue expand icon (inline SVG, `ICON_EXPAND` constant) appears inline in description column on mobile so receipts are tappable without hidden column — replaced the 📎 emoji September 2026 as part of a pass removing all 3D/emoji glyphs from admin.html (receipt-view, lightbox Share, and PDF-message icons all now flat inline SVGs colored `var(--accent-ink)` on light backgrounds / white on the dark lightbox overlay)
 - Amount column always visible (not hidden on mobile)
 - Description column hidden in PWA mode to keep rows clean
 - CSV export: date, category, description, amount, receipt URL — receipt URLs are clickable CloudFront links
@@ -530,6 +533,24 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ## On the Horizon
 
 - **Newsletter + mailing list manager** — MailerLite vs. custom SES; `/unsubscribe` endpoint; low priority
+
+-----
+
+## Completed This Session (September 6 2026)
+
+**admin.html — inventory filters + flat icon pass**
+
+- ✓ **"0 large" / "0 small" filter chips** — appear alongside Sold/Unsold when Prints mode is active (`typeFilter==='prints'`); filter to `stock.large===0` / `stock.small===0`; reset when switching type filters; combinable with all existing filters.
+- ✓ **All emoji/3D icons replaced with flat inline SVGs** — new `ICON_EXPAND`, `ICON_SHARE`, `ICON_CHEVRON`, `ICON_FILE` constants near the top of the main `<script>` block (currentColor-based, so callers set color via CSS). Replaced: 📎 (receipt view → expand icon, `var(--accent-ink)` blue), ⬆️ (lightbox Share → share-nodes icon, left white on the dark overlay — navy would nearly vanish there), 📄 (PDF message → file outline icon, also white on dark overlay).
+- ✓ **Inventory row expand indicator redesigned** — went through two iterations before landing: first a maximize/minimize icon pair (swapped on open state), then per feedback that pattern read as unintuitive, replaced with a rotating chevron (`ICON_CHEVRON`, rotates 90° open) — the conventional accordion pattern, closest match to the original behavior of the `▶` glyph it replaced.
+- ✓ **Gallery Stock tab now sorts stocked prints to the top** — two-tier sort (any stock at that gallery first, by title; zero-stock below, by title, still dimmed) instead of pure alphabetical.
+- ✓ **Admin SW cache key bumped to `dna-admin-v41`** — required since admin.html changed.
+
+**booth.html — Shuffle and Align buttons**
+
+- ✓ **Align button** — re-packs each wall's *existing* pieces into a top-aligned grid (`packWallGrid()`): fills left-to-right with a 4" gap (`GRID_GAP_IN` constant), wraps to a new row (4" gap) when a piece won't fit, row height = tallest piece in that row. Doesn't reassign walls, just tidies. Confirmed working after one round of live testing; gap is a single easy-to-tune constant if 4" reads wrong on an actual wall (David: "may have to look into again with testing").
+- ✓ **Shuffle button** — pools every currently-placed piece across all walls, Fisher-Yates shuffles them, redistributes round-robin across walls (skipping a wall if the piece is wider than it), then runs the same `packWallGrid()` on each wall so the result never overlaps. Chosen over pure-random-position placement per David's preference (spread out, no overlaps, since the tool already has overlap-flagging elsewhere but that's not what he wanted here).
+- ✓ **Design note for future reference** — hamburger icon was considered and rejected for the row-expand indicator (see admin.html above) because it's conventionally "open a nav menu," not "expand this row" — worth remembering if it comes up again elsewhere in the site.
 
 -----
 
@@ -759,6 +780,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - ✓ **IAM** — `dna-kiosk-role` inline policy `booth-layouts-access`: GetItem, PutItem, DeleteItem, Scan on `dna-booth-layouts` table.
 - ✓ **Prints tab simplified** — removed the four color-coded tier sections (Out of Stock red, Low Stock yellow, etc.). Prints now render as one sortable flat table; only controls are the two checkboxes (0 large / 0 small). Tier grouping was redundant once the stock columns are visible.
 - ✓ **atGallery in `/originals`** — Lambda now scans `dna-paintings` in parallel, builds a gallery set by squareId + normalized title, tags each painting `atGallery: true` if matched. Booth planner filters these out; originals.html behavior unchanged (still shows them).
+- ✓ **Shuffle / Align (September 2026)** — see "Completed This Session (September 6 2026)" below.
 
 ## Completed This Session (June 1 2026)
 
@@ -913,7 +935,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v30`; bump in `admin-sw.js` after every admin.html change
+- **Admin SW cache key** — currently `dna-admin-v41`; bump in `admin-sw.js` after every admin.html change
 - **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
