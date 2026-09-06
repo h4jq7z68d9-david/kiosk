@@ -575,6 +575,7 @@
                   <th style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
                   <th style="width:28px"></th>
                   <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
+                  <th id="th-qty" style="display:none">Print qty</th>
                   <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
                   <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
                   <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
@@ -1765,6 +1766,9 @@ function renderTable() {
     const idSet = new Set(checklist.items.map(i => i.paintingId));
     list = list.filter(p => idSet.has(p.id));
   }
+  const thQty = document.getElementById('th-qty');
+  if (thQty) thQty.style.display = checklist ? '' : 'none';
+  const colCount = checklist ? 13 : 12;
   list = sortedPaintings(list);
   lastRenderedIds = list.map(p => p.id);
   ['title','year','dims','cost','retail'].forEach(f => {
@@ -1773,7 +1777,7 @@ function renderTable() {
   });
   const tbody = document.getElementById('table-body');
   updateSelectionUi(list);
-  if (!list.length) { tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state">No paintings found.</div></td></tr>'; return; }
+  if (!list.length) { tbody.innerHTML = `<tr><td colspan="${colCount}"><div class="empty-state">No paintings found.</div></td></tr>`; return; }
   let rows = '';
   list.forEach(p => {
     const c = cost(p), r = retail(p);
@@ -1783,13 +1787,13 @@ function renderTable() {
     const lgSold = p.sales.filter(s => s.type === 'large').length;
     const smSold = p.sales.filter(s => s.type === 'small').length;
     const clItem = checklist ? checklist.items.find(i => i.paintingId === p.id) : null;
-    const qtyBadge = clItem && (clItem.qtyLarge || clItem.qtySmall)
-      ? `<span style="font-size:11px;font-weight:700;color:white;background:var(--accent);border-radius:999px;padding:2px 8px;margin-left:8px;white-space:nowrap;font-family:var(--mono)">${clItem.qtyLarge ? clItem.qtyLarge + 'L ' : ''}${clItem.qtySmall ? clItem.qtySmall + 'S' : ''}</span>`
+    const qtyCell = checklist
+      ? `<td class="mono">${clItem && (clItem.qtyLarge || clItem.qtySmall) ? `${clItem.qtyLarge ? clItem.qtyLarge + 'L ' : ''}${clItem.qtySmall ? clItem.qtySmall + 'S' : ''}` : '—'}</td>`
       : '';
     const titleCell = clItem
       ? `<label style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="event.stopPropagation()">
            <input type="checkbox" ${clItem.done ? 'checked' : ''} onchange="toggleChecklistItemDone('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
-           <strong style="${clItem.done ? 'text-decoration:line-through;color:var(--ink3)' : ''}">${esc(p.title)}</strong>${qtyBadge}
+           <strong style="${clItem.done ? 'text-decoration:line-through;color:var(--ink3)' : ''}">${esc(p.title)}</strong>
          </label>`
       : `<strong>${esc(p.title)}</strong>`;
     rows += `
@@ -1797,6 +1801,7 @@ function renderTable() {
         <td onclick="event.stopPropagation()"><input type="checkbox" class="row-select" ${selectedIds.has(p.id)?'checked':''} onchange="toggleRowSelect('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></td>
         <td><span class="expand-arrow ${isOpen?'open':''}">${ICON_CHEVRON}</span></td>
         <td>${titleCell}</td>
+        ${qtyCell}
         <td class="dim col-hide">${p.month ? p.month.slice(0,3)+' ' : ''}${p.year}</td>
         <td class="mono col-hide">${p.width}×${p.height}</td>
         <td class="mono">$${c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
@@ -1811,7 +1816,7 @@ function renderTable() {
       const monthOpts = ['','January','February','March','April','May','June','July','August','September','October','November','December']
         .map(m => `<option value="${m}" ${p.month===m?'selected':''}>${m||'—'}</option>`).join('');
       rows += `
-        <tr class="expand-row"><td colspan="12"><div class="expand-inner">
+        <tr class="expand-row"><td colspan="${colCount}"><div class="expand-inner">
           <div class="sub-title" style="margin-bottom:12px">Painting Details</div>
           <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">TITLE</div><input type="text" value="${esc(p.title)}" id="edit-title-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
