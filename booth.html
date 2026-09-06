@@ -114,6 +114,8 @@
     <button class="btn" id="btnOpenLoad">Open saved</button>
     <button class="btn" id="reload">Reload catalog</button>
     <button class="btn" id="btnWalls">Walls</button>
+    <button class="btn" id="btnShuffle">Shuffle</button>
+    <button class="btn" id="btnAlign">Align</button>
     <button class="btn" id="clear">Clear walls</button>
     <span class="status" id="status"></span>
   </div>
@@ -366,6 +368,42 @@ function clampPieces(){
     p.yIn=Math.max(0,Math.min(w.hIn-p.h,p.yIn));
   }));
 }
+
+// ---------- align / shuffle ----------
+const GRID_GAP_IN=4; // spacing between pieces and between rows
+function packWallGrid(wall,pieces){
+  let x=0,y=0,rowH=0;
+  pieces.forEach(pc=>{
+    if(x>0&&x+pc.w>wall.wIn){ x=0; y+=rowH+GRID_GAP_IN; rowH=0; }
+    pc.xIn=x; pc.yIn=y;
+    x+=pc.w+GRID_GAP_IN;
+    rowH=Math.max(rowH,pc.h);
+  });
+}
+function alignWalls(){
+  WALLS.forEach(w=>{ if(w.pieces.length) packWallGrid(w,w.pieces); });
+  clampPieces(); renderAllPieces();
+}
+function shuffleFisherYates(arr){
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+function shuffleWalls(){
+  const all=WALLS.flatMap(w=>w.pieces);
+  if(!all.length) return;
+  shuffleFisherYates(all);
+  WALLS.forEach(w=>w.pieces=[]);
+  // distribute round-robin starting from a random wall, skipping walls too narrow for a piece
+  let start=Math.floor(Math.random()*WALLS.length);
+  all.forEach(pc=>{
+    let idx=start, attempts=0;
+    while(pc.w>WALLS[idx].wIn&&attempts<WALLS.length){ idx=(idx+1)%WALLS.length; attempts++; }
+    WALLS[idx].pieces.push(pc);
+    start=(start+1)%WALLS.length;
+  });
+  WALLS.forEach(w=>packWallGrid(w,w.pieces));
+  clampPieces(); renderAllPieces(); renderList();
+}
 function setWallWidth(i,ft){ WALLS[i].wIn=ft*FT; clampPieces(); buildScene(); }
 function setAllHeights(ft){ WALLS.forEach(w=>w.hIn=ft*FT); clampPieces(); buildScene(); }
 function resetWalls(){
@@ -562,6 +600,8 @@ $('listNext').addEventListener('click', () => { $('list').scrollLeft += 210; });
 $('reload').addEventListener('click', load);
 $('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=null; renderAllPieces(); renderList(); });
 $('btnWalls').addEventListener('click', openWallsPanel);
+$('btnShuffle').addEventListener('click', shuffleWalls);
+$('btnAlign').addEventListener('click', alignWalls);
 $('btnCloseWalls').addEventListener('click', closeWallsPanel);
 $('btnResetWalls').addEventListener('click', resetWalls);
 let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
