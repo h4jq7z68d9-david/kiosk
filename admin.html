@@ -244,7 +244,7 @@
   .sale-del:hover { color: var(--red); }
   .no-sales { font-size: 13px; color: var(--ink3); font-style: italic; }
   .expand-actions { display: flex; gap: 8px; }
-  .expand-arrow { font-size: 10px; color: var(--ink3); transition: transform 0.15s; display: inline-block; }
+  .expand-arrow { color: var(--accent-ink); display: inline-flex; align-items: center; transition: transform 0.15s; }
   .expand-arrow.open { transform: rotate(90deg); }
 
   /* ── MODALS ── */
@@ -536,6 +536,10 @@
             <span id="status-filter-group" style="display:none;gap:6px">
               <button class="filter-chip" id="fc-status-sold"   onclick="setStatusFilter('sold')">Sold</button>
               <button class="filter-chip" id="fc-status-unsold" onclick="setStatusFilter('unsold')">Unsold</button>
+            </span>
+            <span id="zero-stock-filter-group" style="display:none;gap:6px">
+              <button class="filter-chip" id="fc-zero-large" onclick="toggleBoolFilter('zeroLarge')">0 large</button>
+              <button class="filter-chip" id="fc-zero-small" onclick="toggleBoolFilter('zeroSmall')">0 small</button>
             </span>
             <span style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
             <button class="filter-chip" id="fc-no-moms"    onclick="toggleBoolFilter('moms')">Mom doesn't have</button>
@@ -1055,6 +1059,12 @@ let sessionToken = null;
 const API_BASE = 'https://davidnicholsonart.com/admin';
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
+// Flat icon SVGs (replace old 3D emoji glyphs) — currentColor so callers set color via CSS
+const ICON_EXPAND = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+const ICON_SHARE = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><line x1="8.7" y1="10.7" x2="15.3" y2="7.3"/><line x1="8.7" y1="13.3" x2="15.3" y2="16.7"/></svg>';
+const ICON_CHEVRON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>';
+const ICON_FILE = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>';
+
 const IRS_RATE_BY_YEAR = {
   2024: 0.67,
   2025: 0.70,
@@ -1206,6 +1216,8 @@ let typeFilter = '';   // '' | 'prints' | 'originals'
 let statusFilter = ''; // '' | 'sold' | 'unsold'
 let momsFilterOn = false;
 let galleryFilterOn = false;
+let zeroLargeFilterOn = false;
+let zeroSmallFilterOn = false;
 let invView = 'list'; // 'list' | 'gallery'
 let selectedIds = new Set();
 let checklists = [];
@@ -1445,6 +1457,8 @@ function sortedPaintings(list) {
 function setTypeFilter(t) {
   typeFilter = typeFilter === t ? '' : t;
   statusFilter = ''; // reset status when switching/clearing type
+  zeroLargeFilterOn = false; // reset zero-stock toggles too
+  zeroSmallFilterOn = false;
   updateFilterChips();
   renderTable();
 }
@@ -1454,8 +1468,10 @@ function setStatusFilter(s) {
   renderTable();
 }
 function toggleBoolFilter(f) {
-  if (f === 'moms')    momsFilterOn = !momsFilterOn;
-  if (f === 'gallery') galleryFilterOn = !galleryFilterOn;
+  if (f === 'moms')      momsFilterOn = !momsFilterOn;
+  if (f === 'gallery')   galleryFilterOn = !galleryFilterOn;
+  if (f === 'zeroLarge') zeroLargeFilterOn = !zeroLargeFilterOn;
+  if (f === 'zeroSmall') zeroSmallFilterOn = !zeroSmallFilterOn;
   updateFilterChips();
   renderTable();
 }
@@ -1489,6 +1505,12 @@ function updateFilterChips() {
   const elUnsold = document.getElementById('fc-status-unsold');
   if (elSold)   elSold.classList.toggle('active', statusFilter === 'sold');
   if (elUnsold) elUnsold.classList.toggle('active', statusFilter === 'unsold');
+  const zeroGroup = document.getElementById('zero-stock-filter-group');
+  if (zeroGroup) zeroGroup.style.display = typeFilter === 'prints' ? 'inline-flex' : 'none';
+  const elZeroLg = document.getElementById('fc-zero-large');
+  const elZeroSm = document.getElementById('fc-zero-small');
+  if (elZeroLg) elZeroLg.classList.toggle('active', zeroLargeFilterOn);
+  if (elZeroSm) elZeroSm.classList.toggle('active', zeroSmallFilterOn);
   const elMoms = document.getElementById('fc-no-moms');
   const elGal  = document.getElementById('fc-at-gallery');
   if (elMoms) elMoms.classList.toggle('active', momsFilterOn);
@@ -1502,6 +1524,8 @@ function applyFilter(list) {
     const printSaleCount = p => (p.sales||[]).filter(s => s.type === 'large' || s.type === 'small').length;
     if (statusFilter === 'sold')   list = list.filter(p => printSaleCount(p) > 0);
     if (statusFilter === 'unsold') list = list.filter(p => printSaleCount(p) === 0);
+    if (zeroLargeFilterOn) list = list.filter(p => (p.stock?.large||0) === 0);
+    if (zeroSmallFilterOn) list = list.filter(p => (p.stock?.small||0) === 0);
   } else if (typeFilter === 'originals') {
     if (statusFilter === 'sold')   list = list.filter(p => p.originalAvail === false);
     if (statusFilter === 'unsold') list = list.filter(p => p.originalAvail === true);
@@ -1743,7 +1767,7 @@ function renderTable() {
     rows += `
       <tr class="painting-row" onclick="toggleExpand('${p.id}')">
         <td onclick="event.stopPropagation()"><input type="checkbox" class="row-select" ${selectedIds.has(p.id)?'checked':''} onchange="toggleRowSelect('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></td>
-        <td><span class="expand-arrow ${isOpen?'open':''}">▶</span></td>
+        <td><span class="expand-arrow ${isOpen?'open':''}">${ICON_CHEVRON}</span></td>
         <td>${titleCell}</td>
         <td class="dim col-hide">${p.month ? p.month.slice(0,3)+' ' : ''}${p.year}</td>
         <td class="mono col-hide">${p.width}×${p.height}</td>
@@ -1930,14 +1954,14 @@ function renderExpTable() {
   tbody.innerHTML = list.map(e => {
     const amt = Number(e.amount||0);
     const receiptInline = e.receiptUrl
-      ? `<button onclick="openReceiptLightbox('${esc(e.receiptUrl)}', event)" style="font-size:12px;color:var(--accent-ink);background:none;border:none;cursor:pointer;margin-left:6px;padding:0;font-family:var(--font)" title="View receipt">📎</button>`
+      ? `<button onclick="openReceiptLightbox('${esc(e.receiptUrl)}', event)" style="font-size:12px;color:var(--accent-ink);background:none;border:none;cursor:pointer;margin-left:6px;padding:0;font-family:var(--font)" title="View receipt">${ICON_EXPAND}</button>`
       : '';
     return `<tr onclick="openEditExpModal('${e.id}')" style="cursor:pointer">
       <td class="mono dim">${e.date || '—'}</td>
       <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
       <td style="font-size:13px;color:var(--ink2)">${isPWA ? '' : esc(e.desc||'')}${receiptInline}</td>
       <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td class="col-hide"><button class="receipt-link" onclick="openReceiptLightbox('${esc(e.receiptUrl||'')}', event)" style="${e.receiptUrl?'':'display:none'}">📎 receipt</button>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
+      <td class="col-hide"><button class="receipt-link" onclick="openReceiptLightbox('${esc(e.receiptUrl||'')}', event)" style="${e.receiptUrl?'':'display:none'}">${ICON_EXPAND} receipt</button>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
     </tr>`;
   }).join('');
 }
@@ -3231,11 +3255,17 @@ function renderGalleryStock() {
 
   const rows = db.paintings
     .filter(p => !p.marketItem)
-    .slice()
-    .sort((a, b) => a.title.localeCompare(b.title))
     .map(p => {
       const rec = stockByPainting[p.id] || { paintingId: p.id, galleryName: gallery, stockSm: 0, stockLg: 0, id: null };
       return { ...rec, title: p.title };
+    })
+    .sort((a, b) => {
+      const aTotal = (Number(a.stockSm)||0) + (Number(a.stockLg)||0);
+      const bTotal = (Number(b.stockSm)||0) + (Number(b.stockLg)||0);
+      const aHas = aTotal > 0 ? 0 : 1;
+      const bHas = bTotal > 0 ? 0 : 1;
+      if (aHas !== bHas) return aHas - bHas; // in-stock rows first
+      return a.title.localeCompare(b.title);
     });
 
   // Summary — only count paintings with any stock
@@ -3333,7 +3363,7 @@ if ('serviceWorker' in navigator) {
 <div id="receipt-lightbox" role="dialog" aria-modal="true">
   <div id="receipt-lightbox-toolbar">
     <button id="receipt-lightbox-close" onclick="closeReceiptLightbox()" aria-label="Close">✕</button>
-    <button id="receipt-lightbox-share" onclick="shareReceipt()" aria-label="Share">⬆️ Share</button>
+    <button id="receipt-lightbox-share" onclick="shareReceipt()" aria-label="Share"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><line x1="8.7" y1="10.7" x2="15.3" y2="7.3"/><line x1="8.7" y1="13.3" x2="15.3" y2="16.7"/></svg> Share</button>
   </div>
   <img id="receipt-lightbox-img" src="" alt="Receipt" style="display:none">
   <div id="receipt-lightbox-pdf-msg" style="display:none"></div>
@@ -3359,7 +3389,7 @@ function openReceiptLightbox(url, event) {
     img.style.display = 'none';
     img.src = '';
     msg.style.display = '';
-    msg.innerHTML = '📄 PDF receipt<br><br><a href="' + url + '" target="_blank" rel="noopener">Open in browser ↗</a><br><br><small style="color:rgba(255,255,255,0.5)">Tap Share to save to iCloud</small>';
+    msg.innerHTML = ICON_FILE + ' PDF receipt<br><br><a href="' + url + '" target="_blank" rel="noopener">Open in browser ↗</a><br><br><small style="color:rgba(255,255,255,0.5)">Tap Share to save to iCloud</small>';
     // Share is still possible — we'll fetch the blob
     shareBtn.style.display = '';
   } else {
