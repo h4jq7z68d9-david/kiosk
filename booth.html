@@ -383,7 +383,11 @@ function packWallGrid(wall,pieces){
   });
 }
 function alignWalls(){
-  WALLS.forEach(w=>{ if(w.pieces.length) packWallGrid(w,w.pieces); });
+  WALLS.forEach(w=>{
+    if(!w.pieces.length) return;
+    const ordered=[...w.pieces].sort((a,b)=>(a.yIn-b.yIn)||(a.xIn-b.xIn));
+    packWallGrid(w,ordered);
+  });
   clampPieces(); renderAllPieces();
 }
 function shuffleFisherYates(arr){
