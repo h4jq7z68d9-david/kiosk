@@ -382,11 +382,13 @@ function packWallGrid(wall,pieces){
     rowH=Math.max(rowH,pc.h);
   });
 }
+const SNAP_GRID_IN=3; // grid cell size in inches for Align (Windows-icon-style snap)
 function alignWalls(){
   WALLS.forEach(w=>{
-    if(!w.pieces.length) return;
-    const ordered=[...w.pieces].sort((a,b)=>(a.yIn-b.yIn)||(a.xIn-b.xIn));
-    packWallGrid(w,ordered);
+    w.pieces.forEach(pc=>{
+      pc.xIn=Math.round(pc.xIn/SNAP_GRID_IN)*SNAP_GRID_IN;
+      pc.yIn=Math.round(pc.yIn/SNAP_GRID_IN)*SNAP_GRID_IN;
+    });
   });
   clampPieces(); renderAllPieces();
 }
