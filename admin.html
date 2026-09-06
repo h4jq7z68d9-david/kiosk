@@ -1048,14 +1048,20 @@
     </div>
     <div class="modal-body">
       <div id="checklist-create-section">
-        <div class="field"><label>Save selection as</label><input type="text" id="checklist-new-title" placeholder="e.g. Fair prep — Sept"></div>
-        <div class="field"><label>Narrative</label><textarea id="checklist-new-narrative" rows="3" placeholder="e.g. prints, COA"></textarea></div>
+        <div id="checklist-add-target-banner" style="display:none;margin-bottom:12px;padding:10px 12px;background:var(--bg2);border:1.5px solid var(--accent);border-radius:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <span>Adding to <strong id="checklist-add-target-title"></strong></span>
+          <a href="#" onclick="cancelAddToChecklist();return false" style="color:var(--ink3);text-decoration:underline;white-space:nowrap">save as new instead</a>
+        </div>
+        <div id="checklist-new-fields">
+          <div class="field"><label>Save selection as</label><input type="text" id="checklist-new-title" placeholder="e.g. Fair prep — Sept"></div>
+          <div class="field"><label>Narrative</label><textarea id="checklist-new-narrative" rows="3" placeholder="e.g. prints, COA"></textarea></div>
+        </div>
         <div style="margin-top:14px">
           <div style="font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:0.04em;margin-bottom:8px">SELECTED PAINTINGS · SET PRINT QTY (OPTIONAL)</div>
           <div id="checklist-item-rows" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto"></div>
         </div>
         <div style="display:flex;justify-content:flex-end;margin-top:14px">
-          <button class="btn-primary" onclick="saveNewChecklist()">Save Checklist</button>
+          <button class="btn-primary" id="checklist-submit-btn" onclick="submitChecklistAction()">Save Checklist</button>
         </div>
       </div>
       <div id="checklist-empty-note" style="display:none;font-size:13px;color:var(--ink3)">Select paintings using the checkboxes on the left, then reopen Checklist to save a new one.</div>
@@ -1242,6 +1248,7 @@ let selectedIds = new Set();
 let checklists = [];
 let checklistsLoaded = false;
 let activeChecklistId = null;
+let addTargetChecklistId = null; // set when adding current selection into an existing checklist rather than creating new
 let checklistDraftItems = []; // [{paintingId, title, qtyLarge, qtySmall}] while building a new checklist
 let lastRenderedIds = [];
 let activeFilter = null, expandedId = null;
@@ -2858,6 +2865,7 @@ async function loadChecklists() {
 async function openChecklistModal() {
   const createSection = document.getElementById('checklist-create-section');
   const emptyNote = document.getElementById('checklist-empty-note');
+  addTargetChecklistId = null;
   if (selectedIds.size) {
     const ids = [...selectedIds];
     const byId = Object.fromEntries(db.paintings.map(p => [p.id, p]));
@@ -2868,6 +2876,7 @@ async function openChecklistModal() {
     document.getElementById('checklist-new-title').value = '';
     document.getElementById('checklist-new-narrative').value = '';
     renderChecklistItemRows();
+    updateChecklistModeUi();
     createSection.style.display = '';
     emptyNote.style.display = 'none';
   } else {
@@ -2931,15 +2940,77 @@ function renderChecklistListModal() {
     const done = cl.items.filter(i => i.done).length;
     const when = cl.updatedAt || cl.createdAt;
     const dateStr = when ? new Date(when).toLocaleDateString() : '';
+    const addBtn = selectedIds.size
+      ? `<button class="btn-sm" onclick="startAddToChecklist('${cl.id}')">+ Add selected (${selectedIds.size})</button>`
+      : '';
     return `<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border-mid);border-radius:8px">
       <div style="flex:1;min-width:0">
         <div style="font-weight:600;font-size:13px;color:var(--ink)">${esc(cl.title)}</div>
         <div style="font-size:11px;color:var(--ink3)">${done}/${cl.items.length} done${dateStr ? ' · saved ' + dateStr : ''}</div>
       </div>
+      ${addBtn}
       <button class="btn-sm" onclick="openChecklist('${cl.id}')">Open</button>
       <button class="btn-sm danger" onclick="deleteChecklist('${cl.id}')">Delete</button>
     </div>`;
   }).join('');
+}
+
+function updateChecklistModeUi() {
+  const banner = document.getElementById('checklist-add-target-banner');
+  const fields = document.getElementById('checklist-new-fields');
+  const btn = document.getElementById('checklist-submit-btn');
+  if (addTargetChecklistId) {
+    const cl = checklists.find(c => c.id === addTargetChecklistId);
+    document.getElementById('checklist-add-target-title').textContent = cl ? cl.title : '';
+    banner.style.display = 'flex';
+    fields.style.display = 'none';
+    btn.textContent = 'Add to Checklist';
+  } else {
+    banner.style.display = 'none';
+    fields.style.display = '';
+    btn.textContent = 'Save Checklist';
+  }
+}
+
+function startAddToChecklist(id) {
+  const cl = checklists.find(c => c.id === id);
+  if (!cl) return;
+  const existingIds = new Set(cl.items.map(i => i.paintingId));
+  const byId = Object.fromEntries(db.paintings.map(p => [p.id, p]));
+  const newIds = [...selectedIds].filter(pid => !existingIds.has(pid));
+  if (!newIds.length) { alert('All selected paintings are already in that checklist.'); return; }
+  addTargetChecklistId = id;
+  checklistDraftItems = newIds
+    .filter(pid => byId[pid])
+    .map(pid => ({ paintingId: pid, title: byId[pid].title, qtyLarge: 0, qtySmall: 0 }))
+    .sort((a, b) => a.title.localeCompare(b.title));
+  renderChecklistItemRows();
+  updateChecklistModeUi();
+}
+
+function cancelAddToChecklist() {
+  addTargetChecklistId = null;
+  updateChecklistModeUi();
+}
+
+function submitChecklistAction() {
+  return addTargetChecklistId ? addSelectionToChecklist() : saveNewChecklist();
+}
+
+async function addSelectionToChecklist() {
+  const cl = checklists.find(c => c.id === addTargetChecklistId);
+  if (!cl) return;
+  const newItems = checklistDraftItems.map(it => ({ ...it, done: false }));
+  const mergedItems = [...cl.items, ...newItems];
+  try {
+    await api('PUT', '/checklists/' + cl.id, { items: mergedItems });
+    cl.items = mergedItems;
+    clearSelection();
+    addTargetChecklistId = null;
+    closeModal('checklist-modal');
+    activeChecklistId = cl.id;
+    renderTable();
+  } catch (e) { alert('Failed to add to checklist: ' + e.message); }
 }
 
 function openChecklist(id) {
