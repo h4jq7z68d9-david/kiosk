@@ -524,6 +524,19 @@
       <!-- ── VIEW: LIST ── -->
       <div id="inv-view-list">
         <div id="checklist-banner" style="display:none"></div>
+        <div id="count-banner" class="checklist-banner" style="display:none">
+          <div class="checklist-banner-top">
+            <div style="flex:1;min-width:160px">
+              <div style="font-weight:700;font-size:14px">Take inventory</div>
+              <div style="font-size:12px;color:var(--ink2);margin-top:2px">Tap + as you find each print. Counts overwrite stock live — paintings you don't touch are left alone.</div>
+              <input type="text" id="count-search" placeholder="Search title…" oninput="renderTable()" style="margin-top:8px;width:100%;max-width:260px;font-family:var(--font);font-size:13px;padding:6px 10px;border:1.5px solid var(--border-mid);border-radius:6px">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+              <span class="checklist-progress" id="count-progress">0 counted</span>
+              <button class="btn-sm" onclick="finishInventoryCount()">✓ Finish</button>
+            </div>
+          </div>
+        </div>
         <div class="rate-bar" style="border-top-left-radius:0;border-top-right-radius:0;margin-bottom:0">
           <label>Price / sq in</label>
           <div class="rate-input-wrap">
@@ -543,6 +556,7 @@
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
               <button class="btn-sm" onclick="openChecklistModal()">Checklist</button>
+              <button class="btn-sm" onclick="startInventoryCount()">Take Inventory</button>
               <button class="btn-sm" onclick="openPriceListModal()">Price List</button>
               <button class="btn-sm" onclick="printTagsForSelected()">Price Tags</button>
               <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
@@ -575,7 +589,11 @@
                   <th style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
                   <th style="width:28px"></th>
                   <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
-                  <th id="th-qty" style="display:none">Print qty</th>
+                  <th id="th-qty-small" style="display:none">Print small</th>
+                  <th id="th-qty-large" style="display:none">Print large</th>
+                  <th id="th-complete" style="display:none">Complete</th>
+                  <th id="th-count-small" style="display:none">Count small</th>
+                  <th id="th-count-large" style="display:none">Count large</th>
                   <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
                   <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
                   <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
@@ -1251,6 +1269,8 @@ let checklistsLoaded = false;
 let activeChecklistId = null;
 let addTargetChecklistId = null; // set when adding current selection into an existing checklist rather than creating new
 let checklistDraftItems = []; // [{paintingId, title, qtyLarge, qtySmall}] while building a new checklist
+let countModeOn = false;
+let countSession = {}; // { [paintingId]: { large: n, small: n } } — only holds paintings actually touched this session
 let lastRenderedIds = [];
 let activeFilter = null, expandedId = null;
 let salePaintingId = null, editSaleId = null;
@@ -1760,15 +1780,30 @@ function renderTable() {
   const checklist = activeChecklistId ? checklists.find(c => c.id === activeChecklistId) : null;
   if (!checklist) activeChecklistId = null;
   renderChecklistBanner(checklist);
+  updateCountBannerUi();
 
-  let list = applyFilter((db.paintings || []).filter(p => !p.marketItem));
-  if (checklist) {
-    const idSet = new Set(checklist.items.map(i => i.paintingId));
-    list = list.filter(p => idSet.has(p.id));
+  let list;
+  if (countModeOn) {
+    const q = (document.getElementById('count-search')?.value || '').trim().toLowerCase();
+    list = (db.paintings || []).filter(p => !p.marketItem && (!q || p.title.toLowerCase().includes(q)));
+  } else {
+    list = applyFilter((db.paintings || []).filter(p => !p.marketItem));
+    if (checklist) {
+      const idSet = new Set(checklist.items.map(i => i.paintingId));
+      list = list.filter(p => idSet.has(p.id));
+    }
   }
-  const thQty = document.getElementById('th-qty');
-  if (thQty) thQty.style.display = checklist ? '' : 'none';
-  const colCount = checklist ? 13 : 12;
+  const thQtySmall = document.getElementById('th-qty-small');
+  const thQtyLarge = document.getElementById('th-qty-large');
+  const thComplete = document.getElementById('th-complete');
+  const thCountSmall = document.getElementById('th-count-small');
+  const thCountLarge = document.getElementById('th-count-large');
+  if (thQtySmall) thQtySmall.style.display = checklist ? '' : 'none';
+  if (thQtyLarge) thQtyLarge.style.display = checklist ? '' : 'none';
+  if (thComplete) thComplete.style.display = checklist ? '' : 'none';
+  if (thCountSmall) thCountSmall.style.display = countModeOn ? '' : 'none';
+  if (thCountLarge) thCountLarge.style.display = countModeOn ? '' : 'none';
+  const colCount = checklist ? 15 : (countModeOn ? 14 : 12);
   list = sortedPaintings(list);
   lastRenderedIds = list.map(p => p.id);
   ['title','year','dims','cost','retail'].forEach(f => {
@@ -1787,21 +1822,39 @@ function renderTable() {
     const lgSold = p.sales.filter(s => s.type === 'large').length;
     const smSold = p.sales.filter(s => s.type === 'small').length;
     const clItem = checklist ? checklist.items.find(i => i.paintingId === p.id) : null;
-    const qtyCell = checklist
-      ? `<td class="mono">${clItem && (clItem.qtyLarge || clItem.qtySmall) ? `${clItem.qtyLarge ? clItem.qtyLarge + 'L ' : ''}${clItem.qtySmall ? clItem.qtySmall + 'S' : ''}` : '—'}</td>`
+    const stepper = (field) => `<div class="stock-cell">
+        <button class="stock-btn" onclick="adjChecklistQty(event,'${p.id}','${field}',-1)">−</button>
+        <span class="stock-num">${clItem[field]||0}</span>
+        <button class="stock-btn" onclick="adjChecklistQty(event,'${p.id}','${field}',1)">+</button>
+      </div>`;
+    const qtySmallCell = checklist ? `<td>${clItem ? stepper('qtySmall') : ''}</td>` : '';
+    const qtyLargeCell = checklist ? `<td>${clItem ? stepper('qtyLarge') : ''}</td>` : '';
+    const completeCell = checklist
+      ? `<td onclick="event.stopPropagation()">${clItem ? `<input type="checkbox" ${clItem.done ? 'checked' : ''} onchange="toggleChecklistItemDone('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">` : ''}</td>`
       : '';
+    const countStepper = (field) => {
+      const val = countSession[p.id] && countSession[p.id][field] != null ? countSession[p.id][field] : null;
+      return `<div class="stock-cell">
+        <button class="stock-btn" onclick="adjCount(event,'${p.id}','${field}',-1)">−</button>
+        <span class="stock-num">${val==null?'—':val}</span>
+        <button class="stock-btn" onclick="adjCount(event,'${p.id}','${field}',1)">+</button>
+      </div>`;
+    };
+    const countSmallCell = countModeOn ? `<td>${countStepper('small')}</td>` : '';
+    const countLargeCell = countModeOn ? `<td>${countStepper('large')}</td>` : '';
     const titleCell = clItem
-      ? `<label style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="event.stopPropagation()">
-           <input type="checkbox" ${clItem.done ? 'checked' : ''} onchange="toggleChecklistItemDone('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">
-           <strong style="${clItem.done ? 'text-decoration:line-through;color:var(--ink3)' : ''}">${esc(p.title)}</strong>
-         </label>`
+      ? `<strong style="${clItem.done ? 'text-decoration:line-through;color:var(--ink3)' : ''}">${esc(p.title)}</strong>`
       : `<strong>${esc(p.title)}</strong>`;
     rows += `
       <tr class="painting-row" onclick="toggleExpand('${p.id}')">
         <td onclick="event.stopPropagation()"><input type="checkbox" class="row-select" ${selectedIds.has(p.id)?'checked':''} onchange="toggleRowSelect('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></td>
         <td><span class="expand-arrow ${isOpen?'open':''}">${ICON_CHEVRON}</span></td>
         <td>${titleCell}</td>
-        ${qtyCell}
+        ${qtySmallCell}
+        ${qtyLargeCell}
+        ${completeCell}
+        ${countSmallCell}
+        ${countLargeCell}
         <td class="dim col-hide">${p.month ? p.month.slice(0,3)+' ' : ''}${p.year}</td>
         <td class="mono col-hide">${p.width}×${p.height}</td>
         <td class="mono">$${c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
@@ -3018,6 +3071,58 @@ async function addSelectionToChecklist() {
   } catch (e) { alert('Failed to add to checklist: ' + e.message); }
 }
 
+function updateCountBannerUi() {
+  const el = document.getElementById('count-banner');
+  const filterBar = document.getElementById('filter-bar');
+  if (!el) return;
+  el.style.display = countModeOn ? 'flex' : 'none';
+  if (countModeOn && filterBar) filterBar.style.display = 'none';
+  else if (!countModeOn && !activeChecklistId && filterBar) filterBar.style.display = '';
+  const prog = document.getElementById('count-progress');
+  if (prog) prog.textContent = Object.keys(countSession).length + ' counted';
+}
+
+function startInventoryCount() {
+  activeChecklistId = null; // mutually exclusive with checklist mode
+  countModeOn = true;
+  countSession = {};
+  closeModal('checklist-modal');
+  setInvView('list');
+  resetFiltersAndSelection();
+  const search = document.getElementById('count-search');
+  if (search) search.value = '';
+  renderTable();
+}
+
+function finishInventoryCount() {
+  const touched = Object.keys(countSession).length;
+  countModeOn = false;
+  countSession = {};
+  renderTable();
+  if (touched) alert(touched + ' painting' + (touched === 1 ? '' : 's') + ' recounted.');
+}
+
+async function adjCount(e, paintingId, field, delta) {
+  e.stopPropagation();
+  const p = db.paintings.find(x => x.id === paintingId);
+  if (!p) return;
+  if (!countSession[paintingId]) countSession[paintingId] = {};
+  const cur = countSession[paintingId][field] != null ? countSession[paintingId][field] : 0;
+  const next = Math.max(0, cur + delta);
+  const prevStock = p.stock[field];
+  countSession[paintingId][field] = next;
+  p.stock[field] = next;
+  renderTable(); renderCards();
+  try {
+    await api('PUT', `/paintings/${p.id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '', galleryStockNo: p.galleryStockNo || '' });
+  } catch (err) {
+    countSession[paintingId][field] = cur;
+    p.stock[field] = prevStock;
+    renderTable(); renderCards();
+    alert('Failed to save count: ' + err.message);
+  }
+}
+
 function resetFiltersAndSelection() {
   dimFilter = '';
   typeFilter = '';
@@ -3032,6 +3137,7 @@ function resetFiltersAndSelection() {
 
 function openChecklist(id) {
   activeChecklistId = id;
+  countModeOn = false;
   resetFiltersAndSelection();
   closeModal('checklist-modal');
   setInvView('list');
@@ -3053,18 +3159,49 @@ async function deleteChecklist(id) {
   } catch (e) { alert('Failed to delete checklist: ' + e.message); }
 }
 
+async function adjChecklistQty(e, paintingId, field, delta) {
+  e.stopPropagation();
+  const cl = checklists.find(c => c.id === activeChecklistId);
+  if (!cl) return;
+  const item = cl.items.find(i => i.paintingId === paintingId);
+  if (!item) return;
+  item[field] = Math.max(0, (item[field] || 0) + delta);
+  renderTable();
+  try {
+    await api('PUT', '/checklists/' + cl.id, { items: cl.items });
+  } catch (err) {
+    item[field] = Math.max(0, item[field] - delta);
+    renderTable();
+    alert('Failed to save: ' + err.message);
+  }
+}
+
 async function toggleChecklistItemDone(paintingId, done) {
   const cl = checklists.find(c => c.id === activeChecklistId);
   if (!cl) return;
   const item = cl.items.find(i => i.paintingId === paintingId);
   if (!item) return;
+  const p = db.paintings.find(x => x.id === paintingId);
+  const prevDone = item.done, prevQtyLarge = item.qtyLarge, prevQtySmall = item.qtySmall;
+  const prevStockLarge = p ? p.stock.large : null, prevStockSmall = p ? p.stock.small : null;
   item.done = done;
-  renderChecklistBanner(cl);
+  let stockChanged = false;
+  if (done && !prevDone && p) {
+    if (item.qtyLarge) { p.stock.large = (p.stock.large || 0) + item.qtyLarge; stockChanged = true; }
+    if (item.qtySmall) { p.stock.small = (p.stock.small || 0) + item.qtySmall; stockChanged = true; }
+    item.qtyLarge = 0;
+    item.qtySmall = 0;
+  }
+  renderChecklistBanner(cl); renderTable(); renderCards();
   try {
+    if (stockChanged && p) {
+      await api('PUT', `/paintings/${p.id}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '', galleryStockNo: p.galleryStockNo || '' });
+    }
     await api('PUT', '/checklists/' + cl.id, { items: cl.items });
   } catch (e) {
-    item.done = !done; // revert on failure
-    renderTable();
+    item.done = prevDone; item.qtyLarge = prevQtyLarge; item.qtySmall = prevQtySmall;
+    if (p) { p.stock.large = prevStockLarge; p.stock.small = prevStockSmall; }
+    renderTable(); renderCards();
     alert('Failed to save: ' + e.message);
   }
 }
