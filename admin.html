@@ -563,6 +563,7 @@
             </div>
           </div>
           <div class="filter-bar" id="filter-bar">
+            <input type="text" id="inv-search" placeholder="Search title…" oninput="renderTable()" style="font-family:var(--font);font-size:13px;padding:5px 10px;border:1.5px solid var(--border-mid);border-radius:20px;min-width:160px">
             <span class="filter-bar-label">Filter</span>
             <button class="filter-chip" id="fc-type-prints"    onclick="setTypeFilter('prints')">Prints</button>
             <button class="filter-chip" id="fc-type-originals" onclick="setTypeFilter('originals')">Originals</button>
@@ -652,6 +653,7 @@
           <div class="table-header">
             <div class="section-title" style="margin:0">Expenses</div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <input type="text" id="exp-search" placeholder="Search description…" oninput="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
               <select id="exp-year-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer"></select>
               <select id="exp-cat-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
                 <option value="">All categories</option>
@@ -758,6 +760,7 @@
           <div class="table-header">
             <div class="section-title" style="margin:0">Sales Log</div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <input type="text" id="sl-search" placeholder="Search title…" oninput="renderSalesLog()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
               <input type="date" id="sl-from" onchange="renderSalesLog()" style="font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
               <span style="font-size:12px;color:var(--ink3)">to</span>
               <input type="date" id="sl-to" onchange="renderSalesLog()" style="font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
@@ -1566,6 +1569,8 @@ function updateFilterChips() {
   if (elGal)  elGal.classList.toggle('active', galleryFilterOn);
 }
 function applyFilter(list) {
+  const q = (document.getElementById('inv-search')?.value || '').trim().toLowerCase();
+  if (q) list = list.filter(p => (p.title || '').toLowerCase().includes(q));
   if (dimFilter) list = list.filter(p => `${p.width}×${p.height}` === dimFilter);
   if (momsFilterOn)    list = list.filter(p => !p.momsHas);
   if (galleryFilterOn) list = list.filter(p => !!p.atGallery);
@@ -2013,9 +2018,11 @@ function renderExpCards() {
 function getExpList() {
   const yearFilter = document.getElementById('exp-year-filter').value;
   const catFilter  = document.getElementById('exp-cat-filter').value;
+  const q = (document.getElementById('exp-search')?.value || '').trim().toLowerCase();
   let list = expState.expenses.slice();
   if (yearFilter) list = list.filter(e => (e.date||'').startsWith(yearFilter));
   if (catFilter)  list = list.filter(e => e.category === catFilter);
+  if (q) list = list.filter(e => (e.desc||'').toLowerCase().includes(q));
   list.sort((a, b) => {
     let av = a[expSortField] ?? '', bv = b[expSortField] ?? '';
     if (expSortField === 'amount') { av = Number(av); bv = Number(bv); }
@@ -3131,6 +3138,8 @@ function resetFiltersAndSelection() {
   galleryFilterOn = false;
   zeroLargeFilterOn = false;
   zeroSmallFilterOn = false;
+  const invSearch = document.getElementById('inv-search');
+  if (invSearch) invSearch.value = '';
   clearSelection();
   updateFilterChips();
 }
@@ -3384,9 +3393,11 @@ function getSalesLogRows() {
   const to      = document.getElementById('sl-to')?.value || '';
   const chanFil = document.getElementById('sl-channel')?.value || '';
   const stateFil= document.getElementById('sl-state')?.value || '';
+  const q       = (document.getElementById('sl-search')?.value || '').trim().toLowerCase();
 
   const rows = [];
   for (const p of (db.paintings || [])) {
+    if (q && !(p.title || '').toLowerCase().includes(q)) continue;
     for (const s of (p.sales || [])) {
       if (from && s.date && s.date < from) continue;
       if (to   && s.date && s.date > to)   continue;
@@ -3441,6 +3452,7 @@ function renderSalesLog() {
 }
 
 function clearSalesLogFilters() {
+  document.getElementById('sl-search').value = '';
   document.getElementById('sl-from').value = '';
   document.getElementById('sl-to').value = '';
   document.getElementById('sl-channel').value = '';
