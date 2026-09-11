@@ -427,6 +427,7 @@
     .chart-bubble-row { flex-direction: column; }
     .chart-stat-box { width: 100%; }
     .field-row, .field-row3 { grid-template-columns: 1fr; }
+    .cat-badge { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
   }
 </style>
 </head>
@@ -712,7 +713,7 @@
                 <tr>
                   <th onclick="expSortBy('date')">Date <span class="sort-arrow" id="exp-sort-date"></span></th>
                   <th onclick="expSortBy('category')">Category <span class="sort-arrow" id="exp-sort-category"></span></th>
-                  <th>Description</th>
+                  <th class="mobile-hide">Description</th>
                   <th onclick="expSortBy('amount')">Amount <span class="sort-arrow" id="exp-sort-amount"></span></th>
                   <th class="col-hide">Receipt</th>
                   <th style="width:32px"></th>
@@ -742,7 +743,7 @@
               <thead>
                 <tr>
                   <th>Category</th>
-                  <th>Description</th>
+                  <th class="mobile-hide">Description</th>
                   <th>Amount</th>
                   <th class="mobile-hide">Day</th>
                   <th class="mobile-hide">Start</th>
@@ -2097,7 +2098,7 @@ function renderExpTable() {
     return `<tr onclick="openEditExpModal('${e.id}')" style="cursor:pointer">
       <td class="mono dim">${e.date || '—'}</td>
       <td><span class="cat-badge ${CAT_CLASS[e.category]||'cat-other'}">${esc(e.category)}</span></td>
-      <td style="font-size:13px;color:var(--ink2)">${isPWA ? '' : esc(e.desc||'')}${receiptInline}</td>
+      <td class="mobile-hide" style="font-size:13px;color:var(--ink2)">${isPWA ? '' : esc(e.desc||'')}${receiptInline}</td>
       <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
       <td class="col-hide"><button class="receipt-link" onclick="openReceiptLightbox('${esc(e.receiptUrl||'')}', event)" style="${e.receiptUrl?'':'display:none'}">${ICON_EXPAND} receipt</button>${!e.receiptUrl?'<span class="receipt-none">no receipt</span>':''}</td>
     </tr>`;
@@ -2343,7 +2344,7 @@ function renderRecurTable() {
       : `<button onclick="toggleRecurring('${r.id}', event)" style="font-size:11px;font-weight:600;color:var(--ink3);background:none;border:1.5px solid var(--border-mid);border-radius:6px;padding:3px 9px;cursor:pointer;font-family:var(--font)">Off</button>`;
     return `<tr onclick="openEditRecurModal('${r.id}')" style="cursor:pointer${r.active?'':';opacity:.55'}">
       <td><span class="cat-badge ${CAT_CLASS[r.category]||'cat-other'}">${esc(r.category)}</span></td>
-      <td style="font-size:13px;color:var(--ink2)">${esc(r.desc||'')}</td>
+      <td class="mobile-hide" style="font-size:13px;color:var(--ink2)">${esc(r.desc||'')}</td>
       <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
       <td class="mono dim mobile-hide">${r.dayOfMonth||1}</td>
       <td class="mono dim mobile-hide">${r.startMonth||'—'}</td>
