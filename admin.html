@@ -403,6 +403,7 @@
     }
     .filter-bar { row-gap: 10px; }
     .filter-chip, .btn-sm, .btn-primary { padding-top: 8px; padding-bottom: 8px; }
+    .mobile-hide { display: none; }
   }
 </style>
 </head>
@@ -436,18 +437,18 @@
 
     <!-- TABS -->
     <div class="tab-bar">
-      <button class="tab-btn active" id="tab-dashboard-btn" onclick="switchTab('dashboard')">Dashboard</button>
-      <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
       <button class="tab-btn" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
       <button class="tab-btn" id="tab-saleslog-btn" onclick="switchTab('saleslog')">Sales Log</button>
+      <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
       <button class="tab-btn" id="tab-booth-btn" onclick="switchTab('booth')">Booth Planner</button>
+      <button class="tab-btn active" id="tab-dashboard-btn" onclick="switchTab('dashboard')">Reports</button>
     </div>
     <select class="tab-select" id="tab-select" onchange="switchTab(this.value)">
-      <option value="dashboard">Dashboard</option>
-      <option value="inventory">Inventory</option>
       <option value="expenses">Expenses &amp; Mileage</option>
       <option value="saleslog">Sales Log</option>
+      <option value="inventory">Inventory</option>
       <option value="booth">Booth Planner</option>
+      <option value="dashboard" selected>Reports</option>
     </select>
 
     <!-- ══ TAB: DASHBOARD ══ -->
@@ -597,13 +598,13 @@
                   <th id="th-count-large" style="display:none">Count large</th>
                   <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
                   <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
-                  <th onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
-                  <th onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
+                  <th class="mobile-hide" onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
+                  <th class="mobile-hide" onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
                   <th>Lg stock</th>
                   <th>Sm stock</th>
-                  <th>Lg sold</th>
-                  <th>Sm sold</th>
-                  <th>Original</th>
+                  <th class="mobile-hide">Lg sold</th>
+                  <th class="mobile-hide">Sm sold</th>
+                  <th class="mobile-hide">Original</th>
                 </tr>
               </thead>
               <tbody id="table-body"></tbody>
@@ -787,8 +788,8 @@
                   <th>Date</th>
                   <th>Painting</th>
                   <th>Type</th>
-                  <th>Channel</th>
-                  <th>State</th>
+                  <th class="mobile-hide">Channel</th>
+                  <th class="mobile-hide">State</th>
                   <th style="text-align:right">Price</th>
                   <th style="text-align:right">Net</th>
                   <th style="width:32px"></th>
@@ -1862,13 +1863,13 @@ function renderTable() {
         ${countLargeCell}
         <td class="dim col-hide">${p.month ? p.month.slice(0,3)+' ' : ''}${p.year}</td>
         <td class="mono col-hide">${p.width}×${p.height}</td>
-        <td class="mono">$${c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-        <td class="mono">$${r.toLocaleString()}${p.priceOverride != null ? ' <span title="Price override active" style="color:var(--accent)">●</span>' : ''}</td>
+        <td class="mobile-hide mono">$${c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+        <td class="mobile-hide mono">$${r.toLocaleString()}${p.priceOverride != null ? ' <span title="Price override active" style="color:var(--accent)">●</span>' : ''}</td>
         <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','large',-1)">−</button><span class="stock-num ${(p.stock.large||0)===0?'zero':''}">${p.stock.large||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','large',1)">+</button></div></td>
         <td><div class="stock-cell"><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',-1)">−</button><span class="stock-num ${(p.stock.small||0)===0?'zero':''}">${p.stock.small||0}</span><button class="stock-btn" onclick="adjStock(event,'${p.id}','small',1)">+</button></div></td>
-        <td class="mono dim">${lgSold||'—'}</td>
-        <td class="mono dim">${smSold||'—'}</td>
-        <td>${p.atGallery ? `<span class="orig-gallery">${esc(p.atGallery)}${p.galleryStockNo ? ' #' + esc(p.galleryStockNo) : ''}</span>` : squareAvail ? '' : '<span class="orig-sold">sold</span>'}</td>
+        <td class="mobile-hide mono dim">${lgSold||'—'}</td>
+        <td class="mobile-hide mono dim">${smSold||'—'}</td>
+        <td class="mobile-hide">${p.atGallery ? `<span class="orig-gallery">${esc(p.atGallery)}${p.galleryStockNo ? ' #' + esc(p.galleryStockNo) : ''}</span>` : squareAvail ? '' : '<span class="orig-sold">sold</span>'}</td>
       </tr>`;
     if (isOpen) {
       const monthOpts = ['','January','February','March','April','May','June','July','August','September','October','November','December']
@@ -1886,7 +1887,7 @@ function renderTable() {
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">SMALL</div><input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
             <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">PRICE OVERRIDE</div><input type="number" value="${p.priceOverride != null ? p.priceOverride : ''}" id="edit-override-${p.id}" min="0" placeholder="auto: $${retail(p)}" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px" onclick="event.stopPropagation()">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px" onclick="event.stopPropagation()">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2)">
               <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''} style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer">
               Mom's Prints
@@ -1902,8 +1903,10 @@ function renderTable() {
               Stock #
               <input type="text" value="${esc(p.galleryStockNo || '')}" id="edit-gallerystock-${p.id}" placeholder="e.g. 214" style="width:90px;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:5px 10px;background:white;color:var(--ink);outline:none">
             </label>
-            <button class="btn-sm" onclick="savePaintingEdits('${p.id}')">Save changes</button>
+          </div>
+          <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:18px" onclick="event.stopPropagation()">
             <button class="btn-sm danger" onclick="deletePainting('${p.id}')">Delete painting</button>
+            <button class="btn-primary" onclick="savePaintingEdits('${p.id}')">Save changes</button>
           </div>
           <div class="sub-title">Sales</div>
           <div class="sales-list">
@@ -3442,8 +3445,8 @@ function renderSalesLog() {
       <td class="mono dim">${s.date || '—'}</td>
       <td><strong>${esc(painting.title)}</strong></td>
       <td><span class="sale-type ${s.type}">${typeLabel}</span></td>
-      <td class="dim">${chanLabel}</td>
-      <td class="mono dim">${s.state || '—'}</td>
+      <td class="mobile-hide dim">${chanLabel}</td>
+      <td class="mobile-hide mono dim">${s.state || '—'}</td>
       <td style="text-align:right">${priceHtml}</td>
       <td style="text-align:right;font-family:var(--mono);font-size:13px;color:var(--green)">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
       <td style="text-align:center"><button class="sale-del" onclick="openEditSaleModal('${painting.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button></td>
@@ -3605,15 +3608,8 @@ document.getElementById('pw-input').addEventListener('input', function() {
   if (this.value.length === 6) checkPassword({});
 });
 
-// PWA mode — if launched from home screen, go straight to Expenses tab and hide others
+// PWA mode flag — no longer restricts which tabs are shown; still read elsewhere (compact expense rows)
 const isPWA = !!window.navigator.standalone;
-if (isPWA) {
-  document.getElementById('tab-dashboard-btn').style.display = 'none';
-  document.getElementById('tab-inventory-btn').style.display = 'none';
-  const tsel = document.getElementById('tab-select');
-  if (tsel) { tsel.querySelector('option[value="dashboard"]').remove(); tsel.querySelector('option[value="inventory"]').remove(); }
-  switchTab('expenses');
-}
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/admin-sw.js').catch(() => {});
