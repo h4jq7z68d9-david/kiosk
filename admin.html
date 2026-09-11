@@ -167,6 +167,20 @@
   .tab-panel.active { display: block; }
   .tab-select { display: none; }
 
+  /* ── SUB-TABS (within Expenses tab) ── */
+  .subtab-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .subtab-btn {
+    font-family: var(--font); font-size: 12px; font-weight: 500;
+    padding: 8px 16px; background: none; border: none;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    color: var(--ink2); cursor: pointer; letter-spacing: 0.02em;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .subtab-btn:hover { color: var(--ink); }
+  .subtab-btn.active { color: var(--accent-ink); border-bottom-color: var(--accent); }
+  .subtab-panel { display: none; }
+  .subtab-panel.active { display: block; }
+
   /* ── TABLE SECTION ── */
   .table-section { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .table-header {
@@ -658,14 +672,21 @@
     <div class="tab-panel active" id="tab-expenses">
       <div style="padding-top:24px">
 
+        <div class="subtab-bar">
+          <button class="subtab-btn active" id="subtab-exp-btn" onclick="switchExpSubTab('exp')">Expenses</button>
+          <button class="subtab-btn" id="subtab-recur-btn" onclick="switchExpSubTab('recur')">Recurring</button>
+          <button class="subtab-btn" id="subtab-mile-btn" onclick="switchExpSubTab('mile')">Mileage</button>
+        </div>
+
         <!-- Expenses table -->
-        <div class="table-section" style="margin-bottom:24px">
+        <div class="subtab-panel active" id="subtab-exp">
+        <div class="table-section">
           <div class="table-header">
             <div class="section-title" style="margin:0">Expenses</div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <input type="text" id="exp-search" placeholder="Search description…" oninput="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
-              <select id="exp-year-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer"></select>
-              <select id="exp-cat-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
+              <input type="text" id="exp-search" placeholder="Search description…" oninput="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;width:140px;max-width:100%">
+              <select id="exp-year-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer;width:90px;max-width:100%"></select>
+              <select id="exp-cat-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer;width:140px;max-width:100%">
                 <option value="">All categories</option>
                 <option>Printing</option>
                 <option>Framing</option>
@@ -701,9 +722,11 @@
             </table>
           </div>
         </div>
+        </div>
 
         <!-- Recurring table -->
-        <div class="table-section" style="margin-bottom:24px">
+        <div class="subtab-panel" id="subtab-recur">
+        <div class="table-section">
           <div class="table-header">
             <div>
               <div class="section-title" style="margin:0">Recurring</div>
@@ -721,8 +744,8 @@
                   <th>Category</th>
                   <th>Description</th>
                   <th>Amount</th>
-                  <th>Day</th>
-                  <th>Start</th>
+                  <th class="mobile-hide">Day</th>
+                  <th class="mobile-hide">Start</th>
                   <th style="width:64px">Active</th>
                   <th style="width:32px"></th>
                 </tr>
@@ -731,8 +754,10 @@
             </table>
           </div>
         </div>
+        </div>
 
         <!-- Mileage table -->
+        <div class="subtab-panel" id="subtab-mile">
         <div class="table-section">
           <div class="table-header">
             <div>
@@ -758,6 +783,7 @@
               <tbody id="mile-table-body"></tbody>
             </table>
           </div>
+        </div>
         </div>
 
       </div>
@@ -1382,6 +1408,13 @@ function switchTab(tab) {
     const ifr = document.getElementById('booth-iframe');
     if (ifr && !ifr.src) ifr.src = '/booth.html';
   }
+}
+
+function switchExpSubTab(sub) {
+  ['exp','recur','mile'].forEach(s => {
+    document.getElementById('subtab-' + s).classList.toggle('active', s === sub);
+    document.getElementById('subtab-' + s + '-btn').classList.toggle('active', s === sub);
+  });
 }
 
 function setInvView(view) {
@@ -2312,8 +2345,8 @@ function renderRecurTable() {
       <td><span class="cat-badge ${CAT_CLASS[r.category]||'cat-other'}">${esc(r.category)}</span></td>
       <td style="font-size:13px;color:var(--ink2)">${esc(r.desc||'')}</td>
       <td class="mono" style="color:var(--red)">$${amt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td class="mono dim">${r.dayOfMonth||1}</td>
-      <td class="mono dim">${r.startMonth||'—'}</td>
+      <td class="mono dim mobile-hide">${r.dayOfMonth||1}</td>
+      <td class="mono dim mobile-hide">${r.startMonth||'—'}</td>
       <td onclick="event.stopPropagation()">${toggle}</td>
       <td></td>
     </tr>`;
