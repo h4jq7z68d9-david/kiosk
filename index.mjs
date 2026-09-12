@@ -822,10 +822,11 @@ async function adminDeletePainting(id, cors) {
 }
 
 async function adminAddSale(paintingId, body, cors) {
-  const { date, type, channel, price, pct, net } = body;
+  const { date, type, channel, price, pct, net, state } = body;
   if (!type || !channel || price == null) return err('Missing required fields', 400, cors);
   const id = 's' + Date.now();
   const item = { id, paintingId, date: date || '', type, channel, price: Number(price) };
+  if (state) item.state = state;
   if (channel === 'gallery') {
     item.pct = Number(pct);
     item.net = Number(net ?? price * (pct / 100));
@@ -835,9 +836,10 @@ async function adminAddSale(paintingId, body, cors) {
 }
 
 async function adminUpdateSale(paintingId, saleId, body, cors) {
-  const { date, type, channel, price, pct, net } = body;
+  const { date, type, channel, price, pct, net, state } = body;
   if (!type || !channel || price == null) return err('Missing required fields', 400, cors);
   const item = { id: saleId, paintingId, date: date || '', type, channel, price: Number(price) };
+  if (state) item.state = state;
   if (channel === 'gallery') {
     item.pct = Number(pct);
     item.net = Number(net ?? price * (pct / 100));

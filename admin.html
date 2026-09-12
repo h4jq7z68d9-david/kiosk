@@ -3484,7 +3484,7 @@ function renderSalesLog() {
     const priceHtml = isGallery
       ? `<span style="font-family:var(--mono);font-size:13px;color:var(--ink3)">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
       : `<span style="font-family:var(--mono);font-size:13px">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
-    return `<tr>
+    return `<tr onclick="openEditSaleModal('${painting.id}','${s.id}')" style="cursor:pointer">
       <td class="mono dim">${s.date || '—'}</td>
       <td><strong>${esc(painting.title)}</strong></td>
       <td><span class="sale-type ${s.type}">${typeLabel}</span></td>
@@ -3492,7 +3492,7 @@ function renderSalesLog() {
       <td class="mobile-hide mono dim">${s.state || '—'}</td>
       <td style="text-align:right">${priceHtml}</td>
       <td style="text-align:right;font-family:var(--mono);font-size:13px;color:var(--green)">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td style="text-align:center"><button class="sale-del" onclick="openEditSaleModal('${painting.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button></td>
+      <td style="text-align:center"><button class="sale-del" onclick="event.stopPropagation();openEditSaleModal('${painting.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button></td>
     </tr>`;
   }).join('');
 }
