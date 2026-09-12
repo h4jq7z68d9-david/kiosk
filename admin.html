@@ -329,7 +329,7 @@
   .cat-website       { background: #f0fdf4; color: #15803d; }
   .cat-travel        { background: #fff7ed; color: #c2410c; }
   .cat-other         { background: #f3f4f6; color: #374151; }
-  .adv-reminder { align-items: center; gap: 12px; font-size: 14px; color: #92400e; background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; }
+  .adv-reminder { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #92400e; background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; flex-wrap: wrap; }
 
   .receipt-link {
     display: inline-flex; align-items: center; gap: 4px;
@@ -428,6 +428,13 @@
     .chart-stat-box { width: 100%; }
     .field-row, .field-row3 { grid-template-columns: 1fr; }
     .cat-badge { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
+    .cards { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    .card { padding: 14px 14px 12px; }
+    .card-label { font-size: 12px; }
+    .card-value { font-size: 22px; }
+    .card-sub { font-size: 12px; }
+    .section-title { font-size: 13px; }
+    .chart-section { padding: 16px; }
   }
 </style>
 </head>
