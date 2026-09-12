@@ -513,6 +513,14 @@
             <button class="btn-sm" onclick="exportRevenueByStateCsv()" title="Export to CSV">↓ CSV</button>
           </div>
           <div class="cards" id="chart-state-breakdown"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px;margin-bottom:4px">
+            <div>
+              <div class="section-title" style="margin:0;font-size:13px">Estimated Taxes by State</div>
+              <div style="font-size:11px;color:var(--ink3);margin-top:2px">Fair + online sales only — excludes gallery, which collects and remits its own tax</div>
+            </div>
+            <button class="btn-sm" onclick="exportTaxByStateCsv()" title="Export to CSV">↓ CSV</button>
+          </div>
+          <div class="cards" id="chart-tax-breakdown"></div>
         </div>
 
         <!-- EXPENSES BUBBLE (mileage folded in as sub-category) -->
@@ -1810,6 +1818,40 @@ function computeRevenueByState(fromVal, toVal) {
   return { revKS, revMO, revStateUnknown };
 }
 
+const TAX_RATE_KS = 0.0935; // Kansas — David Nicholson Art location
+const TAX_RATE_MO = 0.0422; // Missouri location
+
+function computeTaxByState(fromVal, toVal) {
+  // Estimated tax owed on David's own direct sales only. Gallery sales are
+  // excluded entirely — the gallery is the retailer of record there and
+  // collects/remits its own sales tax, not David's. Online counts as Kansas,
+  // consistent with the revenue attribution above. Fair sales use their own
+  // KS/MO tag, or fall into "Unspecified" (taxable amount known, rate isn't)
+  // if untagged.
+  let taxableKS = 0, taxableMO = 0, taxableUnknown = 0;
+  db.paintings.forEach(p => {
+    p.sales.forEach(s => {
+      if (!s.date) return;
+      const key = s.date.slice(0,7);
+      if (fromVal && key < fromVal) return;
+      if (toVal   && key > toVal)   return;
+      if (s.channel === 'gallery') return;
+      const net = saleNet(s);
+      if (s.channel === 'online') taxableKS += net;
+      else if (s.channel === 'fair') {
+        if (s.state === 'KS') taxableKS += net;
+        else if (s.state === 'MO') taxableMO += net;
+        else taxableUnknown += net;
+      }
+    });
+  });
+  return {
+    taxableKS, taxableMO, taxableUnknown,
+    taxKS: taxableKS * TAX_RATE_KS,
+    taxMO: taxableMO * TAX_RATE_MO,
+  };
+}
+
 function renderChart() {
   const fromVal = document.getElementById('chart-from').value;
   const toVal   = document.getElementById('chart-to').value;
@@ -1864,6 +1906,15 @@ function renderChart() {
       <div class="card"><div class="card-label">Kansas</div><div class="card-value" style="font-size:19px">${fmt(revKS)}</div><div class="card-sub">gallery + online + KS fairs${isFiltered ? ' · in range' : ''}</div></div>
       <div class="card"><div class="card-label">Missouri</div><div class="card-value" style="font-size:19px">${fmt(revMO)}</div><div class="card-sub">MO fairs${isFiltered ? ' · in range' : ''}</div></div>
       <div class="card"><div class="card-label">Unspecified</div><div class="card-value" style="font-size:19px${revStateUnknown > 0 ? ';color:var(--red)' : ''}">${fmt(revStateUnknown)}</div><div class="card-sub">fair sales missing a state${isFiltered ? ' · in range' : ''}</div></div>
+    `;
+  }
+  const { taxableKS, taxableMO, taxableUnknown, taxKS, taxMO } = computeTaxByState(fromVal, toVal);
+  const txEl = document.getElementById('chart-tax-breakdown');
+  if (txEl) {
+    txEl.innerHTML = `
+      <div class="card"><div class="card-label">Kansas (9.35%)</div><div class="card-value" style="font-size:19px">${fmt(taxKS)}</div><div class="card-sub">on ${fmt(taxableKS)} taxable${isFiltered ? ' · in range' : ''}</div></div>
+      <div class="card"><div class="card-label">Missouri (4.22%)</div><div class="card-value" style="font-size:19px">${fmt(taxMO)}</div><div class="card-sub">on ${fmt(taxableMO)} taxable${isFiltered ? ' · in range' : ''}</div></div>
+      <div class="card"><div class="card-label">Unspecified</div><div class="card-value" style="font-size:19px${taxableUnknown > 0 ? ';color:var(--red)' : ''}">${fmt(taxableUnknown)}</div><div class="card-sub">taxable, but no state to rate it${isFiltered ? ' · in range' : ''}</div></div>
     `;
   }
 }
@@ -3599,6 +3650,20 @@ function exportRevenueByStateCsv() {
     [period, 'Unspecified (fair sales missing a state)', revStateUnknown.toFixed(2)],
   ];
   downloadCsv('revenue-by-state.csv', [header, ...data]);
+}
+
+function exportTaxByStateCsv() {
+  const fromVal = document.getElementById('chart-from').value;
+  const toVal   = document.getElementById('chart-to').value;
+  const { taxableKS, taxableMO, taxableUnknown, taxKS, taxMO } = computeTaxByState(fromVal, toVal);
+  const period = (fromVal || toVal) ? `${fromVal || 'start'} to ${toVal || 'present'}` : 'All time';
+  const header = ['Period', 'State', 'Taxable Sales', 'Rate', 'Est. Tax Owed'];
+  const data = [
+    [period, 'Kansas', taxableKS.toFixed(2), '9.35%', taxKS.toFixed(2)],
+    [period, 'Missouri', taxableMO.toFixed(2), '4.22%', taxMO.toFixed(2)],
+    [period, 'Unspecified (fair sales missing a state)', taxableUnknown.toFixed(2), '—', '—'],
+  ];
+  downloadCsv('estimated-tax-by-state.csv', [header, ...data]);
 }
 
 function exportSalesLogCsv() {
