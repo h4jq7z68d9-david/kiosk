@@ -508,6 +508,11 @@
             </div>
           </div>
           <div class="cards" id="chart-rev-breakdown" style="margin-top:16px"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px;margin-bottom:4px">
+            <div class="section-title" style="margin:0;font-size:13px">Revenue by State</div>
+            <button class="btn-sm" onclick="exportRevenueByStateCsv()" title="Export to CSV">↓ CSV</button>
+          </div>
+          <div class="cards" id="chart-state-breakdown"></div>
         </div>
 
         <!-- EXPENSES BUBBLE (mileage folded in as sub-category) -->
@@ -1776,6 +1781,29 @@ function renderExpChart() {
   renderDashExpCards();
 }
 
+function computeRevenueByState(fromVal, toVal) {
+  // Gallery is always Kansas (Phoenix Gallery, Lawrence KS — only gallery in the
+  // system); Online counts as Kansas per David's call; Fair sales use their own
+  // KS/MO tag, or fall into "Unspecified" if untagged.
+  let revKS = 0, revMO = 0, revStateUnknown = 0;
+  db.paintings.forEach(p => {
+    p.sales.forEach(s => {
+      if (!s.date) return;
+      const key = s.date.slice(0,7);
+      if (fromVal && key < fromVal) return;
+      if (toVal   && key > toVal)   return;
+      const net = saleNet(s);
+      if (s.channel === 'gallery' || s.channel === 'online') revKS += net;
+      else if (s.channel === 'fair') {
+        if (s.state === 'KS') revKS += net;
+        else if (s.state === 'MO') revMO += net;
+        else revStateUnknown += net;
+      }
+    });
+  });
+  return { revKS, revMO, revStateUnknown };
+}
+
 function renderChart() {
   const fromVal = document.getElementById('chart-from').value;
   const toVal   = document.getElementById('chart-to').value;
@@ -1797,6 +1825,7 @@ function renderChart() {
       if (s.channel === 'gallery') revGallery += net;
     });
   });
+  const { revKS, revMO, revStateUnknown } = computeRevenueByState(fromVal, toVal);
   const isFiltered = fromVal || toVal;
   const displayRev = isFiltered ? filteredRev : allRev;
   const displayCount = isFiltered ? filteredCount : allCount;
@@ -1821,6 +1850,14 @@ function renderChart() {
       <div class="card"><div class="card-label">Art Fair</div><div class="card-value" style="font-size:19px">${fmt(revFair)}</div><div class="card-sub">channel${isFiltered ? ' · in range' : ''}</div></div>
       <div class="card"><div class="card-label">Online</div><div class="card-value" style="font-size:19px">${fmt(revOnline)}</div><div class="card-sub">channel${isFiltered ? ' · in range' : ''}</div></div>
       <div class="card"><div class="card-label">Gallery</div><div class="card-value" style="font-size:19px">${fmt(revGallery)}</div><div class="card-sub">net to you${isFiltered ? ' · in range' : ''}</div></div>
+    `;
+  }
+  const stEl = document.getElementById('chart-state-breakdown');
+  if (stEl) {
+    stEl.innerHTML = `
+      <div class="card"><div class="card-label">Kansas</div><div class="card-value" style="font-size:19px">${fmt(revKS)}</div><div class="card-sub">gallery + online + KS fairs${isFiltered ? ' · in range' : ''}</div></div>
+      <div class="card"><div class="card-label">Missouri</div><div class="card-value" style="font-size:19px">${fmt(revMO)}</div><div class="card-sub">MO fairs${isFiltered ? ' · in range' : ''}</div></div>
+      <div class="card"><div class="card-label">Unspecified</div><div class="card-value" style="font-size:19px${revStateUnknown > 0 ? ';color:var(--red)' : ''}">${fmt(revStateUnknown)}</div><div class="card-sub">fair sales missing a state${isFiltered ? ' · in range' : ''}</div></div>
     `;
   }
 }
@@ -2655,13 +2692,12 @@ async function savePaintingEdits(id) {
   catch(e) { alert('Failed to save changes: ' + e.message); }
 }
 
-const PRINT_DEFAULTS = { large: 60, small: 35 };
+const PRINT_DEFAULTS = { large: 60 };
 function onSaleTypeChange() {
   const type = document.getElementById('sale-type').value;
   const ch   = document.getElementById('sale-channel').value;
   if (ch !== 'gallery') {
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
-    else if (type === 'small') document.getElementById('sale-price').value = PRINT_DEFAULTS.small;
     else document.getElementById('sale-price').value = '';
   }
   updateGalleryNet();
@@ -2676,12 +2712,11 @@ function onSaleChannelChange() {
   if (ch === 'gallery') {
     gf.style.display = 'block'; lbl.textContent = 'Sale price (gross) ($)';
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
-    else if (type === 'small') document.getElementById('sale-price').value = PRINT_DEFAULTS.small;
+    else if (type === 'small') document.getElementById('sale-price').value = '';
     updateGalleryNet();
   } else {
     gf.style.display = 'none'; lbl.textContent = 'Price received ($)';
     if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
-    else if (type === 'small') document.getElementById('sale-price').value = PRINT_DEFAULTS.small;
     else document.getElementById('sale-price').value = '';
   }
 }
@@ -3504,6 +3539,20 @@ function clearSalesLogFilters() {
   document.getElementById('sl-channel').value = '';
   document.getElementById('sl-state').value = '';
   renderSalesLog();
+}
+
+function exportRevenueByStateCsv() {
+  const fromVal = document.getElementById('chart-from').value;
+  const toVal   = document.getElementById('chart-to').value;
+  const { revKS, revMO, revStateUnknown } = computeRevenueByState(fromVal, toVal);
+  const period = (fromVal || toVal) ? `${fromVal || 'start'} to ${toVal || 'present'}` : 'All time';
+  const header = ['Period', 'State', 'Revenue'];
+  const data = [
+    [period, 'Kansas', revKS.toFixed(2)],
+    [period, 'Missouri', revMO.toFixed(2)],
+    [period, 'Unspecified (fair sales missing a state)', revStateUnknown.toFixed(2)],
+  ];
+  downloadCsv('revenue-by-state.csv', [header, ...data]);
 }
 
 function exportSalesLogCsv() {
