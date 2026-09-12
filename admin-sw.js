@@ -1,5 +1,5 @@
-// Admin PWA Service Worker — cache version: dna-admin-v55
-const CACHE = 'dna-admin-v55';
+// Admin PWA Service Worker — cache version: dna-admin-v56
+const CACHE = 'dna-admin-v56';
 const SHELL = [
   '/admin.html',
   '/admin.webmanifest',

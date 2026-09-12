@@ -1318,7 +1318,7 @@ let countModeOn = false;
 let countSession = {}; // { [paintingId]: { large: n, small: n } } — only holds paintings actually touched this session
 let lastRenderedIds = [];
 let activeFilter = null, expandedId = null;
-let salePaintingId = null, editSaleId = null;
+let salePaintingId = null, editSaleId = null, editSaleOriginalPaintingId = null;
 let expSortField = 'date', expSortDir = 'desc';
 let mileSortField = 'date', mileSortDir = 'desc';
 let editExpId = null, editMileId = null, editRecurId = null;
@@ -1585,7 +1585,7 @@ function populateDimFilterOptions() {
   if (!sel) return;
   const prev = dimFilter;
   const dims = [...new Set(
-    db.paintings.filter(p => !p.marketItem).map(p => `${p.width}×${p.height}`)
+    db.paintings.filter(p => !p.marketItem && p.title !== 'Unknown').map(p => `${p.width}×${p.height}`)
   )].sort((a, b) => {
     const [aw, ah] = a.split('×').map(Number);
     const [bw, bh] = b.split('×').map(Number);
@@ -1648,6 +1648,12 @@ async function init() {
     db.paintings = data.paintings;
     db.rate = data.rate ?? 1.10;
     db.rateLarge = data.rateLarge ?? null;
+    if (!db.paintings.some(p => p.title === 'Unknown')) {
+      try {
+        const up = await api('POST', '/paintings', { title: 'Unknown', year: new Date().getFullYear(), width: 1, height: 1, stock: { large: 0, small: 0 } });
+        db.paintings.push({ ...up.painting, sales: [] });
+      } catch(e) { console.error('Failed to create Unknown placeholder painting:', e); }
+    }
   } catch(e) {
     setLoading(false);
     return;
@@ -1690,7 +1696,7 @@ function render() {
 }
 
 function renderCards() {
-  const realPaintings = db.paintings.filter(p => !p.marketItem);
+  const realPaintings = db.paintings.filter(p => !p.marketItem && p.title !== 'Unknown');
   const origSold = realPaintings.filter(p => p.originalAvail !== true).length;
   let largeSold = 0, smallSold = 0;
   db.paintings.forEach(p => {
@@ -1871,9 +1877,9 @@ function renderTable() {
   let list;
   if (countModeOn) {
     const q = (document.getElementById('count-search')?.value || '').trim().toLowerCase();
-    list = (db.paintings || []).filter(p => !p.marketItem && (!q || p.title.toLowerCase().includes(q)));
+    list = (db.paintings || []).filter(p => !p.marketItem && p.title !== 'Unknown' && (!q || p.title.toLowerCase().includes(q)));
   } else {
-    list = applyFilter((db.paintings || []).filter(p => !p.marketItem));
+    list = applyFilter((db.paintings || []).filter(p => !p.marketItem && p.title !== 'Unknown'));
     if (checklist) {
       const idSet = new Set(checklist.items.map(i => i.paintingId));
       list = list.filter(p => idSet.has(p.id));
@@ -2608,7 +2614,10 @@ async function adjStock(e, id, size, delta) {
 async function deleteSale(paintingId, saleId) {
   const p = db.paintings.find(x => x.id === paintingId);
   if (!p) return;
-  p.sales = p.sales.filter(s => s.id !== saleId);
+  const s = p.sales.find(x => x.id === saleId);
+  const label = s ? `the ${s.date || ''} ${s.type} sale` : 'this sale';
+  if (!confirm(`Delete ${label}? This cannot be undone.`)) return;
+  p.sales = p.sales.filter(x => x.id !== saleId);
   render();
   try { await api('DELETE', `/paintings/${paintingId}/sales/${saleId}`); }
   catch(e) { alert('Failed to delete sale: ' + e.message); }
@@ -2752,7 +2761,7 @@ function openQuickSaleModal() {
     sel.appendChild(opt);
   });
   document.getElementById('sale-painting-field').style.display = '';
-  salePaintingId = null; editSaleId = null;
+  salePaintingId = null; editSaleId = null; editSaleOriginalPaintingId = null;
   document.getElementById('sale-modal-title').textContent = 'Log Sale';
   document.getElementById('sale-modal-save-btn').textContent = 'Log Sale';
   document.getElementById('sale-date').value = new Date().toISOString().slice(0,10);
@@ -2772,10 +2781,11 @@ function onSalePaintingChange() {
   const id = document.getElementById('sale-painting-select').value;
   salePaintingId = id || null;
   const p = id ? db.paintings.find(x => x.id === id) : null;
-  document.getElementById('sale-modal-title').textContent = p ? 'Log Sale — ' + p.title : 'Log Sale';
+  const verb = editSaleId ? 'Edit Sale' : 'Log Sale';
+  document.getElementById('sale-modal-title').textContent = p ? verb + ' — ' + p.title : verb;
 }
 function openSaleModal(paintingId) {
-  salePaintingId = paintingId; editSaleId = null;
+  salePaintingId = paintingId; editSaleId = null; editSaleOriginalPaintingId = null;
   document.getElementById('sale-painting-field').style.display = 'none';
   const p = db.paintings.find(x => x.id === paintingId);
   document.getElementById('sale-modal-title').textContent = 'Log Sale — ' + p.title;
@@ -2794,8 +2804,17 @@ function openSaleModal(paintingId) {
   document.getElementById('sale-modal').style.display = 'flex';
 }
 function openEditSaleModal(paintingId, saleId) {
-  salePaintingId = paintingId; editSaleId = saleId;
-  document.getElementById('sale-painting-field').style.display = 'none';
+  salePaintingId = paintingId; editSaleId = saleId; editSaleOriginalPaintingId = paintingId;
+  const sel = document.getElementById('sale-painting-select');
+  sel.innerHTML = '<option value="">— select —</option>';
+  const sorted = [...db.paintings].sort((a,b) => (a.title||'').localeCompare(b.title||''));
+  sorted.forEach(pt => {
+    const opt = document.createElement('option');
+    opt.value = pt.id; opt.textContent = pt.title;
+    sel.appendChild(opt);
+  });
+  sel.value = paintingId;
+  document.getElementById('sale-painting-field').style.display = '';
   const p = db.paintings.find(x => x.id === paintingId);
   const s = p.sales.find(x => x.id === saleId);
   document.getElementById('sale-modal-title').textContent = 'Edit Sale — ' + p.title;
@@ -2830,8 +2849,32 @@ async function saveSale() {
     saleData.pct = pct; saleData.net = isNaN(net) ? gross * (pct / 100) : net;
   }
   closeModal('sale-modal');
+  const moving = editSaleId && editSaleOriginalPaintingId && salePaintingId !== editSaleOriginalPaintingId;
   try {
-    if (editSaleId) {
+    if (editSaleId && moving) {
+      const oldP = db.paintings.find(x => x.id === editSaleOriginalPaintingId);
+      // Create under the new painting first, then remove from the old one —
+      // safer ordering if anything fails partway through.
+      const data = await api('POST', `/paintings/${salePaintingId}/sales`, saleData);
+      p.sales.push(data.sale);
+      await api('DELETE', `/paintings/${editSaleOriginalPaintingId}/sales/${editSaleId}`);
+      if (oldP) oldP.sales = oldP.sales.filter(x => x.id !== editSaleId);
+      // Correct print stock on both sides of the reassignment (undo the old
+      // decrement, apply the correct one) — can go negative, intentional.
+      const saleType = saleData.type;
+      if (saleType === 'large' || saleType === 'small') {
+        if (oldP && oldP.stock) {
+          oldP.stock[saleType] = (oldP.stock[saleType] || 0) + 1;
+          api('PUT', `/paintings/${editSaleOriginalPaintingId}`, { title: oldP.title, month: oldP.month, year: oldP.year, width: oldP.width, height: oldP.height, stock: oldP.stock, momsHas: oldP.momsHas, atGallery: oldP.atGallery || '', galleryStockNo: oldP.galleryStockNo || '' })
+            .catch(e => console.error('Stock restore failed:', e));
+        }
+        if (p.stock) {
+          p.stock[saleType] = (p.stock[saleType] || 0) - 1;
+          api('PUT', `/paintings/${salePaintingId}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '', galleryStockNo: p.galleryStockNo || '' })
+            .catch(e => console.error('Stock decrement failed:', e));
+        }
+      }
+    } else if (editSaleId) {
       const data = await api('PUT', `/paintings/${salePaintingId}/sales/${editSaleId}`, saleData);
       const idx = p.sales.findIndex(x => x.id === editSaleId);
       if (idx !== -1) p.sales[idx] = data.sale;
@@ -2901,7 +2944,7 @@ function renderPriceListModal() {
 
 function currentPriceSnapshot() {
   const prices = {};
-  db.paintings.filter(p => !p.marketItem).forEach(p => { prices[p.id] = retail(p); });
+  db.paintings.filter(p => !p.marketItem && p.title !== 'Unknown').forEach(p => { prices[p.id] = retail(p); });
   return prices;
 }
 
@@ -3327,7 +3370,7 @@ function renderChecklistBanner(checklist) {
 //  PRICE TAGS (Avery 5371 — 3.5×2", 10/sheet)
 // ═══════════════════════════════════════════
 function printPriceTags(ids) {
-  let list = [...db.paintings].filter(p => !p.marketItem).sort((a,b) => (a.title||'').localeCompare(b.title||''));
+  let list = [...db.paintings].filter(p => !p.marketItem && p.title !== 'Unknown').sort((a,b) => (a.title||'').localeCompare(b.title||''));
   if (ids) { const idSet = new Set(ids); list = list.filter(p => idSet.has(p.id)); }
 
   const cards = list.filter(p => p.originalAvail === true).map(p => {
@@ -3419,7 +3462,7 @@ function downloadCsv(filename, rows) {
 }
 
 function exportInventoryCsv() {
-  const list = [...db.paintings].filter(p => !p.marketItem).sort((a,b) => a.title.localeCompare(b.title));
+  const list = [...db.paintings].filter(p => !p.marketItem && p.title !== 'Unknown').sort((a,b) => a.title.localeCompare(b.title));
   const header = ['Title','Month','Year','Width','Height','Sq In','Price','Rounded',
                   'Lg Stock','Sm Stock','Lg Sold','Sm Sold','Original Sold','At Gallery','Gallery Stock #'];
   const rows = list.map(p => {
@@ -3527,7 +3570,10 @@ function renderSalesLog() {
       <td class="mobile-hide mono dim">${s.state || '—'}</td>
       <td style="text-align:right">${priceHtml}</td>
       <td style="text-align:right;font-family:var(--mono);font-size:13px;color:var(--green)">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td style="text-align:center"><button class="sale-del" onclick="event.stopPropagation();openEditSaleModal('${painting.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button></td>
+      <td style="text-align:center">
+        <button class="sale-del" onclick="event.stopPropagation();openEditSaleModal('${painting.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button>
+        <button class="sale-del" onclick="event.stopPropagation();deleteSale('${painting.id}','${s.id}')" title="Delete sale" style="color:var(--ink3);font-size:13px">×</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -3607,7 +3653,7 @@ function renderGalleryStock() {
   }
 
   const rows = db.paintings
-    .filter(p => !p.marketItem)
+    .filter(p => !p.marketItem && p.title !== 'Unknown')
     .map(p => {
       const rec = stockByPainting[p.id] || { paintingId: p.id, galleryName: gallery, stockSm: 0, stockLg: 0, id: null };
       return { ...rec, title: p.title };
@@ -3678,7 +3724,7 @@ async function gsAdjust(paintingId, size, delta) {
 function exportGalleryStockCsv() {
   const gallery = document.getElementById('gs-gallery-filter').value;
   const rows = db.paintings
-    .filter(p => !p.marketItem)
+    .filter(p => !p.marketItem && p.title !== 'Unknown')
     .slice()
     .sort((a, b) => a.title.localeCompare(b.title))
     .map(p => {
