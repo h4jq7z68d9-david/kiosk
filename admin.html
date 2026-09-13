@@ -217,6 +217,7 @@
   }
   th:hover { color: var(--ink); }
   th.sorted { color: var(--accent-ink); }
+  thead th { position: sticky; top: 52px; background: var(--bg2); z-index: 10; }
   th .sort-arrow { font-size: 10px; margin-left: 3px; }
   td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
@@ -2759,32 +2760,26 @@ async function savePaintingEdits(id) {
   catch(e) { alert('Failed to save changes: ' + e.message); }
 }
 
-const PRINT_DEFAULTS = { large: 60 };
 function onSaleTypeChange() {
-  const type = document.getElementById('sale-type').value;
-  const ch   = document.getElementById('sale-channel').value;
+  const ch = document.getElementById('sale-channel').value;
   if (ch !== 'gallery') {
-    if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
-    else document.getElementById('sale-price').value = '';
+    document.getElementById('sale-price').value = '';
   }
   updateGalleryNet();
 }
 function onSaleChannelChange() {
   const ch   = document.getElementById('sale-channel').value;
-  const type = document.getElementById('sale-type').value;
   const gf   = document.getElementById('gallery-fields');
   const lbl  = document.getElementById('sale-price-label');
   const sf   = document.getElementById('sale-state-field');
   sf.style.display = ch === 'fair' ? 'block' : 'none';
   if (ch === 'gallery') {
     gf.style.display = 'block'; lbl.textContent = 'Sale price (gross) ($)';
-    if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
-    else if (type === 'small') document.getElementById('sale-price').value = '';
+    document.getElementById('sale-price').value = '';
     updateGalleryNet();
   } else {
     gf.style.display = 'none'; lbl.textContent = 'Price received ($)';
-    if (type === 'large') document.getElementById('sale-price').value = PRINT_DEFAULTS.large;
-    else document.getElementById('sale-price').value = '';
+    document.getElementById('sale-price').value = '';
   }
 }
 function updateGalleryNet() {
