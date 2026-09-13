@@ -2679,6 +2679,7 @@ async function deleteSale(paintingId, saleId) {
   if (!confirm(`Delete ${label}? This cannot be undone.`)) return;
   p.sales = p.sales.filter(x => x.id !== saleId);
   render();
+  renderSalesLog();
   try { await api('DELETE', `/paintings/${paintingId}/sales/${saleId}`); }
   catch(e) { alert('Failed to delete sale: ' + e.message); }
 }
@@ -2695,6 +2696,7 @@ async function deletePainting(id) {
   if (expandedId === id) expandedId = null;
   populateDimFilterOptions();
   render();
+  renderSalesLog();
   try { await api('DELETE', `/paintings/${id}`); }
   catch(e) { alert('Failed to delete painting: ' + e.message); }
 }
@@ -2944,6 +2946,7 @@ async function saveSale() {
       }
     }
     render();
+    renderSalesLog();
   } catch(e) { alert('Failed to save sale: ' + e.message); }
 }
 
