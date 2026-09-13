@@ -42,6 +42,8 @@
     --shadow-lg: 0 8px 32px rgba(43,54,64,0.14);
   }
 
+  html, body { overflow-x: hidden; }
+
   body {
     font-family: var(--font);
     font-weight: 300;
@@ -142,7 +144,7 @@
     padding: 20px 24px; margin-bottom: 28px;
   }
   .section-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); margin-bottom: 16px; }
-  .chart-wrap { height: 140px; display: flex; align-items: flex-end; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .chart-wrap { height: 140px; width: 100%; max-width: 100%; display: flex; align-items: flex-end; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
   .chart-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; min-width: 36px; }
   .chart-bar { width: 28px; background: var(--accent); border-radius: 3px 3px 0 0; opacity: 0.85; transition: opacity 0.15s; position: relative; cursor: default; }
   .chart-bar:hover { opacity: 1; }
@@ -1698,6 +1700,7 @@ async function init() {
     '$' + DEFAULT_IRS_RATE.toFixed(2) + '/mile (2026)';
 
   populateDimFilterOptions();
+  applyMobileChartDefault();
   render();
 
   // Load expenses in background so dashboard cards populate on login
@@ -1749,6 +1752,29 @@ function renderCards() {
     ${topLgCard}
     ${topSmCard}
   `;
+}
+
+function isMobileWidth() {
+  return window.matchMedia('(max-width: 600px)').matches;
+}
+
+function monthsAgoStr(n) {
+  const d = new Date();
+  d.setMonth(d.getMonth() - n);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
+// On phones, default both Reports charts to the last 6 months so the bar
+// chart fits the screen width with no horizontal scroll or zoom. Only sets
+// the value if the field is empty, so it never clobbers a range the user
+// already picked. Desktop/tablet (>600px) is unaffected — full history by
+// default there, same as before.
+function applyMobileChartDefault() {
+  if (!isMobileWidth()) return;
+  const chartFrom = document.getElementById('chart-from');
+  const expFrom = document.getElementById('exp-chart-from');
+  if (chartFrom && !chartFrom.value) chartFrom.value = monthsAgoStr(5);
+  if (expFrom && !expFrom.value) expFrom.value = monthsAgoStr(5);
 }
 
 function clearChartRange() {
