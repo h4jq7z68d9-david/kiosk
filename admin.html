@@ -310,6 +310,37 @@
   .view-toggle-btn { flex: 1; font-family: var(--font); font-size: 12px; font-weight: 600; padding: 8px 14px; border: none; border-radius: 6px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; }
   .view-toggle-btn.active { background: var(--accent); color: white; }
 
+  /* ── MOBILE-COLLAPSED CONTROLS ── */
+  .mobile-only-flex { display: none; }
+  .search-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+  .icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border-mid); border-radius: 6px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; font-size: 16px; }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .dropdown-wrap { position: relative; display: inline-block; }
+  .dropdown-menu {
+    display: none; position: absolute; right: 0; top: calc(100% + 6px); z-index: 20;
+    background: white; border: 1px solid var(--border-mid); border-radius: 8px; box-shadow: var(--shadow-lg);
+    min-width: 190px; padding: 6px;
+  }
+  .dropdown-menu.open { display: block; }
+  .dropdown-menu button {
+    display: flex; align-items: center; width: 100%; gap: 10px; padding: 9px 10px; border: none;
+    background: none; font-family: var(--font); font-size: 13px; color: var(--ink); text-align: left;
+    border-radius: 6px; cursor: pointer;
+  }
+  .dropdown-menu button:hover { background: var(--bg2); }
+  .filter-badge {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px;
+    border-radius: 8px; background: var(--accent); color: white; font-size: 10px; font-weight: 600; padding: 0 4px;
+  }
+  .rate-chip-btn {
+    display: none; width: 100%; align-items: center; justify-content: space-between;
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px 16px; margin-bottom: 8px; font-family: var(--font); font-size: 13px; color: var(--ink2); cursor: pointer;
+  }
+  .rate-chip-btn .rate-chip-val { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+  .rate-chip-btn .chevron { transition: transform 0.15s; color: var(--ink3); display: inline-block; }
+  .rate-chip-btn.open .chevron { transform: rotate(180deg); }
+
   .checklist-banner { margin: 14px 24px 0; padding: 12px 16px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--accent); display: flex; flex-direction: column; gap: 6px; }
   .checklist-banner-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
   .checklist-progress { font-size: 12px; color: var(--ink2); font-family: var(--mono); white-space: nowrap; }
@@ -423,6 +454,15 @@
     .filter-bar { row-gap: 10px; }
     .filter-chip, .btn-sm, .btn-primary { padding-top: 8px; padding-bottom: 8px; }
     .mobile-hide { display: none; }
+    .mobile-only-flex { display: inline-flex; }
+    .rate-chip-btn { display: flex; }
+    #rate-bar { display: none; }
+    #rate-bar.open { display: flex; }
+    #filter-bar { display: none; width: 100%; }
+    #filter-bar.open { display: flex; }
+    .table-scroll td { padding: 10px 8px; }
+    .stock-btn { width: 16px; height: 16px; font-size: 12px; }
+    .stock-cell { gap: 2px; }
     .topbar { padding: 0 12px; }
     .topbar .badge { display: none; }
     .topbar-left { gap: 8px; }
@@ -473,14 +513,12 @@
     <!-- TABS -->
     <div class="tab-bar">
       <button class="tab-btn active" id="tab-expenses-btn" onclick="switchTab('expenses')">Expenses &amp; Mileage</button>
-      <button class="tab-btn" id="tab-saleslog-btn" onclick="switchTab('saleslog')">Sales Log</button>
       <button class="tab-btn" id="tab-inventory-btn" onclick="switchTab('inventory')">Inventory</button>
       <button class="tab-btn" id="tab-booth-btn" onclick="switchTab('booth')">Booth Planner</button>
       <button class="tab-btn" id="tab-dashboard-btn" onclick="switchTab('dashboard')">Reports</button>
     </div>
     <select class="tab-select" id="tab-select" onchange="switchTab(this.value)">
       <option value="expenses" selected>Expenses &amp; Mileage</option>
-      <option value="saleslog">Sales Log</option>
       <option value="inventory">Inventory</option>
       <option value="booth">Booth Planner</option>
       <option value="dashboard">Reports</option>
@@ -586,7 +624,14 @@
             </div>
           </div>
         </div>
-        <div class="rate-bar" style="border-top-left-radius:0;border-top-right-radius:0;margin-bottom:0">
+        <button class="rate-chip-btn" id="rate-chip-btn" onclick="toggleRateBar()">
+          <span>Rate</span>
+          <span style="display:flex;align-items:center;gap:6px">
+            <span class="rate-chip-val" id="rate-chip-val">$1.10 / sq in</span>
+            <i class="chevron">▾</i>
+          </span>
+        </button>
+        <div class="rate-bar" id="rate-bar" style="border-top-left-radius:0;border-top-right-radius:0;margin-bottom:0">
           <label>Price / sq in</label>
           <div class="rate-input-wrap">
             <span>$</span>
@@ -604,15 +649,29 @@
             <div class="section-title" style="margin:0">Inventory</div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
-              <button class="btn-sm" onclick="openChecklistModal()">Checklist</button>
-              <button class="btn-sm" onclick="startInventoryCount()">Take Inventory</button>
-              <button class="btn-sm" onclick="openPriceListModal()">Price List</button>
-              <button class="btn-sm" onclick="printTagsForSelected()">Price Tags</button>
+              <button class="btn-sm mobile-hide" onclick="openChecklistModal()">Checklist</button>
+              <button class="btn-sm mobile-hide" onclick="startInventoryCount()">Take Inventory</button>
+              <button class="btn-sm mobile-hide" onclick="openPriceListModal()">Price List</button>
+              <button class="btn-sm mobile-hide" onclick="printTagsForSelected()">Price Tags</button>
+              <div class="dropdown-wrap mobile-only-flex">
+                <button class="icon-btn" id="inv-actions-btn" onclick="toggleInvActionsMenu(event)" aria-label="More actions" title="More actions">⋯</button>
+                <div class="dropdown-menu" id="inv-actions-menu">
+                  <button onclick="closeInvActionsMenu();openChecklistModal()">Checklist</button>
+                  <button onclick="closeInvActionsMenu();startInventoryCount()">Take inventory</button>
+                  <button onclick="closeInvActionsMenu();openPriceListModal()">Price list</button>
+                  <button onclick="closeInvActionsMenu();printTagsForSelected()">Price tags</button>
+                </div>
+              </div>
               <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
             </div>
           </div>
+          <div class="search-row">
+            <input type="text" id="inv-search" placeholder="Search title…" oninput="renderTable()" style="font-family:var(--font);font-size:13px;padding:5px 10px;border:1.5px solid var(--border-mid);border-radius:20px;min-width:160px;flex:1">
+            <button class="btn-sm mobile-only-flex" id="inv-filters-btn" onclick="toggleInvFilters()" style="align-items:center;gap:6px">
+              <span>Filters</span><span class="filter-badge" id="inv-filter-badge" style="display:none">0</span>
+            </button>
+          </div>
           <div class="filter-bar" id="filter-bar">
-            <input type="text" id="inv-search" placeholder="Search title…" oninput="renderTable()" style="font-family:var(--font);font-size:13px;padding:5px 10px;border:1.5px solid var(--border-mid);border-radius:20px;min-width:160px">
             <span class="filter-bar-label">Filter</span>
             <button class="filter-chip" id="fc-type-prints"    onclick="setTypeFilter('prints')">Prints</button>
             <button class="filter-chip" id="fc-type-originals" onclick="setTypeFilter('originals')">Originals</button>
@@ -630,14 +689,32 @@
             <select id="dim-filter" onchange="setDimFilter(this.value)" style="font-family:var(--font);font-size:12px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-mid);border-radius:20px;background:none;color:var(--ink2);cursor:pointer;outline:none">
               <option value="">All dimensions</option>
             </select>
-            <button class="btn-sm" onclick="exportInventoryCsv()" title="Export to CSV" style="margin-left:auto">↓ CSV</button>
+            <span style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
+            <span class="filter-bar-label">Sold between</span>
+            <input type="date" id="inv-date-from" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
+            <span style="font-size:11px;color:var(--ink3)">–</span>
+            <input type="date" id="inv-date-to" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
+            <select id="inv-channel" onchange="renderTable()" style="font-family:var(--font);font-size:12px;border:1.5px solid var(--border-mid);border-radius:20px;padding:4px 10px;background:none;color:var(--ink2);outline:none;appearance:none;cursor:pointer">
+              <option value="">All channels</option>
+              <option value="fair">Art fair</option>
+              <option value="online">Online</option>
+              <option value="gallery">Gallery</option>
+            </select>
+            <select id="inv-sale-state" onchange="renderTable()" style="font-family:var(--font);font-size:12px;border:1.5px solid var(--border-mid);border-radius:20px;padding:4px 10px;background:none;color:var(--ink2);outline:none;appearance:none;cursor:pointer">
+              <option value="">All states</option>
+              <option value="KS">KS</option>
+              <option value="MO">MO</option>
+            </select>
+            <button class="btn-sm" onclick="clearAllInvFilters()">Clear</button>
+            <button class="btn-sm" onclick="exportInventoryCsv()" title="Export current stock snapshot to CSV" style="margin-left:auto">↓ Stock CSV</button>
+            <button class="btn-sm" onclick="exportSalesCsv()" title="Export filtered sales to CSV">↓ Sales CSV</button>
           </div>
           <div class="table-scroll">
             <table>
               <thead>
                 <tr>
-                  <th style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
-                  <th style="width:28px"></th>
+                  <th class="mobile-hide" style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
+                  <th class="mobile-hide" style="width:28px"></th>
                   <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
                   <th id="th-qty-small" style="display:none">Print small</th>
                   <th id="th-qty-large" style="display:none">Print large</th>
@@ -650,8 +727,8 @@
                   <th class="mobile-hide" onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
                   <th>Lg stock</th>
                   <th>Sm stock</th>
-                  <th class="mobile-hide">Lg sold</th>
-                  <th class="mobile-hide">Sm sold</th>
+                  <th class="mobile-hide" id="th-lg-sold">Lg sold</th>
+                  <th class="mobile-hide" id="th-sm-sold">Sm sold</th>
                   <th class="mobile-hide">Original</th>
                 </tr>
               </thead>
@@ -811,54 +888,6 @@
         </div>
         </div>
 
-      </div>
-    </div>
-
-    <!-- ══ TAB: SALES LOG ══ -->
-    <div class="tab-panel" id="tab-saleslog">
-      <div style="padding-top:24px">
-        <div class="table-section">
-          <div class="table-header">
-            <div class="section-title" style="margin:0">Sales Log</div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <input type="text" id="sl-search" placeholder="Search title…" oninput="renderSalesLog()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
-              <input type="date" id="sl-from" onchange="renderSalesLog()" style="font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
-              <span style="font-size:12px;color:var(--ink3)">to</span>
-              <input type="date" id="sl-to" onchange="renderSalesLog()" style="font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none">
-              <select id="sl-channel" onchange="renderSalesLog()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
-                <option value="">All channels</option>
-                <option value="fair">Art fair</option>
-                <option value="online">Online</option>
-                <option value="gallery">Gallery</option>
-              </select>
-              <select id="sl-state" onchange="renderSalesLog()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
-                <option value="">All states</option>
-                <option value="KS">KS</option>
-                <option value="MO">MO</option>
-              </select>
-              <button class="btn-sm" onclick="clearSalesLogFilters()">Clear</button>
-              <button class="btn-sm" onclick="exportSalesLogCsv()">↓ CSV</button>
-            </div>
-          </div>
-          <div id="sl-summary" style="padding:10px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;gap:24px;flex-wrap:wrap"></div>
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Painting</th>
-                  <th>Type</th>
-                  <th class="mobile-hide">Channel</th>
-                  <th class="mobile-hide">State</th>
-                  <th style="text-align:right">Price</th>
-                  <th style="text-align:right">Net</th>
-                  <th style="width:32px"></th>
-                </tr>
-              </thead>
-              <tbody id="sl-table-body"></tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -1419,7 +1448,7 @@ function logout() {
 //  TABS
 // ═══════════════════════════════════════════
 function switchTab(tab) {
-  ['dashboard','inventory','expenses','saleslog','booth'].forEach(t => {
+  ['dashboard','inventory','expenses','booth'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
   });
@@ -1427,7 +1456,6 @@ function switchTab(tab) {
   if (sel) sel.value = tab;
   if (tab === 'expenses' && !expLoaded) loadExpenses();
   else if (tab === 'expenses') renderExpenses();
-  else if (tab === 'saleslog') renderSalesLog();
   else if (tab === 'inventory') { if (invView === 'gallery') renderGalleryStock(); else renderTable(); }
   else if (tab === 'booth') {
     const ifr = document.getElementById('booth-iframe');
@@ -1531,11 +1559,13 @@ let saveRatesTimer = null;
 function setRate(val) {
   db.rate = val;
   saveRatesDebounced();
+  updateRateChipLabel();
   render();
 }
 function setRateLarge(val) {
   db.rateLarge = isNaN(val) || val <= 0 ? null : val;
   saveRatesDebounced();
+  updateRateChipLabel();
   render();
 }
 function saveRatesDebounced() {
@@ -1652,8 +1682,131 @@ function applyFilter(list) {
     if (statusFilter === 'sold')   list = list.filter(p => p.originalAvail === false);
     if (statusFilter === 'unsold') list = list.filter(p => p.originalAvail === true);
   }
+  if (hasActiveSaleFilter()) {
+    const idsWithSales = new Set(getFilteredSalesRows().map(r => r.painting.id));
+    list = list.filter(p => idsWithSales.has(p.id));
+  }
   return list;
 }
+
+// ═══════════════════════════════════════════
+//  SALES FILTERING — shared by the Inventory table, the
+//  per-painting expand panel, and the Sales CSV export.
+// ═══════════════════════════════════════════
+function hasActiveSaleFilter() {
+  return !!(
+    document.getElementById('inv-date-from')?.value ||
+    document.getElementById('inv-date-to')?.value ||
+    document.getElementById('inv-channel')?.value ||
+    document.getElementById('inv-sale-state')?.value
+  );
+}
+function salesInFilterFor(p) {
+  const from    = document.getElementById('inv-date-from')?.value || '';
+  const to      = document.getElementById('inv-date-to')?.value || '';
+  const chanFil = document.getElementById('inv-channel')?.value || '';
+  const stateFil= document.getElementById('inv-sale-state')?.value || '';
+  return (p.sales || []).filter(s => {
+    if (from && s.date && s.date < from) return false;
+    if (to   && s.date && s.date > to)   return false;
+    if (chanFil  && s.channel !== chanFil)   return false;
+    if (stateFil && (s.state || '') !== stateFil) return false;
+    return true;
+  });
+}
+function getFilteredSalesRows() {
+  const q = (document.getElementById('inv-search')?.value || '').trim().toLowerCase();
+  const rows = [];
+  for (const p of (db.paintings || [])) {
+    if (q && !(p.title || '').toLowerCase().includes(q)) continue;
+    for (const s of salesInFilterFor(p)) rows.push({ painting: p, sale: s });
+  }
+  rows.sort((a, b) => (b.sale.date || '').localeCompare(a.sale.date || ''));
+  return rows;
+}
+function updateSoldColumnLabels(active) {
+  const lg = document.getElementById('th-lg-sold');
+  const sm = document.getElementById('th-sm-sold');
+  if (lg) lg.textContent = active ? 'Lg sold (range)' : 'Lg sold';
+  if (sm) sm.textContent = active ? 'Sm sold (range)' : 'Sm sold';
+}
+function updateInvFilterBadge() {
+  const badge = document.getElementById('inv-filter-badge');
+  if (!badge) return;
+  let n = 0;
+  if (typeFilter) n++;
+  if (statusFilter) n++;
+  if (momsFilterOn) n++;
+  if (galleryFilterOn) n++;
+  if (zeroLargeFilterOn) n++;
+  if (zeroSmallFilterOn) n++;
+  if (dimFilter) n++;
+  if (document.getElementById('inv-date-from')?.value) n++;
+  if (document.getElementById('inv-date-to')?.value) n++;
+  if (document.getElementById('inv-channel')?.value) n++;
+  if (document.getElementById('inv-sale-state')?.value) n++;
+  badge.textContent = n;
+  badge.style.display = n > 0 ? 'inline-flex' : 'none';
+}
+function clearAllInvFilters() {
+  document.getElementById('inv-search').value = '';
+  typeFilter = ''; statusFilter = '';
+  momsFilterOn = false; galleryFilterOn = false;
+  zeroLargeFilterOn = false; zeroSmallFilterOn = false;
+  dimFilter = '';
+  const dimSel = document.getElementById('dim-filter'); if (dimSel) dimSel.value = '';
+  ['inv-date-from','inv-date-to','inv-channel','inv-sale-state'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  updateFilterChips();
+  renderTable();
+}
+function exportSalesCsv() {
+  const rows = getFilteredSalesRows();
+  const header = ['Date','Painting','Type','Channel','State','Price','Net'];
+  const data = rows.map(({ painting, sale: s }) => [
+    s.date || '',
+    painting.title,
+    s.type,
+    s.channel,
+    s.state || '',
+    Number(s.price || 0).toFixed(2),
+    saleNet(s).toFixed(2),
+  ]);
+  downloadCsv('sales.csv', [header, ...data]);
+}
+
+// ═══════════════════════════════════════════
+//  MOBILE TOOLBAR TOGGLES
+// ═══════════════════════════════════════════
+function toggleInvActionsMenu(e) {
+  e.stopPropagation();
+  document.getElementById('inv-actions-menu')?.classList.toggle('open');
+}
+function closeInvActionsMenu() {
+  document.getElementById('inv-actions-menu')?.classList.remove('open');
+}
+function toggleInvFilters() {
+  document.getElementById('filter-bar')?.classList.toggle('open');
+}
+function toggleRateBar() {
+  document.getElementById('rate-bar')?.classList.toggle('open');
+  document.getElementById('rate-chip-btn')?.classList.toggle('open');
+}
+function updateRateChipLabel() {
+  const el = document.getElementById('rate-chip-val');
+  if (!el) return;
+  el.textContent = db.rateLarge != null
+    ? `$${db.rate.toFixed(2)} / $${db.rateLarge.toFixed(2)} large`
+    : `$${db.rate.toFixed(2)} / sq in`;
+}
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('inv-actions-menu');
+  const btn = document.getElementById('inv-actions-btn');
+  if (menu && menu.classList.contains('open') && !menu.contains(e.target) && e.target !== btn) {
+    menu.classList.remove('open');
+  }
+});
 
 // ═══════════════════════════════════════════
 //  INIT & RENDER
@@ -1695,6 +1848,7 @@ async function init() {
   document.getElementById('rate-large-input').addEventListener('blur', function() {
     this.value = db.rateLarge != null ? db.rateLarge.toFixed(2) : '';
   });
+  updateRateChipLabel();
 
   document.getElementById('irs-rate-display').textContent =
     '$' + DEFAULT_IRS_RATE.toFixed(2) + '/mile (2026)';
@@ -1982,6 +2136,9 @@ function renderTable() {
   if (thCountSmall) thCountSmall.style.display = countModeOn ? '' : 'none';
   if (thCountLarge) thCountLarge.style.display = countModeOn ? '' : 'none';
   const colCount = checklist ? 15 : (countModeOn ? 14 : 12);
+  const saleFilterActive = hasActiveSaleFilter();
+  updateSoldColumnLabels(saleFilterActive);
+  updateInvFilterBadge();
   list = sortedPaintings(list);
   lastRenderedIds = list.map(p => p.id);
   ['title','year','dims','cost','retail'].forEach(f => {
@@ -1997,8 +2154,9 @@ function renderTable() {
     const sold = originalSold(p);
     const squareAvail = originalAvailInSquare(p);
     const isOpen = expandedId === p.id;
-    const lgSold = p.sales.filter(s => s.type === 'large').length;
-    const smSold = p.sales.filter(s => s.type === 'small').length;
+    const scopedSales = salesInFilterFor(p);
+    const lgSold = scopedSales.filter(s => s.type === 'large').length;
+    const smSold = scopedSales.filter(s => s.type === 'small').length;
     const clItem = checklist ? checklist.items.find(i => i.paintingId === p.id) : null;
     const stepper = (field) => `<div class="stock-cell">
         <button class="stock-btn" onclick="adjChecklistQty(event,'${p.id}','${field}',-1)">−</button>
@@ -2020,13 +2178,14 @@ function renderTable() {
     };
     const countSmallCell = countModeOn ? `<td>${countStepper('small')}</td>` : '';
     const countLargeCell = countModeOn ? `<td>${countStepper('large')}</td>` : '';
+    const mobileChevron = `<span class="expand-arrow mobile-only-flex ${isOpen?'open':''}" style="margin-right:6px;vertical-align:middle">${ICON_CHEVRON}</span>`;
     const titleCell = clItem
-      ? `<strong style="${clItem.done ? 'text-decoration:line-through;color:var(--ink3)' : ''}">${esc(p.title)}</strong>`
-      : `<strong>${esc(p.title)}</strong>`;
+      ? `${mobileChevron}<strong style="${clItem.done ? 'text-decoration:line-through;color:var(--ink3)' : ''}">${esc(p.title)}</strong>`
+      : `${mobileChevron}<strong>${esc(p.title)}</strong>`;
     rows += `
       <tr class="painting-row" onclick="toggleExpand('${p.id}')">
-        <td onclick="event.stopPropagation()"><input type="checkbox" class="row-select" ${selectedIds.has(p.id)?'checked':''} onchange="toggleRowSelect('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></td>
-        <td><span class="expand-arrow ${isOpen?'open':''}">${ICON_CHEVRON}</span></td>
+        <td class="mobile-hide" onclick="event.stopPropagation()"><input type="checkbox" class="row-select" ${selectedIds.has(p.id)?'checked':''} onchange="toggleRowSelect('${p.id}', this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></td>
+        <td class="mobile-hide"><span class="expand-arrow ${isOpen?'open':''}">${ICON_CHEVRON}</span></td>
         <td>${titleCell}</td>
         ${qtySmallCell}
         ${qtyLargeCell}
@@ -2080,10 +2239,10 @@ function renderTable() {
             <button class="btn-sm danger" onclick="deletePainting('${p.id}')">Delete painting</button>
             <button class="btn-primary" onclick="savePaintingEdits('${p.id}')">Save changes</button>
           </div>
-          <div class="sub-title">Sales</div>
+          <div class="sub-title">Sales${saleFilterActive ? ' <span style="text-transform:none;font-weight:500;letter-spacing:normal;color:var(--ink3)">(filtered)</span>' : ''}</div>
           <div class="sales-list">
-            ${p.sales.length === 0 ? '<div class="no-sales">No sales logged.</div>' : ''}
-            ${p.sales.map(s => {
+            ${scopedSales.length === 0 ? `<div class="no-sales">${saleFilterActive ? 'No sales match the current filters.' : 'No sales logged.'}</div>` : ''}
+            ${scopedSales.map(s => {
               const typeLabel = s.type === 'original' ? 'Original' : s.type === 'large' ? 'Large print' : 'Small print';
               const chanLabel = s.channel === 'fair' ? ('Art fair' + (s.state ? ' · ' + s.state : '')) : s.channel === 'online' ? 'Online' : 'Gallery';
               const net = saleNet(s);
@@ -2705,7 +2864,6 @@ async function deleteSale(paintingId, saleId) {
   if (!confirm(`Delete ${label}? This cannot be undone.`)) return;
   p.sales = p.sales.filter(x => x.id !== saleId);
   render();
-  renderSalesLog();
   try { await api('DELETE', `/paintings/${paintingId}/sales/${saleId}`); }
   catch(e) { alert('Failed to delete sale: ' + e.message); }
 }
@@ -2722,7 +2880,6 @@ async function deletePainting(id) {
   if (expandedId === id) expandedId = null;
   populateDimFilterOptions();
   render();
-  renderSalesLog();
   try { await api('DELETE', `/paintings/${id}`); }
   catch(e) { alert('Failed to delete painting: ' + e.message); }
 }
@@ -2972,7 +3129,6 @@ async function saveSale() {
       }
     }
     render();
-    renderSalesLog();
   } catch(e) { alert('Failed to save sale: ' + e.message); }
 }
 
@@ -3593,83 +3749,8 @@ function exportMileageCsv() {
 }
 
 // ═══════════════════════════════════════════
-//  SALES LOG TAB
+//  DASHBOARD STATE/TAX EXPORTS
 // ═══════════════════════════════════════════
-function getSalesLogRows() {
-  const from    = document.getElementById('sl-from')?.value || '';
-  const to      = document.getElementById('sl-to')?.value || '';
-  const chanFil = document.getElementById('sl-channel')?.value || '';
-  const stateFil= document.getElementById('sl-state')?.value || '';
-  const q       = (document.getElementById('sl-search')?.value || '').trim().toLowerCase();
-
-  const rows = [];
-  for (const p of (db.paintings || [])) {
-    if (q && !(p.title || '').toLowerCase().includes(q)) continue;
-    for (const s of (p.sales || [])) {
-      if (from && s.date && s.date < from) continue;
-      if (to   && s.date && s.date > to)   continue;
-      if (chanFil && s.channel !== chanFil) continue;
-      if (stateFil && (s.state || '') !== stateFil) continue;
-      rows.push({ painting: p, sale: s });
-    }
-  }
-  rows.sort((a, b) => (b.sale.date || '').localeCompare(a.sale.date || ''));
-  return rows;
-}
-
-function renderSalesLog() {
-  const rows = getSalesLogRows();
-  const tbody = document.getElementById('sl-table-body');
-  const summary = document.getElementById('sl-summary');
-
-  // Summary bar
-  const totalRevenue = rows.reduce((s, r) => s + Number(r.sale.price || 0), 0);
-  const totalNet     = rows.reduce((s, r) => s + saleNet(r.sale), 0);
-  const fmt = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  summary.innerHTML = `
-    <span style="font-size:12px;color:var(--ink2)"><strong style="color:var(--ink);font-family:var(--mono)">${rows.length}</strong> sales</span>
-    <span style="font-size:12px;color:var(--ink2)">Revenue <strong style="color:var(--accent-ink);font-family:var(--mono)">${fmt(totalRevenue)}</strong></span>
-    <span style="font-size:12px;color:var(--ink2)">Net <strong style="color:var(--green);font-family:var(--mono)">${fmt(totalNet)}</strong></span>
-  `;
-
-  if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">No sales match the current filters.</div></td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = rows.map(({ painting, sale: s }) => {
-    const typeLabel = s.type === 'original' ? 'Original' : s.type === 'large' ? 'Large print' : 'Small print';
-    const chanLabel = s.channel === 'fair' ? 'Art fair' : s.channel === 'online' ? 'Online' : 'Gallery';
-    const net = saleNet(s);
-    const isGallery = s.channel === 'gallery';
-    const priceHtml = isGallery
-      ? `<span style="font-family:var(--mono);font-size:13px;color:var(--ink3)">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
-      : `<span style="font-family:var(--mono);font-size:13px">$${Number(s.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
-    return `<tr onclick="openEditSaleModal('${painting.id}','${s.id}')" style="cursor:pointer">
-      <td class="mono dim">${s.date || '—'}</td>
-      <td><strong>${esc(painting.title)}</strong></td>
-      <td><span class="sale-type ${s.type}">${typeLabel}</span></td>
-      <td class="mobile-hide dim">${chanLabel}</td>
-      <td class="mobile-hide mono dim">${s.state || '—'}</td>
-      <td style="text-align:right">${priceHtml}</td>
-      <td style="text-align:right;font-family:var(--mono);font-size:13px;color:var(--green)">$${net.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td style="text-align:center">
-        <button class="sale-del" onclick="event.stopPropagation();openEditSaleModal('${painting.id}','${s.id}')" title="Edit sale" style="color:var(--ink3);font-size:13px">✎</button>
-        <button class="sale-del" onclick="event.stopPropagation();deleteSale('${painting.id}','${s.id}')" title="Delete sale" style="color:var(--ink3);font-size:13px">×</button>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-function clearSalesLogFilters() {
-  document.getElementById('sl-search').value = '';
-  document.getElementById('sl-from').value = '';
-  document.getElementById('sl-to').value = '';
-  document.getElementById('sl-channel').value = '';
-  document.getElementById('sl-state').value = '';
-  renderSalesLog();
-}
-
 function exportRevenueByStateCsv() {
   const fromVal = document.getElementById('chart-from').value;
   const toVal   = document.getElementById('chart-to').value;
@@ -3696,21 +3777,6 @@ function exportTaxByStateCsv() {
     [period, 'Unspecified (fair sales missing a state)', taxableUnknown.toFixed(2), '—', '—'],
   ];
   downloadCsv('estimated-tax-by-state.csv', [header, ...data]);
-}
-
-function exportSalesLogCsv() {
-  const rows = getSalesLogRows();
-  const header = ['Date','Painting','Type','Channel','State','Price','Net'];
-  const data = rows.map(({ painting, sale: s }) => [
-    s.date || '',
-    painting.title,
-    s.type,
-    s.channel,
-    s.state || '',
-    Number(s.price || 0).toFixed(2),
-    saleNet(s).toFixed(2),
-  ]);
-  downloadCsv('sales-log.csv', [header, ...data]);
 }
 
 // ═══════════════════════════════════════════
