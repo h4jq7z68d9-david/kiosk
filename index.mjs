@@ -271,7 +271,6 @@ async function getOriginals() {
   ]);
 
   const rate = configRes.Item?.rate ?? null;
-  const rateLarge = configRes.Item?.rateLarge ?? null;
 
   const imageMap = {};
   for (const img of (imagesRes.objects || [])) {
@@ -332,9 +331,7 @@ async function getOriginals() {
     if (override != null) {
       price = override;
     } else if (rate && width && height) {
-      // Match admin's effectiveRate(): large rate applies when a side is >= 30"
-      const effRate = (rateLarge != null && (width >= 30 || height >= 30)) ? rateLarge : rate;
-      price = Math.ceil((width * height * effRate) / 50) * 50;
+      price = Math.ceil((width * height * rate) / 50) * 50;
     }
 
     const atGallery = gallerySquareIds.has(obj.id) || galleryNormTitles.has(normT(item.name)) || null;
@@ -730,8 +727,7 @@ async function adminGetPaintings(cors) {
   await Promise.all([...backfillPromises, ...autoCreatePromises]);
 
   const rate = configRes.Item?.rate ?? 1.10;
-  const rateLarge = configRes.Item?.rateLarge ?? null;
-  return ok({ paintings, rate, rateLarge }, cors);
+  return ok({ paintings, rate }, cors);
 }
 
 async function adminAddPainting(body, cors) {
@@ -855,16 +851,15 @@ async function adminDeleteSale(saleId, cors) {
 
 async function adminGetConfig(cors) {
   const res = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
-  return ok({ rate: res.Item?.rate ?? 1.10, rateLarge: res.Item?.rateLarge ?? null }, cors);
+  return ok({ rate: res.Item?.rate ?? 1.10 }, cors);
 }
 
 async function adminUpdateConfig(body, cors) {
-  const { rate, rateLarge } = body;
+  const { rate } = body;
   if (!rate || isNaN(rate)) return err('Invalid rate', 400, cors);
   const item = { id: '__config__', rate: Number(rate) };
-  if (rateLarge != null && !isNaN(rateLarge)) item.rateLarge = Number(rateLarge);
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
-  return ok({ rate: Number(rate), rateLarge: item.rateLarge ?? null }, cors);
+  return ok({ rate: Number(rate) }, cors);
 }
 
 // ── Admin: Expenses ──

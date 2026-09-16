@@ -637,12 +637,7 @@
             <span>$</span>
             <input type="text" inputmode="decimal" id="rate-input" value="1.10" style="-webkit-appearance:none;-moz-appearance:textfield">
           </div>
-          <label style="margin-left:16px">Large (≥30") / sq in</label>
-          <div class="rate-input-wrap">
-            <span>$</span>
-            <input type="text" inputmode="decimal" id="rate-large-input" placeholder="same" style="-webkit-appearance:none;-moz-appearance:textfield">
-          </div>
-          <span class="rate-note">Adjusts price &amp; rounded columns for all paintings</span>
+          <span class="rate-note">Adjusts price &amp; rounded columns for all paintings — use a painting's price override for one-off exceptions</span>
         </div>
         <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
           <div class="table-header">
@@ -1344,7 +1339,7 @@ const MILEAGE_SEED = [
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
-let db = { paintings: [], rate: 1.10, rateLarge: null };
+let db = { paintings: [], rate: 1.10 };
 let priceLists = [];
 let expState = { expenses: [], mileage: [], recurring: [], seeded: false };
 let sortField = 'title', sortDir = 'asc';
@@ -1542,7 +1537,7 @@ function chunk(arr, size) {
 //  CALC (inventory)
 // ═══════════════════════════════════════════
 function sqIn(p) { return p.width * p.height; }
-function effectiveRate(p) { return (db.rateLarge != null && (p.width >= 30 || p.height >= 30)) ? db.rateLarge : db.rate; }
+function effectiveRate(p) { return db.rate; }
 function cost(p, rate) { return sqIn(p) * (rate !== undefined ? rate : effectiveRate(p)); }
 function retail(p, rate) {
   if (rate === undefined && p.priceOverride != null) return p.priceOverride;
@@ -1562,19 +1557,12 @@ function setRate(val) {
   updateRateChipLabel();
   render();
 }
-function setRateLarge(val) {
-  db.rateLarge = isNaN(val) || val <= 0 ? null : val;
-  saveRatesDebounced();
-  updateRateChipLabel();
-  render();
-}
 function saveRatesDebounced() {
   clearTimeout(saveRatesTimer);
   saveRatesTimer = setTimeout(saveRates, 500);
 }
 function saveRates() {
   const body = { rate: db.rate };
-  if (db.rateLarge != null) body.rateLarge = db.rateLarge;
   api('PUT', '/config', body).catch(e => console.error('Rate save failed:', e));
 }
 
@@ -1763,7 +1751,7 @@ function clearAllInvFilters() {
 }
 function exportSalesCsv() {
   const rows = getFilteredSalesRows();
-  const header = ['Date','Painting','Type','Channel','State','Price','Net'];
+  const header = ['Date','Painting','Type','Channel','State','Price','Net','Lg Stock Remaining','Sm Stock Remaining'];
   const data = rows.map(({ painting, sale: s }) => [
     s.date || '',
     painting.title,
@@ -1772,6 +1760,8 @@ function exportSalesCsv() {
     s.state || '',
     Number(s.price || 0).toFixed(2),
     saleNet(s).toFixed(2),
+    painting.stock?.large || 0,
+    painting.stock?.small || 0,
   ]);
   downloadCsv('sales.csv', [header, ...data]);
 }
@@ -1796,9 +1786,7 @@ function toggleRateBar() {
 function updateRateChipLabel() {
   const el = document.getElementById('rate-chip-val');
   if (!el) return;
-  el.textContent = db.rateLarge != null
-    ? `$${db.rate.toFixed(2)} / $${db.rateLarge.toFixed(2)} large`
-    : `$${db.rate.toFixed(2)} / sq in`;
+  el.textContent = `$${db.rate.toFixed(2)} / sq in`;
 }
 document.addEventListener('click', function(e) {
   const menu = document.getElementById('inv-actions-menu');
@@ -1819,7 +1807,6 @@ async function init() {
     const data = await api('GET', '/paintings');
     db.paintings = data.paintings;
     db.rate = data.rate ?? 1.10;
-    db.rateLarge = data.rateLarge ?? null;
     if (!db.paintings.some(p => p.title === 'Unknown')) {
       try {
         const up = await api('POST', '/paintings', { title: 'Unknown', year: new Date().getFullYear(), width: 1, height: 1, stock: { large: 0, small: 0 } });
@@ -1839,14 +1826,6 @@ async function init() {
   });
   document.getElementById('rate-input').addEventListener('blur', function() {
     this.value = db.rate.toFixed(2);
-  });
-  if (db.rateLarge != null) document.getElementById('rate-large-input').value = db.rateLarge.toFixed(2);
-  document.getElementById('rate-large-input').addEventListener('input', function() {
-    const v = parseFloat(this.value);
-    setRateLarge(isNaN(v) ? null : v);
-  });
-  document.getElementById('rate-large-input').addEventListener('blur', function() {
-    this.value = db.rateLarge != null ? db.rateLarge.toFixed(2) : '';
   });
   updateRateChipLabel();
 
@@ -3233,9 +3212,9 @@ async function reloadPaintings() {
   const data = await api('GET', '/paintings');
   db.paintings = data.paintings;
   db.rate = data.rate ?? db.rate;
-  db.rateLarge = data.rateLarge ?? db.rateLarge;
   populateDimFilterOptions();
   render();
+  updateRateChipLabel();
 }
 
 // ═══════════════════════════════════════════
