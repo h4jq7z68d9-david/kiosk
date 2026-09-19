@@ -303,6 +303,36 @@
   .filter-chip { font-family: var(--font); font-size: 12px; font-weight: 500; padding: 4px 11px; border: 1.5px solid var(--border-mid); border-radius: 20px; background: none; color: var(--ink2); cursor: pointer; transition: all 0.12s; white-space: nowrap; }
   .filter-chip:hover { border-color: var(--accent); color: var(--accent-ink); }
   .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .filter-chip.exclude { background: none; border-color: var(--red); color: var(--red); }
+  .filter-chip.exclude::before { content: "⊘ "; }
+
+  /* ── FILTER SIDEBAR (tablet/desktop) ── */
+  .inv-cols { display: flex; flex-direction: column; gap: 16px; }
+  .fb-group { display: contents; }
+  .sb-label { display: none; }
+  @media (min-width: 601px) {
+    .inv-cols { flex-direction: row; align-items: flex-start; gap: 20px; }
+    .filter-bar {
+      flex-direction: column; align-items: stretch; flex-wrap: nowrap;
+      width: 220px; flex-shrink: 0; gap: 0;
+      border: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      border-radius: var(--radius); background: white; padding: 4px 18px;
+    }
+    .filter-divider { display: none; }
+    .fb-group {
+      display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .fb-group:last-child { border-bottom: none; }
+    .fb-group-actions { flex-direction: row; flex-wrap: wrap; }
+    .sb-label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); }
+    #status-filter-group, #zero-stock-filter-group {
+      flex-direction: column; align-items: stretch; gap: 8px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .filter-bar #dim-filter, .filter-bar #inv-channel, .filter-bar #inv-sale-state,
+    .filter-bar #inv-date-from, .filter-bar #inv-date-to { width: 100%; }
+  }
 
   .empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); font-size: 14px; }
 
@@ -639,96 +669,122 @@
           </div>
           <span class="rate-note">Adjusts price &amp; rounded columns for all paintings — use a painting's price override for one-off exceptions</span>
         </div>
-        <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
-          <div class="table-header">
-            <div class="section-title" style="margin:0">Inventory</div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
-              <button class="btn-sm mobile-hide" onclick="openChecklistModal()">Checklist</button>
-              <button class="btn-sm mobile-hide" onclick="startInventoryCount()">Take Inventory</button>
-              <button class="btn-sm mobile-hide" onclick="openPriceListModal()">Price List</button>
-              <button class="btn-sm mobile-hide" onclick="printTagsForSelected()">Price Tags</button>
-              <div class="dropdown-wrap mobile-only-flex">
-                <button class="icon-btn" id="inv-actions-btn" onclick="toggleInvActionsMenu(event)" aria-label="More actions" title="More actions">⋯</button>
-                <div class="dropdown-menu" id="inv-actions-menu">
-                  <button onclick="closeInvActionsMenu();openChecklistModal()">Checklist</button>
-                  <button onclick="closeInvActionsMenu();startInventoryCount()">Take inventory</button>
-                  <button onclick="closeInvActionsMenu();openPriceListModal()">Price list</button>
-                  <button onclick="closeInvActionsMenu();printTagsForSelected()">Price tags</button>
-                </div>
-              </div>
-              <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
-            </div>
-          </div>
-          <div class="search-row">
-            <input type="text" id="inv-search" placeholder="Search title…" oninput="renderTable()" style="font-family:var(--font);font-size:13px;padding:5px 10px;border:1.5px solid var(--border-mid);border-radius:20px;min-width:160px;flex:1">
-            <button class="btn-sm mobile-only-flex" id="inv-filters-btn" onclick="toggleInvFilters()" style="align-items:center;gap:6px">
-              <span>Filters</span><span class="filter-badge" id="inv-filter-badge" style="display:none">0</span>
-            </button>
-          </div>
+        <div class="inv-cols">
           <div class="filter-bar" id="filter-bar">
             <span class="filter-bar-label">Filter</span>
-            <button class="filter-chip" id="fc-type-prints"    onclick="setTypeFilter('prints')">Prints</button>
-            <button class="filter-chip" id="fc-type-originals" onclick="setTypeFilter('originals')">Originals</button>
+            <div class="fb-group">
+              <button class="filter-chip" id="fc-type-prints"    onclick="setTypeFilter('prints')">Prints</button>
+              <button class="filter-chip" id="fc-type-originals" onclick="setTypeFilter('originals')">Originals</button>
+            </div>
             <span id="status-filter-group" style="display:none;gap:6px">
+              <span class="sb-label">Status</span>
               <button class="filter-chip" id="fc-status-sold"   onclick="setStatusFilter('sold')">Sold</button>
               <button class="filter-chip" id="fc-status-unsold" onclick="setStatusFilter('unsold')">Unsold</button>
             </span>
             <span id="zero-stock-filter-group" style="display:none;gap:6px">
+              <span class="sb-label">Stock</span>
               <button class="filter-chip" id="fc-zero-large" onclick="toggleBoolFilter('zeroLarge')">0 large</button>
               <button class="filter-chip" id="fc-zero-small" onclick="toggleBoolFilter('zeroSmall')">0 small</button>
             </span>
-            <span style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
-            <button class="filter-chip" id="fc-no-moms"    onclick="toggleBoolFilter('moms')">Mom doesn't have</button>
-            <button class="filter-chip" id="fc-at-gallery" onclick="toggleBoolFilter('gallery')">At gallery</button>
-            <select id="dim-filter" onchange="setDimFilter(this.value)" style="font-family:var(--font);font-size:12px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-mid);border-radius:20px;background:none;color:var(--ink2);cursor:pointer;outline:none">
-              <option value="">All dimensions</option>
-            </select>
-            <span style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
-            <span class="filter-bar-label">Sold between</span>
-            <input type="date" id="inv-date-from" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
-            <span style="font-size:11px;color:var(--ink3)">–</span>
-            <input type="date" id="inv-date-to" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
-            <select id="inv-channel" onchange="renderTable()" style="font-family:var(--font);font-size:12px;border:1.5px solid var(--border-mid);border-radius:20px;padding:4px 10px;background:none;color:var(--ink2);outline:none;appearance:none;cursor:pointer">
-              <option value="">All channels</option>
-              <option value="fair">Art fair</option>
-              <option value="online">Online</option>
-              <option value="gallery">Gallery</option>
-            </select>
-            <select id="inv-sale-state" onchange="renderTable()" style="font-family:var(--font);font-size:12px;border:1.5px solid var(--border-mid);border-radius:20px;padding:4px 10px;background:none;color:var(--ink2);outline:none;appearance:none;cursor:pointer">
-              <option value="">All states</option>
-              <option value="KS">KS</option>
-              <option value="MO">MO</option>
-            </select>
-            <button class="btn-sm" onclick="clearAllInvFilters()">Clear</button>
-            <button class="btn-sm" onclick="exportInventoryCsv()" title="Export current stock snapshot to CSV" style="margin-left:auto">↓ Stock CSV</button>
-            <button class="btn-sm" onclick="exportSalesCsv()" title="Export filtered sales to CSV">↓ Sales CSV</button>
+            <span class="filter-divider" style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
+            <div class="fb-group">
+              <span class="sb-label">Flags</span>
+              <button class="filter-chip" id="fc-no-moms"    onclick="toggleBoolFilter('moms')">Mom doesn't have</button>
+              <button class="filter-chip" id="fc-at-gallery" onclick="toggleBoolFilter('gallery')">At gallery</button>
+            </div>
+            <div class="fb-group">
+              <span class="sb-label">Dimensions</span>
+              <select id="dim-filter" onchange="setDimFilter(this.value)" style="font-family:var(--font);font-size:12px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-mid);border-radius:20px;background:none;color:var(--ink2);cursor:pointer;outline:none">
+                <option value="">All dimensions</option>
+              </select>
+            </div>
+            <span class="filter-divider" style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
+            <div class="fb-group">
+              <span class="filter-bar-label">Sold between</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <input type="date" id="inv-date-from" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
+                <span style="font-size:11px;color:var(--ink3)">–</span>
+                <input type="date" id="inv-date-to" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
+              </div>
+            </div>
+            <div class="fb-group">
+              <span class="sb-label">Channel</span>
+              <select id="inv-channel" onchange="renderTable()" style="font-family:var(--font);font-size:12px;border:1.5px solid var(--border-mid);border-radius:20px;padding:4px 10px;background:none;color:var(--ink2);outline:none;appearance:none;cursor:pointer">
+                <option value="">All channels</option>
+                <option value="fair">Art fair</option>
+                <option value="online">Online</option>
+                <option value="gallery">Gallery</option>
+              </select>
+            </div>
+            <div class="fb-group">
+              <span class="sb-label">State</span>
+              <select id="inv-sale-state" onchange="renderTable()" style="font-family:var(--font);font-size:12px;border:1.5px solid var(--border-mid);border-radius:20px;padding:4px 10px;background:none;color:var(--ink2);outline:none;appearance:none;cursor:pointer">
+                <option value="">All states</option>
+                <option value="KS">KS</option>
+                <option value="MO">MO</option>
+              </select>
+            </div>
+            <div class="fb-group fb-group-actions">
+              <button class="btn-sm" onclick="clearAllInvFilters()">Clear</button>
+              <button class="btn-sm" onclick="exportInventoryCsv()" title="Export current stock snapshot to CSV">↓ Stock CSV</button>
+              <button class="btn-sm" onclick="exportSalesCsv()" title="Export filtered sales to CSV">↓ Sales CSV</button>
+            </div>
           </div>
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="mobile-hide" style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
-                  <th class="mobile-hide" style="width:28px"></th>
-                  <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
-                  <th id="th-qty-small" style="display:none">Print small</th>
-                  <th id="th-qty-large" style="display:none">Print large</th>
-                  <th id="th-complete" style="display:none">Complete</th>
-                  <th id="th-count-small" style="display:none">Count small</th>
-                  <th id="th-count-large" style="display:none">Count large</th>
-                  <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
-                  <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
-                  <th class="mobile-hide" onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
-                  <th class="mobile-hide" onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
-                  <th>Lg stock</th>
-                  <th>Sm stock</th>
-                  <th class="mobile-hide" id="th-lg-sold">Lg sold</th>
-                  <th class="mobile-hide" id="th-sm-sold">Sm sold</th>
-                  <th class="mobile-hide">Original</th>
-                </tr>
-              </thead>
-              <tbody id="table-body"></tbody>
-            </table>
+          <div style="flex:1;min-width:0">
+            <div class="table-section" style="border-top-left-radius:0;border-top-right-radius:0;border-top:none">
+              <div class="table-header">
+                <div class="section-title" style="margin:0">Inventory</div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                  <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
+                  <button class="btn-sm mobile-hide" onclick="openChecklistModal()">Checklist</button>
+                  <button class="btn-sm mobile-hide" onclick="startInventoryCount()">Take Inventory</button>
+                  <button class="btn-sm mobile-hide" onclick="openPriceListModal()">Price List</button>
+                  <button class="btn-sm mobile-hide" onclick="printTagsForSelected()">Price Tags</button>
+                  <div class="dropdown-wrap mobile-only-flex">
+                    <button class="icon-btn" id="inv-actions-btn" onclick="toggleInvActionsMenu(event)" aria-label="More actions" title="More actions">⋯</button>
+                    <div class="dropdown-menu" id="inv-actions-menu">
+                      <button onclick="closeInvActionsMenu();openChecklistModal()">Checklist</button>
+                      <button onclick="closeInvActionsMenu();startInventoryCount()">Take inventory</button>
+                      <button onclick="closeInvActionsMenu();openPriceListModal()">Price list</button>
+                      <button onclick="closeInvActionsMenu();printTagsForSelected()">Price tags</button>
+                    </div>
+                  </div>
+                  <button class="btn-primary" onclick="openAddModal()">+ Add Painting</button>
+                </div>
+              </div>
+              <div class="search-row">
+                <input type="text" id="inv-search" placeholder="Search title…" oninput="renderTable()" style="font-family:var(--font);font-size:13px;padding:5px 10px;border:1.5px solid var(--border-mid);border-radius:20px;min-width:160px;flex:1">
+                <button class="btn-sm mobile-only-flex" id="inv-filters-btn" onclick="toggleInvFilters()" style="align-items:center;gap:6px">
+                  <span>Filters</span><span class="filter-badge" id="inv-filter-badge" style="display:none">0</span>
+                </button>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th class="mobile-hide" style="width:28px"><input type="checkbox" id="select-all-cb" onclick="event.stopPropagation()" onchange="toggleSelectAll(this.checked)" style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer"></th>
+                      <th class="mobile-hide" style="width:28px"></th>
+                      <th onclick="sortBy('title')">Title <span class="sort-arrow" id="sort-title"></span></th>
+                      <th id="th-qty-small" style="display:none">Print small</th>
+                      <th id="th-qty-large" style="display:none">Print large</th>
+                      <th id="th-complete" style="display:none">Complete</th>
+                      <th id="th-count-small" style="display:none">Count small</th>
+                      <th id="th-count-large" style="display:none">Count large</th>
+                      <th onclick="sortBy('year')" class="col-hide">Year <span class="sort-arrow" id="sort-year"></span></th>
+                      <th class="col-hide" onclick="sortBy('dims')">Dimensions <span class="sort-arrow" id="sort-dims"></span></th>
+                      <th class="mobile-hide" onclick="sortBy('cost')" title="Width × height × price/sq in">Price <span class="sort-arrow" id="sort-cost"></span></th>
+                      <th class="mobile-hide" onclick="sortBy('retail')" title="Rounded to the nearest $50">Rounded <span class="sort-arrow" id="sort-retail"></span></th>
+                      <th>Lg stock</th>
+                      <th>Sm stock</th>
+                      <th class="mobile-hide" id="th-lg-sold">Lg sold</th>
+                      <th class="mobile-hide" id="th-sm-sold">Sm sold</th>
+                      <th class="mobile-hide">Original</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body"></tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1346,10 +1402,10 @@ let sortField = 'title', sortDir = 'asc';
 let dimFilter = '';
 let typeFilter = '';   // '' | 'prints' | 'originals'
 let statusFilter = ''; // '' | 'sold' | 'unsold'
-let momsFilterOn = false;
-let galleryFilterOn = false;
-let zeroLargeFilterOn = false;
-let zeroSmallFilterOn = false;
+let momsFilterOn = 0;    // 0 = off, 1 = include (matches), -1 = exclude (opposite)
+let galleryFilterOn = 0;
+let zeroLargeFilterOn = 0;
+let zeroSmallFilterOn = 0;
 let invView = 'list'; // 'list' | 'gallery'
 let selectedIds = new Set();
 let checklists = [];
@@ -1595,8 +1651,8 @@ function sortedPaintings(list) {
 function setTypeFilter(t) {
   typeFilter = typeFilter === t ? '' : t;
   statusFilter = ''; // reset status when switching/clearing type
-  zeroLargeFilterOn = false; // reset zero-stock toggles too
-  zeroSmallFilterOn = false;
+  zeroLargeFilterOn = 0; // reset zero-stock toggles too
+  zeroSmallFilterOn = 0;
   updateFilterChips();
   renderTable();
 }
@@ -1605,11 +1661,17 @@ function setStatusFilter(s) {
   updateFilterChips();
   renderTable();
 }
+function cycleBoolFilter(state) {
+  // off -> include -> exclude -> off
+  if (state === 0) return 1;
+  if (state === 1) return -1;
+  return 0;
+}
 function toggleBoolFilter(f) {
-  if (f === 'moms')      momsFilterOn = !momsFilterOn;
-  if (f === 'gallery')   galleryFilterOn = !galleryFilterOn;
-  if (f === 'zeroLarge') zeroLargeFilterOn = !zeroLargeFilterOn;
-  if (f === 'zeroSmall') zeroSmallFilterOn = !zeroSmallFilterOn;
+  if (f === 'moms')      momsFilterOn = cycleBoolFilter(momsFilterOn);
+  if (f === 'gallery')   galleryFilterOn = cycleBoolFilter(galleryFilterOn);
+  if (f === 'zeroLarge') zeroLargeFilterOn = cycleBoolFilter(zeroLargeFilterOn);
+  if (f === 'zeroSmall') zeroSmallFilterOn = cycleBoolFilter(zeroSmallFilterOn);
   updateFilterChips();
   renderTable();
 }
@@ -1647,25 +1709,35 @@ function updateFilterChips() {
   if (zeroGroup) zeroGroup.style.display = typeFilter === 'prints' ? 'inline-flex' : 'none';
   const elZeroLg = document.getElementById('fc-zero-large');
   const elZeroSm = document.getElementById('fc-zero-small');
-  if (elZeroLg) elZeroLg.classList.toggle('active', zeroLargeFilterOn);
-  if (elZeroSm) elZeroSm.classList.toggle('active', zeroSmallFilterOn);
+  setChipTriState(elZeroLg, zeroLargeFilterOn);
+  setChipTriState(elZeroSm, zeroSmallFilterOn);
   const elMoms = document.getElementById('fc-no-moms');
   const elGal  = document.getElementById('fc-at-gallery');
-  if (elMoms) elMoms.classList.toggle('active', momsFilterOn);
-  if (elGal)  elGal.classList.toggle('active', galleryFilterOn);
+  setChipTriState(elMoms, momsFilterOn);
+  setChipTriState(elGal, galleryFilterOn);
+}
+function setChipTriState(el, state) {
+  if (!el) return;
+  el.classList.toggle('active', state === 1);
+  el.classList.toggle('exclude', state === -1);
+  el.title = state === -1 ? 'Excluding — click to clear' : state === 1 ? 'Including — click to exclude instead' : 'Click to filter';
 }
 function applyFilter(list) {
   const q = (document.getElementById('inv-search')?.value || '').trim().toLowerCase();
   if (q) list = list.filter(p => (p.title || '').toLowerCase().includes(q));
   if (dimFilter) list = list.filter(p => `${p.width}×${p.height}` === dimFilter);
-  if (momsFilterOn)    list = list.filter(p => !p.momsHas);
-  if (galleryFilterOn) list = list.filter(p => !!p.atGallery);
+  if (momsFilterOn === 1)  list = list.filter(p => !p.momsHas);
+  if (momsFilterOn === -1) list = list.filter(p => !!p.momsHas);
+  if (galleryFilterOn === 1)  list = list.filter(p => !!p.atGallery);
+  if (galleryFilterOn === -1) list = list.filter(p => !p.atGallery);
   if (typeFilter === 'prints') {
     const printSaleCount = p => (p.sales||[]).filter(s => s.type === 'large' || s.type === 'small').length;
     if (statusFilter === 'sold')   list = list.filter(p => printSaleCount(p) > 0);
     if (statusFilter === 'unsold') list = list.filter(p => printSaleCount(p) === 0);
-    if (zeroLargeFilterOn) list = list.filter(p => (p.stock?.large||0) === 0);
-    if (zeroSmallFilterOn) list = list.filter(p => (p.stock?.small||0) === 0);
+    if (zeroLargeFilterOn === 1)  list = list.filter(p => (p.stock?.large||0) === 0);
+    if (zeroLargeFilterOn === -1) list = list.filter(p => (p.stock?.large||0) > 0);
+    if (zeroSmallFilterOn === 1)  list = list.filter(p => (p.stock?.small||0) === 0);
+    if (zeroSmallFilterOn === -1) list = list.filter(p => (p.stock?.small||0) > 0);
   } else if (typeFilter === 'originals') {
     if (statusFilter === 'sold')   list = list.filter(p => p.originalAvail === false);
     if (statusFilter === 'unsold') list = list.filter(p => p.originalAvail === true);
@@ -1739,8 +1811,8 @@ function updateInvFilterBadge() {
 function clearAllInvFilters() {
   document.getElementById('inv-search').value = '';
   typeFilter = ''; statusFilter = '';
-  momsFilterOn = false; galleryFilterOn = false;
-  zeroLargeFilterOn = false; zeroSmallFilterOn = false;
+  momsFilterOn = 0; galleryFilterOn = 0;
+  zeroLargeFilterOn = 0; zeroSmallFilterOn = 0;
   dimFilter = '';
   const dimSel = document.getElementById('dim-filter'); if (dimSel) dimSel.value = '';
   ['inv-date-from','inv-date-to','inv-channel','inv-sale-state'].forEach(id => {
@@ -3476,10 +3548,10 @@ function resetFiltersAndSelection() {
   dimFilter = '';
   typeFilter = '';
   statusFilter = '';
-  momsFilterOn = false;
-  galleryFilterOn = false;
-  zeroLargeFilterOn = false;
-  zeroSmallFilterOn = false;
+  momsFilterOn = 0;
+  galleryFilterOn = 0;
+  zeroLargeFilterOn = 0;
+  zeroSmallFilterOn = 0;
   const invSearch = document.getElementById('inv-search');
   if (invSearch) invSearch.value = '';
   clearSelection();
