@@ -741,7 +741,7 @@
             </div>
             <div class="fb-group" id="inv-filter-revenue-group" style="display:none">
               <span class="filter-bar-label">Revenue</span>
-              <span id="inv-filter-revenue" style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent-ink)"></span>
+              <div id="inv-filter-revenue" style="font-family:var(--mono);font-size:12px;display:flex;flex-direction:column;gap:3px;min-width:180px"></div>
             </div>
             <div class="fb-group fb-group-actions">
               <button class="btn-sm" onclick="clearAllInvFilters()">Clear</button>
@@ -1818,15 +1818,22 @@ function updateFilterRevenue() {
   if (!hasActiveSaleFilter()) { grp.style.display = 'none'; return; }
   const rows = getFilteredSalesRows();
   const total = rows.reduce((sum, r) => sum + saleNet(r.sale), 0);
-  // Print cost/profit only ever counts print sales (large/small) — originals carry no print cost
-  // and are excluded from this part of the equation, per the show-kit cost model.
-  const printCost = rows.reduce((sum, r) => sum + printCostFor(r.sale), 0);
-  const printCount = rows.filter(r => r.sale.type === 'large' || r.sale.type === 'small').length;
-  const profit = total - printCost;
+  // Print sales/cost/profit only ever count print sales (large/small) — originals carry no print
+  // cost and are excluded from this part of the equation entirely, per the show-kit cost model.
+  const printRows = rows.filter(r => r.sale.type === 'large' || r.sale.type === 'small');
+  const printRevenue = printRows.reduce((sum, r) => sum + saleNet(r.sale), 0);
+  const printCost = printRows.reduce((sum, r) => sum + printCostFor(r.sale), 0);
+  const printProfit = printRevenue - printCost;
   const fmt = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-  let text = `${fmt(total)} · ${rows.length} sale${rows.length !== 1 ? 's' : ''}`;
-  if (printCount > 0) text += ` · print cost ${fmt(printCost)} · profit ${fmt(profit)}`;
-  el.textContent = text;
+  const statRow = (label, value) =>
+    `<div style="display:flex;justify-content:space-between;gap:10px"><span style="color:var(--ink3)">${label}</span><span style="font-weight:700;color:var(--accent-ink)">${value}</span></div>`;
+  let html = statRow('Total revenue', `${fmt(total)} · ${rows.length} sale${rows.length !== 1 ? 's' : ''}`);
+  if (printRows.length > 0) {
+    html += statRow('Print sales', `${fmt(printRevenue)} · ${printRows.length}`);
+    html += statRow('Print cost', fmt(printCost));
+    html += statRow('Print profit', fmt(printProfit));
+  }
+  el.innerHTML = html;
   grp.style.display = '';
 }
 function updateSoldColumnLabels(active) {
