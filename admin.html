@@ -727,6 +727,10 @@
                 <option value="MO">MO</option>
               </select>
             </div>
+            <div class="fb-group" id="inv-filter-revenue-group" style="display:none">
+              <span class="filter-bar-label">Revenue</span>
+              <span id="inv-filter-revenue" style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent-ink)"></span>
+            </div>
             <div class="fb-group fb-group-actions">
               <button class="btn-sm" onclick="clearAllInvFilters()">Clear</button>
               <button class="btn-sm" onclick="exportInventoryCsv()" title="Export current stock snapshot to CSV">↓ Stock CSV</button>
@@ -1783,6 +1787,17 @@ function getFilteredSalesRows() {
   rows.sort((a, b) => (b.sale.date || '').localeCompare(a.sale.date || ''));
   return rows;
 }
+function updateFilterRevenue() {
+  const grp = document.getElementById('inv-filter-revenue-group');
+  const el  = document.getElementById('inv-filter-revenue');
+  if (!grp || !el) return;
+  if (!hasActiveSaleFilter()) { grp.style.display = 'none'; return; }
+  const rows = getFilteredSalesRows();
+  const total = rows.reduce((sum, r) => sum + saleNet(r.sale), 0);
+  const fmt = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  el.textContent = `${fmt(total)} · ${rows.length} sale${rows.length !== 1 ? 's' : ''}`;
+  grp.style.display = '';
+}
 function updateSoldColumnLabels(active) {
   const lg = document.getElementById('th-lg-sold');
   const sm = document.getElementById('th-sm-sold');
@@ -2189,6 +2204,7 @@ function renderTable() {
   const saleFilterActive = hasActiveSaleFilter();
   updateSoldColumnLabels(saleFilterActive);
   updateInvFilterBadge();
+  updateFilterRevenue();
   list = sortedPaintings(list);
   lastRenderedIds = list.map(p => p.id);
   ['title','year','dims','cost','retail'].forEach(f => {
