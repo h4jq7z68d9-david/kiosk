@@ -671,6 +671,18 @@
             <input type="text" inputmode="decimal" id="rate-input" value="1.10" style="-webkit-appearance:none;-moz-appearance:textfield">
           </div>
           <span class="rate-note">Adjusts price &amp; rounded columns for all paintings — use a painting's price override for one-off exceptions</span>
+          <span class="filter-divider" style="width:1px;height:20px;background:var(--border-mid);margin:0 4px"></span>
+          <label>Small print cost</label>
+          <div class="rate-input-wrap">
+            <span>$</span>
+            <input type="text" inputmode="decimal" id="print-cost-small-input" value="5.00" style="-webkit-appearance:none;-moz-appearance:textfield">
+          </div>
+          <label>Large print cost</label>
+          <div class="rate-input-wrap">
+            <span>$</span>
+            <input type="text" inputmode="decimal" id="print-cost-large-input" value="12.00" style="-webkit-appearance:none;-moz-appearance:textfield">
+          </div>
+          <span class="rate-note">Landed cost per print (paper + ink + show kit) — used for print cost/profit in the filter revenue readout</span>
         </div>
         <div class="inv-cols">
           <div class="filter-bar" id="filter-bar">
@@ -1605,6 +1617,12 @@ function retail(p, rate) {
 function originalSold(p) { return p.sales.some(s => s.type === 'original'); }
 function originalAvailInSquare(p) { return p.originalAvail === true; }
 function saleNet(s) { if (s.channel === 'gallery' && s.net != null) return Number(s.net); return Number(s.price); }
+// Print production cost (paper + ink + mat/backing/bag show kit) — originals have no print cost.
+function printCostFor(s) {
+  if (s.type === 'large') return db.printCostLarge ?? 12;
+  if (s.type === 'small') return db.printCostSmall ?? 5;
+  return 0;
+}
 
 // ═══════════════════════════════════════════
 //  RATE
@@ -1616,12 +1634,18 @@ function setRate(val) {
   updateRateChipLabel();
   render();
 }
+function setPrintCost(size, val) {
+  if (size === 'small') db.printCostSmall = val;
+  else if (size === 'large') db.printCostLarge = val;
+  saveRatesDebounced();
+  updateFilterRevenue();
+}
 function saveRatesDebounced() {
   clearTimeout(saveRatesTimer);
   saveRatesTimer = setTimeout(saveRates, 500);
 }
 function saveRates() {
-  const body = { rate: db.rate };
+  const body = { rate: db.rate, printCostSmall: db.printCostSmall, printCostLarge: db.printCostLarge };
   api('PUT', '/config', body).catch(e => console.error('Rate save failed:', e));
 }
 
@@ -1794,8 +1818,15 @@ function updateFilterRevenue() {
   if (!hasActiveSaleFilter()) { grp.style.display = 'none'; return; }
   const rows = getFilteredSalesRows();
   const total = rows.reduce((sum, r) => sum + saleNet(r.sale), 0);
+  // Print cost/profit only ever counts print sales (large/small) — originals carry no print cost
+  // and are excluded from this part of the equation, per the show-kit cost model.
+  const printCost = rows.reduce((sum, r) => sum + printCostFor(r.sale), 0);
+  const printCount = rows.filter(r => r.sale.type === 'large' || r.sale.type === 'small').length;
+  const profit = total - printCost;
   const fmt = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-  el.textContent = `${fmt(total)} · ${rows.length} sale${rows.length !== 1 ? 's' : ''}`;
+  let text = `${fmt(total)} · ${rows.length} sale${rows.length !== 1 ? 's' : ''}`;
+  if (printCount > 0) text += ` · print cost ${fmt(printCost)} · profit ${fmt(profit)}`;
+  el.textContent = text;
   grp.style.display = '';
 }
 function updateSoldColumnLabels(active) {
@@ -1837,18 +1868,24 @@ function clearAllInvFilters() {
 }
 function exportSalesCsv() {
   const rows = getFilteredSalesRows();
-  const header = ['Date','Painting','Type','Channel','State','Price','Net','Lg Stock Remaining','Sm Stock Remaining'];
-  const data = rows.map(({ painting, sale: s }) => [
-    s.date || '',
-    painting.title,
-    s.type,
-    s.channel,
-    s.state || '',
-    Number(s.price || 0).toFixed(2),
-    saleNet(s).toFixed(2),
-    painting.stock?.large || 0,
-    painting.stock?.small || 0,
-  ]);
+  const header = ['Date','Painting','Type','Channel','State','Price','Net','Print Cost','Net Profit','Lg Stock Remaining','Sm Stock Remaining'];
+  const data = rows.map(({ painting, sale: s }) => {
+    const net = saleNet(s);
+    const pc = printCostFor(s);
+    return [
+      s.date || '',
+      painting.title,
+      s.type,
+      s.channel,
+      s.state || '',
+      Number(s.price || 0).toFixed(2),
+      net.toFixed(2),
+      pc.toFixed(2),
+      (net - pc).toFixed(2),
+      painting.stock?.large || 0,
+      painting.stock?.small || 0,
+    ];
+  });
   downloadCsv('sales.csv', [header, ...data]);
 }
 
@@ -1893,6 +1930,8 @@ async function init() {
     const data = await api('GET', '/paintings');
     db.paintings = data.paintings;
     db.rate = data.rate ?? 1.10;
+    db.printCostSmall = data.printCostSmall ?? 5;
+    db.printCostLarge = data.printCostLarge ?? 12;
     if (!db.paintings.some(p => p.title === 'Unknown')) {
       try {
         const up = await api('POST', '/paintings', { title: 'Unknown', year: new Date().getFullYear(), width: 1, height: 1, stock: { large: 0, small: 0 } });
@@ -1914,6 +1953,23 @@ async function init() {
     this.value = db.rate.toFixed(2);
   });
   updateRateChipLabel();
+
+  document.getElementById('print-cost-small-input').value = db.printCostSmall.toFixed(2);
+  document.getElementById('print-cost-small-input').addEventListener('input', function() {
+    const v = parseFloat(this.value);
+    if (!isNaN(v) && v >= 0) setPrintCost('small', v);
+  });
+  document.getElementById('print-cost-small-input').addEventListener('blur', function() {
+    this.value = db.printCostSmall.toFixed(2);
+  });
+  document.getElementById('print-cost-large-input').value = db.printCostLarge.toFixed(2);
+  document.getElementById('print-cost-large-input').addEventListener('input', function() {
+    const v = parseFloat(this.value);
+    if (!isNaN(v) && v >= 0) setPrintCost('large', v);
+  });
+  document.getElementById('print-cost-large-input').addEventListener('blur', function() {
+    this.value = db.printCostLarge.toFixed(2);
+  });
 
   document.getElementById('irs-rate-display').textContent =
     '$' + DEFAULT_IRS_RATE.toFixed(2) + '/mile (2026)';

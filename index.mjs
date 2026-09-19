@@ -727,7 +727,9 @@ async function adminGetPaintings(cors) {
   await Promise.all([...backfillPromises, ...autoCreatePromises]);
 
   const rate = configRes.Item?.rate ?? 1.10;
-  return ok({ paintings, rate }, cors);
+  const printCostSmall = configRes.Item?.printCostSmall ?? 5;
+  const printCostLarge = configRes.Item?.printCostLarge ?? 12;
+  return ok({ paintings, rate, printCostSmall, printCostLarge }, cors);
 }
 
 async function adminAddPainting(body, cors) {
@@ -851,15 +853,29 @@ async function adminDeleteSale(saleId, cors) {
 
 async function adminGetConfig(cors) {
   const res = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
-  return ok({ rate: res.Item?.rate ?? 1.10 }, cors);
+  return ok({
+    rate: res.Item?.rate ?? 1.10,
+    printCostSmall: res.Item?.printCostSmall ?? 5,
+    printCostLarge: res.Item?.printCostLarge ?? 12,
+  }, cors);
 }
 
 async function adminUpdateConfig(body, cors) {
-  const { rate } = body;
+  const { rate, printCostSmall, printCostLarge } = body;
   if (!rate || isNaN(rate)) return err('Invalid rate', 400, cors);
-  const item = { id: '__config__', rate: Number(rate) };
+  if (printCostSmall != null && isNaN(printCostSmall)) return err('Invalid printCostSmall', 400, cors);
+  if (printCostLarge != null && isNaN(printCostLarge)) return err('Invalid printCostLarge', 400, cors);
+  // Read-merge-write: PutCommand replaces the whole __config__ item, so any field
+  // not explicitly passed here would otherwise be silently dropped.
+  const existing = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
+  const item = {
+    id: '__config__',
+    rate: Number(rate),
+    printCostSmall: printCostSmall != null ? Number(printCostSmall) : (existing.Item?.printCostSmall ?? 5),
+    printCostLarge: printCostLarge != null ? Number(printCostLarge) : (existing.Item?.printCostLarge ?? 12),
+  };
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
-  return ok({ rate: Number(rate) }, cors);
+  return ok({ rate: item.rate, printCostSmall: item.printCostSmall, printCostLarge: item.printCostLarge }, cors);
 }
 
 // ── Admin: Expenses ──

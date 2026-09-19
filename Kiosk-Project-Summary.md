@@ -369,29 +369,49 @@ All are single-file, no framework — intentional, keep it that way.
   - `admin-sw.js` — service worker caches admin shell; passes all `/admin/*` API calls and S3 receipt URLs through to network
   - `admin-icon.png` — 512×512 orange DN icon
   - Safe area insets applied to topbar and main padding for iPhone notch
-- **PWA mode behavior:** when launched from home screen (`navigator.standalone`), goes straight to Expenses & Mileage tab, hides Dashboard and Inventory tabs — full admin still accessible in Safari
+- **PWA mode behavior:** when launched from home screen (`navigator.standalone`), goes straight to Expenses & Mileage tab, hides Reports and Inventory tabs — full admin still accessible in Safari
 
-**Five-tab layout:**
+**Four-tab layout (corrected September 19 2026 — this section had drifted well behind the code; see "Completed This Session" below for the audit):**
 
-- **Dashboard tab** — revenue cards (originals sold, large/small prints sold, print inventory, top large print, top small print, art fair/online/gallery revenue) + expense cards (total expenses, top expense categories, miles driven, mileage deduction) + Revenue by Month chart (orange bars) + Expenses by Month chart (red bars, independent date range filter). Expense cards load in background on login so dashboard is always populated.
-- **Inventory tab** — dual rate adjuster (standard + large ≥30”) + sortable/filterable painting table with inline editing; `↓ CSV` export; `🏷 Tags` button for price tag printing
 - **Expenses & Mileage tab** — expense and mileage tables; tap any row to open edit modal; delete inside modal
-- **Prints tab** — all paintings shown (no stock filter); sorted into four tables by stock tier (Out of Stock → Low Stock → Below Goal → Stocked), ranked by popularity score (70% sales volume, 30% recency) within each tier. “Zero stock only” checkbox filters to paintings where both sizes are at 0. Click any column header to collapse tiers into a single sortable flat table; “✕ Clear sort” returns to tiered view. Print Lg/Print Sm columns show how many to print to reach goal (2 large, 3 small); stock shown in red when below goal.
-- **Sales Log tab** — filterable table of all sales; filters: date range (from/to), channel (all/art fair/online/gallery), state (all/KS/MO); summary bar shows count, total revenue, net; CSV export. Use cases: art fair debrief, monthly KS sales tax, year-end taxes.
+- **Inventory tab** — single tab that has absorbed what used to be four separate tabs/sections: base inventory table, **Prints** (via the Prints/Originals type filter chip — no longer a separate tab), **Sales Log** (via the date/channel/state sale filters + filter revenue readout — no longer a separate tab), and **Gallery Stock** (a view toggle within Inventory, not its own tab). See "Inventory tab (merged)" below for what actually lives here now.
+- **Booth Planner tab** — art fair wall layout tool (unchanged; see `booth.html` section)
+- **Reports tab** — renamed from "Dashboard" at some point after the original build; revenue/expense cards + Revenue by Month / Expenses by Month charts (content otherwise as previously documented)
 
-**Inventory features:**
+**⚠ Rate adjuster is single-rate only.** The "dual rate adjuster (standard + large ≥30")" described in earlier revisions of this doc no longer exists — `rateLarge` and the large-painting rate tier were removed end-to-end from `admin.html` and `index.mjs`; `effectiveRate(p)` is now just `return db.rate`. Per-painting `priceOverride` covers the one-off-exception case that `rateLarge` used to handle.
+
+**Inventory tab (merged) — what's actually in it:**
 
 - All paintings sortable by title, year, price, rounded price
 - Filters: Never sold, Sold, Original available, Low print stock, Mom doesn’t have
-- **Prints filter mode** — Prints/Originals chips reveal a Sold/Unsold sub-filter; Prints mode additionally reveals "0 large" / "0 small" boolean chips (added September 2026) filtering to `stock.large === 0` / `stock.small === 0`; all combinable with dimension/moms/gallery filters
+- **Prints filter mode** — Prints/Originals chips reveal a Sold/Unsold sub-filter; Prints mode additionally reveals "0 large" / "0 small" boolean chips filtering to `stock.large === 0` / `stock.small === 0`; all combinable with dimension/moms/gallery filters. (This is the old "Prints tab" — same tiered ranking logic, now reached as a filter rather than a tab.)
+- **Sale/date filters ("Sales Log" equivalent)** — "Sold between" date range, Channel (all/art fair/online/gallery), State (all/KS/MO) filters in the filter bar; when any sale filter is active, a **Revenue** readout appears showing `$total · N sales`, plus (as of September 19 2026) **print cost** and **profit** whenever any print (large/small) sales are in the filtered set — see "Print production costs" below. `↓ Sales CSV` exports the filtered rows (see CSV export note below).
+- **Gallery Stock view** — toggle at the top of Inventory (`Gallery Stock` button); rows with any print stock at the selected gallery sort to the top (by title), zero-stock rows sink below (still dimmed)
 - Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom’s Prints checkbox) + sale history
-- **Row expand indicator** — flat blue chevron (rotates 90° open), replaced the old muted `▶` triangle glyph September 2026
+- **Row expand indicator** — flat blue chevron (rotates 90° open)
 - Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net; art fair channel tracks state (KS/MO)
 - Stock +/− buttons autosave immediately (floor at 0)
 - Logging a new print sale automatically decrements the matching size stock by 1 (can go negative — intentional)
 - **🏷 Tags button** in Inventory tab header: opens a printable Avery 5371/5871 price tag sheet (3.5×2”, 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
-- CSV export: title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
-- **Gallery Stock tab sort (September 2026)** — rows with any print stock at the selected gallery now sort to the top (by title), zero-stock rows sink below (still dimmed); previously the list was alphabetical only regardless of stock
+- `↓ Stock CSV` export: title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
+- `↓ Sales CSV` export (filtered rows): Date, Painting, Type, Channel, State, Price, Net, **Print Cost, Net Profit** (added September 19 2026), Lg Stock Remaining, Sm Stock Remaining
+
+**Print production costs (added September 19 2026):**
+
+David's actual per-print landed cost, from his own materials pricing (Canon PRO-310 on Hahnemühle German Etching 310gsm, small = 5×7 printed 2-up on 8.5×11, large = 9×12 printed on 11×17, plus a 25-count show-kit box of mats/backing/bags for each finished size):
+
+- **Small print (→ 8×10 show kit): $5.00**
+- **Large print (→ 12×16 show kit): $12.00**
+
+These are stored as `printCostSmall` / `printCostLarge` on the `__config__` DynamoDB record (alongside `rate`), defaulting to 5 / 12 if unset. Editable in the Inventory tab's rate bar (next to the $/sq in price field) — **Small print cost** / **Large print cost** inputs, same debounced-autosave pattern as the rate field. `GET/PUT /admin/config` now reads/writes all three fields together (`adminUpdateConfig` does a read-merge-write against the existing `__config__` item so updating one field never clobbers the others).
+
+**Cost only ever applies to print sales (`type === 'large'` or `'small'`) — originals are excluded from the cost/profit math entirely**, per David's instruction: originals aren't part of this cost equation. `printCostFor(sale)` in `admin.html` is the single source of truth for this (returns 0 for `type === 'original'`).
+
+Surfaced in two places:
+1. **Inventory filter revenue readout** — when a sale filter is active, shows `$total · N sales · print cost $X · profit $Y` (print cost/profit segment only appears if the filtered set contains at least one print sale)
+2. **Sales CSV export** — per-row `Print Cost` and `Net Profit` columns
+
+**Note:** these are landed unit costs (paper + ink + a 25-count show-kit box divided per unit, including the upgraded backing), not a live per-print ink/paper calculator — David tracks materials pricing himself and updates the two config fields directly when costs change, rather than the app re-deriving them from paper/ink prices.
 
 **Expense features:**
 
@@ -521,6 +541,20 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`lambda-deploy` user** (local seed scripts):
 
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
+
+-----
+
+## Completed This Session (September 19 2026)
+
+**Print production cost tracking + steering doc staleness audit**
+
+- ✓ **`printCostSmall` ($5) / `printCostLarge` ($12) config fields** — new fields on the `__config__` DynamoDB record, alongside `rate`. `adminGetConfig`/`adminGetPaintings` return them (defaulting 5/12 if unset); `adminUpdateConfig` (`index.mjs`) now does a read-merge-write instead of a blind `PutCommand` overwrite, so updating the rate alone no longer risks wiping the print-cost fields (or vice versa).
+- ✓ **Rate bar UI (admin.html)** — added **Small print cost** / **Large print cost** `$` inputs next to the existing Price/sq in field; same debounced-autosave pattern (`setPrintCost(size, val)` → `saveRatesDebounced()` → `saveRates()` now sends all three fields together).
+- ✓ **Inventory filter revenue readout** — `updateFilterRevenue()` now also computes print cost (`printCostFor(sale)`: `printCostLarge`/`printCostSmall`/`0` for large/small/original) and profit (`revenue − print cost`) across the filtered sales, appending `· print cost $X · profit $Y` when the filtered set contains any print sales. **Originals are excluded from the cost/profit calculation by design** — David's instruction: cost applies to prints only, not originals.
+- ✓ **Sales CSV export** — added `Print Cost` and `Net Profit` columns per row.
+- ✓ **Admin SW cache bumped to `dna-admin-v69`.**
+- ✓ **Steering doc audit** — the "Five-tab layout" section had drifted badly out of date (last touched well before several since-shipped changes). Corrected to reflect the actual current **four tabs** (Expenses & Mileage, Inventory, Booth Planner, Reports [renamed from Dashboard]); documented that Prints, Sales Log, and Gallery Stock are no longer separate tabs — all three were absorbed into Inventory as filter modes / a view toggle over past sessions, and this doc never caught up. Also corrected the "dual rate adjuster (standard + large ≥30")" claim — `rateLarge` was removed end-to-end in an earlier session (per-painting `priceOverride` replaced its use case) but the doc still described the old two-rate UI.
+- ✓ **Cost basis (David's own materials pricing, not app-derived):** Canon PRO-310 on Hahnemühle German Etching 310gsm — small = 5×7 printed 2-up on 8.5×11 sheets, large = 9×12 printed on 11×17 sheets; plus a 25-count show-kit box of mats/backing/bags per finished size (8×10 kit box $90 incl. upgraded backing, 12×16 kit box $150 incl. upgraded backing, each divided per unit). Landed to $5.00/small print, $12.00/large print.
 
 -----
 
@@ -935,7 +969,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v41`; bump in `admin-sw.js` after every admin.html change
+- **Admin SW cache key** — currently `dna-admin-v69`; bump in `admin-sw.js` after every admin.html change
 - **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order
