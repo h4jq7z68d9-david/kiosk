@@ -310,6 +310,7 @@
   .inv-cols { display: flex; flex-direction: column; gap: 16px; }
   .fb-group { display: contents; }
   .sb-label { display: none; }
+  .fb-date-range { display: flex; align-items: center; gap: 6px; }
   @media (min-width: 601px) {
     .inv-cols { flex-direction: row; align-items: flex-start; gap: 20px; }
     .filter-bar {
@@ -319,6 +320,8 @@
       border-radius: var(--radius); background: white; padding: 4px 18px;
     }
     .filter-divider { display: none; }
+    .fb-date-range { flex-direction: column; align-items: stretch; gap: 6px; }
+    .fb-date-range .fb-date-sep { display: none; }
     .fb-group {
       display: flex; flex-direction: column; align-items: stretch; gap: 8px;
       padding: 14px 0; border-bottom: 1px solid var(--border);
@@ -701,9 +704,9 @@
             <span class="filter-divider" style="width:1px;height:20px;background:var(--border-mid);margin:0 2px"></span>
             <div class="fb-group">
               <span class="filter-bar-label">Sold between</span>
-              <div style="display:flex;align-items:center;gap:6px">
+              <div class="fb-date-range">
                 <input type="date" id="inv-date-from" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
-                <span style="font-size:11px;color:var(--ink3)">–</span>
+                <span class="fb-date-sep" style="font-size:11px;color:var(--ink3)">–</span>
                 <input type="date" id="inv-date-to" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
               </div>
             </div>
@@ -736,11 +739,7 @@
                 <div class="section-title" style="margin:0">Inventory</div>
                 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                   <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
-                  <button class="btn-sm mobile-hide" onclick="openChecklistModal()">Checklist</button>
-                  <button class="btn-sm mobile-hide" onclick="startInventoryCount()">Take Inventory</button>
-                  <button class="btn-sm mobile-hide" onclick="openPriceListModal()">Price List</button>
-                  <button class="btn-sm mobile-hide" onclick="printTagsForSelected()">Price Tags</button>
-                  <div class="dropdown-wrap mobile-only-flex">
+                  <div class="dropdown-wrap">
                     <button class="icon-btn" id="inv-actions-btn" onclick="toggleInvActionsMenu(event)" aria-label="More actions" title="More actions">⋯</button>
                     <div class="dropdown-menu" id="inv-actions-menu">
                       <button onclick="closeInvActionsMenu();openChecklistModal()">Checklist</button>
@@ -3494,11 +3493,8 @@ async function addSelectionToChecklist() {
 
 function updateCountBannerUi() {
   const el = document.getElementById('count-banner');
-  const filterBar = document.getElementById('filter-bar');
   if (!el) return;
   el.style.display = countModeOn ? 'flex' : 'none';
-  if (countModeOn && filterBar) filterBar.style.display = 'none';
-  else if (!countModeOn && !activeChecklistId && filterBar) filterBar.style.display = '';
   const prog = document.getElementById('count-progress');
   if (prog) prog.textContent = Object.keys(countSession).length + ' counted';
 }
@@ -3631,14 +3627,11 @@ async function toggleChecklistItemDone(paintingId, done) {
 
 function renderChecklistBanner(checklist) {
   const el = document.getElementById('checklist-banner');
-  const filterBar = document.getElementById('filter-bar');
   if (!checklist) {
     el.style.display = 'none';
     el.innerHTML = '';
-    if (filterBar) filterBar.style.display = '';
     return;
   }
-  if (filterBar) filterBar.style.display = 'none';
   const done = checklist.items.filter(i => i.done).length;
   el.className = 'checklist-banner';
   el.style.display = 'flex';
