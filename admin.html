@@ -244,8 +244,19 @@
 
   /* ── EXPAND ROW ── */
   tr.expand-row td { padding: 0; background: var(--bg2); border-bottom: 2px solid var(--border-mid); }
-  .expand-inner { padding: 16px 24px; }
+  .expand-inner { padding: 16px 24px; overflow-x: hidden; }
   .expand-inner .sub-title { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); margin-bottom: 10px; }
+  .edit-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr; gap: 10px; margin-bottom: 16px; align-items: end; }
+  .edit-grid-field { min-width: 0; }
+  .edit-grid-field .edit-grid-label { font-size: 11px; font-weight: 600; color: var(--ink2); margin-bottom: 4px; letter-spacing: 0.04em; }
+  .edit-grid-field input, .edit-grid-field select {
+    width: 100%; font-family: var(--font); font-size: 16px; color: var(--ink);
+    border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 6px 10px;
+    background: white; outline: none; appearance: none; box-sizing: border-box;
+  }
+  .edit-grid-field input[type="number"] { font-family: var(--mono); }
+  .edit-meta-row { display: flex; align-items: center; gap: 16px; row-gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .edit-actions-row { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
   .sales-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
   .sale-row {
     display: flex; align-items: center; gap: 12px; font-size: 13px; flex-wrap: wrap;
@@ -504,6 +515,7 @@
     .chart-bubble-row { flex-direction: column; }
     .chart-stat-box { width: 100%; }
     .field-row, .field-row3 { grid-template-columns: 1fr; }
+    .edit-grid { grid-template-columns: 1fr 1fr; }
     .cat-badge { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
     .cards { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
     .card { padding: 14px 14px 12px; }
@@ -2337,34 +2349,34 @@ function renderTable() {
       rows += `
         <tr class="expand-row"><td colspan="${colCount}"><div class="expand-inner">
           <div class="sub-title" style="margin-bottom:12px">Painting Details</div>
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr;gap:10px;margin-bottom:16px;align-items:end" onclick="event.stopPropagation()">
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">TITLE</div><input type="text" value="${esc(p.title)}" id="edit-title-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">MONTH</div><select id="edit-month-${p.id}" style="width:100%;font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none;appearance:none">${monthOpts}</select></div>
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">YEAR</div><input type="number" value="${p.year}" id="edit-year-${p.id}" min="2000" max="2099" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">WIDTH</div><input type="number" value="${p.width}" id="edit-width-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">HEIGHT</div><input type="number" value="${p.height}" id="edit-height-${p.id}" min="1" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">LARGE</div><input type="number" value="${p.stock.large||0}" id="edit-large-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">SMALL</div><input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
-            <div><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:4px;letter-spacing:0.04em">PRICE OVERRIDE</div><input type="number" value="${p.priceOverride != null ? p.priceOverride : ''}" id="edit-override-${p.id}" min="0" placeholder="auto: $${retail(p)}" style="width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:white;color:var(--ink);outline:none"></div>
+          <div class="edit-grid" onclick="event.stopPropagation()">
+            <div class="edit-grid-field"><div class="edit-grid-label">TITLE</div><input type="text" value="${esc(p.title)}" id="edit-title-${p.id}"></div>
+            <div class="edit-grid-field"><div class="edit-grid-label">MONTH</div><select id="edit-month-${p.id}">${monthOpts}</select></div>
+            <div class="edit-grid-field"><div class="edit-grid-label">YEAR</div><input type="number" value="${p.year}" id="edit-year-${p.id}" min="2000" max="2099"></div>
+            <div class="edit-grid-field"><div class="edit-grid-label">WIDTH</div><input type="number" value="${p.width}" id="edit-width-${p.id}" min="1"></div>
+            <div class="edit-grid-field"><div class="edit-grid-label">HEIGHT</div><input type="number" value="${p.height}" id="edit-height-${p.id}" min="1"></div>
+            <div class="edit-grid-field"><div class="edit-grid-label">LARGE</div><input type="number" value="${p.stock.large||0}" id="edit-large-${p.id}" min="0"></div>
+            <div class="edit-grid-field"><div class="edit-grid-label">SMALL</div><input type="number" value="${p.stock.small||0}" id="edit-small-${p.id}" min="0"></div>
+            <div class="edit-grid-field"><div class="edit-grid-label">PRICE OVERRIDE</div><input type="number" value="${p.priceOverride != null ? p.priceOverride : ''}" id="edit-override-${p.id}" min="0" placeholder="auto: $${retail(p)}"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px" onclick="event.stopPropagation()">
+          <div class="edit-meta-row" onclick="event.stopPropagation()">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2)">
               <input type="checkbox" id="edit-moms-${p.id}" ${p.momsHas?'checked':''} style="width:15px;height:15px;accent-color:var(--ink);cursor:pointer">
               Mom's Prints
             </label>
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)">
               At gallery
-              <select id="edit-gallery-${p.id}" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:5px 10px;background:white;color:var(--ink);outline:none;appearance:none">
+              <select id="edit-gallery-${p.id}" style="font-family:var(--font);font-size:16px;border:1.5px solid var(--border-mid);border-radius:6px;padding:5px 10px;background:white;color:var(--ink);outline:none;appearance:none">
                 <option value="" ${!p.atGallery?'selected':''}>—</option>
                 <option value="Phoenix Gallery" ${p.atGallery==='Phoenix Gallery'?'selected':''}>Phoenix Gallery</option>
               </select>
             </label>
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)">
               Stock #
-              <input type="text" value="${esc(p.galleryStockNo || '')}" id="edit-gallerystock-${p.id}" placeholder="e.g. 214" style="width:90px;font-family:var(--mono);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:5px 10px;background:white;color:var(--ink);outline:none">
+              <input type="text" value="${esc(p.galleryStockNo || '')}" id="edit-gallerystock-${p.id}" placeholder="e.g. 214" style="width:90px;max-width:100%;font-family:var(--mono);font-size:16px;border:1.5px solid var(--border-mid);border-radius:6px;padding:5px 10px;background:white;color:var(--ink);outline:none">
             </label>
           </div>
-          <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:18px" onclick="event.stopPropagation()">
+          <div class="edit-actions-row" onclick="event.stopPropagation()">
             <button class="btn-sm danger" onclick="deletePainting('${p.id}')">Delete painting</button>
             <button class="btn-primary" onclick="savePaintingEdits('${p.id}')">Save changes</button>
           </div>
