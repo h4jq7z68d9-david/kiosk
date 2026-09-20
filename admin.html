@@ -42,7 +42,15 @@
     --shadow-lg: 0 8px 32px rgba(43,54,64,0.14);
   }
 
+  /* overflow-x:hidden alone forces the browser to treat html/body as a scroll
+     container (it implicitly computes overflow-y:auto too), which breaks
+     position:sticky on .topbar and #loading-bar below — the sticky containing
+     block stops resolving to the real viewport. overflow-x:clip avoids that
+     side effect entirely; fall back to hidden only for browsers that predate it. */
   html, body { overflow-x: hidden; }
+  @supports (overflow-x: clip) {
+    html, body { overflow-x: clip; }
+  }
 
   body {
     font-family: var(--font);
