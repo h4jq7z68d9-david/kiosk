@@ -68,6 +68,7 @@ function getEpik() {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 :root {
   --bg: #ffffff; --surface: #eef1f4; --border: #dfe4e9; --border-mid: #cfd6dd;
   --ink: #2b3640; --ink2: #586470; --ink3: #697480; --accent: #2f4f75; --accent-hi: #3d5f88; --accent-ink: #33557d;
@@ -1085,6 +1086,12 @@ async function submitGB() {
     btn.textContent = 'sign the guest book'; btn.style.opacity = '';
   }
 }
+
+// Deter casual image saving — right-click and drag-out on artwork images.
+// Not real protection (a screenshot or dev-tools defeats it trivially), but
+// signals that the images aren't meant to be lifted.
+document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+document.addEventListener('dragstart',   e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
 </script>
 </body>
 </html>
