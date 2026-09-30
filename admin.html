@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="DNA Admin">
 <meta name="theme-color" content="#ffffff">
-<link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/admin-favicon96.png">
 <link rel="manifest" href="/admin.webmanifest">
 <link rel="apple-touch-icon" href="/admin-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -536,11 +536,14 @@
 
   /* ── SELL WINDOW (cart → Square POS API) ── */
   .sell-modal { max-width: 560px; }
-  .sell-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; max-height: 34vh; overflow-y: auto; margin-bottom: 14px; }
-  .sell-thumb { aspect-ratio: 1; border-radius: 6px; background: var(--bg2); overflow: hidden; border: none; padding: 0; cursor: pointer; }
-  .sell-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .sell-thumb .ph { font-size: 10px; color: var(--ink2); padding: 4px; text-align: left; line-height: 1.2; }
-  .sell-thumb.sel { outline: 3px solid var(--accent); outline-offset: 1px; }
+  .sell-grid { display: flex; flex-direction: column; max-height: 36vh; overflow-y: auto; margin-bottom: 14px; border: 1.5px solid var(--border-mid); border-radius: 8px; -webkit-overflow-scrolling: touch; }
+  .sell-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 10px; border: none; border-bottom: 1px solid var(--border); background: none; text-align: left; font-family: var(--font); color: var(--ink); cursor: pointer; flex-shrink: 0; }
+  .sell-row:last-child { border-bottom: none; }
+  .sell-row.sel { background: var(--accent-pale); }
+  .sell-row .th { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 4px; background: var(--bg2); overflow: hidden; }
+  .sell-row .th img { width: 44px; height: 44px; object-fit: cover; display: block; }
+  .sell-row .nm { flex: 1 1 auto; min-width: 0; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sell-row .st { flex: 0 0 auto; font-size: 12px; color: var(--ink2); }
   .sell-picked-title { font-size: 15px; font-weight: 600; color: var(--ink); }
   .sell-picked-sub { font-size: 12px; color: var(--ink2); margin: 2px 0 10px; }
   .sell-picked-sub .low { color: var(--red); }
@@ -4273,8 +4276,10 @@ function renderSellGrid() {
   const list = sellPaintings().filter(p => !q || (p.title || '').toLowerCase().includes(q));
   document.getElementById('sell-grid').innerHTML = list.map(p => {
     const img = sellPrintFor(p)?.img;
-    return `<button class="sell-thumb${p.id === sellPaintId ? ' sel' : ''}" type="button" title="${esc(p.title)}" aria-label="${esc(p.title)}" onclick="sellPick('${esc(p.id)}')">
-      ${img ? `<img loading="lazy" decoding="async" referrerpolicy="no-referrer" src="${esc(img)}" data-src="${esc(img)}" onerror="sellImgRetry(this)" alt="">` : `<div class="ph">${esc(p.title)}</div>`}
+    return `<button class="sell-row${p.id === sellPaintId ? ' sel' : ''}" type="button" onclick="sellPick('${esc(p.id)}')">
+      <span class="th">${img ? `<img loading="lazy" decoding="async" referrerpolicy="no-referrer" src="${esc(img)}" data-src="${esc(img)}" onerror="sellImgRetry(this)" alt="">` : ''}</span>
+      <span class="nm">${esc(p.title)}</span>
+      <span class="st">L ${p.stock?.large ?? 0} · S ${p.stock?.small ?? 0}</span>
     </button>`;
   }).join('') || '<div style="font-size:13px;color:var(--ink2)">No matches.</div>';
 }
