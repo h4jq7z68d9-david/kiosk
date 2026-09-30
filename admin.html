@@ -4359,6 +4359,7 @@ function sellAdd() {
 function sellRemove(i) { sellCart.splice(i, 1); sellSet('session', SELL_K_CART, sellCart); renderSellCart(); }
 function sellEmptyCart() {
   sellCart = []; sellSet('session', SELL_K_CART, sellCart);
+  sellSet('session', SELL_K_PENDING, null);
   sellRate = null; sellSet('session', SELL_K_RATE, null);
   const r = document.getElementById('sell-rate'); if (r) r.value = sellDefaults.rate;
   renderSellCart();
@@ -4420,7 +4421,7 @@ function sellCheckout() {
 // ── Return from Square ── runs on page load, before the PIN gate: the complete endpoint is public
 // and verifies the payment with Square, so no admin session is needed.
 const SELL_ERRORS = {
-  payment_canceled: 'Payment was canceled in Square. Your cart is still here.',
+  payment_canceled: 'Canceled in Square — nothing was charged. Switch back to the DNA Admin app; your cart is still there.',
   not_logged_in: 'Log in to the Square app, then try again.',
   unsupported_api_version: 'Update the Square app, then try again.',
 };
@@ -4484,15 +4485,9 @@ async function sellCheckPending() {
       if (sessionToken) {
         try { const data = await api('GET', '/paintings'); db.paintings = data.paintings; render(); renderSellDefaults(); } catch {}
       }
-    } else if (Date.now() - pend.at > 20000) {
-      // Not logged yet — most likely canceled in Square. Ask once instead of guessing.
-      window._sellKeepPending = () => { sellSet('session', SELL_K_PENDING, null); document.getElementById('sell-return').style.display = 'none'; };
-      window._sellClearPending = () => { sellSet('session', SELL_K_PENDING, null); sellEmptyCart(); document.getElementById('sell-return').style.display = 'none'; };
-      const el = document.getElementById('sell-return');
-      el.className = 'bad'; el.style.display = 'block';
-      el.innerHTML = '<b>Checkout not logged</b>No payment was recorded for the cart you sent to Square. If Square did charge it, the other window may still be logging it — check the Sales Log before clearing.' +
-        '<div class="btns"><button class="btn-cancel" type="button" onclick="window._sellKeepPending()">Keep cart</button><button class="btn-primary" type="button" onclick="window._sellClearPending()">Clear cart</button></div>';
     }
+    // Not logged → most likely canceled in Square. Keep the cart silently and keep the pending id,
+    // so a charge that is still being logged in the Safari tab is picked up on the next focus.
   } catch {} finally { sellCheckPending._busy = false; }
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') setTimeout(sellCheckPending, 1500); });
