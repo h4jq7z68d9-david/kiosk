@@ -544,9 +544,6 @@
   .sell-row .th img { width: 44px; height: 44px; object-fit: cover; display: block; }
   .sell-row .nm { flex: 1 1 auto; min-width: 0; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sell-row .st { flex: 0 0 auto; font-size: 12px; color: var(--ink2); }
-  .sell-picked-head { display: flex; align-items: center; gap: 10px; }
-  .sell-picked-head .sell-picked-title { flex: 1 1 auto; min-width: 0; }
-  .sell-picked-head #sell-add-btn { flex: 0 0 auto; }
   .sell-picked-title { font-size: 15px; font-weight: 600; color: var(--ink); }
   .sell-picked-sub { font-size: 12px; color: var(--ink2); margin: 2px 0 10px; }
   .sell-picked-sub .low { color: var(--red); }
@@ -1092,12 +1089,12 @@
       <div class="sell-grid" id="sell-grid"></div>
       <div class="sell-picked-sub" id="sell-status" style="margin-top:-6px"></div>
       <div id="sell-picked">
-        <div class="sell-picked-head"><div class="sell-picked-title" id="sell-picked-title">Pick a painting</div>
-          <button class="btn-cancel" id="sell-add-btn" type="button" onclick="sellAdd()">Add to cart</button></div>
+        <div class="sell-picked-title" id="sell-picked-title">Pick a painting</div>
         <div class="sell-picked-sub" id="sell-picked-sub"></div>
         <div class="sell-opts" id="sell-sizes"></div>
         <div class="field" id="sell-price-field" style="display:none"><label>Price ($)</label>
           <input type="text" inputmode="decimal" id="sell-price" autocomplete="off" style="-webkit-appearance:none"></div>
+        <button class="btn-cancel" id="sell-add-btn" type="button" onclick="sellAdd()" style="margin-bottom:16px">Add to cart</button>
       </div>
       <div class="field-row">
         <div class="field"><label>Source</label>
