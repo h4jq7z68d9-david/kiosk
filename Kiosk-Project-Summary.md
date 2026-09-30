@@ -83,7 +83,9 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 |Square Online Store    |<https://david-nicholson-art.square.site>                                        |
 |Application ID         |`sq0idp-6D-Q6hGLP9tk-medwFpxvQ`                                                  |
 |Production Access Token|Stored in Lambda env var `SQUARE_TOKEN` — see AWS console (do not commit to repo)|
-|Location ID            |`LYVD3ZGR3X4KE`                                                                  |
+|Location ID            |`LYVD3ZGR3X4KE` — "David Nicholson Art", Roeland Park KS (PHYSICAL). Used by online checkout (`SQUARE_LOC`).|
+|Missouri location      |`LHXVQB0QCW9R1` — "Missouri", Kansas City MO (MOBILE, created 2026-09-11). **In-person MO fair sales only — never pass to online checkout.**|
+|Sales tax objects      |Kansas 9.35% (Roeland Park location only, `applies_to_custom_amounts: false`); Missouri 4.22% (Missouri location only). Both fixed-rate, product set `all_products`. See "Online sales tax" below.|
 
 **Product URL pattern:**
 
@@ -548,6 +550,34 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Findings This Session (September 30 2026) — no code shipped
+
+Discussion/audit session. Nothing was changed in the repo or in Square (read-only checks only). All open work is in **Pending → Next session** below.
+
+**Online sales tax — current behavior (verified against real orders)**
+
+- Nexus: **Kansas only** (David). The Missouri location + 4.22% tax exist for in-person MO fair sales under a temporary permit.
+- `checkout()` in `index.mjs` creates a Square Payment Link with `location_id: SQUARE_LOC` (= `LYVD3ZGR3X4KE`, Roeland Park KS), line items by `catalog_object_id` only, and sets no tax or fee options.
+- **Every completed online (payment-link, `source: headless`) shipment order checked has `total_tax_money: 0`**, even though the Kansas 9.35% tax is attached to that location. Orders checked 2026-09-30: Rantoul IL (2026-09-21, $25 + $8 shipping, $0 tax), **Prairie Village KS (2026-09-12, $40 + $8 shipping, $0 tax)**, Atlanta GA (2026-05-22, $35 + $8, $0 tax), plus three March 2026 test orders ($0 tax).
+- So: out-of-state buyers are correctly charged nothing; **Kansas-destination buyers are also charged nothing, and David owes that tax out of pocket.** The voice-session assumption that payment links charge every buyer 9.35% was wrong — the orders show no tax at all.
+- Why this can't be fixed in the Lambda: the buyer's address is entered on Square's hosted checkout page, after the link (and any tax) is already fixed. Nothing on davidnicholsonart.com ever sees the address before payment.
+- Reported in the voice session but **not re-verified**: Square's docs say payment links don't support manually applied online taxes on shipping orders, and destination-based tax is a Square Online feature, not a Checkout API / payment link feature. Re-check before relying on it.
+- Current decision: leave online payment links untaxed; remit Kansas tax on Kansas-destination online orders manually. Revisit if Square adds destination-based tax to payment links.
+- Shipping: Square adds a flat $8 "Flat Rate Shipping, USPS First Class Mail" service charge (non-taxable) on the hosted page — it's not in our Lambda.
+
+**Gallery checkout — issues found (carried over from the admin Sale-window work)**
+
+1. `gallery.html` `checkout()` empties `dna_cart` **before** redirecting to Square. A customer who backs out of Square's page returns to an empty cart. Admin had the same class of bug and fixed it by clearing only on confirmed completion.
+2. Online sales never reach `dna-sales` and never decrement stock — `/checkout` only writes `dna-orders`. `?success=1` is unverified (anyone loading that URL clears their cart and sees "order placed").
+3. The cart stores each line's price in localStorage for display; Square charges the catalog price (correct), but a stale stored price can show a different total than what's charged.
+
+**Originals page — scope decided**
+
+- The chip/filter/"fits a space" mockup was rejected as too many controls. Wanted: **one dropdown of sizes; pick a size → list shows only paintings of that size.**
+- Live `/originals` data (41 paintings, fetched 2026-09-30) has **13 distinct sizes**, not the 5 standard + 1 oddball David expected — see the to-do for the list.
+
+-----
+
 ## Completed This Session (September 29 2026)
 
 **admin.html — unified Sale window: log / cart → Square Tap to Pay → auto-logged sales + stock**
@@ -601,6 +631,47 @@ Goal: stop the two-step fair routine (charge in the Square app, log prints in ad
 -----
 
 ## Pending — In Order of Priority
+
+### Next session — pick up here (from September 30 2026)
+
+**Sales tax (online)**
+
+- [ ] **Remit Kansas tax on the Prairie Village KS online order** (2026-09-12, $40 print, $0 collected) in the monthly KS filing, at the buyer's local rate. Check whether any other Kansas-destination online orders exist before filing.
+- [ ] **Decide how Kansas-destination online orders get flagged going forward.** They currently only show up in Square's order list. Tie this to the online-sales logging item below (record ship-to state on each online sale).
+- [ ] **Re-verify the Square doc claims** from the voice session (payment links can't do destination tax; auto-apply uses the location rate). Current orders show $0 tax, so also confirm *why* the Kansas tax isn't attaching to payment-link orders — so it doesn't start charging out-of-state buyers 9.35% after a Square or settings change.
+- [ ] **Watch Square** for destination-based tax on payment links / Checkout API. Revisit this decision if it ships.
+- [ ] Invariant to keep: online checkout must never pass the Missouri location `LHXVQB0QCW9R1`.
+
+**Gallery checkout (`gallery.html` + `index.mjs`)**
+
+- [ ] **Keep the cart until payment is confirmed** — stop clearing `dna_cart` before the Square redirect; clear it on the success return instead.
+- [ ] **Auto-log online sales** — on return (or via Square webhook), verify the order is COMPLETED, write one `dna-sales` row per line (channel `online`, idempotent on order ID, include ship-to state), and atomically decrement print stock. Reuse the admin `register/complete` pattern. Check whether Square actually appends `orderId` to the payment-link redirect URL (unverified).
+- [ ] **Re-price the stored cart** from `/products` on load so the displayed total matches what Square charges.
+
+**Originals page (`originals.html`)**
+
+- [ ] **Add one size dropdown** ("all sizes" default); picking a size shows only paintings of that size. No chips, no sort, no other filters. Match the size regardless of orientation (22 × 28 also matches 28 × 22).
+- [ ] **Settle the size list first.** David expected 30 × 40, 30 × 30, 22 × 28, 18 × 24, 11 × 14, and one oddball. Live `/originals` (2026-09-30) has 13 sizes:
+
+  |Size   |Count|Paintings|
+  |-------|-----|---------|
+  |30 × 40|6|Beer Drinker, Evening Walkers, Blue Goose, Umbrella Reverie, Side Street Suburbs; Yellow Umbrella (40 × 30)|
+  |33 × 37|1|Fast Eddy|
+  |30 × 30|2|U.S. 380; A Walk in Blue and Green|
+  |24 × 28|1|I-35 No. 1|
+  |22 × 28|12|Junction, Outside of Town, Terminal, KS Wind Farm No. 1, KS Wind Farm No. 2, The Tuntre, Waverly Church, Wayside, Johnson Drive 6 am, Johnson Drive 6:01 am; U.S. 50 East, I-435 Exit 81 (28 × 22)|
+  |20 × 24|2|Apparition; Errands (24 × 20)|
+  |18 × 28|1|U.S. 380, TX (28 × 18)|
+  |18 × 24|9|Off Maple Street, Shuttlecock No. 4, For the Next Hour, I-35 No. 2, Two Dogs, Birdhouse X-Mas 24, On Main, Strasser Hardware, Coming Home|
+  |16 × 20|1|Suburbs|
+  |14 × 18|3|Santa Fe Trail; Sunflower No. 1; Sunflower No. 2|
+  |16 × 16|1|Historic Marker, Eve Ball|
+  |11 × 14|1|Old Mission United|
+  |12 × 12|1|Resurrection Lilies|
+
+  Either some Square Width/Height values are wrong (fix in Square), or the dropdown lists every size present. Decide before building. Generating the list from the data would keep it correct as paintings sell.
+
+### Ongoing
 
 - [ ] **Meta/Instagram Ads — launching now** — $25/week test campaign, 4-week minimum run. Setup and creative plan are in "Completed This Session (July 10 2026)" below. After 4 weeks: review per-ad results, double down on winners, pause losers, log spend under the Advertising expense category.
 - [ ] **Admin panel mobile/UX overhaul** — admin.html has grown to five dense tabs and is hard to use on iPad/iPhone (surfaced when trying to export the sales CSV on iPad). Ideas: split into more pages/views, rework tables for touch, make exports easier to reach on mobile. Scope TBD — discuss before building.
