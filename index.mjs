@@ -445,13 +445,13 @@ async function registerCatalog(cors) {
     const item = obj.item_data;
     if (!item?.name) continue;
     const vars = item.variations || [];
-    if (vars.length === 1 && vars[0].item_variation_data?.name === 'Default Title') continue; // originals-only
+    const originalOnly = vars.length === 1 && vars[0].item_variation_data?.name === 'Default Title';
     let market = false;
     for (const val of Object.values(obj.custom_attribute_values || {})) {
       if (val.name === 'Market Item' && val.boolean_value === true) market = true;
     }
     if (market) continue;
-    const variations = vars
+    const variations = originalOnly ? [] : vars
       .map(v => {
         const cents = v.item_variation_data?.price_money?.amount;
         if (!cents) return null;
@@ -460,7 +460,8 @@ async function registerCatalog(cors) {
       })
       .filter(Boolean)
       .sort((a, b) => a.cents - b.cents);
-    if (!variations.length) continue;
+    // Originals-only items are included (no variations) so the admin Sale window has their images
+    if (!variations.length && !originalOnly) continue;
     const painting = idx.bySquare[obj.id] || idx.byTitle[regNormTitle(item.name)] || null;
     const imgId = item.image_ids?.[0];
     prints.push({
@@ -489,9 +490,11 @@ async function registerComplete(body, cors) {
   const lineMeta = rawLines.map(x => ({
     channel: Array.isArray(x) && x[1] === 'o' ? 'online' : 'fair',
     usState: Array.isArray(x) && (x[2] === 'KS' || x[2] === 'MO') ? x[2] : '',
-    cents: Array.isArray(x) && Number.isInteger(x[3]) && x[3] >= 0 && x[3] <= 1000000 ? x[3] : null,
+    cents: Array.isArray(x) && Number.isInteger(x[3]) && x[3] >= 0 && x[3] <= 10000000 ? x[3] : null,
+    original: Array.isArray(x) && x[4] === 'o',   // 'o' = original painting: ref is the dna-paintings id, price must be given
   }));
   const rateMilli = Number(st?.r);
+  const cartId = /^[a-z0-9]{6,24}$/.test(String(st?.c || '')) ? String(st.c) : '';
   if (!varIds.length || varIds.length > 30 || varIds.some(v => !v) || !Number.isInteger(rateMilli) || rateMilli < 0 || rateMilli > 20000) {
     return err('Cart data missing from Square return', 400, cors);
   }
@@ -506,8 +509,10 @@ async function registerComplete(body, cors) {
 
   // 2. Resolve each line's print/size from the live catalog. Prices come from the cart (adjustable in the Sell
   //    window); the check below still requires Square to have actually charged exactly that total + tax.
-  const uniq = [...new Set(varIds)];
-  const cat = await squarePost('/v2/catalog/batch-retrieve', { object_ids: uniq, include_related_objects: true });
+  const uniq = [...new Set(varIds.filter((id, i) => !lineMeta[i].original))];
+  const cat = uniq.length
+    ? await squarePost('/v2/catalog/batch-retrieve', { object_ids: uniq, include_related_objects: true })
+    : { objects: [] };
   const itemsById = {};
   for (const o of [...(cat.objects || []), ...(cat.related_objects || [])]) {
     if (o.type === 'ITEM') itemsById[o.id] = o;
@@ -524,8 +529,19 @@ async function registerComplete(body, cors) {
       size: regSizeOf(vd.name, vd.price_money?.amount),
     };
   }
-  const lines = varIds.map((id, i) => varById[id] && { ...varById[id], cents: lineMeta[i].cents ?? varById[id].cents });
-  if (lines.some(l => !l || l.cents == null)) return err('A print in the cart no longer exists in Square', 409, cors);
+  const origRows = {};
+  for (const [i, id] of varIds.entries()) {
+    if (!lineMeta[i].original || origRows[id] !== undefined) continue;
+    origRows[id] = (await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id } }))).Item || null;
+  }
+  const lines = varIds.map((id, i) => {
+    if (lineMeta[i].original) {
+      const p = origRows[id];
+      return p && lineMeta[i].cents != null ? { paintingId: p.id, title: p.title, size: 'original', cents: lineMeta[i].cents } : null;
+    }
+    return varById[id] && { ...varById[id], cents: lineMeta[i].cents ?? varById[id].cents };
+  });
+  if (lines.some(l => !l || l.cents == null)) return err('An item in the cart no longer exists in Square or inventory', 409, cors);
 
   const subtotal = lines.reduce((a, l) => a + l.cents, 0);
   const taxTotal = regTaxCents(subtotal, rateMilli);
@@ -545,7 +561,7 @@ async function registerComplete(body, cors) {
   let already = 0;
   for (let i = 0; i < lines.length; i++) {
     const l = lines[i];
-    const painting = idx.bySquare[l.itemId] || idx.byTitle[regNormTitle(l.title)];
+    const painting = l.paintingId ? origRows[l.paintingId] : (idx.bySquare[l.itemId] || idx.byTitle[regNormTitle(l.title)]);
     if (!painting) { unmatched.push(l.title); continue; }
     const meta = lineMeta[i];
     const sale = {
@@ -557,6 +573,7 @@ async function registerComplete(body, cors) {
       price: l.cents / 100,
       tax: lineTax[i] / 100,
       squareTxn: txn,
+      ...(cartId ? { cartId } : {}),
       ...(meta.channel === 'fair' && meta.usState ? { state: meta.usState } : {}),
     };
     try {
@@ -565,7 +582,7 @@ async function registerComplete(body, cors) {
       if (e.name === 'ConditionalCheckFailedException') { already++; continue; }
       throw e;
     }
-    try {
+    if (l.size !== 'original') try {
       await dynamo.send(new UpdateCommand({
         TableName: PAINTINGS_TABLE,
         Key: { id: painting.id },
@@ -579,6 +596,25 @@ async function registerComplete(body, cors) {
   }
 
   return ok({ logged, already, unmatched, total: paid / 100 }, cors);
+}
+
+// Lets the admin window that started a checkout learn it was logged — needed because iOS often
+// returns from Square into Safari, not the home-screen app that still holds the cart.
+async function registerStatus(cartId, cors) {
+  if (!/^[a-z0-9]{6,24}$/.test(String(cartId || ''))) return err('Invalid cart id', 400, cors);
+  let found = false, ExclusiveStartKey;
+  do {
+    const res = await dynamo.send(new ScanCommand({
+      TableName: SALES_TABLE,
+      FilterExpression: 'cartId = :c',
+      ExpressionAttributeValues: { ':c': cartId },
+      ProjectionExpression: 'id',
+      ExclusiveStartKey,
+    }));
+    if ((res.Items || []).length) found = true;
+    ExclusiveStartKey = res.LastEvaluatedKey;
+  } while (!found && ExclusiveStartKey);
+  return ok({ done: found }, cors);
 }
 
 async function getFeed() {
@@ -1384,6 +1420,7 @@ export const handler = async (event) => {
     // Lives under /admin/ so it rides the existing CloudFront /admin/* behavior.
     if (method === 'GET'  && path === '/admin/register/catalog')  return await registerCatalog(cors);
     if (method === 'POST' && path === '/admin/register/complete') return await registerComplete(JSON.parse(event.body || '{}'), cors);
+    if (method === 'GET'  && path === '/admin/register/status')   return await registerStatus(event.queryStringParameters?.cart, cors);
 
     // Admin password verification — public (no token); must come before the auth-gated /admin block
     if (method === 'POST' && path === '/admin/verify-password') return await adminVerifyPassword(JSON.parse(event.body || '{}'), cors);
