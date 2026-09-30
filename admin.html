@@ -533,9 +533,43 @@
     .section-title { font-size: 13px; }
     .chart-section { padding: 16px; }
   }
+
+  /* ── SELL WINDOW (cart → Square POS API) ── */
+  .sell-modal { max-width: 560px; }
+  .sell-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; max-height: 34vh; overflow-y: auto; margin-bottom: 14px; }
+  .sell-thumb { aspect-ratio: 1; border-radius: 6px; background: var(--bg2); overflow: hidden; border: none; padding: 0; cursor: pointer; }
+  .sell-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .sell-thumb .ph { font-size: 10px; color: var(--ink2); padding: 4px; text-align: left; line-height: 1.2; }
+  .sell-thumb.sel { outline: 3px solid var(--accent); outline-offset: 1px; }
+  .sell-picked-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .sell-picked-sub { font-size: 12px; color: var(--ink2); margin: 2px 0 10px; }
+  .sell-picked-sub .low { color: var(--red); }
+  .sell-opts { display: flex; gap: 8px; margin-bottom: 14px; }
+  .sell-opt { flex: 1; font-family: var(--font); font-size: 14px; font-weight: 500; padding: 10px 8px; border-radius: 6px; border: 1.5px solid var(--border-mid); background: none; color: var(--ink); cursor: pointer; }
+  .sell-opt.active { border-color: var(--accent); background: var(--accent-pale); color: var(--accent-ink); }
+  .sell-actions { display: flex; gap: 8px; }
+  .sell-actions button { flex: 1; }
+  .sell-cart { border-top: 1px solid var(--border); margin-top: 16px; padding-top: 12px; font-size: 13px; }
+  .sell-cart-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .sell-line { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .sell-line .lt { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sell-line .x { background: none; border: none; color: var(--ink3); font-size: 16px; cursor: pointer; padding: 0 2px; }
+  .sell-totals { display: flex; justify-content: space-between; padding-top: 8px; color: var(--ink2); }
+  .sell-totals b { color: var(--ink); font-size: 15px; }
+  .sell-defaults { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; border: 1.5px solid var(--border-mid); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; }
+  .sell-defaults .field { margin-bottom: 0; min-width: 110px; }
+  .sell-defaults .sd-title { width: 100%; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink2); }
+  .sell-defaults .sd-tax { width: 100%; font-size: 12px; color: var(--ink2); }
+  #sell-return { display: none; position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 12px; right: 12px; max-width: 520px; z-index: 9000; border-radius: 10px; padding: 14px 16px; font-size: 14px; box-shadow: var(--shadow-lg); background: white; border: 1.5px solid var(--border-mid); color: var(--ink); }
+  #sell-return.ok { border-color: var(--green); }
+  #sell-return.bad { border-color: var(--red); }
+  #sell-return b { display: block; font-size: 15px; margin-bottom: 4px; }
+  #sell-return ul { margin: 4px 0 8px; padding-left: 18px; }
+  #sell-return .btns { display: flex; gap: 8px; margin-top: 8px; }
 </style>
 </head>
 <body>
+<div id="sell-return" role="status"></div>
 
 <!-- PASSWORD GATE -->
 <div id="gate">
@@ -555,7 +589,7 @@
       <span class="badge">Admin</span>
     </div>
     <div class="topbar-actions" style="display:flex;align-items:center;gap:12px">
-      <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="openQuickSaleModal()">+ Sale</button>
+      <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="openSellModal()">+ Sale<span id="sell-count"></span></button>
       <button class="btn-logout" onclick="logout()">sign out</button>
     </div>
   </div>
@@ -580,6 +614,16 @@
     <!-- ══ TAB: DASHBOARD ══ -->
     <div class="tab-panel" id="tab-dashboard">
       <div style="padding-top:24px">
+        <div class="sell-defaults">
+          <div class="sd-title">Selling defaults (Sell window)</div>
+          <div class="field"><label>Source</label>
+            <select id="sd-channel" onchange="saveSellDefaults()"><option value="fair">Art fair</option><option value="online">Online</option></select></div>
+          <div class="field"><label>State</label>
+            <select id="sd-state" onchange="saveSellDefaults()"><option value="KS">KS</option><option value="MO">MO</option></select></div>
+          <div class="field"><label>Sales tax %</label>
+            <input type="text" inputmode="decimal" id="sd-rate" onchange="saveSellDefaults()" style="-webkit-appearance:none"></div>
+          <div class="sd-tax" id="sd-tax"></div>
+        </div>
         <div class="adv-reminder" id="adv-reminder" style="display:none">
           <span style="font-weight:600;flex-shrink:0">⚠ Reminder</span>
           <span id="adv-reminder-text"></span>
@@ -1023,6 +1067,43 @@
     <div class="modal-foot">
       <button class="btn-cancel" onclick="closeModal('add-modal')">Cancel</button>
       <button class="btn-primary" onclick="saveNewPainting()">Add Painting</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="sell-modal" style="display:none" onclick="closeModalOnBackdrop(event,'sell-modal')">
+  <div class="modal sell-modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h2>Sale</h2>
+      <button class="modal-close" onclick="closeModal('sell-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field" style="margin-bottom:10px"><input type="search" id="sell-search" placeholder="Search paintings" oninput="renderSellGrid()" autocomplete="off"></div>
+      <div class="sell-grid" id="sell-grid"></div>
+      <div id="sell-picked">
+        <div class="sell-picked-title" id="sell-picked-title">Pick a painting</div>
+        <div class="sell-picked-sub" id="sell-picked-sub"></div>
+        <div class="sell-opts" id="sell-sizes"></div>
+        <div class="field" id="sell-price-field" style="display:none"><label>Price ($)</label>
+          <input type="text" inputmode="decimal" id="sell-price" autocomplete="off" style="-webkit-appearance:none"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Source</label>
+          <select id="sell-channel" onchange="onSellChannelChange()"><option value="fair">Art fair</option><option value="online">Online</option></select></div>
+        <div class="field" id="sell-state-field"><label>State</label>
+          <select id="sell-state"><option value="KS">KS</option><option value="MO">MO</option></select></div>
+      </div>
+      <div class="sell-actions">
+        <button class="btn-cancel" onclick="sellLog()">Log sale</button>
+        <button class="btn-cancel" onclick="sellAdd()">Add to cart</button>
+        <button class="btn-primary" id="sell-checkout-btn" onclick="sellCheckout()">Checkout</button>
+      </div>
+      <div style="margin-top:10px"><button class="btn-sm" type="button" onclick="sellOpenDetailed()">Original, gallery, or other date…</button></div>
+      <div class="sell-cart">
+        <div class="sell-cart-head"><span style="font-weight:600" id="sell-cart-title">Cart</span><button class="btn-sm" style="margin-left:auto" onclick="sellClearCart()">Clear cart</button></div>
+        <div id="sell-lines"></div>
+        <div class="sell-totals" id="sell-totals"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2004,6 +2085,7 @@ async function init() {
   populateDimFilterOptions();
   applyMobileChartDefault();
   render();
+  renderSellDefaults();
 
   // Load expenses in background so dashboard cards populate on login
   loadExpenses().catch(e => console.error('Background expense load failed:', e));
@@ -4051,6 +4133,275 @@ document.getElementById('pw-input').addEventListener('keydown', checkPassword);
 document.getElementById('pw-input').addEventListener('input', function() {
   if (this.value.length === 6) checkPassword({});
 });
+
+
+// ═══════════════════════════════════════════
+//  SELL WINDOW — pick print → log / cart → checkout in Square (POS API, Tap to Pay)
+//  Quick sale (+ Sale) is separate and unchanged.
+// ═══════════════════════════════════════════
+// Must match the Web callback URL registered in the Square Developer Dashboard (Point of Sale API) exactly.
+const SELL_CALLBACK = 'https://davidnicholsonart.com/admin.html';
+const SELL_K_DEFAULTS = 'dna-sell-defaults', SELL_K_CATALOG = 'dna-sell-catalog', SELL_K_CART = 'dna-sell-cart';
+function sellStore(kind) { try { return kind === 'session' ? window.sessionStorage : window.localStorage; } catch { return null; } }
+function sellGet(kind, k, d) { try { const v = sellStore(kind)?.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
+function sellSet(kind, k, v) { try { sellStore(kind)?.setItem(k, JSON.stringify(v)); } catch {} }
+// Tax in thousandths of a percent (9.35% → 9350) — must match regTaxCents() in index.mjs.
+function sellRateMilli(pct) { return Math.round(Number(pct) * 1000); }
+function sellTaxCents(sub, milli) { return Math.round(sub * milli / 100000); }
+function sellMoney(c) { return '$' + (c / 100).toFixed(2); }
+function sellToday() { return new Date().toLocaleDateString('en-CA'); }
+
+let sellDefaults = Object.assign({ channel: 'fair', state: 'KS', rate: 9.35 }, sellGet('local', SELL_K_DEFAULTS, {}));
+let sellCatalog = sellGet('local', SELL_K_CATALOG, null); // { prints, appId }
+let sellCart = sellGet('session', SELL_K_CART, []);       // session storage: survives app switches/reloads, clears when the window closes
+let sellPrintId = null, sellSize = null, sellBusy = false;
+
+function renderSellDefaults() {
+  const ch = document.getElementById('sd-channel'); if (!ch) return;
+  ch.value = sellDefaults.channel;
+  document.getElementById('sd-state').value = sellDefaults.state;
+  document.getElementById('sd-rate').value = sellDefaults.rate;
+  const ym = sellToday().slice(0, 7), byState = {};
+  for (const p of db.paintings) for (const s of (p.sales || [])) {
+    if (s.tax == null || !(s.date || '').startsWith(ym)) continue;
+    const k = s.state || 'No state';
+    byState[k] = (byState[k] || 0) + Number(s.tax || 0);
+  }
+  const parts = Object.entries(byState).map(([k, v]) => `${k} $${v.toFixed(2)}`);
+  document.getElementById('sd-tax').textContent = 'Tax collected through Sell checkout this month: ' + (parts.length ? parts.join(' · ') : '$0.00');
+}
+function saveSellDefaults() {
+  const rate = parseFloat(document.getElementById('sd-rate').value);
+  if (isNaN(rate) || rate < 0 || rate > 20) { alert('Enter a tax rate between 0 and 20.'); document.getElementById('sd-rate').value = sellDefaults.rate; return; }
+  sellDefaults = { channel: document.getElementById('sd-channel').value, state: document.getElementById('sd-state').value, rate: Math.round(rate * 1000) / 1000 };
+  sellSet('local', SELL_K_DEFAULTS, sellDefaults);
+  renderSellCart();
+}
+
+async function sellLoadCatalog() {
+  try {
+    const r = await fetch(API_BASE + '/register/catalog', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    sellCatalog = await r.json();
+    sellSet('local', SELL_K_CATALOG, sellCatalog);
+  } catch (e) {
+    if (!sellCatalog) document.getElementById('sell-grid').innerHTML = '<div style="font-size:13px;color:var(--ink2)">Could not load prints from Square. Check your connection.</div>';
+    return;
+  }
+  renderSellGrid(); renderSellPicked();
+}
+function sellNorm(t) { return (t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function sellPaintingFor(pr) {
+  return db.paintings.find(p => p.squareId === pr.id) || db.paintings.find(p => !p.marketItem && sellNorm(p.title) === sellNorm(pr.title)) || null;
+}
+function sellPrints() { return sellCatalog?.prints || []; }
+
+function openSellModal() {
+  document.getElementById('sell-channel').value = sellDefaults.channel;
+  document.getElementById('sell-state').value = sellDefaults.state;
+  onSellChannelChange();
+  document.getElementById('sell-search').value = '';
+  renderSellGrid(); renderSellPicked(); renderSellCart();
+  document.getElementById('sell-modal').style.display = 'flex';
+  sellLoadCatalog();
+}
+function onSellChannelChange() {
+  document.getElementById('sell-state-field').style.visibility = document.getElementById('sell-channel').value === 'fair' ? 'visible' : 'hidden';
+}
+function sellImgRetry(img) {
+  const n = +(img.dataset.retry || 0);
+  if (n >= 3) { img.style.visibility = 'hidden'; return; }
+  img.dataset.retry = n + 1;
+  setTimeout(() => { const u = new URL(img.dataset.src); u.searchParams.set('retry', n + 1); img.src = u.toString(); }, 400 * (n + 1));
+}
+function renderSellGrid() {
+  const q = document.getElementById('sell-search').value.trim().toLowerCase();
+  const list = sellPrints().filter(pr => !q || pr.title.toLowerCase().includes(q));
+  document.getElementById('sell-grid').innerHTML = list.map(pr => `
+    <button class="sell-thumb${pr.id === sellPrintId ? ' sel' : ''}" type="button" title="${esc(pr.title)}" aria-label="${esc(pr.title)}" onclick="sellPick('${esc(pr.id)}')">
+      ${pr.img ? `<img loading="lazy" decoding="async" referrerpolicy="no-referrer" src="${esc(pr.img)}" data-src="${esc(pr.img)}" onerror="sellImgRetry(this)" alt="">` : `<div class="ph">${esc(pr.title)}</div>`}
+    </button>`).join('') || (sellCatalog ? '<div style="font-size:13px;color:var(--ink2)">No matches.</div>' : '<div style="font-size:13px;color:var(--ink2)">Loading prints…</div>');
+}
+function sellPick(id) { sellPrintId = id; sellSize = null; renderSellGrid(); renderSellPicked(); }
+// Price field is prefilled from Square when a size is picked, then left alone so edits stick.
+function sellPickSize(sz) {
+  sellSize = sz;
+  const v = sellPrints().find(x => x.id === sellPrintId)?.variations.find(x => x.size === sz);
+  document.getElementById('sell-price').value = v ? (v.cents / 100).toFixed(2).replace(/\.00$/, '') : '';
+  renderSellPicked();
+}
+function renderSellPicked() {
+  const pr = sellPrints().find(x => x.id === sellPrintId);
+  const title = document.getElementById('sell-picked-title'), sub = document.getElementById('sell-picked-sub'), sizes = document.getElementById('sell-sizes');
+  document.getElementById('sell-price-field').style.display = pr && sellSize ? '' : 'none';
+  if (!pr) { title.textContent = 'Pick a painting'; sub.textContent = ''; sizes.innerHTML = ''; return; }
+  const p = sellPaintingFor(pr);
+  title.textContent = pr.title;
+  if (p?.stock) {
+    const one = s => { const n = p.stock[s] ?? 0; return `<span class="${n <= 0 ? 'low' : ''}">${s === 'large' ? 'L' : 'S'} ${n}</span>`; };
+    sub.innerHTML = `In stock: ${one('large')} · ${one('small')}`;
+  } else sub.textContent = p ? '' : 'Not in inventory — checkout works, but log it by hand';
+  sizes.innerHTML = ['large', 'small'].map(sz => {
+    const v = pr.variations.find(x => x.size === sz);
+    if (!v) return '';
+    return `<button class="sell-opt${sellSize === sz ? ' active' : ''}" type="button" onclick="sellPickSize('${sz}')">${sz === 'large' ? 'Large' : 'Small'} · ${sellMoney(v.cents).replace('.00', '')}</button>`;
+  }).join('');
+}
+// Returns the current selection as a cart line, or null (with a message) if incomplete
+function sellCurrentLine(quiet) {
+  const pr = sellPrints().find(x => x.id === sellPrintId);
+  if (!pr) { if (!quiet) alert('Pick a painting first.'); return null; }
+  const v = pr.variations.find(x => x.size === sellSize);
+  if (!v) { if (!quiet) alert('Pick large or small.'); return null; }
+  const priceStr = document.getElementById('sell-price').value.replace(/[$,\s]/g, '');
+  const price = parseFloat(priceStr);
+  if (priceStr === '' || isNaN(price) || price < 0 || price > 10000) { if (!quiet) alert('Enter a valid price.'); return null; }
+  const channel = document.getElementById('sell-channel').value;
+  return { varId: v.id, printId: pr.id, title: pr.title, size: sellSize, cents: Math.round(price * 100), listCents: v.cents, channel,
+           state: channel === 'fair' ? document.getElementById('sell-state').value : '' };
+}
+// Hand off to the detailed log form (the original quick-sale modal, unchanged), carrying over the current pick.
+function sellOpenDetailed() {
+  const pr = sellPrints().find(x => x.id === sellPrintId);
+  const p = pr ? sellPaintingFor(pr) : null;
+  const priceStr = document.getElementById('sell-price').value.replace(/[$,\s]/g, '');
+  const channel = document.getElementById('sell-channel').value;
+  const usState = document.getElementById('sell-state').value;
+  closeModal('sell-modal');
+  openQuickSaleModal();
+  document.getElementById('sale-channel').value = channel;
+  document.getElementById('sale-state-field').style.display = channel === 'fair' ? 'block' : 'none';
+  if (channel === 'fair') document.getElementById('sale-state').value = usState;
+  if (p) { document.getElementById('sale-painting-select').value = p.id; onSalePaintingChange(); }
+  if (sellSize) document.getElementById('sale-type').value = sellSize;
+  if (sellSize && priceStr) document.getElementById('sale-price').value = priceStr;
+}
+function sellResetPick() { sellPrintId = null; sellSize = null; renderSellGrid(); renderSellPicked(); }
+
+async function sellLog() {
+  const line = sellCurrentLine(); if (!line || sellBusy) return;
+  const pr = sellPrints().find(x => x.id === line.printId);
+  const p = sellPaintingFor(pr);
+  if (!p) { alert(`"${line.title}" isn't in inventory — use + Sale to log it against a painting.`); return; }
+  const saleData = { date: sellToday(), type: line.size, channel: line.channel, price: line.cents / 100, ...(line.state ? { state: line.state } : {}), decrementStock: true };
+  sellBusy = true;
+  try {
+    const data = await api('POST', `/paintings/${p.id}/sales`, saleData);
+    (p.sales = p.sales || []).push(data.sale);
+    if (p.stock) p.stock[line.size] = (p.stock[line.size] || 0) - 1;
+    render(); renderSellDefaults();
+    sellResetPick();
+    document.getElementById('sell-picked-sub').textContent = `Logged ${line.title} (${line.size})`;
+  } catch (e) { alert('Failed to log sale: ' + e.message); }
+  finally { sellBusy = false; }
+}
+function sellAdd() {
+  const line = sellCurrentLine(); if (!line) return;
+  sellCart.push(line);
+  sellSet('session', SELL_K_CART, sellCart);
+  sellResetPick(); renderSellCart();
+  document.getElementById('sell-picked-sub').textContent = `Added ${line.title} (${line.size})`;
+}
+function sellRemove(i) { sellCart.splice(i, 1); sellSet('session', SELL_K_CART, sellCart); renderSellCart(); }
+function sellClearCart() {
+  if (!sellCart.length) return;
+  if (!confirm('Clear the cart?')) return;
+  sellCart = []; sellSet('session', SELL_K_CART, sellCart); renderSellCart();
+}
+function sellTotals() {
+  const sub = sellCart.reduce((a, l) => a + l.cents, 0);
+  const milli = sellRateMilli(sellDefaults.rate);
+  const tax = sellTaxCents(sub, milli);
+  return { sub, tax, tot: sub + tax, milli };
+}
+function renderSellCart() {
+  const n = sellCart.length;
+  const cnt = document.getElementById('sell-count'); if (cnt) cnt.textContent = n ? ` · ${n}` : '';
+  const lines = document.getElementById('sell-lines'); if (!lines) return;
+  const t = sellTotals();
+  document.getElementById('sell-cart-title').textContent = n ? `Cart · ${n}` : 'Cart';
+  lines.innerHTML = n ? sellCart.map((l, i) => `
+    <div class="sell-line"><span class="lt">${esc(l.title)} <span style="color:var(--ink2)">· ${l.size}${l.channel === 'online' ? ' · online' : ''}</span></span>
+      <span>${l.listCents != null && l.listCents !== l.cents ? `<span style="color:var(--ink3);text-decoration:line-through;margin-right:4px">${sellMoney(l.listCents)}</span>` : ''}${sellMoney(l.cents)}</span><button class="x" type="button" aria-label="Remove" onclick="sellRemove(${i})">×</button></div>`).join('')
+    : '<div style="color:var(--ink2);padding:4px 0">Empty — pick a print and tap Add to cart.</div>';
+  document.getElementById('sell-totals').innerHTML = n
+    ? `<span>Subtotal ${sellMoney(t.sub)} + tax ${sellDefaults.rate}% ${sellMoney(t.tax)}</span><b>${sellMoney(t.tot)}</b>` : '';
+  document.getElementById('sell-checkout-btn').textContent = n ? `Checkout ${sellMoney(t.tot)}` : 'Checkout';
+}
+function sellCheckout() {
+  const pending = sellCurrentLine(true);
+  if (pending) { sellCart.push(pending); sellSet('session', SELL_K_CART, sellCart); sellResetPick(); renderSellCart(); }
+  if (!sellCart.length) { alert('Pick a print or add something to the cart first.'); return; }
+  const appId = sellCatalog?.appId;
+  if (!appId) { alert('Square app ID is not set. Add SQUARE_APP_ID to the Lambda environment variables.'); return; }
+  const t = sellTotals();
+  const st = { l: sellCart.map(l => [l.varId, l.channel === 'online' ? 'o' : 'f', l.state || '', l.cents]), r: t.milli };
+  const notes = sellCart.map(l => `${l.title} (${l.size === 'large' ? 'L' : 'S'})`).join(', ').slice(0, 480);
+  const req = {
+    amount_money: { amount: t.tot, currency_code: 'USD' },
+    callback_url: SELL_CALLBACK,
+    client_id: appId,
+    version: '1.3',
+    notes,
+    state: JSON.stringify(st),
+    // Tax is already in the total — clear_default_fees stops Square from adding its own on top.
+    options: { supported_tender_types: ['CREDIT_CARD'], auto_return: true, clear_default_fees: true },
+  };
+  window.location.href = 'square-commerce-v1://payment/create?data=' + encodeURIComponent(JSON.stringify(req));
+}
+
+// Return from Square: runs on page load, before the PIN gate — the complete endpoint is public
+// and verifies the payment with Square, so no admin session is needed.
+const SELL_ERRORS = {
+  payment_canceled: 'Payment was canceled in Square. Your cart is still here.',
+  not_logged_in: 'Log in to the Square app, then try again.',
+  unsupported_api_version: 'Update the Square app, then try again.',
+};
+function sellBanner(kind, html, actions) {
+  const el = document.getElementById('sell-return');
+  el.className = kind; el.style.display = 'block';
+  el.innerHTML = html + '<div class="btns">' + (actions || '') + '<button class="btn-cancel" type="button" onclick="document.getElementById(\'sell-return\').style.display=\'none\'">Done</button></div>';
+}
+async function sellHandleReturn() {
+  const raw = new URLSearchParams(location.search).get('data');
+  if (!raw) return;
+  history.replaceState(null, '', location.pathname);
+  let d; try { d = JSON.parse(raw); } catch { d = null; }
+  if (!d) { sellBanner('bad', '<b>Couldn’t read the reply from Square</b>Check the Square app to see whether it charged, then log the sale with + Sale.'); return; }
+  if (d.status !== 'ok' || !d.transaction_id) {
+    const code = d.error_code || 'unknown_error';
+    sellBanner('bad', `<b>Not charged</b>${esc(SELL_ERRORS[code] || 'Square returned: ' + code)}`);
+    return;
+  }
+  sellComplete(d.transaction_id, d.state);
+}
+async function sellComplete(txn, state) {
+  sellBanner('ok', '<b>Payment received — logging sale…</b>');
+  try {
+    const r = await fetch(API_BASE + '/register/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ transactionId: txn, state }) });
+    const res = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error(res.error || 'HTTP ' + r.status); e.final = r.status >= 400 && r.status < 500; throw e; }
+    const items = (res.logged || []).map(l => `<li>${esc(l.title)} — ${l.size} — $${Number(l.price).toFixed(2)}</li>`).join('');
+    let html = `<b>Charged $${Number(res.total).toFixed(2)}</b>`;
+    if (items) html += `Logged and removed from stock:<ul>${items}</ul>`;
+    if (res.already) html += `<div>${res.already} already logged.</div>`;
+    if (res.unmatched?.length) html += `<div style="color:var(--red)">Not in inventory — log with + Sale: ${res.unmatched.map(esc).join(', ')}</div>`;
+    sellBanner('ok', html);
+    sellCart = []; sellSet('session', SELL_K_CART, sellCart); renderSellCart();
+    if (sessionToken) {
+      try { const data = await api('GET', '/paintings'); db.paintings = data.paintings; render(); renderSellDefaults(); } catch {}
+    }
+  } catch (e) {
+    // Retry is safe: the server logs each line under an ID derived from the Square transaction.
+    window._sellRetry = () => sellComplete(txn, state);
+    sellBanner('bad', `<b>Paid, but not logged yet</b>${esc(e.message)}<br>The payment went through in Square.` +
+      (e.final ? ' Log it with + Sale.' : ' Retry when you have signal.'),
+      e.final ? '' : '<button class="btn-primary" type="button" onclick="window._sellRetry()">Retry</button>');
+    if (e.final) { sellCart = []; sellSet('session', SELL_K_CART, sellCart); renderSellCart(); }
+  }
+}
+renderSellCart();
+sellHandleReturn();
 
 // PWA mode flag — no longer restricts which tabs are shown; still read elsewhere (compact expense rows)
 const isPWA = !!window.navigator.standalone;

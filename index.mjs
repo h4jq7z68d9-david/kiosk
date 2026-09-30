@@ -2,7 +2,7 @@ import https from 'https';
 import { timingSafeEqual } from 'crypto';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand, ScanCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand, ScanCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
@@ -397,6 +397,189 @@ async function listBoothLayouts() {
   return ok({ layouts });
 }
 
+
+// ── Register (admin.html Sell window — checkout via Square POS API / Tap to Pay) ──
+// Public by design: admin must be able to log a paid cart when iOS returns from the
+// Square app and the admin session (in-memory token) is gone. Nothing here can write data without a real,
+// completed Square order whose total matches the cart (see registerComplete).
+function regNormTitle(t) { return (t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+
+// Square variation names are mat sizes ("9 x 12 Matted to 12 x 16", "5 x 7 Matted to 8 x 10").
+// 12x16 mat = large print, 8x10 mat = small print; otherwise fall back to price ($40+ = large).
+function regSizeOf(name, cents) {
+  const n = (name || '').toLowerCase();
+  if (/12\s*x\s*16|16\s*x\s*12/.test(n)) return 'large';
+  if (/8\s*x\s*10|10\s*x\s*8/.test(n))   return 'small';
+  if (/large/.test(n)) return 'large';
+  if (/small/.test(n)) return 'small';
+  return (cents || 0) >= 4000 ? 'large' : 'small';
+}
+
+function regTaxCents(subtotalCents, rateMilli) {
+  // rateMilli = tax rate in thousandths of a percent (9.35% → 9350). Same formula as sellTaxCents() in admin.html.
+  return Math.round(subtotalCents * rateMilli / 100000);
+}
+
+async function regPaintingIndex() {
+  const res = await dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE }));
+  const bySquare = {}, byTitle = {};
+  for (const p of (res.Items || [])) {
+    if (p.id === '__config__' || p.type === 'priceList' || p.marketItem) continue;
+    if (p.squareId) bySquare[p.squareId] = p;
+    byTitle[regNormTitle(p.title)] = p;
+  }
+  return { bySquare, byTitle };
+}
+
+async function registerCatalog(cors) {
+  const [itemsRes, imagesRes, idx] = await Promise.all([
+    squareGet(`/v2/catalog/list?types=ITEM&location_id=${SQUARE_LOC}`),
+    squareGet(`/v2/catalog/list?types=IMAGE`),
+    regPaintingIndex(),
+  ]);
+  const imageIds = new Set((imagesRes.objects || []).filter(o => o.image_data?.url).map(o => o.id));
+  const SELF = process.env.API_URL || 'https://davidnicholsonart.com';
+
+  const prints = [];
+  for (const obj of (itemsRes.objects || [])) {
+    const item = obj.item_data;
+    if (!item?.name) continue;
+    const vars = item.variations || [];
+    if (vars.length === 1 && vars[0].item_variation_data?.name === 'Default Title') continue; // originals-only
+    let market = false;
+    for (const val of Object.values(obj.custom_attribute_values || {})) {
+      if (val.name === 'Market Item' && val.boolean_value === true) market = true;
+    }
+    if (market) continue;
+    const variations = vars
+      .map(v => {
+        const cents = v.item_variation_data?.price_money?.amount;
+        if (!cents) return null;
+        const name = v.item_variation_data?.name || '';
+        return { id: v.id, name, cents, size: regSizeOf(name, cents) };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.cents - b.cents);
+    if (!variations.length) continue;
+    const painting = idx.bySquare[obj.id] || idx.byTitle[regNormTitle(item.name)] || null;
+    const imgId = item.image_ids?.[0];
+    prints.push({
+      id: obj.id,
+      title: item.name,
+      img: imgId && imageIds.has(imgId) ? `${SELF}/image?id=${encodeURIComponent(imgId)}` : null,
+      variations,
+      stock: painting ? { large: painting.stock?.large ?? 0, small: painting.stock?.small ?? 0 } : null,
+    });
+  }
+  prints.sort((a, b) => a.title.localeCompare(b.title));
+
+  return ok({ prints, appId: process.env.SQUARE_APP_ID || '' }, cors);
+}
+
+async function registerComplete(body, cors) {
+  const txn = String(body.transactionId || '');
+  if (!/^[A-Za-z0-9_-]{8,64}$/.test(txn)) return err('Missing or invalid transaction ID', 400, cors);
+
+  let st;
+  try { st = typeof body.state === 'string' ? JSON.parse(body.state) : body.state; } catch { st = null; }
+  // state.l = [[variationId, channel ('f' fair | 'o' online), usState ('KS'|'MO'|''), priceCents?], ...]; state.r = tax rate (thousandths of a percent)
+  // priceCents is the (possibly adjusted) price from the Sell window; if absent, the live catalog price is used.
+  const rawLines = Array.isArray(st?.l) ? st.l : [];
+  const varIds = rawLines.map(x => String(Array.isArray(x) ? x[0] : ''));
+  const lineMeta = rawLines.map(x => ({
+    channel: Array.isArray(x) && x[1] === 'o' ? 'online' : 'fair',
+    usState: Array.isArray(x) && (x[2] === 'KS' || x[2] === 'MO') ? x[2] : '',
+    cents: Array.isArray(x) && Number.isInteger(x[3]) && x[3] >= 0 && x[3] <= 1000000 ? x[3] : null,
+  }));
+  const rateMilli = Number(st?.r);
+  if (!varIds.length || varIds.length > 30 || varIds.some(v => !v) || !Number.isInteger(rateMilli) || rateMilli < 0 || rateMilli > 20000) {
+    return err('Cart data missing from Square return', 400, cors);
+  }
+
+  // 1. The payment must be a real, completed Square order (POS API transaction ID = order ID)
+  const orderRes = await squareGet(`/v2/orders/${encodeURIComponent(txn)}`);
+  const order = orderRes.order;
+  if (!order) return err('Square order not found', 404, cors);
+  if (order.state !== 'COMPLETED') return err(`Square order is ${order.state}, not completed`, 409, cors);
+  const ageMs = Date.now() - Date.parse(order.created_at || 0);
+  if (!(ageMs >= 0 && ageMs < 72 * 3600 * 1000)) return err('Square order is too old to log here', 409, cors);
+
+  // 2. Resolve each line's print/size from the live catalog. Prices come from the cart (adjustable in the Sell
+  //    window); the check below still requires Square to have actually charged exactly that total + tax.
+  const uniq = [...new Set(varIds)];
+  const cat = await squarePost('/v2/catalog/batch-retrieve', { object_ids: uniq, include_related_objects: true });
+  const itemsById = {};
+  for (const o of [...(cat.objects || []), ...(cat.related_objects || [])]) {
+    if (o.type === 'ITEM') itemsById[o.id] = o;
+  }
+  const varById = {};
+  for (const o of (cat.objects || [])) {
+    if (o.type !== 'ITEM_VARIATION') continue;
+    const vd = o.item_variation_data || {};
+    const item = itemsById[vd.item_id];
+    varById[o.id] = {
+      itemId: vd.item_id,
+      title: item?.item_data?.name || '',
+      cents: vd.price_money?.amount || 0,
+      size: regSizeOf(vd.name, vd.price_money?.amount),
+    };
+  }
+  const lines = varIds.map((id, i) => varById[id] && { ...varById[id], cents: lineMeta[i].cents ?? varById[id].cents });
+  if (lines.some(l => !l || l.cents == null)) return err('A print in the cart no longer exists in Square', 409, cors);
+
+  const subtotal = lines.reduce((a, l) => a + l.cents, 0);
+  const taxTotal = regTaxCents(subtotal, rateMilli);
+  const expected = subtotal + taxTotal;
+  // Split the tax across lines (per-line rounding, remainder on the last line) so line taxes sum to what was charged
+  const lineTax = lines.map(l => regTaxCents(l.cents, rateMilli));
+  lineTax[lineTax.length - 1] += taxTotal - lineTax.reduce((a, t) => a + t, 0);
+  const paid = (order.total_money?.amount || 0) - (order.total_tip_money?.amount || 0);
+  if (paid !== expected) {
+    return err(`Square charged $${(paid / 100).toFixed(2)} but the cart totals $${(expected / 100).toFixed(2)} — log these by hand in admin`, 409, cors);
+  }
+
+  // 3. Log one sale per print (idempotent: sale IDs derive from the transaction) and take stock out
+  const idx = await regPaintingIndex();
+  const date = new Date(order.created_at).toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+  const logged = [], unmatched = [];
+  let already = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
+    const painting = idx.bySquare[l.itemId] || idx.byTitle[regNormTitle(l.title)];
+    if (!painting) { unmatched.push(l.title); continue; }
+    const meta = lineMeta[i];
+    const sale = {
+      id: `sq_${txn}_${i}`,
+      paintingId: painting.id,
+      date,
+      type: l.size,
+      channel: meta.channel,
+      price: l.cents / 100,
+      tax: lineTax[i] / 100,
+      squareTxn: txn,
+      ...(meta.channel === 'fair' && meta.usState ? { state: meta.usState } : {}),
+    };
+    try {
+      await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: sale, ConditionExpression: 'attribute_not_exists(id)' }));
+    } catch (e) {
+      if (e.name === 'ConditionalCheckFailedException') { already++; continue; }
+      throw e;
+    }
+    try {
+      await dynamo.send(new UpdateCommand({
+        TableName: PAINTINGS_TABLE,
+        Key: { id: painting.id },
+        UpdateExpression: 'SET #stock.#sz = if_not_exists(#stock.#sz, :z) - :one',
+        ConditionExpression: 'attribute_exists(#stock)',
+        ExpressionAttributeNames: { '#stock': 'stock', '#sz': l.size },
+        ExpressionAttributeValues: { ':z': 0, ':one': 1 },
+      }));
+    } catch (e) { console.error('Register stock decrement failed', painting.id, e.name); }
+    logged.push({ paintingId: painting.id, title: painting.title, size: l.size, price: l.cents / 100 });
+  }
+
+  return ok({ logged, already, unmatched, total: paid / 100 }, cors);
+}
 
 async function getFeed() {
   const products = await buildProductList();
@@ -830,6 +1013,20 @@ async function adminAddSale(paintingId, body, cors) {
     item.net = Number(net ?? price * (pct / 100));
   }
   await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: item }));
+  // Opt-in (Sell window): decrement print stock server-side with an atomic update, so the
+  // painting record isn't rewritten from client fields. Quick sale doesn't send this flag.
+  if (body.decrementStock === true && (type === 'large' || type === 'small')) {
+    try {
+      await dynamo.send(new UpdateCommand({
+        TableName: PAINTINGS_TABLE,
+        Key: { id: paintingId },
+        UpdateExpression: 'SET #stock.#sz = if_not_exists(#stock.#sz, :z) - :one',
+        ConditionExpression: 'attribute_exists(#stock)',
+        ExpressionAttributeNames: { '#stock': 'stock', '#sz': type },
+        ExpressionAttributeValues: { ':z': 0, ':one': 1 },
+      }));
+    } catch (e) { console.error('Sale stock decrement failed', paintingId, e.name); }
+  }
   return ok({ sale: item }, cors);
 }
 
@@ -837,6 +1034,10 @@ async function adminUpdateSale(paintingId, saleId, body, cors) {
   const { date, type, channel, price, pct, net, state } = body;
   if (!type || !channel || price == null) return err('Missing required fields', 400, cors);
   const item = { id: saleId, paintingId, date: date || '', type, channel, price: Number(price) };
+  // Keep fields the edit modal doesn't know about (tax + Square transaction from Sell-window checkouts)
+  const prev = (await dynamo.send(new GetCommand({ TableName: SALES_TABLE, Key: { id: saleId } }))).Item;
+  if (prev?.tax != null) item.tax = prev.tax;
+  if (prev?.squareTxn) item.squareTxn = prev.squareTxn;
   if (state) item.state = state;
   if (channel === 'gallery') {
     item.pct = Number(pct);
@@ -1178,6 +1379,11 @@ export const handler = async (event) => {
     if (method === 'POST' && path === '/send-link')                       return await sendLink(JSON.parse(event.body || '{}'));
     if (method === 'POST' && path === '/guestbook')                       return await guestbook(JSON.parse(event.body || '{}'));
     if (method === 'POST' && path === '/checkout')                        return await checkout(JSON.parse(event.body || '{}'));
+
+    // Register (register.html) — public; must come before the auth-gated /admin block.
+    // Lives under /admin/ so it rides the existing CloudFront /admin/* behavior.
+    if (method === 'GET'  && path === '/admin/register/catalog')  return await registerCatalog(cors);
+    if (method === 'POST' && path === '/admin/register/complete') return await registerComplete(JSON.parse(event.body || '{}'), cors);
 
     // Admin password verification — public (no token); must come before the auth-gated /admin block
     if (method === 'POST' && path === '/admin/verify-password') return await adminVerifyPassword(JSON.parse(event.body || '{}'), cors);

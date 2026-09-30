@@ -166,6 +166,7 @@ Static HTML files generated at build time by `generate-prints.js`. One file per 
 ```
 SQUARE_TOKEN  = Square production access token (see AWS console)
 SQUARE_LOC    = LYVD3ZGR3X4KE
+SQUARE_APP_ID = Square Application ID (Developer Dashboard) — used by admin.html's Sell window for the POS API handoff; public-safe
 SES_FROM      = david@davidnicholsonart.com
 NOTIFY_EMAIL  = david@davidnicholsonart.com
 API_URL       = https://davidnicholsonart.com
@@ -189,12 +190,14 @@ PASSWORD      = admin.html PIN (see AWS console) — added June 11 2026
 - `PUT /booth-layout` — save/overwrite a booth layout `{id, title, wallsJson}`
 - `DELETE /booth-layout?id=X` — delete a booth layout from DynamoDB
 - `GET /booth-layouts` — list all saved layouts `[{id, title, updatedAt}]` sorted newest first
+- `GET /admin/register/catalog` — **public** (routed before the `/admin` auth gate). Prints for admin's Sell window: `{prints:[{id,title,img,variations:[{id,name,cents,size}],stock}], appId}`. Excludes originals-only and `Market Item` items. Size comes from the variation name (12×16 mat = large, 8×10 mat = small, else price ≥ $40 = large).
+- `POST /admin/register/complete` — **public**, `{transactionId, state}` where `state = {l:[[variationId, 'f'|'o', 'KS'|'MO'|'', priceCents], …], r: taxRateMilli}`. Verifies the Square order (POS API transaction ID = order ID) is COMPLETED, < 72h old, and that its total (minus tip) equals the cart prices (Sell-window prices, falling back to the live catalog price if absent) + tax. Then writes one `dna-sales` row per print (`id: sq_{txn}_{i}`, conditional put → idempotent/retry-safe; `channel`, pre-tax `price`, per-line `tax`, `state`, `squareTxn`) and atomically decrements `stock.large/small` on the matched painting.
 - `GET /admin/paintings` — all paintings with sales joined
 - `POST /admin/paintings` — add painting
 - `PUT /admin/paintings/{id}` — update painting
 - `DELETE /admin/paintings/{id}` — delete painting + all its sales
-- `POST /admin/paintings/{id}/sales` — add sale
-- `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale
+- `POST /admin/paintings/{id}/sales` — add sale. Optional `decrementStock: true` (sent only by the Sell window's Log sale) decrements print stock server-side with an atomic update; quick sale doesn't send it and still decrements via its own painting PUT.
+- `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale (preserves `tax` and `squareTxn` from the existing row)
 - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
 - `GET/PUT /admin/config` — price/sq in rate (`rate`) and large-painting rate (`rateLarge`, optional); both stored in DynamoDB `__config__` record
 - `GET /admin/expenses` — returns `{ expenses, mileage, recurring }` from `dna-expenses` table
@@ -369,7 +372,7 @@ All are single-file, no framework — intentional, keep it that way.
   - `admin-sw.js` — service worker caches admin shell; passes all `/admin/*` API calls and S3 receipt URLs through to network
   - `admin-icon.png` — 512×512 orange DN icon
   - Safe area insets applied to topbar and main padding for iPhone notch
-- **PWA mode behavior:** when launched from home screen (`navigator.standalone`), goes straight to Expenses & Mileage tab, hides Reports and Inventory tabs — full admin still accessible in Safari
+- **PWA mode behavior:** home-screen launch shows the same tabs as Safari (the tab restriction was removed); `isPWA` now only compacts expense rows
 
 **Four-tab layout (corrected September 19 2026 — this section had drifted well behind the code; see "Completed This Session" below for the audit):**
 
@@ -541,6 +544,38 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`lambda-deploy` user** (local seed scripts):
 
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
+
+-----
+
+## Completed This Session (September 29 2026)
+
+**admin.html — unified Sale window: log / cart → Square Tap to Pay → auto-logged sales + stock**
+
+Goal: stop the two-step fair routine (charge in the Square app, log prints in admin later). Square only processes the card; admin owns tax math, the sales log, and stock. **One `+ Sale` button** (topbar) now opens the Sale window (`openSellModal()`); the original quick-sale modal (`openQuickSaleModal()`, unchanged) is reached from the window's **Original, gallery, or other date…** link, which carries over the current painting, size, price, source, and state.
+
+- ✓ **`+ Sale` button** — shows cart count (`+ Sale · 2`). Opens the Sale window: search + image grid of Square prints → tap a painting → **Large $40 / Small $25** (prices from Square variations) → Source (Art fair / Online) and State (KS / MO, fair only) prefilled from defaults, changeable per sale.
+- ✓ **Adjustable price** — picking Large/Small prefills a Price field from Square; edit it before Log sale / Add to cart. Adjusted cart lines show the list price struck through. The adjusted cents travel in the checkout `state` (`[variationId, channel, state, priceCents]`); Lambda uses them for the sale price and tax split and still requires Square's charged total to equal those prices + tax.
+- ✓ **Three actions** — **Log sale** (logs just that print now, no charge, pre-tax Square price, decrements stock server-side via `decrementStock: true`); **Add to cart**; **Checkout** (adds the current pick if complete, then sends the whole cart to Square). Cart shows lines with × remove, **Clear cart**, subtotal + tax + total.
+- ✓ **Cart storage** — `sessionStorage` (`dna-sell-cart`): survives iOS app switches/reloads, clears when the window/tab is closed.
+- ✓ **Selling defaults card (Reports tab, top)** — Source, State, Sales tax % (per device, `localStorage` `dna-sell-defaults`). Also shows tax collected through Sell checkout this month by state (sum of `sale.tax`).
+- ✓ **Tax** — admin computes it (Square is told `clear_default_fees: true`, so it adds none). Formula `Math.round(sub × rateMilli / 100000)` lives in both `sellTaxCents()` (admin.html) and `regTaxCents()` (index.mjs) — **keep them identical** or payment verification fails. Square's own reports show $0 tax for these charges; the admin `tax` field is the record. Set the fair city's rate before each fair (Kansas is destination-based).
+- ✓ **Square POS API (iOS web)** — `square-commerce-v1://payment/create`, callback `https://davidnicholsonart.com/admin.html`, note lists prints, `state` carries the compact cart. Card only.
+- ✓ **Return flow** — `sellHandleReturn()` runs on page load **before the PIN gate**, POSTs to the public `/admin/register/complete`, and shows a banner above the gate (z-index 9000). If already logged in, it re-fetches paintings. Failed log → **Retry** (idempotent). Canceled payment keeps the cart.
+- ✓ **Lambda** — `registerCatalog`, `registerComplete`, `regSizeOf`, `regTaxCents`, `regPaintingIndex`; `UpdateCommand` import; `adminAddSale` opt-in atomic stock decrement; `adminUpdateSale` preserves `tax`/`squareTxn`. Routes are under `/admin/register/*` (existing CloudFront `/admin/*` behavior) and matched **before** the auth gate.
+- ✓ **Admin SW cache bumped to `dna-admin-v76`** (v74 build, v75 adjustable price, v76 single Sale button).
+- ✓ **Doc fix** — PWA-mode note corrected (home-screen launch no longer hides tabs).
+- ✗ **register.html** — built earlier this session as a standalone page, then replaced by the admin Sell window before deploy. Never shipped.
+
+**Manual steps (David):**
+1. Square Developer Dashboard → create/open an application → **Point of Sale API** → iOS → Web callback URL `https://davidnicholsonart.com/admin.html` (exact). Copy the **Application ID**.
+2. Lambda `dna-kiosk` → env var `SQUARE_APP_ID` = that Application ID.
+3. Square token needs `ORDERS_READ` and `ITEMS_READ` (a personal access token has them).
+4. iPhone: Square POS app ≥ 6.0 with Tap to Pay enabled.
+5. First real test: check out one small print, confirm the Sales Log row (with tax) + stock decrement, then refund in Square and delete the row in admin.
+
+**Known limits:** Square cash payments return no order ID, so Checkout is card-only (log cash with Log sale or + Sale). Paintings not matched to a Square item can't be picked in Sell (use + Sale). Moving a Sell-checkout sale to another painting in the edit modal drops its `tax`/`squareTxn` (the move re-creates the row).
+
+**Existing bug noticed, not changed:** quick sale's stock decrement PUTs the painting with a fixed field list that omits `priceOverride` (and `squareId`, which is backfilled on next load) — `adminUpdatePainting` rewrites the record, so a quick-sale print sale silently clears that painting's price override. The Sell window avoids this via the server-side atomic decrement.
 
 -----
 
