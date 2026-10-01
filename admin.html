@@ -650,6 +650,17 @@
     <!-- ══ TAB: DASHBOARD ══ -->
     <div class="tab-panel" id="tab-dashboard">
       <div style="padding-top:24px">
+        <div class="rep-row" style="margin-bottom:20px">
+          <label for="report-pick" style="font-size:13px">Run report</label>
+          <select id="report-pick" onchange="openReport(this.value)" style="min-width:200px">
+            <option value="">Choose a report…</option>
+            <option value="sales">Sales</option>
+            <option value="expenses">Expenses</option>
+            <option value="mileage">Mileage</option>
+            <option value="stock">Stock (current)</option>
+            <option value="gallery">Gallery stock (current)</option>
+          </select>
+        </div>
         <div class="adv-reminder" id="adv-reminder" style="display:none">
           <span style="font-weight:600;flex-shrink:0">⚠ Reminder</span>
           <span id="adv-reminder-text"></span>
@@ -724,26 +735,6 @@
           </div>
         </div>
 
-        <!-- RUN REPORT -->
-        <div class="rep-sec">
-          <div class="section-title" style="margin:0">Run Report</div>
-          <div style="font-size:12px;color:var(--ink3);margin:2px 0 14px">Download a CSV for year-end financials.</div>
-          <div class="rep-row" style="margin-bottom:10px">
-            <select id="report-type" onchange="updateReportUi()">
-              <option value="sales">Sales</option>
-              <option value="expenses">Expenses</option>
-              <option value="mileage">Mileage</option>
-              <option value="stock">Stock (current)</option>
-              <option value="gallery">Gallery stock (current)</option>
-            </select>
-          </div>
-          <div class="rep-row" id="report-dates" style="margin-bottom:10px">
-            <label for="report-from">From</label><input type="date" id="report-from" value="2026-01-01">
-            <label for="report-to">To</label><input type="date" id="report-to" value="2026-12-31">
-          </div>
-          <div style="font-size:12px;color:var(--ink3);margin-bottom:12px" id="report-hint"></div>
-          <button class="btn-primary" onclick="runReport()">↓ Download CSV</button>
-        </div>
         </div>
       </div>
     </div>
@@ -843,7 +834,7 @@
                 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                   <span id="select-count" style="font-size:12px;color:var(--ink3);white-space:nowrap"></span>
                   <div class="dropdown-wrap">
-                    <button class="icon-btn" id="inv-actions-btn" onclick="toggleInvActionsMenu(event)" aria-label="More actions" title="More actions">⋯</button>
+                    <button class="btn-sm" id="inv-actions-btn" onclick="toggleInvActionsMenu(event)" aria-haspopup="true">Tools ▾</button>
                     <div class="dropdown-menu" id="inv-actions-menu">
                       <button onclick="closeInvActionsMenu();openChecklistModal()">Checklist</button>
                       <button onclick="closeInvActionsMenu();startInventoryCount()">Take inventory</button>
@@ -1317,6 +1308,24 @@
       <div style="flex:1"></div>
       <button class="btn-cancel" onclick="closeModal('mile-modal')">Cancel</button>
       <button class="btn-primary" id="mile-save-btn" onclick="saveMileage()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Report form modal (Reports → Run report) -->
+<div class="modal-backdrop" id="report-modal" style="display:none" onclick="closeModalOnBackdrop(event,'report-modal')">
+  <div class="modal" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h2 id="report-title">Report</h2>
+      <button class="modal-close" onclick="closeModal('report-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="set-note" id="report-hint" style="font-size:13px"></p>
+      <div id="report-fields"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('report-modal')">Cancel</button>
+      <button class="btn-primary" id="report-run" onclick="runReport()">↓ Download CSV</button>
     </div>
   </div>
 </div>
@@ -2145,7 +2154,6 @@ async function init() {
   updateRateChipLabel();
 
   renderIrsDisplay();
-  updateReportUi();
 
   populateDimFilterOptions();
   applyMobileChartDefault();
@@ -2292,30 +2300,48 @@ function renderTaxCollected() {
     ? parts.join(' · ') + ` · ${n} sale${n === 1 ? '' : 's'} with tax`
     : 'No tax collected in this range';
 }
-const REPORT_HINTS = {
-  sales: 'Every sale in the range — channel, fair state, ship-to state, price, tax collected, net, print cost and profit.',
-  expenses: 'Every expense in the range with its category and receipt link.',
-  mileage: 'Every mileage entry in the range with the IRS rate for its year and the deduction.',
-  stock: 'Current print stock and sales counts for every painting. Not date-based.',
-  gallery: 'Current print stock at each gallery. Not date-based.',
+// Report registry — each report declares its parameters; the form is built from them.
+// To add a parameter later (e.g. channel), add a type to REPORT_PARAMS and list it on the report.
+function defaultReportYear() { const d = new Date(); return d.getMonth() <= 3 ? d.getFullYear() - 1 : d.getFullYear(); } // Jan–Apr = tax season → last year
+const REPORT_PARAMS = {
+  range: {
+    html: () => { const y = defaultReportYear(); return `<div class="set-row"><label for="rp-from">From</label><input type="date" id="rp-from" value="${y}-01-01" style="width:auto"></div>
+      <div class="set-row"><label for="rp-to">To</label><input type="date" id="rp-to" value="${y}-12-31" style="width:auto"></div>`; },
+    read: () => { const from = document.getElementById('rp-from').value, to = document.getElementById('rp-to').value;
+      if (from && to && from > to) throw new Error('The From date is after the To date.');
+      return { from, to }; },
+  },
 };
-function updateReportUi() {
-  const t = document.getElementById('report-type')?.value; if (!t) return;
-  document.getElementById('report-dates').style.display = (t === 'stock' || t === 'gallery') ? 'none' : 'flex';
-  document.getElementById('report-hint').textContent = REPORT_HINTS[t] || '';
+const REPORTS = {
+  sales:    { title: 'Sales',    params: ['range'], needsExpenses: false, hint: 'Every sale in the range — channel, fair state, ship-to state, price, tax collected, net, print cost and profit.', run: p => exportSalesCsv(p.from, p.to) },
+  expenses: { title: 'Expenses', params: ['range'], needsExpenses: true,  hint: 'Every expense in the range with its category and receipt link.', run: p => exportExpensesCsv(p.from, p.to) },
+  mileage:  { title: 'Mileage',  params: ['range'], needsExpenses: true,  hint: 'Every mileage entry in the range with the IRS rate for its year and the deduction.', run: p => exportMileageCsv(p.from, p.to) },
+  stock:    { title: 'Stock',    params: [], hint: 'Current print stock and sales counts for every painting. A snapshot of today — not date-based.', run: () => exportInventoryCsv() },
+  gallery:  { title: 'Gallery stock', params: [], hint: 'Current print stock at each gallery. A snapshot of today — not date-based.', run: () => exportGalleryStockCsv() },
+};
+let reportKey = '';
+function openReport(key) {
+  document.getElementById('report-pick').value = '';   // picker always returns to "Choose a report…"
+  const r = REPORTS[key]; if (!r) return;
+  reportKey = key;
+  document.getElementById('report-title').textContent = r.title + ' report';
+  document.getElementById('report-hint').textContent = r.hint;
+  document.getElementById('report-fields').innerHTML = r.params.map(k => REPORT_PARAMS[k].html()).join('');
+  document.getElementById('report-modal').style.display = 'flex';
 }
 async function runReport() {
-  const t = document.getElementById('report-type').value;
-  const from = document.getElementById('report-from').value, to = document.getElementById('report-to').value;
-  if ((t === 'sales' || t === 'expenses' || t === 'mileage') && from && to && from > to) { alert('The From date is after the To date.'); return; }
+  const r = REPORTS[reportKey]; if (!r) return;
+  let params = {};
+  try { for (const k of r.params) Object.assign(params, REPORT_PARAMS[k].read()); }
+  catch (e) { alert(e.message); return; }
+  const btn = document.getElementById('report-run');
+  btn.disabled = true;
   try {
-    if ((t === 'expenses' || t === 'mileage') && !expLoaded) await loadExpenses();
-    if (t === 'sales') exportSalesCsv(from, to);
-    else if (t === 'expenses') exportExpensesCsv(from, to);
-    else if (t === 'mileage') exportMileageCsv(from, to);
-    else if (t === 'stock') exportInventoryCsv();
-    else if (t === 'gallery') await exportGalleryStockCsv();
+    if (r.needsExpenses && !expLoaded) await loadExpenses();
+    await r.run(params);
+    closeModal('report-modal');
   } catch (e) { alert('Report failed: ' + e.message); }
+  finally { btn.disabled = false; }
 }
 
 // ── New online sale alert ──
