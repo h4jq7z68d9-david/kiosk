@@ -592,7 +592,8 @@
   .rep-sec { margin-top: 28px; padding: 18px 22px; border: 1.5px solid var(--border-mid); border-radius: var(--radius); }
   .rep-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .rep-row label { font-size: 12px; color: var(--ink2); font-weight: 500; }
-  .rep-row input[type=date], .rep-row select { font-family: var(--font); font-size: 13px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 5px 8px; background: var(--bg); color: var(--ink); outline: none; }
+  .rep-row input[type=date] { font-family: var(--mono); font-size: 12px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 4px 8px; background: var(--bg); color: var(--ink); outline: none; }
+  .rep-row select { font-family: var(--font); font-size: 13px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 5px 8px; background: var(--bg); color: var(--ink); outline: none; }
   @media (max-width: 600px) { .rep-sec { padding: 14px 14px; } }
   /* New online sale alert — rows logged by the server-side Square sync since this device last dismissed */
   #online-alert { display: none; margin: 14px 24px 0; padding: 12px 16px; border-radius: 10px; background: white; border: 1.5px solid var(--green); font-size: 14px; color: var(--ink); text-align: left; }
@@ -650,7 +651,7 @@
     <!-- ══ TAB: DASHBOARD ══ -->
     <div class="tab-panel" id="tab-dashboard">
       <div style="padding-top:24px">
-        <div class="rep-row" style="margin-bottom:20px">
+        <div class="rep-row" style="margin-bottom:20px;justify-content:flex-end">
           <label for="report-pick" style="font-size:13px">Run report</label>
           <select id="report-pick" onchange="openReport(this.value)" style="min-width:200px">
             <option value="">Choose a report…</option>
@@ -2305,8 +2306,9 @@ function renderTaxCollected() {
 function defaultReportYear() { const d = new Date(); return d.getMonth() <= 3 ? d.getFullYear() - 1 : d.getFullYear(); } // Jan–Apr = tax season → last year
 const REPORT_PARAMS = {
   range: {
-    html: () => { const y = defaultReportYear(); return `<div class="set-row"><label for="rp-from">From</label><input type="date" id="rp-from" value="${y}-01-01" style="width:auto"></div>
-      <div class="set-row"><label for="rp-to">To</label><input type="date" id="rp-to" value="${y}-12-31" style="width:auto"></div>`; },
+    html: () => { const y = defaultReportYear(); return `<div class="field-row">
+      <div class="field"><label for="rp-from">From</label><input type="date" id="rp-from" value="${y}-01-01"></div>
+      <div class="field"><label for="rp-to">To</label><input type="date" id="rp-to" value="${y}-12-31"></div></div>`; },
     read: () => { const from = document.getElementById('rp-from').value, to = document.getElementById('rp-to').value;
       if (from && to && from > to) throw new Error('The From date is after the To date.');
       return { from, to }; },
