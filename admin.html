@@ -935,8 +935,8 @@
           <div class="table-header">
             <div class="section-title" style="margin:0">Expenses</div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <input type="text" id="exp-search" placeholder="Search description…" oninput="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;width:140px;max-width:100%">
-              <select id="exp-year-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer;width:90px;max-width:100%"></select>
+              <input type="text" id="exp-search" placeholder="Search…" oninput="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;width:150px;max-width:100%">
+              <span style="display:inline-flex;align-items:center;gap:6px"><input type="date" id="exp-from" aria-label="From date" onchange="renderExpenses()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"><span style="font-size:11px;color:var(--ink3)">–</span><input type="date" id="exp-to" aria-label="To date" onchange="renderExpenses()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"></span>
               <select id="exp-cat-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer;width:140px;max-width:100%">
                 <option value="">All categories</option>
                 <option>Printing</option>
@@ -1015,6 +1015,8 @@
               <div style="font-size:12px;color:var(--ink3);margin-top:2px">IRS standard rate: <span style="font-family:var(--mono);color:var(--ink2)" id="irs-rate-display"></span></div>
             </div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <input type="text" id="mile-search" placeholder="Search…" oninput="renderMileTable()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;width:150px;max-width:100%">
+              <span style="display:inline-flex;align-items:center;gap:6px"><input type="date" id="mile-from" aria-label="From date" onchange="renderMileTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"><span style="font-size:11px;color:var(--ink3)">–</span><input type="date" id="mile-to" aria-label="To date" onchange="renderMileTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"></span>
               <button class="btn-primary" onclick="openMileModal()">+ Log Mileage</button>
             </div>
           </div>
@@ -2735,14 +2737,15 @@ function renderTable() {
 // ═══════════════════════════════════════════
 //  EXPENSE RENDERING
 // ═══════════════════════════════════════════
+// Expenses & Mileage list filters default to this year so far (From = Jan 1, To open); clear either date to widen.
 function populateExpYearFilter() {
-  const sel = document.getElementById('exp-year-filter');
-  const curYear = new Date().getFullYear();
-  sel.innerHTML = '<option value="">All years</option>';
-  for (let y = curYear; y >= 2024; y--) {
-    sel.innerHTML += `<option value="${y}">${y}</option>`;
-  }
-  sel.value = String(curYear);
+  const jan1 = new Date().getFullYear() + '-01-01';
+  for (const id of ['exp-from', 'mile-from']) { const el = document.getElementById(id); if (el && !el.value) el.value = jan1; }
+}
+function inDateRange(d, fromId, toId) {
+  const from = document.getElementById(fromId)?.value || '', to = document.getElementById(toId)?.value || '';
+  d = d || '';
+  return !((from && d < from) || (to && d > to));
 }
 
 function renderExpenses() {
@@ -2816,13 +2819,11 @@ function renderExpCards() {
 }
 
 function getExpList() {
-  const yearFilter = document.getElementById('exp-year-filter').value;
   const catFilter  = document.getElementById('exp-cat-filter').value;
   const q = (document.getElementById('exp-search')?.value || '').trim().toLowerCase();
-  let list = expState.expenses.slice();
-  if (yearFilter) list = list.filter(e => (e.date||'').startsWith(yearFilter));
+  let list = expState.expenses.filter(e => inDateRange(e.date, 'exp-from', 'exp-to'));
   if (catFilter)  list = list.filter(e => e.category === catFilter);
-  if (q) list = list.filter(e => (e.desc||'').toLowerCase().includes(q));
+  if (q) list = list.filter(e => ((e.desc || '') + ' ' + (e.category || '')).toLowerCase().includes(q));
   list.sort((a, b) => {
     let av = a[expSortField] ?? '', bv = b[expSortField] ?? '';
     if (expSortField === 'amount') { av = Number(av); bv = Number(bv); }
@@ -2869,9 +2870,9 @@ function expSortBy(field) {
 //  MILEAGE RENDERING
 // ═══════════════════════════════════════════
 function getMileList() {
-  const yearFilter = document.getElementById('exp-year-filter').value;
-  let list = expState.mileage.slice();
-  if (yearFilter) list = list.filter(m => (m.date||'').startsWith(yearFilter));
+  const q = (document.getElementById('mile-search')?.value || '').trim().toLowerCase();
+  let list = expState.mileage.filter(m => inDateRange(m.date, 'mile-from', 'mile-to'));
+  if (q) list = list.filter(m => ((m.purpose || '') + ' ' + (m.notes || '')).toLowerCase().includes(q));
   list.sort((a, b) => {
     let av = mileSortField === 'deduction'
       ? Number(a.miles||0) * mileageRate(a)
