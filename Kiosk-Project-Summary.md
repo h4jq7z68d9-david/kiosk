@@ -380,7 +380,7 @@ All are single-file, no framework — intentional, keep it that way.
   - Safe area insets applied to topbar and main padding for iPhone notch
 - **PWA mode behavior:** home-screen launch shows the same tabs as Safari (the tab restriction was removed); `isPWA` now only compacts expense rows
 
-**Settings panel (gear icon in the top bar, added September 30 2026):** one place for rarely-changed values — **Original pricing** ($/sq in; moved out of the Inventory rate bar, which is gone), **Print prices** (large/small, read live from Square with margin shown; tap/hover the margin for the math `(price − cost) ÷ price` using the fixed $12/$5 costs; changing a price shows a warning listing every print that will change, then writes to Square via `PUT /admin/print-prices`), **Mileage** (IRS rate per tax year → `__config__.irsRates`; `irsRate(year)` uses it, falling back to the `IRS_RATE_BY_YEAR` table), **Selling defaults** (moved from Reports; per device, `localStorage`). Print *costs* are deliberately not editable — David's decision: $5/$12 are settled figures.
+**Settings panel (gear icon in the top bar, added September 30 2026):** one place for rarely-changed values — **Original pricing** ($/sq in; moved out of the Inventory rate bar, which is gone), **Print prices** (large/small, read live from Square with margin shown; tap/hover the margin for the math `(price − cost) ÷ price` using the fixed $12/$5 costs; changing a price shows a warning listing every print that will change, then writes to Square via `PUT /admin/print-prices`), **Mileage** (one current IRS rate; stored in `__config__.irsRates` under the year it was set, newest carries forward — `currentMileageRate()`. **Each mileage entry stores the rate it was logged at** (`rate` on the `dna-expenses` row) so changing the setting never re-rates past entries; entries logged before Sept 30 2026 have no stored rate and use the fixed `IRS_RATE_BY_YEAR` table — `mileageRate(m)`), **Selling defaults** (moved from Reports; per device, `localStorage`). Print *costs* are deliberately not editable — David's decision: $5/$12 are settled figures.
 
 **Four-tab layout (corrected September 19 2026 — this section had drifted well behind the code; see "Completed This Session" below for the audit):**
 
@@ -440,7 +440,7 @@ Surfaced in two places:
 
 **Mileage features:**
 
-- IRS standard rate per year is set in **Settings → Mileage** (stored in `__config__.irsRates`); `IRS_RATE_BY_YEAR` in admin.html is only the fallback — update the setting each January, no code change needed
+- IRS rate is set once in **Settings → Mileage** and **locked onto each entry when it's logged** (`POST /admin/mileage` accepts `rate`; `PUT` keeps the entry's stored rate). Deduction = miles × that entry's rate, so editing miles recalculates at the original rate and changing the setting only affects new entries. Older entries without a stored rate use the fixed `IRS_RATE_BY_YEAR` table in admin.html. Update the setting when the IRS announces a new rate — no code change.
 - 2025/2026 rate: $0.70/mile; 2024: $0.67/mile
 - Deduction auto-calculated per entry using rate for that entry’s year
 - Tap row to edit; delete button inside edit modal
@@ -562,6 +562,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **`index.html` — Instagram easter egg (homepage only, David's choice).** Hovering the nav "follow on instagram" pill for 1.5s reveals a dark tooltip (right-anchored under the pill, text left-aligned): "This button is here because one time someone scanned a business card and they were upset that it *only* went to my website and they didn't see [instagram glyph]". Pure CSS (`transition-delay: 1.5s` on hover-in, 0 on hover-out); gated by `@media (hover: hover) and (pointer: fine)`, so it never appears on phones/tablets (no hover there). Tooltip is `aria-hidden` so the link's accessible name stays "follow on instagram".
 
 - ✓ **Online sales auto-log (`index.mjs`) — server-side sweep.** First built as a browser-side confirm (gallery saved the order ID and called a new public `/checkout/complete` on the `?success=1` return, retrying on later visits). **Replaced the same evening** after David's review: (1) a buyer whose confirm failed isn't coming back, so their browser can't be the safety net; (2) a new public path depends on API Gateway routing we couldn't verify. Now the Lambda itself asks Square for paid online orders whenever admin loads (and monthly) — see "Online sale sync" under Lambda endpoints. No new route, no AWS change, no gallery.html involvement. **Ship-to state is stored as `shipState`, not `state`** — `state` means the fair's state on fair sales and drives admin's KS/MO filters and edit-modal select. Sales tax isn't stored on online rows (Square collects $0 — see Online sales tax). Tested: real handler run against faked Square/DynamoDB — admin load logged only the paid online order (3 rows incl. qty 2, stock −1/−2), skipped unpaid / fair-POS / Missouri-location / canceled orders; reload and scheduled run added nothing; a Square search error still returned admin 200. Square check: no online orders (open or completed) since Sept 21, so `ONLINE_LOG_SINCE` = Sept 22 misses nothing.
+- ✓ **Advertising reminder now on the Expenses tab too** (top of tab, same banner as Reports; `renderAdvReminder()` fills every `.adv-reminder`). **Mileage: single current rate, saved per entry** (see Mileage features). `index.mjs` `adminAddMileage`/`adminUpdateMileage` keep `rate`. Admin SW → `dna-admin-v89`.
 - ✓ **Admin "new online sale" alert (`admin.html`).** Green-bordered banner under the top bar, on every tab: "New online sale logged" (or "N new online sales logged"), a line saying they're in the Sales Log and out of stock with the pre-shipping total, and one row per sale: date · title · size · price · ships to {state}. **Got it** stores the newest `syncedAt` in `localStorage` `dna-online-seen`; the banner reappears only for rows synced after that. Per device — phone and desktop each show it once. Driven by `syncedAt` on synced rows (manual online sales have none, so they never trigger it). Tested headless: shows on first load, gone after Got it and reload, returns only for a newly synced sale. Admin SW → **`dna-admin-v85`**.
 - ✓ **Sync hardening (same evening):** marker row per order (see Lambda "Online sale sync") so a deleted/edited synced sale is never re-logged; refunded orders skipped; `adminUpdateSale` keeps `shipState`/`syncedAt`. Tested: delete 2 synced rows → reload → not re-logged, stock untouched; edit price → `shipState`/`syncedAt` kept.
 - ✓ **Admin Settings panel + Reports rework (`admin.html`, `index.mjs`).** See "Settings panel" and "Reports tab" under admin.html. New Lambda: `GET/PUT /admin/print-prices`, `irsRates` in config. Removed the Inventory rate bar (rate chip + $/sq in + print cost inputs) and every scattered ↓ CSV button (Inventory Stock/Sales, Gallery Stock, Expenses, Mileage, Revenue by State, Estimated Tax). Tested headless: Reports order, Taxes Collected range math, all 5 reports download with correct date filtering, only one CSV button remains, Settings margin + hover tip, Square warning shown and **no PUT until "Yes, update Square"**, IRS rate saved to config. Lambda price update tested only against fakes — **first real use: change one size, confirm in Square Dashboard.** Admin SW → `dna-admin-v86`.
@@ -662,9 +663,10 @@ Goal: stop the two-step fair routine (charge in the Square app, log prints in ad
 
 ### Next session — pick up here (from September 30 2026)
 
+_David's instruction: don't track his tax filings or remind him to log sales — this list is for build/verification work only._
+
 **Sales tax (online)**
 
-- [ ] **Remit Kansas tax on the Prairie Village KS online order** (2026-09-12, $40 print, $0 collected) in the monthly KS filing, at the buyer's local rate. Check whether any other Kansas-destination online orders exist before filing.
 - [x] **Record ship-to state on online sales** — done (`shipState` on auto-logged online rows).
 - [x] **Admin tax estimate overcounted online sales** — resolved by removing the estimate entirely (September 30 2026). Reports now shows only tax actually collected; Kansas-destination online orders are identifiable via the Sales CSV "Ship To" column.
 - [ ] **First print price change through Settings:** after "Yes, update Square", spot-check a few prints in the Square Dashboard and on gallery.html.
@@ -679,7 +681,6 @@ Goal: stop the two-step fair routine (charge in the Square app, log prints in ad
 - [x] **Re-price the stored cart** — built September 30 2026 (evening).
 - [ ] **First real online order after deploy:** open admin — the green "New online sale logged" banner should appear; confirm the Sales Log row (channel Online, right size/price) and stock went down. If nothing appears, check CloudWatch for `Online order sync` lines.
 - [ ] **Refund handling:** if an online order is refunded *after* it synced, delete its sale row(s) in admin and add the stock back by hand; the sync won't re-log it. Refunds before the first sync are skipped automatically.
-- [ ] **Sept 12 + Sept 21 online orders are before the sync cutoff.** Check the Sales Log has Prairie Village KS (2026-09-12, I-35 No. 2 large $40) and Rantoul IL (2026-09-21, The Tuntre small $25); log by hand if missing.
 - [ ] **If you ever log an online sale by hand after Sept 22, it will double up** with the synced row (different IDs). Let the sync do online sales.
 
 **Originals page (`originals.html`)**
@@ -1116,7 +1117,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v88` (bumped 2026-09-30: report picker right-aligned + date styling); bump in `admin-sw.js` after every admin.html change
+- **Admin SW cache key** — currently `dna-admin-v89` (bumped 2026-09-30: Expenses-tab reminder + per-entry mileage rate); bump in `admin-sw.js` after every admin.html change
 - **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order

@@ -664,7 +664,7 @@
         </div>
         <div class="adv-reminder" id="adv-reminder" style="display:none">
           <span style="font-weight:600;flex-shrink:0">⚠ Reminder</span>
-          <span id="adv-reminder-text"></span>
+          <span class="adv-reminder-text"></span>
           <button onclick="openExpModalAdv()" style="margin-left:auto;flex-shrink:0;font-family:var(--font);font-size:13px;font-weight:500;background:#92400e;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer">Add advertising expense</button>
         </div>
         <div class="cards" id="cards"></div>
@@ -917,6 +917,11 @@
     <!-- ══ TAB: EXPENSES ══ -->
     <div class="tab-panel active" id="tab-expenses">
       <div style="padding-top:24px">
+        <div class="adv-reminder" style="display:none">
+          <span style="font-weight:600;flex-shrink:0">⚠ Reminder</span>
+          <span class="adv-reminder-text"></span>
+          <button onclick="openExpModalAdv()" style="margin-left:auto;flex-shrink:0;font-family:var(--font);font-size:13px;font-weight:500;background:#92400e;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer">Add advertising expense</button>
+        </div>
 
         <div class="subtab-bar">
           <button class="subtab-btn active" id="subtab-exp-btn" onclick="switchExpSubTab('exp')">Expenses</button>
@@ -1353,7 +1358,7 @@
       </div>
       <div class="set-sec">
         <h3>Mileage</h3>
-        <p class="set-note">IRS standard mileage rate per tax year. Update each January when the IRS announces it.</p>
+        <p class="set-note">IRS standard mileage rate. Each entry keeps the rate it was logged at, so changing this only affects new entries — update it when the IRS announces a new rate.</p>
         <div id="irs-rows"></div>
       </div>
       <div class="set-sec">
@@ -1455,6 +1460,19 @@ const IRS_RATE_BY_YEAR = {
 const DEFAULT_IRS_RATE = 0.70;
 
 // Settings → Mileage overrides these (stored in __config__.irsRates); the table is the fallback.
+// Rate for one mileage entry: the rate stored on it when logged; older entries (no stored rate) use the per-year table.
+function mileageRate(m) {
+  const r = Number(m?.rate);
+  if (r > 0) return r;
+  const y = parseInt((m?.date || '').slice(0, 4)) || new Date().getFullYear();
+  return IRS_RATE_BY_YEAR[y] || DEFAULT_IRS_RATE;   // fixed table, so changing Settings never re-rates old entries
+}
+// Current rate (Settings → Mileage) — applied to new entries. Stored in __config__.irsRates under the year it
+// was set; the newest one carries forward until changed.
+function currentMileageRate() {
+  const keys = Object.keys(db?.irsRates || {}).filter(k => Number(db.irsRates[k]) > 0).sort();
+  return keys.length ? Number(db.irsRates[keys[keys.length - 1]]) : irsRate(new Date().getFullYear());
+}
 function irsRate(year) {
   const set = Number(db?.irsRates?.[year]);
   return set > 0 ? set : (IRS_RATE_BY_YEAR[year] || DEFAULT_IRS_RATE);
@@ -1617,6 +1635,7 @@ let salePaintingId = null, editSaleId = null, editSaleOriginalPaintingId = null;
 let expSortField = 'date', expSortDir = 'desc';
 let mileSortField = 'date', mileSortDir = 'desc';
 let editExpId = null, editMileId = null, editRecurId = null;
+let editMileRate = null;   // rate the entry being edited was logged at (null = new entry → current rate)
 let pendingReceiptFile = null;
 let loading = false;
 let expLoaded = false; // track whether we've fetched expenses from API yet
@@ -2178,30 +2197,23 @@ function openSettings() {
   loadPrintPrices();
 }
 
-// ── Mileage rate per year ──
-function irsYears() {
-  const ys = new Set([String(new Date().getFullYear()), ...Object.keys(IRS_RATE_BY_YEAR).map(String), ...Object.keys(db.irsRates || {})]);
-  for (const m of (expState.mileage || [])) { const y = (m.date || '').slice(0, 4); if (/^20\d\d$/.test(y)) ys.add(y); }
-  return [...ys].sort((a, b) => b.localeCompare(a));
-}
+// ── Mileage rate (single current rate; locked onto each entry when logged) ──
 function renderIrsRows() {
   const el = document.getElementById('irs-rows'); if (!el) return;
-  el.innerHTML = irsYears().map(y => `<div class="set-row"><label for="irs-${y}">${y}</label>
-    <div class="set-money"><span>$</span><input type="text" inputmode="decimal" id="irs-${y}" value="${irsFmt(irsRate(Number(y)))}" onchange="setIrsRate('${y}', this)"><span style="font-family:var(--font);font-size:12px">/ mile</span></div></div>`).join('');
+  el.innerHTML = `<div class="set-row"><label for="mile-rate-input">IRS rate</label>
+    <div class="set-money"><span>$</span><input type="text" inputmode="decimal" id="mile-rate-input" value="${irsFmt(currentMileageRate())}" onchange="setMileageRate(this)"><span style="font-family:var(--font);font-size:12px">/ mile</span></div></div>`;
 }
-function setIrsRate(year, input) {
+function setMileageRate(input) {
   const v = parseFloat(String(input.value).replace(/[$\s]/g, ''));
-  if (isNaN(v) || v <= 0 || v >= 5) { alert('Enter a mileage rate like 0.70'); input.value = irsRate(Number(year)).toFixed(2); return; }
-  db.irsRates = { ...(db.irsRates || {}), [year]: Math.round(v * 1000) / 1000 };
+  if (isNaN(v) || v <= 0 || v >= 5) { alert('Enter a mileage rate like 0.70'); input.value = irsFmt(currentMileageRate()); return; }
+  db.irsRates = { ...(db.irsRates || {}), [String(new Date().getFullYear())]: Math.round(v * 1000) / 1000 };
   saveRatesDebounced();
   renderIrsDisplay();
-  try { render(); if (typeof renderExpenses === 'function' && expLoaded) renderExpenses(); } catch (e) { console.error(e); }
 }
 function irsFmt(r) { return Number(r).toFixed(3).replace(/0$/, ''); }   // 0.70 → "0.70", 0.725 → "0.725"
 function renderIrsDisplay() {
   const el = document.getElementById('irs-rate-display'); if (!el) return;
-  const y = new Date().getFullYear();
-  el.textContent = '$' + irsFmt(irsRate(y)) + '/mile (' + y + ')';
+  el.textContent = '$' + irsFmt(currentMileageRate()) + '/mile — applied to new entries';
 }
 
 // ── Print prices (Square is the source of truth; Settings can change every print of a size) ──
@@ -2742,15 +2754,18 @@ function renderExpenses() {
 }
 
 // Remind to log advertising spend for the current month if none exists yet.
+// Shown on both the Expenses and Reports tabs (every .adv-reminder element).
 function renderAdvReminder() {
-  const el = document.getElementById('adv-reminder');
-  if (!el) return;
+  const els = document.querySelectorAll('.adv-reminder');
+  if (!els.length) return;
   const month = new Date().toISOString().slice(0,7);
   const has = expState.expenses.some(e => e.category === 'Advertising' && (e.date||'').startsWith(month));
-  if (has) { el.style.display = 'none'; return; }
   const label = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-  document.getElementById('adv-reminder-text').textContent = `No Advertising expense logged for ${label} yet.`;
-  el.style.display = 'flex';
+  els.forEach(el => {
+    if (has) { el.style.display = 'none'; return; }
+    el.querySelector('.adv-reminder-text').textContent = `No Advertising expense logged for ${label} yet.`;
+    el.style.display = 'flex';
+  });
 }
 
 function openExpModalAdv() {
@@ -2771,8 +2786,7 @@ function renderDashExpCards() {
 
   const totalMiles = filteredMileage.reduce((s,m) => s + Number(m.miles||0), 0);
   const totalMileDeduction = filteredMileage.reduce((s,m) => {
-    const y = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
-    return s + Number(m.miles||0) * irsRate(y);
+    return s + Number(m.miles||0) * mileageRate(m);
   }, 0);
 
   const byCat = {};
@@ -2860,10 +2874,10 @@ function getMileList() {
   if (yearFilter) list = list.filter(m => (m.date||'').startsWith(yearFilter));
   list.sort((a, b) => {
     let av = mileSortField === 'deduction'
-      ? Number(a.miles||0) * irsRate(parseInt((a.date||'').slice(0,4))||new Date().getFullYear())
+      ? Number(a.miles||0) * mileageRate(a)
       : (mileSortField === 'miles' ? Number(a.miles||0) : a[mileSortField] ?? '');
     let bv = mileSortField === 'deduction'
-      ? Number(b.miles||0) * irsRate(parseInt((b.date||'').slice(0,4))||new Date().getFullYear())
+      ? Number(b.miles||0) * mileageRate(b)
       : (mileSortField === 'miles' ? Number(b.miles||0) : b[mileSortField] ?? '');
     if (av < bv) return mileSortDir === 'asc' ? -1 : 1;
     if (av > bv) return mileSortDir === 'asc' ? 1 : -1;
@@ -2885,8 +2899,7 @@ function renderMileTable() {
   }
   tbody.innerHTML = list.map(m => {
     const miles = Number(m.miles||0);
-    const year = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
-    const rate = irsRate(year);
+    const rate = mileageRate(m);
     const deduction = miles * rate;
     return `<tr onclick="openEditMileModal('${m.id}')" style="cursor:pointer">
       <td class="mono dim">${m.date || '—'}</td>
@@ -3194,6 +3207,7 @@ async function generateExpenses() {
 // ═══════════════════════════════════════════
 function openMileModal() {
   editMileId = null;
+  editMileRate = null;
   document.getElementById('mile-modal-title').textContent = 'Log Mileage';
   document.getElementById('mile-save-btn').textContent = 'Save';
   document.getElementById('mile-date').value = new Date().toISOString().slice(0,10);
@@ -3207,6 +3221,7 @@ function openMileModal() {
 
 function openEditMileModal(id) {
   const m = expState.mileage.find(x => x.id === id);
+  editMileRate = m ? mileageRate(m) : null;
   if (!m) return;
   editMileId = id;
   document.getElementById('mile-modal-title').textContent = 'Edit Mileage';
@@ -3222,9 +3237,7 @@ function openEditMileModal(id) {
 
 function updateMilePreview() {
   const miles = parseFloat(document.getElementById('mile-miles').value);
-  const date  = document.getElementById('mile-date').value;
-  const year  = parseInt((date||'').slice(0,4)) || new Date().getFullYear();
-  const rate  = irsRate(year);
+  const rate  = editMileRate ?? currentMileageRate();
   const prev  = document.getElementById('mile-preview');
   if (!isNaN(miles) && miles > 0) {
     const deduction = miles * rate;
@@ -3250,7 +3263,7 @@ async function saveMileage() {
       const idx = expState.mileage.findIndex(x => x.id === editMileId);
       if (idx !== -1) expState.mileage[idx] = data.entry;
     } else {
-      const data = await api('POST', '/mileage', { date, miles, purpose, notes });
+      const data = await api('POST', '/mileage', { date, miles, purpose, notes, rate: currentMileageRate() });
       expState.mileage.push(data.entry);
     }
   } catch(e) {
@@ -4176,8 +4189,7 @@ function exportMileageCsv(from, to) {
   list.sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const header = ['Date','Purpose','Miles','IRS Rate','Deduction','Notes'];
   const rows = list.map(m => {
-    const year = parseInt((m.date||'').slice(0,4)) || new Date().getFullYear();
-    const rate = irsRate(year);
+    const rate = mileageRate(m);
     const miles = Number(m.miles||0);
     return [m.date||'', m.purpose||'', miles.toFixed(1), rate.toFixed(2),
             (miles * rate).toFixed(2), m.notes||''];

@@ -1525,11 +1525,17 @@ async function adminRunRecurring(cors) {
   return ok({ generated: created.length, expenses: created }, cors);
 }
 
+// IRS $/mile locked onto each mileage entry when it's logged (admin Settings → Mileage rate), so a later
+// rate change never rewrites past deductions. Entries logged before this have no rate; admin falls back
+// to its per-year table for those.
+function validMileRate(r) { const n = Number(r); return n > 0 && n < 5 ? Math.round(n * 1000) / 1000 : null; }
+
 async function adminAddMileage(body, cors) {
   const { date, miles, purpose, notes } = body;
   if (!date || !miles || !purpose) return err('Missing required fields', 400, cors);
   const id = 'm' + Date.now() + Math.random().toString(36).slice(2,5);
-  const item = { id, type: 'mileage', date, miles: Number(miles), purpose, notes: notes || '' };
+  const rate = validMileRate(body.rate);
+  const item = { id, type: 'mileage', date, miles: Number(miles), purpose, notes: notes || '', ...(rate ? { rate } : {}) };
   await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
   return ok({ entry: item }, cors);
 }
@@ -1537,7 +1543,10 @@ async function adminAddMileage(body, cors) {
 async function adminUpdateMileage(id, body, cors) {
   const { date, miles, purpose, notes } = body;
   if (!date || !miles || !purpose) return err('Missing required fields', 400, cors);
-  const item = { id, type: 'mileage', date, miles: Number(miles), purpose, notes: notes || '' };
+  // Keep the rate the entry was logged at; an edit never re-rates it
+  const prev = (await dynamo.send(new GetCommand({ TableName: EXPENSES_TABLE, Key: { id } }))).Item;
+  const rate = validMileRate(prev?.rate) || validMileRate(body.rate);
+  const item = { id, type: 'mileage', date, miles: Number(miles), purpose, notes: notes || '', ...(rate ? { rate } : {}) };
   await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: item }));
   return ok({ entry: item }, cors);
 }
