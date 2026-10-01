@@ -571,6 +571,35 @@
   #sell-return b { display: block; font-size: 15px; margin-bottom: 4px; }
   #sell-return ul { margin: 4px 0 8px; padding-left: 18px; }
   #sell-return .btns { display: flex; gap: 8px; margin-top: 8px; }
+  /* Settings panel */
+  .set-sec { padding: 14px 0 6px; border-top: 1px solid var(--border); }
+  .set-sec:first-child { border-top: none; padding-top: 0; }
+  .set-sec h3 { font-size: 13px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
+  .set-note { font-size: 12px; color: var(--ink3); margin: 0 0 10px; line-height: 1.4; }
+  .set-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .set-row > label { font-size: 13px; color: var(--ink2); min-width: 84px; }
+  .set-money { display: flex; align-items: center; gap: 6px; }
+  .set-money span { font-family: var(--mono); color: var(--ink2); }
+  .set-row input[type=text], .set-row select { font-family: var(--font); font-size: 16px; color: var(--ink); width: 92px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 6px 10px; background: var(--bg); outline: none; -webkit-appearance: none; appearance: none; }
+  .set-row select { width: auto; min-width: 110px; }
+  .set-row input:focus, .set-row select:focus { border-color: var(--accent); background: white; }
+  .pp-margin { position: relative; font-size: 12px; color: var(--green); cursor: help; outline: none; border-bottom: 1px dotted var(--green); }
+  .pp-tip { display: none; position: absolute; left: 0; top: calc(100% + 6px); z-index: 5; width: 250px; padding: 10px 12px; border-radius: 8px; background: var(--ink); color: #f1f3f5; font-size: 12px; line-height: 1.5; text-align: left; }
+  .pp-margin:hover .pp-tip, .pp-margin:focus .pp-tip { display: block; }
+  .pp-square { font-size: 12px; color: var(--ink3); width: 100%; margin-top: -4px; }
+  .pp-confirm { border: 1.5px solid var(--amber, #b45309); border-radius: 8px; padding: 12px 14px; margin: 4px 0 10px; font-size: 13px; color: var(--ink); background: #fffbeb; }
+  .pp-confirm ul { margin: 6px 0 10px; padding-left: 18px; color: var(--ink2); max-height: 140px; overflow-y: auto; }
+  .rep-sec { margin-top: 28px; padding: 18px 22px; border: 1.5px solid var(--border-mid); border-radius: var(--radius); }
+  .rep-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .rep-row label { font-size: 12px; color: var(--ink2); font-weight: 500; }
+  .rep-row input[type=date], .rep-row select { font-family: var(--font); font-size: 13px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 5px 8px; background: var(--bg); color: var(--ink); outline: none; }
+  @media (max-width: 600px) { .rep-sec { padding: 14px 14px; } }
+  /* New online sale alert — rows logged by the server-side Square sync since this device last dismissed */
+  #online-alert { display: none; margin: 14px 24px 0; padding: 12px 16px; border-radius: 10px; background: white; border: 1.5px solid var(--green); font-size: 14px; color: var(--ink); text-align: left; }
+  #online-alert b { display: block; font-size: 15px; margin-bottom: 4px; }
+  #online-alert ul { margin: 4px 0 10px; padding-left: 18px; color: var(--ink2); }
+  #online-alert li { margin: 2px 0; }
+  @media (max-width: 600px) { #online-alert { margin: 10px 12px 0; } }
 </style>
 </head>
 <body>
@@ -594,11 +623,13 @@
       <span class="badge">Admin</span>
     </div>
     <div class="topbar-actions" style="display:flex;align-items:center;gap:12px">
+      <button class="icon-btn" onclick="openSettings()" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="openSellModal()">+ Sale<span id="sell-count"></span></button>
       <button class="btn-logout" onclick="logout()">sign out</button>
     </div>
   </div>
   <div id="loading-bar"></div>
+  <div id="online-alert" role="status"></div>
 
   <div class="main">
 
@@ -619,62 +650,12 @@
     <!-- ══ TAB: DASHBOARD ══ -->
     <div class="tab-panel" id="tab-dashboard">
       <div style="padding-top:24px">
-        <div class="sell-defaults">
-          <div class="sd-title">Selling defaults (+ Sale window)</div>
-          <div class="field"><label>Source</label>
-            <select id="sd-channel" onchange="saveSellDefaults()"><option value="fair">Art fair</option><option value="online">Online</option><option value="gallery">Gallery</option></select></div>
-          <div class="field"><label>State</label>
-            <select id="sd-state" onchange="saveSellDefaults()"><option value="KS">KS</option><option value="MO">MO</option></select></div>
-          <div class="field"><label>Sales tax %</label>
-            <input type="text" inputmode="decimal" id="sd-rate" onchange="saveSellDefaults()" style="-webkit-appearance:none"></div>
-          <div class="field"><label>Gallery %</label>
-            <input type="text" inputmode="decimal" id="sd-pct" onchange="saveSellDefaults()" style="-webkit-appearance:none"></div>
-          <div class="sd-tax" id="sd-tax"></div>
-        </div>
         <div class="adv-reminder" id="adv-reminder" style="display:none">
           <span style="font-weight:600;flex-shrink:0">⚠ Reminder</span>
           <span id="adv-reminder-text"></span>
           <button onclick="openExpModalAdv()" style="margin-left:auto;flex-shrink:0;font-family:var(--font);font-size:13px;font-weight:500;background:#92400e;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer">Add advertising expense</button>
         </div>
         <div class="cards" id="cards"></div>
-
-        <!-- REVENUE BUBBLE -->
-        <div class="chart-section">
-          <div class="chart-bubble-row" style="display:flex;align-items:flex-start;gap:20px">
-            <div class="chart-stat-box" style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
-              <div class="card-label">Total Revenue</div>
-              <div class="card-value accent" id="chart-rev-value">—</div>
-              <div class="card-sub" id="chart-rev-sub"></div>
-            </div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
-                <div class="section-title" style="margin:0">Revenue by Month</div>
-                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                  <label style="font-size:12px;color:var(--ink2);font-weight:500">From</label>
-                  <input type="month" id="chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
-                  <label style="font-size:12px;color:var(--ink2);font-weight:500">To</label>
-                  <input type="month" id="chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
-                  <button onclick="clearChartRange()" style="font-family:var(--font);font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0">clear</button>
-                </div>
-              </div>
-              <div class="chart-wrap" id="chart"></div>
-            </div>
-          </div>
-          <div class="cards" id="chart-rev-breakdown" style="margin-top:16px"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px;margin-bottom:4px">
-            <div class="section-title" style="margin:0;font-size:13px">Revenue by State</div>
-            <button class="btn-sm" onclick="exportRevenueByStateCsv()" title="Export to CSV">↓ CSV</button>
-          </div>
-          <div class="cards" id="chart-state-breakdown"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px;margin-bottom:4px">
-            <div>
-              <div class="section-title" style="margin:0;font-size:13px">Estimated Taxes by State</div>
-              <div style="font-size:11px;color:var(--ink3);margin-top:2px">Fair + online sales only — excludes gallery, which collects and remits its own tax</div>
-            </div>
-            <button class="btn-sm" onclick="exportTaxByStateCsv()" title="Export to CSV">↓ CSV</button>
-          </div>
-          <div class="cards" id="chart-tax-breakdown"></div>
-        </div>
 
         <!-- EXPENSES BUBBLE (mileage folded in as sub-category) -->
         <div class="chart-section">
@@ -699,6 +680,70 @@
             </div>
           </div>
           <div class="cards" id="chart-exp-breakdown" style="margin-top:16px"></div>
+
+        <!-- REVENUE BUBBLE -->
+        <div class="chart-section">
+          <div class="chart-bubble-row" style="display:flex;align-items:flex-start;gap:20px">
+            <div class="chart-stat-box" style="flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:var(--radius);padding:18px 22px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px">
+              <div class="card-label">Total Revenue</div>
+              <div class="card-value accent" id="chart-rev-value">—</div>
+              <div class="card-sub" id="chart-rev-sub"></div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+                <div class="section-title" style="margin:0">Revenue by Month</div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <label style="font-size:12px;color:var(--ink2);font-weight:500">From</label>
+                  <input type="month" id="chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
+                  <label style="font-size:12px;color:var(--ink2);font-weight:500">To</label>
+                  <input type="month" id="chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
+                  <button onclick="clearChartRange()" style="font-family:var(--font);font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0">clear</button>
+                </div>
+              </div>
+              <div class="chart-wrap" id="chart"></div>
+            </div>
+          </div>
+          <div class="cards" id="chart-rev-breakdown" style="margin-top:16px"></div>
+        </div>
+
+        <!-- TAXES COLLECTED -->
+        <div class="rep-sec">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div>
+              <div class="section-title" style="margin:0">Taxes Collected</div>
+              <div style="font-size:12px;color:var(--ink3);margin-top:2px">Sales tax charged through + Sale checkout. Online orders collect none.</div>
+            </div>
+            <div class="rep-row">
+              <label for="tax-from">From</label><input type="date" id="tax-from" value="2026-10-01" onchange="renderTaxCollected()">
+              <label for="tax-to">To</label><input type="date" id="tax-to" onchange="renderTaxCollected()">
+            </div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="card-value" id="tax-collected-value">$0.00</div>
+            <div class="card-sub" id="tax-collected-sub"></div>
+          </div>
+        </div>
+
+        <!-- RUN REPORT -->
+        <div class="rep-sec">
+          <div class="section-title" style="margin:0">Run Report</div>
+          <div style="font-size:12px;color:var(--ink3);margin:2px 0 14px">Download a CSV for year-end financials.</div>
+          <div class="rep-row" style="margin-bottom:10px">
+            <select id="report-type" onchange="updateReportUi()">
+              <option value="sales">Sales</option>
+              <option value="expenses">Expenses</option>
+              <option value="mileage">Mileage</option>
+              <option value="stock">Stock (current)</option>
+              <option value="gallery">Gallery stock (current)</option>
+            </select>
+          </div>
+          <div class="rep-row" id="report-dates" style="margin-bottom:10px">
+            <label for="report-from">From</label><input type="date" id="report-from" value="2026-01-01">
+            <label for="report-to">To</label><input type="date" id="report-to" value="2026-12-31">
+          </div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:12px" id="report-hint"></div>
+          <button class="btn-primary" onclick="runReport()">↓ Download CSV</button>
+        </div>
         </div>
       </div>
     </div>
@@ -727,33 +772,6 @@
               <button class="btn-sm" onclick="finishInventoryCount()">✓ Finish</button>
             </div>
           </div>
-        </div>
-        <button class="rate-chip-btn" id="rate-chip-btn" onclick="toggleRateBar()">
-          <span>Rate</span>
-          <span style="display:flex;align-items:center;gap:6px">
-            <span class="rate-chip-val" id="rate-chip-val">$1.10 / sq in</span>
-            <i class="chevron">▾</i>
-          </span>
-        </button>
-        <div class="rate-bar" id="rate-bar" style="border-top-left-radius:0;border-top-right-radius:0;margin-bottom:0">
-          <label>Price / sq in</label>
-          <div class="rate-input-wrap">
-            <span>$</span>
-            <input type="text" inputmode="decimal" id="rate-input" value="1.10" style="-webkit-appearance:none;-moz-appearance:textfield">
-          </div>
-          <span class="rate-note">Adjusts price &amp; rounded columns for all paintings — use a painting's price override for one-off exceptions</span>
-          <span class="filter-divider" style="width:1px;height:20px;background:var(--border-mid);margin:0 4px"></span>
-          <label>Small print cost</label>
-          <div class="rate-input-wrap">
-            <span>$</span>
-            <input type="text" inputmode="decimal" id="print-cost-small-input" value="5.00" style="-webkit-appearance:none;-moz-appearance:textfield">
-          </div>
-          <label>Large print cost</label>
-          <div class="rate-input-wrap">
-            <span>$</span>
-            <input type="text" inputmode="decimal" id="print-cost-large-input" value="12.00" style="-webkit-appearance:none;-moz-appearance:textfield">
-          </div>
-          <span class="rate-note">Landed cost per print (paper + ink + show kit) — used for print cost/profit in the filter revenue readout</span>
         </div>
         <div class="inv-cols">
           <div class="filter-bar" id="filter-bar">
@@ -816,8 +834,6 @@
             </div>
             <div class="fb-group fb-group-actions">
               <button class="btn-sm" onclick="clearAllInvFilters()">Clear</button>
-              <button class="btn-sm" onclick="exportInventoryCsv()" title="Export current stock snapshot to CSV">↓ Stock CSV</button>
-              <button class="btn-sm" onclick="exportSalesCsv()" title="Export filtered sales to CSV">↓ Sales CSV</button>
             </div>
           </div>
           <div style="flex:1;min-width:0">
@@ -885,7 +901,6 @@
                 <select id="gs-gallery-filter" onchange="renderGalleryStock()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer">
                   <option value="Phoenix Gallery">Phoenix Gallery</option>
                 </select>
-                <button class="btn-sm" onclick="exportGalleryStockCsv()">↓ CSV</button>
               </div>
             </div>
             <div id="gs-summary" style="padding:10px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--ink2)"></div>
@@ -941,7 +956,6 @@
                 <option>Travel</option>
                 <option>Other</option>
               </select>
-              <button class="btn-sm" onclick="exportExpensesCsv()" title="Export to CSV">↓ CSV</button>
               <button class="btn-primary" onclick="openExpModal()">+ Add Expense</button>
             </div>
           </div>
@@ -1004,7 +1018,6 @@
               <div style="font-size:12px;color:var(--ink3);margin-top:2px">IRS standard rate: <span style="font-family:var(--mono);color:var(--ink2)" id="irs-rate-display"></span></div>
             </div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button class="btn-sm" onclick="exportMileageCsv()" title="Export to CSV">↓ CSV</button>
               <button class="btn-primary" onclick="openMileModal()">+ Log Mileage</button>
             </div>
           </div>
@@ -1308,6 +1321,50 @@
   </div>
 </div>
 
+<!-- Settings modal -->
+<div class="modal-backdrop" id="settings-modal" style="display:none" onclick="closeModalOnBackdrop(event,'settings-modal')">
+  <div class="modal" style="max-width:520px" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h2>Settings</h2>
+      <button class="modal-close" onclick="closeModal('settings-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="set-sec">
+        <h3>Original pricing</h3>
+        <p class="set-note">Price of an original = width × height × rate, rounded up to $50. Use a painting's price override for one-offs.</p>
+        <div class="set-row"><label for="rate-input">$ per sq in</label>
+          <div class="set-money"><span>$</span><input type="text" inputmode="decimal" id="rate-input" value="1.10"></div></div>
+      </div>
+      <div class="set-sec">
+        <h3>Print prices</h3>
+        <p class="set-note">Square sets what customers pay. Changing a price here updates every print of that size in Square — you'll see exactly what changes first.</p>
+        <div id="pp-rows"><div class="set-note">Loading prices from Square…</div></div>
+        <div id="pp-confirm"></div>
+      </div>
+      <div class="set-sec">
+        <h3>Mileage</h3>
+        <p class="set-note">IRS standard mileage rate per tax year. Update each January when the IRS announces it.</p>
+        <div id="irs-rows"></div>
+      </div>
+      <div class="set-sec">
+        <h3>Selling defaults</h3>
+        <p class="set-note">This device only. Prefills the + Sale window; each sale can still be changed.</p>
+        <div class="set-row"><label for="sd-channel">Source</label>
+          <select id="sd-channel" onchange="saveSellDefaults()"><option value="fair">Art fair</option><option value="online">Online</option><option value="gallery">Gallery</option></select></div>
+        <div class="set-row"><label for="sd-state">State</label>
+          <select id="sd-state" onchange="saveSellDefaults()"><option value="KS">KS</option><option value="MO">MO</option></select></div>
+        <div class="set-row"><label for="sd-rate">Sales tax %</label>
+          <input type="text" inputmode="decimal" id="sd-rate" onchange="saveSellDefaults()"></div>
+        <div class="set-row"><label for="sd-pct">Gallery %</label>
+          <input type="text" inputmode="decimal" id="sd-pct" onchange="saveSellDefaults()"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('settings-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Price Lists modal -->
 <div class="modal-backdrop" id="pricelist-modal" style="display:none" onclick="closeModalOnBackdrop(event,'pricelist-modal')">
   <div class="modal" style="max-width:560px" onclick="event.stopPropagation()">
@@ -1387,8 +1444,10 @@ const IRS_RATE_BY_YEAR = {
 };
 const DEFAULT_IRS_RATE = 0.70;
 
+// Settings → Mileage overrides these (stored in __config__.irsRates); the table is the fallback.
 function irsRate(year) {
-  return IRS_RATE_BY_YEAR[year] || DEFAULT_IRS_RATE;
+  const set = Number(db?.irsRates?.[year]);
+  return set > 0 ? set : (IRS_RATE_BY_YEAR[year] || DEFAULT_IRS_RATE);
 }
 
 const CAT_CLASS = {
@@ -1760,7 +1819,7 @@ function saveRatesDebounced() {
   saveRatesTimer = setTimeout(saveRates, 500);
 }
 function saveRates() {
-  const body = { rate: db.rate, printCostSmall: db.printCostSmall, printCostLarge: db.printCostLarge };
+  const body = { rate: db.rate, printCostSmall: db.printCostSmall, printCostLarge: db.printCostLarge, irsRates: db.irsRates || {} };
   api('PUT', '/config', body).catch(e => console.error('Rate save failed:', e));
 }
 
@@ -1988,9 +2047,15 @@ function clearAllInvFilters() {
   updateFilterChips();
   renderTable();
 }
-function exportSalesCsv() {
-  const rows = getFilteredSalesRows();
-  const header = ['Date','Painting','Type','Channel','State','Price','Net','Print Cost','Net Profit','Lg Stock Remaining','Sm Stock Remaining'];
+function exportSalesCsv(from, to) {
+  const rows = [];
+  for (const p of (db.paintings || [])) for (const s of (p.sales || [])) {
+    const d = s.date || '';
+    if ((from && d < from) || (to && d > to)) continue;
+    rows.push({ painting: p, sale: s });
+  }
+  rows.sort((a, b) => (a.sale.date || '').localeCompare(b.sale.date || ''));
+  const header = ['Date','Painting','Type','Channel','State','Ship To','Price','Tax Collected','Net','Print Cost','Net Profit','Lg Stock Remaining','Sm Stock Remaining'];
   const data = rows.map(({ painting, sale: s }) => {
     const net = saleNet(s);
     const pc = printCostFor(s);
@@ -2000,7 +2065,9 @@ function exportSalesCsv() {
       s.type,
       s.channel,
       s.state || '',
+      s.shipState || '',
       Number(s.price || 0).toFixed(2),
+      s.tax != null ? Number(s.tax).toFixed(2) : '',
       net.toFixed(2),
       pc.toFixed(2),
       (net - pc).toFixed(2),
@@ -2008,7 +2075,7 @@ function exportSalesCsv() {
       painting.stock?.small || 0,
     ];
   });
-  downloadCsv('sales.csv', [header, ...data]);
+  downloadCsv(`sales-${from || 'start'}-to-${to || 'today'}.csv`, [header, ...data]);
 }
 
 // ═══════════════════════════════════════════
@@ -2054,6 +2121,7 @@ async function init() {
     db.rate = data.rate ?? 1.10;
     db.printCostSmall = data.printCostSmall ?? 5;
     db.printCostLarge = data.printCostLarge ?? 12;
+    db.irsRates = data.irsRates || {};
     if (!db.paintings.some(p => p.title === 'Unknown')) {
       try {
         const up = await api('POST', '/paintings', { title: 'Unknown', year: new Date().getFullYear(), width: 1, height: 1, stock: { large: 0, small: 0 } });
@@ -2076,25 +2144,8 @@ async function init() {
   });
   updateRateChipLabel();
 
-  document.getElementById('print-cost-small-input').value = db.printCostSmall.toFixed(2);
-  document.getElementById('print-cost-small-input').addEventListener('input', function() {
-    const v = parseFloat(this.value);
-    if (!isNaN(v) && v >= 0) setPrintCost('small', v);
-  });
-  document.getElementById('print-cost-small-input').addEventListener('blur', function() {
-    this.value = db.printCostSmall.toFixed(2);
-  });
-  document.getElementById('print-cost-large-input').value = db.printCostLarge.toFixed(2);
-  document.getElementById('print-cost-large-input').addEventListener('input', function() {
-    const v = parseFloat(this.value);
-    if (!isNaN(v) && v >= 0) setPrintCost('large', v);
-  });
-  document.getElementById('print-cost-large-input').addEventListener('blur', function() {
-    this.value = db.printCostLarge.toFixed(2);
-  });
-
-  document.getElementById('irs-rate-display').textContent =
-    '$' + DEFAULT_IRS_RATE.toFixed(2) + '/mile (2026)';
+  renderIrsDisplay();
+  updateReportUi();
 
   populateDimFilterOptions();
   applyMobileChartDefault();
@@ -2105,7 +2156,210 @@ async function init() {
   loadExpenses().catch(e => console.error('Background expense load failed:', e));
 }
 
+// ═══════════════════════════════════════════
+//  SETTINGS (gear in top bar)
+// ═══════════════════════════════════════════
+function openSettings() {
+  renderSellDefaults();
+  const ri = document.getElementById('rate-input');
+  if (ri && document.activeElement !== ri) ri.value = Number(db.rate || 0).toFixed(2);
+  renderIrsRows();
+  document.getElementById('pp-confirm').innerHTML = '';
+  document.getElementById('settings-modal').style.display = 'flex';
+  loadPrintPrices();
+}
+
+// ── Mileage rate per year ──
+function irsYears() {
+  const ys = new Set([String(new Date().getFullYear()), ...Object.keys(IRS_RATE_BY_YEAR).map(String), ...Object.keys(db.irsRates || {})]);
+  for (const m of (expState.mileage || [])) { const y = (m.date || '').slice(0, 4); if (/^20\d\d$/.test(y)) ys.add(y); }
+  return [...ys].sort((a, b) => b.localeCompare(a));
+}
+function renderIrsRows() {
+  const el = document.getElementById('irs-rows'); if (!el) return;
+  el.innerHTML = irsYears().map(y => `<div class="set-row"><label for="irs-${y}">${y}</label>
+    <div class="set-money"><span>$</span><input type="text" inputmode="decimal" id="irs-${y}" value="${irsFmt(irsRate(Number(y)))}" onchange="setIrsRate('${y}', this)"><span style="font-family:var(--font);font-size:12px">/ mile</span></div></div>`).join('');
+}
+function setIrsRate(year, input) {
+  const v = parseFloat(String(input.value).replace(/[$\s]/g, ''));
+  if (isNaN(v) || v <= 0 || v >= 5) { alert('Enter a mileage rate like 0.70'); input.value = irsRate(Number(year)).toFixed(2); return; }
+  db.irsRates = { ...(db.irsRates || {}), [year]: Math.round(v * 1000) / 1000 };
+  saveRatesDebounced();
+  renderIrsDisplay();
+  try { render(); if (typeof renderExpenses === 'function' && expLoaded) renderExpenses(); } catch (e) { console.error(e); }
+}
+function irsFmt(r) { return Number(r).toFixed(3).replace(/0$/, ''); }   // 0.70 → "0.70", 0.725 → "0.725"
+function renderIrsDisplay() {
+  const el = document.getElementById('irs-rate-display'); if (!el) return;
+  const y = new Date().getFullYear();
+  el.textContent = '$' + irsFmt(irsRate(y)) + '/mile (' + y + ')';
+}
+
+// ── Print prices (Square is the source of truth; Settings can change every print of a size) ──
+let ppData = null;
+const PP_LABEL = { large: 'Large', small: 'Small' };
+function ppMoney(c) { return '$' + (c / 100).toFixed(c % 100 ? 2 : 0); }
+async function loadPrintPrices() {
+  const rows = document.getElementById('pp-rows');
+  try {
+    ppData = await api('GET', '/print-prices');
+    renderPrintPrices();
+  } catch (e) {
+    if (!ppData) rows.innerHTML = `<div class="set-note" style="color:var(--red)">Couldn't load prices from Square: ${esc(e.message)}</div>`;
+  }
+}
+function ppCurrent(size) { return ppData?.[size]?.prices?.[0]?.cents ?? null; }
+function ppCost(size) { return size === 'large' ? Number(db.printCostLarge ?? 12) : Number(db.printCostSmall ?? 5); }
+function ppInputCents(size) {
+  const n = sellParseMoney(document.getElementById('pp-in-' + size)?.value);
+  return isNaN(n) ? NaN : Math.round(n * 100);
+}
+function ppMarginHtml(size, cents) {
+  if (isNaN(cents) || cents <= 0) return '';
+  const price = cents / 100, cost = ppCost(size), keep = price - cost;
+  const pct = Math.round(keep / price * 100);
+  const m = n => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
+  return `<span class="pp-margin" tabindex="0">${pct}% margin<span class="pp-tip">(${m(price)} price − ${m(cost)} cost) ÷ ${m(price)} = ${pct}%<br>You keep ${m(keep)} per ${size} print before shipping and card fees.<br><br>Cost is your landed cost per print — ink, paper and the show kit (mat, backing, bag): large $${Number(db.printCostLarge ?? 12)}, small $${Number(db.printCostSmall ?? 5)}.</span></span>`;
+}
+function renderPrintPrices() {
+  const rows = document.getElementById('pp-rows'); if (!rows || !ppData) return;
+  rows.innerHTML = ['large', 'small'].map(size => {
+    const d = ppData[size] || { count: 0, prices: [], items: [] };
+    const cur = ppCurrent(size);
+    const now = d.prices.length
+      ? 'Square now: ' + d.prices.map(x => `${ppMoney(x.cents)} on ${x.count} print${x.count === 1 ? '' : 's'}`).join(' · ')
+      : 'No ' + size + ' prints found in Square';
+    return `<div class="set-row"><label for="pp-in-${size}">${PP_LABEL[size]}</label>
+      <div class="set-money"><span>$</span><input type="text" inputmode="decimal" id="pp-in-${size}" value="${cur != null ? (cur / 100).toFixed(cur % 100 ? 2 : 0) : ''}" oninput="ppChanged('${size}')"></div>
+      <span id="pp-margin-${size}">${cur != null ? ppMarginHtml(size, cur) : ''}</span>
+      <button class="btn-sm" id="pp-btn-${size}" style="display:${d.prices.length > 1 ? '' : 'none'}" onclick="ppConfirm('${size}')">Update Square…</button>
+      <div class="pp-square">${now}</div></div>`;
+  }).join('');
+}
+function ppChanged(size) {
+  const cents = ppInputCents(size);
+  document.getElementById('pp-margin-' + size).innerHTML = ppMarginHtml(size, cents);
+  const d = ppData?.[size];
+  const differs = !isNaN(cents) && cents >= 100 && d && d.items.some(x => x.cents !== cents);
+  document.getElementById('pp-btn-' + size).style.display = differs ? '' : 'none';
+  document.getElementById('pp-confirm').innerHTML = '';
+}
+function ppConfirm(size) {
+  const cents = ppInputCents(size);
+  const d = ppData?.[size];
+  if (isNaN(cents) || cents < 100 || !d) { alert('Enter a price of at least $1.'); return; }
+  const changing = d.items.filter(x => x.cents !== cents);
+  if (!changing.length) return;
+  document.getElementById('pp-confirm').innerHTML = `<div class="pp-confirm">
+    <b>Change ${changing.length} ${size} print${changing.length === 1 ? '' : 's'} in Square to ${ppMoney(cents)}?</b>
+    <div style="margin-top:4px;color:var(--ink2)">This changes what customers pay right away — the online gallery and its checkout, the + Sale window, and the Google/Pinterest feeds all read Square. Past sales don't change.</div>
+    <ul>${changing.map(x => `<li>${esc(x.title)} — ${ppMoney(x.cents)} → ${ppMoney(cents)}</li>`).join('')}</ul>
+    <div style="display:flex;gap:8px"><button class="btn-cancel" onclick="document.getElementById('pp-confirm').innerHTML=''">Cancel</button>
+    <button class="btn-primary" id="pp-apply" onclick="ppApply('${size}', ${cents})">Yes, update Square</button></div></div>`;
+}
+async function ppApply(size, cents) {
+  const btn = document.getElementById('pp-apply');
+  if (btn) { btn.disabled = true; btn.textContent = 'Updating Square…'; }
+  try {
+    const r = await api('PUT', '/print-prices', { size, cents });
+    await loadPrintPrices();
+    document.getElementById('pp-confirm').innerHTML = `<div class="pp-confirm" style="border-color:var(--green);background:#f0fdf4">Updated ${r.updated} ${size} print${r.updated === 1 ? '' : 's'} in Square to ${ppMoney(cents)}.</div>`;
+    if (typeof sellLoadCatalog === 'function') sellLoadCatalog().catch(() => {});
+  } catch (e) {
+    document.getElementById('pp-confirm').innerHTML = `<div class="pp-confirm" style="border-color:var(--red);background:#fef2f2">Square didn't take the change: ${esc(e.message)}. Check Square before trying again.</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+//  REPORTS — taxes collected + run report
+// ═══════════════════════════════════════════
+function renderTaxCollected() {
+  const val = document.getElementById('tax-collected-value'); if (!val) return;
+  const from = document.getElementById('tax-from').value, to = document.getElementById('tax-to').value;
+  let total = 0, n = 0; const byState = {};
+  for (const p of (db.paintings || [])) for (const s of (p.sales || [])) {
+    if (s.tax == null) continue;
+    const d = s.date || '';
+    if ((from && d < from) || (to && d > to)) continue;
+    const t = Number(s.tax) || 0;
+    total += t; n++;
+    const k = s.state || 'No state';
+    byState[k] = (byState[k] || 0) + t;
+  }
+  val.textContent = '$' + total.toFixed(2);
+  const parts = Object.entries(byState).sort().map(([k, v]) => `${k} $${v.toFixed(2)}`);
+  document.getElementById('tax-collected-sub').textContent = n
+    ? parts.join(' · ') + ` · ${n} sale${n === 1 ? '' : 's'} with tax`
+    : 'No tax collected in this range';
+}
+const REPORT_HINTS = {
+  sales: 'Every sale in the range — channel, fair state, ship-to state, price, tax collected, net, print cost and profit.',
+  expenses: 'Every expense in the range with its category and receipt link.',
+  mileage: 'Every mileage entry in the range with the IRS rate for its year and the deduction.',
+  stock: 'Current print stock and sales counts for every painting. Not date-based.',
+  gallery: 'Current print stock at each gallery. Not date-based.',
+};
+function updateReportUi() {
+  const t = document.getElementById('report-type')?.value; if (!t) return;
+  document.getElementById('report-dates').style.display = (t === 'stock' || t === 'gallery') ? 'none' : 'flex';
+  document.getElementById('report-hint').textContent = REPORT_HINTS[t] || '';
+}
+async function runReport() {
+  const t = document.getElementById('report-type').value;
+  const from = document.getElementById('report-from').value, to = document.getElementById('report-to').value;
+  if ((t === 'sales' || t === 'expenses' || t === 'mileage') && from && to && from > to) { alert('The From date is after the To date.'); return; }
+  try {
+    if ((t === 'expenses' || t === 'mileage') && !expLoaded) await loadExpenses();
+    if (t === 'sales') exportSalesCsv(from, to);
+    else if (t === 'expenses') exportExpensesCsv(from, to);
+    else if (t === 'mileage') exportMileageCsv(from, to);
+    else if (t === 'stock') exportInventoryCsv();
+    else if (t === 'gallery') await exportGalleryStockCsv();
+  } catch (e) { alert('Report failed: ' + e.message); }
+}
+
+// ── New online sale alert ──
+// The Lambda logs paid gallery orders from Square on every /paintings load and stamps each row with
+// syncedAt. Show any rows newer than what this device last dismissed (per device: phone and desktop
+// each show it once).
+const ONLINE_SEEN_KEY = 'dna-online-seen';
+let onlineAlertKey = '';
+function renderOnlineAlert() {
+  const el = document.getElementById('online-alert');
+  if (!el) return;
+  let seen = '';
+  try { seen = localStorage.getItem(ONLINE_SEEN_KEY) || ''; } catch {}
+  const fresh = [];
+  for (const p of (db.paintings || [])) for (const s of (p.sales || [])) {
+    if (s.channel === 'online' && s.syncedAt && s.syncedAt > seen) fresh.push({ s, title: p.title });
+  }
+  if (!fresh.length) { el.style.display = 'none'; onlineAlertKey = ''; return; }
+  fresh.sort((a, b) => (a.s.syncedAt < b.s.syncedAt ? 1 : -1) || (a.s.id < b.s.id ? -1 : 1));
+  const key = fresh.map(f => f.s.id).join(',');
+  if (key === onlineAlertKey && el.style.display === 'block') return;   // render() runs often; don't rebuild
+  onlineAlertKey = key;
+  const fmtDate = d => { const [y, m, dd] = (d || '').split('-').map(Number); return y ? new Date(y, m - 1, dd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''; };
+  const rows = fresh.map(({ s, title }) =>
+    `<li>${esc(fmtDate(s.date))} · ${esc(title)} · ${esc(s.type)} · $${Number(s.price).toFixed(0)}${s.shipState ? ' · ships to ' + esc(s.shipState) : ''}</li>`).join('');
+  const total = fresh.reduce((a, f) => a + Number(f.s.price || 0), 0);
+  el.innerHTML = `<b>${fresh.length === 1 ? 'New online sale logged' : fresh.length + ' new online sales logged'}</b>` +
+    `<div style="font-size:13px;color:var(--ink2)">Recorded in the Sales Log and taken out of stock · $${total.toFixed(0)} before shipping</div>` +
+    `<ul>${rows}</ul><button class="btn-cancel" type="button" onclick="dismissOnlineAlert()">Got it</button>`;
+  el.style.display = 'block';
+}
+function dismissOnlineAlert() {
+  let newest = '';
+  for (const p of (db.paintings || [])) for (const s of (p.sales || [])) {
+    if (s.channel === 'online' && s.syncedAt && s.syncedAt > newest) newest = s.syncedAt;
+  }
+  try { if (newest) localStorage.setItem(ONLINE_SEEN_KEY, newest); } catch {}
+  document.getElementById('online-alert').style.display = 'none';
+  onlineAlertKey = '';
+}
+
 function render() {
+  renderOnlineAlert();
+  renderTaxCollected();
   renderCards();
   renderChart();
   renderDashExpCards();
@@ -2228,63 +2482,6 @@ function renderExpChart() {
   renderDashExpCards();
 }
 
-function computeRevenueByState(fromVal, toVal) {
-  // Gallery is always Kansas (Phoenix Gallery, Lawrence KS — only gallery in the
-  // system); Online counts as Kansas per David's call; Fair sales use their own
-  // KS/MO tag, or fall into "Unspecified" if untagged.
-  let revKS = 0, revMO = 0, revStateUnknown = 0;
-  db.paintings.forEach(p => {
-    p.sales.forEach(s => {
-      if (!s.date) return;
-      const key = s.date.slice(0,7);
-      if (fromVal && key < fromVal) return;
-      if (toVal   && key > toVal)   return;
-      const net = saleNet(s);
-      if (s.channel === 'gallery' || s.channel === 'online') revKS += net;
-      else if (s.channel === 'fair') {
-        if (s.state === 'KS') revKS += net;
-        else if (s.state === 'MO') revMO += net;
-        else revStateUnknown += net;
-      }
-    });
-  });
-  return { revKS, revMO, revStateUnknown };
-}
-
-const TAX_RATE_KS = 0.0935; // Kansas — David Nicholson Art location
-const TAX_RATE_MO = 0.0422; // Missouri location
-
-function computeTaxByState(fromVal, toVal) {
-  // Estimated tax owed on David's own direct sales only. Gallery sales are
-  // excluded entirely — the gallery is the retailer of record there and
-  // collects/remits its own sales tax, not David's. Online counts as Kansas,
-  // consistent with the revenue attribution above. Fair sales use their own
-  // KS/MO tag, or fall into "Unspecified" (taxable amount known, rate isn't)
-  // if untagged.
-  let taxableKS = 0, taxableMO = 0, taxableUnknown = 0;
-  db.paintings.forEach(p => {
-    p.sales.forEach(s => {
-      if (!s.date) return;
-      const key = s.date.slice(0,7);
-      if (fromVal && key < fromVal) return;
-      if (toVal   && key > toVal)   return;
-      if (s.channel === 'gallery') return;
-      const net = saleNet(s);
-      if (s.channel === 'online') taxableKS += net;
-      else if (s.channel === 'fair') {
-        if (s.state === 'KS') taxableKS += net;
-        else if (s.state === 'MO') taxableMO += net;
-        else taxableUnknown += net;
-      }
-    });
-  });
-  return {
-    taxableKS, taxableMO, taxableUnknown,
-    taxKS: taxableKS * TAX_RATE_KS,
-    taxMO: taxableMO * TAX_RATE_MO,
-  };
-}
-
 function renderChart() {
   const fromVal = document.getElementById('chart-from').value;
   const toVal   = document.getElementById('chart-to').value;
@@ -2306,7 +2503,6 @@ function renderChart() {
       if (s.channel === 'gallery') revGallery += net;
     });
   });
-  const { revKS, revMO, revStateUnknown } = computeRevenueByState(fromVal, toVal);
   const isFiltered = fromVal || toVal;
   const displayRev = isFiltered ? filteredRev : allRev;
   const displayCount = isFiltered ? filteredCount : allCount;
@@ -2331,23 +2527,6 @@ function renderChart() {
       <div class="card"><div class="card-label">Art Fair</div><div class="card-value" style="font-size:19px">${fmt(revFair)}</div><div class="card-sub">channel${isFiltered ? ' · in range' : ''}</div></div>
       <div class="card"><div class="card-label">Online</div><div class="card-value" style="font-size:19px">${fmt(revOnline)}</div><div class="card-sub">channel${isFiltered ? ' · in range' : ''}</div></div>
       <div class="card"><div class="card-label">Gallery</div><div class="card-value" style="font-size:19px">${fmt(revGallery)}</div><div class="card-sub">net to you${isFiltered ? ' · in range' : ''}</div></div>
-    `;
-  }
-  const stEl = document.getElementById('chart-state-breakdown');
-  if (stEl) {
-    stEl.innerHTML = `
-      <div class="card"><div class="card-label">Kansas</div><div class="card-value" style="font-size:19px">${fmt(revKS)}</div><div class="card-sub">gallery + online + KS fairs${isFiltered ? ' · in range' : ''}</div></div>
-      <div class="card"><div class="card-label">Missouri</div><div class="card-value" style="font-size:19px">${fmt(revMO)}</div><div class="card-sub">MO fairs${isFiltered ? ' · in range' : ''}</div></div>
-      <div class="card"><div class="card-label">Unspecified</div><div class="card-value" style="font-size:19px${revStateUnknown > 0 ? ';color:var(--red)' : ''}">${fmt(revStateUnknown)}</div><div class="card-sub">fair sales missing a state${isFiltered ? ' · in range' : ''}</div></div>
-    `;
-  }
-  const { taxableKS, taxableMO, taxableUnknown, taxKS, taxMO } = computeTaxByState(fromVal, toVal);
-  const txEl = document.getElementById('chart-tax-breakdown');
-  if (txEl) {
-    txEl.innerHTML = `
-      <div class="card"><div class="card-label">Kansas (9.35%)</div><div class="card-value" style="font-size:19px">${fmt(taxKS)}</div><div class="card-sub">on ${fmt(taxableKS)} taxable${isFiltered ? ' · in range' : ''}</div></div>
-      <div class="card"><div class="card-label">Missouri (4.22%)</div><div class="card-value" style="font-size:19px">${fmt(taxMO)}</div><div class="card-sub">on ${fmt(taxableMO)} taxable${isFiltered ? ' · in range' : ''}</div></div>
-      <div class="card"><div class="card-label">Unspecified</div><div class="card-value" style="font-size:19px${taxableUnknown > 0 ? ';color:var(--red)' : ''}">${fmt(taxableUnknown)}</div><div class="card-sub">taxable, but no state to rate it${isFiltered ? ' · in range' : ''}</div></div>
     `;
   }
 }
@@ -3955,25 +4134,17 @@ function exportInventoryCsv() {
   downloadCsv('inventory.csv', [header, ...rows]);
 }
 
-function exportExpensesCsv() {
-  const yearFilter = document.getElementById('exp-year-filter').value;
-  const catFilter  = document.getElementById('exp-cat-filter').value;
-  let list = expState.expenses.slice();
-  if (yearFilter) list = list.filter(e => (e.date||'').startsWith(yearFilter));
-  if (catFilter)  list = list.filter(e => e.category === catFilter);
+function exportExpensesCsv(from, to) {
+  let list = expState.expenses.slice().filter(e => { const d = e.date || ''; return !((from && d < from) || (to && d > to)); });
   list.sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const header = ['Date','Category','Description','Amount','Receipt URL'];
   const rows = list.map(e => [e.date||'', e.category||'', e.desc||'',
                                Number(e.amount||0).toFixed(2), e.receiptUrl||'']);
-  const year = yearFilter || 'all';
-  const cat  = catFilter ? '-' + catFilter.replace(/[^a-z0-9]/gi,'_') : '';
-  downloadCsv(`expenses-${year}${cat}.csv`, [header, ...rows]);
+  downloadCsv(`expenses-${from || 'start'}-to-${to || 'today'}.csv`, [header, ...rows]);
 }
 
-function exportMileageCsv() {
-  const yearFilter = document.getElementById('exp-year-filter').value;
-  let list = expState.mileage.slice();
-  if (yearFilter) list = list.filter(m => (m.date||'').startsWith(yearFilter));
+function exportMileageCsv(from, to) {
+  let list = expState.mileage.slice().filter(m => { const d = m.date || ''; return !((from && d < from) || (to && d > to)); });
   list.sort((a,b) => (a.date||'').localeCompare(b.date||''));
   const header = ['Date','Purpose','Miles','IRS Rate','Deduction','Notes'];
   const rows = list.map(m => {
@@ -3983,39 +4154,7 @@ function exportMileageCsv() {
     return [m.date||'', m.purpose||'', miles.toFixed(1), rate.toFixed(2),
             (miles * rate).toFixed(2), m.notes||''];
   });
-  const year = yearFilter || 'all';
-  downloadCsv(`mileage-${year}.csv`, [header, ...rows]);
-}
-
-// ═══════════════════════════════════════════
-//  DASHBOARD STATE/TAX EXPORTS
-// ═══════════════════════════════════════════
-function exportRevenueByStateCsv() {
-  const fromVal = document.getElementById('chart-from').value;
-  const toVal   = document.getElementById('chart-to').value;
-  const { revKS, revMO, revStateUnknown } = computeRevenueByState(fromVal, toVal);
-  const period = (fromVal || toVal) ? `${fromVal || 'start'} to ${toVal || 'present'}` : 'All time';
-  const header = ['Period', 'State', 'Revenue'];
-  const data = [
-    [period, 'Kansas', revKS.toFixed(2)],
-    [period, 'Missouri', revMO.toFixed(2)],
-    [period, 'Unspecified (fair sales missing a state)', revStateUnknown.toFixed(2)],
-  ];
-  downloadCsv('revenue-by-state.csv', [header, ...data]);
-}
-
-function exportTaxByStateCsv() {
-  const fromVal = document.getElementById('chart-from').value;
-  const toVal   = document.getElementById('chart-to').value;
-  const { taxableKS, taxableMO, taxableUnknown, taxKS, taxMO } = computeTaxByState(fromVal, toVal);
-  const period = (fromVal || toVal) ? `${fromVal || 'start'} to ${toVal || 'present'}` : 'All time';
-  const header = ['Period', 'State', 'Taxable Sales', 'Rate', 'Est. Tax Owed'];
-  const data = [
-    [period, 'Kansas', taxableKS.toFixed(2), '9.35%', taxKS.toFixed(2)],
-    [period, 'Missouri', taxableMO.toFixed(2), '4.22%', taxMO.toFixed(2)],
-    [period, 'Unspecified (fair sales missing a state)', taxableUnknown.toFixed(2), '—', '—'],
-  ];
-  downloadCsv('estimated-tax-by-state.csv', [header, ...data]);
+  downloadCsv(`mileage-${from || 'start'}-to-${to || 'today'}.csv`, [header, ...rows]);
 }
 
 // ═══════════════════════════════════════════
@@ -4123,20 +4262,15 @@ async function gsAdjust(paintingId, size, delta) {
   await api('PUT', '/gallery-stock', { paintingId: rec.paintingId, galleryName: rec.galleryName, stockSm: rec.stockSm, stockLg: rec.stockLg });
 }
 
-function exportGalleryStockCsv() {
-  const gallery = document.getElementById('gs-gallery-filter').value;
-  const rows = db.paintings
-    .filter(p => !p.marketItem && p.title !== 'Unknown')
-    .slice()
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map(p => {
-      const rec = gsData.find(r => r.paintingId === p.id && r.galleryName === gallery);
-      return { title: p.title, sm: rec ? (rec.stockSm || 0) : 0, lg: rec ? (rec.stockLg || 0) : 0 };
-    })
-    .filter(r => r.sm + r.lg > 0);
-  const header = ['Gallery', 'Painting', 'Small', 'Large', 'Total'];
-  const data = rows.map(r => [gallery, r.title, r.sm, r.lg, r.sm + r.lg]);
-  downloadCsv('gallery-stock.csv', [header, ...data]);
+async function exportGalleryStockCsv() {
+  if (!gsData.length) { try { await loadGalleryStock(); } catch (e) { alert('Couldn\'t load gallery stock: ' + e.message); return; } }
+  const titleOf = {};
+  for (const p of db.paintings) if (!p.marketItem && p.title !== 'Unknown') titleOf[p.id] = p.title;
+  const data = gsData
+    .filter(r => titleOf[r.paintingId] && (r.stockSm || 0) + (r.stockLg || 0) > 0)
+    .map(r => [r.galleryName || '', titleOf[r.paintingId], r.stockSm || 0, r.stockLg || 0, (r.stockSm || 0) + (r.stockLg || 0)])
+    .sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
+  downloadCsv('gallery-stock.csv', [['Gallery', 'Painting', 'Small', 'Large', 'Total'], ...data]);
 }
 
 
@@ -4151,7 +4285,7 @@ document.getElementById('pw-input').addEventListener('input', function() {
 
 // ═══════════════════════════════════════════
 //  SALE WINDOW (+ Sale) — pick painting → Large / Small / Original → Log sale, or cart → Checkout in Square
-//  (POS API, Tap to Pay). Source / state / tax / gallery % default from Reports → Selling defaults and can be
+//  (POS API, Tap to Pay). Source / state / tax / gallery % default from Settings → Selling defaults and can be
 //  changed per sale. The old quick-sale modal (openQuickSaleModal) is no longer linked from the UI.
 // ═══════════════════════════════════════════
 // Must match the Web callback URL registered in the Square Developer Dashboard (Point of Sale API) exactly.
@@ -4174,21 +4308,13 @@ let sellCart = sellGet('session', SELL_K_CART, []);       // session storage: su
 let sellRate = sellGet('session', SELL_K_RATE, null);     // this cart's tax %, starts at the default
 let sellPaintId = null, sellSize = null, sellBusy = false;
 
-// ── Selling defaults (Reports tab) ──
+// ── Selling defaults (Settings panel) ──
 function renderSellDefaults() {
   const ch = document.getElementById('sd-channel'); if (!ch) return;
   ch.value = sellDefaults.channel;
   document.getElementById('sd-state').value = sellDefaults.state;
   document.getElementById('sd-rate').value = sellDefaults.rate;
   document.getElementById('sd-pct').value = sellDefaults.pct;
-  const ym = sellToday().slice(0, 7), byState = {};
-  for (const p of db.paintings) for (const s of (p.sales || [])) {
-    if (s.tax == null || !(s.date || '').startsWith(ym)) continue;
-    const k = s.state || 'No state';
-    byState[k] = (byState[k] || 0) + Number(s.tax || 0);
-  }
-  const parts = Object.entries(byState).map(([k, v]) => `${k} $${v.toFixed(2)}`);
-  document.getElementById('sd-tax').textContent = 'Tax collected through checkout this month: ' + (parts.length ? parts.join(' · ') : '$0.00');
 }
 function saveSellDefaults() {
   const rate = parseFloat(document.getElementById('sd-rate').value);

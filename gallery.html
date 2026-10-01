@@ -763,6 +763,27 @@ function removeFromCart(idx) {
   renderCart();
 }
 
+// Stored cart lines carry the price/title from when they were added. Refresh them from the live
+// catalog so the cart total always matches what Square will charge; drop lines whose print or
+// size no longer exists (Square would reject them at checkout anyway).
+function refreshCartFromCatalog() {
+  if (!products.length || !cart.length) return;
+  let changed = false, removed = 0;
+  cart = cart.filter(item => {
+    const p = products.find(x => x.id === item.id);
+    const v = p && p.variations.find(x => x.id === item.variationId);
+    if (!v) { removed++; changed = true; return false; }
+    const price = parseInt(v.price) || 0;
+    if (item.price !== price || item.title !== p.title || item.variationName !== v.name || item.img !== p.img) {
+      Object.assign(item, { price, title: p.title, variationName: v.name, img: p.img });
+      changed = true;
+    }
+    return true;
+  });
+  if (changed) saveCart();
+  if (removed) setTimeout(() => toast(removed === 1 ? 'a print in your cart is no longer available' : removed + ' prints in your cart are no longer available'), 400);
+}
+
 async function checkout() {
   if (!cart.length) return;
   const btn = document.getElementById('btn-checkout');
@@ -795,9 +816,8 @@ async function checkout() {
         })),
         click_id: getEpik(),
       });
-      cart = [];
-      saveCart();
-      updateCartCount();
+      // Cart is NOT cleared here — only on the ?success=1 return from Square.
+      // A customer who backs out of Square's page comes back to their cart intact.
       window.location.href = data.checkout_url;
     } else {
       throw new Error('no checkout url');
@@ -871,6 +891,14 @@ function toast(msg) {
   clearTimeout(tT); tT = setTimeout(() => el.classList.remove('on'), 2600);
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Back button from Square: Safari restores this page from bfcache with the
+// checkout button still disabled on "one moment…" — reset it.
+window.addEventListener('pageshow', e => {
+  if (!e.persisted) return;
+  const btn = document.getElementById('btn-checkout');
+  if (btn) { btn.disabled = false; btn.textContent = 'checkout'; }
+});
 
 if (new URLSearchParams(window.location.search).get('success') === '1') {
   cart = [];
@@ -984,6 +1012,7 @@ async function loadProducts() {
     }));
     buildNav();
     renderGrid();
+    refreshCartFromCatalog();
     updateCartCount();
     handleViewParam();
     handleCartParam();

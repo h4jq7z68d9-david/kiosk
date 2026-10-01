@@ -188,6 +188,7 @@ PASSWORD      = admin.html PIN (see AWS console) — added June 11 2026
 - `POST /send-link` — sends email (SES) with product link (email-only; the `sms`/SNS path was removed June 10 2026)
 - `POST /guestbook` — saves to DynamoDB (`dna-guestbook`) + emails [david@davidnicholsonart.com](mailto:david@davidnicholsonart.com); stores `name, email, note, subscribed (BOOL)`
 - `POST /checkout` — accepts `{items:[{variation_id, item_id, title, price}]}`, creates Square Payment Link with `ask_for_shipping_address: true`, returns `{checkout_url}`
+- **Online sale sync (not an endpoint)** — `syncOnlineOrders()` runs at the start of every `GET /admin/paintings` (8s cap; any Square failure is logged and admin loads anyway) and on the monthly scheduled `{"task":"recurring"}` run. Searches Square orders at `SQUARE_LOC` with a SHIPMENT fulfillment created since `ONLINE_LOG_SINCE` (`2026-09-22T00:00:00Z` — earlier orders were logged by hand; don't move it earlier), keeps paid ones (`isPaidOnlineOrder`: tenders present, `net_amount_due_money` = 0, not CANCELED, no refunds), skips any order that already has a `sync_{orderId}` marker, and `logOnlineOrder()` writes one `dna-sales` row per unit (`id: sq_{orderId}_{n}`, conditional put → idempotent; `channel: 'online'`, pre-tax unit `price`, `squareTxn`, `shipState` = ship-to state, `syncedAt`) and atomically decrements `stock.large/small` (size via `regSizeOf`), then writes the marker row `{id: 'sync_{orderId}', paintingId: '__sync__', syncedAt, logged, unmatched}` in `dna-sales`. **The marker, not the sale rows, is what prevents re-logging** — so deleting or editing a synced sale in admin (e.g. after a refund) never brings it back. `paintingId '__sync__'` matches no painting, so admin never shows markers. Painting matched by Square item ID, then title; unmatched lines are logged to CloudWatch and skipped. `adminUpdateSale` preserves `shipState` and `syncedAt` on edit.
 - `GET /booth-layout?id=X` — fetch a saved booth layout from DynamoDB
 - `PUT /booth-layout` — save/overwrite a booth layout `{id, title, wallsJson}`
 - `DELETE /booth-layout?id=X` — delete a booth layout from DynamoDB
@@ -202,7 +203,9 @@ PASSWORD      = admin.html PIN (see AWS console) — added June 11 2026
 - `POST /admin/paintings/{id}/sales` — add sale. Optional `decrementStock: true` (sent only by the Sell window's Log sale) decrements print stock server-side with an atomic update; quick sale doesn't send it and still decrements via its own painting PUT.
 - `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale (preserves `tax` and `squareTxn` from the existing row)
 - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
-- `GET/PUT /admin/config` — price/sq in rate (`rate`) and large-painting rate (`rateLarge`, optional); both stored in DynamoDB `__config__` record
+- `GET/PUT /admin/config` — `rate` ($/sq in for originals), `printCostSmall`/`printCostLarge` (fixed landed costs, $5/$12), `irsRates` (`{"2026": 0.70, …}`, set in admin Settings → Mileage); stored in DynamoDB `__config__`. PUT is read-merge-write (`...existing.Item`), so unknown fields survive.
+- `GET /admin/print-prices` — Square print variations grouped by size (`regSizeOf` on the variation name; originals-only and `Market Item` items excluded): `{large|small: {count, prices:[{cents,count}], items:[{title,cents}]}}`.
+- `PUT /admin/print-prices` — `{size: 'large'|'small', cents}` → sets **every** print variation of that size in Square to that price via `/v2/catalog/batch-upsert` (only variations whose price differs). admin.html shows a warning listing every affected print before calling it. **This is a live Square write — changes what customers pay everywhere.** Reads the full catalog with pagination and refuses to change anything if it can't read every page. Verified 2026-09-30 (read-only): all 52 small print variations are $25 and all 52 large are $40.
 - `GET /admin/expenses` — returns `{ expenses, mileage, recurring }` from `dna-expenses` table
 - `POST /admin/expenses` — add expense record
 - `PUT /admin/expenses/{id}` — update expense
@@ -377,12 +380,14 @@ All are single-file, no framework — intentional, keep it that way.
   - Safe area insets applied to topbar and main padding for iPhone notch
 - **PWA mode behavior:** home-screen launch shows the same tabs as Safari (the tab restriction was removed); `isPWA` now only compacts expense rows
 
+**Settings panel (gear icon in the top bar, added September 30 2026):** one place for rarely-changed values — **Original pricing** ($/sq in; moved out of the Inventory rate bar, which is gone), **Print prices** (large/small, read live from Square with margin shown; tap/hover the margin for the math `(price − cost) ÷ price` using the fixed $12/$5 costs; changing a price shows a warning listing every print that will change, then writes to Square via `PUT /admin/print-prices`), **Mileage** (IRS rate per tax year → `__config__.irsRates`; `irsRate(year)` uses it, falling back to the `IRS_RATE_BY_YEAR` table), **Selling defaults** (moved from Reports; per device, `localStorage`). Print *costs* are deliberately not editable — David's decision: $5/$12 are settled figures.
+
 **Four-tab layout (corrected September 19 2026 — this section had drifted well behind the code; see "Completed This Session" below for the audit):**
 
 - **Expenses & Mileage tab** — expense and mileage tables; tap any row to open edit modal; delete inside modal
 - **Inventory tab** — single tab that has absorbed what used to be four separate tabs/sections: base inventory table, **Prints** (via the Prints/Originals type filter chip — no longer a separate tab), **Sales Log** (via the date/channel/state sale filters + filter revenue readout — no longer a separate tab), and **Gallery Stock** (a view toggle within Inventory, not its own tab). See "Inventory tab (merged)" below for what actually lives here now.
 - **Booth Planner tab** — art fair wall layout tool (unchanged; see `booth.html` section)
-- **Reports tab** — renamed from "Dashboard" at some point after the original build; revenue/expense cards + Revenue by Month / Expenses by Month charts (content otherwise as previously documented)
+- **Reports tab** (reorganized September 30 2026), top to bottom: advertising reminder, sold/stock cards, **Expenses** (total + by month + categories), **Revenue** (total + by month + channel cards), **Taxes Collected** (sum of `sale.tax` — only + Sale checkouts carry tax — with From/To dates, default From 2026-10-01; split by fair state), **Run Report** (dropdown: Sales, Expenses, Mileage — each with From/To dates, default this calendar year — plus Stock and Gallery stock, which are current snapshots). **All CSV exports live here now**; every other ↓ CSV button in admin was removed. Removed: Revenue by State, Estimated Taxes by State (both counted every online sale as Kansas), their CSVs, and the "tax collected this month" line.
 
 **⚠ Rate adjuster is single-rate only.** The "dual rate adjuster (standard + large ≥30")" described in earlier revisions of this doc no longer exists — `rateLarge` and the large-painting rate tier were removed end-to-end from `admin.html` and `index.mjs`; `effectiveRate(p)` is now just `return db.rate`. Per-painting `priceOverride` covers the one-off-exception case that `rateLarge` used to handle.
 
@@ -399,8 +404,8 @@ All are single-file, no framework — intentional, keep it that way.
 - Stock +/− buttons autosave immediately (floor at 0)
 - Logging a new print sale automatically decrements the matching size stock by 1 (can go negative — intentional)
 - **🏷 Tags button** in Inventory tab header: opens a printable Avery 5371/5871 price tag sheet (3.5×2”, 10/sheet) for all paintings currently marked as original available in Square — shows title, year, medium, original price
-- `↓ Stock CSV` export: title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
-- `↓ Sales CSV` export (filtered rows): Date, Painting, Type, Channel, State, Price, Net, **Print Cost, Net Profit** (added September 19 2026), Lg Stock Remaining, Sm Stock Remaining
+- Stock CSV (Reports → Run Report → Stock): title, month, year, dimensions, sq in, effective rate, rounded price, stock counts, units sold, original sold status
+- Sales CSV (Reports → Run Report → Sales, by date range): Date, Painting, Type, Channel, State, **Ship To**, Price, **Tax Collected**, Net, Print Cost, Net Profit, Lg Stock Remaining, Sm Stock Remaining. No longer tied to the Inventory filters.
 
 **Print production costs (added September 19 2026):**
 
@@ -409,7 +414,7 @@ David's actual per-print landed cost, from his own materials pricing (Canon PRO-
 - **Small print (→ 8×10 show kit): $5.00**
 - **Large print (→ 12×16 show kit): $12.00**
 
-These are stored as `printCostSmall` / `printCostLarge` on the `__config__` DynamoDB record (alongside `rate`), defaulting to 5 / 12 if unset. Editable in the Inventory tab's rate bar (next to the $/sq in price field) — **Small print cost** / **Large print cost** inputs, same debounced-autosave pattern as the rate field. `GET/PUT /admin/config` now reads/writes all three fields together (`adminUpdateConfig` does a read-merge-write against the existing `__config__` item so updating one field never clobbers the others).
+These are stored as `printCostSmall` / `printCostLarge` on the `__config__` DynamoDB record (alongside `rate`), defaulting to 5 / 12 if unset. **No longer editable in admin (September 30 2026)** — the Inventory rate bar was removed and David chose to treat $5/$12 as settled figures. To change them, edit `__config__` in DynamoDB. They drive the margin shown in Settings → Print prices, the Inventory filter revenue readout, and the Sales CSV cost/profit columns. Note: these costs are the same money as the Printing/packaging expenses — year-end profit is revenue − expenses; never subtract both. `GET/PUT /admin/config` now reads/writes all three fields together (`adminUpdateConfig` does a read-merge-write against the existing `__config__` item so updating one field never clobbers the others).
 
 **Cost only ever applies to print sales (`type === 'large'` or `'small'`) — originals are excluded from the cost/profit math entirely**, per David's instruction: originals aren't part of this cost equation. `printCostFor(sale)` in `admin.html` is the single source of truth for this (returns 0 for `type === 'original'`).
 
@@ -435,7 +440,7 @@ Surfaced in two places:
 
 **Mileage features:**
 
-- IRS standard rate hardcoded per year at top of script (`IRS_RATE_BY_YEAR`) — update each January
+- IRS standard rate per year is set in **Settings → Mileage** (stored in `__config__.irsRates`); `IRS_RATE_BY_YEAR` in admin.html is only the fallback — update the setting each January, no code change needed
 - 2025/2026 rate: $0.70/mile; 2024: $0.67/mile
 - Deduction auto-calculated per entry using rate for that entry’s year
 - Tap row to edit; delete button inside edit modal
@@ -550,6 +555,28 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (September 30 2026, evening)
+
+- ✓ **`originals.html` — size dropdown.** One left-aligned "size" `<select>` under the page intro; options generated from live `/originals` data (`sizeOf(p)` = smaller × larger side, so 22 × 28 and 28 × 22 are one entry), sorted small → large by area, each with a count; "all sizes" default. List, year sidebar/pills, and lightbox all run off a filtered `shown` array (`buildNav` now clears and rebuilds). Empty result shows "No originals in that size right now." Tested headless against the 41-painting data set: 13 options, 22 × 28 → 12 rows, no errors.
+- ✓ **`gallery.html` — cart kept until payment confirmed.** `checkout()` no longer clears `dna_cart` before redirecting to Square; the existing `?success=1` handler is the only place it clears. Added a `pageshow` (bfcache) handler that resets the checkout button so a Back from Square doesn't leave it stuck on "one moment…". Headless round trip: old file → cart 0 after Back; new file → cart 1 after Back, 0 after `?success=1`. Known edge: a buyer who pays and closes the tab before the redirect keeps a stale cart on that browser (auto-log work can clear it properly).
+- ✓ **`index.html` — Instagram easter egg (homepage only, David's choice).** Hovering the nav "follow on instagram" pill for 1.5s reveals a dark tooltip (right-anchored under the pill, text left-aligned): "This button is here because one time someone scanned a business card and they were upset that it *only* went to my website and they didn't see [instagram glyph]". Pure CSS (`transition-delay: 1.5s` on hover-in, 0 on hover-out); gated by `@media (hover: hover) and (pointer: fine)`, so it never appears on phones/tablets (no hover there). Tooltip is `aria-hidden` so the link's accessible name stays "follow on instagram".
+
+- ✓ **Online sales auto-log (`index.mjs`) — server-side sweep.** First built as a browser-side confirm (gallery saved the order ID and called a new public `/checkout/complete` on the `?success=1` return, retrying on later visits). **Replaced the same evening** after David's review: (1) a buyer whose confirm failed isn't coming back, so their browser can't be the safety net; (2) a new public path depends on API Gateway routing we couldn't verify. Now the Lambda itself asks Square for paid online orders whenever admin loads (and monthly) — see "Online sale sync" under Lambda endpoints. No new route, no AWS change, no gallery.html involvement. **Ship-to state is stored as `shipState`, not `state`** — `state` means the fair's state on fair sales and drives admin's KS/MO filters and edit-modal select. Sales tax isn't stored on online rows (Square collects $0 — see Online sales tax). Tested: real handler run against faked Square/DynamoDB — admin load logged only the paid online order (3 rows incl. qty 2, stock −1/−2), skipped unpaid / fair-POS / Missouri-location / canceled orders; reload and scheduled run added nothing; a Square search error still returned admin 200. Square check: no online orders (open or completed) since Sept 21, so `ONLINE_LOG_SINCE` = Sept 22 misses nothing.
+- ✓ **Admin "new online sale" alert (`admin.html`).** Green-bordered banner under the top bar, on every tab: "New online sale logged" (or "N new online sales logged"), a line saying they're in the Sales Log and out of stock with the pre-shipping total, and one row per sale: date · title · size · price · ships to {state}. **Got it** stores the newest `syncedAt` in `localStorage` `dna-online-seen`; the banner reappears only for rows synced after that. Per device — phone and desktop each show it once. Driven by `syncedAt` on synced rows (manual online sales have none, so they never trigger it). Tested headless: shows on first load, gone after Got it and reload, returns only for a newly synced sale. Admin SW → **`dna-admin-v85`**.
+- ✓ **Sync hardening (same evening):** marker row per order (see Lambda "Online sale sync") so a deleted/edited synced sale is never re-logged; refunded orders skipped; `adminUpdateSale` keeps `shipState`/`syncedAt`. Tested: delete 2 synced rows → reload → not re-logged, stock untouched; edit price → `shipState`/`syncedAt` kept.
+- ✓ **Admin Settings panel + Reports rework (`admin.html`, `index.mjs`).** See "Settings panel" and "Reports tab" under admin.html. New Lambda: `GET/PUT /admin/print-prices`, `irsRates` in config. Removed the Inventory rate bar (rate chip + $/sq in + print cost inputs) and every scattered ↓ CSV button (Inventory Stock/Sales, Gallery Stock, Expenses, Mileage, Revenue by State, Estimated Tax). Tested headless: Reports order, Taxes Collected range math, all 5 reports download with correct date filtering, only one CSV button remains, Settings margin + hover tip, Square warning shown and **no PUT until "Yes, update Square"**, IRS rate saved to config. Lambda price update tested only against fakes — **first real use: change one size, confirm in Square Dashboard.** Admin SW → `dna-admin-v86`.
+- **Lesson:** don't make a customer's browser responsible for recording the business's own data — anything the customer can abandon mid-flow will eventually go unrecorded. Pull from the source of truth (Square) on our side instead.
+- ✓ **Gallery cart re-priced on load.** `refreshCartFromCatalog()` runs after `/products` loads: updates each stored line's price/title/size name/image from the live catalog and drops lines whose print or variation no longer exists (toast: "a print in your cart is no longer available").
+
+**Auto-log groundwork (Square checks, read-only)**
+
+- Every payment link Square returns already carries its `order_id` at creation time (confirmed via `listPaymentLinks` — e.g. link `75FWESBMK7CY47JY` → order `cFhfbe5…`). The Lambda `/checkout` already has it (`related_resources.orders[0]`, saved to `dna-orders`) but doesn't return it to the page.
+- Square staff (developer forums, 2024) say production appends `orderId` to the redirect URL; not verified on our live flow.
+- ~~**Recommended design:**~~ *(superseded — built, then replaced by the server-side sweep above)* return `order_id` from `/checkout`, store it in `localStorage` as pending before redirect, and on `?success=1` POST it to a new public endpoint that verifies COMPLETED and logs sales + decrements stock (idempotent on order ID). Doesn't depend on Square's redirect params. A webhook (`payment.updated`/`order.updated`) would also catch buyers who close the tab before the redirect — optional second layer.
+- Webhook subscriptions couldn't be read from the Square connector (missing `DEVELOPER_APPLICATION_WEBHOOKS_READ` scope). Check in the Developer Dashboard if going the webhook route.
+
+-----
+
 ## Findings This Session (September 30 2026) — no code shipped
 
 Discussion/audit session. Nothing was changed in the repo or in Square (read-only checks only). All open work is in **Pending → Next session** below.
@@ -637,21 +664,27 @@ Goal: stop the two-step fair routine (charge in the Square app, log prints in ad
 **Sales tax (online)**
 
 - [ ] **Remit Kansas tax on the Prairie Village KS online order** (2026-09-12, $40 print, $0 collected) in the monthly KS filing, at the buyer's local rate. Check whether any other Kansas-destination online orders exist before filing.
-- [ ] **Decide how Kansas-destination online orders get flagged going forward.** They currently only show up in Square's order list. Tie this to the online-sales logging item below (record ship-to state on each online sale).
+- [x] **Record ship-to state on online sales** — done (`shipState` on auto-logged online rows).
+- [x] **Admin tax estimate overcounted online sales** — resolved by removing the estimate entirely (September 30 2026). Reports now shows only tax actually collected; Kansas-destination online orders are identifiable via the Sales CSV "Ship To" column.
+- [ ] **First print price change through Settings:** after "Yes, update Square", spot-check a few prints in the Square Dashboard and on gallery.html.
 - [ ] **Re-verify the Square doc claims** from the voice session (payment links can't do destination tax; auto-apply uses the location rate). Current orders show $0 tax, so also confirm *why* the Kansas tax isn't attaching to payment-link orders — so it doesn't start charging out-of-state buyers 9.35% after a Square or settings change.
 - [ ] **Watch Square** for destination-based tax on payment links / Checkout API. Revisit this decision if it ships.
 - [ ] Invariant to keep: online checkout must never pass the Missouri location `LHXVQB0QCW9R1`.
 
 **Gallery checkout (`gallery.html` + `index.mjs`)**
 
-- [ ] **Keep the cart until payment is confirmed** — stop clearing `dna_cart` before the Square redirect; clear it on the success return instead.
-- [ ] **Auto-log online sales** — on return (or via Square webhook), verify the order is COMPLETED, write one `dna-sales` row per line (channel `online`, idempotent on order ID, include ship-to state), and atomically decrement print stock. Reuse the admin `register/complete` pattern. Check whether Square actually appends `orderId` to the payment-link redirect URL (unverified).
-- [ ] **Re-price the stored cart** from `/products` on load so the displayed total matches what Square charges.
+- [x] **Keep the cart until payment is confirmed** — done September 30 2026 (evening); see "Completed This Session (September 30 2026)".
+- [x] **Auto-log online sales** — built September 30 2026 (evening).
+- [x] **Re-price the stored cart** — built September 30 2026 (evening).
+- [ ] **First real online order after deploy:** open admin — the green "New online sale logged" banner should appear; confirm the Sales Log row (channel Online, right size/price) and stock went down. If nothing appears, check CloudWatch for `Online order sync` lines.
+- [ ] **Refund handling:** if an online order is refunded *after* it synced, delete its sale row(s) in admin and add the stock back by hand; the sync won't re-log it. Refunds before the first sync are skipped automatically.
+- [ ] **Sept 12 + Sept 21 online orders are before the sync cutoff.** Check the Sales Log has Prairie Village KS (2026-09-12, I-35 No. 2 large $40) and Rantoul IL (2026-09-21, The Tuntre small $25); log by hand if missing.
+- [ ] **If you ever log an online sale by hand after Sept 22, it will double up** with the synced row (different IDs). Let the sync do online sales.
 
 **Originals page (`originals.html`)**
 
-- [ ] **Add one size dropdown** ("all sizes" default); picking a size shows only paintings of that size. No chips, no sort, no other filters. Match the size regardless of orientation (22 × 28 also matches 28 × 22).
-- [ ] **Settle the size list first.** David expected 30 × 40, 30 × 30, 22 × 28, 18 × 24, 11 × 14, and one oddball. Live `/originals` (2026-09-30) has 13 sizes:
+- [x] **Add one size dropdown** — done September 30 2026 (evening). Decision: list is generated from whatever sizes exist in Square; David corrects wrong Width/Height values in Square himself (33 × 37 Fast Eddy is correct; the others below are his to check).
+- [ ] **Correct Square Width/Height values (David).** The dropdown picks up fixes automatically. David expected 30 × 40, 30 × 30, 22 × 28, 18 × 24, 11 × 14, and one oddball. Live `/originals` (2026-09-30) has 13 sizes:
 
   |Size   |Count|Paintings|
   |-------|-----|---------|
@@ -1082,7 +1115,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v70`; bump in `admin-sw.js` after every admin.html change
+- **Admin SW cache key** — currently `dna-admin-v86` (bumped 2026-09-30 for Settings + Reports rework); bump in `admin-sw.js` after every admin.html change
 - **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order

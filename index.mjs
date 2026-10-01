@@ -769,6 +769,117 @@ async function checkout(body) {
   return ok({ checkout_url: checkoutUrl });
 }
 
+// ── Online sale logging (gallery.html payment-link orders) ──
+// Server-side sweep: no dependence on the customer's browser coming back. Runs at the start of every
+// admin load (adminGetPaintings) and on the monthly scheduled task. Asks Square for paid, shipped orders
+// at the online location since ONLINE_LOG_SINCE and logs any that aren't in dna-sales yet.
+// Idempotent: sale IDs derive from the order ID (sq_{orderId}_{n}) with conditional puts.
+// Orders before ONLINE_LOG_SINCE were logged by hand (Sept 12 + Sept 21 2026) — don't move it earlier.
+const ONLINE_LOG_SINCE = '2026-09-22T00:00:00Z';
+
+function isPaidOnlineOrder(order) {
+  if (!order || order.location_id !== SQUARE_LOC || order.state === 'CANCELED') return false;
+  if (!(order.fulfillments || []).some(f => f.type === 'SHIPMENT')) return false;   // fair/register orders have no shipment
+  if ((order.refunds || []).length) return false;                                   // refunded before it was ever synced
+  return (order.tenders || []).length > 0 && order.net_amount_due_money?.amount === 0;
+}
+
+async function logOnlineOrder(order) {
+  const orderId = order.id;
+  const ship = order.fulfillments.find(f => f.type === 'SHIPMENT');
+  const paidAt = order.tenders[0].created_at || order.created_at;
+  const lineItems = (order.line_items || []).filter(li => li.catalog_object_id);
+  const uniq = [...new Set(lineItems.map(li => li.catalog_object_id))];
+  const cat = uniq.length ? await squarePost('/v2/catalog/batch-retrieve', { object_ids: uniq }) : { objects: [] };
+  const itemIdByVar = {};
+  for (const o of (cat.objects || [])) if (o.type === 'ITEM_VARIATION') itemIdByVar[o.id] = o.item_variation_data?.item_id;
+
+  const idx = await regPaintingIndex();
+  const date = new Date(paidAt).toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+  const shipState = String(ship.shipment_details?.recipient?.address?.administrative_district_level_1 || '').toUpperCase().slice(0, 3);
+  const syncedAt = new Date().toISOString();   // admin.html shows a "new online sale" alert for rows newer than the device last dismissed
+  let logged = 0, already = 0, n = 0;
+  const unmatched = [];
+  for (const li of lineItems) {
+    const qty = Math.max(1, parseInt(li.quantity, 10) || 1);
+    const unitCents = li.base_price_money?.amount || 0;
+    const size = regSizeOf(li.variation_name, unitCents);
+    const itemId = itemIdByVar[li.catalog_object_id];
+    const painting = (itemId && idx.bySquare[itemId]) || idx.byTitle[regNormTitle(li.name)];
+    for (let u = 0; u < qty; u++, n++) {
+      if (!painting) { unmatched.push(li.name); continue; }
+      const sale = {
+        id: `sq_${orderId}_${n}`,
+        paintingId: painting.id,
+        date,
+        type: size,
+        channel: 'online',
+        price: unitCents / 100,
+        squareTxn: orderId,
+        // Ship-to state, kept separate from `state` (which means the fair's state for fair sales)
+        ...(shipState ? { shipState } : {}),
+        syncedAt,
+      };
+      try {
+        await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: sale, ConditionExpression: 'attribute_not_exists(id)' }));
+      } catch (e) {
+        if (e.name === 'ConditionalCheckFailedException') { already++; continue; }
+        throw e;
+      }
+      try {
+        await dynamo.send(new UpdateCommand({
+          TableName: PAINTINGS_TABLE,
+          Key: { id: painting.id },
+          UpdateExpression: 'SET #stock.#sz = if_not_exists(#stock.#sz, :z) - :one',
+          ConditionExpression: 'attribute_exists(#stock)',
+          ExpressionAttributeNames: { '#stock': 'stock', '#sz': size },
+          ExpressionAttributeValues: { ':z': 0, ':one': 1 },
+        }));
+      } catch (e) { console.error('Online stock decrement failed', painting.id, e.name); }
+      logged++;
+    }
+  }
+  if (unmatched.length) console.warn('Online order lines not matched to a painting', orderId, unmatched);
+  // Marker: this order has been handled. The sync checks this (not the sale rows), so deleting or editing a
+  // synced sale in admin — e.g. after a refund — never causes it to be re-logged. paintingId '__sync__' matches
+  // no painting, so admin never displays it.
+  await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: { id: `sync_${orderId}`, paintingId: '__sync__', squareTxn: orderId, syncedAt, logged, unmatched } }));
+  return { logged, already, unmatched };
+}
+
+async function syncOnlineOrders() {
+  const orders = [];
+  let cursor;
+  for (let page = 0; page < 5; page++) {
+    const res = await squarePost('/v2/orders/search', {
+      location_ids: [SQUARE_LOC],
+      limit: 100,
+      ...(cursor ? { cursor } : {}),
+      query: {
+        filter: {
+          state_filter: { states: ['OPEN', 'COMPLETED'] },
+          fulfillment_filter: { fulfillment_types: ['SHIPMENT'] },
+          date_time_filter: { created_at: { start_at: ONLINE_LOG_SINCE } },
+        },
+        sort: { sort_field: 'CREATED_AT', sort_order: 'ASC' },
+      },
+    });
+    if (res.errors) { console.error('Online order sync: search failed', res.errors); break; }
+    orders.push(...(res.orders || []));
+    cursor = res.cursor;
+    if (!cursor) break;
+  }
+  let logged = 0;
+  for (const order of orders.filter(isPaidOnlineOrder)) {
+    // Skip orders already handled (marker written by logOnlineOrder)
+    const done = await dynamo.send(new GetCommand({ TableName: SALES_TABLE, Key: { id: `sync_${order.id}` } }));
+    if (done.Item) continue;
+    logged += (await logOnlineOrder(order)).logged;
+  }
+  if (logged) console.log('Online order sync: logged', logged, 'sale(s)');
+  return logged;
+}
+
 async function cartRedirect(queryParams) {
   let lineItems = [];
 
@@ -829,6 +940,12 @@ async function cartRedirect(queryParams) {
 // ── Admin: Paintings ──
 
 async function adminGetPaintings(cors) {
+  // Log any paid online (gallery) orders first so they show in this load's sales + stock.
+  // Never let a Square hiccup block admin: failures are logged and the load continues; capped at 8s.
+  try {
+    await Promise.race([syncOnlineOrders(), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 8000))]);
+  } catch (e) { console.error('Online order sync skipped:', e.message); }
+
   const [paintingsRes, salesRes, squareRes, configRes] = await Promise.all([
     dynamo.send(new ScanCommand({ TableName: PAINTINGS_TABLE })),
     dynamo.send(new ScanCommand({ TableName: SALES_TABLE })),
@@ -948,7 +1065,8 @@ async function adminGetPaintings(cors) {
   const rate = configRes.Item?.rate ?? 1.10;
   const printCostSmall = configRes.Item?.printCostSmall ?? 5;
   const printCostLarge = configRes.Item?.printCostLarge ?? 12;
-  return ok({ paintings, rate, printCostSmall, printCostLarge }, cors);
+  const irsRates = configRes.Item?.irsRates || {};
+  return ok({ paintings, rate, printCostSmall, printCostLarge, irsRates }, cors);
 }
 
 async function adminAddPainting(body, cors) {
@@ -1074,6 +1192,8 @@ async function adminUpdateSale(paintingId, saleId, body, cors) {
   const prev = (await dynamo.send(new GetCommand({ TableName: SALES_TABLE, Key: { id: saleId } }))).Item;
   if (prev?.tax != null) item.tax = prev.tax;
   if (prev?.squareTxn) item.squareTxn = prev.squareTxn;
+  if (prev?.shipState) item.shipState = prev.shipState;   // online sync fields
+  if (prev?.syncedAt)  item.syncedAt  = prev.syncedAt;
   if (state) item.state = state;
   if (channel === 'gallery') {
     item.pct = Number(pct);
@@ -1094,11 +1214,22 @@ async function adminGetConfig(cors) {
     rate: res.Item?.rate ?? 1.10,
     printCostSmall: res.Item?.printCostSmall ?? 5,
     printCostLarge: res.Item?.printCostLarge ?? 12,
+    irsRates: res.Item?.irsRates || {},
   }, cors);
 }
 
+// IRS mileage rates by year, set in admin Settings: { "2026": 0.70, ... }
+function cleanIrsRates(v) {
+  const out = {};
+  for (const [y, r] of Object.entries(v || {})) {
+    const n = Number(r);
+    if (/^20\d\d$/.test(y) && n > 0 && n < 5) out[y] = Math.round(n * 1000) / 1000;
+  }
+  return out;
+}
+
 async function adminUpdateConfig(body, cors) {
-  const { rate, printCostSmall, printCostLarge } = body;
+  const { rate, printCostSmall, printCostLarge, irsRates } = body;
   if (!rate || isNaN(rate)) return err('Invalid rate', 400, cors);
   if (printCostSmall != null && isNaN(printCostSmall)) return err('Invalid printCostSmall', 400, cors);
   if (printCostLarge != null && isNaN(printCostLarge)) return err('Invalid printCostLarge', 400, cors);
@@ -1106,13 +1237,94 @@ async function adminUpdateConfig(body, cors) {
   // not explicitly passed here would otherwise be silently dropped.
   const existing = await dynamo.send(new GetCommand({ TableName: PAINTINGS_TABLE, Key: { id: '__config__' } }));
   const item = {
+    ...(existing.Item || {}),
     id: '__config__',
     rate: Number(rate),
     printCostSmall: printCostSmall != null ? Number(printCostSmall) : (existing.Item?.printCostSmall ?? 5),
     printCostLarge: printCostLarge != null ? Number(printCostLarge) : (existing.Item?.printCostLarge ?? 12),
+    irsRates: irsRates != null ? cleanIrsRates(irsRates) : (existing.Item?.irsRates || {}),
   };
   await dynamo.send(new PutCommand({ TableName: PAINTINGS_TABLE, Item: item }));
-  return ok({ rate: item.rate, printCostSmall: item.printCostSmall, printCostLarge: item.printCostLarge }, cors);
+  return ok({ rate: item.rate, printCostSmall: item.printCostSmall, printCostLarge: item.printCostLarge, irsRates: item.irsRates }, cors);
+}
+
+// ── Admin: print prices (Settings) ──
+// Square is the source of truth for print prices. Settings shows what Square currently charges per size and can
+// set every print of one size to a new price in Square (admin.html warns and lists what changes first).
+// Size comes from the variation name via regSizeOf (12x16 mat = large, 8x10 mat = small). Originals-only items
+// and Market Item quick-charge items are never touched.
+async function printVariationsBySize() {
+  // Page through the whole catalog — a price change must never silently miss items past the first page.
+  const objects = [];
+  let cursor = '';
+  for (let page = 0; page < 20; page++) {
+    const res = await squareGet(`/v2/catalog/list?types=ITEM&location_id=${SQUARE_LOC}` + (cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''));
+    if (res.errors) throw new Error(res.errors[0]?.detail || 'Square catalog read failed');
+    objects.push(...(res.objects || []));
+    cursor = res.cursor || '';
+    if (!cursor) break;
+  }
+  if (cursor) throw new Error('Catalog too large to read completely — no prices changed');
+  const out = { large: [], small: [] };
+  for (const obj of objects) {
+    const item = obj.item_data;
+    if (!item?.name || obj.is_deleted) continue;
+    const vars = item.variations || [];
+    if (vars.length === 1 && vars[0].item_variation_data?.name === 'Default Title') continue;
+    let market = false;
+    for (const val of Object.values(obj.custom_attribute_values || {})) {
+      if (val.name === 'Market Item' && val.boolean_value === true) market = true;
+    }
+    if (market) continue;
+    for (const v of vars) {
+      const vd = v.item_variation_data || {};
+      const cents = vd.price_money?.amount;
+      if (!cents) continue;
+      out[regSizeOf(vd.name, cents)].push({ title: item.name, variation: v, cents });
+    }
+  }
+  return out;
+}
+
+function summarizePrices(list) {
+  const byCents = {};
+  for (const x of list) byCents[x.cents] = (byCents[x.cents] || 0) + 1;
+  return Object.entries(byCents).map(([cents, count]) => ({ cents: Number(cents), count })).sort((a, b) => b.count - a.count);
+}
+
+async function adminGetPrintPrices(cors) {
+  const bySize = await printVariationsBySize();
+  const describe = list => ({
+    count: list.length,
+    prices: summarizePrices(list),
+    items: list.map(x => ({ title: x.title, cents: x.cents })).sort((a, b) => a.title.localeCompare(b.title)),
+  });
+  return ok({ large: describe(bySize.large), small: describe(bySize.small) }, cors);
+}
+
+async function adminSetPrintPrice(body, cors) {
+  const size = body.size;
+  const cents = Number(body.cents);
+  if (size !== 'large' && size !== 'small') return err('Size must be large or small', 400, cors);
+  if (!Number.isInteger(cents) || cents < 100 || cents > 100000) return err('Price must be between $1 and $1,000', 400, cors);
+  const bySize = await printVariationsBySize();
+  const changing = bySize[size].filter(x => x.cents !== cents);
+  if (!changing.length) return ok({ updated: 0, size, cents }, cors);
+  const objects = changing.map(x => ({
+    ...x.variation,
+    item_variation_data: { ...x.variation.item_variation_data, price_money: { amount: cents, currency: 'USD' } },
+  }));
+  const res = await squarePost('/v2/catalog/batch-upsert', {
+    idempotency_key: `price-${size}-${cents}-${Date.now()}`,
+    batches: [{ objects }],
+  });
+  if (res.errors) {
+    console.error('Print price update failed', res.errors);
+    return err(res.errors[0]?.detail || 'Square rejected the price change', 502, cors);
+  }
+  const updated = (res.objects || []).length;
+  console.log('Print price updated', size, cents, 'variations:', updated);
+  return ok({ updated, size, cents, titles: changing.map(x => x.title) }, cors);
 }
 
 // ── Admin: Expenses ──
@@ -1392,7 +1604,9 @@ export const handler = async (event) => {
   if (event && event.task === 'recurring') {
     const created = await generateAllRecurring();
     console.log('Recurring generated:', created.length);
-    return { generated: created.length };
+    let online = 0;
+    try { online = await syncOnlineOrders(); } catch (e) { console.error('Online order sync failed:', e.message); }
+    return { generated: created.length, onlineLogged: online };
   }
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
@@ -1434,6 +1648,8 @@ export const handler = async (event) => {
       // Config
       if (method === 'GET' && path === '/admin/config')  return await adminGetConfig(cors);
       if (method === 'PUT' && path === '/admin/config')  return await adminUpdateConfig(b(), cors);
+      if (method === 'GET' && path === '/admin/print-prices') return await adminGetPrintPrices(cors);
+      if (method === 'PUT' && path === '/admin/print-prices') return await adminSetPrintPrice(b(), cors);
 
       // Paintings
       if (method === 'GET'  && path === '/admin/paintings') return await adminGetPaintings(cors);
