@@ -180,7 +180,7 @@ PASSWORD      = admin.html PIN (see AWS console) — added June 11 2026
 
 **Endpoints:**
 
-- `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, rawImg, url, variations, year`
+- `GET /products` — fetches Square catalog, excludes originals, returns prints with `id, title, desc, img, rawImg, url, variations, year`, plus `originalAvail` (raw Square `Original Available` toggle) and `atGallery` (true when the `dna-paintings` record has At Gallery set)
 - `GET /originals` — Square items with the `Original Available` toggle true; price is **computed**, not stored per painting: `Math.ceil(width × height × effRate / 50) × 50`, where `effRate = rateLarge` if `rateLarge` is set AND a side ≥ 30”, else base `rate`. Reads both `rate` and `rateLarge` from the `__config__` record so it matches admin.html’s `effectiveRate()` / `retail()`. originals.html fetches this directly from API Gateway (not via CloudFront), so config changes show on next load. Each row carries `atGallery: true` when the painting's `dna-paintings` record has At Gallery set (matched by squareId or normalized title); **both originals.html and booth.html drop those rows client-side** (October 2 2026), so the admin At Gallery dropdown is the switch for hiding a consigned original — leave the Square `Original Available` toggle on. **Fixed June 2026:** previously used only base `rate`, so large paintings (≥30”) ignored the large rate set in admin.
 - `GET /feed` and `GET /feed.xml` — returns RSS/XML product catalog for Pinterest/Google; served publicly via CloudFront at `https://davidnicholsonart.com/feed.xml`
 - `GET /hero` — returns a single random product with an image `{img, title, id}` — filtered to 2025–2026 prints, falls back to full catalog
@@ -558,6 +558,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ## Completed This Session (October 2 2026)
 
 - ✓ **`originals.html` — paintings at a gallery are hidden.** `loadOriginals()` now filters `!p.atGallery` on the `/originals` response (same rule booth.html already used), so the list, size dropdown counts, year nav, and lightbox all exclude consigned pieces. Reverses the June 9 note "originals.html behavior unchanged (still shows them)". No Lambda change, no service worker involved. Live data at time of change: 47 originals, 5 tagged at gallery (Junction, KS Wind Farm No. 1, Sunflower No. 1, Sunflower No. 2, Waverly Church) → 42 shown.
+- ✓ **`gallery.html` modal — "original available →" hidden for at-gallery paintings.** `/products` now returns `atGallery: true/false` per product (new `loadAtGalleryMatcher()` in `index.mjs`: one `dna-paintings` scan run in parallel with the Square calls, matched by squareId or normalized title — same rule as `/originals`). Only `getProducts` uses it; `/feed` and `/hero` are unchanged. The scan is wrapped in try/catch, so a DynamoDB failure can't take down the storefront — the link just shows as before. gallery.html shows the link only when `p.originalAvail && !p.atGallery`. `originalAvail` itself is unchanged (still the raw Square toggle), so admin/dashboard numbers are unaffected.
 - **How to hide/show an original:** admin → Inventory → expand row → At Gallery = Phoenix Gallery (or — to bring it back). Do not turn off `Original Available` in Square for a consigned piece — that makes it count as sold on the dashboard and blocks price tags.
 
 ## Completed This Session (September 30 2026, evening)
@@ -712,7 +713,8 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 
   Either some Square Width/Height values are wrong (fix in Square), or the dropdown lists every size present. Decide before building. Generating the list from the data would keep it correct as paintings sell.
 - [ ] **After deploy, verify the at-gallery filter:** originals.html should show 42 paintings and none of Junction, KS Wind Farm No. 1, Sunflower No. 1, Sunflower No. 2, Waverly Church. If an at-gallery painting still shows, its `dna-paintings` title doesn't match the Square title and it has no `squareId` — fix the title in admin.
-- [ ] **Open question — gallery.html modal link:** `/products` sets `originalAvail` from the Square toggle only, so a painting at Phoenix still shows "original available →" in the gallery modal, linking to an originals page that no longer lists it. Decide: hide the link for at-gallery paintings (needs `atGallery` added to `buildProductList` in `index.mjs`), or leave it.
+- [x] **gallery.html modal link** — resolved October 2 2026: link hidden when the painting is at a gallery (`atGallery` added to `/products`).
+- [ ] **After deploy, verify the modal link:** open a print of an at-gallery painting (e.g. KS Wind Farm No. 1) on gallery.html — no "original available →"; open one that isn't at a gallery and is available — link still there.
 
 ### Ongoing
 

@@ -626,7 +626,7 @@ function openDetail(idx) {
     '</a>';
 
   const origRow = document.getElementById('original-avail-row');
-  if (p.originalAvail) {
+  if (p.originalAvail && !p.atGallery) {
     origRow.innerHTML = '<a class="original-avail-link" href="/originals.html" onclick="event.stopPropagation()">original available →</a>';
   } else {
     origRow.innerHTML = '';
@@ -1004,6 +1004,7 @@ async function loadProducts() {
       url:        p.url || null,
       year:       p.year || null,
       originalAvail: p.originalAvail || false,
+      atGallery:  p.atGallery || false,
       variations: (p.variations || []).map(v => ({
         id:    v.id,
         name:  v.name,

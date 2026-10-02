@@ -255,8 +255,32 @@ async function buildProductList() {
   return products;
 }
 
+// Titles / Square IDs of paintings whose dna-paintings record has At Gallery set.
+// Never throws: if the scan fails, nothing is treated as at-gallery.
+async function loadAtGalleryMatcher() {
+  const normT = t => (t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const ids = new Set();
+  const titles = new Set();
+  try {
+    const res = await dynamo.send(new ScanCommand({
+      TableName: PAINTINGS_TABLE,
+      ProjectionExpression: 'squareId, atGallery, #t',
+      ExpressionAttributeNames: { '#t': 'title' },
+    }));
+    for (const p of (res.Items || [])) {
+      if (!p.atGallery) continue;
+      if (p.squareId) ids.add(p.squareId);
+      if (p.title)    titles.add(normT(p.title));
+    }
+  } catch (e) {
+    console.error('atGallery scan failed', e);
+  }
+  return (id, title) => ids.has(id) || titles.has(normT(title));
+}
+
 async function getProducts() {
-  const products = await buildProductList();
+  const [list, isAtGallery] = await Promise.all([buildProductList(), loadAtGalleryMatcher()]);
+  const products = list.map(p => ({ ...p, atGallery: isAtGallery(p.id, p.title) }));
   return ok({ products });
 }
 
