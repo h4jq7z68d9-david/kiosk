@@ -305,7 +305,7 @@ Shopify has been cancelled. All product images were already in Square — no ima
 
 ## HTML Files
 
-All are single-file, no framework — intentional, keep it that way.
+All are currently single-file with no framework. **This is how they were first built, not a rule** (David, October 2 2026) — shared files are allowed where they save duplicate edits; see the shared header/footer to-do under Pending.
 
 **Session workflow:** Claude generates files here, David downloads and pushes to GitHub. GitHub is NOT the source of truth during a session — the latest file Claude produced is. At the start of each session, upload all files from the repo as a starting point.
 
@@ -720,7 +720,8 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 - [ ] **After deploy, verify the at-gallery filter:** originals.html should show 42 paintings and none of Junction, KS Wind Farm No. 1, Sunflower No. 1, Sunflower No. 2, Waverly Church. If an at-gallery painting still shows, its `dna-paintings` title doesn't match the Square title and it has no `squareId` — fix the title in admin.
 - [x] **gallery.html modal link** — resolved October 2 2026: link hidden when the painting is at a gallery (`atGallery` added to `/products`).
 - [ ] **After deploy, verify the October 2 batch on a phone and a desktop:** homepage shows the whole painting with caption and name on the first screen; 2025 is collapsed and opens on tap; menu opens on every page and each link lands; a print card opens with no size chosen and the button says "choose a size"; picking a box and adding to cart puts the right size and price in the cart.
-- [ ] **Market items in the public gallery?** Live `/products` returns "Market Item $40" and "Market Item $25" (no year, single `Regular` variation) and `gallery.html` does not filter them. Check whether they show at the bottom of the public gallery; if so, decide whether to exclude them in `/products` or in the page.
+- [ ] **Market items reachable from a print card (found October 2 2026).** `/products` returns "Market Item $40" and "Market Item $25" (no year, single `Regular` variation). `renderGrid()` skips no-year products, so they are **not** in the gallery grid (51 cards of 53 products), but `slideNav()` cycles the full `products` array, so next/previous arrows and swipe in a print card reach them and they can be added to the cart. Fix options: drop them from `/products` in `index.mjs`, or filter no-year items out of `products` in gallery.html (check kiosk.html, which also reads `/products`, before changing the endpoint). David to decide.
+- [ ] **Shared header and footer (maybe).** The top bar, site menu and footer are copy-pasted into every public page (the menu alone is 11 copies). Restructure them as one shared header and one shared footer so an edit is made once and shows across the site. Options to weigh: a small shared JS file that injects them, or a build step in the deploy workflow that stamps them into each page. Decide the approach before building; keep the per-page differences (gallery's cart button opens the cart, other pages link to it; index footer has no guest-book button).
 - [ ] **After deploy, verify the modal link:** open a print of an at-gallery painting (e.g. KS Wind Farm No. 1) on gallery.html — no "original available →"; open one that isn't at a gallery and is available — link still there.
 
 ### Ongoing
@@ -1121,7 +1122,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. As of August 2026 the wheel is inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the wheel-position mixing math, why real pigment physics (spectral.js) was tried and reverted, the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
-- **Single-file HTML** — no frameworks, no build pipeline for HTML files, keep it that way
+- **HTML structure** — pages are single-file today with no framework or build pipeline; that is history, not a constraint (David, October 2 2026). Prefer simple shared files over copy-pasting the same block into many pages. Still no need for a framework.
 - **Always ask which file** — if a request doesn’t specify which HTML file to update, ask before making changes
 - **Square Payment Links**: use `checkout_options: { ask_for_shipping_address: true }`
 - **No mailto links** — use split-string JS onclick to prevent Cloudflare obfuscation
