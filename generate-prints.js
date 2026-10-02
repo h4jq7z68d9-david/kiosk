@@ -130,27 +130,22 @@ async function main() {
 
   // Hero pool: small static list the homepage picks from (daily rotation),
   // so the hero never waits on a live catalog fetch. Prefer recent years.
-  // Only horizontal or square pieces are eligible — the hero is a wide band,
-  // and a portrait painting cropped to fill it shows an unrecognisable slice.
+  // Every orientation is eligible — the homepage shows the whole painting, uncropped.
+  // Each entry carries the image's pixel size (w, h) when it can be measured, so the
+  // page can reserve the right-shaped box before the image loads.
   const withImg = products.filter(p => p.img);
   const recent  = withImg.filter(p => p.year && [2025, 2026].includes(parseInt(p.year)));
   const candidates = recent.length ? recent : withImg;
 
-  const measured = [];
+  const pool = [];
+  let measuredCount = 0;
   for (const p of candidates) {
     const dim = await imageSize(p.img);
-    if (!dim) continue;
-    measured.push({ ...p, ratio: dim.width / dim.height });
+    const entry = { img: p.img, title: p.title };
+    if (dim && dim.width && dim.height) { entry.w = dim.width; entry.h = dim.height; measuredCount++; }
+    pool.push(entry);
   }
-  const wideEnough = measured.filter(p => p.ratio >= 0.98);
-
-  // never ship an empty hero: fall back to unfiltered if measuring fails
-  const chosen = wideEnough.length ? wideEnough : candidates;
-  if (!wideEnough.length) {
-    console.warn('hero-pool: no horizontal/square images measured, falling back to all');
-  }
-  const pool = chosen.map(p => ({ img: p.img, title: p.title }));
-  console.log(`hero-pool: ${wideEnough.length} of ${measured.length} measured images are horizontal or square`);
+  console.log(`hero-pool: measured ${measuredCount} of ${pool.length} images`);
   fs.writeFileSync(
     path.join(process.cwd(), 'hero-pool.js'),
     `window.__HERO_POOL__ = ${JSON.stringify(pool)};\n`,

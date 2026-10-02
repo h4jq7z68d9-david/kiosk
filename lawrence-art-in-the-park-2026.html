@@ -73,11 +73,32 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   .plates { gap: 36px; margin-top: 44px; }
   footer { padding: 48px 20px 40px; }
 }
+
+/* SITE MENU — the same block is inlined on every public page; change all copies together */
+.nav-menu { display: inline-flex; align-items: center; gap: 8px; background: none; border: none; height: 40px; padding: 0 8px 0 0; margin-left: -2px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: var(--ink); cursor: pointer; flex-shrink: 0; }
+.nav-menu svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; }
+.nav-menu:hover { color: var(--accent-ink); }
+#menu-scrim { position: fixed; inset: 0; z-index: 85; background: rgba(43,54,64,0.28); opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0s linear 0.2s; }
+#menu-scrim.on { opacity: 1; visibility: visible; transition: opacity 0.2s, visibility 0s; }
+#menu-panel { position: fixed; z-index: 90; top: var(--nav-h, 62px); left: 20px; width: 280px; background: #ffffff; border: 1px solid var(--border-mid, #cfd6dd); border-top: none; padding: 10px 0 14px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.18s, transform 0.18s, visibility 0s linear 0.18s; }
+#menu-panel.on { opacity: 1; visibility: visible; transform: none; transition: opacity 0.18s, transform 0.18s, visibility 0s; }
+#menu-panel a, #menu-panel button { display: flex; align-items: center; width: 100%; min-height: 46px; padding: 0 22px; font-family: var(--font); font-size: 17px; font-weight: 400; letter-spacing: 0; text-transform: lowercase; text-align: left; text-decoration: none; color: var(--ink2); background: none; border: none; border-radius: 0; cursor: pointer; transition: color 0.15s, background 0.15s; }
+#menu-panel a:hover, #menu-panel button:hover { color: var(--ink); background: var(--surface); }
+#menu-panel a.current { color: var(--accent-ink); font-weight: 500; }
+#menu-panel hr { border: none; border-top: 1px solid var(--border); margin: 8px 22px; }
+@media (max-width: 600px) {
+  #menu-panel { left: 0 !important; right: 0; width: auto; border-left: none; border-right: none; }
+  #menu-panel a, #menu-panel button { padding: 0 16px; min-height: 50px; font-size: 18px; }
+  #menu-panel hr { margin: 8px 16px; }
+}
+@media (max-width: 500px) { .nav-menu .menu-word { display: none; } .nav-menu { padding-right: 10px; margin-right: -4px; } }
+@media (prefers-reduced-motion: reduce) { #menu-panel, #menu-scrim { transition: none; } }
 </style>
 </head>
 <body>
 
 <nav>
+  <button class="nav-menu" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="menu-word">menu</span></button>
   <a class="nav-title" href="/index.html">david nicholson</a>
   <div class="nav-links">
     <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
@@ -87,6 +108,19 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
     </a>
   </div>
 </nav>
+
+<!-- SITE MENU -->
+<div id="menu-scrim"></div>
+<div id="menu-panel" aria-label="site menu">
+  <a href="/">home</a>
+  <a href="/gallery.html">prints</a>
+  <a href="/originals.html">available originals</a>
+  <hr>
+  <a href="/color-theory.html">color theory</a>
+  <a href="/shipping.html">shipping &amp; returns</a>
+  <button type="button" data-menu="guestbook">guest book</button>
+  <button type="button" data-menu="contact">contact</button>
+</div>
 
 <main>
   <div class="lead">
@@ -140,6 +174,39 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   if (!el) return;
   el.textContent = n;
   el.classList.toggle('on', n > 0);
+})();
+</script>
+<script>
+/* SITE MENU — same block on every public page */
+(function () {
+  var btn = document.getElementById('menu-btn');
+  var panel = document.getElementById('menu-panel');
+  var scrim = document.getElementById('menu-scrim');
+  if (!btn || !panel || !scrim) return;
+  function setMenu(open) {
+    if (open && window.innerWidth > 600) panel.style.left = Math.max(0, btn.getBoundingClientRect().left) + 'px';
+    panel.classList.toggle('on', open);
+    scrim.classList.toggle('on', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  btn.addEventListener('click', function () { setMenu(!panel.classList.contains('on')); });
+  scrim.addEventListener('click', function () { setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+  var here = location.pathname.replace(/\/index\.html$/, '/');
+  panel.querySelectorAll('a').forEach(function (a) {
+    if (a.getAttribute('href') === here) a.classList.add('current');
+    a.addEventListener('click', function () { setMenu(false); });
+  });
+  panel.querySelector('[data-menu="guestbook"]').addEventListener('click', function () {
+    setMenu(false);
+    if (typeof openGB === 'function') { openGB(); return; }
+    var gb = document.getElementById('guest-book');
+    if (gb) gb.scrollIntoView(); else window.location = '/#guest-book';
+  });
+  panel.querySelector('[data-menu="contact"]').addEventListener('click', function () {
+    setMenu(false);
+    window.location = 'mai' + 'lto:' + 'david@' + 'davidnicholsonart.com';
+  });
 })();
 </script>
 </body>

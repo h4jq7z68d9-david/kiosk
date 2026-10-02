@@ -323,11 +323,12 @@ All are single-file, no framework — intentional, keep it that way.
 
 ### index.html (homepage)
 
-- Hero column width: 820px
-- Hero calls Lambda `GET /hero` for a single random product image — fast, no full catalog fetch
-- Image appears at natural aspect ratio (`height: auto`) — no fixed placeholder, no skeleton
-- Caption (print title) appears only after image loads
-- `referrerPolicy = 'no-referrer'` on hero image to avoid S3 403
+- **Hero (October 2 2026):** the whole painting, never cropped, in a 2px navy outline (`var(--accent)`), left-aligned in `.wrap`. `.hero-media` takes the painting's proportions from `--hero-ratio` (set by `showHero()` from the pool entry's `w`/`h`, then corrected from the loaded image) and its width is capped by `calc(max(260px, 100svh - 280px) * ratio)` so nav + painting + caption + name fit the first screen. Any orientation works. Black outline was tried in the prototype and rejected as too heavy — keep navy, matching gallery cards.
+- Hero image comes from build-time `hero-pool.js` (daily rotation); Lambda `GET /hero` is only the fallback
+- Caption is the print title in quotes, lowercased
+- `referrerPolicy`: not set on the hero image (served via the `/image` proxy on our own domain)
+- **Past section:** the current year (2026) is a plain always-open list; previous years are `<details class="ev-past">` — collapsed, tap the year to open. No script. When a new year starts, move the old "current year" list into its own `<details>` by hand.
+- Guest book section has `id="guest-book"` — the site menu links to `/#guest-book`
 - Guest book POSTs to Lambda; includes newsletter opt-in checkbox (“casually stay informed”) — `subscribed` bool stored in DynamoDB
 - Contact link uses split string `'mai'+'lto:david@davidnicholsonart.com'` to prevent Cloudflare email obfuscation injection
 
@@ -340,7 +341,7 @@ All are single-file, no framework — intentional, keep it that way.
 - Cart persists in localStorage (`dna_cart`) across page loads and browser closes
 - Cart clears from localStorage after successful checkout
 - Tap print → bottom sheet modal on mobile, side-by-side on desktop
-  - Variant selector (size buttons) with name + price
+  - **Size boxes (October 2 2026):** two side-by-side boxes, smallest first (sorted by price), **nothing pre-selected**; each shows small/large, print size, "matted to …", price. Tapped box fills dark. Add button reads "choose a size" (muted) until one is picked, then "add to cart · $25". Sizes are parsed from Square variation names of the form `9 x 12 Matted to 12 x 16 (Bottom Weighted)` by `parseVariationName()`; any other name (e.g. `Regular`) is shown as written. A print with a single variation is auto-selected. Price is **not** shown on the gallery grid — only inside the card (David's choice).
   - “Add to cart” button — adds selected variant, closes modal, returns to grid
   - Swipe left/right to browse on mobile
   - Click image → fullscreen shadowbox
@@ -509,6 +510,7 @@ An earlier "always draw from the largest remaining group" greedy was tried and *
 - Each file: OG meta tags + `window.location.replace("gallery.html?view=ITEM_ID")`
 - Slug logic matches gallery.html share button slug generation
 - **Also writes `hero-pool.js`** (repo root, June 2026): `window.__HERO_POOL__ = [{img,title}]` for 2025–26 prints (fallback: all prints with images). The homepage loads it and picks a daily-rotating hero client-side — keeps the slow uncached `/hero` Lambda catalog fetch off the hot path. Deployed by the same `*.js` S3 sync.
+- **Hero pool, October 2 2026:** the horizontal/square-only filter is gone — every 2025–26 print with an image is eligible, because the homepage now shows the whole painting. Entries are `{img, title, w, h}`; `w`/`h` are the measured pixel size (omitted if the header read fails) and let the homepage size the box before the image loads.
 
 -----
 
@@ -559,6 +561,9 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 - ✓ **`originals.html` — paintings at a gallery are hidden.** `loadOriginals()` now filters `!p.atGallery` on the `/originals` response (same rule booth.html already used), so the list, size dropdown counts, year nav, and lightbox all exclude consigned pieces. Reverses the June 9 note "originals.html behavior unchanged (still shows them)". No Lambda change, no service worker involved. Live data at time of change: 47 originals, 5 tagged at gallery (Junction, KS Wind Farm No. 1, Sunflower No. 1, Sunflower No. 2, Waverly Church) → 42 shown.
 - ✓ **`gallery.html` modal — "original available →" hidden for at-gallery paintings.** `/products` now returns `atGallery: true/false` per product (new `loadAtGalleryMatcher()` in `index.mjs`: one `dna-paintings` scan run in parallel with the Square calls, matched by squareId or normalized title — same rule as `/originals`). Only `getProducts` uses it; `/feed` and `/hero` are unchanged. The scan is wrapped in try/catch, so a DynamoDB failure can't take down the storefront — the link just shows as before. gallery.html shows the link only when `p.originalAvail && !p.atGallery`. `originalAvail` itself is unchanged (still the raw Square toggle), so admin/dashboard numbers are unaffected.
+- ✓ **Site menu on every public page.** "menu" control at the left of the top bar (icon only ≤500px) opens a panel: home, prints, available originals — divider — color theory, shipping & returns, guest book, contact. Current page highlighted. Left-anchored dropdown on desktop, full-width sheet ≤600px, scrim + Esc to close. **The same CSS/HTML/JS block is inlined in 11 files** (index, gallery, originals, shipping, color-theory, varied-readings, and the five art-fair pages) — search `SITE MENU`; a menu change means editing all 11. Not added to legacy shop.html, kiosk, booth, admin. Guest book item calls the page's `openGB()` when it exists, otherwise goes to `/#guest-book`; contact uses the split-string mailto. Footer links unchanged. The "prints / originals" tab row was prototyped and rejected (menu only).
+- ✓ **`index.html` hero, past-year collapse; `generate-prints.js` pool; `gallery.html` size boxes** — see the index.html, gallery.html and generate-prints.js sections above for the as-built detail.
+- **Prototypes (Claude artifacts, David's account):** "Outlined Hero Homepage" and "Gallery Menu and Tabs" — the design references for this batch.
 - **How to hide/show an original:** admin → Inventory → expand row → At Gallery = Phoenix Gallery (or — to bring it back). Do not turn off `Original Available` in Square for a consigned piece — that makes it count as sold on the dashboard and blocks price tags.
 
 ## Completed This Session (September 30 2026, evening)
@@ -714,6 +719,8 @@ _David's instruction: don't track his tax filings or remind him to log sales —
   Either some Square Width/Height values are wrong (fix in Square), or the dropdown lists every size present. Decide before building. Generating the list from the data would keep it correct as paintings sell.
 - [ ] **After deploy, verify the at-gallery filter:** originals.html should show 42 paintings and none of Junction, KS Wind Farm No. 1, Sunflower No. 1, Sunflower No. 2, Waverly Church. If an at-gallery painting still shows, its `dna-paintings` title doesn't match the Square title and it has no `squareId` — fix the title in admin.
 - [x] **gallery.html modal link** — resolved October 2 2026: link hidden when the painting is at a gallery (`atGallery` added to `/products`).
+- [ ] **After deploy, verify the October 2 batch on a phone and a desktop:** homepage shows the whole painting with caption and name on the first screen; 2025 is collapsed and opens on tap; menu opens on every page and each link lands; a print card opens with no size chosen and the button says "choose a size"; picking a box and adding to cart puts the right size and price in the cart.
+- [ ] **Market items in the public gallery?** Live `/products` returns "Market Item $40" and "Market Item $25" (no year, single `Regular` variation) and `gallery.html` does not filter them. Check whether they show at the bottom of the public gallery; if so, decide whether to exclude them in `/products` or in the page.
 - [ ] **After deploy, verify the modal link:** open a print of an at-gallery painting (e.g. KS Wind Farm No. 1) on gallery.html — no "original available →"; open one that isn't at a gallery and is available — link still there.
 
 ### Ongoing
