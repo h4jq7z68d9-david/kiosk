@@ -709,7 +709,7 @@ async function loadOriginals() {
     const r = await fetch(LAMBDA + '/originals');
     if (!r.ok) throw 0;
     const data = await r.json();
-    originals = data.originals || [];
+    originals = (data.originals || []).filter(p => !p.atGallery);
     if (!originals.length) {
       document.getElementById('list-wrap').innerHTML =
         '<p style="color:var(--ink3);padding:40px 0;font-size:14px;">No originals currently available.</p>';
