@@ -244,7 +244,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* SITE MENU — the same block is inlined on every public page; change all copies together */
-.nav-menu { display: inline-flex; align-items: center; gap: 8px; background: none; border: none; height: 40px; padding: 0 8px 0 0; margin-left: -2px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: var(--ink); cursor: pointer; flex-shrink: 0; }
+.nav-menu { display: inline-flex; align-items: center; background: none; border: none; height: 40px; padding: 0 10px 0 0; margin-left: -2px; margin-right: -4px; color: var(--ink); cursor: pointer; flex-shrink: 0; }
 .nav-menu svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; }
 .nav-menu:hover { color: var(--accent-ink); }
 #menu-scrim { position: fixed; inset: 0; z-index: 85; background: rgba(43,54,64,0.28); opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0s linear 0.2s; }
@@ -260,14 +260,13 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   #menu-panel a, #menu-panel button { padding: 0 16px; min-height: 50px; font-size: 18px; }
   #menu-panel hr { margin: 8px 16px; }
 }
-@media (max-width: 500px) { .nav-menu .menu-word { display: none; } .nav-menu { padding-right: 10px; margin-right: -4px; } }
 @media (prefers-reduced-motion: reduce) { #menu-panel, #menu-scrim { transition: none; } }
 </style>
 </head>
 <body>
 
 <nav>
-  <button class="nav-menu" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="menu-word">menu</span></button>
+  <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="nav-title" href="/index.html">david nicholson</a>
   <div class="nav-links">
     <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>

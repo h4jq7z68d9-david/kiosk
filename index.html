@@ -178,7 +178,7 @@ footer .wrap { padding: 0 20px; }
 }
 
 /* SITE MENU — the same block is inlined on every public page; change all copies together */
-.nav-menu { display: inline-flex; align-items: center; gap: 8px; background: none; border: none; height: 40px; padding: 0 8px 0 0; margin-left: -2px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: var(--ink); cursor: pointer; flex-shrink: 0; }
+.nav-menu { display: inline-flex; align-items: center; background: none; border: none; height: 40px; padding: 0 10px 0 0; margin-left: -2px; margin-right: -4px; color: var(--ink); cursor: pointer; flex-shrink: 0; }
 .nav-menu svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; }
 .nav-menu:hover { color: var(--accent-ink); }
 #menu-scrim { position: fixed; inset: 0; z-index: 85; background: rgba(43,54,64,0.28); opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0s linear 0.2s; }
@@ -194,7 +194,6 @@ footer .wrap { padding: 0 20px; }
   #menu-panel a, #menu-panel button { padding: 0 16px; min-height: 50px; font-size: 18px; }
   #menu-panel hr { margin: 8px 16px; }
 }
-@media (max-width: 500px) { .nav-menu .menu-word { display: none; } .nav-menu { padding-right: 10px; margin-right: -4px; } }
 @media (prefers-reduced-motion: reduce) { #menu-panel, #menu-scrim { transition: none; } }
 </style>
 <link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
@@ -204,7 +203,7 @@ footer .wrap { padding: 0 20px; }
 
 <nav>
   <div class="nav-inner">
-    <button class="nav-menu" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="menu-word">menu</span></button>
+    <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <a class="brand" href="/">david nicholson</a>
     <div class="nav-links">
       <a class="pill has-egg" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span><span class="ig-egg" aria-hidden="true">This button is here because one time someone scanned a business card and they were upset that it <em>only</em> went to my website and they didn't see <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg></span></a>
