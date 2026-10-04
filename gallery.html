@@ -576,8 +576,11 @@ function wallDims(p) {
 }
 
 function wallParams(W) {
-  if (window.innerWidth <= 600) return { rows: true, scale: W / 64.6, gap: 14 };
-  const scale = Math.min(W / 118, 11);   // ≈10px per inch at the full desktop width
+  // Phones: W / 56 is about the largest scale at which a 30"-wide and a 22"-wide painting still share a row.
+  if (window.innerWidth <= 600) return { rows: true, scale: W / 56, gap: 14 };
+  // Wide screens: W / 102 is about the largest scale at which 30" + 36" + 30" still fit across;
+  // any bigger and the clusters turn into tall stacks (≈11.6px per inch at 1280 wide).
+  const scale = Math.min(W / 102, 13);
   return { rows: false, scale, gap: Math.round(Math.max(14, Math.min(28, scale * 2.8))) };
 }
 
