@@ -179,7 +179,13 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 .year-heading {
   margin-bottom: 24px;
   scroll-margin-top: calc(var(--nav-h) + 20px);
+  /* year sits at the right, a thin rule runs back to the left edge */
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 20px;
 }
+.year-heading::after { content: ''; flex: 1; height: 1px; background: var(--border-mid); }
 .year-heading-label {
   font-family: var(--font);
   font-size: 28px;
@@ -258,7 +264,13 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav
 }
 .card img.loaded { opacity: 1; }
 
+/* WALL — each year's paintings hung at true relative size; positions set by layoutWalls() */
+.wall { position: relative; width: 100%; }
+.wall .card { position: absolute; }
+.wall .card:hover { z-index: 2; }
+
 @media (max-width: 600px) {
+  .year-heading { gap: 14px; }
 }
 
 /* Skeleton */
@@ -551,10 +563,132 @@ function buildNav() {
   });
 }
 
+// ── True-scale wall ──────────────────────────────────────────────────────────
+// Every painting is drawn at its real relative size, from the original's Square
+// Width / Height (inches). Wide screens: the largest painting of the year sits in
+// the centre and the rest pack around it, largest first. Phones (≤600px): the
+// largest leads, then centred rows that mix large and small.
+const WALL_FALLBACK = { w: 18, h: 24 };   // when Square has no Width / Height
+
+function wallDims(p) {
+  const w = parseFloat(p.width), h = parseFloat(p.height);
+  return (w > 0 && h > 0) ? { w, h } : WALL_FALLBACK;
+}
+
+function wallParams(W) {
+  if (window.innerWidth <= 600) return { rows: true, scale: W / 64.6, gap: 14 };
+  const scale = Math.min(W / 118, 11);   // ≈10px per inch at the full desktop width
+  return { rows: false, scale, gap: Math.round(Math.max(14, Math.min(28, scale * 2.8))) };
+}
+
+// Pixel sizes for one year's paintings, largest first (title breaks ties).
+function wallSizes(list, scale, W) {
+  return list.map(e => {
+    const d = wallDims(e.p);
+    const w = Math.min(Math.round(d.w * scale), W);
+    return { card: e.card, title: e.p.title || '', area: d.w * d.h, w, h: Math.round(w * d.h / d.w) };
+  }).sort((a, b) => (b.area - a.area) || a.title.localeCompare(b.title));
+}
+
+// Largest in the centre; each next painting takes the free spot nearest the centre.
+function wallCluster(items, W, gap) {
+  const EPS = 1e-6;
+  const placed = [];
+  const hit = (a, b) => !(a.x + a.w + gap <= b.x + EPS || b.x + b.w + gap <= a.x + EPS ||
+                          a.y + a.h + gap <= b.y + EPS || b.y + b.h + gap <= a.y + EPS);
+  items.forEach((it, n) => {
+    const w = it.w, h = it.h;
+    if (!n) { placed.push({ it, x: (W - w) / 2, y: -h / 2, w, h }); return; }
+    const xs = new Set(), ys = new Set();
+    placed.forEach(r => {
+      [r.x - gap - w, r.x + r.w + gap, r.x, r.x + r.w - w, r.x + (r.w - w) / 2].forEach(v => xs.add(v));
+      [r.y - gap - h, r.y + r.h + gap, r.y, r.y + r.h - h, r.y + (r.h - h) / 2].forEach(v => ys.add(v));
+    });
+    let best = null;
+    xs.forEach(x => {
+      if (x < 0 || x + w > W) return;
+      ys.forEach(y => {
+        const c = { x, y, w, h };
+        if (placed.some(r => hit(c, r))) return;
+        const dx = x + w / 2 - W / 2, dy = (y + h / 2) * 1.3;
+        const score = dx * dx + dy * dy;
+        if (!best || score < best.score) best = { score, x, y };
+      });
+    });
+    if (!best) best = { x: (W - w) / 2, y: Math.max(...placed.map(r => r.y + r.h)) + gap };
+    placed.push({ it, x: best.x, y: best.y, w, h });
+  });
+  const top = Math.min(...placed.map(r => r.y));
+  placed.forEach(r => { r.x = Math.round(r.x); r.y = Math.round(r.y - top); });
+  return placed;
+}
+
+// Phones: largest alone on the first row, then rows of up to three that pair the
+// next-largest painting with the smallest ones that still fit beside it.
+function wallRows(items, W, gap) {
+  const rows = [[items[0]]];
+  const pool = items.slice(1);
+  while (pool.length) {
+    const row = [pool.shift()];
+    let used = row[0].w;
+    for (const c of pool.slice().sort((a, b) => a.area - b.area)) {
+      if (row.length >= 3) break;
+      if (used + gap + c.w <= W) { row.push(c); pool.splice(pool.indexOf(c), 1); used += gap + c.w; }
+    }
+    if (rows.length % 2 === 0) row.reverse();
+    rows.push(row);
+  }
+  const placed = [];
+  let y = 0;
+  rows.forEach(row => {
+    const tw = row.reduce((s, it) => s + it.w, 0) + gap * (row.length - 1);
+    const rh = Math.max(...row.map(it => it.h));
+    let x = (W - tw) / 2;
+    row.forEach(it => {
+      placed.push({ it, x: Math.round(x), y: Math.round(y + (rh - it.h) / 2), w: it.w, h: it.h });
+      x += it.w + gap;
+    });
+    y += rh + gap;
+  });
+  return placed;
+}
+
+let wallW = 0;
+function layoutWalls() {
+  const grid = document.getElementById('grid');
+  const W = grid.clientWidth;
+  if (!W) return;
+  wallW = W;
+  const { rows, scale, gap } = wallParams(W);
+  grid.querySelectorAll('.wall').forEach(wall => {
+    if (!wall._items || !wall._items.length) return;
+    const items = wallSizes(wall._items, scale, W);
+    const placed = rows ? wallRows(items, W, gap) : wallCluster(items, W, gap);
+    let H = 0;
+    placed.forEach(r => {
+      const s = r.it.card.style;
+      s.left = r.x + 'px'; s.top = r.y + 'px'; s.width = r.w + 'px';
+      H = Math.max(H, r.y + r.h);
+    });
+    wall.style.height = H + 'px';
+  });
+}
+
+// Re-hang when the available width changes (rotation, window resize, a scrollbar appearing).
+let wallTimer = null;
+function scheduleWallLayout() {
+  clearTimeout(wallTimer);
+  wallTimer = setTimeout(() => {
+    const W = document.getElementById('grid').clientWidth;
+    if (W && W !== wallW) layoutWalls();
+  }, 150);
+}
+if ('ResizeObserver' in window) new ResizeObserver(scheduleWallLayout).observe(document.getElementById('grid'));
+else window.addEventListener('resize', scheduleWallLayout);
+
 function renderGrid() {
   const wrap = document.getElementById('grid');
   wrap.innerHTML = '';
-  const numCols = window.innerWidth <= 600 ? 2 : 3;
 
   const years = [...new Set(products.map(p => p.year).filter(Boolean))]
     .sort((a, b) => parseInt(b) - parseInt(a));
@@ -582,22 +716,19 @@ function renderGrid() {
     heading.innerHTML = '<div class="year-heading-label">' + y + '</div>';
     section.appendChild(heading);
 
-    // Masonry columns
+    // Wall — cards are positioned by layoutWalls() once every section is in the page
     const grid = document.createElement('div');
-    grid.className = 'grid';
-    const cols = [];
-    for (let c = 0; c < numCols; c++) {
-      const col = document.createElement('div');
-      col.className = 'masonry-col';
-      grid.appendChild(col);
-      cols.push(col);
-    }
-    yearProducts.forEach(({ p, i }, pos) => {
+    grid.className = 'wall';
+    grid._items = [];
+    yearProducts.forEach(({ p, i }) => {
       const card = document.createElement('div');
       card.className = 'card';
       if (p.img) {
         const img = document.createElement('img');
         img.alt = p.desc || p.title;
+        // Reserve the painting's shape before the image arrives; the real proportions take over on load.
+        const d = wallDims(p);
+        img.style.aspectRatio = 'auto ' + d.w + ' / ' + d.h;
         img.referrerPolicy = 'no-referrer';
         img.loading = 'lazy';
         img.decoding = 'async';
@@ -615,11 +746,13 @@ function renderGrid() {
         card.appendChild(img);
       }
       card.onclick = () => openDetail(i);
-      cols[pos % numCols].appendChild(card);
+      grid.appendChild(card);
+      grid._items.push({ p, card });
     });
     section.appendChild(grid);
     wrap.appendChild(section);
   });
+  layoutWalls();
 }
 
 // Scroll spy — highlight sidebar/mobile link for visible section
@@ -1061,6 +1194,8 @@ async function loadProducts() {
       year:       p.year || null,
       originalAvail: p.originalAvail || false,
       atGallery:  p.atGallery || false,
+      width:      p.width || null,
+      height:     p.height || null,
       variations: (p.variations || []).map(v => ({
         id:    v.id,
         name:  v.name,

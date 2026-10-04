@@ -224,9 +224,13 @@ async function buildProductList() {
 
     const attrs = obj.custom_attribute_values;
     let originalAvail = false;
+    // Original painting size in inches (Square Width / Height) — the gallery wall draws to scale from these.
+    let width = null, height = null;
     if (attrs) {
       for (const val of Object.values(attrs)) {
-        if (val.name === 'Original Available') { originalAvail = val.boolean_value === true; break; }
+        if (val.name === 'Original Available') originalAvail = val.boolean_value === true;
+        else if (val.name === 'Width')  width  = parseFloat(val.string_value ?? val.number_value) || null;
+        else if (val.name === 'Height') height = parseFloat(val.string_value ?? val.number_value) || null;
       }
     }
 
@@ -241,6 +245,8 @@ async function buildProductList() {
       year:       extractYear(obj),
       createdAt:  obj.created_at || '',
       originalAvail,
+      width,
+      height,
     });
   }
 
