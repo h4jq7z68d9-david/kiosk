@@ -804,12 +804,7 @@ function openDetail(idx) {
       'facebook' +
     '</a>';
 
-  const origRow = document.getElementById('original-avail-row');
-  if (p.originalAvail && !p.atGallery) {
-    origRow.innerHTML = '<a class="original-avail-link" href="/originals.html" onclick="event.stopPropagation()">original available →</a>';
-  } else {
-    origRow.innerHTML = '';
-  }
+  renderOriginalRow(p);
 
   document.getElementById('detail-overlay').classList.add('on');
   document.getElementById('detail-sheet').scrollTop = 0;
@@ -873,6 +868,23 @@ function selectVariant(v, btn) {
   document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   renderAddButton();
+}
+
+// Link to the original when it can still be bought (not sold, not out at a gallery).
+// The original's size leads the link when Square has it: 18 × 24" original available →
+function renderOriginalRow(p) {
+  const origRow = document.getElementById('original-avail-row');
+  if (!origRow) return;
+  origRow.innerHTML = '';
+  if (!(p.originalAvail && !p.atGallery)) return;
+  const w = parseFloat(p.width), h = parseFloat(p.height);
+  const a = document.createElement('a');
+  a.className = 'original-avail-link';
+  a.href = '/originals.html';
+  // attribute, not a property: renderAddButton() re-creates this row from its outerHTML
+  a.setAttribute('onclick', 'event.stopPropagation()');
+  a.textContent = ((w > 0 && h > 0) ? w + ' × ' + h + '" ' : '') + 'original available →';
+  origRow.appendChild(a);
 }
 
 function renderAddButton() {
@@ -1029,6 +1041,7 @@ function slideNav(dir) {
   const nextIdx = (curIdx + dir + products.length) % products.length;
   curIdx = nextIdx;
   populateDetail(products[curIdx]);
+  renderOriginalRow(products[curIdx]);   // otherwise the row keeps the first-opened painting's link
   document.getElementById('detail-sheet').scrollTop = 0;
 }
 
