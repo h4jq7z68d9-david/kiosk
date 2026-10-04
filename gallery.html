@@ -619,7 +619,11 @@ function wallCluster(items, W, gap) {
     placed.push({ it, x: best.x, y: best.y, w, h });
   });
   const top = Math.min(...placed.map(r => r.y));
-  placed.forEach(r => { r.x = Math.round(r.x); r.y = Math.round(r.y - top); });
+  // Centre the whole group in the width, not just the largest painting — a lone small
+  // piece at one edge otherwise leaves the year looking lopsided.
+  const left = Math.min(...placed.map(r => r.x)), right = Math.max(...placed.map(r => r.x + r.w));
+  const shift = (W - (left + right)) / 2;
+  placed.forEach(r => { r.x = Math.round(r.x + shift); r.y = Math.round(r.y - top); });
   return placed;
 }
 
