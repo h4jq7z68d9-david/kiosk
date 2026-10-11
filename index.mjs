@@ -16,6 +16,7 @@ const PAINTINGS_TABLE = 'dna-paintings';
 const SALES_TABLE     = 'dna-sales';
 const EXPENSES_TABLE  = 'dna-expenses';
 const GALLERY_TABLE   = 'dna-gallery-stock';
+const DEFAULT_GALLERY = 'Phoenix Gallery'; // gallery sales with no galleryName (matches GALLERY_NAMES[0] in admin.html)
 const BOOTH_TABLE     = 'dna-booth-layouts';
 const CHECKLISTS_TABLE = 'dna-checklists';
 const RECEIPTS_BUCKET = 'kiosk.davidnicholsonllc';
@@ -1197,9 +1198,20 @@ async function adminAddSale(paintingId, body, cors) {
     item.net = Number(net ?? price * (pct / 100));
   }
   await dynamo.send(new PutCommand({ TableName: SALES_TABLE, Item: item }));
-  // Opt-in (Sell window): decrement print stock server-side with an atomic update, so the
-  // painting record isn't rewritten from client fields. Quick sale doesn't send this flag.
-  if (body.decrementStock === true && (type === 'large' || type === 'small')) {
+  // Opt-in: decrement print stock server-side with an atomic update, so the painting record
+  // isn't rewritten from client fields. Sent by the Sell window's Log sale, and by the
+  // sale modal for gallery sales only (its other sales still decrement via a painting PUT).
+  const isPrint = type === 'large' || type === 'small';
+  if (body.decrementStock === true && isPrint && channel === 'gallery') {
+    // A gallery sells from its own consignment stock (dna-gallery-stock) — main print stock
+    // is left alone. The sale is already saved; a stock failure is reported, never thrown.
+    const galleryName = String(body.galleryName || DEFAULT_GALLERY);
+    let gs;
+    try { gs = await reduceGalleryStock(paintingId, galleryName, type); }
+    catch (e) { console.error('Gallery stock decrement failed', paintingId, galleryName, e.name, e.message); gs = { reduced: false, record: null, error: true }; }
+    return ok({ sale: item, galleryStock: { galleryName, ...gs } }, cors);
+  }
+  if (body.decrementStock === true && isPrint) {
     try {
       await dynamo.send(new UpdateCommand({
         TableName: PAINTINGS_TABLE,
@@ -1630,6 +1642,40 @@ async function adminPutGalleryStock(body, cors) {
   };
   await dynamo.send(new PutCommand({ TableName: GALLERY_TABLE, Item: item }));
   return ok({ stock: item }, cors);
+}
+
+// Take one print off a gallery's record for a sale. Never goes below zero: with no record, or
+// none of that size, nothing changes and `reduced` is false so the admin can say so.
+// Deliberately Scan + conditional Put — the only operations the routes above already use on
+// this table, so it needs no IAM change (UpdateItem/GetItem on it are unconfirmed for the role).
+// The condition makes the read-then-write safe: if the count changed in between, re-read and retry.
+async function reduceGalleryStock(paintingId, galleryName, type) {
+  const id = `${paintingId}__${galleryName.replace(/\s+/g, '_')}`;
+  const field = type === 'large' ? 'stockLg' : 'stockSm';
+  for (let attempt = 0; attempt < 3; attempt++) {
+    let rec = null, startKey;
+    do {
+      const res = await dynamo.send(new ScanCommand({
+        TableName: GALLERY_TABLE, ConsistentRead: true, ExclusiveStartKey: startKey,
+        FilterExpression: 'id = :id', ExpressionAttributeValues: { ':id': id },
+      }));
+      rec = (res.Items || [])[0] || rec;
+      startKey = res.LastEvaluatedKey;
+    } while (!rec && startKey);
+    const cur = Number(rec?.[field]) || 0;
+    if (!rec || cur < 1) return { reduced: false, record: null };
+    const next = { ...rec, [field]: cur - 1 };
+    try {
+      await dynamo.send(new PutCommand({
+        TableName: GALLERY_TABLE, Item: next,
+        ConditionExpression: '#f = :cur',
+        ExpressionAttributeNames: { '#f': field },
+        ExpressionAttributeValues: { ':cur': rec[field] },
+      }));
+      return { reduced: true, record: next };
+    } catch (e) { if (e.name !== 'ConditionalCheckFailedException') throw e; }
+  }
+  throw new Error('gallery stock kept changing');
 }
 
 async function adminDeleteGalleryStock(id, cors) {

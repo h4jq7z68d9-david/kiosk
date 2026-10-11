@@ -200,7 +200,7 @@ PASSWORD      = admin.html PIN (see AWS console) — added June 11 2026
 - `POST /admin/paintings` — add painting
 - `PUT /admin/paintings/{id}` — update painting
 - `DELETE /admin/paintings/{id}` — delete painting + all its sales
-- `POST /admin/paintings/{id}/sales` — add sale. Optional `decrementStock: true` (sent only by the Sell window's Log sale) decrements print stock server-side with an atomic update; quick sale doesn't send it and still decrements via its own painting PUT.
+- `POST /admin/paintings/{id}/sales` — add sale. Optional `decrementStock: true` decrements print stock server-side with an atomic update. **Which stock depends on the channel:** `channel: 'gallery'` reduces that gallery's record in `dna-gallery-stock` (`galleryName` in the body, defaulting to `DEFAULT_GALLERY` = Phoenix Gallery) and leaves main print stock alone; it never goes below zero, and the response carries `galleryStock: {galleryName, reduced, record, error?}` (`reduced: false` = the gallery had none of that size on record, nothing changed; `error: true` = the stock write itself failed — the sale is still saved). Any other channel reduces `dna-paintings.stock` (can go negative). The Sell window's Log sale always sends the flag; the sale modal (row **+ Log Sale** / edit) sends it for gallery print sales only and still decrements its other sales via its own painting PUT.
 - `PUT /admin/paintings/{id}/sales/{saleId}` — edit sale (preserves `tax` and `squareTxn` from the existing row)
 - `DELETE /admin/paintings/{id}/sales/{saleId}` — delete sale
 - `GET/PUT /admin/config` — `rate` ($/sq in for originals), `printCostSmall`/`printCostLarge` (fixed landed costs, $5/$12), `irsRates` (`{"2026": 0.70, …}`, set in admin Settings → Mileage); stored in DynamoDB `__config__`. PUT is read-merge-write (`...existing.Item`), so unknown fields survive.
@@ -405,7 +405,7 @@ All are currently single-file with no framework. **This is how they were first b
 - Filters: Never sold, Sold, Original available, Low print stock, Mom doesn’t have
 - **Prints filter mode** — Prints/Originals chips reveal a Sold/Unsold sub-filter; Prints mode additionally reveals "0 large" / "0 small" boolean chips filtering to `stock.large === 0` / `stock.small === 0`; all combinable with dimension/moms/gallery filters. (This is the old "Prints tab" — same tiered ranking logic, now reached as a filter rather than a tab.)
 - **Sale/date filters ("Sales Log" equivalent)** — "Sold between" date range, Channel (all/art fair/online/gallery), State (all/KS/MO) filters in the filter bar; when any sale filter is active, a **Revenue** readout appears as a small stacked stat block: **Total revenue** (`$total · N sales`, all sale types) always shown, plus — only when the filtered set contains print sales — **Print sales** (`$revenue · N`, large+small only), **Print cost**, and **Print profit** (print revenue − print cost). Originals contribute to Total revenue but are excluded from the Print sales/cost/profit rows entirely — see "Print production costs" below. `↓ Sales CSV` exports the filtered rows (see CSV export note below).
-- **Gallery Stock view** — toggle at the top of Inventory (`Gallery Stock` button); rows with any print stock at the selected gallery sort to the top (by title), zero-stock rows sink below (still dimmed)
+- **Gallery Stock view** — toggle at the top of Inventory (`Gallery Stock` button); rows with any print stock at the selected gallery sort to the top (by title), zero-stock rows sink below (still dimmed). **A print sale logged with Source = Gallery comes out of this stock, not main print stock** (October 11 2026) — the sale forms have no gallery picker, so it goes against `GALLERY_NAMES[0]` (`saleGalleryName()`); add a picker if a second gallery is ever added.
 - Click row → expand: inline edit (title, month, year, dimensions, stock counts, Mom’s Prints checkbox) + sale history
 - **Row expand indicator** — flat blue chevron (rotates 90° open)
 - Sale logging: date, type (original/large/small), channel (fair/online/gallery), price; gallery channel tracks gross + % + net; art fair channel tracks state (KS/MO)
@@ -528,6 +528,7 @@ An earlier "always draw from the largest remaining group" greedy was tried and *
 |`dna-paintings`    |All paintings + `__config__` record (stores `rate` and optional `rateLarge`). Records with `marketItem: true` (Boolean) are hidden from Inventory/Prints/Gallery Stock and exist only to anchor manual market sales in the Sales Log — e.g. `manual_sale` for small originals sold at markets. `title` must be String type.|
 |`dna-sales`        |Sales records with `paintingId` foreign key + GSI `paintingId-index`        |
 |`dna-guestbook`    |Guest book entries                                                          |
+|`dna-gallery-stock`|Prints on consignment at each gallery — `id` = `{paintingId}__{Gallery_Name}`, `paintingId`, `galleryName`, `stockSm`, `stockLg`. Edited in the Gallery Stock view; gallery print sales take one off (October 11 2026)|
 |`dna-orders`       |Square order records                                                        |
 |`dna-expenses`     |Expenses and mileage — single table, `type` field = `expense` or `mileage`  |
 |`dna-booth-layouts`|Art fair wall layout plans — `id` (PK), `title`, `wallsJson`, `updatedAt`   |
@@ -561,6 +562,27 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`lambda-deploy` user** (local seed scripts):
 
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
+
+-----
+
+## Completed This Session (October 11 2026)
+
+**Gallery print sales now come out of gallery stock, not main print stock**
+
+David logged a gallery sale and asked which inventory it reduced. It was main print stock (`dna-paintings.stock`) — wrong: a print sold at the gallery was on consignment there, so it should leave `dna-gallery-stock`. Before this, no sale path wrote to gallery stock at all; it only changed through the +/− buttons in the Gallery Stock view.
+
+- ✓ **`index.mjs` — `adminAddSale` + new `reduceGalleryStock()`** — with `decrementStock: true`, a `large`/`small` sale on `channel: 'gallery'` takes one off the gallery record (`{paintingId}__{Gallery_Name}`, `stockLg`/`stockSm`) and returns `galleryStock: {galleryName, reduced, record}`. Main stock is not touched. No record, or zero of that size → the sale is still logged, nothing is reduced, `reduced: false`. **Done as Scan + conditional `PutCommand` (`#f = :cur`, re-read and retry up to 3×), not `UpdateCommand`, on purpose:** Scan and PutItem are what the gallery-stock routes already use, and the role's UpdateItem/GetItem permission on `dna-gallery-stock` isn't documented — an `UpdateCommand` could have deployed fine and then failed on access. If the stock write fails for any other reason the response carries `error: true` and the admin says to fix the count by hand, rather than reporting it as "none on record". `galleryName` defaults to `DEFAULT_GALLERY` ('Phoenix Gallery') so an older cached admin that doesn't send it still lands on gallery stock. Other channels and originals are unchanged.
+- ✓ **`admin.html` — Sell window Log sale (`sellLog`)** — gallery print sales send `galleryName`, no longer subtract from the on-screen main stock, and the status line reads e.g. `Logged Wayside (small) — Phoenix Gallery small stock now 1` (or says the gallery had none on record and nothing was changed).
+- ✓ **`admin.html` — sale modal (`saveSale`, row + Log Sale)** — gallery print sales now send `decrementStock` + `galleryName` and skip the painting PUT (so they also no longer clear `priceOverride`). If the gallery had none on record, an alert says so after the sale is logged.
+- ✓ **`admin.html` — moving a sale to another painting** — each side uses the stock its channel sells from: a gallery sale gives the old painting's gallery count back (+1, `gsBump()` via `PUT /admin/gallery-stock`) and takes one from the new painting's gallery count (Lambda, on the re-created sale). Non-gallery moves are unchanged.
+- ✓ **New helpers (admin.html, after `gsAdjust`)** — `saleGalleryName()`, `gsApplySaleResult()` (merges the returned record into `gsData`, re-renders the Gallery Stock view if it's open), `gsSaleNote()`, `gsBump()`.
+- ✓ **Admin SW cache bumped to `dna-admin-v91`.**
+- **Tested:** `node --check` on `index.mjs` and both inline scripts; the real `adminAddSale` run against a local DynamoDB emulator (dynalite) for gallery small / large / zero-stock / no-record / fair / original / no-flag / three simultaneous sales against two in stock / stock table unreachable; `admin.html` driven in headless Chromium against a mocked API for the Sell window (gallery, fair), the sale modal (gallery, gallery at zero, fair, stock-write failure) and a gallery-sale move. **Not yet run against live DynamoDB** — first real gallery sale after deploy is the confirmation.
+- **Not corrected by this change:** the gallery sale David logged on October 11 before the fix (main stock is one low and Phoenix Gallery one high for that print) — fix by hand in Inventory and Gallery Stock.
+
+**Known limits:** gallery print sales logged before October 11 2026 came out of main stock, so moving one of those to another painting now shifts gallery counts instead of main. Editing a sale's source in place (e.g. fair → gallery) and deleting a sale still adjust no stock in either pool (unchanged). The Sell window's "Prints in stock" line and picker rows still show main stock when Source is Gallery.
+
+**Noticed, not changed:** sale ids are `'s' + Date.now()`, so two `adminAddSale` calls landing in the same millisecond would share an id and the second would overwrite the first. Only showed up in the simultaneous-sales test; one person logging sales by hand can't hit it.
 
 -----
 
@@ -1157,7 +1179,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 - **generate-prints.js fetches from API Gateway directly** — not through CloudFront; CloudFront blocks GitHub Actions runner IPs
 - **handleViewParam before handleIncomingProduct** — handleIncomingProduct wipes the URL unconditionally; view param must be read first
 - **Kiosk service worker blocks all external requests** except fonts, cdnjs, and Lambda
-- **Admin SW cache key** — currently `dna-admin-v90` (bumped 2026-09-30: Expenses/Mileage date range + search); bump in `admin-sw.js` after every admin.html change
+- **Admin SW cache key** — currently `dna-admin-v91` (bumped 2026-10-11: gallery sales reduce gallery stock); bump in `admin-sw.js` after every admin.html change
 - **Lambda deploys from `index.mjs` only** — the workflow runs `zip lambda.zip index.mjs`. A stale `index.js` is also tracked in the repo and is NOT deployed; editing it leaves the live Lambda unchanged (symptom: frontend works, backend ignores new fields). Always edit `index.mjs`; `git rm index.js` to remove the trap.
 - **Receipts are NOT in S3 Block Public Access whitelist** — served via CloudFront only; do not attempt to make `receipts/` prefix publicly readable via bucket policy
 - **Receipt filename values read from DOM at save time** — not from pre-parsed JS variables, to ensure correct date/amount/category regardless of field fill order

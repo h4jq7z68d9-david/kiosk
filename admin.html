@@ -3555,25 +3555,37 @@ async function saveSale() {
   }
   closeModal('sale-modal');
   const moving = editSaleId && editSaleOriginalPaintingId && salePaintingId !== editSaleOriginalPaintingId;
+  // Gallery print sales come out of the gallery's stock (dna-gallery-stock), not main print
+  // stock — the Lambda does that decrement when the POST carries decrementStock + galleryName.
+  const galleryPrint = channel === 'gallery' && (saleData.type === 'large' || saleData.type === 'small');
+  const newSaleBody = galleryPrint ? { ...saleData, decrementStock: true, galleryName: saleGalleryName() } : saleData;
+  let gsNote = '';
   try {
     if (editSaleId && moving) {
       const oldP = db.paintings.find(x => x.id === editSaleOriginalPaintingId);
+      const oldSale = oldP ? oldP.sales.find(x => x.id === editSaleId) : null;
       // Create under the new painting first, then remove from the old one —
       // safer ordering if anything fails partway through.
-      const data = await api('POST', `/paintings/${salePaintingId}/sales`, saleData);
+      const data = await api('POST', `/paintings/${salePaintingId}/sales`, newSaleBody);
       p.sales.push(data.sale);
       await api('DELETE', `/paintings/${editSaleOriginalPaintingId}/sales/${editSaleId}`);
       if (oldP) oldP.sales = oldP.sales.filter(x => x.id !== editSaleId);
       // Correct print stock on both sides of the reassignment (undo the old
       // decrement, apply the correct one) — can go negative, intentional.
+      // Each side uses the stock its channel sells from: gallery stock for a gallery sale, main otherwise.
       const saleType = saleData.type;
       if (saleType === 'large' || saleType === 'small') {
-        if (oldP && oldP.stock) {
+        if (oldSale && oldSale.channel === 'gallery') {
+          gsBump(editSaleOriginalPaintingId, saleType, 1).catch(e => console.error('Gallery stock restore failed:', e));
+        } else if (oldP && oldP.stock) {
           oldP.stock[saleType] = (oldP.stock[saleType] || 0) + 1;
           api('PUT', `/paintings/${editSaleOriginalPaintingId}`, { title: oldP.title, month: oldP.month, year: oldP.year, width: oldP.width, height: oldP.height, stock: oldP.stock, momsHas: oldP.momsHas, atGallery: oldP.atGallery || '', galleryStockNo: oldP.galleryStockNo || '' })
             .catch(e => console.error('Stock restore failed:', e));
         }
-        if (p.stock) {
+        if (galleryPrint) {
+          gsApplySaleResult(data.galleryStock);
+          if (data.galleryStock && !data.galleryStock.reduced) gsNote = gsSaleNote(data.galleryStock, saleType);
+        } else if (p.stock) {
           p.stock[saleType] = (p.stock[saleType] || 0) - 1;
           api('PUT', `/paintings/${salePaintingId}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '', galleryStockNo: p.galleryStockNo || '' })
             .catch(e => console.error('Stock decrement failed:', e));
@@ -3584,17 +3596,21 @@ async function saveSale() {
       const idx = p.sales.findIndex(x => x.id === editSaleId);
       if (idx !== -1) p.sales[idx] = data.sale;
     } else {
-      const data = await api('POST', `/paintings/${salePaintingId}/sales`, saleData);
+      const data = await api('POST', `/paintings/${salePaintingId}/sales`, newSaleBody);
       p.sales.push(data.sale);
       // Decrement print stock for new print sales (can go negative — intentional)
       const saleType = saleData.type;
-      if ((saleType === 'large' || saleType === 'small') && p.stock) {
+      if (galleryPrint) {
+        gsApplySaleResult(data.galleryStock);
+        if (data.galleryStock && !data.galleryStock.reduced) gsNote = gsSaleNote(data.galleryStock, saleType);
+      } else if ((saleType === 'large' || saleType === 'small') && p.stock) {
         p.stock[saleType] = (p.stock[saleType] || 0) - 1;
         api('PUT', `/paintings/${salePaintingId}`, { title: p.title, month: p.month, year: p.year, width: p.width, height: p.height, stock: p.stock, momsHas: p.momsHas, atGallery: p.atGallery || '', galleryStockNo: p.galleryStockNo || '' })
           .catch(e => console.error('Stock decrement failed:', e));
       }
     }
     render();
+    if (gsNote) alert('Sale logged. ' + gsNote + '.');
   } catch(e) { alert('Failed to save sale: ' + e.message); }
 }
 
@@ -4303,6 +4319,39 @@ async function gsAdjust(paintingId, size, delta) {
   await api('PUT', '/gallery-stock', { paintingId: rec.paintingId, galleryName: rec.galleryName, stockSm: rec.stockSm, stockLg: rec.stockLg });
 }
 
+// ── Gallery sales ──
+// A print sold through a gallery comes out of that gallery's stock, not main print stock.
+// The Lambda does it (POST …/sales with decrementStock + galleryName, channel 'gallery') and
+// returns { galleryName, reduced, record, error? }; these keep the in-memory copy and the user in step.
+// The sale forms have no gallery picker — sales go against the first gallery in GALLERY_NAMES.
+function saleGalleryName() { return GALLERY_NAMES[0]; }
+function gsApplySaleResult(gs) {
+  if (!gs || !gs.record || !gsLoaded) return;
+  const i = gsData.findIndex(r => r.id === gs.record.id);
+  if (i === -1) gsData.push(gs.record); else gsData[i] = gs.record;
+  if (invView === 'gallery') renderGalleryStock();
+}
+function gsSaleNote(gs, type) {
+  if (!gs) return '';
+  if (gs.error) return `couldn't update ${gs.galleryName} stock — change it by hand in Gallery Stock`;
+  if (!gs.reduced) return `${gs.galleryName} had no ${type} prints on record, so no stock was changed`;
+  return `${gs.galleryName} ${type} stock now ${Number(gs.record?.[type === 'large' ? 'stockLg' : 'stockSm']) || 0}`;
+}
+// ±1 on a gallery's count from outside the Gallery Stock view (moving a gallery sale to another painting)
+async function gsBump(paintingId, type, delta) {
+  const gallery = saleGalleryName();
+  if (!gsLoaded) await loadGalleryStock();
+  const field = type === 'large' ? 'stockLg' : 'stockSm';
+  let rec = gsData.find(r => r.paintingId === paintingId && r.galleryName === gallery);
+  if (!rec) {
+    rec = { paintingId, galleryName: gallery, stockSm: 0, stockLg: 0, id: `${paintingId}__${gallery.replace(/\s+/g, '_')}` };
+    gsData.push(rec);
+  }
+  rec[field] = Math.max(0, (Number(rec[field]) || 0) + delta);
+  if (invView === 'gallery') renderGalleryStock();
+  await api('PUT', '/gallery-stock', { paintingId: rec.paintingId, galleryName: rec.galleryName, stockSm: rec.stockSm, stockLg: rec.stockLg });
+}
+
 async function exportGalleryStockCsv() {
   if (!gsData.length) { try { await loadGalleryStock(); } catch (e) { alert('Couldn\'t load gallery stock: ' + e.message); return; } }
   const titleOf = {};
@@ -4497,14 +4546,19 @@ async function sellLog() {
     saleData.pct = pct; saleData.net = Math.round(line.cents * pct / 100) / 100;
   }
   if (line.size !== 'original') saleData.decrementStock = true;
+  // Gallery print sales come out of the gallery's stock, not main print stock (Lambda decides by channel)
+  const galleryPrint = line.channel === 'gallery' && line.size !== 'original';
+  if (galleryPrint) saleData.galleryName = saleGalleryName();
   sellBusy = true;
   try {
     const data = await api('POST', `/paintings/${p.id}/sales`, saleData);
     (p.sales = p.sales || []).push(data.sale);
-    if (line.size !== 'original' && p.stock) p.stock[line.size] = (p.stock[line.size] || 0) - 1;
+    if (galleryPrint) gsApplySaleResult(data.galleryStock);
+    else if (line.size !== 'original' && p.stock) p.stock[line.size] = (p.stock[line.size] || 0) - 1;
     render(); renderSellDefaults();
     sellResetPick();
-    document.getElementById('sell-picked-sub').textContent = `Logged ${line.title} (${line.size})`;
+    const gsNote = galleryPrint ? gsSaleNote(data.galleryStock, line.size) : '';
+    document.getElementById('sell-picked-sub').textContent = `Logged ${line.title} (${line.size})` + (gsNote ? ' — ' + gsNote : '');
   } catch (e) { alert('Failed to log sale: ' + e.message); }
   finally { sellBusy = false; }
 }
