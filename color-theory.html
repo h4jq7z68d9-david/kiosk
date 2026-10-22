@@ -163,7 +163,10 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rel-chip.big .lbl{font-size:9px}
   .mixer-sliders{display:flex;flex-direction:column;gap:8px}
   .mixer-slider-row{display:flex;align-items:center;gap:8px}
-  .mixer-slider-row input[type=range]{flex:1;accent-color:var(--accent);height:20px}
+  .mixer-slider-row input[type=range]{flex:1;height:14px;margin:3px 0;-webkit-appearance:none;appearance:none;border-radius:7px;border:1px solid rgba(0,0,0,.12);background:var(--track,var(--wall-hi));cursor:pointer}
+  .mixer-slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--thumb,#fff);border:2px solid #fff;box-shadow:0 0 0 1px rgba(43,54,64,.35),0 1px 3px rgba(0,0,0,.25)}
+  .mixer-slider-row input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--thumb,#fff);border:2px solid #fff;box-shadow:0 0 0 1px rgba(43,54,64,.35),0 1px 3px rgba(0,0,0,.25)}
+  .mixer-slider-row input[type=range]::-moz-range-track{background:transparent}
   .mixer-slider-label{font-family:var(--mono);font-size:9px;letter-spacing:.04em;color:var(--muted);white-space:nowrap;min-width:40px;text-align:center}
 
   .temp-row{display:flex;justify-content:flex-start;padding-bottom:2px}
@@ -176,6 +179,11 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rel-row:first-child{padding-top:0;border-top:none}
   .rel-label{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);width:88px;flex-shrink:0;line-height:1.25}
   .rel-label[data-rel]{cursor:pointer}
+  .chroma-meter{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+  .chroma-bar{flex:1;height:8px;border-radius:4px;background:var(--wall-hi);overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+  .chroma-fill{height:100%;border-radius:4px}
+  .chroma-pct{font-family:var(--mono);font-size:10px;color:var(--ink);min-width:34px;text-align:right}
+  .v7-note{font-family:var(--mono);font-size:9px;color:var(--muted);line-height:1.3;flex:1;min-width:0}
   .rel-label[data-rel]:hover{color:var(--ink)}
   .rel-toggle{color:var(--line);font-weight:400}
   .rel-info{font-family:var(--mono);font-size:10px;color:var(--ink);letter-spacing:.02em;line-height:1.55;background:var(--wall-hi);border-radius:6px;padding:9px 11px;margin-top:8px}
@@ -184,6 +192,7 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rel-chip .sq{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,.12)}
   .rel-chip .lbl{font-size:9px;font-weight:500;text-align:center;line-height:1.15;color:var(--ink)}
   .rel-chip .lbl.lbl-sm{font-size:8px}
+  .rel-chip .pct{font-family:var(--mono);font-size:9px;color:var(--muted);line-height:1.15}
   .rel-chip.base .sq{border-width:2px;border-color:var(--ink)}
 
   .wheel-footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px 16px;text-align:center}
@@ -385,6 +394,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 
 <div id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/spectral.js@3.0.0/spectral.min.js"></script>
 <script>
 /* cart badge — reads the same store the gallery writes to */
 (function () {
@@ -647,7 +657,26 @@ function mixToward(hex, targetRgb, t){
   );
 }
 const WHITE = {r:255,g:255,b:255}, BLACK = {r:2,g:10,b:18};
-function tint(hex, t){ return mixToward(hex, WHITE, t); }
+/* October 2026: needle mixing, black, and white go through spectral.js
+   3.0.0 (Kubelka-Munk), chosen by David after an A/B against the
+   wheel-position math. Known trade-off, accepted: complements don't fully
+   neutralize and Red+Blue reads grayish rather than Violet (see
+   Color-Wheel-App-Reference.md for the earlier revert). The wheel-position
+   math (blendAngles/hexFromBlend, the adaptive shade()) is kept as the
+   fallback if the spectral.js CDN script fails to load. */
+function spectralReady(){ return typeof window.spectral !== 'undefined' && typeof window.spectral.mix === 'function'; }
+function useSpectral(){ return spectralReady(); }
+function spectralMixHex(pairs){ // pairs: [[hex, weight], ...]
+  const sp = window.spectral;
+  const parts = pairs.filter(([, w]) => w > 0).map(([hex, w]) => [new sp.Color(hex), w]);
+  if (parts.length === 1) return pairs.find(([, w]) => w > 0)[0];
+  return sp.mix(...parts).toString().toLowerCase();
+}
+const BLACK_HEX = rgbToHex(BLACK.r, BLACK.g, BLACK.b), WHITE_HEX = '#ffffff';
+function tint(hex, t){
+  if (useSpectral()) return spectralMixHex([[hex, 1 - t], [WHITE_HEX, t]]);
+  return mixToward(hex, WHITE, t);
+}
 /* Black gets two things real black pigments have and a plain linear blend
    doesn't: a cool (blue-leaning) undertone, rather than perfectly neutral
    — most real blacks (Mars Black and similar) aren't neutral — and,
@@ -674,6 +703,7 @@ function tint(hex, t){ return mixToward(hex, WHITE, t); }
    cast visible at a moderate, still-legible darkness for a real stretch,
    rather than a blink-and-you-miss-it sliver right before black. */
 function shade(hex, t){
+  if (useSpectral()) return spectralMixHex([[hex, 1 - t], [BLACK_HEX, t]]);
   const c = hexToRgb(hex);
   const maxCh = Math.max(c.r, c.g, c.b, 1);
   const rgGap = Math.abs(c.r - c.g) / maxCh; // 0 = R and G nearly identical (most vulnerable), higher = more separated (more resistant)
@@ -897,6 +927,14 @@ function chainAngleMag(count){
   return blendAngles(chainEntries(count));
 }
 function chainHex(count){
+  if (useSpectral()) {
+    // Same snapped ingredient angles and weights as wheel mode; each needle
+    // contributes its wedge's own swatch color.
+    return spectralMixHex(chainEntries(count).map(({ angle, weight }) => {
+      const hsl = wheelHslAt(angle), rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+      return [rgbToHex(rgb.r, rgb.g, rgb.b), weight];
+    }));
+  }
   const { angle, magnitude } = chainAngleMag(count);
   return hexFromBlend(angle, magnitude);
 }
@@ -1001,9 +1039,24 @@ function updateActiveWedge(){
 function stageHue(i, a){
   return i === 0 ? a : hueAtRotation(mixNeedles[i - 1], 0);
 }
+/* Each color's actual share of the hue mix, as whole percents that sum to
+   100 (largest-remainder rounding). The ratio sliders are cascading — each
+   sets the new color's share of the running mix, not its share of the
+   total — so the real split isn't readable from the sliders themselves.
+   Display only; White/Black are applied on top of this and aren't counted. */
+function mixPercents(){
+  const w = computeChainWeights(mixRatios);
+  const raw = w.map(x => x * 100);
+  const out = raw.map(Math.floor);
+  let left = 100 - out.reduce((a, b) => a + b, 0);
+  raw.map((x, i) => [x - Math.floor(x), i]).sort((p, q) => q[0] - p[0])
+     .slice(0, left).forEach(([, i]) => out[i]++);
+  return out;
+}
 function updateMixer(){
   const a = hueAtOffset(0);
   const n = mixNeedles.length + 1;
+  const pcts = n > 1 ? mixPercents() : null;
 
   let chainHtml = '';
   for (let i = 0; i < n; i++) {
@@ -1016,6 +1069,7 @@ function updateMixer(){
         ${removable ? `<button class="chip-x" data-remove="${i}" aria-label="Remove">&times;</button>` : ''}
         <div class="sq" style="background:${hue.hex}"></div>
         <div class="lbl">${hue.name}</div>
+        ${pcts ? `<div class="pct" data-pct-for="${i}">${pcts[i]}%</div>` : ''}
       </div>`;
     if (i < n - 1) chainHtml += `<div class="mixer-op">+</div>`;
   }
@@ -1064,6 +1118,55 @@ function updateMixer(){
       <button class="mixer-btn" id="saveMixBtn">Save to Palette</button>
       <button class="mixer-btn mixer-btn-quiet" id="clearMixBtn">Clear</button>
     </div>`;
+  paintSliders();
+}
+
+/* Colored sliders: each track is the actual run of colors that slider
+   produces from 0 to 100 (sampled through the same engine the Result uses,
+   so it follows wheel/spectral mode and the current White/Black), and the
+   thumb is filled with the color at its current position. Sampling works by
+   temporarily setting that one control and reading the color back, then
+   restoring it. Ratio slider i shows the mix through stage i+2 (with
+   White/Black applied, matching its left label); White/Black show the
+   final Result. */
+const TRACK_STOPS = 9;
+function tonedStageHex(count){
+  let hex = chainHex(count);
+  if (blackAmt > 0) hex = shade(hex, blackAmt);
+  if (whiteAmt > 0) hex = tint(hex, whiteAmt);
+  return hex;
+}
+function sampleTrack(setT, readHex){
+  const stops = [];
+  for (let k = 0; k < TRACK_STOPS; k++) {
+    const t = k / (TRACK_STOPS - 1);
+    setT(t);
+    stops.push(`${readHex()} ${Math.round(t * 100)}%`);
+  }
+  return `linear-gradient(to right, ${stops.join(', ')})`;
+}
+function paintSliders(){
+  document.querySelectorAll('#mixerCard input[data-ratio-idx]').forEach(el => {
+    const i = parseInt(el.dataset.ratioIdx, 10);
+    const saved = mixRatios[i];
+    el.style.setProperty('--track', sampleTrack(t => { mixRatios[i] = t; }, () => tonedStageHex(i + 2)));
+    mixRatios[i] = saved;
+    el.style.setProperty('--thumb', tonedStageHex(i + 2));
+  });
+  const w = document.getElementById('whiteSlider');
+  if (w) {
+    const saved = whiteAmt;
+    w.style.setProperty('--track', sampleTrack(t => { whiteAmt = t; }, computeResultHex));
+    whiteAmt = saved;
+    w.style.setProperty('--thumb', computeResultHex());
+  }
+  const b = document.getElementById('blackSlider');
+  if (b) {
+    const saved = blackAmt;
+    b.style.setProperty('--track', sampleTrack(t => { blackAmt = t; }, computeResultHex));
+    blackAmt = saved;
+    b.style.setProperty('--thumb', computeResultHex());
+  }
 }
 
 /* Slider drags call this instead of updateMixer() — rebuilding the sliders'
@@ -1080,11 +1183,17 @@ function refreshMixerColors(){
     const lbl = resultEl.querySelector('.lbl');
     if (lbl) lbl.textContent = resultName();
   }
+  const pctEls = document.querySelectorAll('#mixerCard [data-pct-for]');
+  if (pctEls.length) {
+    const pcts = mixPercents();
+    pctEls.forEach(el => { el.textContent = pcts[parseInt(el.dataset.pctFor, 10)] + '%'; });
+  }
   const a = hueAtOffset(0);
   document.querySelectorAll('#mixerCard [data-left-for]').forEach(el => {
     const i = parseInt(el.dataset.leftFor, 10);
     el.textContent = i === 0 ? a.name : stageResultName(i + 1);
   });
+  paintSliders();
 }
 
 let expandedPaletteIdx = null; // which saved swatch's recipe is currently shown, if any
@@ -1460,6 +1569,77 @@ function chipHtml(hue){
       <div class="lbl">${hue.name}</div>
     </div>`;
 }
+/* ---- Radiant-style helpers (value-7 tint + chroma meter) ----
+   Gamblin's Radiants are single colors plus white at Munsell value 7, so
+   these work on the HUE MIX only (chainHex, before White/Black) — a
+   Radiant has no black in it, and the White slider is what this row is
+   telling you how to set. Munsell value 7 ≈ CIE L* 71.6 (ASTM D1535:
+   V7 → Y 43.06). Chroma is OKLCh C. */
+const V7_LSTAR = 71.6;
+function srgbToLinear(c){ c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+function lstarOfHex(hex){
+  const c = hexToRgb(hex);
+  const Y = 0.2126 * srgbToLinear(c.r) + 0.7152 * srgbToLinear(c.g) + 0.0722 * srgbToLinear(c.b);
+  return Y > 216 / 24389 ? 116 * Math.cbrt(Y) - 16 : Y * 24389 / 27;
+}
+function oklchChroma(hex){
+  const c = hexToRgb(hex);
+  const r = srgbToLinear(c.r), g = srgbToLinear(c.g), b = srgbToLinear(c.b);
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  const A = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
+  return Math.hypot(A, B);
+}
+function ingredientHexes(){
+  return chainEntries(mixNeedles.length + 1).map(({ angle }) => {
+    const hsl = wheelHslAt(angle), rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+    return rgbToHex(rgb.r, rgb.g, rgb.b);
+  });
+}
+/* Smallest white amount whose tint reaches value 7 (tint() is monotonic in
+   lightness in both modes, so bisection is safe). Returns {t, hex}, or
+   null when the mix is already lighter than value 7 — white can only
+   raise value, never lower it. */
+function value7Tint(hex){
+  if (lstarOfHex(hex) >= V7_LSTAR) return null;
+  let lo = 0, hi = 1;
+  for (let k = 0; k < 18; k++) {
+    const mid = (lo + hi) / 2;
+    if (lstarOfHex(tint(hex, mid)) < V7_LSTAR) lo = mid; else hi = mid;
+  }
+  return { t: hi, hex: tint(hex, hi) };
+}
+function chromaRowHtml(){
+  const mixHex = chainHex(mixNeedles.length + 1);
+  const strongest = Math.max(...ingredientHexes().map(oklchChroma), 1e-6);
+  const pct = Math.max(0, Math.min(100, Math.round(oklchChroma(mixHex) / strongest * 100)));
+  return `
+    <div class="rel-row">
+      <div class="rel-label">Chroma</div>
+      <div class="chroma-meter" title="Hue mix chroma vs. its most intense ingredient (before White/Black)">
+        <div class="chroma-bar"><div class="chroma-fill" style="width:${pct}%;background:${mixHex}"></div></div>
+        <span class="chroma-pct">${pct}%</span>
+      </div>
+    </div>`;
+}
+function value7RowHtml(){
+  const mixHex = chainHex(mixNeedles.length + 1);
+  const v7 = value7Tint(mixHex);
+  const chips = v7
+    ? ladderSwatchHtml(mixHex, "Mix", false) + ladderSwatchHtml(v7.hex, `+ ${Math.round(v7.t * 100)}% White`, true)
+    : ladderSwatchHtml(mixHex, "Mix", true);
+  const note = v7
+    ? 'Set White here, Black at 0, for a Radiant-style tint.'
+    : 'Already lighter than value 7 — white can\u2019t bring it there.';
+  return `
+    <div class="rel-row">
+      <div class="rel-label">Value 7 Tint</div>
+      <div class="rel-chips">${chips}</div>
+      <div class="v7-note">${note}</div>
+    </div>`;
+}
 function ladderSwatchHtml(hex, label, isBase){
   return `
     <div class="rel-chip${isBase ? ' base' : ''}">
@@ -1535,7 +1715,7 @@ function updateReadout(){
       <span class="temp-badge ${tempClass}">${tempText}</span>
     </div>`;
 
-  $('#readout').innerHTML = tempRow + relRows + ladderRow;
+  $('#readout').innerHTML = tempRow + relRows + ladderRow + chromaRowHtml() + value7RowHtml();
 }
 
 /* ---- drag the active needle, or tap a wedge directly ----
