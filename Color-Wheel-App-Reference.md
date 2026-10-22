@@ -58,19 +58,20 @@ instructive ways.
 
 ## The one thing to understand before anything else
 
-> **Update — October 22 2026: spectral.js is back, by David's choice.**
-> After using the tool, David A/B-tested spectral.js 3.0.0 against the
-> wheel-position math (via a temporary toggle) and chose spectral as the
-> only mixing engine for needle mixing, White, and Black. The trade-offs
-> described below are still real and were re-confirmed before shipping —
-> Red+Blue reads grayish rather than Violet, Yellow+Violet lands on a
-> muted Red-Orange, and complements/triads don't fully neutralize (R+Y+B
-> at 1:1:1 keeps ~34% chroma vs ~8% under the wheel math). They are
-> **accepted**, not bugs. Don't revert to the wheel math on the strength
-> of the history below without asking David. The wheel-position math and
-> adaptive black model are still in the file as the automatic fallback if
-> the spectral.js CDN script fails to load. The section below is kept as
-> the record of why it was reverted the first time.
+> **Update — October 22 2026: mixing now uses measured pigment data.**
+> Same day, in order: spectral.js was brought back (A/B toggle, David's
+> choice), hand-corrected, then replaced by a built-in Kubelka-Munk engine
+> using real paint measurements — 13 single-pigment Kimera acrylics from
+> the PaintMixing project (miciwan, data CC BY 4.0; credit line is in the
+> wheel footer and must stay). David's rule for data sources: use only
+> data that is certainly free to use — no "ask for permission" datasets.
+> The wheel still represents **idealized RYB** hues; pigments work behind
+> the scenes. Known, accepted behavior: complements don't neutralize to
+> gray (Yellow+Violet → Muted Red, Orange+Blue → dark olive), R+Y+B →
+> Brown, and a few mixes sit on a name boundary (Red+Blue → "Blue-Violet/
+> Violet", Yellow+Blue → "Green/Blue-Green" — phthalo + lemon really is a
+> bluish green). Don't revert on the strength of the history below
+> without asking David; it's kept as the record of the first revert.
 
 **This is a teaching tool for painters, not a physics simulation.**
 
@@ -146,39 +147,46 @@ ever happens *between* distinct chosen hues, never *within* one.
 
 -----
 
-## The mixing engine — spectral.js (live) + wheel-position math (fallback)
+## The mixing engine — measured pigments (live) + wheel-position math
 
-**Live engine (October 2026):** `chainHex(count)` sends each ingredient's
-wedge swatch (from `wheelHslAt` at its snapped angle) and its chain weight
-to `spectralMixHex()`, which wraps `spectral.mix([Color, weight], ...)`.
-spectral.js 3.0.0 is loaded pinned from
-`cdn.jsdelivr.net/npm/spectral.js@3.0.0/spectral.min.js` in a `<script>`
-tag ahead of the main script. `useSpectral()` is simply "did the library
-load"; if it didn't, every path below runs instead, unchanged. The snapping
-invariant still holds — spectral only ever sees the wedge-center colors.
+**Data.** `PIGMENT_DATA` (≈7 KB, inline) holds, for 13 Kimera paints,
+absorption K and scattering S at 400–700 nm in 10 nm steps, CIE 1931 2° ×
+D65 weights, and one pigment recipe per wheel hue. K/S were fitted offline
+with two-constant Kubelka-Munk (white S = 1) from each paint's masstone and
+its measured white tint — `tools/pigment-fit/` has the scripts (not
+deployed). spectral.js and its CDN script are gone.
 
-**Spectral corrections (October 22 2026, same day):** raw spectral.js put
-12 of the 24 two-color mixes at 60°/120° apart more than 15° off the
-wheel's target or into gray (Red+Blue → Gray, Green+Violet → Green). Two
-hand-tuned corrections, both in `chainHex`'s spectral branch:
+**Hue recipes.** Each of the 12 hues is a fixed mix (≤2 chromatic pigments
++ white) solved to match the swatch's hue and lightness; e.g. Red = cold
+yellow 44% + red 43% + white 13% (Kimera's red is crimson-leaning), Blue =
+blue (red shade) 26% + violet 4% + white 70%, Violet = magenta + violet +
+white. In-between angles interpolate recipes.
 
-1. **Split-primary shift** (`SPLIT_PRIMARY_DEG = 60`) — each ingredient fed
-   to spectral is its wheel color shifted toward the wheel-math target,
-   scaled by distance to target (d/60, capped) and blend magnitude, the
-   way a painter picks alizarin rather than cadmium for a violet. Display
-   swatches never change. Complements/full triads (magnitude ≈ 0) are not
-   shifted, so their partial neutralizing is still raw spectral.
-2. **Per-hue tinting strength** (`TINT_STRENGTH12`) — spectral.js weights
-   colors by luminance, so bright greens swamped dark blues/violets.
-   Greens 0.5, Blue 0.9, Blue-Violet 1.6, Violet 0.8, others 1;
-   interpolated by angle.
+**Display calibration** (`PigmentEngine.display`). Real paint can't reach
+the screen swatches (Green, Blue-Violet, Violet are far outside paint's
+reach), so results are mapped into the wheel's space: lightness stretched
+so measured white/black land on page white/black, then per-hue chroma
+scale, hue and lightness corrections so each hue's own recipe lands
+exactly on its swatch. Chroma scales proportionally (a mix 60% as intense
+as its ingredients in paint stays 60% on screen); neutrals stay neutral;
+out-of-gamut results keep hue/lightness and lose chroma.
 
-Result: all 24 of those pairs name as the wheel's target hue. Values came
-from a search over every pair, validated on unequal-ratio mixes it didn't
-see. Known side effect: on two-color mixes the wheel geometry now mostly
-decides hue and spectral mostly decides dulling/value; Yellow+Violet reads
-"Orange" and Red+Green "Brown" (complements are unshifted). Retune only by
-rerunning the full pair check, not by eye on one pair.
+**Mixing** (`chainHex`). Ingredient recipes are blended by chain weight,
+with the **split-primary shift** (`SPLIT_PRIMARY_DEG = 60`): each
+ingredient's recipe is taken from the wheel shifted toward the wheel-math
+target, scaled by distance (d/60, capped) and blend magnitude — so Red
+heading for Blue pulls in Red-Violet's magenta. Complements/triads
+(magnitude ≈ 0) aren't shifted. A per-hue strength fudge was tried on top
+and rejected: it fit 50/50 mixes but did worse on 25/75 ratios.
+
+**Checked before shipping:** all 24 two-color pairs at 60°/120° (12- and
+24-hue positions) name as the wheel's target or a boundary name that
+includes it; every single hue renders exactly its swatch; White ends at
+#ffffff. Retune only by rerunning that full check, not by eye.
+
+**`RECIPE_OF`.** `tint()`/`shade()` take a hex, so every engine output is
+remembered with its recipe; White mixes real white paint into it. Any hex
+the engine didn't produce falls back to the old models.
 
 **Fallback engine — wheel-position math:**
 
@@ -210,12 +218,13 @@ got 5 of 6 right, and inconsistently).
 
 ## Tint & Shade — the adaptive black model
 
-**Live (October 2026):** `tint()` and `shade()` first check
-`useSpectral()` and, when true, mix with spectral.js against `#ffffff` and
-`BLACK_HEX` (the same cool `BLACK` below, `#020a12`). Everything in this
-section describes the fallback path, which still runs if spectral.js fails
-to load. Known quirk of the fallback, not fixed: a near-neutral gray plus
-black drifts teal, because R≈G makes `vulnerability` max out.
+**Live (October 2026):** White mixes measured white paint (see the mixing
+engine). **Black deliberately stays on this hand-tuned model.** The
+measured Kimera black was tested and rejected by David: it's warm and very
+strong (2% visibly darkens Yellow), and Yellow+black went brown instead of
+olive, contradicting the researched behavior below. Known quirk, not
+fixed: a near-neutral gray plus black drifts teal (R≈G maxes out
+`vulnerability`).
 
 This is the part that took the most iteration, and the reasoning is worth
 preserving in full, because it's easy to accidentally regress.
@@ -356,11 +365,11 @@ track is a 9-stop gradient of the colors that slider actually produces at
 0→100%, and the thumb is filled with the color at its current position.
 `paintSliders()` samples by temporarily setting that one control, reading
 the color back through the live engine, then restoring it — so tracks
-follow spectral/fallback and current White/Black automatically. Ratio
+follow the live engine and current White/Black automatically. Ratio
 slider `i` shows the toned stage `i+2` (matching its left label);
 White/Black show the final Result. Called at the end of `updateMixer()`
 and from `refreshMixerColors()` (the mid-drag path), never by rebuilding
-the inputs. ~3.4 ms per repaint in spectral mode on desktop.
+the inputs. ~0.8 ms per repaint with the pigment engine on desktop.
 
 -----
 
@@ -371,8 +380,8 @@ describes as single colors plus white at Munsell value 7.
 
 - **Chroma** — OKLCh chroma of the hue mix (`chainHex`, before
   White/Black) as a % of its most intense ingredient. Shows how much a
-  complement or third primary costs. Under spectral, cancellation is
-  partial, so muddy mixes read higher than they would under the fallback.
+  complement or third primary costs. Real pigments don't fully cancel,
+  so muddy mixes keep some chroma.
 - **Value 7 Tint** — bisects the White amount that brings the hue mix to
   CIE L* 71.6 (≈ Munsell V7 per ASTM D1535) through the live `tint()`,
   and shows "Mix → + N% White." Setting White to N with Black at 0 makes

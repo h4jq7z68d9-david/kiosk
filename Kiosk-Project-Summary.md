@@ -574,6 +574,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **Colored sliders** — tracks show the actual 0→100% color range, thumb shows current color; live during drag.
 - ✓ **Readout: Chroma meter + Value 7 Tint** — for mixing Gamblin Radiant–style high-chroma tints (color + white at Munsell value 7).
 - ✓ **Spectral corrections: split-primary shift + per-hue tinting strength** — Red+Blue now Violet (was Gray), Green+Violet now Blue (was Green); all 24 two-color pairs at 60°/120° name as the wheel's target. Complements still don't fully neutralize (Yellow+Violet → "Orange"). Details in `Color-Wheel-App-Reference.md`.
+- ✓ **Measured-pigment engine replaced spectral.js** — 13 Kimera paints from PaintMixing (miciwan, data CC BY 4.0; credit line in the wheel footer — keep it). Built-in Kubelka-Munk mixer + display calibration; no CDN dependency. White uses measured white paint; **Black stays on the hand-tuned adaptive model** (measured black tested and rejected — Yellow+black went brown). Fitting scripts in `tools/pigment-fit/` (not deployed). David's rule: only use data that's certainly free to use.
 - **Workflow note:** test builds are reviewed in chat as files, not pushed as GitHub branches. Two experiment branches from this session (`spectral-mix-toggle`, `mix-percentages`) couldn't be deleted from the session — delete them on GitHub.
 
 -----
@@ -1176,7 +1177,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 
 ## Key Principles
 
-- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. As of August 2026 the wheel is inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the mixing engine (spectral.js live since October 22 2026 by David's choice, after an earlier revert — wheel-position math kept as fallback), the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
+- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. As of August 2026 the wheel is inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the mixing engine (measured-pigment Kubelka-Munk since October 22 2026 — spectral.js was used briefly that day and replaced; black stays on the hand-tuned model), the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **HTML structure** — pages are single-file today with no framework or build pipeline; that is history, not a constraint (David, October 2 2026). Prefer simple shared files over copy-pasting the same block into many pages. Still no need for a framework.

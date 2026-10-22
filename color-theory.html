@@ -341,6 +341,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 
   <div class="wheel-footer">
     <div class="tool-note">Drag the needle around the wheel — or tap any hue directly — to see relationships, value, and temperature update live.</div>
+    <div class="tool-note">Mixes are computed from measured pigment data adapted from <a href="https://github.com/miciwan/PaintMixing" target="_blank" rel="noopener">PaintMixing</a> by miciwan, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</div>
   </div>
   </div>
 
@@ -394,7 +395,6 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 
 <div id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/spectral.js@3.0.0/spectral.min.js"></script>
 <script>
 /* cart badge — reads the same store the gallery writes to */
 (function () {
@@ -657,28 +657,141 @@ function mixToward(hex, targetRgb, t){
   );
 }
 const WHITE = {r:255,g:255,b:255}, BLACK = {r:2,g:10,b:18};
-/* October 2026: needle mixing, black, and white go through spectral.js
-   3.0.0 (Kubelka-Munk), chosen by David after an A/B against the
-   wheel-position math. Known trade-off, accepted: complements don't fully
-   neutralize and Red+Blue reads grayish rather than Violet (see
-   Color-Wheel-App-Reference.md for the earlier revert). The wheel-position
-   math (blendAngles/hexFromBlend, the adaptive shade()) is kept as the
-   fallback if the spectral.js CDN script fails to load. */
-function spectralReady(){ return typeof window.spectral !== 'undefined' && typeof window.spectral.mix === 'function'; }
-function useSpectral(){ return spectralReady(); }
-function spectralMixHex(pairs){ // pairs: [[hex, weight, tintingStrength?], ...]
-  const sp = window.spectral;
-  const parts = pairs.filter(([, w]) => w > 0).map(([hex, w, ts]) => {
-    const c = new sp.Color(hex);
-    if (ts !== undefined) c.tintingStrength = ts;
-    return [c, w];
-  });
-  if (parts.length === 1) return pairs.find(([, w]) => w > 0)[0];
-  return sp.mix(...parts).toString().toLowerCase();
+/* MEASURED-PIGMENT MIXING (October 2026). Needle mixing, White and Black
+   use real paint measurements: 13 single-pigment Kimera acrylics (white,
+   cold/warm yellow, yellow oxide, orange, red, red oxide, magenta, violet,
+   two phthalo blues, green, black), spectral reflectance from the
+   PaintMixing project by miciwan — data CC BY 4.0, credited in the wheel
+   footer. Absorption (K) and scattering (S) per wavelength (400–700 nm,
+   10 nm) were fitted offline from each paint's masstone and its measured
+   white tint (two-constant Kubelka-Munk, white S = 1), and are embedded
+   below with CIE 1931 2° × D65 weights. Each wheel hue maps to a fixed
+   pigment recipe that reproduces its hue; the display calibration in the
+   engine maps paint results into the wheel's own (brighter, screen-gamut)
+   swatches, so a single hue shows exactly its swatch. This replaced
+   spectral.js, which guessed pigment behavior from screen RGB. The
+   wheel-position math (blendAngles/hexFromBlend) and the adaptive shade()
+   are still here: blendAngles drives the split-primary direction, and
+   tint/shade fall back to the old models for any color the engine didn't
+   produce. See Color-Wheel-App-Reference.md before retuning anything. */
+const PIGMENT_DATA = {"names":["white","cold yellow","warm yellow","yellow oxide","orange","red","red oxide","magenta","violet","blue red shade","blue green shade","green","black"],"K":[[0.0286,0.02372,0.006891,0.002692,0.002475,0.00218,0.001945,0.001913,0.001732,0.001708,0.001744,0.001694,0.001546,0.001504,0.00153,0.001524,0.001465,0.001424,0.0014,0.00141,0.00143,0.00143,0.001435,0.001648,0.001629,0.001976,0.001795,0.001844,0.002134,0.002617,0.002462],[1.373,2.056,2.271,2.192,2.18,2.085,1.787,1.428,1.023,0.6362,0.3332,0.1436,0.05659,0.02583,0.01669,0.01459,0.01541,0.01549,0.01559,0.01684,0.01707,0.0189,0.02083,0.02352,0.02561,0.02698,0.02989,0.03025,0.03041,0.03548,0.03388],[2.311,4.667,6.327,7.324,8.289,9.335,10.35,8.874,7.372,7.069,5.936,3.426,1.482,0.5373,0.1832,0.06684,0.03062,0.01822,0.01376,0.01175,0.01071,0.01055,0.01045,0.01097,0.01022,0.01073,0.01108,0.0118,0.0125,0.01225,0.01422],[1.015,1.438,1.45,1.344,1.216,1.108,1.076,1.054,1.024,0.9608,0.8664,0.7284,0.5701,0.413,0.2803,0.1835,0.1263,0.09595,0.0833,0.08096,0.08328,0.08891,0.09451,0.1014,0.1047,0.1079,0.1071,0.1047,0.1005,0.09737,0.08974],[1.566,2.389,2.738,3.04,3.391,3.637,3.852,3.944,4.17,4.178,4.288,4.178,4.117,3.935,3.299,2.206,1.236,0.634,0.3275,0.1578,0.0764,0.04443,0.03208,0.02757,0.0254,0.02393,0.02319,0.02292,0.02291,0.02318,0.02338],[1.318,1.499,1.594,1.685,1.797,1.963,2.089,2.268,2.446,2.66,2.909,3.19,3.51,3.681,3.822,4.089,4.396,4.319,2.873,1.214,0.4345,0.1692,0.07945,0.05507,0.05171,0.05973,0.06983,0.07867,0.08429,0.1005,0.09782],[2.079,2.373,2.409,2.489,2.654,2.782,2.854,2.933,2.997,3.075,3.164,3.232,3.276,3.3,3.281,3.123,2.814,2.311,1.767,1.332,1.042,0.8779,0.7821,0.7334,0.6901,0.6546,0.609,0.5703,0.5183,0.4797,0.4362],[0.5972,0.5862,0.5657,0.6155,0.7491,0.922,1.126,1.379,1.755,2.257,2.746,3.361,4.585,6.096,6.756,6.624,6.981,6.154,3.611,1.696,0.8102,0.4281,0.251,0.1706,0.1297,0.1101,0.09832,0.09283,0.08933,0.08828,0.08673],[1.076,0.9247,0.7866,0.7226,0.7527,0.8462,1.013,1.289,1.783,2.615,3.716,5.137,7.251,9.748,11.4,12.32,14.22,15.29,12.83,9.166,7.238,7.233,8.327,8.443,6.408,4.015,2.323,1.386,0.8764,0.5973,0.4218],[0.8164,0.7054,0.6145,0.5003,0.375,0.2538,0.2132,0.2242,0.2737,0.3711,0.5199,0.749,1.106,1.62,2.364,3.424,4.79,6.16,7.314,7.962,9.142,10.12,10.53,10.03,9.173,8.135,7.508,7.527,8.175,9.202,9.87],[0.8721,0.761,0.6827,0.5294,0.3493,0.2495,0.2284,0.2318,0.2669,0.3316,0.4355,0.604,0.8799,1.293,1.904,2.804,4.108,5.647,7.144,8.434,10.06,11.89,13.54,15.14,16.41,16.24,15.34,15.08,15.45,16.18,20.26],[1.851,2.076,1.953,1.753,1.543,1.281,0.9409,0.5922,0.3592,0.2441,0.2254,0.2569,0.3249,0.4311,0.5989,0.8518,1.208,1.696,2.382,3.411,4.842,6.316,7.51,8.439,9.087,9.85,9.986,9.27,8.274,7.295,6.851],[4.492,4.427,4.253,4.341,4.604,4.787,4.938,5.057,5.186,5.323,5.511,5.661,5.767,5.917,6.097,6.255,6.401,6.59,6.739,6.91,7.089,7.251,7.465,7.695,7.824,8.104,8.241,8.441,8.51,8.76,9.002]],"S":[[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0],[1.323,0.6653,0.5871,0.5668,0.5449,0.5412,0.5012,0.4682,0.4491,0.4262,0.4101,0.3965,0.3872,0.4246,0.5647,0.8001,1.098,1.244,1.326,1.444,1.498,1.612,1.812,1.934,2.118,2.121,2.288,2.205,2.104,2.225,2.117],[1.534,1.159,1.283,1.529,1.755,1.979,2.302,2.007,1.611,1.554,1.349,0.8378,0.4423,0.2675,0.2036,0.1704,0.1593,0.1638,0.1763,0.1802,0.1836,0.1947,0.202,0.2198,0.2125,0.2237,0.2363,0.2511,0.2565,0.2442,0.2821],[0.4774,0.3345,0.3009,0.3045,0.3095,0.3046,0.3051,0.3091,0.3158,0.3209,0.3314,0.3468,0.3643,0.376,0.3865,0.3869,0.3852,0.3808,0.3778,0.3756,0.3736,0.3761,0.3776,0.3851,0.3871,0.391,0.3924,0.3921,0.3898,0.3975,0.3967],[0.6518,0.4327,0.421,0.4746,0.5188,0.5422,0.5785,0.5998,0.6504,0.6513,0.6812,0.675,0.6927,0.7046,0.6654,0.5559,0.4403,0.3473,0.2931,0.2539,0.2275,0.2188,0.2266,0.241,0.255,0.2609,0.2704,0.2772,0.2832,0.2881,0.2893],[0.5744,0.2616,0.2222,0.2369,0.2376,0.2551,0.2613,0.2899,0.3151,0.3471,0.3804,0.4302,0.4927,0.5367,0.57,0.659,0.7974,0.9058,0.8455,0.7768,0.6737,0.6132,0.637,0.8455,1.263,1.857,2.513,2.995,3.29,3.885,3.785],[0.5489,0.4224,0.424,0.4411,0.4569,0.4686,0.4794,0.4937,0.5059,0.5176,0.5342,0.5523,0.5723,0.5949,0.6238,0.6584,0.7075,0.7728,0.8396,0.8903,0.9189,0.932,0.9361,0.9446,0.9485,0.9511,0.9553,0.9696,0.9627,0.9773,0.9893],[0.186,0.1581,0.1544,0.1547,0.1619,0.1758,0.1967,0.2229,0.266,0.3249,0.3812,0.4542,0.6199,0.8568,0.9974,1.014,1.111,1.07,0.6927,0.3833,0.2358,0.1738,0.1475,0.139,0.1386,0.1426,0.1448,0.1472,0.1479,0.1491,0.1503],[0.1631,0.1253,0.1131,0.103,0.1005,0.1071,0.1232,0.1504,0.1993,0.2818,0.4018,0.5862,0.9326,1.412,1.769,1.997,2.451,2.84,2.455,1.737,1.305,1.249,1.462,1.563,1.268,0.8422,0.5302,0.3537,0.259,0.2071,0.1733],[0.1682,0.1507,0.1425,0.1212,0.09871,0.07906,0.06647,0.05853,0.05439,0.05664,0.06591,0.08468,0.1183,0.1665,0.2364,0.3422,0.4888,0.6687,0.8418,0.9664,1.171,1.382,1.536,1.51,1.403,1.233,1.109,1.077,1.172,1.346,1.532],[0.1966,0.1767,0.1704,0.1412,0.1093,0.08764,0.07448,0.06414,0.05744,0.05509,0.05846,0.06975,0.09339,0.1309,0.1868,0.2721,0.3996,0.5721,0.7655,0.961,1.226,1.575,1.921,2.253,2.572,2.587,2.429,2.342,2.406,2.57,3.437],[0.2911,0.3137,0.3261,0.3023,0.2619,0.2231,0.1784,0.1307,0.09617,0.07554,0.06629,0.06183,0.06198,0.06802,0.0821,0.1071,0.144,0.1957,0.2678,0.3808,0.5561,0.7705,0.9799,1.153,1.306,1.497,1.603,1.538,1.404,1.227,1.159],[0.5768,0.5298,0.5466,0.5682,0.5813,0.5966,0.6172,0.635,0.6543,0.6733,0.6958,0.7171,0.737,0.7603,0.7861,0.8121,0.8338,0.8648,0.8849,0.9121,0.9411,0.9673,1.003,1.031,1.058,1.096,1.122,1.158,1.178,1.222,1.274]],"W":[[0.001121,0.003768,0.01188,0.02329,0.03457,0.03723,0.03243,0.02124,0.01049,0.003297,0.0005072,0.0009489,0.006275,0.01687,0.0287,0.04269,0.05627,0.06949,0.08308,0.08615,0.09049,0.08503,0.07093,0.05064,0.03548,0.02147,0.01252,0.006806,0.003466,0.001498,0.0007699],[3.102e-05,0.0001048,0.0003537,0.0009517,0.002283,0.004208,0.006691,0.009891,0.01525,0.02142,0.03343,0.05132,0.07042,0.08786,0.09428,0.09798,0.09418,0.0868,0.07888,0.06354,0.05376,0.04266,0.03163,0.02089,0.01386,0.008105,0.004631,0.002492,0.00126,0.0005418,0.000278],[0.005315,0.01796,0.05709,0.1137,0.1734,0.1963,0.1861,0.14,0.0892,0.04791,0.02815,0.01614,0.007761,0.004297,0.002006,0.0008617,0.0003691,0.0001915,0.0001496,9.234e-05,6.815e-05,2.883e-05,1.577e-05,3.942e-06,1.584e-06,0.0,0.0,0.0,0.0,0.0,0.0]],"recipes":[[0.1306,0.4435,0.0,0.0,0.0,0.4259,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.2143,0.0,0.4547,0.0,0.3309,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.1082,0.8706,0.0,0.0,0.0,0.0212,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.0392,0.9582,0.0,0.0,0.0026,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.3193,0.6335,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0472,0.0],[0.421,0.4254,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1536,0.0],[0.6541,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.3459,0.0],[0.7029,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0382,0.2589,0.0,0.0,0.0],[0.4098,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1182,0.472,0.0,0.0,0.0],[0.6851,0.0,0.0,0.0,0.0,0.0,0.0,0.1709,0.144,0.0,0.0,0.0,0.0],[0.5503,0.0,0.0,0.0,0.0,0.1403,0.0,0.3094,0.0,0.0,0.0,0.0,0.0]]};
+/* ==== PIGMENT ENGINE (inlined into color-theory.html; also loaded by tests) ====
+   Needs: PIGMENT_DATA, SWATCH12 (12 hex strings, Red first, 30° apart). */
+const PigmentEngine = (function () {
+  function make(DATA, SWATCH12, BLACK_TARGET_HEX) {
+    const N = DATA.names.length, B = DATA.K[0].length;
+    const IW = DATA.names.indexOf('white'), IB = DATA.names.indexOf('black');
+    const M = [[3.2404542, -1.5371385, -0.4985314], [-0.9692660, 1.8760108, 0.0415560], [0.0556434, -0.2040259, 1.0572252]];
+
+    function reflectance(c) {
+      const R = new Array(B);
+      for (let b = 0; b < B; b++) {
+        let k = 0, s = 0;
+        for (let i = 0; i < N; i++) { if (c[i]) { k += c[i] * DATA.K[i][b]; s += c[i] * DATA.S[i][b]; } }
+        const om = s / (k + s);
+        R[b] = om / (2 - om + 2 * Math.sqrt(1 - om));
+      }
+      return R;
+    }
+    function linRgb(c) {
+      const R = reflectance(c), xyz = [0, 0, 0];
+      for (let j = 0; j < 3; j++) for (let b = 0; b < B; b++) xyz[j] += DATA.W[j][b] * R[b];
+      return M.map(row => row[0] * xyz[0] + row[1] * xyz[1] + row[2] * xyz[2]);
+    }
+    const toLin = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    const toGam = v => v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
+    function hexToLin(h) { const n = parseInt(h.slice(1), 16); return [toLin(n >> 16 & 255), toLin(n >> 8 & 255), toLin(n & 255)]; }
+    function linToOklch(l) {
+      const [r, g, b] = l.map(v => Math.max(0, v));
+      const L_ = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+      const m_ = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+      const s_ = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+      const L = 0.2104542553 * L_ + 0.7936177850 * m_ - 0.0040720468 * s_;
+      const a = 1.9779984951 * L_ - 2.4285922050 * m_ + 0.4505937099 * s_;
+      const bb = 0.0259040371 * L_ + 0.7827717662 * m_ - 0.8086757660 * s_;
+      return { L, C: Math.hypot(a, bb), h: Math.atan2(bb, a) };
+    }
+    function oklchToLin({ L, C, h }) {
+      const a = C * Math.cos(h), b = C * Math.sin(h);
+      const l_ = L + 0.3963377774 * a + 0.2158037573 * b, m_ = L - 0.1055613458 * a - 0.0638541728 * b, s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+      const l = l_ ** 3, m = m_ ** 3, s = s_ ** 3;
+      return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s];
+    }
+    const inGamut = l => l.every(v => v >= -1e-4 && v <= 1 + 1e-4);
+    function linToHex(l) { return '#' + l.map(v => Math.round(Math.min(1, Math.max(0, toGam(Math.min(1, Math.max(0, v))))) * 255).toString(16).padStart(2, '0')).join(''); }
+    const wrap = d => ((d + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+
+    /* Display calibration. Real paints can't reach the wheel's screen
+       swatches (greens and violets especially), so the pigment result is
+       mapped into the wheel's color space: lightness is stretched so the
+       measured white/black land on the page's white/black, then hue,
+       chroma and lightness are corrected per hue so each wheel hue's own
+       pigment recipe lands exactly on its swatch. Chroma is scaled
+       proportionally, so a mix that's 60% as intense as its ingredients in
+       paint stays 60% as intense on screen; neutrals stay neutral. */
+    const unit = i => { const c = new Array(N).fill(0); c[i] = 1; return c; };
+    const Lw = linToOklch(linRgb(unit(IW))).L, Lb = linToOklch(linRgb(unit(IB))).L;
+    const Lb2 = linToOklch(hexToLin(BLACK_TARGET_HEX)).L;
+    const remapL = L => Lb2 + (L - Lb) * (1 - Lb2) / (Lw - Lb);
+    const anchors = DATA.recipes.map((rc, i) => {
+      const p = linToOklch(linRgb(rc)); p.L = remapL(p.L);
+      const s = linToOklch(hexToLin(SWATCH12[i]));
+      return { h: p.h, C: p.C, dh: wrap(s.h - p.h), cs: s.C / p.C, dL: s.L - p.L };
+    }).sort((a, b) => a.h - b.h);
+    function corrAt(h) {
+      const n = anchors.length;
+      for (let i = 0; i < n; i++) {
+        const a = anchors[i], b = anchors[(i + 1) % n];
+        const span = ((b.h - a.h) + 2 * Math.PI) % (2 * Math.PI) || 2 * Math.PI;
+        const off = ((h - a.h) + 2 * Math.PI) % (2 * Math.PI);
+        if (off <= span) {
+          const f = off / span;
+          return { C: a.C + (b.C - a.C) * f, dh: a.dh + (b.dh - a.dh) * f, cs: a.cs + (b.cs - a.cs) * f, dL: a.dL + (b.dL - a.dL) * f };
+        }
+      }
+      return anchors[0];
+    }
+    function display(c) {
+      const p = linToOklch(linRgb(c));
+      const L1 = remapL(p.L), k = corrAt(p.h), w = Math.min(1, p.C / k.C);
+      const out = { L: Math.min(1, Math.max(0, L1 + k.dL * w)), C: p.C * k.cs, h: p.h + k.dh * w };
+      let lin = oklchToLin(out);
+      if (!inGamut(lin)) { // keep hue and lightness, pull chroma in
+        let lo = 0, hi = out.C;
+        for (let it = 0; it < 22; it++) { const mid = (lo + hi) / 2; if (inGamut(oklchToLin({ ...out, C: mid }))) lo = mid; else hi = mid; }
+        lin = oklchToLin({ ...out, C: lo });
+      }
+      return linToHex(lin);
+    }
+    function recipeAt(deg) {
+      deg = ((deg % 360) + 360) % 360;
+      const lo = Math.floor(deg / 30) % 12, hi = (lo + 1) % 12, f = (deg % 30) / 30;
+      return DATA.recipes[lo].map((v, i) => v * (1 - f) + DATA.recipes[hi][i] * f);
+    }
+    function blend(parts) { // [[conc, weight], ...]
+      const out = new Array(N).fill(0); let tot = 0;
+      for (const [c, w] of parts) { if (w <= 0) continue; tot += w; for (let i = 0; i < N; i++) out[i] += c[i] * w; }
+      return tot > 0 ? out.map(v => v / tot) : out;
+    }
+    return { display, recipeAt, blend, white: unit(IW), black: unit(IB), names: DATA.names };
+  }
+  return { make };
+})();
+const BLACK_HEX = rgbToHex(BLACK.r, BLACK.g, BLACK.b);
+const PIG = PigmentEngine.make(PIGMENT_DATA, HUES12.map(h => h.hex), BLACK_HEX);
+/* tint()/shade() take a hex, so every color the engine produces is
+   remembered with its pigment recipe — White/Black then mix real white or
+   black paint into that recipe instead of guessing from the hex. */
+const RECIPE_OF = new Map();
+function showRecipe(conc){
+  const hex = PIG.display(conc);
+  if (RECIPE_OF.size > 5000) RECIPE_OF.clear();
+  RECIPE_OF.set(hex, conc);
+  return hex;
 }
-const BLACK_HEX = rgbToHex(BLACK.r, BLACK.g, BLACK.b), WHITE_HEX = '#ffffff';
 function tint(hex, t){
-  if (useSpectral()) return spectralMixHex([[hex, 1 - t], [WHITE_HEX, t]]);
+  const conc = RECIPE_OF.get(hex);
+  if (conc) return showRecipe(PIG.blend([[conc, 1 - t], [PIG.white, t]]));
   return mixToward(hex, WHITE, t);
 }
 /* Black gets two things real black pigments have and a plain linear blend
@@ -707,7 +820,10 @@ function tint(hex, t){
    cast visible at a moderate, still-legible darkness for a real stretch,
    rather than a blink-and-you-miss-it sliver right before black. */
 function shade(hex, t){
-  if (useSpectral()) return spectralMixHex([[hex, 1 - t], [BLACK_HEX, t]]);
+  // Black stays on the hand-tuned adaptive model below (cool undertone,
+  // Yellow drifts to olive): the measured Kimera black is warm and very
+  // strong, so Yellow+black went brown, contradicting the researched
+  // behavior this model encodes. See Color-Wheel-App-Reference.md.
   const c = hexToRgb(hex);
   const maxCh = Math.max(c.r, c.g, c.b, 1);
   const rgGap = Math.abs(c.r - c.g) / maxCh; // 0 = R and G nearly identical (most vulnerable), higher = more separated (more resistant)
@@ -930,44 +1046,29 @@ function chainEntries(count){
 function chainAngleMag(count){
   return blendAngles(chainEntries(count));
 }
-/* Two hand-tuned corrections to raw spectral.js mixing (October 2026).
-   Before them, 12 of the 24 two-color mixes at 60°/120° apart landed more
-   than 15° off the wheel's own target hue or went gray; after, none do.
-   1. SPLIT-PRIMARY SHIFT. A painter picks the version of a color that leans
-      toward the mix (alizarin, not cadmium, for a violet). Each ingredient
-      fed to spectral is the wheel color shifted toward the wheel-math
-      target, up to SPLIT_PRIMARY_DEG, scaled by how far the target is
-      (d/60, capped) and by blend magnitude. Complements and full triads
-      have magnitude ~0, so they're NOT shifted — their partial
-      neutralizing stays pure spectral. Display swatches never change.
-      This is what fixes Red+Blue (was gray, now a muted violet).
-   2. TINTING STRENGTH. spectral.js weights each color by its luminance, so
-      bright greens swamped dark blues/violets at "equal" parts (Green+
-      Violet came out Green). Per-hue tinting strength rebalances that,
-      interpolated by angle. Wedge order: Red, Red-Orange, Orange,
-      Yellow-Orange, Yellow, Yellow-Green, Green, Blue-Green, Blue,
-      Blue-Violet, Violet, Red-Violet.
-   Both values came from a search over every 60°/120° pair, checked
-   against unequal-ratio mixes the search didn't see. Before retuning
-   either, rerun that check — don't adjust one pair by eye. */
+/* SPLIT-PRIMARY SHIFT. A painter picks the version of a color that leans
+   toward the mix (alizarin, not cadmium, for a violet). Each ingredient's
+   pigment recipe is taken from the wheel shifted toward the wheel-math
+   target, up to SPLIT_PRIMARY_DEG, scaled by how far the target is (d/60,
+   capped) and by blend magnitude — so Red heading for Blue brings in the
+   magenta from Red-Violet's recipe. Complements and full triads
+   (magnitude ~0) are not shifted; their dulling is the pigments' own.
+   60 was chosen by checking every 60°/120° pair at 12 and 24 positions
+   plus 25/75 ratios; a per-hue strength fudge was tried on top and
+   rejected (it fit the 50/50 checks but did worse on uneven ratios).
+   Retune only by rerunning that full check, not by eye on one pair. */
 const SPLIT_PRIMARY_DEG = 60;
-const TINT_STRENGTH12 = [1, 1, 1, 1, 1, 0.5, 0.5, 0.5, 0.9, 1.6, 0.8, 1];
-function tintStrengthAt(deg){
-  deg = ((deg % 360) + 360) % 360;
-  const lo = Math.floor(deg / 30) % 12, hi = (lo + 1) % 12, f = (deg % 30) / 30;
-  return TINT_STRENGTH12[lo] + (TINT_STRENGTH12[hi] - TINT_STRENGTH12[lo]) * f;
-}
 function chainHex(count){
-  if (useSpectral()) {
-    const entries = chainEntries(count);
-    const { angle: target, magnitude } = blendAngles(entries);
-    return spectralMixHex(entries.map(({ angle, weight }) => {
-      const d = ((target - angle) % 360 + 540) % 360 - 180; // signed degrees toward target
-      const shifted = angle + SPLIT_PRIMARY_DEG * Math.max(-1, Math.min(1, d / 60)) * magnitude;
-      const hsl = wheelHslAt(shifted), rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
-      return [rgbToHex(rgb.r, rgb.g, rgb.b), weight, tintStrengthAt(angle)];
-    }));
-  }
+  const entries = chainEntries(count);
+  if (entries.length === 1) return showRecipe(PIG.recipeAt(entries[0].angle));
+  const { angle: target, magnitude } = blendAngles(entries);
+  return showRecipe(PIG.blend(entries.map(({ angle, weight }) => {
+    const d = ((target - angle) % 360 + 540) % 360 - 180; // signed degrees toward target
+    const shifted = angle + SPLIT_PRIMARY_DEG * Math.max(-1, Math.min(1, d / 60)) * magnitude;
+    return [PIG.recipeAt(shifted), weight];
+  })));
+}
+function chainHexWheelMath(count){
   const { angle, magnitude } = chainAngleMag(count);
   return hexFromBlend(angle, magnitude);
 }
@@ -1156,7 +1257,7 @@ function updateMixer(){
 
 /* Colored sliders: each track is the actual run of colors that slider
    produces from 0 to 100 (sampled through the same engine the Result uses,
-   so it follows wheel/spectral mode and the current White/Black), and the
+   so it follows the pigment engine and the current White/Black), and the
    thumb is filled with the color at its current position. Sampling works by
    temporarily setting that one control and reading the color back, then
    restoring it. Ratio slider i shows the mix through stage i+2 (with
