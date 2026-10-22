@@ -121,6 +121,9 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .wheel-toggle{display:flex;background:var(--wall-hi);border-radius:20px;padding:3px;gap:2px}
   .wheel-toggle-btn{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 11px;border-radius:16px;border:none;background:transparent;color:var(--muted);cursor:pointer}
   .wheel-toggle-btn.active{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(43,54,64,.15)}
+  .mix-mode-btn{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 11px;border-radius:16px;border:none;background:transparent;color:var(--muted);cursor:pointer}
+  .mix-mode-btn.active{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(43,54,64,.15)}
+  .mix-mode-btn:disabled{opacity:.4;cursor:default}
 
   .wheel-frame{position:relative;width:min(320px,66vw);aspect-ratio:1/1;touch-action:none;cursor:grab}
   .wheel-frame:active{cursor:grabbing}
@@ -319,6 +322,10 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
           <div class="wheel-frame" id="wheelFrame">
             <svg viewBox="-115 -115 230 230" id="wheelSvg"></svg>
           </div>
+          <div class="wheel-toggle" id="mixModeToggle">
+            <button class="mix-mode-btn active" data-mode="wheel">wheel mix</button>
+            <button class="mix-mode-btn" data-mode="spectral">spectral mix</button>
+          </div>
         </div>
       </div>
 
@@ -385,6 +392,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 
 <div id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/spectral.js@3.0.0/spectral.min.js"></script>
 <script>
 /* cart badge — reads the same store the gallery writes to */
 (function () {
@@ -647,7 +655,25 @@ function mixToward(hex, targetRgb, t){
   );
 }
 const WHITE = {r:255,g:255,b:255}, BLACK = {r:2,g:10,b:18};
-function tint(hex, t){ return mixToward(hex, WHITE, t); }
+/* EXPERIMENT (October 2026): "wheel" / "spectral" A/B toggle. "wheel" is the
+   default and the documented teaching model (see Color-Wheel-App-Reference.md
+   for why spectral.js was reverted once). "spectral" routes needle mixing,
+   black, and white through spectral.js 3.0.0 (Kubelka-Munk) so the two can
+   be compared on the same mix. The wheel-mode code paths are untouched. */
+let mixMode = 'wheel';
+function spectralReady(){ return typeof window.spectral !== 'undefined' && typeof window.spectral.mix === 'function'; }
+function useSpectral(){ return mixMode === 'spectral' && spectralReady(); }
+function spectralMixHex(pairs){ // pairs: [[hex, weight], ...]
+  const sp = window.spectral;
+  const parts = pairs.filter(([, w]) => w > 0).map(([hex, w]) => [new sp.Color(hex), w]);
+  if (parts.length === 1) return pairs.find(([, w]) => w > 0)[0];
+  return sp.mix(...parts).toString().toLowerCase();
+}
+const BLACK_HEX = rgbToHex(BLACK.r, BLACK.g, BLACK.b), WHITE_HEX = '#ffffff';
+function tint(hex, t){
+  if (useSpectral()) return spectralMixHex([[hex, 1 - t], [WHITE_HEX, t]]);
+  return mixToward(hex, WHITE, t);
+}
 /* Black gets two things real black pigments have and a plain linear blend
    doesn't: a cool (blue-leaning) undertone, rather than perfectly neutral
    — most real blacks (Mars Black and similar) aren't neutral — and,
@@ -674,6 +700,7 @@ function tint(hex, t){ return mixToward(hex, WHITE, t); }
    cast visible at a moderate, still-legible darkness for a real stretch,
    rather than a blink-and-you-miss-it sliver right before black. */
 function shade(hex, t){
+  if (useSpectral()) return spectralMixHex([[hex, 1 - t], [BLACK_HEX, t]]);
   const c = hexToRgb(hex);
   const maxCh = Math.max(c.r, c.g, c.b, 1);
   const rgGap = Math.abs(c.r - c.g) / maxCh; // 0 = R and G nearly identical (most vulnerable), higher = more separated (more resistant)
@@ -897,6 +924,14 @@ function chainAngleMag(count){
   return blendAngles(chainEntries(count));
 }
 function chainHex(count){
+  if (useSpectral()) {
+    // Same snapped ingredient angles and weights as wheel mode; each needle
+    // contributes its wedge's own swatch color.
+    return spectralMixHex(chainEntries(count).map(({ angle, weight }) => {
+      const hsl = wheelHslAt(angle), rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+      return [rgbToHex(rgb.r, rgb.g, rgb.b), weight];
+    }));
+  }
   const { angle, magnitude } = chainAngleMag(count);
   return hexFromBlend(angle, magnitude);
 }
@@ -1312,7 +1347,20 @@ function updatePalette(){
   attachPaletteDrag();
 }
 
+function setMixMode(mode){
+  if (mode === 'spectral' && !spectralReady()) return;
+  mixMode = mode;
+  document.querySelectorAll('.mix-mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mixMode);
+  });
+  updateAll();
+}
 document.addEventListener('click', e => {
+  const modeBtn = e.target.closest('.mix-mode-btn[data-mode]');
+  if (modeBtn) {
+    if (modeBtn.dataset.mode !== mixMode) setMixMode(modeBtn.dataset.mode);
+    return;
+  }
   const sizeBtn = e.target.closest('.wheel-toggle-btn[data-size]');
   if (sizeBtn) {
     const newSize = parseInt(sizeBtn.dataset.size, 10);
@@ -1621,6 +1669,10 @@ function attachDrag(){
   frame.addEventListener('pointercancel', () => { dragging = false; });
 }
 
+if (!spectralReady()) {
+  const sb = document.querySelector('.mix-mode-btn[data-mode="spectral"]');
+  if (sb) { sb.disabled = true; sb.title = 'spectral.js failed to load'; }
+}
 renderWheel();
 updatePalette();
 })();
