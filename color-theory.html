@@ -184,6 +184,7 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rel-chip .sq{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,.12)}
   .rel-chip .lbl{font-size:9px;font-weight:500;text-align:center;line-height:1.15;color:var(--ink)}
   .rel-chip .lbl.lbl-sm{font-size:8px}
+  .rel-chip .pct{font-family:var(--mono);font-size:9px;color:var(--muted);line-height:1.15}
   .rel-chip.base .sq{border-width:2px;border-color:var(--ink)}
 
   .wheel-footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px 16px;text-align:center}
@@ -1001,9 +1002,24 @@ function updateActiveWedge(){
 function stageHue(i, a){
   return i === 0 ? a : hueAtRotation(mixNeedles[i - 1], 0);
 }
+/* Each color's actual share of the hue mix, as whole percents that sum to
+   100 (largest-remainder rounding). The ratio sliders are cascading — each
+   sets the new color's share of the running mix, not its share of the
+   total — so the real split isn't readable from the sliders themselves.
+   Display only; White/Black are applied on top of this and aren't counted. */
+function mixPercents(){
+  const w = computeChainWeights(mixRatios);
+  const raw = w.map(x => x * 100);
+  const out = raw.map(Math.floor);
+  let left = 100 - out.reduce((a, b) => a + b, 0);
+  raw.map((x, i) => [x - Math.floor(x), i]).sort((p, q) => q[0] - p[0])
+     .slice(0, left).forEach(([, i]) => out[i]++);
+  return out;
+}
 function updateMixer(){
   const a = hueAtOffset(0);
   const n = mixNeedles.length + 1;
+  const pcts = n > 1 ? mixPercents() : null;
 
   let chainHtml = '';
   for (let i = 0; i < n; i++) {
@@ -1016,6 +1032,7 @@ function updateMixer(){
         ${removable ? `<button class="chip-x" data-remove="${i}" aria-label="Remove">&times;</button>` : ''}
         <div class="sq" style="background:${hue.hex}"></div>
         <div class="lbl">${hue.name}</div>
+        ${pcts ? `<div class="pct" data-pct-for="${i}">${pcts[i]}%</div>` : ''}
       </div>`;
     if (i < n - 1) chainHtml += `<div class="mixer-op">+</div>`;
   }
@@ -1079,6 +1096,11 @@ function refreshMixerColors(){
     if (sq) sq.style.background = computeResultHex();
     const lbl = resultEl.querySelector('.lbl');
     if (lbl) lbl.textContent = resultName();
+  }
+  const pctEls = document.querySelectorAll('#mixerCard [data-pct-for]');
+  if (pctEls.length) {
+    const pcts = mixPercents();
+    pctEls.forEach(el => { el.textContent = pcts[parseInt(el.dataset.pctFor, 10)] + '%'; });
   }
   const a = hueAtOffset(0);
   document.querySelectorAll('#mixerCard [data-left-for]').forEach(el => {
