@@ -565,6 +565,18 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 22 2026)
+
+**color-theory.html — color wheel: spectral.js mixing + mixer/readout UI** (commit `07b9a6f`, deployed)
+
+- ✓ **spectral.js 3.0.0 is now the live mixing engine** (needles, White, Black) — chosen by David after a temporary A/B toggle; toggle removed before shipping. Known trade-offs accepted: Red+Blue reads grayish, complements don't fully neutralize. Wheel-position math kept as automatic fallback if the jsDelivr script fails. `Color-Wheel-App-Reference.md` updated with the history and the "don't revert without asking" note.
+- ✓ **Mix chips show each color's real share** (e.g. 34 / 33 / 33) — the cascading ratio sliders hid the actual split.
+- ✓ **Colored sliders** — tracks show the actual 0→100% color range, thumb shows current color; live during drag.
+- ✓ **Readout: Chroma meter + Value 7 Tint** — for mixing Gamblin Radiant–style high-chroma tints (color + white at Munsell value 7).
+- **Workflow note:** test builds are reviewed in chat as files, not pushed as GitHub branches. Two experiment branches from this session (`spectral-mix-toggle`, `mix-percentages`) couldn't be deleted from the session — delete them on GitHub.
+
+-----
+
 ## Completed This Session (October 11 2026)
 
 **Gallery print sales now come out of gallery stock, not main print stock**
@@ -1163,7 +1175,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 
 ## Key Principles
 
-- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. As of August 2026 the wheel is inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the wheel-position mixing math, why real pigment physics (spectral.js) was tried and reverted, the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
+- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. As of August 2026 the wheel is inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the mixing engine (spectral.js live since October 22 2026 by David's choice, after an earlier revert — wheel-position math kept as fallback), the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **HTML structure** — pages are single-file today with no framework or build pipeline; that is history, not a constraint (David, October 2 2026). Prefer simple shared files over copy-pasting the same block into many pages. Still no need for a framework.

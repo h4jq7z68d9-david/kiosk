@@ -58,6 +58,20 @@ instructive ways.
 
 ## The one thing to understand before anything else
 
+> **Update — October 22 2026: spectral.js is back, by David's choice.**
+> After using the tool, David A/B-tested spectral.js 3.0.0 against the
+> wheel-position math (via a temporary toggle) and chose spectral as the
+> only mixing engine for needle mixing, White, and Black. The trade-offs
+> described below are still real and were re-confirmed before shipping —
+> Red+Blue reads grayish rather than Violet, Yellow+Violet lands on a
+> muted Red-Orange, and complements/triads don't fully neutralize (R+Y+B
+> at 1:1:1 keeps ~34% chroma vs ~8% under the wheel math). They are
+> **accepted**, not bugs. Don't revert to the wheel math on the strength
+> of the history below without asking David. The wheel-position math and
+> adaptive black model are still in the file as the automatic fallback if
+> the spectral.js CDN script fails to load. The section below is kept as
+> the record of why it was reverted the first time.
+
 **This is a teaching tool for painters, not a physics simulation.**
 
 Partway through this project, real pigment mixing (Kubelka-Munk theory, via
@@ -132,7 +146,19 @@ ever happens *between* distinct chosen hues, never *within* one.
 
 -----
 
-## The mixing engine — wheel-position math
+## The mixing engine — spectral.js (live) + wheel-position math (fallback)
+
+**Live engine (October 2026):** `chainHex(count)` sends each ingredient's
+wedge swatch (from `wheelHslAt` at its snapped angle) and its chain weight
+to `spectralMixHex()`, which wraps `spectral.mix([Color, weight], ...)`.
+spectral.js 3.0.0 is loaded pinned from
+`cdn.jsdelivr.net/npm/spectral.js@3.0.0/spectral.min.js` in a `<script>`
+tag ahead of the main script. `useSpectral()` is simply "did the library
+load"; if it didn't, every path below runs instead, unchanged. The snapping
+invariant still holds — spectral only ever sees the wedge-center colors.
+
+**Fallback engine — wheel-position math:**
+
 
 `blendAngles(entries)` treats each active color as a unit vector at its
 wheel angle, scaled by its weight, and sums them. The resulting vector's
@@ -160,6 +186,13 @@ got 5 of 6 right, and inconsistently).
 -----
 
 ## Tint & Shade — the adaptive black model
+
+**Live (October 2026):** `tint()` and `shade()` first check
+`useSpectral()` and, when true, mix with spectral.js against `#ffffff` and
+`BLACK_HEX` (the same cool `BLACK` below, `#020a12`). Everything in this
+section describes the fallback path, which still runs if spectral.js fails
+to load. Known quirk of the fallback, not fixed: a near-neutral gray plus
+black drifts teal, because R≈G makes `vulnerability` max out.
 
 This is the part that took the most iteration, and the reasoning is worth
 preserving in full, because it's easy to accidentally regress.
@@ -287,6 +320,44 @@ Chain chips in the UI show the **raw picked hues**, not cumulative blends
 — you always see exactly what you selected, even though the math
 underneath is cascading. Removing the Base chip promotes the next color in
 the chain to become the new Base.
+
+**Real-share percentages (October 2026):** because the cascading sliders
+don't show the actual split (the 3rd color's slider sits at 33% for an
+even three-way mix, and moving an early slider silently changes later
+shares), each chip shows its true share of the hue mix under its name —
+`mixPercents()`, largest-remainder rounding so they sum to 100. Display
+only; White/Black aren't counted. Hidden when there's only one color.
+
+**Colored sliders (October 2026):** every ratio, White, and Black slider
+track is a 9-stop gradient of the colors that slider actually produces at
+0→100%, and the thumb is filled with the color at its current position.
+`paintSliders()` samples by temporarily setting that one control, reading
+the color back through the live engine, then restoring it — so tracks
+follow spectral/fallback and current White/Black automatically. Ratio
+slider `i` shows the toned stage `i+2` (matching its left label);
+White/Black show the final Result. Called at the end of `updateMixer()`
+and from `refreshMixerColors()` (the mid-drag path), never by rebuilding
+the inputs. ~3.4 ms per repaint in spectral mode on desktop.
+
+-----
+
+## Readout — Chroma meter & Value 7 Tint (October 2026)
+
+Added to help mix high-chroma tints like Gamblin's Radiants, which Gamblin
+describes as single colors plus white at Munsell value 7.
+
+- **Chroma** — OKLCh chroma of the hue mix (`chainHex`, before
+  White/Black) as a % of its most intense ingredient. Shows how much a
+  complement or third primary costs. Under spectral, cancellation is
+  partial, so muddy mixes read higher than they would under the fallback.
+- **Value 7 Tint** — bisects the White amount that brings the hue mix to
+  CIE L* 71.6 (≈ Munsell V7 per ASTM D1535) through the live `tint()`,
+  and shows "Mix → + N% White." Setting White to N with Black at 0 makes
+  the Result match. If the mix is already lighter than V7 (pure Yellow),
+  it says white can't get there — Radiant Lemon reaches V7 with other
+  pigments, which the wheel doesn't model.
+- Both work on idealized wheel swatches, not real pigments: they show the
+  direction and value to aim for, not a guarantee a tube mix gets there.
 
 -----
 
