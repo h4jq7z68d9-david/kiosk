@@ -573,6 +573,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - ✓ **Mix chips show each color's real share** (e.g. 34 / 33 / 33) — the cascading ratio sliders hid the actual split.
 - ✓ **Colored sliders** — tracks show the actual 0→100% color range, thumb shows current color; live during drag.
 - ✓ **Readout: Chroma meter + Value 7 Tint** — for mixing Gamblin Radiant–style high-chroma tints (color + white at Munsell value 7).
+- ✓ **Spectral corrections: split-primary shift + per-hue tinting strength** — Red+Blue now Violet (was Gray), Green+Violet now Blue (was Green); all 24 two-color pairs at 60°/120° name as the wheel's target. Complements still don't fully neutralize (Yellow+Violet → "Orange"). Details in `Color-Wheel-App-Reference.md`.
 - **Workflow note:** test builds are reviewed in chat as files, not pushed as GitHub branches. Two experiment branches from this session (`spectral-mix-toggle`, `mix-percentages`) couldn't be deleted from the session — delete them on GitHub.
 
 -----

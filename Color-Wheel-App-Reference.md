@@ -157,6 +157,29 @@ tag ahead of the main script. `useSpectral()` is simply "did the library
 load"; if it didn't, every path below runs instead, unchanged. The snapping
 invariant still holds — spectral only ever sees the wedge-center colors.
 
+**Spectral corrections (October 22 2026, same day):** raw spectral.js put
+12 of the 24 two-color mixes at 60°/120° apart more than 15° off the
+wheel's target or into gray (Red+Blue → Gray, Green+Violet → Green). Two
+hand-tuned corrections, both in `chainHex`'s spectral branch:
+
+1. **Split-primary shift** (`SPLIT_PRIMARY_DEG = 60`) — each ingredient fed
+   to spectral is its wheel color shifted toward the wheel-math target,
+   scaled by distance to target (d/60, capped) and blend magnitude, the
+   way a painter picks alizarin rather than cadmium for a violet. Display
+   swatches never change. Complements/full triads (magnitude ≈ 0) are not
+   shifted, so their partial neutralizing is still raw spectral.
+2. **Per-hue tinting strength** (`TINT_STRENGTH12`) — spectral.js weights
+   colors by luminance, so bright greens swamped dark blues/violets.
+   Greens 0.5, Blue 0.9, Blue-Violet 1.6, Violet 0.8, others 1;
+   interpolated by angle.
+
+Result: all 24 of those pairs name as the wheel's target hue. Values came
+from a search over every pair, validated on unequal-ratio mixes it didn't
+see. Known side effect: on two-color mixes the wheel geometry now mostly
+decides hue and spectral mostly decides dulling/value; Yellow+Violet reads
+"Orange" and Red+Green "Brown" (complements are unshifted). Retune only by
+rerunning the full pair check, not by eye on one pair.
+
 **Fallback engine — wheel-position math:**
 
 

@@ -666,9 +666,13 @@ const WHITE = {r:255,g:255,b:255}, BLACK = {r:2,g:10,b:18};
    fallback if the spectral.js CDN script fails to load. */
 function spectralReady(){ return typeof window.spectral !== 'undefined' && typeof window.spectral.mix === 'function'; }
 function useSpectral(){ return spectralReady(); }
-function spectralMixHex(pairs){ // pairs: [[hex, weight], ...]
+function spectralMixHex(pairs){ // pairs: [[hex, weight, tintingStrength?], ...]
   const sp = window.spectral;
-  const parts = pairs.filter(([, w]) => w > 0).map(([hex, w]) => [new sp.Color(hex), w]);
+  const parts = pairs.filter(([, w]) => w > 0).map(([hex, w, ts]) => {
+    const c = new sp.Color(hex);
+    if (ts !== undefined) c.tintingStrength = ts;
+    return [c, w];
+  });
   if (parts.length === 1) return pairs.find(([, w]) => w > 0)[0];
   return sp.mix(...parts).toString().toLowerCase();
 }
@@ -926,13 +930,42 @@ function chainEntries(count){
 function chainAngleMag(count){
   return blendAngles(chainEntries(count));
 }
+/* Two hand-tuned corrections to raw spectral.js mixing (October 2026).
+   Before them, 12 of the 24 two-color mixes at 60°/120° apart landed more
+   than 15° off the wheel's own target hue or went gray; after, none do.
+   1. SPLIT-PRIMARY SHIFT. A painter picks the version of a color that leans
+      toward the mix (alizarin, not cadmium, for a violet). Each ingredient
+      fed to spectral is the wheel color shifted toward the wheel-math
+      target, up to SPLIT_PRIMARY_DEG, scaled by how far the target is
+      (d/60, capped) and by blend magnitude. Complements and full triads
+      have magnitude ~0, so they're NOT shifted — their partial
+      neutralizing stays pure spectral. Display swatches never change.
+      This is what fixes Red+Blue (was gray, now a muted violet).
+   2. TINTING STRENGTH. spectral.js weights each color by its luminance, so
+      bright greens swamped dark blues/violets at "equal" parts (Green+
+      Violet came out Green). Per-hue tinting strength rebalances that,
+      interpolated by angle. Wedge order: Red, Red-Orange, Orange,
+      Yellow-Orange, Yellow, Yellow-Green, Green, Blue-Green, Blue,
+      Blue-Violet, Violet, Red-Violet.
+   Both values came from a search over every 60°/120° pair, checked
+   against unequal-ratio mixes the search didn't see. Before retuning
+   either, rerun that check — don't adjust one pair by eye. */
+const SPLIT_PRIMARY_DEG = 60;
+const TINT_STRENGTH12 = [1, 1, 1, 1, 1, 0.5, 0.5, 0.5, 0.9, 1.6, 0.8, 1];
+function tintStrengthAt(deg){
+  deg = ((deg % 360) + 360) % 360;
+  const lo = Math.floor(deg / 30) % 12, hi = (lo + 1) % 12, f = (deg % 30) / 30;
+  return TINT_STRENGTH12[lo] + (TINT_STRENGTH12[hi] - TINT_STRENGTH12[lo]) * f;
+}
 function chainHex(count){
   if (useSpectral()) {
-    // Same snapped ingredient angles and weights as wheel mode; each needle
-    // contributes its wedge's own swatch color.
-    return spectralMixHex(chainEntries(count).map(({ angle, weight }) => {
-      const hsl = wheelHslAt(angle), rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
-      return [rgbToHex(rgb.r, rgb.g, rgb.b), weight];
+    const entries = chainEntries(count);
+    const { angle: target, magnitude } = blendAngles(entries);
+    return spectralMixHex(entries.map(({ angle, weight }) => {
+      const d = ((target - angle) % 360 + 540) % 360 - 180; // signed degrees toward target
+      const shifted = angle + SPLIT_PRIMARY_DEG * Math.max(-1, Math.min(1, d / 60)) * magnitude;
+      const hsl = wheelHslAt(shifted), rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+      return [rgbToHex(rgb.r, rgb.g, rgb.b), weight, tintStrengthAt(angle)];
     }));
   }
   const { angle, magnitude } = chainAngleMag(count);
