@@ -219,6 +219,15 @@ PASSWORD      = admin.html PIN (see AWS console) — added June 11 2026
 - `DELETE /admin/mileage/{id}` — delete mileage entry
 - `POST /admin/expenses/receipt-url` — returns pre-signed S3 PUT URL + final CloudFront file URL; accepts `{ filename, contentType, date, amount, category }`; names file `{date}_{amount}_{category}.{ext}` in `receipts/` prefix
 
+**Jill routes (`/admin/jill/*`, added October 24 2026)** — dispatched by `jillRoute()` *before* the `/admin` auth gate; authenticated by `checkJillAuth()` against env `JILL_TOKEN` (DNA `ADMIN_TOKEN` is rejected here, and `JILL_TOKEN` is rejected on every other `/admin/*` route — tested):
+- `POST /admin/jill/verify-password` (public) — checks env `JILL_PASSWORD`, returns `JILL_TOKEN`
+- `GET /admin/jill/data` — `{ expenses, revenue, mileage, recurring, config }` (paginated scan via `scanAll()`)
+- `PUT /admin/jill/config` — `{ categories?, streams?, mileageRate?, onboarded? }` read-merge-write
+- `POST|PUT|DELETE /admin/jill/{expenses|revenue|mileage|recurring}[/{id}]` — type-checked (an id of the wrong type, or `__config__`, 404s)
+- `POST /admin/jill/import` — `{ kind: 'expense'|'revenue', rows }`, ≤2000 rows, amounts stored positive, rows tagged `imported: true`
+- `POST /admin/jill/expenses/receipt-url`, `POST /admin/jill/recurring/run`
+- `generateAllRecurring(table = EXPENSES_TABLE)` is now table-aware; the monthly `{"task":"recurring"}` schedule also runs it for `jill-expenses` (wrapped in try/catch so a Jill failure never blocks DNA's run).
+
 **To redeploy Lambda:** Push `index.mjs` to GitHub — deploy is automatic via GitHub Actions.
 
 **Note on images:** Square catalog API returns URLs that 403 in browsers due to hotlink protection. Lambda `/image` endpoint proxies them. All image elements use `referrerPolicy = 'no-referrer'` as a fallback.
@@ -469,6 +478,19 @@ Surfaced in two places:
 
 **Admin token:** stored as Lambda env var `ADMIN_TOKEN` (value in AWS console only). **Enforced server-side as of June 11 2026** — `checkAdminAuth()` validates `?token=` / `X-Admin-Token` with a timing-safe comparison; all `/admin/*` routes return 401 without it. The frontend obtains the token at login via `/admin/verify-password`.
 
+### expenses-jill-nicholson.html (Jill's practice books — added October 24 2026)
+
+Standalone expenses/revenue page for David's sister Jill (counseling practice, shiftintegrativetherapy.com), modeled on the admin.html Expenses tab. **Fully separate from DNA data:** own password, own token, own DynamoDB table, own receipts prefix. No sales, inventory, or sales tax.
+
+- **URL:** `https://davidnicholsonart.com/expenses-jill-nicholson.html` (noindex; not linked from the site)
+- **Tabs:** Expenses & Mileage (subtabs Expenses / Recurring / Mileage), Revenue (manual entries by stream), Reports (date range + presets, revenue/expenses/mileage/net cards, monthly chart, by-category and by-stream breakdowns, CSV downloads: Profit & loss summary, Expenses, Revenue, Mileage)
+- **Settings (gear):** editable expense categories and revenue streams (rename relabels past entries client-side; remove keeps old entries as-is) + IRS mileage rate (locked per entry when logged, same rule as admin)
+- **Import (↥):** CSV, pasted rows, or .xlsx (SheetJS 0.18.5 lazy-loaded from cdnjs only when an Excel file is chosen). 4 steps: file → column mapping (auto-guessed; skips bank title lines above the header; date-format and money-in/out filters) → category/stream mapping (exact-name matches prefilled; unmatched default to "add as new") → review (bad rows and duplicates of existing date+amount+description shown and skipped). Writes via `POST /admin/jill/import` in 500-row chunks; new categories added to config first.
+- **Onboarding:** first sign-in shows a welcome modal → 12-step spotlight tour; the ? button replays it. Finishing (or skipping) sets `onboarded: true` on her `__config__` row so it shows once across devices. Tour end opens Import if she has no expenses yet.
+- **`?preview`:** shows the welcome + tour every time and never sets `onboarded` (badge reads "Preview") — for David to look around without using up Jill's first-run tour
+- **Session:** token kept in `sessionStorage` (survives reload, cleared on tab close/sign-out)
+- **Privacy copy:** receipt and revenue forms tell her not to enter client names/session details — receipts are readable by anyone with the CloudFront URL, same as DNA receipts.
+
 ### varied-readings.html (show page)
 
 - Standalone retrospective page for the Varied Readings show (Phoenix Gallery, Lawrence KS, April 2026)
@@ -532,6 +554,7 @@ An earlier "always draw from the largest remaining group" greedy was tried and *
 |`dna-orders`       |Square order records                                                        |
 |`dna-expenses`     |Expenses and mileage — single table, `type` field = `expense` or `mileage`  |
 |`dna-booth-layouts`|Art fair wall layout plans — `id` (PK), `title`, `wallsJson`, `updatedAt`   |
+|`jill-expenses`    |Jill's practice books (expenses-jill-nicholson.html) — single table, `type` = `expense` / `revenue` / `mileage` / `recurring`, plus `__config__` (`categories`, `streams`, `mileageRate`, `onboarded`). PK `id` (String). Never mixed with `dna-*`.|
 
 All tables: PAY_PER_REQUEST, us-east-1.
 
@@ -543,6 +566,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - Served via CloudFront behavior `/receipts/*` → S3 origin
 - Publicly readable via CloudFront — no S3 public access needed
 - Filename convention: `{date}_{amount}_{category}.{ext}`
+- Jill's receipts: `receipts/jill/{date}_{amount}_{category}_{rand5}.{ext}` via `POST /admin/jill/expenses/receipt-url` (random suffix so same-day/same-amount receipts never overwrite). Already covered by the deploy's `--exclude "receipts/*"` and the `/receipts/*` behavior.
 - Pre-signed PUT URL generated by Lambda `POST /admin/expenses/receipt-url`
 - Old Hurdlr receipt links (2024–2025) point to Hurdlr’s S3 — may expire eventually
 - 2026 receipts: add manually via admin, will get proper CloudFront URLs
@@ -564,6 +588,16 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
 
 -----
+
+## Completed This Session (October 24 2026)
+
+**expenses-jill-nicholson.html + `/admin/jill/*` Lambda routes** — see the HTML Files and Lambda sections. Tested headless against the real `index.mjs` handler with an in-memory DynamoDB (25 checks: auth isolation both directions, tour + onboarded flag, bank-CSV import with title line / quoted commas / money-in filter / category mapping / new category / duplicate re-import, receipt key, revenue, mileage math, recurring 3-month backfill, rename relabel, P&L CSV, session reload, 390px phone width, no page errors). **Not yet live until the AWS setup below is done.**
+
+**One-time AWS setup (David):**
+1. DynamoDB → create table `jill-expenses`, partition key `id` (String), on-demand, us-east-1.
+2. IAM → `dna-kiosk-role` → add GetItem/PutItem/DeleteItem/Scan on `arn:aws:dynamodb:us-east-1:*:table/jill-expenses` (S3 `receipts/*` is already covered).
+3. Lambda `dna-kiosk` → env vars `JILL_PASSWORD` (her password) and `JILL_TOKEN` (long random string, e.g. `openssl rand -hex 32`; must differ from `ADMIN_TOKEN`).
+4. Open the page, sign in once to confirm, then send Jill the link + password.
 
 ## Completed This Session (October 22 2026)
 

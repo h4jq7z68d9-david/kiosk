@@ -21,6 +21,9 @@ const BOOTH_TABLE     = 'dna-booth-layouts';
 const CHECKLISTS_TABLE = 'dna-checklists';
 const RECEIPTS_BUCKET = 'kiosk.davidnicholsonllc';
 const RECEIPTS_PREFIX = 'receipts/';
+const JILL_TABLE      = 'jill-expenses';       // expenses-jill-nicholson.html — fully separate from dna-* data
+const JILL_RECEIPTS   = 'receipts/jill/';
+const JILL_TOKEN      = process.env.JILL_TOKEN;
 
 const ALLOWED_ORIGINS = new Set([
   'https://davidnicholsonart.com',
@@ -1524,10 +1527,11 @@ function monthsFromTo(from, to) {
 // Bring every active recurring def current: create a monthly expense from the def's
 // startMonth through the current month. Idempotent — skips any month that already has a
 // generated row for that def — so it doubles as both the catch-up button and the monthly cron.
-async function generateAllRecurring() {
+async function generateAllRecurring(table = EXPENSES_TABLE) {
   const to = currentMonth();
-  const res = await dynamo.send(new ScanCommand({ TableName: EXPENSES_TABLE }));
-  const items = res.Items || [];
+  const items = table === EXPENSES_TABLE
+    ? ((await dynamo.send(new ScanCommand({ TableName: EXPENSES_TABLE }))).Items || [])
+    : await scanAll(table);
   const defs = items.filter(x => x.type === 'recurring' && x.active);
   const expenses = items.filter(x => x.type === 'expense');
   const created = [];
@@ -1551,12 +1555,12 @@ async function generateAllRecurring() {
         recurringId: d.id,
         auto: true,
       };
-      await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: expense }));
+      await dynamo.send(new PutCommand({ TableName: table, Item: expense }));
       expenses.push(expense); // so later months in this loop see it
       created.push(expense);
     }
     if (maxMonth && maxMonth !== d.lastRun) {
-      await dynamo.send(new PutCommand({ TableName: EXPENSES_TABLE, Item: { ...d, lastRun: maxMonth } }));
+      await dynamo.send(new PutCommand({ TableName: table, Item: { ...d, lastRun: maxMonth } }));
     }
   }
   return created;
@@ -1683,15 +1687,235 @@ async function adminDeleteGalleryStock(id, cors) {
   return ok({ deleted: true }, cors);
 }
 
+// ── Jill Nicholson expenses (expenses-jill-nicholson.html) ──
+// Separate practice-bookkeeping page for Jill (counseling practice). Walled off from DNA data:
+// own table (JILL_TABLE), own password (env JILL_PASSWORD), own token (env JILL_TOKEN), own receipts
+// prefix (receipts/jill/). The DNA ADMIN_TOKEN is NOT accepted here and JILL_TOKEN is NOT accepted on /admin/*.
+// One table, `type` = expense | revenue | mileage | recurring, plus a single `__config__` row holding her
+// editable category list, revenue streams and IRS mileage rate. No sales, inventory or sales tax.
+
+const JILL_DEFAULT_CONFIG = {
+  categories: [
+    'Rent & Office', 'Licensing & CE', 'Professional Liability Insurance', 'EHR & Practice Software',
+    'Telehealth & Phone', 'Clinical Supervision & Consultation', 'Professional Memberships',
+    'Billing & Card Fees', 'Marketing & Directory Listings', 'Website & Domain', 'Office Supplies',
+    'Books & Assessments', 'Accounting & Legal', 'Travel', 'Other',
+  ],
+  streams: [
+    'Self-pay sessions', 'Insurance reimbursements', 'Copays', 'Out-of-network / superbills',
+    'Consultation & supervision', 'Workshops & speaking', 'Other income',
+  ],
+  mileageRate: 0.70,
+};
+
+function checkJillAuth(event) {
+  const token = event.queryStringParameters?.token
+    || event.headers?.['x-admin-token']
+    || event.headers?.['X-Admin-Token']
+    || '';
+  if (!JILL_TOKEN || !token) return false;
+  return safeEqual(token, JILL_TOKEN);
+}
+
+async function scanAll(table) {
+  const items = [];
+  let ExclusiveStartKey;
+  do {
+    const res = await dynamo.send(new ScanCommand({ TableName: table, ExclusiveStartKey }));
+    items.push(...(res.Items || []));
+    ExclusiveStartKey = res.LastEvaluatedKey;
+  } while (ExclusiveStartKey);
+  return items;
+}
+
+const jillId  = (p) => p + Date.now() + Math.random().toString(36).slice(2, 5);
+const jillPut = (Item) => dynamo.send(new PutCommand({ TableName: JILL_TABLE, Item }));
+const jillGet = async (id) => (await dynamo.send(new GetCommand({ TableName: JILL_TABLE, Key: { id } }))).Item;
+const validDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d || '');
+const cleanList = (v) => [...new Set((Array.isArray(v) ? v : []).map(x => String(x || '').trim().slice(0, 60)).filter(Boolean))].slice(0, 60);
+
+function jillConfigOut(item) {
+  const c = item || {};
+  return {
+    categories: Array.isArray(c.categories) && c.categories.length ? c.categories : JILL_DEFAULT_CONFIG.categories,
+    streams:    Array.isArray(c.streams)    && c.streams.length    ? c.streams    : JILL_DEFAULT_CONFIG.streams,
+    mileageRate: validMileRate(c.mileageRate) || JILL_DEFAULT_CONFIG.mileageRate,
+    onboarded: !!c.onboarded,
+  };
+}
+
+async function jillGetData(cors) {
+  const items = await scanAll(JILL_TABLE);
+  return ok({
+    expenses:  items.filter(x => x.type === 'expense'),
+    revenue:   items.filter(x => x.type === 'revenue'),
+    mileage:   items.filter(x => x.type === 'mileage'),
+    recurring: items.filter(x => x.type === 'recurring'),
+    config:    jillConfigOut(items.find(x => x.id === '__config__')),
+  }, cors);
+}
+
+async function jillUpdateConfig(body, cors) {
+  const prev = await jillGet('__config__');
+  const cur = jillConfigOut(prev);
+  const categories = body.categories != null ? cleanList(body.categories) : cur.categories;
+  const streams    = body.streams    != null ? cleanList(body.streams)    : cur.streams;
+  if (!categories.length) return err('At least one category is required', 400, cors);
+  if (!streams.length)    return err('At least one revenue stream is required', 400, cors);
+  const mileageRate = body.mileageRate != null ? validMileRate(body.mileageRate) : cur.mileageRate;
+  if (!mileageRate) return err('Invalid mileage rate', 400, cors);
+  const onboarded = body.onboarded != null ? !!body.onboarded : cur.onboarded;
+  const item = { ...(prev || {}), id: '__config__', type: 'config', categories, streams, mileageRate, onboarded };
+  await jillPut(item);
+  return ok({ config: jillConfigOut(item) }, cors);
+}
+
+async function jillSaveExpense(id, body, cors) {
+  const { date, category, desc, amount, receiptUrl } = body;
+  if (!validDate(date) || amount == null || isNaN(amount)) return err('Missing required fields', 400, cors);
+  const prev = id ? await jillGet(id) : null;
+  if (id && (!prev || prev.type !== 'expense')) return err('Not found', 404, cors);
+  const item = {
+    ...(prev || {}),
+    id: id || jillId('e'), type: 'expense', date,
+    category: category || 'Other', desc: desc || '', amount: Number(amount),
+    receiptUrl: receiptUrl !== undefined ? (receiptUrl || '') : (prev?.receiptUrl || ''),
+  };
+  await jillPut(item);
+  return ok({ expense: item }, cors);
+}
+
+async function jillSaveRevenue(id, body, cors) {
+  const { date, stream, desc, amount } = body;
+  if (!validDate(date) || amount == null || isNaN(amount)) return err('Missing required fields', 400, cors);
+  const prev = id ? await jillGet(id) : null;
+  if (id && (!prev || prev.type !== 'revenue')) return err('Not found', 404, cors);
+  const item = { id: id || jillId('v'), type: 'revenue', date, stream: stream || 'Other income', desc: desc || '', amount: Number(amount) };
+  await jillPut(item);
+  return ok({ revenue: item }, cors);
+}
+
+async function jillSaveMileage(id, body, cors) {
+  const { date, miles, purpose, notes } = body;
+  if (!validDate(date) || !miles || !purpose) return err('Missing required fields', 400, cors);
+  const prev = id ? await jillGet(id) : null;
+  if (id && (!prev || prev.type !== 'mileage')) return err('Not found', 404, cors);
+  // Rate is locked when the entry is first logged; edits never re-rate it.
+  const rate = validMileRate(prev?.rate) || validMileRate(body.rate) || jillConfigOut(await jillGet('__config__')).mileageRate;
+  const item = { id: id || jillId('m'), type: 'mileage', date, miles: Number(miles), purpose, notes: notes || '', rate };
+  await jillPut(item);
+  return ok({ entry: item }, cors);
+}
+
+async function jillSaveRecurring(id, body, cors) {
+  const prev = id ? await jillGet(id) : null;
+  if (id && (!prev || prev.type !== 'recurring')) return err('Not found', 404, cors);
+  const { category, desc, amount, dayOfMonth, active, startMonth } = body;
+  if (!id && (amount == null || isNaN(amount))) return err('Missing required fields', 400, cors);
+  const p = prev || {};
+  const item = {
+    ...p,
+    id: id || jillId('r'), type: 'recurring',
+    category:   category   != null ? (category || 'Other') : (p.category || 'Other'),
+    desc:       desc       != null ? desc                  : (p.desc || ''),
+    amount:     amount     != null ? Number(amount)        : p.amount,
+    dayOfMonth: dayOfMonth != null ? clampDay(dayOfMonth)  : clampDay(p.dayOfMonth),
+    startMonth: /^\d{4}-\d{2}$/.test(startMonth || '') ? startMonth : (p.startMonth || currentMonth()),
+    active:     active     != null ? !!active              : (prev ? p.active : true),
+    lastRun:    p.lastRun || '',
+  };
+  await jillPut(item);
+  return ok({ recurring: item }, cors);
+}
+
+async function jillDelete(id, type, cors) {
+  const prev = await jillGet(id);
+  if (!prev || prev.type !== type) return err('Not found', 404, cors);
+  await dynamo.send(new DeleteCommand({ TableName: JILL_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
+async function jillReceiptUploadUrl(body, cors) {
+  const { filename, contentType, date, amount, category } = body;
+  if (!filename || !contentType) return err('Missing filename or contentType', 400, cors);
+  const ext = filename.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  const safeCat  = (category || 'other').replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').toLowerCase();
+  const safeDate = validDate(date) ? date : new Date().toISOString().slice(0, 10);
+  const safeAmt  = amount != null && !isNaN(amount) ? Number(amount).toFixed(2) : '0.00';
+  // Random suffix: two receipts with the same date/amount/category must never overwrite each other.
+  const key = `${JILL_RECEIPTS}${safeDate}_${safeAmt}_${safeCat}_${Math.random().toString(36).slice(2, 7)}.${ext}`;
+  const uploadUrl = await getSignedUrl(s3, new PutObjectCommand({ Bucket: RECEIPTS_BUCKET, Key: key, ContentType: contentType }), { expiresIn: 300 });
+  return ok({ uploadUrl, fileUrl: `https://davidnicholsonart.com/${key}` }, cors);
+}
+
+// Bulk import from the page's CSV importer. Rows are already parsed/mapped client-side; validated again here.
+// Duplicate skipping happens client-side (preview shows it); this just writes what it's given.
+async function jillImport(body, cors) {
+  const kind = body.kind === 'revenue' ? 'revenue' : 'expense';
+  const rows = Array.isArray(body.rows) ? body.rows : [];
+  if (!rows.length) return err('No rows', 400, cors);
+  if (rows.length > 2000) return err('Import at most 2000 rows at a time', 400, cors);
+  const items = [];
+  for (const r of rows) {
+    if (!validDate(r.date) || r.amount == null || isNaN(r.amount)) return err(`Invalid row: ${JSON.stringify(r).slice(0, 120)}`, 400, cors);
+    items.push(kind === 'expense'
+      ? { id: jillId('e'), type: 'expense', date: r.date, category: String(r.category || 'Other').slice(0, 60), desc: String(r.desc || '').slice(0, 300), amount: Math.abs(Number(r.amount)), receiptUrl: '', imported: true }
+      : { id: jillId('v'), type: 'revenue', date: r.date, stream: String(r.stream || 'Other income').slice(0, 60), desc: String(r.desc || '').slice(0, 300), amount: Math.abs(Number(r.amount)), imported: true });
+  }
+  for (let i = 0; i < items.length; i += 10) await Promise.all(items.slice(i, i + 10).map(jillPut));
+  return ok({ imported: items.length, items }, cors);
+}
+
+async function jillRoute(method, path, event, cors) {
+  const b = () => JSON.parse(event.body || '{}');
+
+  // Public: password check returns JILL_TOKEN
+  if (method === 'POST' && path === '/admin/jill/verify-password') {
+    const password = b().password;
+    const envPassword = process.env.JILL_PASSWORD;
+    if (!envPassword || !JILL_TOKEN) return err('Server not configured', 500, cors);
+    if (!password) return err('Password required', 400, cors);
+    if (safeEqual(password, envPassword)) return ok({ verified: true, token: JILL_TOKEN }, cors);
+    return err('Incorrect password', 401, cors);
+  }
+
+  if (!checkJillAuth(event)) return err('Unauthorized', 401, cors);
+
+  if (method === 'GET' && path === '/admin/jill/data')   return await jillGetData(cors);
+  if (method === 'PUT' && path === '/admin/jill/config') return await jillUpdateConfig(b(), cors);
+  if (method === 'POST' && path === '/admin/jill/import') return await jillImport(b(), cors);
+  if (method === 'POST' && path === '/admin/jill/expenses/receipt-url') return await jillReceiptUploadUrl(b(), cors);
+  if (method === 'POST' && path === '/admin/jill/recurring/run') {
+    const created = await generateAllRecurring(JILL_TABLE);
+    return ok({ generated: created.length, expenses: created }, cors);
+  }
+
+  const savers = { expenses: [jillSaveExpense, 'expense'], revenue: [jillSaveRevenue, 'revenue'], mileage: [jillSaveMileage, 'mileage'], recurring: [jillSaveRecurring, 'recurring'] };
+  const m = path.match(/^\/admin\/jill\/(expenses|revenue|mileage|recurring)(?:\/([^/]+))?$/);
+  if (m) {
+    const [save, type] = savers[m[1]];
+    const id = m[2];
+    if (!id && method === 'POST')  return await save(null, b(), cors);
+    if (id && id !== '__config__') {
+      if (method === 'PUT')    return await save(id, b(), cors);
+      if (method === 'DELETE') return await jillDelete(id, type, cors);
+    }
+  }
+  return err('Not found', 404, cors);
+}
+
 // ── Router ──
 export const handler = async (event) => {
   // EventBridge scheduled trigger → generate this month's recurring expenses
   if (event && event.task === 'recurring') {
     const created = await generateAllRecurring();
     console.log('Recurring generated:', created.length);
+    let jillCreated = 0;
+    try { jillCreated = (await generateAllRecurring(JILL_TABLE)).length; } catch (e) { console.error('Jill recurring failed:', e.message); }
+    console.log('Jill recurring generated:', jillCreated);
     let online = 0;
     try { online = await syncOnlineOrders(); } catch (e) { console.error('Online order sync failed:', e.message); }
-    return { generated: created.length, onlineLogged: online };
+    return { generated: created.length, jillGenerated: jillCreated, onlineLogged: online };
   }
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
@@ -1720,6 +1944,10 @@ export const handler = async (event) => {
     if (method === 'GET'  && path === '/admin/register/catalog')  return await registerCatalog(cors);
     if (method === 'POST' && path === '/admin/register/complete') return await registerComplete(JSON.parse(event.body || '{}'), cors);
     if (method === 'GET'  && path === '/admin/register/status')   return await registerStatus(event.queryStringParameters?.cart, cors);
+
+    // Jill Nicholson expenses (expenses-jill-nicholson.html) — own password/token/table; must come before
+    // the /admin gate. Lives under /admin/ so it rides the existing CloudFront /admin/* behavior.
+    if (path.startsWith('/admin/jill/')) return await jillRoute(method, path, event, cors);
 
     // Admin password verification — public (no token); must come before the auth-gated /admin block
     if (method === 'POST' && path === '/admin/verify-password') return await adminVerifyPassword(JSON.parse(event.body || '{}'), cors);
