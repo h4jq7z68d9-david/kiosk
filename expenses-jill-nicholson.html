@@ -778,7 +778,8 @@ async function init() {
   if (!val('rep-from')) applyPreset(new Date().getMonth() < 4 ? 'last' : 'ytd', true);
   refreshLists();
   renderAll();
-  if (!st.config.onboarded) document.getElementById('welcome-modal').classList.add('open');
+  if (!st.config.onboarded || PREVIEW) document.getElementById('welcome-modal').classList.add('open');
+  if (PREVIEW) document.querySelector('.topbar .badge').textContent = 'Preview';
 }
 function refreshLists() {
   fillSelect('exp-cat-filter', st.config.categories, 'All categories');
@@ -1468,8 +1469,10 @@ function finishWelcome(showTour) {
   markOnboarded();
   if (showTour) startTour();
 }
+// ?preview — for David to look around before sending: welcome + tour still run, but never get marked done
+const PREVIEW = new URLSearchParams(location.search).has('preview');
 function markOnboarded() {
-  if (st.config.onboarded) return;
+  if (PREVIEW || st.config.onboarded) return;
   st.config.onboarded = true;
   api('PUT', '/config', { onboarded: true }).catch(() => {});
 }

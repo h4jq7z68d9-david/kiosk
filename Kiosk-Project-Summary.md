@@ -487,6 +487,7 @@ Standalone expenses/revenue page for David's sister Jill (counseling practice, s
 - **Settings (gear):** editable expense categories and revenue streams (rename relabels past entries client-side; remove keeps old entries as-is) + IRS mileage rate (locked per entry when logged, same rule as admin)
 - **Import (↥):** CSV, pasted rows, or .xlsx (SheetJS 0.18.5 lazy-loaded from cdnjs only when an Excel file is chosen). 4 steps: file → column mapping (auto-guessed; skips bank title lines above the header; date-format and money-in/out filters) → category/stream mapping (exact-name matches prefilled; unmatched default to "add as new") → review (bad rows and duplicates of existing date+amount+description shown and skipped). Writes via `POST /admin/jill/import` in 500-row chunks; new categories added to config first.
 - **Onboarding:** first sign-in shows a welcome modal → 12-step spotlight tour; the ? button replays it. Finishing (or skipping) sets `onboarded: true` on her `__config__` row so it shows once across devices. Tour end opens Import if she has no expenses yet.
+- **`?preview`:** shows the welcome + tour every time and never sets `onboarded` (badge reads "Preview") — for David to look around without using up Jill's first-run tour
 - **Session:** token kept in `sessionStorage` (survives reload, cleared on tab close/sign-out)
 - **Privacy copy:** receipt and revenue forms tell her not to enter client names/session details — receipts are readable by anyone with the CloudFront URL, same as DNA receipts.
 
