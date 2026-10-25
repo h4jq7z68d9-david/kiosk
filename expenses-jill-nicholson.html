@@ -241,7 +241,7 @@
     </div>
     <div class="topbar-actions">
       <button class="btn-sm" id="import-btn" onclick="openImport()">↥ <span class="btn-label">Import</span></button>
-      <button class="icon-btn" id="help-btn" onclick="startTour()" aria-label="Show me around" title="Show me around"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+      <button class="icon-btn" id="help-btn" onclick="startTour()" aria-label="Show me around" title="Show me around"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span class="btn-label" style="font-size:12px;font-weight:500;margin-left:5px;align-self:center">Tour</span></button>
       <button class="icon-btn" id="settings-btn" onclick="openSettings()" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       <button class="btn-logout" onclick="logout()">sign out</button>
     </div>
@@ -533,6 +533,19 @@
         <button class="btn-sm" onclick="addListRow('set-streams')">+ Add stream</button>
       </div>
       <div class="set-sec">
+        <h3>Password</h3>
+        <div class="hint">At least 8 characters. Changes take effect right away; you stay signed in here.</div>
+        <div class="field" style="margin:10px 0 8px"><input type="password" id="pw-current" placeholder="Current password" autocomplete="current-password"></div>
+        <div class="field" style="margin-bottom:8px"><input type="password" id="pw-new" placeholder="New password" autocomplete="new-password"></div>
+        <div class="field" style="margin-bottom:8px"><input type="password" id="pw-confirm" placeholder="New password again" autocomplete="new-password"></div>
+        <button class="btn-sm" id="pw-change-btn" onclick="changePassword()">Change password</button>
+      </div>
+      <div class="set-sec">
+        <h3>Tour</h3>
+        <div class="hint">The one-minute walkthrough of where everything is.</div>
+        <button class="btn-sm" style="margin-top:10px" onclick="closeModal('settings-modal');startTour()">Replay the tour</button>
+      </div>
+      <div class="set-sec">
         <h3>Mileage rate</h3>
         <div class="hint">IRS standard business rate. New entries use this; past entries keep the rate they were logged at.</div>
         <div style="display:flex;align-items:center;gap:6px;margin-top:10px"><span style="font-family:var(--mono)">$</span><input type="number" class="inp" id="set-rate" step="0.005" min="0" style="width:100px;font-size:16px"><span style="font-size:13px;color:var(--ink2)">per mile</span></div>
@@ -555,9 +568,9 @@
       <div id="imp-step1">
         <div class="field">
           <label>What are you importing?</label>
-          <div class="seg"><button id="imp-kind-expense" class="on" onclick="setImpKind('expense')">Expenses</button><button id="imp-kind-revenue" onclick="setImpKind('revenue')">Revenue</button></div>
+          <div class="seg"><button id="imp-kind-expense" class="on" onclick="setImpKind('expense')">Expenses</button><button id="imp-kind-revenue" onclick="setImpKind('revenue')">Revenue</button><button id="imp-kind-mileage" onclick="setImpKind('mileage')">Mileage</button></div>
         </div>
-        <div class="callout">Works with a CSV or Excel file from your bank, credit card, QuickBooks, Wave, or your own spreadsheet. It needs at least a <b>date</b> and an <b>amount</b> column. Nothing is saved until the last step. <a href="#" onclick="downloadTemplate();return false" style="color:var(--accent-ink)">Download a blank template</a></div>
+        <div class="callout"><b>Coming from Hurdlr?</b> In Hurdlr, open Reports and export the <i>(Spreadsheet)</i> version of <i>Expense Details List with Receipts</i>, <i>Income Detail List</i>, or <i>Mileage Detail List</i>, then choose that file here. Receipt links come along with expenses.<br><br>Also works with a CSV or Excel file from your bank, credit card, QuickBooks, Wave, or your own spreadsheet. It needs at least a <b>date</b> and an <b id="imp-need">amount</b> column. Nothing is saved until the last step. <a href="#" onclick="downloadTemplate();return false" style="color:var(--accent-ink)">Download a blank template</a></div>
         <div class="upload-zone" id="imp-zone" onclick="document.getElementById('imp-file').click()">
           <input type="file" id="imp-file" accept=".csv,.txt,.xlsx,.xls,text/csv" onchange="onImportFile(event)">
           <div class="upload-zone-label">Choose a <strong>.csv</strong> or <strong>.xlsx</strong> file</div>
@@ -571,12 +584,16 @@
         <div class="callout" id="imp-detected"></div>
         <div class="map-grid">
           <div class="field"><label for="map-date">Date column *</label><select id="map-date" onchange="onMapChange()"></select></div>
-          <div class="field"><label for="map-amount">Amount column *</label><select id="map-amount" onchange="onMapChange()"></select></div>
-          <div class="field"><label for="map-desc">Description column</label><select id="map-desc" onchange="onMapChange()"></select></div>
-          <div class="field"><label for="map-cat" id="map-cat-label">Category column</label><select id="map-cat" onchange="onMapChange()"></select></div>
+          <div class="field"><label for="map-amount" id="map-amount-label">Amount column *</label><select id="map-amount" onchange="onMapChange()"></select></div>
+          <div class="field"><label for="map-desc" id="map-desc-label">Description column</label><select id="map-desc" onchange="onMapChange()"></select></div>
+          <div class="field" data-kinds="expense revenue"><label for="map-cat" id="map-cat-label">Category column</label><select id="map-cat" onchange="onMapChange()"></select></div>
+          <div class="field" data-kinds="expense"><label for="map-vendor">Vendor / merchant column</label><select id="map-vendor" onchange="onMapChange()"></select><div class="hint">Added to the front of the description.</div></div>
+          <div class="field" data-kinds="expense"><label for="map-receipt">Receipt link column</label><select id="map-receipt" onchange="onMapChange()"></select></div>
+          <div class="field" data-kinds="mileage"><label for="map-notes">Notes column</label><select id="map-notes" onchange="onMapChange()"></select></div>
+          <div class="field" data-kinds="mileage"><label for="map-deduct">Deduction ($) column</label><select id="map-deduct" onchange="onMapChange()"></select><div class="hint">Keeps the rate each trip was logged at. Without it, the IRS rate for that year is used.</div></div>
         </div>
         <div class="map-grid">
-          <div class="field"><label for="map-sign">Which rows?</label>
+          <div class="field" data-kinds="expense revenue"><label for="map-sign">Which rows?</label>
             <select id="map-sign" onchange="onMapChange()">
               <option value="all">All rows</option>
               <option value="neg">Only negative amounts (bank export: money out)</option>
@@ -665,7 +682,7 @@ async function api(method, path, body) {
   const opts = { method, headers: { 'Content-Type': 'application/json' } };
   if (body !== undefined) opts.body = JSON.stringify(body);
   const res = await fetch(url, opts);
-  if (res.status === 401) { logout(); throw new Error('Session expired. Please sign in again.'); }
+  if (res.status === 401 && path !== '/password') { logout(); throw new Error('Session expired. Please sign in again.'); }
   if (!res.ok) { const e = await res.json().catch(() => ({ error: res.statusText })); throw new Error(e.error || res.statusText); }
   return res.json();
 }
@@ -1143,6 +1160,7 @@ function openSettings() {
   buildListEditor('set-cats', st.config.categories, x => st.expenses.filter(e => e.category === x).length + st.recurring.filter(r => r.category === x).length);
   buildListEditor('set-streams', st.config.streams, x => st.revenue.filter(r => r.stream === x).length);
   document.getElementById('set-rate').value = st.config.mileageRate;
+  openSettingsClearPw();
   openModal('settings-modal');
 }
 function buildListEditor(id, list, count) {
@@ -1195,10 +1213,27 @@ async function saveSettings() {
   finally { btn.disabled = false; btn.textContent = 'Save Settings'; }
 }
 
+async function changePassword() {
+  const cur = val('pw-current'), nw = val('pw-new'), cf = val('pw-confirm');
+  if (!cur || !nw) return alert('Enter your current password and a new one.');
+  if (nw.length < 8) return alert('The new password needs at least 8 characters.');
+  if (nw !== cf) return alert("The two new passwords don't match.");
+  if (nw === cur) return alert('The new password is the same as the current one.');
+  const btn = document.getElementById('pw-change-btn'); btn.disabled = true; btn.textContent = 'Changing…';
+  try {
+    await api('PUT', '/password', { current: cur, next: nw });
+    ['pw-current', 'pw-new', 'pw-confirm'].forEach(id => document.getElementById(id).value = '');
+    toast('Password changed. Use the new one next time you sign in.');
+  } catch (e) { alert(e.message); }
+  finally { btn.disabled = false; btn.textContent = 'Change password'; }
+}
+function openSettingsClearPw() { ['pw-current', 'pw-new', 'pw-confirm'].forEach(id => document.getElementById(id).value = ''); }
+
 // ═══════════════════════════════════════════
 //  IMPORT
 // ═══════════════════════════════════════════
 const imp = { kind: 'expense', step: 1, header: [], rows: [], catMap: {}, parsed: [] };
+const IMP_NOUN = { expense: 'expenses', revenue: 'revenue entries', mileage: 'trips' };
 function openImport() {
   Object.assign(imp, { step: 1, header: [], rows: [], catMap: {}, parsed: [] });
   document.getElementById('imp-file').value = ''; document.getElementById('imp-paste').value = '';
@@ -1207,8 +1242,13 @@ function openImport() {
 }
 function setImpKind(k) {
   imp.kind = k;
-  document.getElementById('imp-kind-expense').classList.toggle('on', k === 'expense');
-  document.getElementById('imp-kind-revenue').classList.toggle('on', k === 'revenue');
+  ['expense', 'revenue', 'mileage'].forEach(x => document.getElementById('imp-kind-' + x).classList.toggle('on', x === k));
+  document.getElementById('imp-need').textContent = k === 'mileage' ? 'miles' : 'amount';
+  document.querySelectorAll('#import-modal [data-kinds]').forEach(el => el.style.display = el.dataset.kinds.split(' ').includes(k) ? '' : 'none');
+  document.getElementById('map-amount-label').textContent = k === 'mileage' ? 'Miles column *' : 'Amount column *';
+  document.getElementById('map-desc-label').textContent = k === 'mileage' ? 'Purpose column *' : k === 'revenue' ? 'Note column' : 'Description column';
+  document.getElementById('imp-s3').style.display = k === 'mileage' ? 'none' : '';
+  document.getElementById('imp-s4').textContent = (k === 'mileage' ? '3' : '4') + ' · Review';
 }
 function showImpStep(n) {
   imp.step = n;
@@ -1216,9 +1256,12 @@ function showImpStep(n) {
   document.getElementById('imp-back').textContent = n === 1 ? 'Cancel' : 'Back';
   const next = document.getElementById('imp-next');
   next.disabled = false;
-  next.textContent = n === 4 ? `Import ${imp.parsed.filter(r => r.ok && !r.dup).length || ''} ${imp.kind === 'expense' ? 'expenses' : 'entries'}` : 'Next';
+  next.textContent = n === 4 ? `Import ${imp.parsed.filter(r => r.ok && !r.dup).length || ''} ${IMP_NOUN[imp.kind]}` : 'Next';
 }
-function impBack() { if (imp.step === 1) closeModal('import-modal'); else showImpStep(imp.step - 1); }
+function impBack() {
+  if (imp.step === 1) return closeModal('import-modal');
+  showImpStep(imp.step === 4 && imp.kind === 'mileage' ? 2 : imp.step - 1);
+}
 
 function parseCSV(text) {
   // RFC 4180-ish; auto-detects comma / tab / semicolon delimiter from the first line
@@ -1307,6 +1350,7 @@ function parseDate(v, fmt) {
   if (/[a-z]{3}/i.test(s) && /\d{4}/.test(s)) { const d = new Date(s); if (!isNaN(d)) return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
   return null;
 }
+const IRS_BY_YEAR = { 2022: 0.585, 2023: 0.655, 2024: 0.67, 2025: 0.70, 2026: 0.70 };
 async function impNext() {
   const next = document.getElementById('imp-next');
   try {
@@ -1316,20 +1360,36 @@ async function impNext() {
       if (raw.length < 2) throw new Error('That file has no data rows.');
       const { header, rows } = splitHeader(raw);
       Object.assign(imp, { header, rows });
-      fillMapSelect('map-date', header, guessCol(header, [/^date$/i, /trans.*date|posted|post date/i, /date/i]));
-      fillMapSelect('map-amount', header, guessCol(header, [/^amount$/i, /amount|total|debit|withdraw|payment|charge/i]));
-      fillMapSelect('map-desc', header, guessCol(header, [/desc|memo|payee|merchant|vendor|name|details|item|note/i]), true);
-      fillMapSelect('map-cat', header, guessCol(header, imp.kind === 'expense' ? [/categor|type|account/i] : [/stream|source|categor|type/i]), true);
-      document.getElementById('map-cat-label').textContent = imp.kind === 'expense' ? 'Category column' : 'Stream column';
-      const amtIdx = +val('map-amount'); const negs = amtIdx >= 0 ? rows.filter(r => parseAmount(r[amtIdx]) < 0).length : 0;
-      document.getElementById('map-sign').value = imp.kind === 'expense' && negs > 0 && negs < rows.length ? 'neg' : 'all';
+      const k = imp.kind;
+      fillMapSelect('map-date', header, guessCol(header, [/^date$/i, /trans.*date|posted|post date|trip date/i, /date/i]));
+      fillMapSelect('map-amount', header, k === 'mileage'
+        ? guessCol(header, [/^miles$/i, /miles|distance|mileage/i])
+        : guessCol(header, [/^amount$/i, /amount|total|debit|withdraw|payment|charge|income/i]));
+      fillMapSelect('map-desc', header, k === 'mileage'
+        ? guessCol(header, [/purpose/i, /desc|memo|reason|trip|destination|note/i])
+        : guessCol(header, [/^desc|description|memo|details|purpose/i, /note/i, /payee|merchant|vendor|name|item|client|customer|source/i]), true);
+      fillMapSelect('map-cat', header, guessCol(header, k === 'expense' ? [/categor|type|account/i] : [/stream|source|categor|type/i]), true);
+      fillMapSelect('map-vendor', header, k === 'expense' ? guessCol(header, [/vendor|merchant|payee|business name|store/i]) : -1, true);
+      fillMapSelect('map-receipt', header, k === 'expense' ? guessCol(header, [/receipt|attachment|image|photo|link|url/i]) : -1, true);
+      fillMapSelect('map-notes', header, k === 'mileage' ? guessCol(header, [/notes?$/i, /comment/i]) : -1, true);
+      fillMapSelect('map-deduct', header, k === 'mileage' ? guessCol(header, [/deduct|value|amount|\$/i]) : -1, true);
+      // Never let one column feed two fields (e.g. "Description" matched as both purpose and notes)
+      if (val('map-vendor') === val('map-desc')) document.getElementById('map-vendor').value = '-1';
+      if (val('map-notes') === val('map-desc')) document.getElementById('map-notes').value = '-1';
+      document.getElementById('map-cat-label').textContent = k === 'expense' ? 'Category column' : 'Stream column';
+      const amtIdx = +val('map-amount'); const negs = amtIdx >= 0 && k !== 'mileage' ? rows.filter(r => parseAmount(r[amtIdx]) < 0).length : 0;
+      document.getElementById('map-sign').value = k === 'expense' && negs > 0 && negs < rows.length ? 'neg' : 'all';
       document.getElementById('map-datefmt').value = 'auto';
-      document.getElementById('imp-detected').innerHTML = `Found <b>${rows.length}</b> rows and <b>${header.length}</b> columns. Check that each box below points at the right column.`;
+      const hurdlr = header.some(h => /hurdlr/i.test(h)) || raw.slice(0, 3).some(r => r.join(' ').match(/hurdlr/i));
+      document.getElementById('imp-detected').innerHTML = `${hurdlr ? '<b>Hurdlr export detected.</b> ' : ''}Found <b>${rows.length}</b> rows and <b>${header.length}</b> columns. Check that each box below points at the right column.`;
       renderRawPreview();
       showImpStep(2);
     } else if (imp.step === 2) {
-      if (+val('map-date') < 0 || +val('map-amount') < 0) throw new Error('Choose the date and amount columns.');
-      buildCatMap(); showImpStep(3);
+      if (+val('map-date') < 0 || +val('map-amount') < 0) throw new Error(`Choose the date and ${imp.kind === 'mileage' ? 'miles' : 'amount'} columns.`);
+      if (imp.kind === 'mileage') {
+        if (+val('map-desc') < 0) throw new Error('Choose the purpose column. The IRS expects a purpose for every trip.');
+        buildPreview(); showImpStep(4);
+      } else { buildCatMap(); showImpStep(3); }
     } else if (imp.step === 3) {
       readCatMap(); buildPreview(); showImpStep(4);
     } else if (imp.step === 4) {
@@ -1338,15 +1398,22 @@ async function impNext() {
   } catch (e) { alert(e.message); showImpStep(imp.step); }
 }
 function onMapChange() { renderRawPreview(); }
+function mapIdx() {
+  const g = id => +val(id);
+  return { date: g('map-date'), amount: g('map-amount'), desc: g('map-desc'), cat: imp.kind === 'mileage' ? -1 : g('map-cat'),
+    vendor: imp.kind === 'expense' ? g('map-vendor') : -1, receipt: imp.kind === 'expense' ? g('map-receipt') : -1,
+    notes: imp.kind === 'mileage' ? g('map-notes') : -1, deduct: imp.kind === 'mileage' ? g('map-deduct') : -1 };
+}
 function renderRawPreview() {
-  const idx = { date: +val('map-date'), amount: +val('map-amount'), desc: +val('map-desc'), cat: +val('map-cat') };
-  const used = Object.fromEntries(Object.entries(idx).filter(([, i]) => i >= 0).map(([k, i]) => [i, k]));
+  const idx = mapIdx();
+  const names = { date: 'date', amount: imp.kind === 'mileage' ? 'miles' : 'amount', desc: imp.kind === 'mileage' ? 'purpose' : 'description', cat: imp.kind === 'expense' ? 'category' : 'stream', vendor: 'vendor', receipt: 'receipt', notes: 'notes', deduct: 'deduction' };
+  const used = {}; Object.entries(idx).forEach(([k, i]) => { if (i >= 0) used[i] = names[k]; });
   const fmt = val('map-datefmt');
   document.getElementById('imp-raw').innerHTML = `<thead><tr>${imp.header.map((h, i) => `<th style="${used[i] ? 'color:var(--accent-ink)' : ''}">${esc(h)}${used[i] ? ` → ${used[i]}` : ''}</th>`).join('')}</tr></thead><tbody>` +
     imp.rows.slice(0, 8).map(r => `<tr>${imp.header.map((_, i) => {
       const v = r[i] ?? '';
       const bad = (i === idx.date && !parseDate(v, fmt)) || (i === idx.amount && isNaN(parseAmount(v)));
-      return `<td style="${bad ? 'color:var(--red)' : ''}">${esc(v)}</td>`;
+      return `<td style="${bad ? 'color:var(--red)' : ''}">${esc(String(v).length > 60 ? String(v).slice(0, 57) + '…' : v)}</td>`;
     }).join('')}</tr>`).join('') + '</tbody>';
 }
 function buildCatMap() {
@@ -1378,30 +1445,65 @@ function readCatMap() {
   document.querySelectorAll('#imp-catmap select').forEach(s => { imp.catMap[s.dataset.src] = s.value === '__new__' ? s.dataset.src : s.value; });
 }
 function buildPreview() {
-  const di = +val('map-date'), ai = +val('map-amount'), dsi = +val('map-desc'), ci = +val('map-cat'), sign = val('map-sign'), fmt = val('map-datefmt');
-  const existing = new Set((imp.kind === 'expense' ? st.expenses : st.revenue).map(x => `${x.date}|${Number(x.amount).toFixed(2)}|${(x.desc || '').trim().toLowerCase()}`));
+  const k = imp.kind, ix = mapIdx(), sign = k === 'mileage' ? 'all' : val('map-sign'), fmt = val('map-datefmt');
+  const cell = (r, i) => i >= 0 ? String(r[i] ?? '').trim() : '';
+  const key = k === 'mileage'
+    ? x => `${x.date}|${Number(x.miles).toFixed(1)}|${(x.purpose || '').trim().toLowerCase()}`
+    : x => `${x.date}|${Number(x.amount).toFixed(2)}|${(x.desc || '').trim().toLowerCase()}`;
+  const existing = new Set((k === 'expense' ? st.expenses : k === 'revenue' ? st.revenue : st.mileage).map(key));
+  const seen = new Set();
   imp.parsed = imp.rows.map(r => {
-    const date = parseDate(r[di], fmt), amt = parseAmount(r[ai]);
-    const src = ci < 0 ? '__all__' : (String(r[ci] ?? '').trim() || '(blank)');
-    const desc = dsi >= 0 ? String(r[dsi] ?? '').trim() : '';
-    const out = { date, amount: Math.abs(amt), desc, label: imp.catMap[src], ok: true, why: '' };
-    if (!date) { out.ok = false; out.why = 'bad date'; }
-    else if (isNaN(amt)) { out.ok = false; out.why = 'bad amount'; }
-    else if (amt === 0) { out.ok = false; out.why = 'zero'; }
-    else if (sign === 'neg' && amt > 0) { out.ok = false; out.why = 'money in'; }
-    else if (sign === 'pos' && amt < 0) { out.ok = false; out.why = 'money out'; }
-    out.dup = out.ok && existing.has(`${date}|${out.amount.toFixed(2)}|${desc.toLowerCase()}`);
+    const date = parseDate(r[ix.date], fmt), amt = parseAmount(r[ix.amount]);
+    const out = { date, ok: true, why: '' };
+    if (k === 'mileage') {
+      out.miles = Math.abs(amt); out.purpose = cell(r, ix.desc); out.notes = cell(r, ix.notes);
+      const d = ix.deduct >= 0 ? Math.abs(parseAmount(r[ix.deduct])) : NaN;
+      const y = date ? +date.slice(0, 4) : 0;
+      out.rate = d > 0 && out.miles > 0 && d / out.miles < 5 ? Math.round(d / out.miles * 1000) / 1000 : (IRS_BY_YEAR[y] || st.config.mileageRate);
+      out.amount = out.miles * out.rate;
+      if (!date) { out.ok = false; out.why = 'bad date'; }
+      else if (!(out.miles > 0)) { out.ok = false; out.why = 'no miles'; }
+      else if (!out.purpose) { out.ok = false; out.why = 'no purpose'; }
+    } else {
+      const vendor = cell(r, ix.vendor), d = cell(r, ix.desc);
+      out.desc = vendor && d && !d.toLowerCase().includes(vendor.toLowerCase()) ? `${vendor} — ${d}` : (d || vendor);
+      out.amount = Math.abs(amt);
+      out.label = imp.catMap[ix.cat < 0 ? '__all__' : (cell(r, ix.cat) || '(blank)')];
+      out.receiptUrl = /^https?:\/\//i.test(cell(r, ix.receipt)) ? cell(r, ix.receipt) : '';
+      if (!date) { out.ok = false; out.why = 'bad date'; }
+      else if (isNaN(amt)) { out.ok = false; out.why = 'bad amount'; }
+      else if (amt === 0) { out.ok = false; out.why = 'zero'; }
+      else if (sign === 'neg' && amt > 0) { out.ok = false; out.why = 'money in'; }
+      else if (sign === 'pos' && amt < 0) { out.ok = false; out.why = 'money out'; }
+    }
+    // Duplicates: already saved, or the same row twice in this file
+    if (out.ok) { const kk = key(out); out.dup = existing.has(kk) || seen.has(kk); seen.add(kk); }
     return out;
   });
   const good = imp.parsed.filter(r => r.ok && !r.dup), dups = imp.parsed.filter(r => r.dup).length, skipped = imp.parsed.filter(r => !r.ok).length;
-  const list = imp.kind === 'expense' ? st.config.categories : st.config.streams;
-  const newLabels = [...new Set(good.map(r => r.label))].filter(x => !list.includes(x));
-  document.getElementById('imp-sum').innerHTML = `<span>Ready: <b>${good.length}</b></span><span>Total: <b>${money(good.reduce((s, r) => s + r.amount, 0))}</b></span>${skipped ? `<span style="color:var(--ink3)">Skipped: <b>${skipped}</b></span>` : ''}${dups ? `<span style="color:var(--amber)">Already in your list: <b>${dups}</b></span>` : ''}${newLabels.length ? `<span>New ${imp.kind === 'expense' ? 'categories' : 'streams'}: <b>${newLabels.length}</b></span>` : ''}`;
+  const list = k === 'expense' ? st.config.categories : st.config.streams;
+  const newLabels = k === 'mileage' ? [] : [...new Set(good.map(r => r.label))].filter(x => !list.includes(x));
+  const receipts = good.filter(r => r.receiptUrl).length;
+  document.getElementById('imp-sum').innerHTML = `<span>Ready: <b>${good.length}</b></span>`
+    + (k === 'mileage' ? `<span>Miles: <b>${good.reduce((s, r) => s + r.miles, 0).toLocaleString('en-US')}</b></span><span>Deduction: <b>${money(good.reduce((s, r) => s + r.amount, 0))}</b></span>`
+                       : `<span>Total: <b>${money(good.reduce((s, r) => s + r.amount, 0))}</b></span>`)
+    + (receipts ? `<span>With receipt links: <b>${receipts}</b></span>` : '')
+    + (skipped ? `<span style="color:var(--ink3)">Skipped: <b>${skipped}</b></span>` : '')
+    + (dups ? `<span style="color:var(--amber)">Duplicates: <b>${dups}</b></span>` : '')
+    + (newLabels.length ? `<span>New ${k === 'expense' ? 'categories' : 'streams'}: <b>${newLabels.length}</b></span>` : '');
   const dn = document.getElementById('imp-dup-note');
-  dn.style.display = dups ? '' : 'none';
-  dn.textContent = dups ? `${dups} row${dups > 1 ? 's match' : ' matches'} something already saved (same date, amount and description) and will be skipped so nothing is counted twice.` : '';
-  document.getElementById('imp-preview').innerHTML = `<thead><tr><th>Date</th><th>${imp.kind === 'expense' ? 'Category' : 'Stream'}</th><th>Description</th><th class="num">Amount</th><th></th></tr></thead><tbody>` +
-    imp.parsed.slice(0, 300).map(r => `<tr class="${!r.ok ? 'skip' : r.dup ? 'dup' : ''}"><td class="mono">${r.date ? fmtDate(r.date) : '—'}</td><td>${r.ok ? badge(r.label, list) : ''}</td><td>${esc(r.desc)}</td><td class="mono num">${isNaN(r.amount) ? '—' : money(r.amount)}</td><td style="font-size:11px">${!r.ok ? r.why : r.dup ? 'duplicate' : ''}</td></tr>`).join('') +
+  const notes = [];
+  if (dups) notes.push(`${dups} row${dups > 1 ? 's match' : ' matches'} something already saved or repeat${dups > 1 ? '' : 's'} earlier in this file, so ${dups > 1 ? 'they' : 'it'} will be skipped and nothing is counted twice.`);
+  if (receipts) notes.push('Receipt links still point to where they were stored before (for example Hurdlr). If you close that account, the links may stop working, so download any receipts you need to keep first.');
+  dn.style.display = notes.length ? '' : 'none';
+  dn.innerHTML = notes.map(esc).join('<br><br>');
+  const head = k === 'mileage' ? '<th>Date</th><th>Purpose</th><th class="num">Miles</th><th class="num">Deduction</th><th></th>'
+    : `<th>Date</th><th>${k === 'expense' ? 'Category' : 'Stream'}</th><th>Description</th><th class="num">Amount</th><th></th>`;
+  document.getElementById('imp-preview').innerHTML = `<thead><tr>${head}</tr></thead><tbody>` +
+    imp.parsed.slice(0, 300).map(r => `<tr class="${!r.ok ? 'skip' : r.dup ? 'dup' : ''}"><td class="mono">${r.date ? fmtDate(r.date) : '—'}</td>` +
+      (k === 'mileage' ? `<td>${esc(r.purpose)}</td><td class="mono num">${isNaN(r.miles) ? '—' : r.miles}</td>`
+                       : `<td>${r.ok ? badge(r.label, list) : ''}</td><td>${esc(r.desc)}${r.receiptUrl ? ' 📎' : ''}</td>`) +
+      `<td class="mono num">${isNaN(r.amount) ? '—' : money(r.amount)}</td><td style="font-size:11px">${!r.ok ? r.why : r.dup ? 'duplicate' : ''}</td></tr>`).join('') +
     (imp.parsed.length > 300 ? `<tr><td colspan="5" class="dim">…and ${imp.parsed.length - 300} more</td></tr>` : '') + '</tbody>';
   if (!good.length) document.getElementById('imp-next').disabled = true;
 }
@@ -1409,28 +1511,36 @@ async function runImport() {
   const good = imp.parsed.filter(r => r.ok && !r.dup);
   if (!good.length) return;
   const next = document.getElementById('imp-next'); next.disabled = true; next.textContent = 'Importing…';
-  const isExp = imp.kind === 'expense', key = isExp ? 'categories' : 'streams';
-  const newLabels = [...new Set(good.map(r => r.label))].filter(x => !st.config[key].includes(x));
-  if (newLabels.length) { const d = await api('PUT', '/config', { [key]: [...st.config[key], ...newLabels] }); st.config = d.config; refreshLists(); }
+  const k = imp.kind, stateKey = k === 'expense' ? 'expenses' : k === 'revenue' ? 'revenue' : 'mileage';
+  let newLabels = [];
+  if (k !== 'mileage') {
+    const key = k === 'expense' ? 'categories' : 'streams';
+    newLabels = [...new Set(good.map(r => r.label))].filter(x => !st.config[key].includes(x));
+    if (newLabels.length) { const d = await api('PUT', '/config', { [key]: [...st.config[key], ...newLabels] }); st.config = d.config; refreshLists(); }
+  }
   let total = 0;
   for (let i = 0; i < good.length; i += 500) {
-    const rows = good.slice(i, i + 500).map(r => isExp ? { date: r.date, amount: r.amount, desc: r.desc, category: r.label } : { date: r.date, amount: r.amount, desc: r.desc, stream: r.label });
-    const d = await api('POST', '/import', { kind: imp.kind, rows });
-    (isExp ? st.expenses : st.revenue).push(...d.items); total += d.imported;
+    const rows = good.slice(i, i + 500).map(r => k === 'expense' ? { date: r.date, amount: r.amount, desc: r.desc, category: r.label, receiptUrl: r.receiptUrl }
+      : k === 'revenue' ? { date: r.date, amount: r.amount, desc: r.desc, stream: r.label }
+      : { date: r.date, miles: r.miles, purpose: r.purpose, notes: r.notes, rate: r.rate });
+    const d = await api('POST', '/import', { kind: k, rows });
+    st[stateKey].push(...d.items); total += d.imported;
     next.textContent = `Importing… ${total}/${good.length}`;
   }
   // Widen the list's date filter so imported history is visible
   const earliest = good.reduce((m, r) => r.date < m ? r.date : m, good[0].date);
-  const fromId = isExp ? 'exp-from' : 'rev-from';
+  const fromId = { expense: 'exp-from', revenue: 'rev-from', mileage: 'mile-from' }[k];
   if (val(fromId) && earliest < val(fromId)) document.getElementById(fromId).value = earliest;
   closeModal('import-modal'); renderAll();
-  switchTab(isExp ? 'expenses' : 'revenue'); if (isExp) switchSub('exp');
-  toast(`Imported ${total} ${isExp ? 'expenses' : 'revenue entries'}${newLabels.length ? ` · ${newLabels.length} new ${isExp ? 'categor' + (newLabels.length > 1 ? 'ies' : 'y') : 'stream' + (newLabels.length > 1 ? 's' : '')}` : ''}`);
+  if (k === 'revenue') switchTab('revenue'); else { switchTab('expenses'); switchSub(k === 'expense' ? 'exp' : 'mile'); }
+  toast(`Imported ${total} ${IMP_NOUN[k]}${newLabels.length ? ` · ${newLabels.length} new ${k === 'expense' ? 'categor' + (newLabels.length > 1 ? 'ies' : 'y') : 'stream' + (newLabels.length > 1 ? 's' : '')}` : ''}`);
 }
 function downloadTemplate() {
-  downloadCsv(imp.kind === 'expense' ? 'expenses-template.csv' : 'revenue-template.csv', imp.kind === 'expense'
-    ? [['Date', 'Description', 'Amount', 'Category'], ['2026-01-05', 'Office rent - January', '650.00', st.config.categories[0] || 'Rent & Office']]
-    : [['Date', 'Note', 'Amount', 'Stream'], ['2026-01-09', 'Week of Jan 5', '1200.00', st.config.streams[0] || 'Self-pay sessions']]);
+  const k = imp.kind;
+  downloadCsv(`${k}-template.csv`, k === 'expense'
+    ? [['Date', 'Vendor', 'Description', 'Amount', 'Category', 'Receipt'], ['2026-01-05', 'Regus', 'Office rent - January', '650.00', st.config.categories[0] || 'Rent & Office', '']]
+    : k === 'revenue' ? [['Date', 'Note', 'Amount', 'Stream'], ['2026-01-09', 'Week of Jan 5', '1200.00', st.config.streams[0] || 'Self-pay sessions']]
+    : [['Date', 'Purpose', 'Miles', 'Notes'], ['2026-01-12', 'CE training, Overland Park', '24.6', '']]);
 }
 
 // ═══════════════════════════════════════════
@@ -1452,16 +1562,21 @@ document.addEventListener('keydown', e => {
 const TOUR = [
   { title: 'Welcome to Practice Books', text: 'Everything the practice spends and earns lives here. This takes about a minute. Use Next, or press Esc to stop anytime.' },
   { sel: '#tab-bar', title: 'Three areas', text: 'Expenses & Mileage for what you spend, Revenue for what comes in, and Reports for totals and tax-time downloads.', go: () => { switchTab('expenses'); switchSub('exp'); } },
-  { sel: '#add-exp-btn', title: 'Add an expense', text: 'Tap here for anything the practice pays for. Snap a photo of the receipt in the same form and it’s saved with the expense.', go: () => { switchTab('expenses'); switchSub('exp'); } },
+  { sel: '#add-exp-btn', title: 'Logging an expense', text: 'Tap + Add Expense for anything the practice pays for. Here’s what the form looks like.', go: () => { switchTab('expenses'); switchSub('exp'); } },
+  { sel: '#exp-modal .field-row', title: 'Date and amount', text: 'The date defaults to today. Change it if you’re catching up on older receipts.', modal: 'exp-modal' },
+  { sel: '#exp-category', title: 'Category', text: 'Pick what it was for. These are your categories. You can rename them or add your own in Settings.', modal: 'exp-modal' },
+  { sel: '#exp-desc', title: 'Description', text: 'A few words so you’ll recognize it later, like “Liability insurance renewal” or “SimplePractice — October”.', modal: 'exp-modal' },
+  { sel: '#exp-upload-zone', title: 'Receipt', text: 'Tap to take a photo or choose a PDF. It’s stored with the expense, and the “View” link in the list opens it. Business receipts only, nothing with client names.', modal: 'exp-modal' },
+  { sel: '#exp-save-btn', title: 'Save', text: 'Save adds it to your list. To fix or delete one later, tap it in the list.', modal: 'exp-modal' },
   { sel: '#exp-cat-filter', title: 'Find things later', text: 'Search, pick a date range, or filter by category. The total at the bottom always matches what’s showing.' },
   { sel: '#subtab-recur-btn', title: 'Recurring bills', text: 'Rent, your EHR subscription, insurance: add it once here and it’s entered automatically every month.' },
   { sel: '#subtab-mile-btn', title: 'Mileage', text: 'Log business drives (trainings, a second office, consultations). The deduction is worked out at the IRS rate.' },
   { sel: '#add-rev-btn', title: 'Revenue', text: 'Log deposits by stream: self-pay, insurance, supervision, workshops. Weekly totals are fine. Never enter client names here.', go: () => switchTab('revenue') },
   { sel: '#rep-cards', title: 'Reports', text: 'Revenue, expenses, mileage, and net income for any date range, with breakdowns by category and stream.', go: () => switchTab('reports') },
   { sel: '#csv-btn', title: 'Tax time', text: 'Pick a report and download it as a spreadsheet for your accountant. The profit & loss summary is the one they usually want.' },
-  { sel: '#import-btn', title: 'Bring in what you already have', text: 'Import expenses or revenue from your bank, credit card, QuickBooks, or a spreadsheet. You’ll match up columns and categories before anything is saved.' },
-  { sel: '#settings-btn', title: 'Make it yours', text: 'Edit your expense categories, revenue streams, and the mileage rate here.' },
-  { sel: '#help-btn', title: 'That’s it', text: 'Tap this anytime to see the tour again. A good first step: import your existing expenses.', last: true },
+  { sel: '#import-btn', title: 'Bring in what you already have', text: 'Bring over expenses, revenue, and mileage from Hurdlr, your bank, or a spreadsheet. You’ll check the columns and categories before anything is saved.' },
+  { sel: '#settings-btn', title: 'Make it yours', text: 'Change your password, edit categories and revenue streams, set the mileage rate, or replay this tour.' },
+  { sel: '#help-btn', title: 'That’s it', text: 'Tap Tour anytime to see this again. A good first step: import what you’ve tracked in Hurdlr.', last: true },
 ];
 const tour = { on: false, i: 0 };
 function finishWelcome(showTour) {
@@ -1493,11 +1608,15 @@ function endTour(silent) {
   if (!tour.on) return;
   tour.on = false;
   ['tour-block', 'tour-card', 'tour-hole'].forEach(id => document.getElementById(id).style.display = 'none');
+  closeModal('exp-modal');
   markOnboarded();
   if (!silent) { switchTab('expenses'); switchSub('exp'); window.scrollTo(0, 0); }
 }
 function showTourStep() {
   const s = TOUR[tour.i];
+  // Steps inside the expense form open a blank form for show; every other step closes it
+  if (s.modal) { if (!document.getElementById(s.modal).classList.contains('open')) openExpModal(); }
+  else closeModal('exp-modal');
   if (s.go) s.go();
   document.getElementById('tour-title').textContent = s.title;
   document.getElementById('tour-text').textContent = s.text;

@@ -1,5 +1,5 @@
 import https from 'https';
-import { timingSafeEqual } from 'crypto';
+import { timingSafeEqual, scryptSync, randomBytes } from 'crypto';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand, ScanCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
@@ -1851,19 +1851,52 @@ async function jillReceiptUploadUrl(body, cors) {
 // Bulk import from the page's CSV importer. Rows are already parsed/mapped client-side; validated again here.
 // Duplicate skipping happens client-side (preview shows it); this just writes what it's given.
 async function jillImport(body, cors) {
-  const kind = body.kind === 'revenue' ? 'revenue' : 'expense';
+  const kind = ['expense', 'revenue', 'mileage'].includes(body.kind) ? body.kind : 'expense';
   const rows = Array.isArray(body.rows) ? body.rows : [];
   if (!rows.length) return err('No rows', 400, cors);
   if (rows.length > 2000) return err('Import at most 2000 rows at a time', 400, cors);
+  const str = (v, n) => String(v || '').slice(0, n);
+  const url = (v) => /^https?:\/\//i.test(String(v || '').trim()) ? String(v).trim().slice(0, 1000) : '';
   const items = [];
   for (const r of rows) {
-    if (!validDate(r.date) || r.amount == null || isNaN(r.amount)) return err(`Invalid row: ${JSON.stringify(r).slice(0, 120)}`, 400, cors);
+    const bad = () => err(`Invalid row: ${JSON.stringify(r).slice(0, 120)}`, 400, cors);
+    if (!validDate(r.date)) return bad();
+    if (kind === 'mileage') {
+      if (!(Number(r.miles) > 0) || !String(r.purpose || '').trim()) return bad();
+      const rate = validMileRate(r.rate);
+      items.push({ id: jillId('m'), type: 'mileage', date: r.date, miles: Number(r.miles), purpose: str(r.purpose, 200), notes: str(r.notes, 300), ...(rate ? { rate } : {}), imported: true });
+      continue;
+    }
+    if (r.amount == null || isNaN(r.amount)) return bad();
     items.push(kind === 'expense'
-      ? { id: jillId('e'), type: 'expense', date: r.date, category: String(r.category || 'Other').slice(0, 60), desc: String(r.desc || '').slice(0, 300), amount: Math.abs(Number(r.amount)), receiptUrl: '', imported: true }
-      : { id: jillId('v'), type: 'revenue', date: r.date, stream: String(r.stream || 'Other income').slice(0, 60), desc: String(r.desc || '').slice(0, 300), amount: Math.abs(Number(r.amount)), imported: true });
+      ? { id: jillId('e'), type: 'expense', date: r.date, category: str(r.category || 'Other', 60), desc: str(r.desc, 300), amount: Math.abs(Number(r.amount)), receiptUrl: url(r.receiptUrl), imported: true }
+      : { id: jillId('v'), type: 'revenue', date: r.date, stream: str(r.stream || 'Other income', 60), desc: str(r.desc, 300), amount: Math.abs(Number(r.amount)), imported: true });
   }
   for (let i = 0; i < items.length; i += 10) await Promise.all(items.slice(i, i + 10).map(jillPut));
   return ok({ imported: items.length, items }, cors);
+}
+
+// Jill can change her password in Settings. The new one is stored as an scrypt hash on her __config__ row
+// (`passwordHash` = 'scrypt$<saltHex>$<hashHex>') and, once set, replaces env JILL_PASSWORD.
+// Forgotten password → David deletes the passwordHash attribute in DynamoDB and JILL_PASSWORD works again.
+function jillHash(pw, saltHex) {
+  const salt = saltHex ? Buffer.from(saltHex, 'hex') : randomBytes(16);
+  return `scrypt$${salt.toString('hex')}$${scryptSync(String(pw), salt, 32).toString('hex')}`;
+}
+async function jillCheckPassword(pw) {
+  if (!pw) return false;
+  const stored = (await jillGet('__config__'))?.passwordHash;
+  if (stored && stored.startsWith('scrypt$')) return safeEqual(jillHash(pw, stored.split('$')[1]), stored);
+  const envPassword = process.env.JILL_PASSWORD;
+  return !!envPassword && safeEqual(pw, envPassword);
+}
+async function jillChangePassword(body, cors) {
+  const { current, next } = body || {};
+  if (!(await jillCheckPassword(current))) return err('Current password is incorrect', 401, cors);
+  if (typeof next !== 'string' || next.length < 8) return err('New password must be at least 8 characters', 400, cors);
+  const prev = await jillGet('__config__');
+  await jillPut({ ...(prev || {}), id: '__config__', type: 'config', passwordHash: jillHash(next) });
+  return ok({ changed: true }, cors);
 }
 
 async function jillRoute(method, path, event, cors) {
@@ -1872,10 +1905,9 @@ async function jillRoute(method, path, event, cors) {
   // Public: password check returns JILL_TOKEN
   if (method === 'POST' && path === '/admin/jill/verify-password') {
     const password = b().password;
-    const envPassword = process.env.JILL_PASSWORD;
-    if (!envPassword || !JILL_TOKEN) return err('Server not configured', 500, cors);
+    if (!process.env.JILL_PASSWORD || !JILL_TOKEN) return err('Server not configured', 500, cors);
     if (!password) return err('Password required', 400, cors);
-    if (safeEqual(password, envPassword)) return ok({ verified: true, token: JILL_TOKEN }, cors);
+    if (await jillCheckPassword(password)) return ok({ verified: true, token: JILL_TOKEN }, cors);
     return err('Incorrect password', 401, cors);
   }
 
@@ -1884,6 +1916,7 @@ async function jillRoute(method, path, event, cors) {
   if (method === 'GET' && path === '/admin/jill/data')   return await jillGetData(cors);
   if (method === 'PUT' && path === '/admin/jill/config') return await jillUpdateConfig(b(), cors);
   if (method === 'POST' && path === '/admin/jill/import') return await jillImport(b(), cors);
+  if (method === 'PUT'  && path === '/admin/jill/password') return await jillChangePassword(b(), cors);
   if (method === 'POST' && path === '/admin/jill/expenses/receipt-url') return await jillReceiptUploadUrl(b(), cors);
   if (method === 'POST' && path === '/admin/jill/recurring/run') {
     const created = await generateAllRecurring(JILL_TABLE);
