@@ -594,7 +594,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
-## Built This Session (October 26 2026) — NOT deployed, awaiting David's review
+## Completed This Session (October 26 2026) — Study section (deployed Oct 26 2026, run 40387472373)
 
 **Shared site pieces.** `site-tokens.css` holds the site's colors and fonts (light and dark). `site-bar.js` + `site-bar.css` draw the top bar into an empty `<nav data-chrome-nav>` (study pages only for now; bar styles are scoped to that attribute so main pages are unaffected). `site-chrome.js` + `site-chrome.css`: menu and footer links.
 
@@ -608,7 +608,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 **Tested (headless Chromium, 1440 / 820 / 390 px):** every internal link, anchor and image path resolves (191 pages); no horizontal scroll; no JS errors; menu opens and marks "study" current; footer filled; full-screen image view opens/closes; credit links go to Commons in a new tab; search returns results that open the right page; card corners rounded at all widths; Prev/Next side by side at the bottom right on every screen size (David, Oct 26 2026 — no top pager), swipe and arrow keys turn the page; no week numbers or course codes; "Theme" label on every theme; no image twice in a row or more than twice on a page. Not tested here: real Google Fonts (blocked in the test sandbox) and live API-driven content on the old pages.
 
-**After the push, check:** `/study.html`, the menu on a phone on index and gallery, `/color-theory.html` redirects, `/study/color-theory.html#flashcards`, one work page and one part page on a phone, search on the course home, a credits link. Then resubmit the sitemap in Search Console.
+**Post-deploy checks (passed Oct 26 2026 on the live site):** `/study.html`, the menu on a phone on index and gallery, `/color-theory.html` redirects, `/study/color-theory.html#flashcards`, one work page and one part page on a phone, search on the course home, a credits link. Then resubmit the sitemap in Search Console.
 
 -----
 
@@ -842,7 +842,7 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 - [ ] **Move the main-site pages onto `site-tokens.css` and give the main site dark mode** (David, Oct 26 2026). Today each main page carries its own `:root` colors inline; the study pages already read `site-tokens.css`, which has light and dark values. Swap each page's inline token block for the shared file, then check every page in dark mode (gallery cards, hero, modals, admin is out of scope). After that, a site-wide color or font change is one edit.
 - [ ] **Move the main-site pages onto the shared top bar** (`<nav data-chrome-nav>` + `site-bar.js`), one page at a time. Index and gallery have their own bar variants (index pill + easter egg; gallery cart button opens the cart) — decide how the shared bar handles those first.
 - [ ] **Review the Google Analytics setup, and walk David through what GA can tell him** (added Oct 26 2026). Check that every public page (including the new study pages) reports to `G-FL5BKJFVXF`, that the stream and Search Console link are healthy, then a short guided tour: traffic sources, which pages and prints get looked at, art-fair QR scans, and whether ad clicks show up. Teach-as-you-go, not a report.
-- [ ] **Study section: deploy and verify (built Oct 26 2026, not yet live).** See "Built This Session (October 26 2026)" for what changed and the checks to run after the push. Afterwards resubmit `sitemap.xml` in Search Console.
+- [ ] **Resubmit `sitemap.xml` in Google Search Console** (study section went live Oct 26 2026; the sitemap now lists 195 URLs). Post-deploy checks already passed on the live site: shared bar/menu/footer on index, gallery and study pages; gallery prints load; `/color-theory.html` redirects; `#flashcards` opens the deck; course-home search; work-page pager; Jost loads.
 - [ ] **Next art-history courses** (Renaissance, then Baroque, Impressionism…): each is a data folder + a copy of `tools/study/build-classical-myth.js` pointed at it + one card on `study.html`. When the second course arrives, generalize the generator into one script that takes a course folder, rather than keeping copies.
 
 ### Ongoing
