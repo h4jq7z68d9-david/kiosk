@@ -6,7 +6,8 @@
 
    Reads   study/art-history/classical-myth/{data.js,data_w34.js,data_w58.js,credits.js}
            study/art-history/classical-myth/img/<key>.jpg   (for width/height)
-   Writes  study/art-history/classical-myth.html            course home
+           tools/study/classical-myth-viewer.html           the original one-page guide (layout and script kept)
+   Writes  study/art-history/classical-myth.html            course home = the one-page guide (from the viewer below)
            study/art-history/classical-myth/<section>/<part>.html   16 part pages
            study/art-history/classical-myth/<section>/<work>.html   one page per work
            study/art-history/classical-myth/credits.html
@@ -135,10 +136,10 @@ const FOOTER = `<footer>
     </div>
     <p class="f-legal">&copy; 2026 david nicholson</p>
   </div>
-</footer>
-<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button class="x" id="lbx" type="button">Close ✕</button><img id="lbimg" alt=""><p class="cap" id="lbcap"></p></div>`;
+</footer>`;
+const LIGHTBOX = `<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button class="x" id="lbx" type="button">Close ✕</button><img id="lbimg" alt=""><p class="cap" id="lbcap"></p></div>`;
 
-function page({ url, title, desc, image, imageAlt, type = 'article', body, ld, extraHead = '', extraScripts = '' }) {
+function page({ url, title, desc, image, imageAlt, type = 'article', body, ld, extraHead = '', extraScripts = '', guide = false }) {
   const og = image ? `<meta property="og:image" content="${abs(img(image))}">
 <meta property="og:image:width" content="${dims(image).w}">
 <meta property="og:image:height" content="${dims(image).h}">
@@ -173,14 +174,11 @@ ${FONTS}
 <link rel="stylesheet" href="/study/study.css?v=4">
 <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
 ${extraHead}</head>
-<body>
+<body${guide ? ' class="guide-page"' : ''}>
 ${NAV}
-<main id="main">
-${body}
-</main>
+${guide ? body : `<main id="main">\n${body}\n</main>`}
 ${FOOTER}
-${extraScripts}<script src="/study/study.js?v=3"></script>
-<script src="/site-chrome.js?v=1"></script>
+${guide ? '' : LIGHTBOX + '\n'}${extraScripts}${guide ? '' : '<script src="/study/study.js?v=3"></script>\n'}<script src="/site-chrome.js?v=1"></script>
 </body>
 </html>
 `;
@@ -203,6 +201,7 @@ const pager = (prev, next, posText, label) => `<nav class="pager" aria-label="${
   ${prev ? `<a class="btn" href="${prev.url}" rel="prev" title="${esc(prev.title)}">← Prev</a>` : '<span class="btn" aria-disabled="true">← Prev</span>'}
   ${next ? `<a class="btn primary" href="${next.url}" rel="next" title="${esc(next.title)}">Next →</a>` : '<span class="btn primary" aria-disabled="true">Next →</span>'}
 </nav>`;
+const openGuide = (id) => `<p class="open-guide"><a class="btn primary" href="${COURSE}.html#${id}">Open in the guide</a></p>`;
 const workRef = (w) => w && { url: w.url, title: w.s.title };
 const partRef = (p) => p && { url: p.url, title: p.h.title };
 
@@ -224,6 +223,7 @@ works.forEach((w, i) => {
   const cr = [['Study', STUDY], [NAME, COURSE + '.html'], [h.title, p.url], [s.title, w.url]];
   const themes = parts.flatMap((pp) => pp.items).filter((t) => t.s.type === 'theme' && (t.s.works || []).includes(s.key));
   const body = `${crumbs(cr)}
+${openGuide(w.id)}
 <article class="card slide">
   ${pic(s.key, s.title, capOf(s), true)}
   <div class="notes">
@@ -269,6 +269,7 @@ parts.forEach((p, i) => {
     return `<article class="card slide text" id="${it.anchor}" style="scroll-margin-top:calc(var(--nav-h) + 12px)"><div class="notes"><p class="eyebrow">${esc(h.title)}</p><h2 class="htitle">${esc(s.title)}</h2>${s.sub ? `<p class="hsub">${esc(s.sub)}</p>` : ''}<p class="sum">${esc(s.sum)}</p>${RULE}${bul(s.bul)}${RULE}${terms(s.terms)}</div></article>`;
   });
   const body = `${crumbs(cr)}
+${openGuide(p.id)}
 <article class="card slide">
   ${pic(o.img, c[1], ch, true)}
   <div class="notes"><p class="eyebrow">${esc(sec(h.wk))}</p><h1 class="htitle">${esc(h.title)}</h1><p class="hsub">${esc(h.sub)}</p>
@@ -304,47 +305,77 @@ ${pager(partRef(parts[i - 1]), partRef(parts[i + 1]), `Part ${i + 1} of ${parts.
   write(url, page({ url, title: `Image credits – ${NAME}`, desc: `Sources and licenses for the ${keys.length} public-domain and CC0 images in ${NAME}, all from Wikimedia Commons.`, image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website' }));
 }
 
-/* ---------- course home ---------- */
+/* ---------- course home = the one-page guide (search, outline, Prev/Next, swipe) ---------- */
 {
   const url = COURSE + '.html';
+  let v = fs.readFileSync(path.join(__dirname, 'classical-myth-viewer.html'), 'utf8');
+  const must = (a, b) => { if (!v.includes(a)) throw new Error('viewer changed; cannot find: ' + a.slice(0, 70)); v = v.replace(a, b); };
+  const style = v.slice(v.indexOf('<style>') + 7, v.indexOf('</style>'));
+  // the viewer's own color/font tokens give way to the site's (site-tokens.css), keeping its layout
+  const t0 = style.indexOf(':root{'), t1 = style.indexOf('*{box-sizing:border-box}');
+  if (t0 < 0 || t1 < t0) throw new Error('viewer tokens not found');
+  const css = style.slice(0, t0) + `:root{
+  --paper:var(--panel); --line:var(--border); --muted:var(--ink2); --navy:var(--accent-ink); --navy-ink:var(--on-accent);
+  --clay:var(--ink3); --tint:var(--surface); --mat:var(--surface); --matink:var(--ink2); --serif:var(--font); --sans:var(--font);
+}
+` + style.slice(t1) + `
+/* site integration (generated): site bar above, site footer below, site type, Greek-key divider kept */
+body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:400}
+.guide-page .rail{top:calc(var(--nav-h) + 16px);max-height:calc(100vh - var(--nav-h) - 40px);max-height:calc(100dvh - var(--nav-h) - 40px)}
+@media (min-width:901px){.guide-page .main{height:calc(100vh - var(--nav-h) - 40px);height:calc(100dvh - var(--nav-h) - 40px)}.guide-page .main:has(.slide.text){height:auto}}
+.guide-page .lb{z-index:120}
+.guide-page .brand a{color:inherit;text-decoration:none}
+.guide-page .brand,.guide-page .title,.guide-page .htitle,.guide-page .res .rt{color:var(--ink);font-weight:500}
+.guide-page .ho[aria-current="true"],.guide-page .items button[aria-current="true"]{color:var(--accent-ink)}
+.guide-page .wk,.guide-page .eyebrow,.guide-page .res .rk{color:var(--ink3);font-weight:500}
+.guide-page .date{color:var(--ink2)}
+.guide-page .fn b,.guide-page .cred b{color:var(--ink);font-weight:500}
+.guide-page .terms dt{font-weight:500;color:var(--accent-ink)}
+.guide-page .btn,.guide-page .search input,.guide-page .jump{border-color:var(--border-mid)}
+.guide-page .btn{border-radius:22px;font-weight:500}
+.guide-page .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.guide-page .search input{border-radius:22px}
+.guide-page blockquote{border-left-color:var(--accent)}
+.guide-page .res mark{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+.guide-page .pic img{box-shadow:none}
+.guide-page .rule{background:var(--key);opacity:.8;-webkit-mask:var(--key-mask) repeat-x left center/16px 8px;mask:var(--key-mask) repeat-x left center/16px 8px}
+.guide-page :focus-visible{outline-color:var(--accent)}
+.guide-page .bar .spacer{flex:1}
+.guide-page footer{margin-top:40px}
+`;
+  must(style, '');
+  must('<title>Classical Myth in Art</title>', '');
+  must('<meta name="claude:viewport-fit-sides" content="cover">\n', '');
+  must('<link rel="preconnect" href="https://fonts.googleapis.com">\n', '');
+  v = v.replace(/<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com[^>]*>\n/, '');
+  must('<style></style>\n', '');
+  // Prev / Next bar moves below the slide (bottom right), as on the rest of the study pages
+  const barStart = v.indexOf('    <div class="bar">'), barEnd = v.indexOf('</div>', barStart) + 7;
+  const bar = v.slice(barStart, barEnd);
+  v = v.slice(0, barStart) + v.slice(barEnd);
+  must('    <article class="slide" id="slide" aria-live="polite" tabindex="-1"></article>\n', '    <article class="slide" id="slide" aria-live="polite" tabindex="-1"></article>\n' + bar);
+  // brand links home; images and data load from the course folder
+  must('<p class="brand">Classical Myth in Art</p>', `<p class="brand"><a href="${url}">Classical Myth in Art</a></p>`);
+  must("const src=k=>'img/'+k+'.jpg';", `const src=k=>'${COURSE}/img/'+k+'.jpg';`);
+  for (const f of ['data.js', 'data_w34.js', 'data_w58.js', 'credits.js']) must(`<script src="${f}"></script>`, `<script src="${COURSE}/${f}"></script>`);
+  // no "free study guide" label and no authorship line (David, Oct 26 2026)
+  must('<p class="eyebrow">Free study guide</p>', '');
+  must('\n    <p class="det">Text by David Nicholson · davidnicholsonart.com</p></div>`;', '</div>`;');
+  const scripts = v.slice(v.indexOf('<script src='));
+  const markup = v.slice(0, v.indexOf('<script src=')).trim();
+  // a plain list of every part for readers without JavaScript (and for crawlers)
+  const nojs = `<noscript><div style="max-width:900px;margin:20px auto;padding:0 16px"><p>${esc(NAME)}: the parts of the guide.</p><ul>${parts.map((p) => `<li><a href="${p.url}">${esc(p.h.title)}</a></li>`).join('')}<li><a href="${COURSE}/credits.html">Image credits</a></li></ul></div></noscript>`;
+  const keyMask = `:root{--key-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8' viewBox='0 0 16 8'%3E%3Cpath d='M0 7.5h6V1.5H2v3h2' fill='none' stroke='black' stroke-width='1'/%3E%3Cpath d='M8 7.5h6V1.5h-4v3h2' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E")}`;
   const cr = [['Study', STUDY], [NAME, url]];
-  let secs = '';
-  let lastWk = 0;
-  parts.forEach((p) => {
-    if (p.h.wk !== lastWk) {
-      if (lastWk) secs += '</div>';
-      secs += `<h2 class="sec-h" id="${p.secSlug}">${esc(sec(p.h.wk))}</h2><div class="grid parts">`;
-      lastWk = p.h.wk;
-    }
-    const n = p.items.filter((it) => it.s.type === 'work').length;
-    secs += `<a class="card tile" href="${p.url}"><span class="th"><img src="${img(p.h.overview.img)}" alt="${esc(p.h.overview.cap[1])}" loading="lazy"></span><span class="tb"><span class="tt">${esc(p.h.title)}</span><span class="ts">${esc(p.h.sub)}</span><span class="tk">${n} works</span></span></a>`;
-  });
-  secs += '</div>';
-  const body = `${crumbs(cr)}
-<section class="card hero">
-  <h1 class="htitle">${NAME}</h1>
-  <p class="hsub">The stories of the Greek and Roman gods and heroes, told through paintings, sculpture, and vases</p>
-  ${RULE}
-  <p class="sum">Each page pairs one work of art with a short account of the myth it shows, what the object was made for, and the key names and terms. Theme sections step back to the bigger ideas that connect the works. The material follows a college survey of classical mythology, rewritten for general readers.</p>
-  <ul class="b"><li>Every image is public domain or CC0; sources and licenses are listed under <a href="${COURSE}/credits.html">Image credits</a>.</li><li>Quotations from Hesiod use Hugh G. Evelyn-White’s public-domain translation (1914).</li></ul>
-  <div class="search" id="search" role="search">
-    <svg class="sico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6l4.4 4.4"/></svg>
-    <input id="q" type="search" placeholder="Search gods, works, artists, terms…" aria-label="Search the guide" autocomplete="off" aria-controls="results" aria-expanded="false">
-    <div class="results" id="results" role="listbox" hidden></div>
-  </div>
-</section>
-${secs}`;
   const ld = { '@context': 'https://schema.org', '@graph': [
     Object.assign({}, COURSE_LD, { description: 'The stories of the Greek and Roman gods and heroes, told through paintings, sculpture, and vases.', inLanguage: 'en',
       learningResourceType: 'Study guide', educationalLevel: 'Introductory', publisher: PUBLISHER, isAccessibleForFree: true,
       hasPart: parts.map((p) => ({ '@type': 'LearningResource', name: p.h.title, url: abs(p.url) })) }),
     crumbLd(cr)] };
-  // search reads the course data files directly, plus a slide id -> page URL map
-  const map = { parts: Object.fromEntries(parts.map((p) => [p.h.n, p.url])), ids: viewerIds, img: COURSE + '/img/' };
-  const extraScripts = `<script>window.STUDY_MAP=${JSON.stringify(map)};</script>
-<script src="${COURSE}/data.js" defer></script><script src="${COURSE}/data_w34.js" defer></script><script src="${COURSE}/data_w58.js" defer></script>
-`;
-  write(url, page({ url, title: `${NAME} – Study – David Nicholson`, desc: 'A study guide to Greek and Roman myth in art: the gods and heroes through 170 paintings, sculptures, and vases, each with the story it shows and key terms.', image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website', extraScripts }));
+  write(url, page({ url, title: `${NAME} – Study – David Nicholson`,
+    desc: 'A study guide to Greek and Roman myth in art: the gods and heroes through 170 paintings, sculptures, and vases, each with the story it shows and key terms.',
+    image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], type: 'website', ld, guide: true,
+    extraHead: `<style>\n${keyMask}\n${css}</style>\n`, body: markup + '\n' + nojs, extraScripts: scripts.trim() + '\n' }));
 }
 
 /* ---------- sitemap: replace this course's block in /sitemap.xml ---------- */

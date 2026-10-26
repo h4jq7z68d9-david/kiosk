@@ -178,3 +178,4 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 /* ---------- PAGER: bottom right on every screen size (swipe also works on touch screens) ---------- */
 .pager { display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 .pager .pos { margin-right: 4px; }
+.open-guide { display: flex; justify-content: flex-end; }
