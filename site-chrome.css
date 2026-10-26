@@ -1,0 +1,18 @@
+/* SITE MENU — shared by every public page (markup and links come from site-chrome.js) */
+.nav-menu { display: inline-flex; align-items: center; background: none; border: none; height: 40px; padding: 0 10px 0 0; margin-left: -2px; margin-right: -4px; color: var(--ink); cursor: pointer; flex-shrink: 0; }
+.nav-menu svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; }
+.nav-menu:hover { color: var(--accent-ink); }
+#menu-scrim { position: fixed; inset: 0; z-index: 85; background: rgba(43,54,64,0.28); opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0s linear 0.2s; }
+#menu-scrim.on { opacity: 1; visibility: visible; transition: opacity 0.2s, visibility 0s; }
+#menu-panel { position: fixed; z-index: 90; top: var(--nav-h, 62px); left: 20px; width: 280px; background: #ffffff; border: 1px solid var(--border-mid, #cfd6dd); border-top: none; padding: 10px 0 14px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.18s, transform 0.18s, visibility 0s linear 0.18s; }
+#menu-panel.on { opacity: 1; visibility: visible; transform: none; transition: opacity 0.18s, transform 0.18s, visibility 0s; }
+#menu-panel a, #menu-panel button { display: flex; align-items: center; width: 100%; min-height: 46px; padding: 0 22px; font-family: var(--font); font-size: 17px; font-weight: 400; letter-spacing: 0; text-transform: lowercase; text-align: left; text-decoration: none; color: var(--ink2); background: none; border: none; border-radius: 0; cursor: pointer; transition: color 0.15s, background 0.15s; }
+#menu-panel a:hover, #menu-panel button:hover { color: var(--ink); background: var(--surface); }
+#menu-panel a.current { color: var(--accent-ink); font-weight: 500; }
+#menu-panel hr { border: none; border-top: 1px solid var(--border); margin: 8px 22px; }
+@media (max-width: 600px) {
+  #menu-panel { left: 0 !important; right: 0; width: auto; border-left: none; border-right: none; }
+  #menu-panel a, #menu-panel button { padding: 0 16px; min-height: 50px; font-size: 18px; }
+  #menu-panel hr { margin: 8px 16px; }
+}
+@media (prefers-reduced-motion: reduce) { #menu-panel, #menu-scrim { transition: none; } }

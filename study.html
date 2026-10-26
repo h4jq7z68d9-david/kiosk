@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Study — David Nicholson</title>
+<meta name="description" content="Color tools and art history study guides by painter David Nicholson: an interactive color wheel, color theory flashcards, and Classical Myth in Art.">
+<link rel="canonical" href="https://davidnicholsonart.com/study.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="David Nicholson">
+<meta property="og:title" content="Study — David Nicholson">
+<meta property="og:description" content="Color tools and art history study guides by painter David Nicholson.">
+<meta property="og:url" content="https://davidnicholsonart.com/study.html">
+<meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FL5BKJFVXF"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FL5BKJFVXF');</script>
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="/site-chrome.css?v=1">
+<link rel="stylesheet" href="/study/study.css?v=1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","@id":"https://davidnicholsonart.com/study.html","url":"https://davidnicholsonart.com/study.html","name":"Study","author":{"@type":"Person","name":"David Nicholson","url":"https://davidnicholsonart.com/"},"hasPart":[{"@type":"WebPage","name":"Color theory","url":"https://davidnicholsonart.com/study/color-theory.html"},{"@type":"LearningResource","name":"Classical Myth in Art","url":"https://davidnicholsonart.com/study/art-history/classical-myth.html"}]}</script>
+</head>
+<body class="site">
+<nav>
+  <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="nav-title" href="/index.html">david nicholson</a>
+  <div class="nav-links">
+    <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
+    <a class="nav-cart" href="/gallery.html?cart=1" aria-label="cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="nav-cart-count" id="cart-count">0</span>
+    </a>
+  </div>
+</nav>
+<div id="menu-scrim"></div>
+<div id="menu-panel" aria-label="site menu"></div>
+
+<main>
+  <div class="lead">
+    <h1 class="show-title">study</h1>
+    <p>color tools and art history study guides.</p>
+  </div>
+
+  <!-- Each group is a heading plus a grid of cards. To add a course or tool, copy a card. -->
+  <h2 class="grp-h">color</h2>
+  <div class="grid">
+    <a class="card tile" href="/study/color-theory.html">
+      <span class="th icon"><img src="/color-wheel-icon-512.png" alt=""></span>
+      <span class="tb"><span class="tt">color wheel</span><span class="ts">an interactive red–yellow–blue wheel: harmonies, tints and shades, and paint mixing.</span></span>
+    </a>
+    <a class="card tile" href="/study/color-theory.html#flashcards">
+      <span class="th"><span class="swatches" aria-hidden="true"><span style="background:#c8342b"></span><span style="background:#e2892c"></span><span style="background:#e8c63a"></span><span style="background:#4f8a3c"></span><span style="background:#2f5f9e"></span><span style="background:#6b3f8c"></span></span></span>
+      <span class="tb"><span class="tt">color theory flashcards</span><span class="ts">test yourself on color relationships, one card at a time.</span></span>
+    </a>
+  </div>
+
+  <h2 class="grp-h">art history</h2>
+  <div class="grid">
+    <a class="card tile" href="/study/art-history/classical-myth.html">
+      <span class="th"><img src="/study/art-history/classical-myth/img/h1_council.jpg" alt="" loading="lazy"></span>
+      <span class="tb"><span class="tt">classical myth in art</span><span class="ts">the greek and roman gods and heroes, told through 170 paintings, sculptures, and vases.</span></span>
+    </a>
+  </div>
+</main>
+
+<footer>
+  <div class="f-inner">
+    <div class="f-cols">
+      <div>
+        <p class="f-brand">david nicholson</p>
+        <img class="f-logo" src="/logo-mark.png" alt="">
+      </div>
+      <div class="f-links" data-chrome-footer></div>
+    </div>
+    <p class="f-legal">&copy; 2026 david nicholson</p>
+  </div>
+</footer>
+<script>
+/* cart badge — reads the same store the gallery writes to */
+(function () {
+  var n = 0;
+  try { n = (JSON.parse(localStorage.getItem('dna_cart')) || []).length; } catch (e) {}
+  var el = document.getElementById('cart-count');
+  if (!el) return;
+  el.textContent = n;
+  el.classList.toggle('on', n > 0);
+})();
+</script>
+<script src="/site-chrome.js?v=1"></script>
+</body>
+</html>
