@@ -171,6 +171,14 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page :focus-visible{outline-color:var(--accent)}
 .guide-page .bar .spacer{flex:1}
 .guide-page footer{margin-top:40px}
+/* phones and portrait iPads: Prev / Next pinned to the bottom of the screen, bottom right */
+@media (max-width:900px){
+  .guide-page .bar{position:fixed;left:0;right:0;bottom:0;z-index:70;margin:0;justify-content:flex-end;gap:8px;
+    background:var(--navbg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--border);
+    padding:8px max(16px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+  .guide-page .bar .crumb,.guide-page .bar .spacer{display:none}
+  body.guide-page{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+}
 </style>
 </head>
 <body class="guide-page">
