@@ -135,6 +135,12 @@
   .brk-amt { font-family: var(--mono); font-size: 13px; }
   .brk-bar { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: var(--bg2); overflow: hidden; }
   .brk-bar > div { height: 100%; border-radius: 2px; }
+  .brk-total { border-top: 1.5px solid var(--border-mid); border-bottom: none; margin-top: 4px; padding-top: 10px; font-weight: 500; }
+  .brk-total .brk-amt { font-weight: 500; }
+  .month-table { margin-top: 16px; border: 1px solid var(--border); border-radius: 6px; overflow: auto; }
+  .month-table td, .month-table th { padding: 7px 12px; }
+  .month-table th { position: static; }
+  .month-table tr.total td { font-weight: 500; background: var(--bg2); border-top: 1.5px solid var(--border-mid); }
 
   /* Modals */
   .modal-backdrop { position: fixed; inset: 0; background: rgba(43,54,64,0.4); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
@@ -219,6 +225,8 @@
     .field-row { grid-template-columns: 1fr; gap: 0; }
     .modal-head, .modal-body, .modal-foot { padding-left: 16px; padding-right: 16px; }
     .catmap-row { grid-template-columns: 1fr; gap: 4px; }
+    .month-table td, .month-table th { padding: 7px 6px; font-size: 12px; }
+    .month-table td.mono { font-size: 12px; }
   }
 </style>
 </head>
@@ -408,6 +416,7 @@
           <div class="legend"><span><i style="background:var(--accent)"></i>Revenue</span><span><i style="background:#c98a7f"></i>Expenses + mileage</span></div>
         </div>
         <div class="chart-wrap" id="rep-chart"></div>
+        <div class="month-table" id="rep-months"></div>
       </div>
 
       <div class="breakdown">
@@ -1091,6 +1100,7 @@ function renderBreakdown(id, rows, list, color) {
   const max = rows.length ? rows[0][1] : 0;
   document.getElementById(id).innerHTML = rows.length ? rows.map(([k, v]) => `<div class="brk-row"><span>${badge(k, list)}</span><span class="brk-amt">${money(v)}</span>
     <div class="brk-bar"><div style="width:${max ? (v / max * 100).toFixed(1) : 0}%;background:${color}"></div></div></div>`).join('')
+    + `<div class="brk-row brk-total"><span>Total</span><span class="brk-amt">${money(rows.reduce((s, r) => s + r[1], 0))}</span></div>`
     : '<div class="empty-state" style="padding:24px">Nothing in this range.</div>';
 }
 function renderReports() {
@@ -1099,9 +1109,9 @@ function renderReports() {
   const tRev = rev.reduce((s, r) => s + Number(r.amount || 0), 0), net = tRev - tExp - tMile;
   const miles = mile.reduce((s, m) => s + Number(m.miles || 0), 0);
   document.getElementById('rep-cards').innerHTML = `
-    <div class="card"><div class="card-label">Revenue</div><div class="card-value acc">${money(tRev)}</div><div class="card-sub">${rev.length} entr${rev.length === 1 ? 'y' : 'ies'}</div></div>
-    <div class="card"><div class="card-label">Expenses</div><div class="card-value neg">${money(tExp)}</div><div class="card-sub">${exp.length} item${exp.length === 1 ? '' : 's'}</div></div>
-    <div class="card"><div class="card-label">Mileage deduction</div><div class="card-value">${money(tMile)}</div><div class="card-sub">${miles.toLocaleString('en-US')} miles</div></div>
+    <div class="card"><div class="card-label">Total revenue</div><div class="card-value acc">${money(tRev)}</div><div class="card-sub">${rev.length} entr${rev.length === 1 ? 'y' : 'ies'}</div></div>
+    <div class="card"><div class="card-label">Total expenses</div><div class="card-value neg">${money(tExp)}</div><div class="card-sub">${exp.length} item${exp.length === 1 ? '' : 's'}</div></div>
+    <div class="card"><div class="card-label">Total mileage deduction</div><div class="card-value">${money(tMile)}</div><div class="card-sub">${miles.toLocaleString('en-US')} miles</div></div>
     <div class="card"><div class="card-label">Net income</div><div class="card-value ${net >= 0 ? 'pos' : 'neg'}">${net < 0 ? '−' : ''}${money(Math.abs(net))}</div><div class="card-sub">revenue − expenses − mileage</div></div>`;
   // Monthly chart
   const months = {};
@@ -1119,6 +1129,13 @@ function renderReports() {
       <div class="chart-bar exp" style="height:${(m.exp / max * 140).toFixed(1)}px" title="${MON[+mo - 1]} ${y} expenses ${money(m.exp)}"></div>
       </div><div class="chart-label">${MON[+mo - 1]} ${y.slice(2)}</div></div>`;
   }).join('') : '<div class="empty-state" style="width:100%">Nothing in this range yet.</div>';
+  // Same numbers as a table with a totals row — the bars alone show no figures on a phone (no hover)
+  const netCell = v => `<td class="mono num ${v < 0 ? 'neg' : ''}">${v < 0 ? '−' : ''}${money(Math.abs(v))}</td>`;
+  const mt = document.getElementById('rep-months');
+  mt.style.display = keys.length ? '' : 'none';
+  mt.innerHTML = keys.length ? `<table><thead><tr><th>Month</th><th class="num">Revenue</th><th class="num">Expenses<span class="mobile-hide"> + mileage</span></th><th class="num">Net</th></tr></thead><tbody>`
+    + keys.map(k => { const m = months[k], [y, mo] = k.split('-'); return `<tr><td style="white-space:nowrap">${MON[+mo - 1]} ${y}</td><td class="mono num">${money(m.rev)}</td><td class="mono num">${money(m.exp)}</td>${netCell(m.rev - m.exp)}</tr>`; }).join('')
+    + `<tr class="total"><td>Total</td><td class="mono num">${money(tRev)}</td><td class="mono num">${money(tExp + tMile)}</td>${netCell(net)}</tr></tbody></table>` : '';
   const cats = groupSum(exp, 'category');
   if (tMile) cats.push(['Mileage', tMile]), cats.sort((a, b) => b[1] - a[1]);
   renderBreakdown('rep-cats', cats, st.config.categories, '#c98a7f');
