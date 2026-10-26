@@ -1,0 +1,20 @@
+/* SITE TOKENS — the site's colors and fonts in one place, light and dark.
+   Study pages read these today. Main-site pages still carry their own copies
+   inline (backlog: move them onto this file, which also gives them dark mode). */
+:root {
+  --bg: #ffffff; --surface: #eef1f4; --border: #dfe4e9; --border-mid: #cfd6dd;
+  --ink: #2b3640; --ink2: #586470; --ink3: #697480;
+  --accent: #2f4f75; --accent-hi: #3d5f88; --accent-ink: #33557d; --on-accent: #ffffff;
+  --navbg: rgba(255,255,255,0.94); --panel: #ffffff;
+  --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif; --nav-h: 62px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14181c; --surface: #222931; --border: #2e363f; --border-mid: #3a434d;
+  --ink: #e4e8ec; --ink2: #b0b9c2; --ink3: #8f9aa5;
+  --accent: #9bb6d8; --accent-hi: #b3c8e3; --accent-ink: #9bb6d8; --on-accent: #14181c;
+  --navbg: rgba(20,24,28,0.94); --panel: #1b2026; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #14181c; --surface: #222931; --border: #2e363f; --border-mid: #3a434d;
+  --ink: #e4e8ec; --ink2: #b0b9c2; --ink3: #8f9aa5;
+  --accent: #9bb6d8; --accent-hi: #b3c8e3; --accent-ink: #9bb6d8; --on-accent: #14181c;
+  --navbg: rgba(20,24,28,0.94); --panel: #1b2026; color-scheme: dark; }

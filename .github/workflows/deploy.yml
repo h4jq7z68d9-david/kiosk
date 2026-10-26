@@ -34,7 +34,7 @@ jobs:
             --include "*.txt" \
             --include "*.js" \
             --include "*.webmanifest" \
-            --include "site-chrome.css" \
+            --include "site-*.css" \
             --include "study/*.css" \
             --exclude "receipts/*" \
             --delete

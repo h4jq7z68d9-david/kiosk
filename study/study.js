@@ -1,12 +1,6 @@
 /* STUDY — shared script for every page under /study/art-history/.
-   Cart badge, full-screen image view, and (on a course home page) search. */
+   Full-screen image view, arrow-key Prev/Next, and (on a course home page) search. */
 (function () {
-  /* cart badge — reads the same store the gallery writes to */
-  var n = 0;
-  try { n = (JSON.parse(localStorage.getItem('dna_cart')) || []).length; } catch (e) {}
-  var cc = document.getElementById('cart-count');
-  if (cc) { cc.textContent = n; cc.classList.toggle('on', n > 0); }
-
   /* full-screen image view: tap or Enter on any slide image */
   var lb = document.getElementById('lb'), lbi = document.getElementById('lbimg'), lbc = document.getElementById('lbcap');
   var last = null;

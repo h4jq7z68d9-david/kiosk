@@ -6,16 +6,16 @@
 
    Reads   study/art-history/classical-myth/{data.js,data_w34.js,data_w58.js,credits.js}
            study/art-history/classical-myth/img/<key>.jpg   (for width/height)
-           tools/study/classical-myth-viewer.html           (the original slide viewer)
    Writes  study/art-history/classical-myth.html            course home
            study/art-history/classical-myth/<section>/<part>.html   16 part pages
            study/art-history/classical-myth/<section>/<work>.html   one page per work
            study/art-history/classical-myth/credits.html
-           study/art-history/classical-myth/slides.html     the slide viewer (noindex)
            sitemap.xml                                      replaces this course's block (between its comment markers)
 
    Content is never rewritten here: every title, summary, bullet, term and quote comes
-   straight from the data files. Only page structure, links and SEO tags are added. */
+   straight from the data files. Only page structure, links and SEO tags are added.
+   Look: site colors and fonts from /site-tokens.css, top bar from /site-bar.js, menu and
+   footer links from /site-chrome.js, page styles from /study/study.css. */
 
 const fs = require('fs');
 const path = require('path');
@@ -86,7 +86,7 @@ const LICENSE_URL = { 'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/
 const parts = [];
 const works = [];
 const viewerIds = {};             // viewer slide id -> static page URL
-viewerIds.start = COURSE + '.html';
+viewerIds.start = COURSE + '.html';  // ids follow the original slide numbering (h<part>-<n>); used by search
 viewerIds.credits = COURSE + '/credits.html';
 S.handouts.forEach((h) => {
   const secSlug = slug(sec(h.wk));
@@ -119,18 +119,9 @@ const GA = `<script async src="https://www.googletagmanager.com/gtag/js?id=G-FL5
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FL5BKJFVXF');</script>`;
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap">`;
-const NAV = `<nav>
-  <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <a class="nav-title" href="/index.html">david nicholson</a>
-  <div class="nav-links">
-    <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
-    <a class="nav-cart" href="/gallery.html?cart=1" aria-label="cart">
-      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span class="nav-cart-count" id="cart-count">0</span>
-    </a>
-  </div>
-</nav>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500&display=swap">`;
+const NAV = `<nav data-chrome-nav></nav>
+<script src="/site-bar.js?v=1"></script>
 <div id="menu-scrim"></div>
 <div id="menu-panel" aria-label="site menu"></div>`;
 const FOOTER = `<footer>
@@ -176,8 +167,10 @@ ${GA}
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
 ${FONTS}
+<link rel="stylesheet" href="/site-tokens.css?v=1">
 <link rel="stylesheet" href="/site-chrome.css?v=1">
-<link rel="stylesheet" href="/study/study.css?v=1">
+<link rel="stylesheet" href="/site-bar.css?v=1">
+<link rel="stylesheet" href="/study/study.css?v=2">
 <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
 ${extraHead}</head>
 <body>
@@ -186,7 +179,7 @@ ${NAV}
 ${body}
 </main>
 ${FOOTER}
-${extraScripts}<script src="/study/study.js?v=1"></script>
+${extraScripts}<script src="/study/study.js?v=2"></script>
 <script src="/site-chrome.js?v=1"></script>
 </body>
 </html>
@@ -205,12 +198,10 @@ const imageLd = (k) => {
   const c = C[k] || {}; const d = dims(k);
   return { '@type': 'ImageObject', contentUrl: abs(img(k)), width: d.w, height: d.h, license: LICENSE_URL[c.license] || undefined, acquireLicensePage: c.page, creditText: c.page ? 'Wikimedia Commons' : undefined };
 };
-const pager = (prev, next, posText, slidesId) => `<div class="bar">
+const pager = (prev, next, posText) => `<div class="bar">
   ${prev ? `<a class="btn" href="${prev.url}" rel="prev">← Prev</a>` : '<span class="btn" aria-disabled="true">← Prev</span>'}
   ${next ? `<a class="btn primary" href="${next.url}" rel="next">Next →</a>` : '<span class="btn primary" aria-disabled="true">Next →</span>'}
   <span class="pos">${posText}</span>
-  <span class="spacer"></span>
-  <a class="btn" href="${COURSE}/slides.html#${slidesId}">View as slides</a>
 </div>`;
 
 const out = [];
@@ -231,11 +222,11 @@ works.forEach((w, i) => {
   const cr = [['Study', STUDY], [NAME, COURSE + '.html'], [h.title, p.url], [s.title, w.url]];
   const themes = parts.flatMap((pp) => pp.items).filter((t) => t.s.type === 'theme' && (t.s.works || []).includes(s.key));
   const body = `${crumbs(cr)}
-${pager(works[i - 1], works[i + 1], `${i + 1} / ${works.length}`, w.id)}
+${pager(works[i - 1], works[i + 1], `${i + 1} / ${works.length}`)}
 <article class="card slide">
   ${pic(s.key, s.title, capOf(s), true)}
   <div class="notes">
-    <p class="eyebrow"><a href="${p.url}" style="color:inherit;text-decoration:none">${esc(sec(h.wk))} · ${esc(h.title)}</a></p>
+    <p class="eyebrow"><a href="${p.url}">${esc(sec(h.wk))} · ${esc(h.title)}</a></p>
     ${s.artist ? `<p class="artist">${esc(s.artist)}</p>` : ''}<h1 class="title">${esc(s.title)}</h1><p class="date">${esc(s.date)}</p>${s.det ? `<p class="det">${esc(s.det)}</p>` : ''}
     <p class="fn"><b>Made for:</b> ${esc(s.fn)}</p><p class="sum">${esc(s.sum)}</p>${RULE}${bul(s.bul)}${s.terms && s.terms.length ? RULE + terms(s.terms) : ''}${quote(s.quote)}
     ${themes.length ? `<p class="lab">Themes</p><ul class="wl">${themes.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.s.title)}</a></li>`).join('')}</ul>` : ''}
@@ -276,7 +267,7 @@ parts.forEach((p, i) => {
     return `<article class="card slide text" id="${it.anchor}" style="scroll-margin-top:calc(var(--nav-h) + 12px)"><div class="notes"><p class="eyebrow">${esc(h.title)}</p><h2 class="htitle">${esc(s.title)}</h2>${s.sub ? `<p class="hsub">${esc(s.sub)}</p>` : ''}<p class="sum">${esc(s.sum)}</p>${RULE}${bul(s.bul)}${RULE}${terms(s.terms)}</div></article>`;
   });
   const body = `${crumbs(cr)}
-${pager(parts[i - 1], parts[i + 1], `Part ${i + 1} of ${parts.length}`, p.id)}
+${pager(parts[i - 1], parts[i + 1], `Part ${i + 1} of ${parts.length}`)}
 <article class="card slide">
   ${pic(o.img, c[1], ch, true)}
   <div class="notes"><p class="eyebrow">${esc(sec(h.wk))}</p><h1 class="htitle">${esc(h.title)}</h1><p class="hsub">${esc(h.sub)}</p>
@@ -340,7 +331,6 @@ ${seq.join('\n')}
     <input id="q" type="search" placeholder="Search gods, works, artists, terms…" aria-label="Search the guide" autocomplete="off" aria-controls="results" aria-expanded="false">
     <div class="results" id="results" role="listbox" hidden></div>
   </div>
-  <div class="bar"><a class="btn primary" href="${COURSE}/slides.html">View as slides</a><a class="btn" href="${COURSE}/credits.html">Image credits</a></div>
   <p class="det">Text by David Nicholson</p>
 </section>
 ${secs}`;
@@ -349,47 +339,12 @@ ${secs}`;
       learningResourceType: 'Study guide', educationalLevel: 'Introductory', author: PUBLISHER, isAccessibleForFree: true,
       hasPart: parts.map((p) => ({ '@type': 'LearningResource', name: p.h.title, url: abs(p.url) })) }),
     crumbLd(cr)] };
-  // the search reads the same data files as the slide viewer, plus a key -> URL map
+  // search reads the course data files directly, plus a slide id -> page URL map
   const map = { parts: Object.fromEntries(parts.map((p) => [p.h.n, p.url])), ids: viewerIds, img: COURSE + '/img/' };
   const extraScripts = `<script>window.STUDY_MAP=${JSON.stringify(map)};</script>
 <script src="${COURSE}/data.js" defer></script><script src="${COURSE}/data_w34.js" defer></script><script src="${COURSE}/data_w58.js" defer></script>
 `;
   write(url, page({ url, title: `${NAME} – Study – David Nicholson`, desc: 'A free study guide to Greek and Roman myth in art: the gods and heroes through 170 paintings, sculptures, and vases, each with the story it shows and key terms.', image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website', extraScripts }));
-}
-
-/* ---------- slide viewer (noindex; every slide links to its page) ---------- */
-{
-  const url = COURSE + '/slides.html';
-  let v = fs.readFileSync(path.join(__dirname, 'classical-myth-viewer.html'), 'utf8');
-  const must = (a, b) => { if (!v.includes(a)) throw new Error('viewer changed; cannot find: ' + a.slice(0, 60)); v = v.replace(a, b); };
-  // 1) proper document head
-  must('<title>Classical Myth in Art</title>', `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Slides – ${NAME}</title>
-<meta name="robots" content="noindex, follow">
-<link rel="canonical" href="${abs(COURSE + '.html')}">
-<meta name="color-scheme" content="light dark">
-${GA}
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon96.png">`);
-  must('<meta name="claude:viewport-fit-sides" content="cover">\n', '');
-  must('</style>\n', `.pagelink{display:inline-block;margin-top:2px;font-size:.86rem;font-weight:600;color:var(--navy)}
-.brand a{color:inherit;text-decoration:none}
-</style>
-</head>
-<body>
-`);
-  // 2) brand links back to the course home
-  must('<p class="brand">Classical Myth in Art</p>', `<p class="brand"><a href="${COURSE}.html">Classical Myth in Art</a></p>`);
-  // 3) every slide gets a link to its own page
-  must('  el.innerHTML=h;\n', `  el.innerHTML=h;
-  {const u=(window.PAGE_URLS||{})[f.id];const n=el.querySelector('.notes');if(u&&n){const a=document.createElement('a');a.className='pagelink';a.href=u;a.textContent=f.kind==='work'?'Open this work’s page →':'Open this as a page →';const c=n.querySelector('.crl');c?n.insertBefore(a,c):n.appendChild(a)}}
-`);
-  must('<script src="data.js"></script>', `<script>window.PAGE_URLS=${JSON.stringify(viewerIds)};</script>\n<script src="data.js"></script>`);
-  v = v.replace(/\s*$/, '\n</body>\n</html>\n');
-  write(url, v);
 }
 
 /* ---------- sitemap: replace this course's block in /sitemap.xml ---------- */
@@ -404,4 +359,4 @@ ${GA}
   sm = a >= 0 && b > a ? sm.slice(0, a) + block + sm.slice(b + END.length) : sm.replace('</urlset>', block + '\n</urlset>');
   fs.writeFileSync(smFile, sm);
 }
-console.log(`wrote ${out.length} pages (${works.length} works, ${parts.length} parts, home, credits, slides)`);
+console.log(`wrote ${out.length} pages (${works.length} works, ${parts.length} parts, home, credits)`);

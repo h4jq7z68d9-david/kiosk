@@ -20,23 +20,16 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500&display=swap">
+<link rel="stylesheet" href="/site-tokens.css?v=1">
 <link rel="stylesheet" href="/site-chrome.css?v=1">
-<link rel="stylesheet" href="/study/study.css?v=1">
+<link rel="stylesheet" href="/site-bar.css?v=1">
+<link rel="stylesheet" href="/study/study.css?v=2">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","@id":"https://davidnicholsonart.com/study.html","url":"https://davidnicholsonart.com/study.html","name":"Study","author":{"@type":"Person","name":"David Nicholson","url":"https://davidnicholsonart.com/"},"hasPart":[{"@type":"WebPage","name":"Color theory","url":"https://davidnicholsonart.com/study/color-theory.html"},{"@type":"LearningResource","name":"Classical Myth in Art","url":"https://davidnicholsonart.com/study/art-history/classical-myth.html"}]}</script>
 </head>
-<body class="site">
-<nav>
-  <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <a class="nav-title" href="/index.html">david nicholson</a>
-  <div class="nav-links">
-    <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
-    <a class="nav-cart" href="/gallery.html?cart=1" aria-label="cart">
-      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span class="nav-cart-count" id="cart-count">0</span>
-    </a>
-  </div>
-</nav>
+<body class="landing">
+<nav data-chrome-nav></nav>
+<script src="/site-bar.js?v=1"></script>
 <div id="menu-scrim"></div>
 <div id="menu-panel" aria-label="site menu"></div>
 
@@ -80,17 +73,6 @@
     <p class="f-legal">&copy; 2026 david nicholson</p>
   </div>
 </footer>
-<script>
-/* cart badge — reads the same store the gallery writes to */
-(function () {
-  var n = 0;
-  try { n = (JSON.parse(localStorage.getItem('dna_cart')) || []).length; } catch (e) {}
-  var el = document.getElementById('cart-count');
-  if (!el) return;
-  el.textContent = n;
-  el.classList.toggle('on', n > 0);
-})();
-</script>
 <script src="/site-chrome.js?v=1"></script>
 </body>
 </html>
