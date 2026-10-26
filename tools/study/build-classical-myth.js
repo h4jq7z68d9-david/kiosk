@@ -240,7 +240,7 @@ ${pager(workRef(works[i - 1]), workRef(works[i + 1]), `${i + 1} / ${works.length
     { '@type': 'VisualArtwork', '@id': abs(w.url) + '#work', name: s.title, url: abs(w.url), description: s.sum,
       creator: s.artist ? { '@type': 'Person', name: s.artist } : undefined, artMedium: medium, image: imageLd(s.key) },
     { '@type': 'WebPage', '@id': abs(w.url), url: abs(w.url), name: title, description: describe(s.sum), inLanguage: 'en',
-      about: { '@id': abs(w.url) + '#work' }, isPartOf: COURSE_LD, author: PUBLISHER, primaryImageOfPage: imageLd(s.key) },
+      about: { '@id': abs(w.url) + '#work' }, isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(s.key) },
     crumbLd(cr)] };
   write(w.url, page({ url: w.url, title, desc: describe(s.sum), image: s.key, imageAlt: s.title, body, ld }));
 });
@@ -282,7 +282,7 @@ ${pager(partRef(parts[i - 1]), partRef(parts[i + 1]), `Part ${i + 1} of ${parts.
   const ld = { '@context': 'https://schema.org', '@graph': [
     { '@type': ['LearningResource', 'CollectionPage'], '@id': abs(p.url), url: abs(p.url), name: h.title, headline: h.title, alternativeHeadline: h.sub,
       description: describe(o.sum), inLanguage: 'en', learningResourceType: 'Study guide', educationalLevel: 'Introductory',
-      isPartOf: COURSE_LD, author: PUBLISHER, primaryImageOfPage: imageLd(o.img),
+      isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(o.img),
       about: (o.terms || []).map(([t]) => ({ '@type': 'Thing', name: t })),
       hasPart: p.items.filter((it) => it.s.type === 'work').map((it) => ({ '@type': 'VisualArtwork', name: it.s.title, url: abs(it.url) })) },
     crumbLd(cr)] };
@@ -322,7 +322,6 @@ ${pager(partRef(parts[i - 1]), partRef(parts[i + 1]), `Part ${i + 1} of ${parts.
   secs += '</div>';
   const body = `${crumbs(cr)}
 <section class="card hero">
-  <p class="eyebrow">Free study guide</p>
   <h1 class="htitle">${NAME}</h1>
   <p class="hsub">The stories of the Greek and Roman gods and heroes, told through paintings, sculpture, and vases</p>
   ${RULE}
@@ -333,12 +332,11 @@ ${pager(partRef(parts[i - 1]), partRef(parts[i + 1]), `Part ${i + 1} of ${parts.
     <input id="q" type="search" placeholder="Search gods, works, artists, terms…" aria-label="Search the guide" autocomplete="off" aria-controls="results" aria-expanded="false">
     <div class="results" id="results" role="listbox" hidden></div>
   </div>
-  <p class="det">Text by David Nicholson</p>
 </section>
 ${secs}`;
   const ld = { '@context': 'https://schema.org', '@graph': [
     Object.assign({}, COURSE_LD, { description: 'The stories of the Greek and Roman gods and heroes, told through paintings, sculpture, and vases.', inLanguage: 'en',
-      learningResourceType: 'Study guide', educationalLevel: 'Introductory', author: PUBLISHER, isAccessibleForFree: true,
+      learningResourceType: 'Study guide', educationalLevel: 'Introductory', publisher: PUBLISHER, isAccessibleForFree: true,
       hasPart: parts.map((p) => ({ '@type': 'LearningResource', name: p.h.title, url: abs(p.url) })) }),
     crumbLd(cr)] };
   // search reads the course data files directly, plus a slide id -> page URL map
@@ -346,7 +344,7 @@ ${secs}`;
   const extraScripts = `<script>window.STUDY_MAP=${JSON.stringify(map)};</script>
 <script src="${COURSE}/data.js" defer></script><script src="${COURSE}/data_w34.js" defer></script><script src="${COURSE}/data_w58.js" defer></script>
 `;
-  write(url, page({ url, title: `${NAME} – Study – David Nicholson`, desc: 'A free study guide to Greek and Roman myth in art: the gods and heroes through 170 paintings, sculptures, and vases, each with the story it shows and key terms.', image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website', extraScripts }));
+  write(url, page({ url, title: `${NAME} – Study – David Nicholson`, desc: 'A study guide to Greek and Roman myth in art: the gods and heroes through 170 paintings, sculptures, and vases, each with the story it shows and key terms.', image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website', extraScripts }));
 }
 
 /* ---------- sitemap: replace this course's block in /sitemap.xml ---------- */
