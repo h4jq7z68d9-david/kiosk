@@ -2,7 +2,7 @@
    Read by the guide (sources slide) and by tools/study/build-classical-myth.js (sources page).
    Chicago bibliography style. Each entry: html (the citation, titles in <i>) and an optional url. */
 window.SOURCES = {
-  intro: "The text in this guide was written for general readers from the sources below: the textbook, a set of articles on myth in art, and public-domain translations of the ancient texts it quotes. The ideas and facts come from them; the wording is new, and every quotation is credited where it appears.",
+  intro: "The text in this guide was compiled for general readers from the sources below: the textbook, a set of articles on myth in art, and public-domain translations of the ancient texts it quotes. The ideas and facts come from them; the wording is new, and every quotation is credited where it appears.",
   groups: [
     { title: "Textbook", items: [
       { html: "Mellenthin, Jessica, and Susan O. Shapiro. <i>Mythology Unbound: An Online Textbook for Classical Mythology</i>. Utah Education Network Pressbooks. Licensed CC BY-NC-SA 4.0.", url: "https://uen.pressbooks.pub/mythologyunbound/" }
