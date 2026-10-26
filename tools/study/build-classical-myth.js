@@ -365,6 +365,8 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
   must("const src=k=>'img/'+k+'.jpg';", `const src=k=>'${COURSE}/img/'+k+'.jpg';`);
   for (const f of ['data.js', 'data_w34.js', 'data_w58.js', 'credits.js']) must(`<script src="${f}"></script>`, `<script src="${COURSE}/${f}"></script>`);
   // no "free study guide" label and no authorship line (David, Oct 26 2026)
+  // every slide change (Prev/Next, swipe, arrow keys, outline, search) starts at the top of the new slide
+  must('function go(i){if(i==null||i<0||i>=flat.length)return;cur=i;render()}', 'function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}');
   must('<p class="eyebrow">Free study guide</p>', '');
   must('\n    <p class="det">Text by David Nicholson · davidnicholsonart.com</p></div>`;', '</div>`;');
   const scripts = v.slice(v.indexOf('<script src='));

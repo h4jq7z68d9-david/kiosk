@@ -289,7 +289,7 @@ function render(){
   try{history.replaceState(null,'','#'+f.id)}catch(e){}
   el.querySelector('.notes')&&(el.querySelector('.notes').scrollTop=0);
 }
-function go(i){if(i==null||i<0||i>=flat.length)return;cur=i;render()}
+function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}
 /* outline */
 const out=document.getElementById('outline'); let html='<button class="ho" data-i="0">About this site</button>'; let lastWk=0;
 S.handouts.forEach(h=>{
