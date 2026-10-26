@@ -170,7 +170,7 @@ ${FONTS}
 <link rel="stylesheet" href="/site-tokens.css?v=1">
 <link rel="stylesheet" href="/site-chrome.css?v=1">
 <link rel="stylesheet" href="/site-bar.css?v=1">
-<link rel="stylesheet" href="/study/study.css?v=2">
+<link rel="stylesheet" href="/study/study.css?v=4">
 <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
 ${extraHead}</head>
 <body>
@@ -179,7 +179,7 @@ ${NAV}
 ${body}
 </main>
 ${FOOTER}
-${extraScripts}<script src="/study/study.js?v=2"></script>
+${extraScripts}<script src="/study/study.js?v=3"></script>
 <script src="/site-chrome.js?v=1"></script>
 </body>
 </html>
@@ -198,11 +198,13 @@ const imageLd = (k) => {
   const c = C[k] || {}; const d = dims(k);
   return { '@type': 'ImageObject', contentUrl: abs(img(k)), width: d.w, height: d.h, license: LICENSE_URL[c.license] || undefined, acquireLicensePage: c.page, creditText: c.page ? 'Wikimedia Commons' : undefined };
 };
-const pager = (prev, next, posText) => `<div class="bar">
-  ${prev ? `<a class="btn" href="${prev.url}" rel="prev">← Prev</a>` : '<span class="btn" aria-disabled="true">← Prev</span>'}
-  ${next ? `<a class="btn primary" href="${next.url}" rel="next">Next →</a>` : '<span class="btn primary" aria-disabled="true">Next →</span>'}
+const pager = (prev, next, posText, label) => `<nav class="pager" aria-label="${label}">
   <span class="pos">${posText}</span>
-</div>`;
+  ${prev ? `<a class="btn" href="${prev.url}" rel="prev" title="${esc(prev.title)}">← Prev</a>` : '<span class="btn" aria-disabled="true">← Prev</span>'}
+  ${next ? `<a class="btn primary" href="${next.url}" rel="next" title="${esc(next.title)}">Next →</a>` : '<span class="btn primary" aria-disabled="true">Next →</span>'}
+</nav>`;
+const workRef = (w) => w && { url: w.url, title: w.s.title };
+const partRef = (p) => p && { url: p.url, title: p.h.title };
 
 const out = [];
 function write(url, html) {
@@ -222,7 +224,6 @@ works.forEach((w, i) => {
   const cr = [['Study', STUDY], [NAME, COURSE + '.html'], [h.title, p.url], [s.title, w.url]];
   const themes = parts.flatMap((pp) => pp.items).filter((t) => t.s.type === 'theme' && (t.s.works || []).includes(s.key));
   const body = `${crumbs(cr)}
-${pager(works[i - 1], works[i + 1], `${i + 1} / ${works.length}`)}
 <article class="card slide">
   ${pic(s.key, s.title, capOf(s), true)}
   <div class="notes">
@@ -232,7 +233,8 @@ ${pager(works[i - 1], works[i + 1], `${i + 1} / ${works.length}`)}
     ${themes.length ? `<p class="lab">Themes</p><ul class="wl">${themes.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.s.title)}</a></li>`).join('')}</ul>` : ''}
     ${crl(s.key)}
   </div>
-</article>`;
+</article>
+${pager(workRef(works[i - 1]), workRef(works[i + 1]), `${i + 1} / ${works.length}`, 'Works')}`;
   const medium = s.det ? s.det.split(' · ')[0] : undefined;
   const ld = { '@context': 'https://schema.org', '@graph': [
     { '@type': 'VisualArtwork', '@id': abs(w.url) + '#work', name: s.title, url: abs(w.url), description: s.sum,
@@ -267,7 +269,6 @@ parts.forEach((p, i) => {
     return `<article class="card slide text" id="${it.anchor}" style="scroll-margin-top:calc(var(--nav-h) + 12px)"><div class="notes"><p class="eyebrow">${esc(h.title)}</p><h2 class="htitle">${esc(s.title)}</h2>${s.sub ? `<p class="hsub">${esc(s.sub)}</p>` : ''}<p class="sum">${esc(s.sum)}</p>${RULE}${bul(s.bul)}${RULE}${terms(s.terms)}</div></article>`;
   });
   const body = `${crumbs(cr)}
-${pager(parts[i - 1], parts[i + 1], `Part ${i + 1} of ${parts.length}`)}
 <article class="card slide">
   ${pic(o.img, c[1], ch, true)}
   <div class="notes"><p class="eyebrow">${esc(sec(h.wk))}</p><h1 class="htitle">${esc(h.title)}</h1><p class="hsub">${esc(h.sub)}</p>
@@ -276,7 +277,8 @@ ${pager(parts[i - 1], parts[i + 1], `Part ${i + 1} of ${parts.length}`)}
 <h2 class="seq-h">In this part</h2>
 <div class="seq">
 ${seq.join('\n')}
-</div>`;
+</div>
+${pager(partRef(parts[i - 1]), partRef(parts[i + 1]), `Part ${i + 1} of ${parts.length}`, 'Parts')}`;
   const ld = { '@context': 'https://schema.org', '@graph': [
     { '@type': ['LearningResource', 'CollectionPage'], '@id': abs(p.url), url: abs(p.url), name: h.title, headline: h.title, alternativeHeadline: h.sub,
       description: describe(o.sum), inLanguage: 'en', learningResourceType: 'Study guide', educationalLevel: 'Introductory',

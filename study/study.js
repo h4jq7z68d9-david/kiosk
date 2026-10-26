@@ -1,5 +1,5 @@
 /* STUDY — shared script for every page under /study/art-history/.
-   Full-screen image view, arrow-key Prev/Next, and (on a course home page) search. */
+   Full-screen image view, Prev/Next by arrow keys or swipe, and (on a course home page) search. */
 (function () {
   /* full-screen image view: tap or Enter on any slide image */
   var lb = document.getElementById('lb'), lbi = document.getElementById('lbimg'), lbc = document.getElementById('lbcap');
@@ -19,13 +19,32 @@
     document.addEventListener('keydown', function (e) { if (!lb.hidden && e.key === 'Escape') closeLb(); });
   }
 
-  /* arrow keys follow the page's Prev / Next links */
+  /* arrow keys and horizontal swipes follow the page's Prev / Next links */
+  function follow(rel) {
+    var a = document.querySelector('.pager a[rel="' + rel + '"]');
+    if (a) location.href = a.href;
+  }
   document.addEventListener('keydown', function (e) {
     if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName) || (lb && !lb.hidden) || e.altKey || e.ctrlKey || e.metaKey) return;
-    var rel = e.key === 'ArrowRight' ? 'next' : e.key === 'ArrowLeft' ? 'prev' : null;
-    var a = rel && document.querySelector('.bar a[rel="' + rel + '"]');
-    if (a) location.href = a.href;
+    if (e.key === 'ArrowRight') follow('next');
+    else if (e.key === 'ArrowLeft') follow('prev');
   });
+  /* swipe: one finger, quick, clearly sideways (so normal scrolling never turns the page) */
+  var x0 = null, y0 = 0, t0 = 0;
+  var mainEl = document.querySelector('main');
+  if (mainEl && document.querySelector('.pager')) {
+    mainEl.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1 || (lb && !lb.hidden) || e.target.closest('.search')) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+    }, { passive: true });
+    mainEl.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+      x0 = null;
+      if (Date.now() - t0 > 800 || Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 2) return;
+      follow(dx < 0 ? 'next' : 'prev');
+    }, { passive: true });
+  }
 
   /* search (course home only): same matching as the slide viewer, results link to pages */
   var qi = document.getElementById('q'), rs = document.getElementById('results');
