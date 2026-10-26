@@ -32,11 +32,12 @@ const STUDY = '/study.html';
 /* ---------- load data ---------- */
 const ctx = { window: {} };
 vm.createContext(ctx);
-for (const f of ['data.js', 'data_w34.js', 'data_w58.js', 'credits.js']) {
+for (const f of ['data.js', 'data_w34.js', 'data_w58.js', 'credits.js', 'sources.js']) {
   vm.runInContext(fs.readFileSync(path.join(DIR, f), 'utf8'), ctx, { filename: f });
 }
 const S = ctx.window.SITE;
 const C = ctx.window.CREDITS || {};
+const SOURCES = ctx.window.SOURCES || { intro: '', groups: [] };
 
 /* ---------- helpers ---------- */
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -89,6 +90,7 @@ const works = [];
 const viewerIds = {};             // viewer slide id -> static page URL
 viewerIds.start = COURSE + '.html';  // ids follow the original slide numbering (h<part>-<n>); used by search
 viewerIds.credits = COURSE + '/credits.html';
+viewerIds.sources = COURSE + '/sources.html';
 S.handouts.forEach((h) => {
   const secSlug = slug(sec(h.wk));
   const p = { h, secSlug, url: `${COURSE}/${secSlug}/${slug(h.title)}.html`, id: `h${h.n}-0`, items: [] };
@@ -297,11 +299,26 @@ ${pager(partRef(parts[i - 1]), partRef(parts[i + 1]), `Part ${i + 1} of ${parts.
   const keys = [...new Set(order)].filter((k) => C[k]);
   const cr = [['Study', STUDY], [NAME, COURSE + '.html'], ['Image credits', url]];
   const body = `${crumbs(cr)}
-<article class="card slide text"><div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Image credits</h1><p class="sum">All images come from Wikimedia Commons and are marked public domain or CC0 there. Many are museum open-access files (Metropolitan Museum of Art, National Gallery of Art, Rijksmuseum); the rest are photographs or reproductions their authors released into the public domain. Follow each link for the file’s full record.</p>
+${openGuide('credits')}
+<article class="card slide text"><div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Image credits</h1><p class="det"><a href="${COURSE}/sources.html">Sources and further reading</a></p><p class="sum">All images come from Wikimedia Commons and are marked public domain or CC0 there. Many are museum open-access files (Metropolitan Museum of Art, National Gallery of Art, Rijksmuseum); the rest are photographs or reproductions their authors released into the public domain. Follow each link for the file’s full record.</p>
 <div class="cred">${keys.map((k) => { const c = C[k]; const au = (c.author || '').replace(/\s+/g, ' ').slice(0, 80); const w = workByKey[k];
     return `<div><b>${w ? `<a href="${w.url}">${esc(c.work)}</a>` : esc(c.work)}</b><br>File: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.file)}</a><br>${esc(c.license)}${au ? ' · Author/source field: ' + esc(au) : ''}</div>`; }).join('\n')}</div></div></article>`;
   const ld = { '@context': 'https://schema.org', '@graph': [{ '@type': 'WebPage', '@id': abs(url), url: abs(url), name: `Image credits – ${NAME}`, isPartOf: COURSE_LD }, crumbLd(cr)] };
   write(url, page({ url, title: `Image credits – ${NAME}`, desc: `Sources and licenses for the ${keys.length} public-domain and CC0 images in ${NAME}, all from Wikimedia Commons.`, image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website' }));
+}
+
+/* ---------- sources and further reading ---------- */
+{
+  const url = COURSE + '/sources.html';
+  const cr = [['Study', STUDY], [NAME, COURSE + '.html'], ['Sources and further reading', url]];
+  const groups = SOURCES.groups.map((g) => `${RULE}<p class="lab">${esc(g.title)}</p><div class="cred">${g.items.map((it) => `<div>${it.html}${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noopener">Link</a>` : ''}</div>`).join('\n')}</div>`).join('\n');
+  const body = `${crumbs(cr)}
+${openGuide('sources')}
+<article class="card slide text"><div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Sources and further reading</h1><p class="sum">${esc(SOURCES.intro)}</p>
+${groups}
+<p class="crl"><a href="${COURSE}/credits.html">Image credits</a></p></div></article>`;
+  const ld = { '@context': 'https://schema.org', '@graph': [{ '@type': 'WebPage', '@id': abs(url), url: abs(url), name: `Sources and further reading – ${NAME}`, isPartOf: COURSE_LD, publisher: PUBLISHER }, crumbLd(cr)] };
+  write(url, page({ url, title: `Sources and further reading – ${NAME}`, desc: `The textbook, articles on myth in art, and public-domain translations behind ${NAME}.`, image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website' }));
 }
 
 /* ---------- course home = the one-page guide (search, outline, Prev/Next, swipe) ---------- */
@@ -364,7 +381,16 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
   must('<p class="brand">Classical Myth in Art</p>', `<p class="brand"><a href="${url}">Classical Myth in Art</a></p>`);
   must("const src=k=>'img/'+k+'.jpg';", `const src=k=>'${COURSE}/img/'+k+'.jpg';`);
   for (const f of ['data.js', 'data_w34.js', 'data_w58.js', 'credits.js']) must(`<script src="${f}"></script>`, `<script src="${COURSE}/${f}"></script>`);
+  must(`<script src="${COURSE}/credits.js"></script>`, `<script src="${COURSE}/credits.js"></script>\n<script src="${COURSE}/sources.js"></script>`);
   // no "free study guide" label and no authorship line (David, Oct 26 2026)
+  // "Sources and further reading" slide, just before Image credits (data in sources.js)
+  must("flat.push({h:99,kind:'credits',id:'credits',label:'Image credits'});", "flat.push({h:99,kind:'sources',id:'sources',label:'Sources and further reading'});\nflat.push({h:99,kind:'credits',id:'credits',label:'Image credits'});");
+  must("} else if(f.kind==='credits'){", "} else if(f.kind==='sources'){\n    el.className='slide text'; const SR=window.SOURCES||{groups:[]};\n    h=`<div class=\"notes\"><p class=\"eyebrow\">Sources</p><h2 class=\"htitle\">Sources and further reading</h2><p class=\"sum\">${esc(SR.intro)}</p>${SR.groups.map(g=>`${rule}<p class=\"lab\">${esc(g.title)}</p><div class=\"cred\">${g.items.map(it=>`<div>${it.html}${it.url?` <a href=\"${esc(it.url)}\" target=\"_blank\" rel=\"noopener\">Link</a>`:''}</div>`).join('')}</div>`).join('')}</div>`;\n  } else if(f.kind==='credits'){");
+  must("(f.kind==='credits'?'Credits':'Start')", "(f.kind==='credits'?'Credits':f.kind==='sources'?'Sources':'Start')");
+  must('<p class="wk">Sources</p><button class="ho" data-i="${flat.length-1}">Image credits</button>', '<p class="wk">Sources</p><button class="ho" data-i="${flat.length-2}">Sources and further reading</button><button class="ho" data-i="${flat.length-1}">Image credits</button>');
+  must("(f.kind==='credits'?'Sources':'Start')", "((f.kind==='credits'||f.kind==='sources')?'Sources':'Start')");
+  must("else if(f.kind==='intro'||f.kind==='credits'){parts.push(f.label)}", "else if(f.kind==='intro'||f.kind==='credits'){parts.push(f.label)}\n  else if(f.kind==='sources'){const SR=window.SOURCES||{groups:[]};parts.push(f.label,SR.intro,...SR.groups.flatMap(g=>g.items.map(i=>i.html.replace(/<[^>]+>/g,''))))}");
+  must("const k={overview:'Overview',theme:'Theme',intro:'Start',credits:'Credits'}[f.kind]", "const k={overview:'Overview',theme:'Theme',intro:'Start',credits:'Credits',sources:'Sources'}[f.kind]");
   // every slide change (Prev/Next, swipe, arrow keys, outline, search) starts at the top of the new slide
   must('function go(i){if(i==null||i<0||i>=flat.length)return;cur=i;render()}', 'function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}');
   must('<p class="eyebrow">Free study guide</p>', '');
@@ -388,7 +414,7 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 
 /* ---------- sitemap: replace this course's block in /sitemap.xml ---------- */
 {
-  const listed = [COURSE + '.html', ...parts.map((p) => p.url), ...works.map((w) => w.url), COURSE + '/credits.html'];
+  const listed = [COURSE + '.html', ...parts.map((p) => p.url), ...works.map((w) => w.url), COURSE + '/sources.html', COURSE + '/credits.html'];
   const START = '  <!-- study: classical-myth (generated by tools/study/build-classical-myth.js) -->';
   const END = '  <!-- /study: classical-myth -->';
   const block = [START, ...listed.map((u) => `  <url>\n    <loc>${abs(u)}</loc>\n    <changefreq>yearly</changefreq>\n    <priority>${u === COURSE + '.html' ? '0.6' : '0.4'}</priority>\n  </url>`), END].join('\n');

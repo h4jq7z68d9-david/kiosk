@@ -215,6 +215,7 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 <script src="/study/art-history/classical-myth/data_w34.js"></script>
 <script src="/study/art-history/classical-myth/data_w58.js"></script>
 <script src="/study/art-history/classical-myth/credits.js"></script>
+<script src="/study/art-history/classical-myth/sources.js"></script>
 <script>
 (function(){
 const S=window.SITE, C=window.CREDITS||{};
@@ -231,6 +232,7 @@ S.handouts.forEach(h=>{
     flat.push(it); if(s.type==='work') workIndex[s.key]=flat.length-1;
   });
 });
+flat.push({h:99,kind:'sources',id:'sources',label:'Sources and further reading'});
 flat.push({h:99,kind:'credits',id:'credits',label:'Image credits'});
 const imgs=[]; flat.forEach((f,i)=>{if(f.kind==='work')imgs.push(i)});
 const cap=(s)=>[s.artist&&esc(s.artist),'<i>'+esc(s.title)+'</i>',s.date&&esc(s.date)].filter(Boolean).join(', ');
@@ -268,6 +270,9 @@ function render(){
   } else if(f.kind==='text'){
     el.className='slide text'; const s=f.d;
     h=`<div class="notes"><p class="eyebrow">${esc(f.hd.title)}</p><h2 class="htitle">${esc(s.title)}</h2>${s.sub?`<p class="hsub">${esc(s.sub)}</p>`:''}<p class="sum">${esc(s.sum)}</p>${rule}${bul(s.bul)}${rule}${terms(s.terms)}</div>`;
+  } else if(f.kind==='sources'){
+    el.className='slide text'; const SR=window.SOURCES||{groups:[]};
+    h=`<div class="notes"><p class="eyebrow">Sources</p><h2 class="htitle">Sources and further reading</h2><p class="sum">${esc(SR.intro)}</p>${SR.groups.map(g=>`${rule}<p class="lab">${esc(g.title)}</p><div class="cred">${g.items.map(it=>`<div>${it.html}${it.url?` <a href="${esc(it.url)}" target="_blank" rel="noopener">Link</a>`:''}</div>`).join('')}</div>`).join('')}</div>`;
   } else if(f.kind==='credits'){
     el.className='slide text';
     const order=[];flat.forEach(x=>{if(x.kind==='overview')order.push(x.d.overview.img);if(x.kind==='work'||x.kind==='theme')order.push(x.kind==='work'?x.d.key:x.d.img)});
@@ -280,7 +285,7 @@ function render(){
   el.querySelectorAll('[data-k].wlink').forEach(b=>b.onclick=()=>go(workIndex[b.dataset.k]));
   el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(flat.findIndex(x=>x.id===b.dataset.go)));
   const hd=S.handouts.find(x=>x.n===f.h);
-  document.getElementById('crumb').textContent=hd?`${sec(hd.wk)} · ${hd.title}`:(f.kind==='credits'?'Credits':'Start');
+  document.getElementById('crumb').textContent=hd?`${sec(hd.wk)} · ${hd.title}`:(f.kind==='credits'?'Credits':f.kind==='sources'?'Sources':'Start');
   document.getElementById('pos').textContent=(cur+1)+' / '+flat.length;
   document.getElementById('prev').disabled=cur===0; document.getElementById('next').disabled=cur===flat.length-1;
   document.getElementById('jump').value=String(cur);
@@ -297,9 +302,9 @@ S.handouts.forEach(h=>{
   const items=flat.map((f,i)=>({f,i})).filter(x=>x.f.h===h.n);
   html+=`<div class="grp" data-h="${h.n}"><button class="ho" data-i="${items[0].i}">${esc(h.title)}</button><ul class="items">${items.map(x=>`<li><button data-i="${x.i}" class="${x.f.kind==='theme'?'th':''}">${x.f.kind==='theme'?'Theme: ':''}${esc(x.f.label)}</button></li>`).join('')}</ul></div>`;
 });
-html+=`<p class="wk">Sources</p><button class="ho" data-i="${flat.length-1}">Image credits</button>`;
+html+=`<p class="wk">Sources</p><button class="ho" data-i="${flat.length-2}">Sources and further reading</button><button class="ho" data-i="${flat.length-1}">Image credits</button>`;
 out.innerHTML=html; out.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>go(+b.dataset.i));
-const j=document.getElementById('jump'); j.innerHTML=(()=>{let o='',g=null;flat.forEach((f,i)=>{const hd=S.handouts.find(x=>x.n===f.h);const gt=hd?hd.title:(f.kind==='credits'?'Sources':'Start');if(gt!==g){if(g!==null)o+='</optgroup>';o+=`<optgroup label="${esc(gt)}">`;g=gt}o+=`<option value="${i}">${f.kind==='theme'?'Theme: ':''}${esc(f.label)}</option>`});return o+'</optgroup>'})(); j.onchange=()=>go(+j.value);
+const j=document.getElementById('jump'); j.innerHTML=(()=>{let o='',g=null;flat.forEach((f,i)=>{const hd=S.handouts.find(x=>x.n===f.h);const gt=hd?hd.title:((f.kind==='credits'||f.kind==='sources')?'Sources':'Start');if(gt!==g){if(g!==null)o+='</optgroup>';o+=`<optgroup label="${esc(gt)}">`;g=gt}o+=`<option value="${i}">${f.kind==='theme'?'Theme: ':''}${esc(f.label)}</option>`});return o+'</optgroup>'})(); j.onchange=()=>go(+j.value);
 document.getElementById('prev').onclick=()=>go(cur-1); document.getElementById('next').onclick=()=>go(cur+1);
 /* rail toggle */
 const app=document.getElementById('app'),tog=document.getElementById('tog');
@@ -322,6 +327,7 @@ const norm=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLo
 const textOf=f=>{const d=f.d||{};const parts=[];
   if(f.kind==='overview'){const o=d.overview;parts.push(d.title,d.sub,o.sum,...(o.bul||[]),...(o.terms||[]).flat(),...(o.cap||[]))}
   else if(f.kind==='intro'||f.kind==='credits'){parts.push(f.label)}
+  else if(f.kind==='sources'){const SR=window.SOURCES||{groups:[]};parts.push(f.label,SR.intro,...SR.groups.flatMap(g=>g.items.map(i=>i.html.replace(/<[^>]+>/g,''))))}
   else{parts.push(d.title,d.artist,d.date,d.det,d.fn,d.stmt,d.para,d.sum,d.sub,...(d.bul||[]),...(d.terms||[]).flat(),d.quote&&d.quote.q)}
   return parts.filter(Boolean).join(' · ')};
 const IDX=flat.map((f,i)=>{const t=textOf(f),tt=(f.d&&f.d.title)||'';return {i,t,body:tt&&t.startsWith(tt+' · ')?t.slice(tt.length+3):t,n:norm(t),title:norm((f.d&&f.d.title)||f.label)+' '+norm(f.d&&f.d.artist)}});
@@ -329,7 +335,7 @@ const qi=document.getElementById('q'),rs=document.getElementById('results');let 
 function snippet(t,words){const n=norm(t);let p=-1;for(const w of words){const k=n.indexOf(w);if(k>=0&&(p<0||k<p))p=k}
   let a=Math.max(0,p-50),b=Math.min(t.length,a+170);let s=t.slice(a,b);if(a>0)s='…'+s;if(b<t.length)s+='…';
   let h=esc(s);for(const w of words){if(!w)continue;const re=new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');h=h.replace(re,'<mark>$1</mark>')}return h}
-function kindLabel(f){const hd=S.handouts.find(x=>x.n===f.h);const k={overview:'Overview',theme:'Theme',intro:'Start',credits:'Credits'}[f.kind];return [hd&&hd.title,k].filter(Boolean).join(' · ')}
+function kindLabel(f){const hd=S.handouts.find(x=>x.n===f.h);const k={overview:'Overview',theme:'Theme',intro:'Start',credits:'Credits',sources:'Sources'}[f.kind];return [hd&&hd.title,k].filter(Boolean).join(' · ')}
 function thumbKey(f){if(f.kind==='work')return f.d.key;if(f.kind==='theme')return f.d.img;if(f.kind==='overview')return f.d.overview.img;return null}
 function search(){const raw=qi.value.trim();if(!raw){rs.hidden=true;qi.setAttribute('aria-expanded','false');return}
   const words=norm(raw).split(/\s+/).filter(Boolean);
