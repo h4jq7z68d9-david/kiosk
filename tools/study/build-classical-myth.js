@@ -177,8 +177,7 @@ ${extraHead}</head>
 <body${guide ? ' class="guide-page"' : ''}>
 ${NAV}
 ${guide ? body : `<main id="main">\n${body}\n</main>`}
-${FOOTER}
-${guide ? '' : LIGHTBOX + '\n'}${extraScripts}${guide ? '' : '<script src="/study/study.js?v=3"></script>\n'}<script src="/site-chrome.js?v=1"></script>
+${guide ? '' : FOOTER + '\n'}${guide ? '' : LIGHTBOX + '\n'}${extraScripts}${guide ? '' : '<script src="/study/study.js?v=3"></script>\n'}<script src="/site-chrome.js?v=1"></script>
 </body>
 </html>
 `;
@@ -341,7 +340,6 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .rule{background:var(--key);opacity:.8;-webkit-mask:var(--key-mask) repeat-x left center/16px 8px;mask:var(--key-mask) repeat-x left center/16px 8px}
 .guide-page :focus-visible{outline-color:var(--accent)}
 .guide-page .bar .spacer{flex:1}
-.guide-page footer{margin-top:40px}
 /* phones and portrait iPads: Prev / Next pinned to the bottom of the screen, bottom right */
 @media (max-width:900px){
   .guide-page .bar{position:fixed;left:0;right:0;bottom:0;z-index:70;margin:0;justify-content:flex-end;gap:8px;
