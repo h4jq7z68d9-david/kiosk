@@ -250,7 +250,7 @@ function render(){
   if(f.kind==='intro'){
     el.className='slide text';
     h=`<div class="notes intro"><h1 class="htitle">Classical Myth in Art</h1><p class="hsub">The stories of the Greek and Roman gods and heroes, told through paintings, sculpture, and vases</p>${rule}
-    <p class="sum">Each slide pairs one work of art with a short account of the myth it shows, what the object was made for, and the key names and terms. Theme slides step back to the bigger ideas that connect the works. The material follows a college survey of classical mythology, rewritten for general readers.</p>
+    <p class="sum">Each slide pairs one work of art with a short account of the myth it shows, what the object was made for, and the key names and terms. Theme slides step back to the bigger ideas that connect the works.</p>
     <ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move through the slides.</li><li>Click any image to see it full screen.</li><li>Every image is public domain or CC0; sources and licenses are listed under Image credits.</li><li>Quotations from Hesiod use Hugh G. Evelyn-White’s public-domain translation (1914).</li></ul>
     <p class="lab">Contents</p><ul class="wl">${S.handouts.map(x=>`<li><button class="wlink" data-go="h${x.n}-0">${esc(x.title)}</button></li>`).join('')}</ul></div>`;
   } else if(f.kind==='overview'){

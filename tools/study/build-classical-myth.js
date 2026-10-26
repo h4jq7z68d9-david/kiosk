@@ -383,6 +383,8 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
   for (const f of ['data.js', 'data_w34.js', 'data_w58.js', 'credits.js']) must(`<script src="${f}"></script>`, `<script src="${COURSE}/${f}"></script>`);
   must(`<script src="${COURSE}/credits.js"></script>`, `<script src="${COURSE}/credits.js"></script>\n<script src="${COURSE}/sources.js"></script>`);
   // no "free study guide" label and no authorship line (David, Oct 26 2026)
+  // no mention of a college course on the public site (David, Oct 26 2026)
+  must(' The material follows a college survey of classical mythology, rewritten for general readers.', '');
   // "Sources and further reading" slide, just before Image credits (data in sources.js)
   must("flat.push({h:99,kind:'credits',id:'credits',label:'Image credits'});", "flat.push({h:99,kind:'sources',id:'sources',label:'Sources and further reading'});\nflat.push({h:99,kind:'credits',id:'credits',label:'Image credits'});");
   must("} else if(f.kind==='credits'){", "} else if(f.kind==='sources'){\n    el.className='slide text'; const SR=window.SOURCES||{groups:[]};\n    h=`<div class=\"notes\"><p class=\"eyebrow\">Sources</p><h2 class=\"htitle\">Sources and further reading</h2><p class=\"sum\">${esc(SR.intro)}</p>${SR.groups.map(g=>`${rule}<p class=\"lab\">${esc(g.title)}</p><div class=\"cred\">${g.items.map(it=>`<div>${it.html}${it.url?` <a href=\"${esc(it.url)}\" target=\"_blank\" rel=\"noopener\">Link</a>`:''}</div>`).join('')}</div>`).join('')}</div>`;\n  } else if(f.kind==='credits'){");
