@@ -36,6 +36,13 @@ jobs:
             --include "*.webmanifest" \
             --exclude "receipts/*" \
             --delete
+      - name: No-cache headers for Jill's page
+        # Browsers otherwise keep a stale copy for hours after a deploy (S3 sends no Cache-Control).
+        # Plain upload from the checkout = same PutObject permission the sync above uses.
+        run: |
+          aws s3 cp expenses-jill-nicholson.html s3://kiosk.davidnicholsonllc/expenses-jill-nicholson.html \
+            --cache-control "no-cache" \
+            --content-type "text/html; charset=utf-8"
       - name: Deploy Lambda
         run: |
           zip lambda.zip index.mjs
