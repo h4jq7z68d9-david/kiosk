@@ -1136,12 +1136,23 @@ function downloadCsv(filename, rows) {
 function downloadReport() {
   const kind = val('report-pick'), { from, to, exp, rev, mile } = repData();
   const span = `${from || 'start'}_to_${to || todayStr()}`, byDate = (a, b) => (a.date < b.date ? -1 : 1), n2 = v => Number(v || 0).toFixed(2);
+  // Detail reports end with a grand total and subtotals, so they're usable without spreadsheet formulas
+  const sum = (list, f) => list.reduce((s, x) => s + f(x), 0);
+  const subtotals = (list, key, label) => [[], [`Totals by ${label}`, '', '', ''], ...groupSum(list, key).map(([k, v]) => ['', k, '', n2(v)])];
   if (kind === 'expenses') {
-    downloadCsv(`jill-expenses_${span}.csv`, [['Date', 'Category', 'Description', 'Amount', 'Receipt'], ...exp.sort(byDate).map(e => [e.date, e.category, e.desc, n2(e.amount), e.receiptUrl || ''])]);
+    downloadCsv(`jill-expenses_${span}.csv`, [['Date', 'Category', 'Description', 'Amount', 'Receipt'],
+      ...exp.sort(byDate).map(e => [e.date, e.category, e.desc, n2(e.amount), e.receiptUrl || '']),
+      [], ['Total', `${exp.length} expense${exp.length === 1 ? '' : 's'}`, '', n2(sum(exp, e => Number(e.amount || 0))), ''],
+      ...subtotals(exp, 'category', 'category')]);
   } else if (kind === 'revenue') {
-    downloadCsv(`jill-revenue_${span}.csv`, [['Date', 'Stream', 'Note', 'Amount'], ...rev.sort(byDate).map(r => [r.date, r.stream, r.desc, n2(r.amount)])]);
+    downloadCsv(`jill-revenue_${span}.csv`, [['Date', 'Stream', 'Note', 'Amount'],
+      ...rev.sort(byDate).map(r => [r.date, r.stream, r.desc, n2(r.amount)]),
+      [], ['Total', `${rev.length} entr${rev.length === 1 ? 'y' : 'ies'}`, '', n2(sum(rev, r => Number(r.amount || 0)))],
+      ...subtotals(rev, 'stream', 'stream')]);
   } else if (kind === 'mileage') {
-    downloadCsv(`jill-mileage_${span}.csv`, [['Date', 'Purpose', 'Notes', 'Miles', 'Rate', 'Deduction'], ...mile.sort(byDate).map(m => [m.date, m.purpose, m.notes, m.miles, mileRate(m), n2(mileDeduction(m))])]);
+    downloadCsv(`jill-mileage_${span}.csv`, [['Date', 'Purpose', 'Notes', 'Miles', 'Rate', 'Deduction'],
+      ...mile.sort(byDate).map(m => [m.date, m.purpose, m.notes, m.miles, mileRate(m), n2(mileDeduction(m))]),
+      [], ['Total', `${mile.length} trip${mile.length === 1 ? '' : 's'}`, '', Math.round(sum(mile, m => Number(m.miles || 0)) * 10) / 10, '', n2(sum(mile, mileDeduction))]]);
   } else {
     const tRev = rev.reduce((s, r) => s + Number(r.amount || 0), 0), tExp = exp.reduce((s, e) => s + Number(e.amount || 0), 0), tMile = mile.reduce((s, m) => s + mileDeduction(m), 0);
     const rows = [['Profit & loss', `${from || 'All dates'} to ${to || todayStr()}`, ''], [], ['Section', 'Line', 'Amount'], ['Revenue', '', '']];
