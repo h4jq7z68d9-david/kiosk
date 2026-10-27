@@ -42,6 +42,13 @@ Tested Oct 27 2026 in headless Chromium against the current code: saving, listin
 - On phones and portrait iPads (900 px and below) the rail is hidden. The saved slides are only a "Bookmarks" group inside the "Jump to slide" dropdown, and the Bookmark button is icon-only.
 - Bookmarks live in one browser on one device (localStorage). A different device, browser or private window shows none, and nothing says so.
 
+What happens today when you skip around or come back (Certain: read from the code and tested): a bookmark is a **pin on one slide**, kept in a list; skipping to other slides does not remove it (the test read a slide far from both pins and the list still showed them). The page address records the slide you are on, so a reload stays there, but opening the course fresh starts at "About this site". Nothing resumes where you left off, and nothing jumps you to a bookmark.
+
+So there are two separate needs, and the new design covers both:
+
+- **Saved slides** (several pins): the list and panel below.
+- **Continue where you left off** (one automatic place-marker): remember the last slide read in each course (localStorage, by slide id). On the course home and at the top of the "Saved" panel, show a "Continue: <slide title>" link. Never redirect automatically: the course home URL must always show the same page to everyone, search engines included.
+
 Required in the new design:
 
 - A **"Saved (n)" button beside the search bar on every page and every screen size**, with the count. It opens a panel listing the saved slides, each a link to its page, with a remove control.
