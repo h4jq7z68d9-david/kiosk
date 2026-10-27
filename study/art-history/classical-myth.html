@@ -247,7 +247,7 @@ const terms=t=>t&&t.length?'<dl class="terms">'+t.map(([a,b])=>`<div><dt>${esc(a
 const bul=b=>b&&b.length?'<ul class="b">'+b.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':'';
 const quote=q=>q?`<blockquote><p>“${esc(q.q)}”</p><cite>${esc(q.by)}</cite></blockquote>`:'';
 const rule='<hr class="rule">';
-const credLine=k=>{const c=C[k];if(!c)return'';return `Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${esc(c.license)}`};
+const credLine=k=>{const c=C[k];if(!c)return'';return `Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.source||'Wikimedia Commons')}</a> · ${esc(c.license)}`};
 const pic=(k,alt,capHtml)=>`<div class="pic"><img src="${src(k)}" alt="${esc(alt)}" data-k="${k}" data-cap="${esc(capHtml)}" tabindex="0"></div>`;
 const crl=k=>`<p class="crl">${credLine(k)}</p>`;
 let cur=0;

@@ -1,0 +1,13 @@
+{
+  "name": "Classical Myth in Art",
+  "viewer": "classical-myth-viewer.html",
+  "viewerName": "Classical Myth in Art",
+  "dataFiles": ["data.js", "data_w34.js", "data_w58.js"],
+  "greekKey": true,
+  "homeDescription": "A study guide to Greek and Roman myth in art: the gods and heroes through 170 paintings, sculptures, and vases, each with the story it shows and key terms.",
+  "ldDescription": "The stories of the Greek and Roman gods and heroes, told through paintings, sculpture, and vases.",
+  "sourcesDescription": "The textbook, articles on myth in art, and public-domain translations behind {name}.",
+  "creditsIntro": "All images come from Wikimedia Commons and are marked public domain or CC0 there. Many are museum open-access files (Metropolitan Museum of Art, National Gallery of Art, Rijksmuseum); the rest are photographs or reproductions their authors released into the public domain. Follow each link for the file’s full record.",
+  "creditsDescription": "Sources and licenses for the {count} public-domain and CC0 images in {name}, all from Wikimedia Commons.",
+  "strip": [" The material follows a college survey of classical mythology, rewritten for general readers."]
+}
