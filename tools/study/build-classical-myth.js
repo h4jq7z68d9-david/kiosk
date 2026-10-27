@@ -357,6 +357,12 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .rule{background:var(--key);opacity:.8;-webkit-mask:var(--key-mask) repeat-x left center/16px 8px;mask:var(--key-mask) repeat-x left center/16px 8px}
 .guide-page :focus-visible{outline-color:var(--accent)}
 .guide-page .bar .spacer{flex:1}
+/* bookmark button (bar) and bookmark list (top of outline) */
+.guide-page .bm{display:inline-flex;align-items:center;gap:6px;padding:6px 12px}
+.guide-page .bm svg{width:18px;height:18px;display:block;flex:none}
+.guide-page .bm[aria-pressed="true"]{color:var(--accent-ink);border-color:var(--accent)}
+.guide-page .bml{display:block}
+@media (max-width:900px){.guide-page .bm .bmt{display:none}.guide-page .bar .bm{margin-right:auto}}
 /* phones and portrait iPads: Prev / Next pinned to the bottom of the screen, bottom right */
 @media (max-width:900px){
   .guide-page .bar{position:fixed;left:0;right:0;bottom:0;z-index:70;margin:0;justify-content:flex-end;gap:8px;
@@ -397,6 +403,47 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
   must('function go(i){if(i==null||i<0||i>=flat.length)return;cur=i;render()}', 'function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}');
   must('<p class="eyebrow">Free study guide</p>', '');
   must('\n    <p class="det">Text by David Nicholson · davidnicholsonart.com</p></div>`;', '</div>`;');
+  // Back button and bookmarks (David, Oct 26 2026). A jump (outline, search, contents, "works in this part",
+  // the phone menu, a bookmark) adds a history entry, so Back returns to the slide you jumped from instead of
+  // leaving the guide. Prev / Next, swipe and arrow keys replace the entry, so Back doesn't replay every slide.
+  // Bookmarks are kept in this browser only (localStorage), keyed by work key so they survive reordering.
+  must('      <button class="btn tog" id="tog" aria-controls="rail" aria-expanded="true" aria-label="Hide outline" title="Hide outline"></button>',
+    '      <button class="btn tog" id="tog" aria-controls="rail" aria-expanded="true" aria-label="Hide outline" title="Hide outline"></button>\n      <button class="btn bm" id="bm" type="button" aria-pressed="false" aria-label="Bookmark this slide" title="Bookmark this slide"></button>');
+  must("  try{history.replaceState(null,'','#'+f.id)}catch(e){}",
+    "  try{const u='#'+f.id;if(location.hash!==u){if(pushNext)history.pushState(null,'',u);else history.replaceState(null,'',u)}}catch(e){}\n  pushNext=false;\n  bmSync();");
+  must('function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}',
+    'function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}\nlet pushNext=false;\nfunction jump(i){if(i==null||i<0||i>=flat.length)return;pushNext=i!==cur;go(i)}');
+  must("el.querySelectorAll('[data-k].wlink').forEach(b=>b.onclick=()=>go(workIndex[b.dataset.k]));", "el.querySelectorAll('[data-k].wlink').forEach(b=>b.onclick=()=>jump(workIndex[b.dataset.k]));");
+  must("el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(flat.findIndex(x=>x.id===b.dataset.go)));", "el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>jump(flat.findIndex(x=>x.id===b.dataset.go)));");
+  must("out.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>go(+b.dataset.i));", "out.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>jump(+b.dataset.i));");
+  must('j.onchange=()=>go(+j.value);', "j.onchange=()=>jump(+String(j.value).replace('b',''));");
+  must('function pick(j){if(!hits[j])return;go(hits[j].i);', 'function pick(j){if(!hits[j])return;jump(hits[j].i);');
+  must(`const out=document.getElementById('outline'); let html='<button class="ho" data-i="0">About this site</button>';`,
+    `const out=document.getElementById('outline'); let html='<div id="bmarks"></div><button class="ho" data-i="0">About this site</button>';`);
+  must('<li>Click any image to see it full screen.</li>', '<li>Click any image to see it full screen.</li><li>Use Bookmark to save a slide. Saved slides are listed at the top of the outline (on a phone, at the top of the slide menu) and stay in this browser.</li>');
+  must('/* start */', `/* back button: return to the slide recorded in the address */
+window.addEventListener('popstate',()=>{const i=flat.findIndex(f=>f.id===location.hash.slice(1));if(i>=0){if(!lb.hidden)closeLb();go(i)}});
+/* bookmarks: saved in this browser only */
+const BK='cm-bookmarks';
+const bid=f=>f.kind==='work'?'w:'+f.d.key:f.id;
+const bidx=b=>{const i=b.startsWith('w:')?workIndex[b.slice(2)]:flat.findIndex(f=>f.id===b);return i==null?-1:i};
+let marks=[];try{const v=JSON.parse(localStorage.getItem(BK)||'[]');marks=Array.isArray(v)?v.filter(b=>typeof b==='string'&&bidx(b)>=0):[]}catch(e){marks=[]}
+const bmBtn=document.getElementById('bm');
+const bmIcon=on=>'<svg viewBox="0 0 20 20" fill="'+(on?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5h9v15l-4.5-3.6-4.5 3.6z"/></svg>';
+function bmSave(){try{localStorage.setItem(BK,JSON.stringify(marks))}catch(e){}}
+function bmLabel(i){const f=flat[i];if(f.kind==='overview')return f.d.title;return (f.kind==='theme'?'Theme: ':'')+f.label}
+function bmList(){const ix=marks.map(bidx).filter(i=>i>=0).sort((a,b)=>a-b);
+  const box=document.getElementById('bmarks');
+  if(box){box.innerHTML=ix.length?'<p class="wk">Bookmarks</p><ul class="items bml">'+ix.map(i=>'<li><button data-bi="'+i+'" aria-current="'+(i===cur)+'">'+esc(bmLabel(i))+'</button></li>').join('')+'</ul>':'';
+    box.querySelectorAll('[data-bi]').forEach(b=>b.onclick=()=>jump(+b.dataset.bi))}
+  let og=j.querySelector('optgroup.bmg');if(og)og.remove();
+  if(ix.length){og=document.createElement('optgroup');og.className='bmg';og.label='Bookmarks';og.innerHTML=ix.map(i=>'<option value="b'+i+'">'+esc(bmLabel(i))+'</option>').join('');j.prepend(og)}
+  j.value=String(cur)}
+function bmSync(){if(!bmBtn)return;const on=marks.includes(bid(flat[cur]));
+  bmBtn.innerHTML=bmIcon(on)+'<span class="bmt">'+(on?'Bookmarked':'Bookmark')+'</span>';
+  bmBtn.setAttribute('aria-pressed',String(on));bmBtn.title=on?'Remove bookmark':'Bookmark this slide';bmBtn.setAttribute('aria-label',bmBtn.title);bmList()}
+if(bmBtn)bmBtn.onclick=()=>{const b=bid(flat[cur]),k=marks.indexOf(b);if(k>=0)marks.splice(k,1);else marks.push(b);bmSave();bmSync()};
+/* start */`);
   const scripts = v.slice(v.indexOf('<script src='));
   const markup = v.slice(0, v.indexOf('<script src=')).trim();
   // a plain list of every part for readers without JavaScript (and for crawlers)

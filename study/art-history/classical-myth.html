@@ -170,6 +170,12 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .rule{background:var(--key);opacity:.8;-webkit-mask:var(--key-mask) repeat-x left center/16px 8px;mask:var(--key-mask) repeat-x left center/16px 8px}
 .guide-page :focus-visible{outline-color:var(--accent)}
 .guide-page .bar .spacer{flex:1}
+/* bookmark button (bar) and bookmark list (top of outline) */
+.guide-page .bm{display:inline-flex;align-items:center;gap:6px;padding:6px 12px}
+.guide-page .bm svg{width:18px;height:18px;display:block;flex:none}
+.guide-page .bm[aria-pressed="true"]{color:var(--accent-ink);border-color:var(--accent)}
+.guide-page .bml{display:block}
+@media (max-width:900px){.guide-page .bm .bmt{display:none}.guide-page .bar .bm{margin-right:auto}}
 /* phones and portrait iPads: Prev / Next pinned to the bottom of the screen, bottom right */
 @media (max-width:900px){
   .guide-page .bar{position:fixed;left:0;right:0;bottom:0;z-index:70;margin:0;justify-content:flex-end;gap:8px;
@@ -201,6 +207,7 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
     <article class="slide" id="slide" aria-live="polite" tabindex="-1"></article>
     <div class="bar">
       <button class="btn tog" id="tog" aria-controls="rail" aria-expanded="true" aria-label="Hide outline" title="Hide outline"></button>
+      <button class="btn bm" id="bm" type="button" aria-pressed="false" aria-label="Bookmark this slide" title="Bookmark this slide"></button>
       <span class="crumb" id="crumb"></span>
       <span class="spacer"></span>
       <span class="pos" id="pos"></span>
@@ -251,7 +258,7 @@ function render(){
     el.className='slide text';
     h=`<div class="notes intro"><h1 class="htitle">Classical Myth in Art</h1><p class="hsub">The stories of the Greek and Roman gods and heroes, told through paintings, sculpture, and vases</p>${rule}
     <p class="sum">Each slide pairs one work of art with a short account of the myth it shows, what the object was made for, and the key names and terms. Theme slides step back to the bigger ideas that connect the works.</p>
-    <ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move through the slides.</li><li>Click any image to see it full screen.</li><li>Every image is public domain or CC0; sources and licenses are listed under Image credits.</li><li>Quotations from Hesiod use Hugh G. Evelyn-White’s public-domain translation (1914).</li></ul>
+    <ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move through the slides.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a slide. Saved slides are listed at the top of the outline (on a phone, at the top of the slide menu) and stay in this browser.</li><li>Every image is public domain or CC0; sources and licenses are listed under Image credits.</li><li>Quotations from Hesiod use Hugh G. Evelyn-White’s public-domain translation (1914).</li></ul>
     <p class="lab">Contents</p><ul class="wl">${S.handouts.map(x=>`<li><button class="wlink" data-go="h${x.n}-0">${esc(x.title)}</button></li>`).join('')}</ul></div>`;
   } else if(f.kind==='overview'){
     const d=f.d,o=d.overview,c=o.cap;const ch=[c[0]&&esc(c[0]),'<i>'+esc(c[1])+'</i>',c[2]&&esc(c[2])].filter(Boolean).join(', ');
@@ -282,8 +289,8 @@ function render(){
   }
   el.innerHTML=h;
   el.querySelectorAll('.pic img').forEach(im=>{im.onclick=()=>openLb(im);im.onkeydown=e=>{if(e.key==='Enter')openLb(im)}});
-  el.querySelectorAll('[data-k].wlink').forEach(b=>b.onclick=()=>go(workIndex[b.dataset.k]));
-  el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(flat.findIndex(x=>x.id===b.dataset.go)));
+  el.querySelectorAll('[data-k].wlink').forEach(b=>b.onclick=()=>jump(workIndex[b.dataset.k]));
+  el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>jump(flat.findIndex(x=>x.id===b.dataset.go)));
   const hd=S.handouts.find(x=>x.n===f.h);
   document.getElementById('crumb').textContent=hd?`${sec(hd.wk)} · ${hd.title}`:(f.kind==='credits'?'Credits':f.kind==='sources'?'Sources':'Start');
   document.getElementById('pos').textContent=(cur+1)+' / '+flat.length;
@@ -291,20 +298,24 @@ function render(){
   document.getElementById('jump').value=String(cur);
   document.querySelectorAll('#outline [data-i]').forEach(b=>b.setAttribute('aria-current',String(+b.dataset.i===cur)));
   document.querySelectorAll('#outline .grp').forEach(g=>{const on=+g.dataset.h===f.h;g.querySelector('.items').classList.toggle('open',on);g.querySelector('.ho').setAttribute('aria-current',String(on))});
-  try{history.replaceState(null,'','#'+f.id)}catch(e){}
+  try{const u='#'+f.id;if(location.hash!==u){if(pushNext)history.pushState(null,'',u);else history.replaceState(null,'',u)}}catch(e){}
+  pushNext=false;
+  bmSync();
   el.querySelector('.notes')&&(el.querySelector('.notes').scrollTop=0);
 }
 function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}
+let pushNext=false;
+function jump(i){if(i==null||i<0||i>=flat.length)return;pushNext=i!==cur;go(i)}
 /* outline */
-const out=document.getElementById('outline'); let html='<button class="ho" data-i="0">About this site</button>'; let lastWk=0;
+const out=document.getElementById('outline'); let html='<div id="bmarks"></div><button class="ho" data-i="0">About this site</button>'; let lastWk=0;
 S.handouts.forEach(h=>{
   if(h.wk!==lastWk){html+=`<p class="wk">${esc(sec(h.wk))}</p>`;lastWk=h.wk}
   const items=flat.map((f,i)=>({f,i})).filter(x=>x.f.h===h.n);
   html+=`<div class="grp" data-h="${h.n}"><button class="ho" data-i="${items[0].i}">${esc(h.title)}</button><ul class="items">${items.map(x=>`<li><button data-i="${x.i}" class="${x.f.kind==='theme'?'th':''}">${x.f.kind==='theme'?'Theme: ':''}${esc(x.f.label)}</button></li>`).join('')}</ul></div>`;
 });
 html+=`<p class="wk">Sources</p><button class="ho" data-i="${flat.length-2}">Sources and further reading</button><button class="ho" data-i="${flat.length-1}">Image credits</button>`;
-out.innerHTML=html; out.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>go(+b.dataset.i));
-const j=document.getElementById('jump'); j.innerHTML=(()=>{let o='',g=null;flat.forEach((f,i)=>{const hd=S.handouts.find(x=>x.n===f.h);const gt=hd?hd.title:((f.kind==='credits'||f.kind==='sources')?'Sources':'Start');if(gt!==g){if(g!==null)o+='</optgroup>';o+=`<optgroup label="${esc(gt)}">`;g=gt}o+=`<option value="${i}">${f.kind==='theme'?'Theme: ':''}${esc(f.label)}</option>`});return o+'</optgroup>'})(); j.onchange=()=>go(+j.value);
+out.innerHTML=html; out.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>jump(+b.dataset.i));
+const j=document.getElementById('jump'); j.innerHTML=(()=>{let o='',g=null;flat.forEach((f,i)=>{const hd=S.handouts.find(x=>x.n===f.h);const gt=hd?hd.title:((f.kind==='credits'||f.kind==='sources')?'Sources':'Start');if(gt!==g){if(g!==null)o+='</optgroup>';o+=`<optgroup label="${esc(gt)}">`;g=gt}o+=`<option value="${i}">${f.kind==='theme'?'Theme: ':''}${esc(f.label)}</option>`});return o+'</optgroup>'})(); j.onchange=()=>jump(+String(j.value).replace('b',''));
 document.getElementById('prev').onclick=()=>go(cur-1); document.getElementById('next').onclick=()=>go(cur+1);
 /* rail toggle */
 const app=document.getElementById('app'),tog=document.getElementById('tog');
@@ -346,7 +357,7 @@ function search(){const raw=qi.value.trim();if(!raw){rs.hidden=true;qi.setAttrib
     :`<p class="rnone">No slides match “${esc(raw)}”. Try a single name, such as Zeus or Pandora.</p>`;
   rs.hidden=false;qi.setAttribute('aria-expanded','true');
   rs.querySelectorAll('.res').forEach(b=>b.onclick=()=>pick(+b.dataset.j))}
-function pick(j){if(!hits[j])return;go(hits[j].i);rs.hidden=true;qi.setAttribute('aria-expanded','false');document.getElementById('slide').focus?.()}
+function pick(j){if(!hits[j])return;jump(hits[j].i);rs.hidden=true;qi.setAttribute('aria-expanded','false');document.getElementById('slide').focus?.()}
 function mark(){rs.querySelectorAll('.res').forEach((b,j)=>{b.setAttribute('aria-selected',String(j===sel));if(j===sel)b.scrollIntoView({block:'nearest'})})}
 qi.addEventListener('input',search);
 qi.addEventListener('focus',()=>{if(qi.value.trim())search()});
@@ -364,6 +375,28 @@ document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|SELECT|TEXTAREA/
  sl.addEventListener('touchstart',ts,{passive:true});sl.addEventListener('touchend',e=>te(e,d=>go(cur+d)),{passive:true});
  lb.addEventListener('touchstart',ts,{passive:true});lb.addEventListener('touchend',e=>te(e,d=>stepLb(d)),{passive:true});
 })();
+/* back button: return to the slide recorded in the address */
+window.addEventListener('popstate',()=>{const i=flat.findIndex(f=>f.id===location.hash.slice(1));if(i>=0){if(!lb.hidden)closeLb();go(i)}});
+/* bookmarks: saved in this browser only */
+const BK='cm-bookmarks';
+const bid=f=>f.kind==='work'?'w:'+f.d.key:f.id;
+const bidx=b=>{const i=b.startsWith('w:')?workIndex[b.slice(2)]:flat.findIndex(f=>f.id===b);return i==null?-1:i};
+let marks=[];try{const v=JSON.parse(localStorage.getItem(BK)||'[]');marks=Array.isArray(v)?v.filter(b=>typeof b==='string'&&bidx(b)>=0):[]}catch(e){marks=[]}
+const bmBtn=document.getElementById('bm');
+const bmIcon=on=>'<svg viewBox="0 0 20 20" fill="'+(on?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5h9v15l-4.5-3.6-4.5 3.6z"/></svg>';
+function bmSave(){try{localStorage.setItem(BK,JSON.stringify(marks))}catch(e){}}
+function bmLabel(i){const f=flat[i];if(f.kind==='overview')return f.d.title;return (f.kind==='theme'?'Theme: ':'')+f.label}
+function bmList(){const ix=marks.map(bidx).filter(i=>i>=0).sort((a,b)=>a-b);
+  const box=document.getElementById('bmarks');
+  if(box){box.innerHTML=ix.length?'<p class="wk">Bookmarks</p><ul class="items bml">'+ix.map(i=>'<li><button data-bi="'+i+'" aria-current="'+(i===cur)+'">'+esc(bmLabel(i))+'</button></li>').join('')+'</ul>':'';
+    box.querySelectorAll('[data-bi]').forEach(b=>b.onclick=()=>jump(+b.dataset.bi))}
+  let og=j.querySelector('optgroup.bmg');if(og)og.remove();
+  if(ix.length){og=document.createElement('optgroup');og.className='bmg';og.label='Bookmarks';og.innerHTML=ix.map(i=>'<option value="b'+i+'">'+esc(bmLabel(i))+'</option>').join('');j.prepend(og)}
+  j.value=String(cur)}
+function bmSync(){if(!bmBtn)return;const on=marks.includes(bid(flat[cur]));
+  bmBtn.innerHTML=bmIcon(on)+'<span class="bmt">'+(on?'Bookmarked':'Bookmark')+'</span>';
+  bmBtn.setAttribute('aria-pressed',String(on));bmBtn.title=on?'Remove bookmark':'Bookmark this slide';bmBtn.setAttribute('aria-label',bmBtn.title);bmList()}
+if(bmBtn)bmBtn.onclick=()=>{const b=bid(flat[cur]),k=marks.indexOf(b);if(k>=0)marks.splice(k,1);else marks.push(b);bmSave();bmSync()};
 /* start */
 const hs=(location.hash||'').slice(1); const st=flat.findIndex(f=>f.id===hs); go(st>=0?st:0);
 })();
