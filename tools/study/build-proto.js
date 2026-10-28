@@ -11,12 +11,12 @@ const CFG = JSON.parse(fs.readFileSync(path.join(__dirname, 'courses', SLUG + '.
 const SRC = path.join(ROOT, 'study', 'art-history', SLUG);
 const OUT = path.join(ROOT, 'study', 'art-history', SLUG + '-proto');
 const BASE = '/study/art-history/' + SLUG + '-proto';
-const IMG = '/study/art-history/' + SLUG + '/img/';
+const IMG = '/study/art-history/' + (CFG.imgFrom || SLUG) + '/img/';   // imgFrom: reuse another course's images
 const NAME = CFG.name;
 
 const ctx = { window: {} }; ctx.window = ctx; vm.createContext(ctx);
-for (const f of [...CFG.dataFiles, 'credits.js']) vm.runInContext(fs.readFileSync(path.join(SRC, f), 'utf8'), ctx, { filename: f });
-const S = ctx.SITE, C = ctx.CREDITS || {};
+for (const f of [...CFG.dataFiles, 'credits.js', ...(fs.existsSync(path.join(SRC, 'sources.js')) ? ['sources.js'] : [])]) vm.runInContext(fs.readFileSync(path.join(SRC, f), 'utf8'), ctx, { filename: f });
+const S = ctx.SITE, C = ctx.CREDITS || {}, SRCS = ctx.SOURCES;
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const sec = (w) => (S.sections && S.sections[w]) || '';
 
@@ -30,6 +30,7 @@ for (const h of S.handouts) {
     flat.push({ h: h.n, kind: s.type, d: s, hd: h, id: s.type === 'work' ? s.key : id, label: s.title, url: `${BASE}/${s.type === 'work' ? s.key : id}.html` });
   });
 }
+if (SRCS) flat.push({ h: 99, kind: 'sources', id: 'sources', label: 'Sources', url: BASE + '/sources.html' });
 flat.push({ h: 99, kind: 'credits', id: 'credits', label: 'Image credits', url: BASE + '/credits.html' });
 const byKey = {}; flat.forEach((f, i) => { if (f.kind === 'work') byKey[f.d.key] = i; });
 
@@ -59,6 +60,14 @@ function slideHtml(f) {
 <p class="sum">${esc(o.sum)}</p>${quote(d.quote)}${rule}${bul(o.bul)}${o.terms && o.terms.length ? rule + terms(o.terms) : ''}
 <p class="lab">Works in this part</p>${wl(d.slides.filter((s) => s.type === 'work').map((s) => s.key))}${crl(o.img)}</div>`];
   }
+  if (f.kind === 'work' && d.lead) {   // artwork-first format: lead paragraph, bullets, then the subject
+    return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}
+<p class="sum">${esc(d.lead)}</p>${bul(d.bul)}${d.subj ? rule + `<p class="lab">The subject</p><p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${crl(d.key)}</div>`];
+  }
+  if (f.kind === 'sources') {
+    return ['slide text', `<div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Sources and further reading</h1><p class="sum">${esc(SRCS.intro)}</p>
+${SRCS.groups.map((g) => `<p class="lab">${esc(g.title)}</p><div class="cred">${g.items.map((it) => `<div>${it.html}${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noopener">Link</a>` : ''}</div>`).join('')}</div>`).join('')}</div>`];
+  }
   if (f.kind === 'work') {
     return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}
 <p class="fn"><b>Made for:</b> ${esc(d.fn)}</p><p class="sum">${esc(d.sum)}</p>${rule}${bul(d.bul)}${d.terms && d.terms.length ? rule + terms(d.terms) : ''}${quote(d.quote)}${crl(d.key)}</div>`];
@@ -83,8 +92,8 @@ ${d.works && d.works.length ? `<p class="lab">See</p>${wl(d.works)}` : ''}${quot
 function textOf(f) {
   const d = f.d || {}, p = [];
   if (f.kind === 'overview') { const o = d.overview; p.push(d.title, d.sub, o.sum, ...(o.bul || []), ...(o.terms || []).flat(), ...(o.cap || [])); }
-  else if (f.kind === 'intro' || f.kind === 'credits') p.push(f.label);
-  else p.push(d.title, d.artist, d.date, d.det, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.bul || []), ...(d.terms || []).flat(), d.quote && d.quote.q);
+  else if (f.kind === 'intro' || f.kind === 'credits' || f.kind === 'sources') p.push(f.label);
+  else p.push(d.title, d.artist, d.date, d.det, d.lead, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.bul || []), ...(d.terms || []).flat(), d.subj, d.quote && d.quote.q);
   return p.filter(Boolean).join(' · ');
 }
 const thumb = (f) => f.kind === 'work' ? f.d.key : f.kind === 'theme' ? f.d.img : f.kind === 'overview' ? f.d.overview.img : null;
@@ -109,9 +118,9 @@ const SEARCH_ICON = '<svg class="sico" viewBox="0 0 20 20" fill="none" stroke="c
 
 flat.forEach((f, i) => {
   const [cls, inner] = slideHtml(f), prev = flat[i - 1], next = flat[i + 1];
-  const title = f.kind === 'intro' ? `${NAME}: study guide` : f.kind === 'credits' ? `Image credits | ${NAME}` : `${f.d.title} | ${NAME}`;
-  const desc = (f.kind === 'work' ? f.d.sum : f.kind === 'overview' ? f.d.overview.sum : f.kind === 'theme' ? f.d.para : f.kind === 'text' ? f.d.sum : CFG.ldDescription || NAME).replace(/\s+/g, ' ').slice(0, 155);
-  const hd = f.hd, crumb = hd ? `${sec(hd.wk)} · ${hd.title}` : (f.kind === 'credits' ? 'Credits' : 'Start');
+  const title = f.kind === 'intro' ? `${NAME}: study guide` : (f.kind === 'credits' || f.kind === 'sources') ? `${f.label} | ${NAME}` : `${f.d.title} | ${NAME}`;
+  const desc = (f.kind === 'work' ? (f.d.lead || f.d.sum) : f.kind === 'overview' ? f.d.overview.sum : f.kind === 'theme' ? f.d.para : f.kind === 'text' ? f.d.sum : CFG.ldDescription || NAME).replace(/\s+/g, ' ').slice(0, 155);
+  const hd = f.hd, crumb = hd ? `${sec(hd.wk)} · ${hd.title}` : (f.h === 99 ? 'Sources' : 'Start');
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>

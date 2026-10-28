@@ -22,8 +22,7 @@
     const its = items.filter((x) => x.h === p.h);
     html += `<div class="grp" data-h="${p.h}"><a class="ho" href="${its[0].url}"${its[0].id === curId ? ' aria-current="page"' : ''}>${esc(p.title)}</a><ul class="items${p.h === curH ? ' open' : ''}">${its.map((x) => `<li><a href="${x.url}" class="${x.kind === 'theme' ? 'th' : ''}"${x.id === curId ? ' aria-current="page"' : ''}>${x.kind === 'theme' ? 'Theme: ' : ''}${esc(x.label)}</a></li>`).join('')}</ul></div>`;
   });
-  const last = items[items.length - 1];
-  html += `<p class="wk">Sources</p><a class="ho" href="${last.url}"${last.id === curId ? ' aria-current="page"' : ''}>Image credits</a>`;
+  html += '<p class="wk">Sources</p>' + items.filter((x) => x.h === 99).map((x) => `<a class="ho" href="${x.url}"${x.id === curId ? ' aria-current="page"' : ''}>${esc(x.label)}</a>`).join('');
   out.innerHTML = html;
   const rail = $('rail');
   try { const y = sessionStorage.getItem(KR); if (y != null) rail.scrollTop = +y; } catch (e) {}
