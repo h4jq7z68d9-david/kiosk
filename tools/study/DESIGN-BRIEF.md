@@ -1,6 +1,6 @@
 # Study section: one-layout design brief
 
-Written Oct 27 2026 for the art business project. Status: decided by David, not started. Branch: `generalize-study-generator` (the generalized generator it builds on).
+Written Oct 27 2026 for the art business project. Status: **built and deployed Oct 27 2026** (see `Kiosk-Project-Summary.md`). Not done on purpose: the old `#hN-M` hash mapping (the content changed; David chose no redirects). Branch: `generalize-study-generator` (the generalized generator it builds on).
 
 ## Why
 

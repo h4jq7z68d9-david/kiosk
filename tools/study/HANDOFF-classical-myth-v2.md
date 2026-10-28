@@ -2,7 +2,7 @@
 
 Written Oct 27 2026 by the Art History Course Builder project for the art business project.
 Branch: `generalize-study-generator` (pushed; not merged; nothing deployed).
-Status: **David approved the condensed content and the one-layout design on Oct 27 2026.** Deploying still needs his final yes on the real pages, as always.
+Status (Oct 27 2026, evening): **done and deployed** by the art business project; see `Kiosk-Project-Summary.md` and `SKILL-UPDATE-2026-10-27.md`. Earlier status: **David approved the condensed content and the one-layout design on Oct 27 2026.** Deploying still needs his final yes on the real pages, as always.
 
 ## What is on the branch
 
