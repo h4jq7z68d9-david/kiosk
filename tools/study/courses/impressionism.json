@@ -1,0 +1,14 @@
+{
+ "name": "Impressionism",
+ "dataFiles": [
+  "data.js",
+  "data-2.js"
+ ],
+ "intro": "Impressionism began as an argument about what painting should show and who should decide. In 1874 a group of painters turned their backs on the official Salon and held their own exhibition, filled with city streets, cafés, beaches and changing light. This section follows them through sixty works, from the Salon pictures they reacted against to Monet’s late water lilies and the turn toward Neo-Impressionism, with the facts of each object drawn from museum collection records.",
+ "homeDescription": "Sixty works trace Impressionism from the Paris Salon and Manet to the 1874 exhibition, modern Paris, Degas, Morisot and Cassatt, and Monet’s series.",
+ "ldDescription": "An artwork-by-artwork guide to French Impressionism, 1860s–1890s, compiled from museum collection records.",
+ "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
+ "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
+ "creditsIntro": "Every image in this section is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "introImg": "monet-impression"
+}

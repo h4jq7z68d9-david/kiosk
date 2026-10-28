@@ -151,7 +151,7 @@ function slideHtml(f) {
   if (f.kind === 'work') {
     const th = themesOf(d.key);
     const tail = (th.length ? `<p class="lab">Themes</p><ul class="wl">${th.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.d.title)}</a></li>`).join('')}</ul>` : '') + crl(d.key);
-    const head = `<p class="eyebrow">${partLink(f)}</p>${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}`;
+    const head = `<p class="eyebrow">${esc(sec(f.hd.wk))}</p>${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}`;
     if (d.lead) {   // artwork-first format: lead paragraph, bullets, then the subject
       return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
 <p class="sum">${esc(d.lead)}</p>${bul(d.bul)}${d.subj ? RULE + `<p class="lab">The subject</p><p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${tail}</div>`];
@@ -161,11 +161,11 @@ function slideHtml(f) {
   }
   if (f.kind === 'theme') {
     const w = byKey[d.img] != null ? cap(flat[byKey[d.img]].d) : (C[d.img] ? esc(C[d.img].work) : '');
-    return ['slide', pic(d.img, d.title, w) + `<div class="notes"><p class="eyebrow">Theme · ${partLink(f)}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="sum">${esc(d.para)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}
+    return ['slide', pic(d.img, d.title, w) + `<div class="notes"><p class="eyebrow">Theme · ${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="sum">${esc(d.para)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}
 ${d.works && d.works.length ? `<p class="lab">See</p>${wl(d.works)}` : ''}${quote(d.quote)}${crl(d.img)}</div>`];
   }
   if (f.kind === 'text') {
-    return ['slide text', `<div class="notes"><p class="eyebrow">${partLink(f)}</p><h1 class="htitle">${esc(d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}<p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${RULE}${terms(d.terms)}</div>`];
+    return ['slide text', `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="htitle">${esc(d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}<p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${RULE}${terms(d.terms)}</div>`];
   }
   if (f.kind === 'sources') {
     return ['slide text', `<div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Sources and further reading</h1><p class="sum">${esc(SRCS.intro)}</p>
@@ -273,7 +273,8 @@ function crumbHtml(f) {
   if (f.kind === 'intro') return '<span>Start</span>';
   if (f.h === 99) return `<a href="${HOME}">${esc(NAME)}</a> · <span>Sources</span>`;
   const p = f.part || f;
-  return `<span>${esc(sec(f.hd.wk))}</span> · ${f.kind === 'overview' ? `<span aria-current="page">${esc(f.hd.title)}</span>` : `<a href="${p.url}">${esc(f.hd.title)}</a>`}`;
+  // section shows in the page's eyebrow; the bar shows only the part (overview pages: a neutral label, since the h1 is the part)
+  return f.kind === 'overview' ? '<span aria-current="page">Overview</span>' : `<a href="${p.url}">${esc(f.hd.title)}</a>`;
 }
 
 function pageHtml(f, i) {
