@@ -289,7 +289,7 @@ window.CREDITS = {
   "credit": "Museo Nacional del Prado"
  },
  "h10_orpheusrel": {
-  "work": "Roman, after an Athenian relief, Orpheus, Eurydice and Hermes, 1st century BCE copy of a late 5th-century BCE original (Pentelic marble · Louvre, Paris)",
+  "work": "Roman, after an Athenian relief, Orpheus, Eurydice and Hermes, 1st century BCE, after an original of the late 5th century BCE (Marble, 121 × 98 cm · Louvre, Paris)",
   "file": "Relief of Orpheus and Eurydice (Louvre, Ma 854) (28266063496).jpg",
   "page": "https://commons.wikimedia.org/wiki/File:Relief_of_Orpheus_and_Eurydice_(Louvre,_Ma_854)_(28266063496).jpg",
   "license": "CC0",
@@ -355,7 +355,7 @@ window.CREDITS = {
   "author": ""
  },
  "h13_theseusvase": {
-  "work": "Athenian black-figure painter, Amphora with Theseus Killing the Minotaur, c. 550 BCE (Black-figure terracotta · Louvre, Paris)",
+  "work": "Group of London B 174, Amphora with Theseus Killing the Minotaur, c. 540–530 BCE (Black-figure terracotta, 42.3 cm high · Louvre, Paris)",
   "file": "Theseus Minotaur Louvre F33.jpg",
   "page": "https://commons.wikimedia.org/wiki/File:Theseus_Minotaur_Louvre_F33.jpg",
   "license": "Public domain",

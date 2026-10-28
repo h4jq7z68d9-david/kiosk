@@ -114,7 +114,7 @@ window.SOURCES = {
      "html": "Joachim Patinir, <i>Charon Crossing the Styx</i>. Museo del Prado, Madrid. Records consulted: <a href=\"https://www.museodelprado.es/en/the-collection/art-work/wd/c51349b6-049e-476c-a388-5ae6d301e8c1\" target=\"_blank\" rel=\"noopener\">museodelprado.es</a>."
     },
     {
-     "html": "Roman, after an Athenian relief, <i>Orpheus, Eurydice and Hermes</i>. Louvre, Paris. Records consulted: <a href=\"https://ancientrome.ru/art/artworken/img.htm?id=5604\" target=\"_blank\" rel=\"noopener\">ancientrome.ru</a>, <a href=\"https://digital.library.cornell.edu/catalog/ss:945882\" target=\"_blank\" rel=\"noopener\">digital.library.cornell.edu</a>."
+     "html": "Roman, after an Athenian relief, <i>Orpheus, Eurydice and Hermes</i>. Louvre, Paris. Records consulted: <a href=\"https://collections.louvre.fr/en/ark:/53355/cl010279151\" target=\"_blank\" rel=\"noopener\">collections.louvre.fr</a>, <a href=\"https://ancientrome.ru/art/artworken/img.htm?id=5604\" target=\"_blank\" rel=\"noopener\">ancientrome.ru</a>, <a href=\"https://digital.library.cornell.edu/catalog/ss:945882\" target=\"_blank\" rel=\"noopener\">digital.library.cornell.edu</a>."
     },
     {
      "html": "Camille Corot, <i>Orpheus Leading Eurydice from the Underworld</i>. Museum of Fine Arts, Houston. Records consulted: <a href=\"https://emuseum.mfah.org/objects/11407\" target=\"_blank\" rel=\"noopener\">emuseum.mfah.org</a>."
@@ -141,7 +141,7 @@ window.SOURCES = {
      "html": "Euphronios, <i>Krater with Heracles Wrestling Antaeus</i>. Louvre, Paris. Records consulted: <a href=\"https://collections.louvre.fr/en/ark:/53355/cl010269994\" target=\"_blank\" rel=\"noopener\">collections.louvre.fr</a>, <a href=\"https://www.louvre.fr/en/exhibitions-and-events/exhibitions/olympism/highlights/at-the-heart-of-a-merciless-struggle\" target=\"_blank\" rel=\"noopener\">louvre.fr</a>."
     },
     {
-     "html": "Athenian black-figure painter, <i>Amphora with Theseus Killing the Minotaur</i>. Louvre, Paris. Records consulted: <a href=\"https://www.theoi.com/Gallery/T34.6.html\" target=\"_blank\" rel=\"noopener\">theoi.com</a>."
+     "html": "Group of London B 174, <i>Amphora with Theseus Killing the Minotaur</i>. Louvre, Paris. Records consulted: <a href=\"https://collections.louvre.fr/en/ark:/53355/cl010269741\" target=\"_blank\" rel=\"noopener\">collections.louvre.fr</a>, <a href=\"https://www.theoi.com/Gallery/T34.6.html\" target=\"_blank\" rel=\"noopener\">theoi.com</a>."
     },
     {
      "html": "After Pieter Bruegel the Elder, <i>Landscape with the Fall of Icarus</i>. Royal Museums of Fine Arts of Belgium, Brussels. Records consulted: <a href=\"https://artsandculture.google.com/asset/landscape-with-the-fall-of-icarus/6gGkgMwPyiEqUQ?hl=en\" target=\"_blank\" rel=\"noopener\">artsandculture.google.com</a>, <a href=\"https://www.codart.nl/research-study/quot-landscape-with-the-fall\" target=\"_blank\" rel=\"noopener\">codart.nl</a>, <a href=\"https://www.lalibre.be/culture/arts/2011/11/09/la-chute-dicare-nest-pas-un-original-de-bruegel-3LZD2JV5QNFR7CVLMJ4POLCRII/\" target=\"_blank\" rel=\"noopener\">lalibre.be</a>."
