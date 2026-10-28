@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Theory — David Nicholson</title>
-<meta name="description" content="An interactive color wheel and color theory study deck by David Nicholson — explore hue relationships, then test yourself with the flashcards.">
-<meta property="og:title" content="Color Theory — David Nicholson">
-<meta property="og:description" content="An interactive color wheel and study deck for color relationships and the science behind them.">
+<title>Color Wheel — David Nicholson</title>
+<meta name="description" content="An interactive red–yellow–blue color wheel by David Nicholson: harmonies, tints and shades, temperature, and paint mixing.">
+<meta property="og:title" content="Color Wheel — David Nicholson">
+<meta property="og:description" content="An interactive color wheel for color relationships, value, temperature and paint mixing.">
 <meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
-<meta property="og:url" content="https://davidnicholsonart.com/study/color-theory.html">
-<link rel="canonical" href="https://davidnicholsonart.com/study/color-theory.html">
+<meta property="og:url" content="https://davidnicholsonart.com/study/color-wheel.html">
+<link rel="canonical" href="https://davidnicholsonart.com/study/color-wheel.html">
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FL5BKJFVXF"></script>
@@ -80,10 +80,6 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
 .lead p { font-size: 16px; font-weight: 300; line-height: 1.8; color: var(--ink2); margin-top: 18px; }
 
 /* section toggle */
-.ct-toggle { display: flex; justify-content: center; gap: 8px; margin: 28px auto 0; }
-.ct-toggle-btn { font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: lowercase; cursor: pointer; border: 1.5px solid var(--border-mid); background: #fff; color: var(--ink2); border-radius: 999px; padding: 10px 22px; transition: background 0.15s, border-color 0.15s, color 0.15s; }
-.ct-toggle-btn:hover { border-color: var(--accent); color: var(--accent-ink); }
-.ct-toggle-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 /* deck frame */
 .deck-wrap { width: 100%; max-width: 880px; margin: 20px auto 8px; padding: 0 20px; }
@@ -228,7 +224,6 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   .show-title { font-size: 24px; }
   .deck-wrap { padding: 0 12px; margin-top: 16px; }
   .deck { height: 860px; min-height: 860px; border-radius: 10px; }
-  .ct-toggle-btn { padding: 9px 16px; font-size: 12px; }
   footer { padding: 48px 20px 40px; }
 }
 
@@ -276,12 +271,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 
 <main>
   <div class="lead">
-    <h1 class="show-title">color theory</h1>
-  </div>
-
-  <div class="ct-toggle">
-    <button class="ct-toggle-btn active" id="ct-wheel-btn" onclick="ctShow('wheel')">color wheel</button>
-    <button class="ct-toggle-btn" id="ct-cards-btn" onclick="ctShow('cards')">flashcards</button>
+    <h1 class="show-title">color wheel</h1>
   </div>
 
   <div class="deck-wrap" id="ct-wheel-wrap">
@@ -316,14 +306,11 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 
   <div class="wheel-footer">
     <div class="tool-note">Drag the needle around the wheel — or tap any hue directly — to see relationships, value, and temperature update live.</div>
+    <div class="tool-note">For the ideas behind the wheel, see the short course <a href="/study/color-theory.html">Color Theory</a>.</div>
     <div class="tool-note">Mixes are computed from measured pigment data adapted from <a href="https://github.com/miciwan/PaintMixing" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">PaintMixing</a> by miciwan, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">CC BY 4.0</a>.</div>
   </div>
   </div>
 
-  </div>
-
-  <div class="deck-wrap hidden" id="ct-cards-wrap">
-    <iframe class="deck" id="ct-cards-frame" title="color theory study deck" loading="lazy"></iframe>
   </div>
 </main>
 
@@ -375,21 +362,6 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   el.classList.toggle('on', n > 0);
 })();
 
-/* color wheel / flashcards toggle — wheel loads eagerly (it's the default
-   view now); flashcards iframe loads lazily on first switch to it */
-function ctShow(which) {
-  document.getElementById('ct-wheel-btn').classList.toggle('active', which === 'wheel');
-  document.getElementById('ct-cards-btn').classList.toggle('active', which === 'cards');
-  document.getElementById('ct-wheel-wrap').classList.toggle('hidden', which !== 'wheel');
-  document.getElementById('ct-cards-wrap').classList.toggle('hidden', which !== 'cards');
-  if (which === 'cards') {
-    var frame = document.getElementById('ct-cards-frame');
-    if (!frame.src) frame.src = '/study/color-theory-app.html';
-  }
-}
-// /study/color-theory.html#flashcards opens straight onto the deck (linked from /study.html)
-if (location.hash === '#flashcards') ctShow('cards');
-
 /* Inlined color wheel app (formerly a same-origin iframe to
    /color-wheel-app.html, which is now retired — this is the only copy).
    The iframe was originally there because this app has its own
@@ -401,9 +373,7 @@ if (location.hash === '#flashcards') ctShow('cards');
    height measuring, no ResizeObserver loop, no double-scroll, and no
    iOS quirk where resizing an <iframe> eats the next tap inside it —
    this is now just normal page content, sized and scrolled the same way
-   as everything else on the page. Showing/hiding between the Wheel and
-   Cards tabs (ctShow above) is a plain CSS class toggle now, same as any
-   other section on the page. */
+   as everything else on the page. */
 // Wrapped in an IIFE now that this runs in the same document as
 // color-theory.html's own script, instead of its own isolated iframe
 // document — every top-level function/const/let below (including the $
