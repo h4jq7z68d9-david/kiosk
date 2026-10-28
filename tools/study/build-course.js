@@ -13,7 +13,14 @@
      introImg        required: image key (usually a work key) shown on the start page — every course starts with an image
      ldDescription, homeDescription, creditsIntro, creditsDescription, sourcesDescription
      imgFrom         optional: read images from another course's img/ folder
+     basePath        optional: folder the course lives in (default /study/art-history; a technique course can use /study)
+     themeLabel      optional: name for theme-layout pages (default Theme; a technique course uses Concept)
+     subjLabel       optional: heading over a work page's subj text (default The subject; "" = no heading)
+     imagesNote      optional: the start page's line about image rights (default: every image is public domain or CC0)
+   Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
+   (this page's own label in place of themeLabel, e.g. History).
 
+   Paths below use the default basePath.
    Reads   study/art-history/<slug>/{<dataFiles>,credits.js,sources.js (optional)}
            study/art-history/<slug>/img/<key>.jpg                      (for width/height)
    Writes  study/art-history/<slug>.html                                course home = the start page
@@ -41,16 +48,20 @@ const CFG_FILE = path.join(__dirname, 'courses', SLUG + '.json');
 if (!fs.existsSync(CFG_FILE)) { console.error('no settings file: ' + CFG_FILE); process.exit(1); }
 const CFG = JSON.parse(fs.readFileSync(CFG_FILE, 'utf8'));
 for (const k of ['name', 'dataFiles', 'introImg']) if (!CFG[k]) throw new Error(`${CFG_FILE}: missing "${k}"`);
-const COURSE = '/study/art-history/' + SLUG;
+const BASE = (CFG.basePath || '/study/art-history').replace(/\/$/, '');
+if (!/^\/study(\/[a-z0-9-]+)*$/.test(BASE)) throw new Error(`${CFG_FILE}: basePath must be /study or a folder under it`);
+const COURSE = BASE + '/' + SLUG;
 const DIR = path.join(ROOT, COURSE);
-const IMG_COURSE = '/study/art-history/' + (CFG.imgFrom || SLUG);
+const IMG_COURSE = BASE + '/' + (CFG.imgFrom || SLUG);
+const THEME = CFG.themeLabel || 'Theme';
+const SUBJ = CFG.subjLabel == null ? 'The subject' : CFG.subjLabel;
 const IMG_DIR = path.join(ROOT, IMG_COURSE, 'img');
 const NAME = CFG.name;
 const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 1, bar: 1, guideCss: 4, guideJs: 2 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 1, bar: 1, guideCss: 4, guideJs: 3 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -133,12 +144,12 @@ const themesOf = (key) => flat.filter((t) => t.kind === 'theme' && (t.d.works ||
 function slideHtml(f) {
   const d = f.d;
   if (f.kind === 'intro') {
-    const p1 = CFG.intro || 'Each page pairs one work of art with a short account of what it shows, how and why it was made, and the key names and terms.' + (HAS_THEMES ? ' Theme pages step back to the bigger ideas that connect the works.' : '');
+    const p1 = CFG.intro || 'Each page pairs one work of art with a short account of what it shows, how and why it was made, and the key names and terms.' + (HAS_THEMES ? ` ${THEME} pages step back to the bigger ideas that connect the works.` : '');
     const ik = CFG.introImg, iw = ik && byKey[ik] != null ? flat[byKey[ik]].d : null;   // optional start-page image: a work key
     if (ik && !C[ik]) throw new Error(`introImg "${ik}" has no credits entry`);
     return [ik ? 'slide' : 'slide text', (ik ? pic(ik, iw ? iw.title : ik, iw ? cap(iw) : esc(C[ik].work)) : '') + `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>${RULE}
 <p class="sum">${esc(p1)}</p>
-<ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move between pages.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a page, and Saved (top right) to find your saved pages again.</li><li>Every image is public domain or CC0; sources and licenses are listed under Image credits.</li></ul>
+<ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move between pages.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a page, and Saved (top right) to find your saved pages again.</li><li>${esc(CFG.imagesNote || 'Every image is public domain or CC0; sources and licenses are listed under Image credits.')}</li></ul>
 <p class="contlink" id="contlink" hidden></p>
 <p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul>${ik ? crl(ik) : ''}</div>`];
   }
@@ -150,18 +161,18 @@ function slideHtml(f) {
   }
   if (f.kind === 'work') {
     const th = themesOf(d.key);
-    const tail = (th.length ? `<p class="lab">Themes</p><ul class="wl">${th.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.d.title)}</a></li>`).join('')}</ul>` : '') + crl(d.key);
+    const tail = (th.length ? `<p class="lab">${esc(THEME)}s</p><ul class="wl">${th.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.d.title)}</a></li>`).join('')}</ul>` : '') + crl(d.key);
     const head = `<p class="eyebrow">${esc(sec(f.hd.wk))}</p>${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}`;
     if (d.lead) {   // artwork-first format: lead paragraph, bullets, then the subject
       return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
-<p class="sum">${esc(d.lead)}</p>${bul(d.bul)}${d.subj ? RULE + `<p class="lab">The subject</p><p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${tail}</div>`];
+<p class="sum">${esc(d.lead)}</p>${bul(d.bul)}${d.subj ? RULE + (SUBJ ? `<p class="lab">${esc(SUBJ)}</p>` : '') + `<p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${tail}</div>`];
     }
     return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
 <p class="fn"><b>Made for:</b> ${esc(d.fn)}</p><p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}${quote(d.quote)}${tail}</div>`];
   }
   if (f.kind === 'theme') {
     const w = byKey[d.img] != null ? cap(flat[byKey[d.img]].d) : (C[d.img] ? esc(C[d.img].work) : '');
-    return ['slide', pic(d.img, d.title, w) + `<div class="notes"><p class="eyebrow">Theme · ${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="sum">${esc(d.para)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}
+    return ['slide', pic(d.img, d.alt || d.title, w) + `<div class="notes"><p class="eyebrow">${esc(d.label || THEME)} · ${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="sum">${esc(d.para)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}
 ${d.works && d.works.length ? `<p class="lab">See</p>${wl(d.works)}` : ''}${quote(d.quote)}${crl(d.img)}</div>`];
   }
   if (f.kind === 'text') {
@@ -195,9 +206,9 @@ function textOf(f) {
 }
 const thumb = (f) => (f.kind === 'work' ? f.d.key : f.kind === 'theme' ? f.d.img : f.kind === 'overview' ? f.d.overview.img : null);
 const GUIDE = {
-  slug: SLUG, name: NAME, img: IMG_COURSE + '/img/',
+  slug: SLUG, name: NAME, img: IMG_COURSE + '/img/', themeLabel: THEME,
   parts: S.handouts.map((h) => ({ h: h.n, title: h.title, section: sec(h.wk) })),
-  items: flat.map((f) => ({ id: f.id, url: f.url, h: f.h, kind: f.kind, label: f.label, title: (f.d && f.d.title) || f.label, artist: (f.d && f.d.artist) || '', thumb: thumb(f), text: textOf(f) })),
+  items: flat.map((f) => ({ id: f.id, url: f.url, h: f.h, kind: f.kind, label: f.label, tlabel: (f.kind === 'theme' && f.d.label) || undefined, title: (f.d && f.d.title) || f.label, artist: (f.d && f.d.artist) || '', thumb: thumb(f), text: textOf(f) })),
 };
 
 /* ---------- SEO: title, description, image and JSON-LD per page ---------- */
@@ -240,7 +251,7 @@ function meta(f) {
   if (f.kind === 'theme' || f.kind === 'text') {
     const cr = [...base, [f.hd.title, f.part.url], [d.title, f.url]];
     const text = f.kind === 'theme' ? d.para : d.sum, im = f.kind === 'theme' ? d.img : f.hd.overview.img;
-    return { title: `${d.title} – ${NAME}`, desc: describe(text), image: im, alt: f.kind === 'theme' ? d.title : f.hd.overview.cap[1], type: 'article',
+    return { title: `${d.title} – ${NAME}`, desc: describe(text), image: im, alt: f.kind === 'theme' ? (d.alt || d.title) : f.hd.overview.cap[1], type: 'article',
       ld: [{ '@type': 'LearningResource', '@id': abs(f.url), url: abs(f.url), name: d.title, description: describe(text), inLanguage: 'en',
         learningResourceType: 'Study guide', isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(im) }, crumbLd(cr)] };
   }
