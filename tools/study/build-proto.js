@@ -120,7 +120,7 @@ flat.forEach((f, i) => {
 <meta name="robots" content="noindex">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon96.png">
 ${FONTS}
 <link rel="stylesheet" href="/site-tokens.css?v=1">

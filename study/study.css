@@ -6,8 +6,6 @@
 :root {
   --key: #a4482a;           /* Greek-key divider, the one accent kept from the original guide */
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --key: #e08a62; } }
-:root[data-theme="dark"] { --key: #e08a62; }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
