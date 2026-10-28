@@ -597,6 +597,14 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 28 2026, later) — phone fixes for every study page (deployed Oct 28 2026; David confirmed on iPhone)
+
+**Prev/Next took several taps after scrolling on iPhone** (one tap before any scroll). The Oct 27 change (scroll inside `<body>` so Safari's toolbar can't shrink) had fixed the toolbar but left the Prev/Next bar `position:fixed` inside the scrolling `<body>`; after a scroll, Safari mis-registers taps on a fixed element inside a scrolled container. **Fix (run 40750171338):** at ≤900 px, `html` and `body` don't scroll at all; `.app` is the scroller; `study/guide.js` moves `.main > .bar` out of `.app` to sit under it as a plain row (`position:relative`, not fixed), and moves it back above 900 px. Toolbar still never shrinks. **Rule: on phones, never put a fixed or tappable bottom bar inside the scrolling element, and never let the document or `<body>` scroll on study pages.**
+
+**Phone page menu** (`#jump`): each part's first page is now listed under the part name instead of "Overview" (run 40751219501). Desktop outline and bottom bar unchanged.
+
+Cache: `guide.css` v5, `guide.js` v5 (`V` in `build-course.js`); all three courses rebuilt (cache strings only). Tested in Chromium with touch at 390 / 820 / 1440 px; David confirmed the tap fix and menu on his iPhone.
+
 ## Completed This Session (October 28 2026, afternoon) — Color Theory course (deployed Oct 28 2026)
 
 **Color Theory** course at `/study/color-theory.html`, built by the art-technique course builder (iCloud `School v2/Art Technique Course Builder/Color Theory/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). 8 parts in 3 sections (Foundations, Relationships, Color in painting); 66 pages: concept pages (original diagrams), four history pages, and example pages (public-domain or openly licensed paintings). Data: `study/color-theory/data.js`, `credits.js`, `sources.js`, `img/` (57 images, ~9 MB). Settings: `tools/study/courses/color-theory.json` (`basePath: /study`, `themeLabel: Concept`, `subjLabel: ""`, `imagesNote`, `introImg: ct-complementary`).
@@ -636,7 +644,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 **Fix after deploy:** the Greek-key divider had collapsed to 0 px on desktop two-column slides (flex shrink); `guide.css` now sets `.rule{flex:none}`.
 
-**Tested (headless Chromium, 1440 / 820 / 390 px, 77 checks):** search, outline highlight and hide, arrow keys, swipe, Prev/Next, bar pinned at bottom on phones, jump menu, Bookmark → Saved from another page → open → reload → remove, Continue link, lightbox, site menu, every image on all 70 pages, no horizontal scroll, no console errors, no 4xx; all 688 data fields present on their pages; unique titles/descriptions; JSON-LD parses; every sitemap URL exists; a throwaway second course built with nothing Classical-Myth-specific (removed). Not tested: real Jost (blocked in sandbox).
+**Tested (headless Chromium, 1440 / 820 / 390 px, 77 checks):** search, outline highlight and hide, arrow keys, swipe, Prev/Next, bar pinned at bottom on phones (replaced Oct 28 2026: bar sits under the scrolling `.app`), jump menu, Bookmark → Saved from another page → open → reload → remove, Continue link, lightbox, site menu, every image on all 70 pages, no horizontal scroll, no console errors, no 4xx; all 688 data fields present on their pages; unique titles/descriptions; JSON-LD parses; every sitemap URL exists; a throwaway second course built with nothing Classical-Myth-specific (removed). Not tested: real Jost (blocked in sandbox).
 
 -----
 
