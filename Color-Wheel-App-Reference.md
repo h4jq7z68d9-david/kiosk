@@ -1,3 +1,4 @@
+> **Moved Oct 28 2026:** the wheel now lives in `study/color-wheel.html` (flashcards retired; `study/color-theory.html` is now the Color Theory course). References below to `color-theory.html` mean `study/color-wheel.html`.
 > **Moved Oct 26 2026:** both files now live under `study/` — `study/color-theory.html` and `study/color-theory-app.html`. The root URLs are redirect stubs. References below to `color-theory.html` mean `study/color-theory.html`.
 
 # Color Wheel App — Architecture & Design Reference

@@ -14,9 +14,9 @@
 |<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal                                   |
 |<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)                              |
 |<https://davidnicholsonart.com/study.html>          |Study landing page — cards grouped by color and art history; menu item "study"               |
-|<https://davidnicholsonart.com/study/color-theory.html>|Color wheel + flashcards (moved from /color-theory.html, Oct 26 2026); `#flashcards` opens the deck|
-|<https://davidnicholsonart.com/study/color-theory-app.html>|The deck app itself — noindex; viewed inside study/color-theory.html                    |
-|<https://davidnicholsonart.com/color-theory.html>   |Redirect stub → /study/color-theory.html (noindex; keeps old links and installed web app working)|
+|<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel (Oct 28 2026: moved from study/color-theory.html; flashcards tab removed). Home-screen web app `start_url`|
+|<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards|
+|<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (condensed, Oct 27 2026: 60 works, 7 modules) — start page of the guide; every slide is its own indexable page under /study/art-history/classical-myth/ (70 pages), all in the guide layout (outline, search, Saved, Prev/Next, swipe)|
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
 |<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                                                       |
@@ -510,6 +510,8 @@ Standalone expenses/revenue page for David's sister Jill (counseling practice, s
 
 ### color-theory.html + color-theory-app.html (color theory study deck)
 
+> **Superseded Oct 28 2026:** the flashcard deck is retired (both `color-theory-app.html` files are redirects to the course) and the wheel now lives at `study/color-wheel.html`. `study/color-theory.html` is the generated Color Theory course home. The notes below are history.
+
 Public study deck for color relationships and color science — supports the painting practice and gives fair visitors something to play with.
 
 **Two-file split (intentional):**
@@ -594,6 +596,18 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
 
 -----
+
+## Completed This Session (October 28 2026, afternoon) — Color Theory course (deployed Oct 28 2026)
+
+**Color Theory** course at `/study/color-theory.html`, built by the art-technique course builder (iCloud `School v2/Art Technique Course Builder/Color Theory/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). 8 parts in 3 sections (Foundations, Relationships, Color in painting); 66 pages: concept pages (original diagrams), four history pages, and example pages (public-domain or openly licensed paintings). Data: `study/color-theory/data.js`, `credits.js`, `sources.js`, `img/` (57 images, ~9 MB). Settings: `tools/study/courses/color-theory.json` (`basePath: /study`, `themeLabel: Concept`, `subjLabel: ""`, `imagesNote`, `introImg: ct-complementary`).
+
+**Generator (`generator-changes.patch`, David approved):** optional settings `basePath`, `themeLabel`, `subjLabel`, `imagesNote`; theme slides accept `alt` and `label`; `study/guide.js` shows the theme label in outline and search; `guideJs` cache 3. Classical Myth and Impressionism rebuilt: HTML changed only cache strings; their `index.js` gained `"themeLabel":"Theme"`.
+
+**Color wheel** moved to `study/color-wheel.html` (supplied page: flashcards tab, iframe and `ctShow` removed; links to the course). `color-theory.webmanifest`: `start_url` `/study/color-wheel.html`, description "An interactive color wheel by David Nicholson." Home-screen installs made earlier open the course until re-added. **Flashcards retired:** root and `study/` `color-theory-app.html` redirect to the course. `study.html` color group: wheel card → `/study/color-wheel.html`; course card (thumbnail `ct-complementary.jpg`); JSON-LD `hasPart` updated. Sitemap: 216 URLs.
+
+**Tested (headless Chromium, 1440 / 390 px):** 216 study pages — no broken local links/images, JSON-LD parses, no label/bar repeats; course start, overview, concept, history, example pages and the wheel — no console errors, no 4xx, no horizontal scroll; outline and search show Concept/History; arrow keys; the three redirects land on the course.
+
+**Open:** concept and history page URLs keep the generator's `theme-` prefix (e.g. `/study/color-theory/foundations/theme-newton-splits-white-light.html`) — published that way, so changing it now means new URLs. `study.html` meta description still mentions "color theory flashcards". Branches `mix-percentages` and `spectral-mix-toggle` edit the old wheel file — retarget to `study/color-wheel.html` before merging. Delete remote branch `course/color-theory` (superseded).
 
 ## Completed This Session (October 28 2026) — Impressionism study section (deployed Oct 28 2026, run 40690321923)
 
@@ -876,7 +890,7 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 - [ ] **Move the main-site pages onto `site-tokens.css`** (David, Oct 26 2026). Today each main page carries its own `:root` colors inline; the study pages already read `site-tokens.css` (light only). Swap each page's inline token block for the shared file and check each page looks unchanged. After that, a site-wide color or font change is one edit. (Dark mode for the main site was dropped Oct 27 2026 — David changed his mind.)
 - [ ] **Move the main-site pages onto the shared top bar** (`<nav data-chrome-nav>` + `site-bar.js`), one page at a time. Index and gallery have their own bar variants (index pill + easter egg; gallery cart button opens the cart) — decide how the shared bar handles those first.
 - [ ] **Review the Google Analytics setup, and walk David through what GA can tell him** (added Oct 26 2026). Check that every public page (including the new study pages) reports to `G-FL5BKJFVXF`, that the stream and Search Console link are healthy, then a short guided tour: traffic sources, which pages and prints get looked at, art-fair QR scans, and whether ad clicks show up. Teach-as-you-go, not a report.
-- [ ] **Resubmit `sitemap.xml` in Google Search Console** (study section went live Oct 26 2026; replaced by the condensed Classical Myth Oct 27 2026 — the sitemap listed 77 URLs; 150 since Impressionism was added Oct 28 2026). After the Oct 27 deploy, spot-check on a phone: course home, one work page, Saved panel, search. Post-deploy checks already passed on the live site: shared bar/menu/footer on index, gallery and study pages; gallery prints load; `/color-theory.html` redirects; `#flashcards` opens the deck; course-home search; work-page pager; Jost loads.
+- [ ] **Resubmit `sitemap.xml` in Google Search Console** (study section went live Oct 26 2026; replaced by the condensed Classical Myth Oct 27 2026 — the sitemap listed 77 URLs; 150 after Impressionism and 216 after Color Theory, both Oct 28 2026). After the Oct 27 deploy, spot-check on a phone: course home, one work page, Saved panel, search. Post-deploy checks already passed on the live site: shared bar/menu/footer on index, gallery and study pages; gallery prints load; `/color-theory.html` redirects; `#flashcards` opens the deck; course-home search; work-page pager; Jost loads.
 - [x] **Study generator generalized + one layout** — done and deployed Oct 27 2026; see that session above.
 - [ ] **Next art-history courses** (Impressionism done Oct 28 2026; next Renaissance, Baroque…): each is a data folder `study/art-history/<slug>/` (data files, `credits.js`, optional `sources.js`, `img/`) + a settings file in `tools/study/courses/` + one card on `study.html`. Run `node tools/study/build-course.js <slug>`. No viewer file needed.
 - [ ] **Optional: delete the 114 unused images** in `study/art-history/classical-myth/img/` (only 60 are used since Oct 27 2026; ~20 MB).
@@ -1276,7 +1290,7 @@ New standalone page for pre-fair layout planning. Noindex, linked from admin top
 
 ## Key Principles
 
-- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. As of August 2026 the wheel is inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the mixing engine (measured-pigment Kubelka-Munk since October 22 2026 — spectral.js was used briefly that day and replaced; black stays on the hand-tuned model), the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
+- **Color wheel app has its own reference doc** — `Color-Wheel-App-Reference.md` at repo root. Read it before touching the wheel code. Since Oct 28 2026 the wheel lives in `study/color-wheel.html`; as of August 2026 it was inlined directly into `color-theory.html` (no more standalone `color-wheel-app.html`, no iframe — retired after a chain of mobile bugs the iframe architecture kept causing; see the reference doc's "Where this lives" section). Covers the mixing engine (measured-pigment Kubelka-Munk since October 22 2026 — spectral.js was used briefly that day and replaced; black stays on the hand-tuned model), the adaptive black-tinting model, and the naming system — a lot of non-obvious constants in that file exist for researched, specific reasons.
 
 - **ACM certs for CloudFront must be in us-east-1** — any other region silently fails
 - **HTML structure** — pages are single-file today with no framework or build pipeline; that is history, not a constraint (David, October 2 2026). Prefer simple shared files over copy-pasting the same block into many pages. Still no need for a framework.
