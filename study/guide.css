@@ -190,3 +190,4 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .pic img{width:auto;height:auto}
 .guide-page .eyebrow a{color:inherit;text-decoration:none}
 .guide-page .eyebrow a:hover{color:var(--accent-ink);text-decoration:underline}
+.guide-page .rule{flex:none}   /* keep the divider from collapsing in the fixed-height notes column */

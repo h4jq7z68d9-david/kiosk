@@ -10,6 +10,7 @@
      dataFiles       data files in study/art-history/<slug>/, in order (required)
      greekKey        true = Greek-key divider (Classical Myth); otherwise a plain rule
      intro           optional: the start page's first paragraph
+     introImg        optional: image key (usually a work key) shown on the start page
      ldDescription, homeDescription, creditsIntro, creditsDescription, sourcesDescription
      imgFrom         optional: read images from another course's img/ folder
 
@@ -49,7 +50,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 1, bar: 1, guideCss: 2, guideJs: 2 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 1, bar: 1, guideCss: 3, guideJs: 2 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -133,11 +134,13 @@ function slideHtml(f) {
   const d = f.d;
   if (f.kind === 'intro') {
     const p1 = CFG.intro || 'Each page pairs one work of art with a short account of what it shows, how and why it was made, and the key names and terms.' + (HAS_THEMES ? ' Theme pages step back to the bigger ideas that connect the works.' : '');
-    return ['slide text', `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>${RULE}
+    const ik = CFG.introImg, iw = ik && byKey[ik] != null ? flat[byKey[ik]].d : null;   // optional start-page image: a work key
+    if (ik && !C[ik]) throw new Error(`introImg "${ik}" has no credits entry`);
+    return [ik ? 'slide' : 'slide text', (ik ? pic(ik, iw ? iw.title : ik, iw ? cap(iw) : esc(C[ik].work)) : '') + `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>${RULE}
 <p class="sum">${esc(p1)}</p>
 <ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move between pages.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a page, and Saved (top right) to find your saved pages again.</li><li>Every image is public domain or CC0; sources and licenses are listed under Image credits.</li></ul>
 <p class="contlink" id="contlink" hidden></p>
-<p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul></div>`];
+<p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul>${ik ? crl(ik) : ''}</div>`];
   }
   if (f.kind === 'overview') {
     const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');

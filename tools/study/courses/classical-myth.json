@@ -2,6 +2,7 @@
   "name": "Classical Myth in Art",
   "dataFiles": ["data.js", "data_m2.js", "data_m3.js", "data_m4.js", "data_m5.js", "data_m6.js"],
   "greekKey": true,
+  "introImg": "h1_persephone",
   "homeDescription": "A study guide to Greek and Roman myth in art: sixty paintings, sculptures and vases, each with the story of the object itself and the myth it shows.",
   "ldDescription": "Greek and Roman myths told through sixty paintings, sculptures and vases, each with the story of the object itself.",
   "sourcesDescription": "The museum records, catalogues and references behind {name}.",
