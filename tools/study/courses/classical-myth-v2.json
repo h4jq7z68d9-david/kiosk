@@ -1,8 +1,0 @@
-{
-  "name": "Classical Myth in Art",
-  "dataFiles": ["data.js", "data_m2.js", "data_m3.js", "data_m4.js", "data_m5.js", "data_m6.js"],
-  "imgFrom": "classical-myth",
-  "greekKey": true,
-  "ldDescription": "Greek and Roman myths told through sixty paintings, sculptures and vases, each with the story of the object itself.",
-  "creditsIntro": "All images come from Wikimedia Commons and are marked public domain or CC0 there. Many are museum open-access files; the rest are photographs or reproductions their authors released into the public domain. Follow each link for the file’s full record."
-}

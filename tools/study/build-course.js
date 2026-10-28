@@ -1,25 +1,32 @@
 #!/usr/bin/env node
-/* Builds the static pages for one art history study course from its data files.
+/* Builds one art history study course: one real, indexable page per slide, all in the guide's layout.
 
    Run from the repo root:   node tools/study/build-course.js <course-slug>
    (node tools/study/build-classical-myth.js still works; it runs this with classical-myth.)
-   Re-run after editing any of the data files; it rewrites every generated page.
+   Re-run after editing any data file; it rewrites every generated page.
 
-   Course settings live in tools/study/courses/<course-slug>.json (see classical-myth.json).
+   Settings: tools/study/courses/<course-slug>.json
+     name            course name (required)
+     dataFiles       data files in study/art-history/<slug>/, in order (required)
+     greekKey        true = Greek-key divider (Classical Myth); otherwise a plain rule
+     intro           optional: the start page's first paragraph
+     ldDescription, homeDescription, creditsIntro, creditsDescription, sourcesDescription
+     imgFrom         optional: read images from another course's img/ folder
 
-   Reads   study/art-history/<slug>/{<dataFiles from the settings>,credits.js,sources.js}
-           study/art-history/<slug>/img/<key>.jpg           (for width/height)
-           tools/study/<viewer from the settings>           the course's one-page guide (layout and script kept)
-   Writes  study/art-history/<slug>.html                    course home = the one-page guide (from the viewer above)
-           study/art-history/<slug>/<section>/<part>.html   one page per part
-           study/art-history/<slug>/<section>/<work>.html   one page per work
-           study/art-history/<slug>/{credits,sources}.html
-           sitemap.xml                                      replaces this course's block (between its comment markers)
+   Reads   study/art-history/<slug>/{<dataFiles>,credits.js,sources.js (optional)}
+           study/art-history/<slug>/img/<key>.jpg                      (for width/height)
+   Writes  study/art-history/<slug>.html                                course home = the start page
+           study/art-history/<slug>/<section>/<part>.html               part overview
+           study/art-history/<slug>/<section>/<work>.html               one page per work
+           study/art-history/<slug>/<section>/{theme,note}-<title>.html one page per theme / text slide
+           study/art-history/<slug>/{sources,credits}.html
+           study/art-history/<slug>/index.js                            outline + search index (read by /study/guide.js)
+           sitemap.xml                                                  replaces this course's block
 
-   Content is never rewritten here: every title, summary, bullet, term and quote comes
-   straight from the data files. Only page structure, links and SEO tags are added.
-   Look: site colors and fonts from /site-tokens.css, top bar from /site-bar.js, menu and
-   footer links from /site-chrome.js, page styles from /study/study.css. */
+   Content is never rewritten here: every title, paragraph, bullet, term and quote comes straight
+   from the data files. Pages carry no <style> block and no color or font literals: layout is
+   /study/guide.css, behavior /study/guide.js, colors and fonts /site-tokens.css, top bar
+   /site-bar.js, menu /site-chrome.js. One edit to those files restyles every course. */
 
 const fs = require('fs');
 const path = require('path');
@@ -32,36 +39,35 @@ if (!SLUG || !/^[a-z0-9-]+$/.test(SLUG)) { console.error('usage: node tools/stud
 const CFG_FILE = path.join(__dirname, 'courses', SLUG + '.json');
 if (!fs.existsSync(CFG_FILE)) { console.error('no settings file: ' + CFG_FILE); process.exit(1); }
 const CFG = JSON.parse(fs.readFileSync(CFG_FILE, 'utf8'));
-for (const k of ['name', 'viewer', 'dataFiles']) if (!CFG[k]) throw new Error(`${CFG_FILE}: missing "${k}"`);
+for (const k of ['name', 'dataFiles']) if (!CFG[k]) throw new Error(`${CFG_FILE}: missing "${k}"`);
 const COURSE = '/study/art-history/' + SLUG;
 const DIR = path.join(ROOT, COURSE);
+const IMG_COURSE = '/study/art-history/' + (CFG.imgFrom || SLUG);
+const IMG_DIR = path.join(ROOT, IMG_COURSE, 'img');
 const NAME = CFG.name;
 const STUDY = '/study.html';
+const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
-const DEFAULT_SOURCE = 'Wikimedia Commons';
-const srcOf = (c) => (c && c.source) || DEFAULT_SOURCE;   // an image's credits entry may name its own source, e.g. "The Met Open Access"
-const GREEK_KEY = CFG.greekKey === true;                   // Classical Myth's clay Greek-key divider is opt-in
-const DEFAULT_CREDITS_INTRO = 'Every image is public domain or CC0. Each entry below links to the file’s record with its source and license.';
-const RULE_CSS = GREEK_KEY
-  ? '.guide-page .rule{background:var(--key);opacity:.8;-webkit-mask:var(--key-mask) repeat-x left center/16px 8px;mask:var(--key-mask) repeat-x left center/16px 8px}'
-  : '.guide-page .rule{background:var(--border-mid);opacity:1;-webkit-mask:none;mask:none;height:1px}';
+const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
+const V = { tokens: 1, chrome: 1, bar: 1, guideCss: 2, guideJs: 2 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
-const ctx = { window: {} };
-vm.createContext(ctx);
+const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
 for (const f of [...CFG.dataFiles, 'credits.js', 'sources.js']) {
-  vm.runInContext(fs.readFileSync(path.join(DIR, f), 'utf8'), ctx, { filename: f });
+  const file = path.join(DIR, f);
+  if (f === 'sources.js' && !fs.existsSync(file)) continue;
+  vm.runInContext(fs.readFileSync(file, 'utf8'), ctx, { filename: f });
 }
-const S = ctx.window.SITE;
-const C = ctx.window.CREDITS || {};
-const SOURCES = ctx.window.SOURCES || { intro: '', groups: [] };
+const S = ctx.SITE;
+const C = ctx.CREDITS || {};
+const SRCS = ctx.SOURCES && ctx.SOURCES.groups && ctx.SOURCES.groups.length ? ctx.SOURCES : null;
 
 /* ---------- helpers ---------- */
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const slug = (s) => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   .replace(/[’'`]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const sec = (w) => (S.sections && S.sections[w]) || '';
-const img = (k) => `${COURSE}/img/${k}.jpg`;
+const img = (k) => `${IMG_COURSE}/img/${k}.jpg`;
 const abs = (u) => ORIGIN + u;
 
 function jpegSize(file) {
@@ -79,59 +85,170 @@ function jpegSize(file) {
   throw new Error('no size in ' + file);
 }
 const DIMS = {};
-const dims = (k) => (DIMS[k] = DIMS[k] || jpegSize(path.join(DIR, 'img', k + '.jpg')));
+const dims = (k) => (DIMS[k] = DIMS[k] || jpegSize(path.join(IMG_DIR, k + '.jpg')));
 
 function describe(text) {
-  const t = String(text).replace(/\s+/g, ' ').trim();
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
   const first = (t.match(/^.+?[.!?](?=\s|$)/) || [t])[0];
   if (first.length >= 70 && first.length <= 160) return first;
   if (t.length <= 160) return t;
   const cut = t.slice(0, 156);
   return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:–—-]$/, '') + '…';
 }
-const capOf = (s) => [s.artist && esc(s.artist), '<i>' + esc(s.title) + '</i>', s.date && esc(s.date)].filter(Boolean).join(', ');
+const LICENSE_URL = { 'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/', 'Public domain': 'https://creativecommons.org/publicdomain/mark/1.0/' };
+
+/* ---------- flatten the course into one ordered list of pages ---------- */
+const flat = [];
+flat.push({ h: 0, kind: 'intro', id: 'start', label: 'About this site', url: HOME });
+const used = new Set([HOME]);
+const claim = (u) => { if (used.has(u)) throw new Error('duplicate URL ' + u); used.add(u); return u; };
+S.handouts.forEach((h) => {
+  const secSlug = slug(sec(h.wk)) || 'part-' + h.n;
+  const part = { h: h.n, kind: 'overview', d: h, hd: h, id: `h${h.n}-0`, label: 'Overview', url: claim(`${COURSE}/${secSlug}/${slug(h.title)}.html`) };
+  flat.push(part);
+  h.slides.forEach((s, i) => {
+    const name = s.type === 'work' ? slug(s.title) : (s.type === 'theme' ? 'theme-' : 'note-') + slug(s.title);
+    flat.push({ h: h.n, kind: s.type, d: s, hd: h, part, id: s.type === 'work' ? s.key : `h${h.n}-${i + 1}`, label: s.title, url: claim(`${COURSE}/${secSlug}/${name}.html`) });
+  });
+});
+if (SRCS) flat.push({ h: 99, kind: 'sources', id: 'sources', label: 'Sources and further reading', url: claim(COURSE + '/sources.html') });
+flat.push({ h: 99, kind: 'credits', id: 'credits', label: 'Image credits', url: claim(COURSE + '/credits.html') });
+const byKey = {}; flat.forEach((f, i) => { if (f.kind === 'work') byKey[f.d.key] = i; });
+const ids = new Set(); flat.forEach((f) => { if (ids.has(f.id)) throw new Error('duplicate slide id ' + f.id); ids.add(f.id); });
+const HAS_THEMES = flat.some((f) => f.kind === 'theme');
+
+/* ---------- slide markup ---------- */
+const cap = (s) => [s.artist && esc(s.artist), '<i>' + esc(s.title) + '</i>', s.date && esc(s.date)].filter(Boolean).join(', ');
 const terms = (t) => (t && t.length ? '<dl class="terms">' + t.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('') + '</dl>' : '');
 const bul = (b) => (b && b.length ? '<ul class="b">' + b.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>' : '');
 const quote = (q) => (q ? `<blockquote><p>“${esc(q.q)}”</p><cite>${esc(q.by)}</cite></blockquote>` : '');
 const RULE = '<hr class="rule">';
 const crl = (k) => { const c = C[k]; return c ? `<p class="crl">Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(srcOf(c))}</a> · ${esc(c.license)}</p>` : ''; };
-function pic(k, alt, capHtml, eager) {
-  const d = dims(k);
-  return `<div class="pic"><img src="${img(k)}" width="${d.w}" height="${d.h}" alt="${esc(alt)}" data-cap="${esc(capHtml)}" tabindex="0"${eager ? ' fetchpriority="high"' : ' loading="lazy"'}></div>`;
-}
-const LICENSE_URL = { 'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/', 'Public domain': 'https://creativecommons.org/publicdomain/mark/1.0/' };
+const pic = (k, alt, capHtml) => { const d = dims(k); return `<div class="pic"><img src="${img(k)}" width="${d.w}" height="${d.h}" alt="${esc(alt)}" data-cap="${esc(capHtml)}" tabindex="0" fetchpriority="high"></div>`; };
+const wl = (keys) => `<ul class="wl">${keys.filter((k) => byKey[k] != null).map((k) => `<li><a class="wlink" href="${flat[byKey[k]].url}">${esc(flat[byKey[k]].d.title)}</a></li>`).join('')}</ul>`;
+const partLink = (f) => `<a href="${f.part.url}">${esc(f.hd.title)}</a>`;
+const themesOf = (key) => flat.filter((t) => t.kind === 'theme' && (t.d.works || []).includes(key));
 
-/* ---------- build the site map in memory ---------- */
-const parts = [];
-const works = [];
-const viewerIds = {};             // viewer slide id -> static page URL
-viewerIds.start = COURSE + '.html';  // ids follow the original slide numbering (h<part>-<n>); used by search
-viewerIds.credits = COURSE + '/credits.html';
-viewerIds.sources = COURSE + '/sources.html';
-S.handouts.forEach((h) => {
-  const secSlug = slug(sec(h.wk));
-  const p = { h, secSlug, url: `${COURSE}/${secSlug}/${slug(h.title)}.html`, id: `h${h.n}-0`, items: [] };
-  viewerIds[p.id] = p.url;
-  h.slides.forEach((s, i) => {
-    const id = `h${h.n}-${i + 1}`;
-    const it = { s, id, part: p };
-    if (s.type === 'work') {
-      it.url = `${COURSE}/${secSlug}/${slug(s.title)}.html`;
-      works.push(it);
-    } else {
-      it.anchor = (s.type === 'theme' ? 'theme-' : 'note-') + slug(s.title);
-      it.url = p.url + '#' + it.anchor;
+function slideHtml(f) {
+  const d = f.d;
+  if (f.kind === 'intro') {
+    const p1 = CFG.intro || 'Each page pairs one work of art with a short account of what it shows, how and why it was made, and the key names and terms.' + (HAS_THEMES ? ' Theme pages step back to the bigger ideas that connect the works.' : '');
+    return ['slide text', `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>${RULE}
+<p class="sum">${esc(p1)}</p>
+<ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move between pages.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a page, and Saved (top right) to find your saved pages again.</li><li>Every image is public domain or CC0; sources and licenses are listed under Image credits.</li></ul>
+<p class="contlink" id="contlink" hidden></p>
+<p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul></div>`];
+  }
+  if (f.kind === 'overview') {
+    const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
+    return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><p class="eyebrow">${esc(sec(d.wk))}</p><h1 class="htitle">${esc(d.title)}</h1><p class="hsub">${esc(d.sub)}</p>
+<p class="sum">${esc(o.sum)}</p>${quote(d.quote)}${RULE}${bul(o.bul)}${o.terms && o.terms.length ? RULE + terms(o.terms) : ''}
+<p class="lab">Works in this part</p>${wl(d.slides.filter((s) => s.type === 'work').map((s) => s.key))}${crl(o.img)}</div>`];
+  }
+  if (f.kind === 'work') {
+    const th = themesOf(d.key);
+    const tail = (th.length ? `<p class="lab">Themes</p><ul class="wl">${th.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.d.title)}</a></li>`).join('')}</ul>` : '') + crl(d.key);
+    const head = `<p class="eyebrow">${partLink(f)}</p>${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}`;
+    if (d.lead) {   // artwork-first format: lead paragraph, bullets, then the subject
+      return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
+<p class="sum">${esc(d.lead)}</p>${bul(d.bul)}${d.subj ? RULE + `<p class="lab">The subject</p><p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${tail}</div>`];
     }
-    viewerIds[id] = it.url;
-    p.items.push(it);
-  });
-  parts.push(p);
-});
-const workByKey = Object.fromEntries(works.map((w) => [w.s.key, w]));
-const seen = new Set();
-for (const u of [...parts.map((p) => p.url), ...works.map((w) => w.url)]) {
-  if (seen.has(u)) throw new Error('duplicate URL ' + u);
-  seen.add(u);
+    return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
+<p class="fn"><b>Made for:</b> ${esc(d.fn)}</p><p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}${quote(d.quote)}${tail}</div>`];
+  }
+  if (f.kind === 'theme') {
+    const w = byKey[d.img] != null ? cap(flat[byKey[d.img]].d) : (C[d.img] ? esc(C[d.img].work) : '');
+    return ['slide', pic(d.img, d.title, w) + `<div class="notes"><p class="eyebrow">Theme · ${partLink(f)}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="sum">${esc(d.para)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}
+${d.works && d.works.length ? `<p class="lab">See</p>${wl(d.works)}` : ''}${quote(d.quote)}${crl(d.img)}</div>`];
+  }
+  if (f.kind === 'text') {
+    return ['slide text', `<div class="notes"><p class="eyebrow">${partLink(f)}</p><h1 class="htitle">${esc(d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}<p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${RULE}${terms(d.terms)}</div>`];
+  }
+  if (f.kind === 'sources') {
+    return ['slide text', `<div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Sources and further reading</h1><p class="sum">${esc(SRCS.intro)}</p>
+${SRCS.groups.map((g) => `${RULE}<p class="lab">${esc(g.title)}</p><div class="cred">${g.items.map((it) => `<div>${it.html}${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noopener">Link</a>` : ''}</div>`).join('\n')}</div>`).join('\n')}
+<p class="crl"><a href="${COURSE}/credits.html">Image credits</a></p></div>`];
+  }
+  // credits
+  const keys = creditKeys();
+  return ['slide text', `<div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Image credits</h1>${SRCS ? `<p class="det"><a href="${COURSE}/sources.html">Sources and further reading</a></p>` : ''}<p class="sum">${esc(CFG.creditsIntro || 'Every image is public domain or CC0. Each entry below links to the file’s record with its source and license.')}</p>
+<div class="cred">${keys.map((k) => { const c = C[k]; const au = (c.author || '').replace(/\s+/g, ' ').slice(0, 80); const w = byKey[k] != null ? flat[byKey[k]] : null;
+    return `<div><b>${w ? `<a href="${w.url}">${esc(c.work)}</a>` : esc(c.work)}</b><br>File: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.file)}</a><br>${esc(c.license)}${au ? ' · Author/source field: ' + esc(au) : ''}</div>`; }).join('\n')}</div></div>`];
+}
+function creditKeys() {
+  const order = [];
+  flat.forEach((x) => { if (x.kind === 'overview') order.push(x.d.overview.img); if (x.kind === 'work') order.push(x.d.key); if (x.kind === 'theme') order.push(x.d.img); });
+  return [...new Set(order)].filter((k) => C[k]);
+}
+
+/* ---------- per-course index: outline + search (read by /study/guide.js) ---------- */
+function textOf(f) {
+  const d = f.d || {}, p = [];
+  if (f.kind === 'overview') { const o = d.overview; p.push(d.title, d.sub, o.sum, ...(o.bul || []), ...(o.terms || []).flat(), ...(o.cap || [])); }
+  else if (f.kind === 'intro' || f.kind === 'credits') p.push(f.label);
+  else if (f.kind === 'sources') p.push(f.label, SRCS.intro, ...SRCS.groups.flatMap((g) => g.items.map((i) => i.html.replace(/<[^>]+>/g, ''))));
+  else p.push(d.title, d.artist, d.date, d.det, d.lead, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.bul || []), ...(d.terms || []).flat(), d.subj, d.quote && d.quote.q);
+  return p.filter(Boolean).join(' · ');
+}
+const thumb = (f) => (f.kind === 'work' ? f.d.key : f.kind === 'theme' ? f.d.img : f.kind === 'overview' ? f.d.overview.img : null);
+const GUIDE = {
+  slug: SLUG, name: NAME, img: IMG_COURSE + '/img/',
+  parts: S.handouts.map((h) => ({ h: h.n, title: h.title, section: sec(h.wk) })),
+  items: flat.map((f) => ({ id: f.id, url: f.url, h: f.h, kind: f.kind, label: f.label, title: (f.d && f.d.title) || f.label, artist: (f.d && f.d.artist) || '', thumb: thumb(f), text: textOf(f) })),
+};
+
+/* ---------- SEO: title, description, image and JSON-LD per page ---------- */
+const COURSE_LD = { '@type': ['LearningResource', 'CollectionPage'], '@id': abs(HOME) + '#course', name: NAME, url: abs(HOME) };
+const PUBLISHER = { '@type': 'Person', name: 'David Nicholson', url: ORIGIN + '/' };
+const imageLd = (k) => {
+  const c = C[k] || {}; const d = dims(k);
+  return { '@type': 'ImageObject', contentUrl: abs(img(k)), width: d.w, height: d.h, license: LICENSE_URL[c.license] || undefined, acquireLicensePage: c.page, creditText: c.page ? srcOf(c) : undefined };
+};
+const crumbLd = (list) => ({ '@type': 'BreadcrumbList', itemListElement: list.map(([name, href], i) => ({ '@type': 'ListItem', position: i + 1, name, item: abs(href) })) });
+const FIRST_IMG = S.handouts[0].overview.img, FIRST_ALT = S.handouts[0].overview.cap[1];
+
+function meta(f) {
+  const d = f.d || {};
+  const base = [['Study', STUDY], [NAME, HOME]];
+  if (f.kind === 'intro') {
+    return { title: `${NAME} – Study – David Nicholson`, desc: fill(CFG.homeDescription || '{name}: a study guide to the works, with the story and key terms for each.'), image: FIRST_IMG, alt: FIRST_ALT, type: 'website',
+      ld: [Object.assign({}, COURSE_LD, { description: fill(CFG.ldDescription || '{name}: an illustrated study guide to the works and the stories they tell.'), inLanguage: 'en',
+        learningResourceType: 'Study guide', educationalLevel: 'Introductory', publisher: PUBLISHER, isAccessibleForFree: true,
+        hasPart: flat.filter((x) => x.kind === 'overview').map((x) => ({ '@type': 'LearningResource', name: x.d.title, url: abs(x.url) })) }), crumbLd(base)] };
+  }
+  if (f.kind === 'overview') {
+    const o = d.overview, cr = [...base, [d.title, f.url]];
+    return { title: `${d.title} – ${NAME}`, desc: describe(o.sum), image: o.img, alt: o.cap[1], type: 'article',
+      ld: [{ '@type': ['LearningResource', 'CollectionPage'], '@id': abs(f.url), url: abs(f.url), name: d.title, headline: d.title, alternativeHeadline: d.sub,
+        description: describe(o.sum), inLanguage: 'en', learningResourceType: 'Study guide', educationalLevel: 'Introductory',
+        isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(o.img),
+        about: (o.terms || []).map(([t]) => ({ '@type': 'Thing', name: t })),
+        hasPart: d.slides.filter((s) => s.type === 'work').map((s) => ({ '@type': 'VisualArtwork', name: s.title, url: abs(flat[byKey[s.key]].url) })) }, crumbLd(cr)] };
+  }
+  if (f.kind === 'work') {
+    const cr = [...base, [f.hd.title, f.part.url], [d.title, f.url]];
+    const text = d.lead || d.sum, title = `${d.artist ? `${d.artist}, ${d.title}` : d.title} – ${NAME}`;
+    return { title, desc: describe(text), image: d.key, alt: d.title, type: 'article',
+      ld: [{ '@type': 'VisualArtwork', '@id': abs(f.url) + '#work', name: d.title, url: abs(f.url), description: text,
+        creator: d.artist ? { '@type': 'Person', name: d.artist } : undefined, artMedium: d.det ? d.det.split(' · ')[0] : undefined, image: imageLd(d.key) },
+      { '@type': 'WebPage', '@id': abs(f.url), url: abs(f.url), name: title, description: describe(text), inLanguage: 'en',
+        about: { '@id': abs(f.url) + '#work' }, isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(d.key) }, crumbLd(cr)] };
+  }
+  if (f.kind === 'theme' || f.kind === 'text') {
+    const cr = [...base, [f.hd.title, f.part.url], [d.title, f.url]];
+    const text = f.kind === 'theme' ? d.para : d.sum, im = f.kind === 'theme' ? d.img : f.hd.overview.img;
+    return { title: `${d.title} – ${NAME}`, desc: describe(text), image: im, alt: f.kind === 'theme' ? d.title : f.hd.overview.cap[1], type: 'article',
+      ld: [{ '@type': 'LearningResource', '@id': abs(f.url), url: abs(f.url), name: d.title, description: describe(text), inLanguage: 'en',
+        learningResourceType: 'Study guide', isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(im) }, crumbLd(cr)] };
+  }
+  if (f.kind === 'sources') {
+    const cr = [...base, ['Sources and further reading', f.url]];
+    return { title: `Sources and further reading – ${NAME}`, desc: fill(CFG.sourcesDescription || 'The sources and further reading behind {name}.'), image: FIRST_IMG, alt: FIRST_ALT, type: 'website',
+      ld: [{ '@type': 'WebPage', '@id': abs(f.url), url: abs(f.url), name: `Sources and further reading – ${NAME}`, isPartOf: COURSE_LD, publisher: PUBLISHER }, crumbLd(cr)] };
+  }
+  const cr = [...base, ['Image credits', f.url]];
+  return { title: `Image credits – ${NAME}`, desc: fill((CFG.creditsDescription || 'Sources and licenses for the {count} public-domain and CC0 images in {name}.').replace('{count}', creditKeys().length)), image: FIRST_IMG, alt: FIRST_ALT, type: 'website',
+    ld: [{ '@type': 'WebPage', '@id': abs(f.url), url: abs(f.url), name: `Image credits – ${NAME}`, isPartOf: COURSE_LD, publisher: PUBLISHER }, crumbLd(cr)] };
 }
 
 /* ---------- page shell ---------- */
@@ -141,366 +258,137 @@ const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500&display=swap">`;
 const NAV = `<nav data-chrome-nav></nav>
-<script src="/site-bar.js?v=1"></script>
+<script src="/site-bar.js?v=${V.bar}"></script>
 <div id="menu-scrim"></div>
 <div id="menu-panel" aria-label="site menu"></div>`;
-const FOOTER = `<footer>
-  <div class="f-inner">
-    <div class="f-cols">
-      <div>
-        <p class="f-brand">david nicholson</p>
-        <img class="f-logo" src="/logo-mark.png" alt="">
-      </div>
-      <div class="f-links" data-chrome-footer></div>
-    </div>
-    <p class="f-legal">&copy; 2026 david nicholson</p>
-  </div>
-</footer>`;
-const LIGHTBOX = `<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button class="x" id="lbx" type="button">Close ✕</button><img id="lbimg" alt=""><p class="cap" id="lbcap"></p></div>`;
+const BM_ICON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5h9v15l-4.5-3.6-4.5 3.6z"/></svg>';
+const SEARCH_ICON = '<svg class="sico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6l4.4 4.4"/></svg>';
+const OUTLINE = `<p><a class="ho" href="${HOME}">About this site</a></p>` + flat.filter((x) => x.kind === 'overview').map((x) => `<p><a class="ho" href="${x.url}">${esc(x.d.title)}</a></p>`).join('')
+  + flat.filter((x) => x.h === 99).map((x) => `<p><a class="ho" href="${x.url}">${esc(x.label)}</a></p>`).join('');
 
-function page({ url, title, desc, image, imageAlt, type = 'article', body, ld, extraHead = '', extraScripts = '', guide = false }) {
-  const og = image ? `<meta property="og:image" content="${abs(img(image))}">
-<meta property="og:image:width" content="${dims(image).w}">
-<meta property="og:image:height" content="${dims(image).h}">
-<meta property="og:image:alt" content="${esc(imageAlt)}">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="${abs(img(image))}">
-<meta name="twitter:image:alt" content="${esc(imageAlt)}">` : '<meta name="twitter:card" content="summary">';
+function crumbHtml(f) {
+  if (f.kind === 'intro') return '<span>Start</span>';
+  if (f.h === 99) return `<a href="${HOME}">${esc(NAME)}</a> · <span>Sources</span>`;
+  const p = f.part || f;
+  return `<span>${esc(sec(f.hd.wk))}</span> · ${f.kind === 'overview' ? `<span aria-current="page">${esc(f.hd.title)}</span>` : `<a href="${p.url}">${esc(f.hd.title)}</a>`}`;
+}
+
+function pageHtml(f, i) {
+  const [cls, inner] = slideHtml(f), prev = flat[i - 1], next = flat[i + 1], m = meta(f), u = abs(f.url), im = dims(m.image);
+  const ld = { '@context': 'https://schema.org', '@graph': m.ld };
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>${esc(title)}</title>
-<meta name="description" content="${esc(desc)}">
-<link rel="canonical" href="${abs(url)}">
-<meta property="og:type" content="${type}">
+<title>${esc(m.title)}</title>
+<meta name="description" content="${esc(m.desc)}">
+<link rel="canonical" href="${u}">
+<meta property="og:type" content="${m.type}">
 <meta property="og:site_name" content="David Nicholson">
-<meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(desc)}">
-<meta property="og:url" content="${abs(url)}">
-${og}
-<meta name="twitter:title" content="${esc(title)}">
-<meta name="twitter:description" content="${esc(desc)}">
+<meta property="og:title" content="${esc(m.title)}">
+<meta property="og:description" content="${esc(m.desc)}">
+<meta property="og:url" content="${u}">
+<meta property="og:image" content="${abs(img(m.image))}">
+<meta property="og:image:width" content="${im.w}">
+<meta property="og:image:height" content="${im.h}">
+<meta property="og:image:alt" content="${esc(m.alt)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(m.title)}">
+<meta name="twitter:description" content="${esc(m.desc)}">
+<meta name="twitter:image" content="${abs(img(m.image))}">
+<meta name="twitter:image:alt" content="${esc(m.alt)}">
 <meta name="color-scheme" content="light">
 ${GA}
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
 ${FONTS}
-<link rel="stylesheet" href="/site-tokens.css?v=1">
-<link rel="stylesheet" href="/site-chrome.css?v=1">
-<link rel="stylesheet" href="/site-bar.css?v=1">
-<link rel="stylesheet" href="/study/study.css?v=4">
-<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
-${extraHead}</head>
-<body${guide ? ' class="guide-page"' : ''}>
+<link rel="stylesheet" href="/site-tokens.css?v=${V.tokens}">
+<link rel="stylesheet" href="/site-chrome.css?v=${V.chrome}">
+<link rel="stylesheet" href="/site-bar.css?v=${V.bar}">
+<link rel="stylesheet" href="/study/guide.css?v=${V.guideCss}">
+${prev ? `<link rel="prev" href="${prev.url}">\n` : ''}${next ? `<link rel="next" href="${next.url}">\n` : ''}<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
+</head>
+<body class="guide-page${CFG.greekKey === true ? ' greek-key' : ''}" data-id="${esc(f.id)}">
 ${NAV}
-${guide ? body : `<main id="main">\n${body}\n</main>`}
-${guide ? '' : FOOTER + '\n'}${guide ? '' : LIGHTBOX + '\n'}${extraScripts}${guide ? '' : '<script src="/study/study.js?v=3"></script>\n'}<script src="/site-chrome.js?v=1"></script>
+<div class="app" id="app">
+  <nav class="rail" aria-label="Outline" id="rail">
+    <p class="brand"><a href="${HOME}">${esc(NAME)}</a></p>
+    <p class="brandsub">${esc(CFG.ldDescription || '')}</p>
+    <div id="outline">${OUTLINE}</div>
+  </nav>
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="search" id="search" role="search">${SEARCH_ICON}
+        <input id="q" type="search" placeholder="Search works, artists, terms…" aria-label="Search this guide" autocomplete="off" aria-controls="results" aria-expanded="false">
+        <div class="results" id="results" role="listbox" hidden></div>
+      </div>
+      <button class="btn savedbtn" id="saved" type="button" aria-expanded="false" aria-controls="savedp">Saved (0)</button>
+      <div class="savedp" id="savedp" hidden></div>
+    </div>
+    <select id="jump" class="jump" aria-label="Jump to page"></select>
+    <article class="${cls}" id="slide" tabindex="-1">${inner}</article>
+    <div class="bar">
+      <button class="btn tog" id="tog" type="button" aria-controls="rail" aria-expanded="true" aria-label="Hide outline" title="Hide outline"></button>
+      <nav class="crumb" aria-label="Breadcrumb">${crumbHtml(f)}</nav>
+      <span class="spacer"></span>
+      <span class="pos">${i + 1} / ${flat.length}</span>
+      <button class="btn bm" id="bm" type="button" aria-pressed="false">${BM_ICON}<span class="bmt">Bookmark</span></button>
+      ${prev ? `<a class="btn" id="prev" rel="prev" href="${prev.url}" title="${esc((prev.d && prev.d.title) || prev.label)}">← Prev</a>` : '<a class="btn" id="prev" aria-disabled="true">← Prev</a>'}
+      ${next ? `<a class="btn primary" id="next" rel="next" href="${next.url}" title="${esc((next.d && next.d.title) || next.label)}">Next →</a>` : '<a class="btn primary" id="next" aria-disabled="true">Next →</a>'}
+    </div>
+  </main>
+</div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button class="x" id="lbx" type="button">Close ✕</button><img id="lbimg" alt=""><p class="cap" id="lbcap"></p></div>
+<script src="${COURSE}/index.js?v=${INDEX_V}"></script>
+<script src="/study/guide.js?v=${V.guideJs}"></script>
+<script src="/site-chrome.js?v=${V.chrome}"></script>
 </body>
 </html>
 `;
 }
 
-function crumbs(list) {
-  return '<ol class="crumbs" aria-label="Breadcrumb">' + list.map(([label, href]) => `<li>${href ? `<a href="${href}">${esc(label)}</a>` : `<span aria-current="page">${esc(label)}</span>`}</li>`).join('') + '</ol>';
+/* ---------- write ---------- */
+// clear earlier generated pages: every sub-folder of the course that holds only .html files (img/ is kept)
+for (const n of fs.existsSync(DIR) ? fs.readdirSync(DIR) : []) {
+  const p = path.join(DIR, n);
+  if (n !== 'img' && fs.statSync(p).isDirectory() && fs.readdirSync(p).every((x) => x.endsWith('.html'))) fs.rmSync(p, { recursive: true, force: true });
 }
-function crumbLd(list) {
-  return { '@type': 'BreadcrumbList', itemListElement: list.map(([name, href], i) => ({ '@type': 'ListItem', position: i + 1, name, item: abs(href) })) };
-}
-const COURSE_LD = { '@type': ['LearningResource', 'CollectionPage'], '@id': abs(COURSE + '.html') + '#course', name: NAME, url: abs(COURSE + '.html') };
-const PUBLISHER = { '@type': 'Person', name: 'David Nicholson', url: ORIGIN + '/' };
-const imageLd = (k) => {
-  const c = C[k] || {}; const d = dims(k);
-  return { '@type': 'ImageObject', contentUrl: abs(img(k)), width: d.w, height: d.h, license: LICENSE_URL[c.license] || undefined, acquireLicensePage: c.page, creditText: c.page ? srcOf(c) : undefined };
-};
-const pager = (prev, next, posText, label) => `<nav class="pager" aria-label="${label}">
-  <span class="pos">${posText}</span>
-  ${prev ? `<a class="btn" href="${prev.url}" rel="prev" title="${esc(prev.title)}">← Prev</a>` : '<span class="btn" aria-disabled="true">← Prev</span>'}
-  ${next ? `<a class="btn primary" href="${next.url}" rel="next" title="${esc(next.title)}">Next →</a>` : '<span class="btn primary" aria-disabled="true">Next →</span>'}
-</nav>`;
-const openGuide = (id) => `<p class="open-guide"><a class="btn primary" href="${COURSE}.html#${id}">Open in the guide</a></p>`;
-const workRef = (w) => w && { url: w.url, title: w.s.title };
-const partRef = (p) => p && { url: p.url, title: p.h.title };
-
+const indexJs = 'window.GUIDE=' + JSON.stringify(GUIDE).replace(/</g, '\\u003c') + ';\n';
+const INDEX_V = require('crypto').createHash('sha1').update(indexJs).digest('hex').slice(0, 8);   // changes whenever the index does
+fs.mkdirSync(DIR, { recursive: true });
+fs.writeFileSync(path.join(DIR, 'index.js'), indexJs);
 const out = [];
-function write(url, html) {
-  const file = path.join(ROOT, url);
+flat.forEach((f, i) => {
+  const file = path.join(ROOT, f.url);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, html);
-  out.push(url);
-}
-// clear generated section folders so renamed works don't leave stale pages behind
-for (const p of new Set(parts.map((x) => x.secSlug))) fs.rmSync(path.join(DIR, p), { recursive: true, force: true });
-
-/* ---------- work pages ---------- */
-works.forEach((w, i) => {
-  const s = w.s, p = w.part, h = p.h;
-  const who = s.artist ? `${s.artist}, ${s.title}` : s.title;
-  const title = `${who} – ${NAME}`;
-  const cr = [['Study', STUDY], [NAME, COURSE + '.html'], [h.title, p.url], [s.title, w.url]];
-  const themes = parts.flatMap((pp) => pp.items).filter((t) => t.s.type === 'theme' && (t.s.works || []).includes(s.key));
-  const body = `${crumbs(cr)}
-${openGuide(w.id)}
-<article class="card slide">
-  ${pic(s.key, s.title, capOf(s), true)}
-  <div class="notes">
-    <p class="eyebrow"><a href="${p.url}">${esc(sec(h.wk))} · ${esc(h.title)}</a></p>
-    ${s.artist ? `<p class="artist">${esc(s.artist)}</p>` : ''}<h1 class="title">${esc(s.title)}</h1><p class="date">${esc(s.date)}</p>${s.det ? `<p class="det">${esc(s.det)}</p>` : ''}
-    <p class="fn"><b>Made for:</b> ${esc(s.fn)}</p><p class="sum">${esc(s.sum)}</p>${RULE}${bul(s.bul)}${s.terms && s.terms.length ? RULE + terms(s.terms) : ''}${quote(s.quote)}
-    ${themes.length ? `<p class="lab">Themes</p><ul class="wl">${themes.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.s.title)}</a></li>`).join('')}</ul>` : ''}
-    ${crl(s.key)}
-  </div>
-</article>
-${pager(workRef(works[i - 1]), workRef(works[i + 1]), `${i + 1} / ${works.length}`, 'Works')}`;
-  const medium = s.det ? s.det.split(' · ')[0] : undefined;
-  const ld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'VisualArtwork', '@id': abs(w.url) + '#work', name: s.title, url: abs(w.url), description: s.sum,
-      creator: s.artist ? { '@type': 'Person', name: s.artist } : undefined, artMedium: medium, image: imageLd(s.key) },
-    { '@type': 'WebPage', '@id': abs(w.url), url: abs(w.url), name: title, description: describe(s.sum), inLanguage: 'en',
-      about: { '@id': abs(w.url) + '#work' }, isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(s.key) },
-    crumbLd(cr)] };
-  write(w.url, page({ url: w.url, title, desc: describe(s.sum), image: s.key, imageAlt: s.title, body, ld }));
+  fs.writeFileSync(file, pageHtml(f, i));
+  out.push(f.url);
 });
-
-/* ---------- part pages ---------- */
-parts.forEach((p, i) => {
-  const h = p.h, o = h.overview, c = o.cap;
-  const ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
-  const title = `${h.title} – ${NAME}`;
-  const cr = [['Study', STUDY], [NAME, COURSE + '.html'], [h.title, p.url]];
-  const seq = p.items.map((it) => {
-    const s = it.s;
-    if (s.type === 'work') {
-      const d = dims(s.key);
-      return `<a class="card row" href="${it.url}"><span class="th"><img src="${img(s.key)}" width="${d.w}" height="${d.h}" alt="${esc(s.title)}" loading="lazy"></span><span><span class="rt">${esc(s.title)}</span><span class="ra">${esc([s.artist, s.date].filter(Boolean).join(' · '))}</span><span class="rs">${esc(s.sum)}</span></span></a>`;
-    }
-    if (s.type === 'theme') {
-      const wk = workByKey[s.img];
-      const tc = wk ? capOf(wk.s) : (C[s.img] ? esc(C[s.img].work) : '');
-      return `<article class="card slide" id="${it.anchor}" style="scroll-margin-top:calc(var(--nav-h) + 12px)">
-  ${pic(s.img, wk ? wk.s.title : s.title, tc)}
-  <div class="notes"><p class="eyebrow">Theme</p><h2 class="title plain">${esc(s.title)}</h2><p class="stmt">${esc(s.stmt)}</p><p class="sum">${esc(s.para)}</p>${RULE}${bul(s.bul)}${s.terms && s.terms.length ? RULE + terms(s.terms) : ''}
-  ${s.works && s.works.length ? `<p class="lab">See</p><ul class="wl">${s.works.filter((k) => workByKey[k]).map((k) => `<li><a class="wlink" href="${workByKey[k].url}">${esc(workByKey[k].s.title)}</a></li>`).join('')}</ul>` : ''}${quote(s.quote)}${crl(s.img)}</div>
-</article>`;
-    }
-    return `<article class="card slide text" id="${it.anchor}" style="scroll-margin-top:calc(var(--nav-h) + 12px)"><div class="notes"><p class="eyebrow">${esc(h.title)}</p><h2 class="htitle">${esc(s.title)}</h2>${s.sub ? `<p class="hsub">${esc(s.sub)}</p>` : ''}<p class="sum">${esc(s.sum)}</p>${RULE}${bul(s.bul)}${RULE}${terms(s.terms)}</div></article>`;
-  });
-  const body = `${crumbs(cr)}
-${openGuide(p.id)}
-<article class="card slide">
-  ${pic(o.img, c[1], ch, true)}
-  <div class="notes"><p class="eyebrow">${esc(sec(h.wk))}</p><h1 class="htitle">${esc(h.title)}</h1><p class="hsub">${esc(h.sub)}</p>
-  <p class="sum">${esc(o.sum)}</p>${quote(h.quote)}${RULE}${bul(o.bul)}${o.terms && o.terms.length ? RULE + terms(o.terms) : ''}${crl(o.img)}</div>
-</article>
-<h2 class="seq-h">In this part</h2>
-<div class="seq">
-${seq.join('\n')}
-</div>
-${pager(partRef(parts[i - 1]), partRef(parts[i + 1]), `Part ${i + 1} of ${parts.length}`, 'Parts')}`;
-  const ld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': ['LearningResource', 'CollectionPage'], '@id': abs(p.url), url: abs(p.url), name: h.title, headline: h.title, alternativeHeadline: h.sub,
-      description: describe(o.sum), inLanguage: 'en', learningResourceType: 'Study guide', educationalLevel: 'Introductory',
-      isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(o.img),
-      about: (o.terms || []).map(([t]) => ({ '@type': 'Thing', name: t })),
-      hasPart: p.items.filter((it) => it.s.type === 'work').map((it) => ({ '@type': 'VisualArtwork', name: it.s.title, url: abs(it.url) })) },
-    crumbLd(cr)] };
-  write(p.url, page({ url: p.url, title, desc: describe(o.sum), image: o.img, imageAlt: c[1], body, ld }));
-});
-
-/* ---------- credits ---------- */
-{
-  const url = COURSE + '/credits.html';
-  const order = [];
-  parts.forEach((p) => { order.push(p.h.overview.img); p.items.forEach((it) => { if (it.s.type === 'work') order.push(it.s.key); if (it.s.type === 'theme') order.push(it.s.img); }); });
-  const keys = [...new Set(order)].filter((k) => C[k]);
-  const cr = [['Study', STUDY], [NAME, COURSE + '.html'], ['Image credits', url]];
-  const body = `${crumbs(cr)}
-${openGuide('credits')}
-<article class="card slide text"><div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Image credits</h1><p class="det"><a href="${COURSE}/sources.html">Sources and further reading</a></p><p class="sum">${esc(CFG.creditsIntro || DEFAULT_CREDITS_INTRO)}</p>
-<div class="cred">${keys.map((k) => { const c = C[k]; const au = (c.author || '').replace(/\s+/g, ' ').slice(0, 80); const w = workByKey[k];
-    return `<div><b>${w ? `<a href="${w.url}">${esc(c.work)}</a>` : esc(c.work)}</b><br>File: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.file)}</a><br>${esc(c.license)}${au ? ' · Author/source field: ' + esc(au) : ''}</div>`; }).join('\n')}</div></div></article>`;
-  const ld = { '@context': 'https://schema.org', '@graph': [{ '@type': 'WebPage', '@id': abs(url), url: abs(url), name: `Image credits – ${NAME}`, isPartOf: COURSE_LD }, crumbLd(cr)] };
-  write(url, page({ url, title: `Image credits – ${NAME}`, desc: fill((CFG.creditsDescription || 'Sources and licenses for the {count} public-domain and CC0 images in {name}.').replace('{count}', keys.length)), image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website' }));
-}
-
-/* ---------- sources and further reading ---------- */
-{
-  const url = COURSE + '/sources.html';
-  const cr = [['Study', STUDY], [NAME, COURSE + '.html'], ['Sources and further reading', url]];
-  const groups = SOURCES.groups.map((g) => `${RULE}<p class="lab">${esc(g.title)}</p><div class="cred">${g.items.map((it) => `<div>${it.html}${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noopener">Link</a>` : ''}</div>`).join('\n')}</div>`).join('\n');
-  const body = `${crumbs(cr)}
-${openGuide('sources')}
-<article class="card slide text"><div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Sources and further reading</h1><p class="sum">${esc(SOURCES.intro)}</p>
-${groups}
-<p class="crl"><a href="${COURSE}/credits.html">Image credits</a></p></div></article>`;
-  const ld = { '@context': 'https://schema.org', '@graph': [{ '@type': 'WebPage', '@id': abs(url), url: abs(url), name: `Sources and further reading – ${NAME}`, isPartOf: COURSE_LD, publisher: PUBLISHER }, crumbLd(cr)] };
-  write(url, page({ url, title: `Sources and further reading – ${NAME}`, desc: fill(CFG.sourcesDescription || 'The sources and further reading behind {name}.'), image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], body, ld, type: 'website' }));
-}
-
-/* ---------- course home = the one-page guide (search, outline, Prev/Next, swipe) ---------- */
-{
-  const url = COURSE + '.html';
-  let v = fs.readFileSync(path.join(__dirname, CFG.viewer), 'utf8');
-  const must = (a, b) => { if (!v.includes(a)) throw new Error('viewer changed; cannot find: ' + a.slice(0, 70)); v = v.replace(a, b); };
-  const strip = (a, b = '') => { if (v.includes(a)) v = v.replace(a, () => b); };   // course-specific wording: replaced when the viewer has it
-  const style = v.slice(v.indexOf('<style>') + 7, v.indexOf('</style>'));
-  // the viewer's own color/font tokens give way to the site's (site-tokens.css), keeping its layout
-  const t0 = style.indexOf(':root{'), t1 = style.indexOf('*{box-sizing:border-box}');
-  if (t0 < 0 || t1 < t0) throw new Error('viewer tokens not found');
-  const css = style.slice(0, t0) + `:root{
-  --paper:var(--panel); --line:var(--border); --muted:var(--ink2); --navy:var(--accent-ink); --navy-ink:var(--on-accent);
-  --clay:var(--ink3); --tint:var(--surface); --mat:var(--surface); --matink:var(--ink2); --serif:var(--font); --sans:var(--font);
-}
-` + style.slice(t1) + `
-/* site integration (generated): site bar above, site footer below, site type, Greek-key divider kept */
-body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:400}
-.guide-page .rail{top:calc(var(--nav-h) + 16px);max-height:calc(100vh - var(--nav-h) - 40px);max-height:calc(100dvh - var(--nav-h) - 40px)}
-@media (min-width:901px){.guide-page .main{height:calc(100vh - var(--nav-h) - 40px);height:calc(100dvh - var(--nav-h) - 40px)}.guide-page .main:has(.slide.text){height:auto}}
-.guide-page .lb{z-index:120}
-.guide-page .brand a{color:inherit;text-decoration:none}
-.guide-page .brand,.guide-page .title,.guide-page .htitle,.guide-page .res .rt{color:var(--ink);font-weight:500}
-.guide-page .ho[aria-current="true"],.guide-page .items button[aria-current="true"]{color:var(--accent-ink)}
-.guide-page .wk,.guide-page .eyebrow,.guide-page .res .rk{color:var(--ink3);font-weight:500}
-.guide-page .date{color:var(--ink2)}
-.guide-page .fn b,.guide-page .cred b{color:var(--ink);font-weight:500}
-.guide-page .terms dt{font-weight:500;color:var(--accent-ink)}
-.guide-page .btn,.guide-page .search input,.guide-page .jump{border-color:var(--border-mid)}
-.guide-page .btn{border-radius:22px;font-weight:500}
-.guide-page .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.guide-page .search input{border-radius:22px}
-.guide-page blockquote{border-left-color:var(--accent)}
-.guide-page .res mark{background:color-mix(in srgb,var(--accent) 22%,transparent)}
-.guide-page .pic img{box-shadow:none}
-${RULE_CSS}
-.guide-page :focus-visible{outline-color:var(--accent)}
-.guide-page .bar .spacer{flex:1}
-/* bookmark button (bar) and bookmark list (top of outline) */
-.guide-page .bm{display:inline-flex;align-items:center;gap:6px;padding:6px 12px}
-.guide-page .bm svg{width:18px;height:18px;display:block;flex:none}
-.guide-page .bm[aria-pressed="true"]{color:var(--accent-ink);border-color:var(--accent)}
-.guide-page .bml{display:block}
-@media (max-width:900px){.guide-page .bm .bmt{display:none}.guide-page .bar .bm{margin-right:auto}}
-/* phones and portrait iPads: Prev / Next pinned to the bottom of the screen, bottom right */
-@media (max-width:900px){
-  .guide-page .bar{position:fixed;left:0;right:0;bottom:0;z-index:70;margin:0;justify-content:flex-end;gap:8px;
-    background:var(--navbg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--border);
-    padding:8px max(16px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-  .guide-page .bar .crumb,.guide-page .bar .spacer{display:none}
-  body.guide-page{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
-}
-`;
-  must(style, '');
-  must('<title>' + (CFG.viewerName || NAME) + '</title>', '');
-  must('<meta name="claude:viewport-fit-sides" content="cover">\n', '');
-  must('<link rel="preconnect" href="https://fonts.googleapis.com">\n', '');
-  v = v.replace(/<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com[^>]*>\n/, '');
-  must('<style></style>\n', '');
-  // Prev / Next bar moves below the slide (bottom right), as on the rest of the study pages
-  const barStart = v.indexOf('    <div class="bar">'), barEnd = v.indexOf('</div>', barStart) + 7;
-  const bar = v.slice(barStart, barEnd);
-  v = v.slice(0, barStart) + v.slice(barEnd);
-  must('    <article class="slide" id="slide" aria-live="polite" tabindex="-1"></article>\n', '    <article class="slide" id="slide" aria-live="polite" tabindex="-1"></article>\n' + bar);
-  // brand links home; images and data load from the course folder
-  must('<p class="brand">' + (CFG.viewerName || NAME) + '</p>', `<p class="brand"><a href="${url}">${esc(NAME)}</a></p>`);
-  must("const src=k=>'img/'+k+'.jpg';", `const src=k=>'${COURSE}/img/'+k+'.jpg';`);
-  // the viewer lists its own data scripts; swap that run for this course's data files (from the settings), credits.js and sources.js
-  const tagRun = /<script src="(?:data[^"\/]*|credits)\.js"><\/script>(?:\n<script src="(?:data[^"\/]*|credits)\.js"><\/script>)*/;
-  if (!tagRun.test(v)) throw new Error('viewer changed; cannot find its data script tags');
-  v = v.replace(tagRun, () => [...CFG.dataFiles, 'credits.js', 'sources.js'].map((f) => `<script src="${COURSE}/${f}"></script>`).join('\n'));
-  // no "free study guide" label and no authorship line (David, Oct 26 2026)
-  // no mention of a college course on the public site (David, Oct 26 2026)
-  for (const t of CFG.strip || []) must(t, '');
-  // "Sources and further reading" slide, just before Image credits (data in sources.js)
-  must("flat.push({h:99,kind:'credits',id:'credits',label:'Image credits'});", "flat.push({h:99,kind:'sources',id:'sources',label:'Sources and further reading'});\nflat.push({h:99,kind:'credits',id:'credits',label:'Image credits'});");
-  must("} else if(f.kind==='credits'){", "} else if(f.kind==='sources'){\n    el.className='slide text'; const SR=window.SOURCES||{groups:[]};\n    h=`<div class=\"notes\"><p class=\"eyebrow\">Sources</p><h2 class=\"htitle\">Sources and further reading</h2><p class=\"sum\">${esc(SR.intro)}</p>${SR.groups.map(g=>`${rule}<p class=\"lab\">${esc(g.title)}</p><div class=\"cred\">${g.items.map(it=>`<div>${it.html}${it.url?` <a href=\"${esc(it.url)}\" target=\"_blank\" rel=\"noopener\">Link</a>`:''}</div>`).join('')}</div>`).join('')}</div>`;\n  } else if(f.kind==='credits'){");
-  must("(f.kind==='credits'?'Credits':'Start')", "(f.kind==='credits'?'Credits':f.kind==='sources'?'Sources':'Start')");
-  must('<p class="wk">Sources</p><button class="ho" data-i="${flat.length-1}">Image credits</button>', '<p class="wk">Sources</p><button class="ho" data-i="${flat.length-2}">Sources and further reading</button><button class="ho" data-i="${flat.length-1}">Image credits</button>');
-  must("(f.kind==='credits'?'Sources':'Start')", "((f.kind==='credits'||f.kind==='sources')?'Sources':'Start')");
-  must("else if(f.kind==='intro'||f.kind==='credits'){parts.push(f.label)}", "else if(f.kind==='intro'||f.kind==='credits'){parts.push(f.label)}\n  else if(f.kind==='sources'){const SR=window.SOURCES||{groups:[]};parts.push(f.label,SR.intro,...SR.groups.flatMap(g=>g.items.map(i=>i.html.replace(/<[^>]+>/g,''))))}");
-  must("const k={overview:'Overview',theme:'Theme',intro:'Start',credits:'Credits'}[f.kind]", "const k={overview:'Overview',theme:'Theme',intro:'Start',credits:'Credits',sources:'Sources'}[f.kind]");
-  // every slide change (Prev/Next, swipe, arrow keys, outline, search) starts at the top of the new slide
-  must('function go(i){if(i==null||i<0||i>=flat.length)return;cur=i;render()}', 'function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}');
-  strip('<p class="eyebrow">Free study guide</p>');
-  strip('\n    <p class="det">Text by David Nicholson · davidnicholsonart.com</p></div>`;', '</div>`;');
-  // image credit line and credits slide: each image may name its own source; the slide intro comes from the settings
-  must('Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${esc(c.license)}', 'Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.source||\'Wikimedia Commons\')}</a> · ${esc(c.license)}');
-  if (CFG.creditsIntro) strip('All images come from Wikimedia Commons and are marked public domain or CC0 there. Many are museum open-access files (Metropolitan Museum of Art, National Gallery of Art, Rijksmuseum); the rest are photographs or reproductions their authors released into the public domain. Follow each link for the file’s full record.', esc(CFG.creditsIntro));
-  // Back button and bookmarks (David, Oct 26 2026). A jump (outline, search, contents, "works in this part",
-  // the phone menu, a bookmark) adds a history entry, so Back returns to the slide you jumped from instead of
-  // leaving the guide. Prev / Next, swipe and arrow keys replace the entry, so Back doesn't replay every slide.
-  // Bookmarks are kept in this browser only (localStorage), keyed by work key so they survive reordering.
-  must('      <button class="btn tog" id="tog" aria-controls="rail" aria-expanded="true" aria-label="Hide outline" title="Hide outline"></button>',
-    '      <button class="btn tog" id="tog" aria-controls="rail" aria-expanded="true" aria-label="Hide outline" title="Hide outline"></button>\n      <button class="btn bm" id="bm" type="button" aria-pressed="false" aria-label="Bookmark this slide" title="Bookmark this slide"></button>');
-  must("  try{history.replaceState(null,'','#'+f.id)}catch(e){}",
-    "  try{const u='#'+f.id;if(location.hash!==u){if(pushNext)history.pushState(null,'',u);else history.replaceState(null,'',u)}}catch(e){}\n  pushNext=false;\n  bmSync();");
-  must('function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}',
-    'function go(i){if(i==null||i<0||i>=flat.length)return;const ch=i!==cur;cur=i;render();if(ch)window.scrollTo(0,0)}\nlet pushNext=false;\nfunction jump(i){if(i==null||i<0||i>=flat.length)return;pushNext=i!==cur;go(i)}');
-  must("el.querySelectorAll('[data-k].wlink').forEach(b=>b.onclick=()=>go(workIndex[b.dataset.k]));", "el.querySelectorAll('[data-k].wlink').forEach(b=>b.onclick=()=>jump(workIndex[b.dataset.k]));");
-  must("el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(flat.findIndex(x=>x.id===b.dataset.go)));", "el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>jump(flat.findIndex(x=>x.id===b.dataset.go)));");
-  must("out.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>go(+b.dataset.i));", "out.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>jump(+b.dataset.i));");
-  must('j.onchange=()=>go(+j.value);', "j.onchange=()=>jump(+String(j.value).replace('b',''));");
-  must('function pick(j){if(!hits[j])return;go(hits[j].i);', 'function pick(j){if(!hits[j])return;jump(hits[j].i);');
-  must(`const out=document.getElementById('outline'); let html='<button class="ho" data-i="0">About this site</button>';`,
-    `const out=document.getElementById('outline'); let html='<div id="bmarks"></div><button class="ho" data-i="0">About this site</button>';`);
-  must('<li>Click any image to see it full screen.</li>', '<li>Click any image to see it full screen.</li><li>Use Bookmark to save a slide. Saved slides are listed at the top of the outline (on a phone, at the top of the slide menu) and stay in this browser.</li>');
-  must('/* start */', `/* back button: return to the slide recorded in the address */
-window.addEventListener('popstate',()=>{const i=flat.findIndex(f=>f.id===location.hash.slice(1));if(i>=0){if(!lb.hidden)closeLb();go(i)}});
-/* bookmarks: saved in this browser only */
-const BK='cm-bookmarks';
-const bid=f=>f.kind==='work'?'w:'+f.d.key:f.id;
-const bidx=b=>{const i=b.startsWith('w:')?workIndex[b.slice(2)]:flat.findIndex(f=>f.id===b);return i==null?-1:i};
-let marks=[];try{const v=JSON.parse(localStorage.getItem(BK)||'[]');marks=Array.isArray(v)?v.filter(b=>typeof b==='string'&&bidx(b)>=0):[]}catch(e){marks=[]}
-const bmBtn=document.getElementById('bm');
-const bmIcon=on=>'<svg viewBox="0 0 20 20" fill="'+(on?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5h9v15l-4.5-3.6-4.5 3.6z"/></svg>';
-function bmSave(){try{localStorage.setItem(BK,JSON.stringify(marks))}catch(e){}}
-function bmLabel(i){const f=flat[i];if(f.kind==='overview')return f.d.title;return (f.kind==='theme'?'Theme: ':'')+f.label}
-function bmList(){const ix=marks.map(bidx).filter(i=>i>=0).sort((a,b)=>a-b);
-  const box=document.getElementById('bmarks');
-  if(box){box.innerHTML=ix.length?'<p class="wk">Bookmarks</p><ul class="items bml">'+ix.map(i=>'<li><button data-bi="'+i+'" aria-current="'+(i===cur)+'">'+esc(bmLabel(i))+'</button></li>').join('')+'</ul>':'';
-    box.querySelectorAll('[data-bi]').forEach(b=>b.onclick=()=>jump(+b.dataset.bi))}
-  let og=j.querySelector('optgroup.bmg');if(og)og.remove();
-  if(ix.length){og=document.createElement('optgroup');og.className='bmg';og.label='Bookmarks';og.innerHTML=ix.map(i=>'<option value="b'+i+'">'+esc(bmLabel(i))+'</option>').join('');j.prepend(og)}
-  j.value=String(cur)}
-function bmSync(){if(!bmBtn)return;const on=marks.includes(bid(flat[cur]));
-  bmBtn.innerHTML=bmIcon(on)+'<span class="bmt">'+(on?'Bookmarked':'Bookmark')+'</span>';
-  bmBtn.setAttribute('aria-pressed',String(on));bmBtn.title=on?'Remove bookmark':'Bookmark this slide';bmBtn.setAttribute('aria-label',bmBtn.title);bmList()}
-if(bmBtn)bmBtn.onclick=()=>{const b=bid(flat[cur]),k=marks.indexOf(b);if(k>=0)marks.splice(k,1);else marks.push(b);bmSave();bmSync()};
-/* start */`);
-  const scripts = v.slice(v.indexOf('<script src='));
-  const markup = v.slice(0, v.indexOf('<script src=')).trim();
-  // a plain list of every part for readers without JavaScript (and for crawlers)
-  const nojs = `<noscript><div style="max-width:900px;margin:20px auto;padding:0 16px"><p>${esc(NAME)}: the parts of the guide.</p><ul>${parts.map((p) => `<li><a href="${p.url}">${esc(p.h.title)}</a></li>`).join('')}<li><a href="${COURSE}/credits.html">Image credits</a></li></ul></div></noscript>`;
-  const keyMask = `:root{--key-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8' viewBox='0 0 16 8'%3E%3Cpath d='M0 7.5h6V1.5H2v3h2' fill='none' stroke='black' stroke-width='1'/%3E%3Cpath d='M8 7.5h6V1.5h-4v3h2' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E")}`;
-  const cr = [['Study', STUDY], [NAME, url]];
-  const ld = { '@context': 'https://schema.org', '@graph': [
-    Object.assign({}, COURSE_LD, { description: fill(CFG.ldDescription || '{name}: an illustrated study guide to the works and the stories they tell.'), inLanguage: 'en',
-      learningResourceType: 'Study guide', educationalLevel: 'Introductory', publisher: PUBLISHER, isAccessibleForFree: true,
-      hasPart: parts.map((p) => ({ '@type': 'LearningResource', name: p.h.title, url: abs(p.url) })) }),
-    crumbLd(cr)] };
-  write(url, page({ url, title: `${NAME} – Study – David Nicholson`,
-    desc: fill(CFG.homeDescription || '{name}: a study guide to the works, with the story and key terms for each.'),
-    image: parts[0].h.overview.img, imageAlt: parts[0].h.overview.cap[1], type: 'website', ld, guide: true,
-    extraHead: `<style>\n${GREEK_KEY ? keyMask : ''}\n${css}</style>\n`, body: markup + '\n' + nojs, extraScripts: scripts.trim() + '\n' }));
-}
 
 /* ---------- sitemap: replace this course's block in /sitemap.xml ---------- */
 {
-  const listed = [COURSE + '.html', ...parts.map((p) => p.url), ...works.map((w) => w.url), COURSE + '/sources.html', COURSE + '/credits.html'];
   const START_PREFIX = `  <!-- study: ${SLUG} (`;
   const START = `${START_PREFIX}generated by tools/study/build-course.js) -->`;
   const END = `  <!-- /study: ${SLUG} -->`;
-  const block = [START, ...listed.map((u) => `  <url>\n    <loc>${abs(u)}</loc>\n    <changefreq>yearly</changefreq>\n    <priority>${u === COURSE + '.html' ? '0.6' : '0.4'}</priority>\n  </url>`), END].join('\n');
+  const block = [START, ...out.map((u) => `  <url>\n    <loc>${abs(u)}</loc>\n    <changefreq>yearly</changefreq>\n    <priority>${u === HOME ? '0.6' : '0.4'}</priority>\n  </url>`), END].join('\n');
   const smFile = path.join(ROOT, 'sitemap.xml');
   let sm = fs.readFileSync(smFile, 'utf8');
   const a = sm.indexOf(START_PREFIX), b = sm.indexOf(END);
   sm = a >= 0 && b > a ? sm.slice(0, a) + block + sm.slice(b + END.length) : sm.replace('</urlset>', block + '\n</urlset>');
   fs.writeFileSync(smFile, sm);
 }
-/* public-site rules: no course label, no authorship line, no week numbers on any generated page */
+
+/* ---------- checks: public-site wording, and no page-by-page styling ---------- */
 const BAD = /Free study guide|Text by David Nicholson|\bWeek \d/;
+const STYLED = /<style|\sstyle="|#[0-9a-f]{3,8}\b(?![^<]*<\/script)|rgba?\(/i;
 for (const u of out) {
-  const m = fs.readFileSync(path.join(ROOT, u), 'utf8').match(BAD);
+  const html = fs.readFileSync(path.join(ROOT, u), 'utf8');
+  const m = html.match(BAD);
   if (m) throw new Error(`${u}: public-site rule broken (found "${m[0]}")`);
+  const body = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/href="[^"]*"/g, '');   // ignore scripts and #fragments in links
+  const s = body.match(STYLED);
+  if (s) throw new Error(`${u}: styling in the page (found "${s[0]}") — put it in /study/guide.css`);
 }
-console.log(`wrote ${out.length} pages (${works.length} works, ${parts.length} parts, home, credits)`);
+const nWorks = flat.filter((f) => f.kind === 'work').length, nParts = flat.filter((f) => f.kind === 'overview').length;
+console.log(`wrote ${out.length} pages (${nWorks} works, ${nParts} parts, ${out.length - nWorks - nParts} other) + index.js; sitemap block ${out.length} URLs`);

@@ -90,7 +90,7 @@
     const a = Math.max(0, p - 50), b = Math.min(t.length, a + 170); let s = t.slice(a, b); if (a > 0) s = '…' + s; if (b < t.length) s += '…';
     let h = esc(s); for (const w of words) { if (!w) continue; h = h.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } return h;
   }
-  const kindLabel = (it) => [it.h && it.h < 99 ? partTitle(it.h) : '', { overview: 'Overview', theme: 'Theme', intro: 'Start', credits: 'Credits' }[it.kind]].filter(Boolean).join(' · ');
+  const kindLabel = (it) => [it.h && it.h < 99 ? partTitle(it.h) : '', { overview: 'Overview', theme: 'Theme', intro: 'Start', credits: 'Credits', sources: 'Sources' }[it.kind]].filter(Boolean).join(' · ');
   function search() {
     const raw = qi.value.trim(); if (!raw) { rs.hidden = true; qi.setAttribute('aria-expanded', 'false'); return; }
     const words = norm(raw).split(/\s+/).filter(Boolean);
