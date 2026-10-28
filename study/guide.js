@@ -20,7 +20,7 @@
   G.parts.forEach((p) => {
     if (p.section !== lastWk) { html += `<p class="wk">${esc(p.section)}</p>`; lastWk = p.section; }
     const its = items.filter((x) => x.h === p.h);
-    html += `<div class="grp" data-h="${p.h}"><a class="ho" href="${its[0].url}"${its[0].id === curId ? ' aria-current="page"' : ''}>${esc(p.title)}</a><ul class="items${p.h === curH ? ' open' : ''}">${its.map((x) => `<li><a href="${x.url}" class="${x.kind === 'theme' ? 'th' : ''}"${x.id === curId ? ' aria-current="page"' : ''}>${x.kind === 'theme' ? 'Theme: ' : ''}${esc(x.label)}</a></li>`).join('')}</ul></div>`;
+    html += `<div class="grp" data-h="${p.h}"><a class="ho" href="${its[0].url}"${its[0].id === curId ? ' aria-current="page"' : ''}>${esc(p.title)}</a><ul class="items${p.h === curH ? ' open' : ''}">${its.map((x) => `<li><a href="${x.url}" class="${x.kind === 'theme' ? 'th' : ''}"${x.id === curId ? ' aria-current="page"' : ''}>${x.kind === 'theme' ? esc(G.themeLabel || 'Theme') + ': ' : ''}${esc(x.label)}</a></li>`).join('')}</ul></div>`;
   });
   html += '<p class="wk">Sources</p>' + items.filter((x) => x.h === 99).map((x) => `<a class="ho" href="${x.url}"${x.id === curId ? ' aria-current="page"' : ''}>${esc(x.label)}</a>`).join('');
   out.innerHTML = html;
@@ -90,7 +90,7 @@
     const a = Math.max(0, p - 50), b = Math.min(t.length, a + 170); let s = t.slice(a, b); if (a > 0) s = '…' + s; if (b < t.length) s += '…';
     let h = esc(s); for (const w of words) { if (!w) continue; h = h.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } return h;
   }
-  const kindLabel = (it) => [it.h && it.h < 99 ? partTitle(it.h) : '', { overview: 'Overview', theme: 'Theme', intro: 'Start', credits: 'Credits', sources: 'Sources' }[it.kind]].filter(Boolean).join(' · ');
+  const kindLabel = (it) => [it.h && it.h < 99 ? partTitle(it.h) : '', { overview: 'Overview', theme: G.themeLabel || 'Theme', intro: 'Start', credits: 'Credits', sources: 'Sources' }[it.kind]].filter(Boolean).join(' · ');
   function search() {
     const raw = qi.value.trim(); if (!raw) { rs.hidden = true; qi.setAttribute('aria-expanded', 'false'); return; }
     const words = norm(raw).split(/\s+/).filter(Boolean);
