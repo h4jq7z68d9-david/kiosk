@@ -191,3 +191,10 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .eyebrow a{color:inherit;text-decoration:none}
 .guide-page .eyebrow a:hover{color:var(--accent-ink);text-decoration:underline}
 .guide-page .rule{flex:none}   /* keep the divider from collapsing in the fixed-height notes column */
+/* iPhone Safari: when the document scrolls, Safari shrinks its bottom toolbar and the next tap near the
+   bottom edge only brings it back, so Prev/Next needed two taps. On phones and portrait iPads the page
+   scrolls inside <body> instead; the document never scrolls, Safari keeps its toolbar, the bar sits above it. */
+@media (max-width:900px){
+  html:has(body.guide-page){height:100%;overflow:hidden}
+  body.guide-page{height:100%;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+}
