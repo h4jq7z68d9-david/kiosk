@@ -1,5 +1,5 @@
 /* STUDY — shared stylesheet for /study.html and every page under /study/art-history/.
-   Colors and fonts come from /site-tokens.css (the main site's look, light and dark);
+   Colors and fonts come from /site-tokens.css (the main site's look, light only);
    the top bar from /site-bar.css; the menu from /site-chrome.css.
    The only course-specific touch is the Greek-key divider (.rule). */
 
