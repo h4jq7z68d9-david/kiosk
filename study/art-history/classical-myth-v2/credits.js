@@ -249,7 +249,7 @@ window.CREDITS = {
   "credit": "Google Arts &amp; Culture — hQG4sLnqY3kx1g"
  },
  "h1_persephone": {
-  "work": "Frederic Leighton, The Return of Persephone, 1891 (Oil on canvas, 203.2 × 152.4 cm · Leeds Art Gallery)",
+  "work": "Frederic Leighton, The Return of Persephone, c. 1891 (Oil on canvas, 203 × 152.4 cm · Leeds Art Gallery)",
   "file": "Frederic Leighton - The Return of Persephone (1891).jpg",
   "page": "https://commons.wikimedia.org/wiki/File:Frederic_Leighton_-_The_Return_of_Persephone_(1891).jpg",
   "license": "Public domain",
@@ -376,7 +376,7 @@ window.CREDITS = {
   "author": "Jean-Auguste-Dominique Ingres"
  },
  "h14_jason": {
-  "work": "Gustave Moreau, Jason, 1865 (Oil on canvas · Musée d’Orsay, Paris)",
+  "work": "Gustave Moreau, Jason, 1865 (Oil on canvas, 204 × 115.5 cm · Musée d’Orsay, Paris)",
   "file": "Moreau - Jason et Médée.jpg",
   "page": "https://commons.wikimedia.org/wiki/File:Moreau_-_Jason_et_M%C3%A9d%C3%A9e.jpg",
   "license": "Public domain",
