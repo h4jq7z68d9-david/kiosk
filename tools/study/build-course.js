@@ -10,7 +10,7 @@
      dataFiles       data files in study/art-history/<slug>/, in order (required)
      greekKey        true = Greek-key divider (Classical Myth); otherwise a plain rule
      intro           optional: the start page's first paragraph
-     introImg        optional: image key (usually a work key) shown on the start page
+     introImg        required: image key (usually a work key) shown on the start page — every course starts with an image
      ldDescription, homeDescription, creditsIntro, creditsDescription, sourcesDescription
      imgFrom         optional: read images from another course's img/ folder
 
@@ -40,7 +40,7 @@ if (!SLUG || !/^[a-z0-9-]+$/.test(SLUG)) { console.error('usage: node tools/stud
 const CFG_FILE = path.join(__dirname, 'courses', SLUG + '.json');
 if (!fs.existsSync(CFG_FILE)) { console.error('no settings file: ' + CFG_FILE); process.exit(1); }
 const CFG = JSON.parse(fs.readFileSync(CFG_FILE, 'utf8'));
-for (const k of ['name', 'dataFiles']) if (!CFG[k]) throw new Error(`${CFG_FILE}: missing "${k}"`);
+for (const k of ['name', 'dataFiles', 'introImg']) if (!CFG[k]) throw new Error(`${CFG_FILE}: missing "${k}"`);
 const COURSE = '/study/art-history/' + SLUG;
 const DIR = path.join(ROOT, COURSE);
 const IMG_COURSE = '/study/art-history/' + (CFG.imgFrom || SLUG);

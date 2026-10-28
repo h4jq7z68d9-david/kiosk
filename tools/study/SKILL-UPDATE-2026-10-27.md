@@ -38,6 +38,7 @@ Rules the generator enforces or relies on: work titles must be unique within a s
   "name": "Course Name",
   "dataFiles": ["data.js", "data_m2.js"],
   "greekKey": false,
+  "introImg": "<work key>",
   "intro": "Optional start-page paragraph.",
   "homeDescription": "Meta description for the course home.",
   "ldDescription": "One-line course description (rail subtitle, start page, JSON-LD).",
@@ -48,7 +49,7 @@ Rules the generator enforces or relies on: work titles must be unique within a s
 }
 ```
 
-Only `name` and `dataFiles` are required. `viewer`, `viewerName` and `strip` are no longer read. `greekKey: true` is for Classical Myth only.
+Only `name`, `dataFiles` and `introImg` are required. **Rule (David, Oct 27 2026): every course's start page has an image** — `introImg` names a work key (Classical Myth: `h1_persephone`, *The Return of Persephone*); the build fails without it. `viewer`, `viewerName` and `strip` are no longer read. `greekKey: true` is for Classical Myth only.
 
 ## Build and publish
 
