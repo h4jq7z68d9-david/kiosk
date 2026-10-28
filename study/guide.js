@@ -2,6 +2,16 @@
    Reads window.GUIDE (per-course index.js). Pages work without this script: the slide,
    Prev/Next links and the part links are plain HTML. This adds the outline, search,
    Saved pages, Continue, keyboard, swipe and the full-screen image. */
+/* Phones and portrait iPads: move the Prev/Next bar out of the scrolling .app to sit under it (see guide.css). */
+(function () {
+  const bar = document.querySelector('.main > .bar'); if (!bar || !window.matchMedia) return;
+  const home = bar.parentNode, mq = window.matchMedia('(max-width:900px)');
+  const place = () => {
+    if (mq.matches) { if (bar.parentNode !== document.body) document.body.insertBefore(bar, document.getElementById('app').nextSibling); }
+    else if (bar.parentNode !== home) home.appendChild(bar);
+  };
+  place(); if (mq.addEventListener) mq.addEventListener('change', place); else if (mq.addListener) mq.addListener(place);
+})();
 (function () {
   const G = window.GUIDE; if (!G) return;
   const $ = (id) => document.getElementById(id);

@@ -191,10 +191,17 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .eyebrow a{color:inherit;text-decoration:none}
 .guide-page .eyebrow a:hover{color:var(--accent-ink);text-decoration:underline}
 .guide-page .rule{flex:none}   /* keep the divider from collapsing in the fixed-height notes column */
-/* iPhone Safari: when the document scrolls, Safari shrinks its bottom toolbar and the next tap near the
-   bottom edge only brings it back, so Prev/Next needed two taps. On phones and portrait iPads the page
-   scrolls inside <body> instead; the document never scrolls, Safari keeps its toolbar, the bar sits above it. */
+/* Phones and portrait iPads (Oct 28 2026): neither the document nor <body> scrolls. Only .app scrolls,
+   and guide.js moves the Prev/Next bar out of it to sit under it as a plain (not fixed) row.
+   Why: when the page itself scrolled, iPhone Safari shrank its bottom toolbar and the next tap near the
+   bottom edge only brought the toolbar back, so Prev/Next took several taps. Scrolling <body> (Oct 27)
+   did not stop that, and it left a fixed bar inside the scroller. Until guide.js runs, the fixed bar
+   rule above still applies. */
 @media (max-width:900px){
   html:has(body.guide-page){height:100%;overflow:hidden}
-  body.guide-page{height:100%;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+  body.guide-page{height:100%;overflow:hidden;display:flex;flex-direction:column;padding:0}
+  body.guide-page>.app{flex:1 1 auto;min-height:0;width:100%;max-width:none;margin:0;align-content:start;
+    overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;
+    padding:calc(var(--nav-h) + 16px) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+  body.guide-page>.bar{position:relative;flex:none}
 }
