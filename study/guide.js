@@ -42,7 +42,7 @@
 
   /* jump select (small screens) */
   const j = $('jump'); let o = '', g = null;
-  items.forEach((it) => { const gt = partTitle(it.h); if (gt !== g) { if (g !== null) o += '</optgroup>'; o += `<optgroup label="${esc(gt)}">`; g = gt; } o += `<option value="${it.url}"${it.id === curId ? ' selected' : ''}>${esc(it.label)}</option>`; });
+  items.forEach((it) => { const gt = partTitle(it.h); if (gt !== g) { if (g !== null) o += '</optgroup>'; o += `<optgroup label="${esc(gt)}">`; g = gt; } o += `<option value="${it.url}"${it.id === curId ? ' selected' : ''}>${esc(it.kind === 'overview' ? gt : it.label)}</option>`; });
   j.innerHTML = o + '</optgroup>'; j.onchange = () => { location.href = j.value; };
 
   /* rail toggle */

@@ -61,7 +61,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 1, bar: 1, guideCss: 5, guideJs: 4 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 1, bar: 1, guideCss: 5, guideJs: 5 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
