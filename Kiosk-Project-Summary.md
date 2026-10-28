@@ -18,6 +18,7 @@
 |<https://davidnicholsonart.com/study/color-theory-app.html>|The deck app itself — noindex; viewed inside study/color-theory.html                    |
 |<https://davidnicholsonart.com/color-theory.html>   |Redirect stub → /study/color-theory.html (noindex; keeps old links and installed web app working)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (condensed, Oct 27 2026: 60 works, 7 modules) — start page of the guide; every slide is its own indexable page under /study/art-history/classical-myth/ (70 pages), all in the guide layout (outline, search, Saved, Prev/Next, swipe)|
+|<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
 |<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                                                       |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
@@ -594,6 +595,16 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 28 2026) — Impressionism study section (deployed Oct 28 2026, run 40690321923)
+
+**Impressionism** added at `/study/art-history/impressionism.html`, built by the art-history course builder (iCloud `School v2/Art History Course Builder/Impressionism/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). 60 works in 3 sections (Beginnings, Modern Life, Late Impressionism), 6 parts, 4 theme pages; 73 pages. Data: `study/art-history/impressionism/data.js`, `data-2.js`, `credits.js`, `sources.js`, `img/` (60 JPEGs, ~16 MB). Settings: `tools/study/courses/impressionism.json` (`introImg: monet-impression`). `study.html`: second art-history card (*Impression, Sunrise*, "from the paris salon and manet to monet’s water lilies in 60 works, across 6 parts") and a JSON-LD `hasPart` entry. Sitemap: 150 URLs.
+
+**Generator change — no repeated titles on a page (David, Oct 28 2026).** In `tools/study/build-course.js`: work, theme and text pages show the **section** in the top label (`Theme · <section>` on themes); the bottom bar shows **only the part**; part overviews show "Overview" in the bar (the h1 is the part). BreadcrumbList JSON-LD unchanged. Classical Myth rebuilt with the same change (67 pages, label/bar lines only). `partLink` in the generator is now unused.
+
+**Tested (headless Chromium, 1440 / 390 px):** all 144 study pages — no broken local links or images, no repeated label/bar text on work, theme and overview pages, inline script parses, no horizontal scroll, no console errors (GA blocked during tests). Live check after deploy: study page, Impressionism start page, a work page and an image return 200 with the new label/bar.
+
+**Open:** Sources and Image credits pages still repeat "Sources" (top label and bar) in both courses — not in the approved change. From the content side: open the archived NGV essay link on the "Tools for Painting Outdoors" theme once; seven images are public domain but not museum-sourced (listed in iCloud `../Handoff - Impressionism.txt`).
+
 ## Completed This Session (October 27 2026) — Study: one layout, condensed Classical Myth (deployed Oct 27 2026)
 
 **One layout for every study page.** `tools/study/build-course.js` now writes **one real, indexable page per slide** in the guide's look: outline rail at left (built by `study/guide.js` from the course index; part links stay in the static HTML), search bar and **Saved (n)** button on top, image left / notes right, Prev/Next bar under the slide (pinned to the bottom of the screen at ≤900 px, with Bookmark and the counter). No per-course viewer file any more; `tools/study/classical-myth-viewer.html` and `build-proto.js` are deleted.
@@ -865,9 +876,9 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 - [ ] **Move the main-site pages onto `site-tokens.css`** (David, Oct 26 2026). Today each main page carries its own `:root` colors inline; the study pages already read `site-tokens.css` (light only). Swap each page's inline token block for the shared file and check each page looks unchanged. After that, a site-wide color or font change is one edit. (Dark mode for the main site was dropped Oct 27 2026 — David changed his mind.)
 - [ ] **Move the main-site pages onto the shared top bar** (`<nav data-chrome-nav>` + `site-bar.js`), one page at a time. Index and gallery have their own bar variants (index pill + easter egg; gallery cart button opens the cart) — decide how the shared bar handles those first.
 - [ ] **Review the Google Analytics setup, and walk David through what GA can tell him** (added Oct 26 2026). Check that every public page (including the new study pages) reports to `G-FL5BKJFVXF`, that the stream and Search Console link are healthy, then a short guided tour: traffic sources, which pages and prints get looked at, art-fair QR scans, and whether ad clicks show up. Teach-as-you-go, not a report.
-- [ ] **Resubmit `sitemap.xml` in Google Search Console** (study section went live Oct 26 2026; replaced by the condensed Classical Myth Oct 27 2026 — the sitemap now lists 77 URLs). After the Oct 27 deploy, spot-check on a phone: course home, one work page, Saved panel, search. Post-deploy checks already passed on the live site: shared bar/menu/footer on index, gallery and study pages; gallery prints load; `/color-theory.html` redirects; `#flashcards` opens the deck; course-home search; work-page pager; Jost loads.
+- [ ] **Resubmit `sitemap.xml` in Google Search Console** (study section went live Oct 26 2026; replaced by the condensed Classical Myth Oct 27 2026 — the sitemap listed 77 URLs; 150 since Impressionism was added Oct 28 2026). After the Oct 27 deploy, spot-check on a phone: course home, one work page, Saved panel, search. Post-deploy checks already passed on the live site: shared bar/menu/footer on index, gallery and study pages; gallery prints load; `/color-theory.html` redirects; `#flashcards` opens the deck; course-home search; work-page pager; Jost loads.
 - [x] **Study generator generalized + one layout** — done and deployed Oct 27 2026; see that session above.
-- [ ] **Next art-history courses** (Impressionism first, then Renaissance, Baroque…): each is a data folder `study/art-history/<slug>/` (data files, `credits.js`, optional `sources.js`, `img/`) + a settings file in `tools/study/courses/` + one card on `study.html`. Run `node tools/study/build-course.js <slug>`. No viewer file needed.
+- [ ] **Next art-history courses** (Impressionism done Oct 28 2026; next Renaissance, Baroque…): each is a data folder `study/art-history/<slug>/` (data files, `credits.js`, optional `sources.js`, `img/`) + a settings file in `tools/study/courses/` + one card on `study.html`. Run `node tools/study/build-course.js <slug>`. No viewer file needed.
 - [ ] **Optional: delete the 114 unused images** in `study/art-history/classical-myth/img/` (only 60 are used since Oct 27 2026; ~20 MB).
 
 ### Ongoing
