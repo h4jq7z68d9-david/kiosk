@@ -19,6 +19,7 @@
 |<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (condensed, Oct 27 2026: 60 works, 7 modules) — start page of the guide; every slide is its own indexable page under /study/art-history/classical-myth/ (70 pages), all in the guide layout (outline, search, Saved, Prev/Next, swipe)|
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
+|<https://davidnicholsonart.com/study/art-history/post-impressionism.html>|Post-Impressionism (Oct 28 2026: 74 works, 3 sections, 7 parts) — start page of the guide; every slide is its own page under /study/art-history/post-impressionism/ (84 pages), same guide layout|
 |<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                                                       |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
@@ -596,6 +597,16 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
 
 -----
+
+## Completed This Session (October 28 2026, evening) — Post-Impressionism study section (deployed Oct 28 2026)
+
+**Post-Impressionism** added at `/study/art-history/post-impressionism.html`, built by the art-history course builder (iCloud `School v2/Art History Course Builder/Post-Impressionism/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). 74 works in 3 sections (Order and Science; Color as Feeling; Dream, Decoration and the Wider World), 7 parts; 84 pages (74 works, 7 parts, 3 other). Data: `study/art-history/post-impressionism/data.js`, `data-m1.js`…`data-m7.js`, `credits.js`, `sources.js`, `img/` (74 JPEGs, ~24 MB). Settings: `tools/study/courses/post-impressionism.json` (`introImg: vangogh-starry-night`, `imagesNote` and `creditsIntro` worded for open licenses). No generator change; other courses' HTML untouched. `study.html`: third art-history card (*The Starry Night*, "from seurat and cézanne to van gogh, gauguin, the nabis and the symbolists in 74 works, across 7 parts") and a JSON-LD `hasPart` entry. Sitemap: 300 URLs.
+
+**Rebuild list:** after any `guide.css`/`guide.js`/generator change, rebuild all four courses: classical-myth, impressionism, color-theory, post-impressionism. (The `dna-kiosk-conventions` skill still lists only three — update it.)
+
+**Tested (headless Chromium, 1440 / 390 px, GA blocked):** all 84 pages plus `study.html` — inline scripts pass `node --check`, no missing local links or images, no console errors, no broken images (`#lbimg` lightbox placeholder has no src by design); document/body don't scroll on phones. Credits page shows the two open-license attributions exactly as in `credits.js`: Klimt *Pallas Athene* (CC BY 4.0, Wien Museum, "Gustav Klimt; Foto: TimTom") and Khnopff *I Lock My Door upon Myself* (CC BY-SA 4.0, Neue Pinakothek).
+
+**Open:** from the content side, the Signac lecture (Wildenstein Plattner) shows a YouTube posted date of October 1, 2026 — possibly a re-upload date; cited as shown. Delete remote branch `post-impressionism-study` (merged).
 
 ## Completed This Session (October 28 2026, later) — phone fixes for every study page (deployed Oct 28 2026; David confirmed on iPhone)
 
