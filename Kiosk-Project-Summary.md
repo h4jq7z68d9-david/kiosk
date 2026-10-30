@@ -17,6 +17,7 @@
 |<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel (Oct 28 2026: moved from study/color-theory.html; flashcards tab removed). Home-screen web app `start_url`|
 |<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards|
 |<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course (Oct 30 2026: 5 parts, 50 pages under /study/pigments-and-materials/; concept, history and example pages), same guide layout as Color Theory|
+|<https://davidnicholsonart.com/study/oil-vs-acrylic.html>|Oil vs Acrylic technique course (Oct 30 2026: 6 parts, 38 pages under /study/oil-vs-acrylic/; concept, history and example pages), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (condensed, Oct 27 2026: 60 works, 7 modules) — start page of the guide; every slide is its own indexable page under /study/art-history/classical-myth/ (70 pages), all in the guide layout (outline, search, Saved, Prev/Next, swipe)|
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
@@ -598,6 +599,22 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`lambda-deploy` user** (local seed scripts):
 
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
+
+-----
+
+## Completed This Session (October 30 2026, afternoon) — Oil vs Acrylic course (deployed Oct 30 2026)
+
+**Oil vs Acrylic** added at `/study/oil-vs-acrylic.html`, built by the art technique course builder (iCloud `School v2/Art Technique Course Builder/Oil vs Acrylic/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). Technique course under `/study/`, concept pages labeled "Concept". 6 parts in 3 sections (Two Paints; Working with Each; Over Time); 38 pages (9 works, 6 parts, 23 other). Data: `study/oil-vs-acrylic/data.js`, `credits.js`, `sources.js`, `img/` (29 images: 20 original diagrams, 7 public-domain artworks, 2 of David's acrylics — *Early, Still* 2025 and *Umbrella, Reverie* 2024, credited "© David Nicholson"). Settings: `tools/study/courses/oil-vs-acrylic.json` (`introImg: oa-binders`). `study.html`: technique-tab card after Pigments and Materials ("course · 6 parts") + JSON-LD entry. Sitemap: 525 URLs.
+
+**Changed from the handoff (David, Oct 30 2026):** the 7 public-domain artwork images were resized to max 1600 px, JPEG q85 (folder 9.4 MB → 4.6 MB; Ryder 1.7 MB → 0.64 MB). The course-wide images note ("Diagrams and the acrylic examples are David Nicholson's own work…") was removed — David: not needed, the credit on his images is enough. The iCloud copy still has the large images and the old note; the repo is now the source of truth for this course.
+
+**Generator change:** `build-course.js` — `imagesNote: ""` now omits the start page's image-rights line (missing key still gives the public-domain default, which would be wrong for a course with copyrighted images). All eight courses rebuilt; the other seven unchanged.
+
+**Rebuild list:** after any `guide.css`/`guide.js`/generator change, rebuild all eight courses: classical-myth, impressionism, color-theory, post-impressionism, fauvism-and-expressionism, romanticism, pigments-and-materials, oil-vs-acrylic.
+
+**Tested (headless Chromium, 1440 / 390 px):** start page plus one page from each of the 6 parts, `study.html`, and *Early, Still* (image + "© David Nicholson" credit) — every image loads, no horizontal scroll, phone Prev/Next row outside `.app`; Open Time shows "minutes to a few hours".
+
+**Known limits (from the handoff):** "colors dry slightly darker" (one paint maker) and the isolation coat (paint makers' recommendation) are labeled as brand claims; gels and modeling paste described only in general terms; fat over lean rests on Univ. of Delaware MITRA guides (National Gallery explains the wrinkling but not the term); acrylic drying "minutes to a few hours" because sources range; no lecture compares the two paints, acrylic facts from Getty, Tate and Smithsonian; Hockney, Lichtenstein, Louis, Frankenthaler and Olitski named only (copyrighted). Optional, not done: link from Pigments and Materials' "Oil" page to this course (and the earlier Color Theory → Pigments link).
 
 -----
 
