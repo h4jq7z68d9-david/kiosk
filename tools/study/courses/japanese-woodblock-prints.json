@@ -1,0 +1,22 @@
+{
+ "name": "Japanese Woodblock Prints",
+ "dataFiles": [
+  "data.js",
+  "data-m1.js",
+  "data-m2.js",
+  "data-m3.js",
+  "data-m4.js",
+  "data-m5.js",
+  "data-m6.js",
+  "data-m7.js"
+ ],
+ "intro": "Japanese woodblock prints of the floating world, from the first black-line sheets of the 1680s through Hokusai, Hiroshige and the Meiji era, with Western works that drew on them and one 1927 print by Yoshida Hiroshi. Compiled from museum collection records, with lectures and reference essays as background.",
+ "homeDescription": "Ukiyo-e from Moronobu and Harunobu to Utamaro, Sharaku, Hokusai, Hiroshige and Kuniyoshi.",
+ "ldDescription": "A compact guide to Japanese woodblock prints (ukiyo-e), c. 1680–1927, told through 64 works from open-access museum collections.",
+ "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
+ "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
+ "creditsIntro": "Images are CC0 or public domain, from The Metropolitan Museum of Art, the Art Institute of Chicago, the Cleveland Museum of Art, the Minneapolis Institute of Art and the Smithsonian's National Museum of Asian Art.",
+ "imagesNote": "Images come from museum open-access programs. The Monkey Bridge photograph is cropped to the print, leaving out its scroll mounting.",
+ "introImg": "hokusai-red-fuji",
+ "subjLabel": ""
+}
