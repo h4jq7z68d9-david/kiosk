@@ -7,11 +7,11 @@
  "themeLabel": "Concept",
  "subjLabel": "",
  "introImg": "oa-binders",
- "intro": "How oil and acrylic paint differ: what is in each, how each dries, how they handle and layer, and how they age. Concept pages explain one idea with an original diagram; example pages show it in a public-domain painting or in David Nicholson's own acrylic work.",
+ "intro": "How oil and acrylic paint differ: what is in each, how each dries, how they handle and layer, and how they age. Concept pages explain one idea with a historic plate or an original diagram; example pages show it in a public-domain painting or in David Nicholson's own acrylic work.",
  "imagesNote": "",
  "ldDescription": "A short course comparing oil and acrylic paint.",
- "homeDescription": "{name}: a short course on how oil and acrylic paint differ, from how each dries to how each ages, with original diagrams and example paintings.",
- "creditsIntro": "The diagrams were made for this site, and the acrylic examples are David Nicholson's own paintings. The other artworks are public domain; each entry links to the file's record with its source and license.",
+ "homeDescription": "{name}: a short course on how oil and acrylic paint differ, from how each dries to how each ages, with historic plates, original diagrams and example paintings.",
+ "creditsIntro": "The diagrams were made for this site, and the acrylic examples are David Nicholson's own paintings. The historic patent drawing and the other artworks are public domain; each entry links to the file's record with its source and license.",
  "creditsDescription": "Sources and licenses for the {count} diagrams and artworks in {name}.",
  "sourcesDescription": "The lectures, courses, museum records and references behind {name}."
 }

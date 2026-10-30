@@ -151,6 +151,10 @@ window.SOURCES = {
      "url": "https://www.nationalgallery.org.uk/research/publications/vermeer-and-technique/drying-and-paint-defects"
     },
     {
+     "html": "Rand, John. “Improvement in the Construction of Vessels or Apparatus for Preserving Paint, &amp;c.” US Patent 2,252, September 11, 1841. Google Patents.",
+     "url": "https://patents.google.com/patent/US2252A/en"
+    },
+    {
      "html": "Rijksmuseum, Amsterdam. “Rijksmuseum Reveals Major Discoveries on Vermeer's Painting <em>The Milkmaid</em>.” Press release, September 8, 2022.",
      "url": "https://www.rijksmuseum.nl/en/press/press-releases/rijksmuseum-reveals-major-discoveries-on-vermeer-s-painting-the-milkmaid"
     },

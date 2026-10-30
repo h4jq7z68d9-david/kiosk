@@ -95,13 +95,13 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "oa-h-oil": {
-  "work": "Five Centuries of Oil",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "rand-1841-tube-patent": {
+  "work": "John Rand, US Patent 2,252, Improvement in the Construction of Vessels or Apparatus for Preserving Paint, &c. (1841): drawing sheet, Metal Rolls for Paint, figs. 1–5",
+  "page": "https://patents.google.com/patent/US2252A/en",
+  "file": "https://patentimages.storage.googleapis.com/34/bd/5c/b1ff3f79537751/US2252-drawings-page-1.png",
+  "license": "Public domain",
+  "author": "John Rand",
+  "source": "US Patent and Trademark Office (via Google Patents)"
  },
  "oa-h-plastic": {
   "work": "Plastic Paint",

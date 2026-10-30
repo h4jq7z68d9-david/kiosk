@@ -47,21 +47,21 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "ct-spectrum": {
-  "work": "Diagram: the visible spectrum with a wavelength scale",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "bezold-plate-i-solar-spectrum": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate I, Fig. 1, solar spectrum (rotated upright and cropped)",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n9/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n9.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
- "ct-light-vs-paint": {
-  "work": "Diagram: additive mixing of light and subtractive mixing of inks",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "bezold-plate-i-mixtures": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate I, Figs. 2–5, spectra of gamboge, Prussian blue, the pigments mixed and their colors mixed (rotated upright and cropped)",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n9/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n9.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
  "ct-cones": {
   "work": "Diagram: sensitivity of the three cone types (Stockman & Sharpe data)",
@@ -95,45 +95,45 @@ window.CREDITS = {
   "author": "Claude Monet",
   "source": "National Gallery of Art Open Access"
  },
- "ct-hue-value-saturation": {
-  "work": "Diagram: hue, value and saturation, with tint, tone and shade mixes",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "ostwald-farbenfibel-triangle": {
+  "work": "Wilhelm Ostwald, Die Farbenfibel, 6th ed. (1921): p. 33, Die Farbzeichen, tone triangle of one yellow (detail)",
+  "page": "https://digital.sciencehistory.org/works/3f462642b/viewer/7p88ch85v",
+  "file": "https://digital.sciencehistory.org/downloads/deriv/7p88ch85v/download_full",
+  "license": "Public domain",
+  "author": "Wilhelm Ostwald",
+  "source": "Science History Institute Digital Collections"
  },
- "ct-color-wheel": {
-  "work": "Diagram: primaries, secondaries and tertiaries on the painter's color wheel",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "field-chromatography-plate-1": {
+  "work": "George Field, Chromatography; or, A Treatise on Colours and Pigments (1835): Plate I, Fig. 2, Chromatic Equivalents, and Fig. 3, Definitive or Fundamental Scale of Colours (detail)",
+  "page": "https://archive.org/details/gri_c00033125008687523/page/n5/",
+  "file": "https://archive.org/download/gri_c00033125008687523/page/n5.jpg",
+  "license": "Public domain",
+  "author": "George Field",
+  "source": "Getty Research Institute via Internet Archive"
  },
- "ct-munsell": {
-  "work": "Diagram: simplified Munsell color tree for yellow and purple-blue",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "munsell-atlas-chroma-branches": {
+  "work": "Albert H. Munsell, Atlas of the Munsell Color System (1915): Chart C, Chromatic Branches of the Color Tree",
+  "page": "https://archive.org/details/AtlasMunsellcol00Muns/page/n12/",
+  "file": "https://archive.org/download/AtlasMunsellcol00Muns/page/n12.jpg",
+  "license": "Public domain",
+  "author": "Albert H. Munsell",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
- "ct-value-scale": {
-  "work": "Diagram: nine-step gray scale with hues matched by value",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "munsell-atlas-value-axis": {
+  "work": "Albert H. Munsell, Atlas of the Munsell Color System (1915): Chart V, Axis of the Color Tree",
+  "page": "https://archive.org/details/AtlasMunsellcol00Muns/page/n10/",
+  "file": "https://archive.org/download/AtlasMunsellcol00Muns/page/n10.jpg",
+  "license": "Public domain",
+  "author": "Albert H. Munsell",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
- "ct-warm-cool": {
-  "work": "Diagram: warm and cool halves of the color wheel, warm light and cool shadow, a cool red and a warm red",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "field-chromatography-fig-2": {
+  "work": "George Field, Chromatography; or, A Treatise on Colours and Pigments (1835): Plate I, Fig. 2, Chromatic Equivalents (detail)",
+  "page": "https://archive.org/details/gri_c00033125008687523/page/n5/",
+  "file": "https://archive.org/download/gri_c00033125008687523/page/n5.jpg",
+  "license": "Public domain",
+  "author": "George Field",
+  "source": "Getty Research Institute via Internet Archive"
  },
  "ct-neutrals": {
   "work": "Diagram: complementary pairs mixed toward neutral, and five earth pigments",
@@ -199,21 +199,29 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "ct-color-schemes": {
-  "work": "Diagram: triad, split complement and square schemes on the color wheel",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "bezold-plate-iv-pairs": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate IV, Figs. 1–6, pairs",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n328/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n328.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
- "ct-saturation-contrast": {
-  "work": "Diagram: one red from full chroma to gray, set among dull and bright colors",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "bezold-plate-iv-triads": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate IV, Figs. 7–10, triads",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n328/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n328.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
+ },
+ "munsell-atlas-chroma-steps": {
+  "work": "Albert H. Munsell, Atlas of the Munsell Color System (1915): Chart C, Chromatic Branches of the Color Tree, detail of the yellow, red and purple branches",
+  "page": "https://archive.org/details/AtlasMunsellcol00Muns/page/n12/",
+  "file": "https://archive.org/download/AtlasMunsellcol00Muns/page/n12.jpg",
+  "license": "Public domain",
+  "author": "Albert H. Munsell",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
  "ct-extension": {
   "work": "Diagram: complement pairs sized by area ratios (after Itten and Schopenhauer)",
@@ -271,13 +279,13 @@ window.CREDITS = {
   "author": "The Metropolitan Museum of Art",
   "source": "The Met Open Access"
  },
- "ct-simultaneous-contrast": {
-  "work": "Diagram: one color on two grounds (simultaneous contrast)",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "bezold-plate-iii": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate III a, b and c, red disks on purple and yellow grounds and on a neutral ground (shown side by side)",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n322/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n322.jpg, n324.jpg, n326.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
  "ct-afterimage": {
   "work": "Diagram: stare-and-look afterimage test",
@@ -287,21 +295,21 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "ct-optical-mixing": {
-  "work": "Diagram: red and blue dots, their optical average, and the paint mixture",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "bezold-plate-v-fig-3": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate V, Fig. 3, red ornament on blue",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n330/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n330.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
- "ct-bezold-effect": {
-  "work": "Diagram: one red under white and black lines (Bezold effect)",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "bezold-plate-v-figs-5-6": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate V, Figs. 5 and 6, red ornament with black and white",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n330/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n330.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
  "ct-vibrating-edges": {
   "work": "Diagram: equal-value edges that vibrate or vanish",
@@ -407,21 +415,21 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "ct-color-emotion": {
-  "work": "Diagram: the same shapes in a warm saturated palette and a cool low-saturation palette",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "goethe-schiller-temperamentenrose": {
+  "work": "Johann Wolfgang von Goethe and Friedrich Schiller, Die Temperamentenrose (drawing, 1798–99). Klassik Stiftung Weimar",
+  "page": "https://commons.wikimedia.org/wiki/File:Goethe_Schiller_Die_Temperamentenrose.jpg",
+  "file": "https://upload.wikimedia.org/wikipedia/commons/8/82/Goethe_Schiller_Die_Temperamentenrose.jpg",
+  "license": "Public domain",
+  "author": "Johann Wolfgang von Goethe and Friedrich Schiller",
+  "source": "Wikimedia Commons (scan from Biedermeier: Die Erfindung der Einfachheit, Hatje Cantz, 2006, p. 103)"
  },
- "ct-color-symbol": {
-  "work": "Diagram: a praying figure with a blue mantle and with a brown mantle",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "goethe-farbenkreis-1809": {
+  "work": "Johann Wolfgang von Goethe, Farbenkreis zur Symbolisierung des menschlichen Geistes- und Seelenlebens (watercolor, 1809), inv. III-14047",
+  "page": "https://hessen.museum-digital.de/object/96949",
+  "file": "https://assets.museum-digital.org/hessen/images/1/202204/96949/farbenkreis-zur-symbolisierung-des-menschlichen-geistes-und-seelenlebens-96949.jpg",
+  "license": "Public domain (Public Domain Mark)",
+  "author": "Johann Wolfgang von Goethe",
+  "source": "Freies Deutsches Hochstift, Frankfurter Goethe-Museum, via museum-digital:hessen"
  },
  "claude-sunrise": {
   "work": "Claude Lorrain, Sunrise, possibly 1646–47",

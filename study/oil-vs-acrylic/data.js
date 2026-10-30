@@ -29,11 +29,11 @@ window.SITE = {
     {
      "type": "theme",
      "label": "History",
-     "img": "oa-h-oil",
-     "alt": "Timeline from 1400 to today: oil becomes the main painter's medium in the 1400s; the paint tube is patented in 1841 by J. G. Rand, making outdoor painting easier; oil is probably still the most-used paint today.",
+     "img": "rand-1841-tube-patent",
+     "alt": "Patent drawing headed \"J. Rand, Metal Rolls for Paint, No. 2,252, Patented Sep. 11, 1841.\" Figures 1 and 2: a flat tin tube sealed at both ends, then with its emptied end rolled up. Figure 3: a hinged clamp for sealing tube ends. Figures 4 and 5: the tube with a screw cap, full and with its end rolled up. Signed by the inventor, John Rand, and two witnesses.",
      "title": "Five Centuries of Oil",
      "stmt": "For more than five hundred years, oil has been the paint most painters reached for.",
-     "para": "Its early story is told in Pigments and Materials. What matters here is one change in the 1800s: the paint tube.",
+     "para": "Its early story is told in Pigments and Materials. What matters here is one change in the 1800s: the paint tube, patented by John Rand in 1841.",
      "bul": [
       "Before tubes, paint was kept in animal bladders that couldn't be resealed once pricked.",
       "A screw-cap tin tube kept paint fresh and easy to carry outdoors.",

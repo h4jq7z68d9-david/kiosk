@@ -612,6 +612,10 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/568012"
     },
     {
+     "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>New Inventions of Modern Times [Nova Reperta], The Invention of Oil Painting</i>, plate 14&rdquo; (ca. 1600), Jan Collaert I after Jan van der Straet (Stradanus), published by Philips Galle. Collection record, 49.95.870(5).",
+     "url": "https://www.metmuseum.org/art/collection/search/659725"
+    },
+    {
      "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Portrait of a young woman in red</i>&rdquo; (90&ndash;120 CE), Roman Egypt. Collection record, 09.181.6.",
      "url": "https://www.metmuseum.org/art/collection/search/547860"
     },
@@ -673,8 +677,16 @@ window.SOURCES = {
      "url": "https://archive.org/download/bookofartofcenni00cennuoft/bookofartofcenni00cennuoft_djvu.txt"
     },
     {
+     "html": "Diderot, Denis, and Jean le Rond d'Alembert, eds. <i>Recueil de planches, sur les sciences, les arts lib&eacute;raux, et les arts m&eacute;chaniques</i>. Vol. 8. Paris: Briasson, David, Le Breton, Durand, 1771. &ldquo;Peintures en huile, en miniature et encaustique,&rdquo; Pl. IV. Internet Archive (Smithsonian Libraries).",
+     "url": "https://archive.org/details/Recueildeplanch8Dide/page/n340/mode/1up"
+    },
+    {
      "html": "Pliny the Elder. <i>The Natural History of Pliny</i>. Vol. 6. Translated by John Bostock and H. T. Riley. London: Henry G. Bohn, 1857. Project Gutenberg.",
      "url": "https://gutenberg.org/ebooks/62704.txt.utf-8"
+    },
+    {
+     "html": "Rand, John. &ldquo;Improvement in the Construction of Vessels or Apparatus for Preserving Paint, &amp;c.&rdquo; US Patent 2,252, September 11, 1841. Google Patents.",
+     "url": "https://patents.google.com/patent/US2252A/en"
     }
    ]
   }

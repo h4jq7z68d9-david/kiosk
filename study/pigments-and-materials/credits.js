@@ -183,13 +183,13 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "pm-canvas": {
-  "work": "Diagram: canvas",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "encyclopedie-peinture-pl4-chassis": {
+  "work": "Diderot and d'Alembert, eds., Encyclopédie, Recueil de planches, vol. 8 (1771): Peinture, Pl. IV (Grand Chevalet, Châssis &c.), fig. 2, canvas stretched on a common stretcher; detail",
+  "page": "https://archive.org/details/Recueildeplanch8Dide/page/n340/mode/1up",
+  "file": "https://archive.org/download/Recueildeplanch8Dide/page/n340.jpg",
+  "license": "Public domain",
+  "author": "Bourgeois (drawing) and Robert Bénard (engraving)",
+  "source": "Internet Archive (Smithsonian Libraries, Biodiversity Heritage Library)"
  },
  "pm-earths": {
   "work": "Diagram: earth pigments",
@@ -231,13 +231,13 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "pm-h-chemists": {
-  "work": "Diagram: new pigments, 1700–1860",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "rand-1841-tube-patent": {
+  "work": "John Rand, US Patent 2,252, Improvement in the Construction of Vessels or Apparatus for Preserving Paint, &c. (1841): drawing sheet, Metal Rolls for Paint, figs. 1–5",
+  "page": "https://patents.google.com/patent/US2252A/en",
+  "file": "https://patentimages.storage.googleapis.com/34/bd/5c/b1ff3f79537751/US2252-drawings-page-1.png",
+  "license": "Public domain",
+  "author": "John Rand",
+  "source": "US Patent and Trademark Office (via Google Patents)"
  },
  "pm-h-costly-blue": {
   "work": "Diagram: price of ultramarine and azurite",
@@ -263,13 +263,13 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "pm-oil": {
-  "work": "Diagram: oil painting timeline",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "stradanus-color-olivi": {
+  "work": "Jan van der Straet (Stradanus), designer; Jan Collaert I, engraver; Philips Galle, publisher, Nova Reperta (about 1600): plate 14, The Invention of Oil Painting (Color Olivi)",
+  "page": "https://www.metmuseum.org/art/collection/search/659725",
+  "file": "https://images.metmuseum.org/CRDImages/dp/original/DP841119.jpg",
+  "license": "Public domain (CC0)",
+  "author": "Jan Collaert I after Jan van der Straet (Stradanus)",
+  "source": "The Met Open Access"
  },
  "pm-panel": {
   "work": "Diagram: wood panels",

@@ -311,6 +311,18 @@ window.SOURCES = {
     {
      "html": "Bezold, Wilhelm von. <i>The Theory of Color in Its Relation to Art and Art-Industry</i>. Translated by S. R. Koehler. Boston: L. Prang and Co., 1876.",
      "url": "https://archive.org/details/theoryofcolorini00bezo"
+    },
+    {
+     "html": "Field, George. <i>Chromatography; or, A Treatise on Colours and Pigments, and of Their Powers in Painting</i>. London: Charles Tilt, 1835. Internet Archive (Getty Research Institute).",
+     "url": "https://archive.org/details/gri_c00033125008687523"
+    },
+    {
+     "html": "Munsell, A. H. <i>Atlas of the Munsell Color System</i>. Malden, MA: Wadsworth, Howland and Co., 1915. Internet Archive (Smithsonian Libraries).",
+     "url": "https://archive.org/details/AtlasMunsellcol00Muns"
+    },
+    {
+     "html": "Ostwald, Wilhelm. <i>Die Farbenfibel</i>. 6th ed. Leipzig: Unesma, 1921. Science History Institute Digital Collections.",
+     "url": "https://digital.sciencehistory.org/works/3f462642b"
     }
    ]
   }

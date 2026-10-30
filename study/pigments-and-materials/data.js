@@ -71,14 +71,14 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "pm-h-chemists",
-     "alt": "Timeline from 1700 to 1860 with a break after 1720. One dot, Prussian blue, stands in the early 1700s; the rest crowd after 1800: cobalt blue, emerald green, synthetic ultramarine, viridian, the paint tube, cadmium yellow and cobalt violet.",
+     "img": "rand-1841-tube-patent",
+     "alt": "Patent drawing headed \"J. Rand, Metal Rolls for Paint, No. 2,252, Patented Sep. 11, 1841.\" Figures 1 and 2: a flat tin tube sealed at both ends, then with its emptied end rolled up. Figure 3: a hinged clamp for sealing tube ends. Figures 4 and 5: the tube with a screw cap, full and with its end rolled up. Signed by the inventor, John Rand, and two witnesses.",
      "title": "The Chemist's Palette",
      "stmt": "After centuries with few new colors, chemistry began producing them, most of them after 1800.",
-     "para": "Prussian blue came first, found by accident in Berlin early in the 1700s. Then the dots crowd together after 1800; several new colors, such as cadmium yellow, came from metals discovered around that time.",
+     "para": "Prussian blue came first, found by accident in Berlin early in the 1700s. The rest came in a rush after 1800; several, such as cadmium yellow, came from metals discovered around that time.",
      "bul": [
       "Synthetic ultramarine is chemically the same as the natural pigment but far cheaper, so the costliest blue became an everyday one.",
-      "The collapsible paint tube (1841), devised by the American portrait painter John Goffe Rand, replaced paint stored in pig bladders."
+      "The patent drawing shows the collapsible tin tube (1841) of John Goffe Rand, an American portrait painter; it replaced paint stored in pig bladders."
      ],
      "works": [],
      "label": "History"
@@ -411,13 +411,14 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "pm-oil",
-     "alt": "Timeline from 600 to 1600: drying oil in the Bamiyan murals (mid-600s), a northern treatise on oil (1100s), Cennini noting that the Germans use oil (about 1400) and Van Eyck refining the method (1430s), against Vasari's 1550 legend that Van Eyck invented it.",
+     "img": "stradanus-color-olivi",
+     "alt": "Engraving of a busy painter's studio. At center a master on a low platform paints Saint George and the dragon on a large panel, palette and brushes in hand. At right two assistants grind colors on stone slabs. Around them a painter works on a portrait of a seated woman, apprentices draw, and a boy holds a palette. A Latin caption below credits \"Eyckius\" with inventing oil color.",
      "title": "Oil",
      "stmt": "Oil paint binds pigment in an oil that dries, usually linseed; it hardens slowly as it takes up oxygen from the air.",
      "para": "Slow drying gives the painter time: colors can be blended on the surface, laid on thick or put on as glazes.",
      "bul": [
-      "From the north the method moved south; Giovanni Bellini was painting in oil in Venice as early as the 1460s."
+      "Stradanus's print (about 1600) repeats Vasari's legend that Van Eyck invented oil; it was used centuries earlier.",
+      "Oil then moved south; Giovanni Bellini used it in Venice by the 1460s."
      ],
      "works": [
       "vanderweyden-magdalen-reading"
@@ -570,13 +571,14 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "pm-canvas",
-     "alt": "Left: linen stretched over a wooden frame with a seam where strips are sewn together. Right: a close-up of the weave with paint caught on the raised threads, showing how the weave breaks up brushstrokes.",
+     "img": "encyclopedie-peinture-pl4-chassis",
+     "alt": "Engraving of a canvas stretched on a wooden frame, seen from the back at an angle: four bars form the frame, a crossbar runs across the middle, and short diagonal braces are pegged across each corner. Labeled fig. 2.",
      "title": "Canvas",
      "stmt": "Canvas is a tough cloth, usually linen, pulled tight over a wooden frame.",
      "para": "It weighs less than wood and can be rolled up. Venice switched to canvas from panels and walls between about 1450 and 1550; damp air and the sailcloth trade are the usual reasons given, though recent research doubts any single one.",
      "bul": [
-      "Until the 1800s, big canvases were usually sewn from strips, as in the diagram; the Titian on the next page is an exception."
+      "Seen from the back: a crossbar and corner braces keep the frame square.",
+      "Until the 1800s, big canvases were usually sewn from strips; the Titian on the next page is an exception."
      ],
      "works": [
       "titian-vendramin-family"

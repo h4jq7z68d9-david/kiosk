@@ -119,13 +119,13 @@ window.SITE = {
    "slides": [
     {
      "type": "theme",
-     "img": "ct-spectrum",
-     "alt": "A horizontal band of spectral color from violet at 380 nanometres through blue, cyan, green, yellow and orange to red at 700, with a wavelength scale.",
+     "img": "bezold-plate-i-solar-spectrum",
+     "alt": "Chromolithographed solar spectrum from Bezold's 1876 Plate I: a band running from red at left through orange, yellow, green and blue to violet at right, crossed by thin dark lines lettered A to H above, beside a white square numbered 1.",
      "title": "Light and the Spectrum",
      "stmt": "Visible light is the narrow band of electromagnetic waves the eye can detect, roughly 380 to 700 nanometres long.",
-     "para": "Moving along the band, hue changes gradually, from violet at the short end through blue, green, yellow and orange to red. Sunlight carries the whole band at once and looks white; Newton Splits White Light shows a prism fanning it out.",
+     "para": "Hue changes along the band, from red at the long end through orange, yellow, green and blue to violet. Sunlight carries the whole band and looks white; Newton Splits White Light shows a prism fanning it out. Dark lines, lettered A to H, mark light absorbed by gases in the sun and air.",
      "bul": [
-      "A cut-glass crystal or a garden hose's spray in sunlight shows the band in order.",
+      "A cut-glass crystal or a hose's spray in sunlight shows the band.",
       "Magenta and purple appear nowhere in the band; the eye builds them from red and violet light together.",
       "Beyond the two ends lie ultraviolet and infrared, waves too short or too long for the eye."
      ],
@@ -139,11 +139,11 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-light-vs-paint",
-     "alt": "Left, on black: overlapping red, green and blue circles of light making yellow, cyan, magenta and white. Right, on white: overlapping cyan, magenta and yellow circles making blue, red, green and black.",
+     "img": "bezold-plate-i-mixtures",
+     "alt": "Four spectra on black from Bezold's 1876 Plate I, each beside a swatch: gamboge (yellow), passing red through green; Prussian blue (blue), passing green and blue; the two pigments mixed (green), passing only green; and their light combined (gray), passing everything either one passes.",
      "title": "Mixing Light vs. Mixing Paint",
      "stmt": "Additive mixing, as with lights, adds wavelengths with each new color; subtractive mixing, as with pigments, takes more away with each one.",
-     "para": "Red, green and blue lights together make white; screens build their colors this way. Cyan, magenta and yellow inks or filters stacked together leave almost nothing to reflect. Paint follows the second pattern, so each added color tends to darken and dull a mix.",
+     "para": "Wilhelm von Bezold, a German physicist, tested this with gamboge yellow and Prussian blue: mixed as paint, only the green both reflect survives; mixed as light in the eye, they add to a dim white that reads as gray. Screens add red, green and blue light; printers subtract with cyan, magenta and yellow inks.",
      "bul": [
       "Look at a phone screen through a strong magnifier: tiny glowing red, green and blue points, not blended color.",
       "In paint, only a color lighter than the mix raises its value.",
@@ -224,11 +224,11 @@ window.SITE = {
    "title": "Describing Color",
    "sub": "Words and numbers for telling one color from another",
    "overview": {
-    "img": "ct-color-wheel",
+    "img": "field-chromatography-plate-1",
     "cap": [
-     "",
-     "Hues arranged in mixing order",
-     ""
+     "George Field",
+     "Plate I from Chromatography, London",
+     "1835"
     ],
     "sum": "Everyday color names are too loose for a painter. This module sets out the properties every color has, the wheel painters use to arrange hues, and a system that locates each color by number. Later modules use these terms throughout.",
     "bul": [
@@ -246,11 +246,11 @@ window.SITE = {
    "slides": [
     {
      "type": "theme",
-     "img": "ct-hue-value-saturation",
-     "alt": "Rows of swatches: seven hues at one lightness, one red from dark to light, the same red from gray to strong, and that red mixed step by step with white, gray and black.",
+     "img": "ostwald-farbenfibel-triangle",
+     "alt": "Wilhelm Ostwald's 1921 tone triangle for one yellow: the pure yellow at the left point, paler yellows stepping up toward white at top right, darker olive yellows stepping down toward dark gray at bottom right, grayed yellows between, and a column of four grays on the right edge; edges lettered a, e, i, n.",
      "title": "Hue, Value and Saturation",
      "stmt": "Every color has three properties: hue, its color family (red, blue-green); value, how light or dark it is; and saturation, how strong or grayed it is.",
-     "para": "Each can change while the others hold still, so two reds may share a hue yet differ in lightness and strength. Paint mixed with white makes a tint, with gray a tone, with black a shade; all three usually also lower saturation.",
+     "para": "Each can change while the others hold still. The chemist Wilhelm Ostwald's 1921 triangle starts from one yellow: mixed toward white it makes tints along the top edge, toward black shades along the bottom, and toward gray the tones between. All three usually also lower saturation.",
      "bul": [
       "Name a color by all three, such as a light, grayed blue-green, rather than by an object like sage.",
       "Black shifts hue as well as value: stirred into yellow, it gives olive greens."
@@ -259,27 +259,27 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-color-wheel",
-     "alt": "A twelve-part red-yellow-blue color wheel with each wedge numbered 1, 2 or 3, beside swatches of the three primaries, three secondaries and six tertiaries.",
+     "img": "field-chromatography-plate-1",
+     "alt": "George Field's 1835 Plate I: an engraved ring of overlapping circles labeled red, yellow and blue, orange, green and purple, and the six mixtures between them, around a neutral center ringed by citrine, russet and olive; below, a hand-colored scale of triangles from white through the primaries, secondaries and tertiaries to black.",
      "title": "The Color Wheel",
      "stmt": "A color wheel arranges hues in a closed ring, running from red through violet and back to red, so every hue has neighbors on both sides.",
      "para": "On the painter's traditional wheel, red, yellow and blue are the primaries. Two primaries mixed give a secondary: orange, green or violet. A primary mixed with the secondary beside it gives a tertiary, such as blue-green. Twelve steps are usual; finer wheels are possible.",
      "bul": [
       "Read it as a map of mixing; Analogous, in the module on harmony and contrast, covers how neighbors mix.",
       "This wheel follows paint; light and printing ink start from other primaries (see Mixing Light vs. Mixing Paint).",
-      "Tertiaries are also called intermediates."
+      "George Field's 1835 tertiaries mix two secondaries: citrine, russet, olive. Today's are also called intermediates."
      ],
      "works": []
     },
     {
      "type": "theme",
-     "img": "ct-munsell",
-     "alt": "A simplified Munsell tree: a gray axis numbered 1 to 9, with yellow branching right and purple-blue branching left in steps of increasing strength; the branches differ in length at each level.",
+     "img": "munsell-atlas-chroma-branches",
+     "alt": "Chart C from Munsell's 1915 Atlas: a vertical gray axis from black to white inside a circle, with painted branches of different lengths: yellow to the right near the top, green and blue to the left near the middle, red to the right at middle height and longest, and purple to the right below it.",
      "title": "Munsell's System",
      "stmt": "Devised by Albert Munsell, this system places each color on three scales. Hue runs around a circle, value up a gray axis from black (0) to white (10), and chroma outward from that axis.",
      "para": "A notation such as 5R 4/14 reads hue, then value over chroma: a strong red a little darker than middle gray. The circle rests on five principal hues, not the painter's three. Munsell compared a chart that ignores chroma to 'a map of Switzerland with the mountains left out.'",
      "bul": [
-      "Yellow's branch is longest near white; purple-blue's, a little below the middle.",
+      "On his 1915 chart, red reaches ten steps from the axis at value 4; blue, at the same value, only six.",
       "Every hue shares the one gray axis, so colors of any hue can be compared by value alone.",
       "Chroma has no fixed end; Munsell expected branches to lengthen as stronger pigments appeared."
      ],
@@ -293,11 +293,11 @@ window.SITE = {
    "title": "Value and Temperature",
    "sub": "Light against dark, warm against cool, and the quiet colors in between",
    "overview": {
-    "img": "ct-warm-cool",
+    "img": "munsell-atlas-value-axis",
     "cap": [
-     "",
-     "A wheel split into warm and cool halves, a ball in warm light with cool shadows, and a cool red beside a warm red",
-     ""
+     "Albert H. Munsell",
+     "Chart V from Atlas of the Munsell Color System, Malden, Massachusetts",
+     "1915"
     ],
     "sum": "Before it is a set of hues, a painting is a pattern of lights and darks. This module looks at that pattern, at the pull between warm and cool, and at the grays and browns that hold a picture together. Each idea is paired with a painting that depends on it.",
     "bul": [
@@ -315,11 +315,11 @@ window.SITE = {
    "slides": [
     {
      "type": "theme",
-     "img": "ct-value-scale",
-     "alt": "A nine-step gray scale from near-black to near-white, with violet, blue, red, green, orange and yellow swatches each placed under the gray of matching value.",
+     "img": "munsell-atlas-value-axis",
+     "alt": "Chart V from Munsell's 1915 Atlas: a column of nine gray steps, N1 near black to N9 near white, between black (0) and white (10), with lines tying a yellow disk to step 8, green to 5, blue and red to 4, and purple to 3.",
      "title": "Seeing Light and Dark",
      "stmt": "A painting's value pattern is the arrangement of its lights and darks, and it does more than hue to show form, light and depth.",
-     "para": "Every hue has its own value at full strength: yellow sits near the light end, violet near the dark. The brain reads depth and form largely from differences in lightness, so a well-built picture still holds together in a black-and-white photograph.",
+     "para": "Every hue has its own value at full strength: on Munsell's 1915 chart, yellow sits at 8 of 10, red and blue at 4, purple at 3. The brain reads depth and form largely from differences in lightness, so a well-built picture still holds together in a black-and-white photograph.",
      "bul": [
       "Squint: it blurs detail and mutes hue, so the main lights and darks stand out.",
       "Many painters plan a picture in three to five values before they choose any colors.",
@@ -346,15 +346,15 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-warm-cool",
-     "alt": "A color wheel divided by a dashed line into warm and cool halves; a pale ball lit by warm light with blue-gray shadows; and a bluish, cool red beside an orange-leaning, warm red.",
+     "img": "field-chromatography-fig-2",
+     "alt": "George Field's 1835 Fig. 2: an engraved ring of overlapping circles labeled with red, yellow and blue and their mixtures, crossed by a line from Hot at upper right, near orange, to Cold at lower left, near blue, with Advancing and Retiring on the other diagonal.",
      "title": "Warm and Cool",
      "stmt": "Color temperature sorts hues into warm ones, around red, orange and yellow, and cool ones, around green, blue and violet. It always works by comparison.",
      "para": "Any hue can lean either way: a red with a touch of blue looks cool beside a red that leans to orange. Light has temperature too, and painters often see cool shadows under warm light and warm shadows under cool light.",
      "bul": [
       "Set two versions of one hue side by side; which one is warmer shows at once.",
       "Many painters lay out a warm and a cool version of each primary, so mixtures can lean either way.",
-      "The split is a convention: some count yellow-green and red-violet as warm, others as cool."
+      "The split is a convention: George Field's 1835 ring runs it from “Hot” orange to “Cold” blue, and border hues such as yellow-green are disputed."
      ],
      "works": [
       "turner-temeraire"
@@ -497,11 +497,11 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-complementary",
-     "alt": "The painter's color wheel with lines joining opposite hues, beside three swatch pairs: yellow and violet, red and green, blue and orange.",
+     "img": "bezold-plate-iv-pairs",
+     "alt": "Six split disks on black from Bezold's 1876 Plate IV, each half one color: carmine and bluish green, vermilion and turquoise-blue, orange and ultramarine, green and purple, yellowish green and purplish violet, yellow and bluish violet.",
      "title": "Complementary",
      "stmt": "Complementary colors sit opposite each other on the color wheel, and side by side each makes the other look more intense.",
-     "para": "Between them, each pair contains all three paint primaries: red is set against green, and green is yellow mixed with blue. That is one reason a pair can look complete together.",
+     "para": "Between them, each pair contains all three paint primaries: red is set against green, and green is yellow mixed with blue. Bezold's 1876 pairs sit opposite on his twelve-step circle; he notes only purple and green are true complements of light.",
      "bul": [
       "To spot a pair, find a picture's main hue and look for its opposite elsewhere in the picture.",
       "Where opposites of matched lightness meet, the edge can flicker; Vibrating and Vanishing Edges explains why."
@@ -527,11 +527,11 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-color-schemes",
-     "alt": "Three color wheels marked with a triangle, a narrow triangle and a square, each above its chosen swatches.",
+     "img": "bezold-plate-iv-triads",
+     "alt": "Four disks on black from Bezold's 1876 Plate IV, each split in three: carmine, yellowish green and ultramarine; vermilion, green and bluish violet; purple, yellow and turquoise-blue; orange, bluish green and purplish violet.",
      "title": "Triads and Wider Schemes",
      "stmt": "Wider schemes space three or four hues around the color wheel.",
-     "para": "A triad takes three evenly spaced hues. A split complement pairs one hue with the two neighbors of its opposite, and a square takes four evenly spaced hues. These schemes are lively but hard to balance, so most painters let one hue lead and keep the others smaller or duller.",
+     "para": "A triad takes three evenly spaced hues, as in Bezold's four 1876 examples, spaced on his own twelve-step circle. A split complement pairs one hue with the two neighbors of its opposite, and a square takes four evenly spaced hues. These schemes are lively but hard to balance, so most painters let one hue lead and keep the others smaller or duller.",
      "bul": [
       "To spot a triad, name a picture's three main colors and check their spacing on the wheel.",
       "A split complement gives much of the punch of opposites with less of a head-on clash.",
@@ -572,13 +572,13 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-saturation-contrast",
-     "alt": "A red stepping from full strength to gray, and the same red square set among dull colors and among bright ones.",
+     "img": "munsell-atlas-chroma-steps",
+     "alt": "Detail of Chart C from Munsell's 1915 Atlas: from a column of grays at left, yellows at value 8 step out to a strong yellow, reds at value 4 step over ten squares from brownish gray to strong red, and a shorter row of purples at value 3.",
      "title": "Contrast of Saturation",
      "stmt": "This contrast sets pure, intense colors against dull, grayed ones.",
      "para": "An intense color looks stronger among muted ones and weaker among other intense colors. Painters use this to decide where the eye lands without changing hue or lightness. Since mixing rarely raises intensity, dulling the surroundings is often the easier route.",
      "bul": [
-      "It needs no second hue: one red, stepped down toward gray, already contrasts with itself.",
+      "It needs no second hue: Munsell's red, stepped from gray to full strength, already contrasts with itself.",
       "Painters gray down most of a picture so a few saturated passages can carry the focus.",
       "Making every color intense backfires: when everything shouts, nothing stands out."
      ],
@@ -663,15 +663,15 @@ window.SITE = {
    "slides": [
     {
      "type": "theme",
-     "img": "ct-simultaneous-contrast",
-     "alt": "Two rows of panels: a gray square on black and on white, and a beige square on orange and on blue.",
+     "img": "bezold-plate-iii",
+     "alt": "Bezold's 1876 Plate III a, b and c side by side: two red disks, one on a deep crimson ground (Bezold's 'purple') above and one on yellow below; the same disks with the grounds swapped; and the two disks on a plain buff ground.",
      "title": "Simultaneous Contrast",
-     "stmt": "A color seen beside another seems to shift away from it, so one paint can look like two on different grounds.",
-     "para": "The eye exaggerates differences at a boundary. A gray looks lighter on black and darker on white, and a beige turns cooler on orange and warmer on blue, taking on a hint of each ground's opposite. How Chevreul came to it is told on Chevreul and Colors Side by Side, in Module 1.",
+     "stmt": "A color seen beside another seems to shift away from it, so two paints can look alike, or far apart, on different grounds.",
+     "para": "The eye exaggerates differences at a boundary. On Wilhelm von Bezold's 1876 plates, two different reds look nearly alike on his purple (now faded to crimson) and yellow (left); swap the grounds and they split apart (center); on neutral paper their true difference shows (right). How Chevreul came to it is told on Chevreul and Colors Side by Side, in Module 1.",
      "bul": [
       "Mask a color with a scrap of gray card to see it apart from its neighbors.",
       "Painters judge a mixture on the canvas, beside what will surround it, not on the palette.",
-      "Knowing the two squares match does not make them look alike, even to a trained eye."
+      "Knowing the two disks differ does not make them look different, even to a trained eye."
      ],
      "works": []
     },
@@ -691,11 +691,11 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-optical-mixing",
-     "alt": "A checkerboard of small red and blue squares, a flat patch of the average of those two colors, and a darker, duller patch showing the same red and blue mixed as paint.",
+     "img": "bezold-plate-v-fig-3",
+     "alt": "Fig. 3 of Bezold's 1876 Plate V: a band of red ornament, scrolls, palmettes and stripes, printed flat on a blue ground.",
      "title": "Optical Mixing",
      "stmt": "Small touches of different colors, seen from far enough away, merge into one color in the eye instead of on the palette.",
-     "para": "The eye averages the light from each touch, so the result stays lighter than the same paints stirred together. Wilhelm von Bezold, a German scientist writing in the 1870s, gave a test case: thin vermilion lines on blue look purple from a distance, yet the two paints mixed make a muddy red-brown.",
+     "para": "The eye averages the light from each touch, so the result stays lighter than the same paints stirred together. Bezold printed a test case: from a distance, red ornament on blue shows “a tinge of purple,” yet vermilion and ultramarine mixed on the palette make “a dirty reddish brown.”",
      "bul": [
       "Walk toward a dotted passage and watch one color split into its parts.",
       "Painters set dots or broken strokes side by side to keep mixtures clean and lively.",
@@ -723,11 +723,11 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-bezold-effect",
-     "alt": "Two panels of the same red crossed by a fine diagonal lattice, white lines on the left and black lines on the right.",
+     "img": "bezold-plate-v-figs-5-6",
+     "alt": "Figs. 5 and 6 of Bezold's 1876 Plate V: an ornamental band in one red with black ornament and stripes on its left half and white on its right; beside it, the pattern reversed: red ornament and thin red stripes on a black ground.",
      "title": "The Bezold Effect",
      "stmt": "Changing one color in a pattern can shift the look of all the others, seen most clearly when fine lines switch from white to black.",
-     "para": "Here the lines are too fine to judge apart, so the red takes on some of their color: white lines lift it toward pink and black lines sink it toward maroon. This pull toward a neighbor is called assimilation, or spreading. Bezold describes it in his book on color in art and the decorative trades.",
+     "para": "In Fig. 5 of Bezold's plate, from his book on color in art and the decorative trades, one red carries black ornament on the left and white on the right: it reads darker beside black, lighter beside white. In Fig. 6, red ornament on black, it darkens more still. This pull toward a neighbor is called assimilation, or spreading.",
      "bul": [
       "From across the room, the one red splits into a light and a dark version.",
       "It is the reverse of simultaneous contrast, where a neighbor pushes a color away from itself.",
@@ -1014,11 +1014,11 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-color-emotion",
-     "alt": "The same sunset-over-water shapes painted twice, once in saturated reds, oranges and yellows with dark blue, once in gray-blues with a narrower value range, with swatches below each.",
+     "img": "goethe-schiller-temperamentenrose",
+     "alt": "Goethe and Schiller's Temperamentenrose, 1798–99: a hand-drawn ring of twelve watercolor segments, red at the top through orange, pale yellows and greens to blue and violet, around a dark center; inscribed bands name human types such as tyrants, heroes, lovers, poets, historians and teachers, and the outer band the four temperaments.",
      "title": "Color and Emotion",
      "stmt": "Color carries emotion when a painter sets hue, value and saturation to push viewers toward a feeling rather than to describe what is there.",
-     "para": "The effect comes from the whole scheme more than any one hue: how strong the colors are, how far apart their values sit, and whether they clash or settle.",
+     "para": "Goethe and Schiller's 1798–99 rose matched hues to temperaments. Yet the effect comes from the whole scheme more than any one hue: how strong the colors are, how far apart their values sit, and whether they clash or settle.",
      "bul": [
       "Cover the subject and ask what the colors alone suggest before reading the story.",
       "Painters often push one property hard, such as saturation or value contrast, and keep the rest quiet.",
@@ -1045,15 +1045,15 @@ window.SITE = {
     },
     {
      "type": "theme",
-     "img": "ct-color-symbol",
-     "alt": "The same simple praying figure twice, in a blue mantle with red dress and white veil, and with the mantle changed to brown.",
+     "img": "goethe-farbenkreis-1809",
+     "alt": "Goethe's 1809 watercolor color circle: a ring of red, orange, yellow, green, blue and violet segments inscribed in German schön, edel, gut, nützlich, gemein and unnöthig, with Vernunft, Verstand, Sinnlichkeit and Phantasie on the outer band.",
      "title": "Color and Symbol",
      "stmt": "A color becomes a symbol when a culture attaches a set meaning to it, so the color can be read as a sign.",
      "para": "The meaning can come from tradition, from the cost of the material, or both. European painters often gave the Virgin Mary a mantle of ultramarine, the most expensive blue, which honored her and showed what a patron could afford.",
      "bul": [
       "A symbol needs a viewer who knows the code; without it, the same blue is just blue.",
       "Painters can use a traditional color to name a figure at a glance, before any detail is read.",
-      "Meanings differ between cultures and change over time, so check the period before reading a color as a sign."
+      "Meanings differ by culture and period: Goethe's 1809 circle calls red “schön” (beautiful) and blue “gemein” (common)."
      ],
      "works": [
       "sassoferrato-virgin-prayer"

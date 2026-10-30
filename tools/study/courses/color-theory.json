@@ -7,11 +7,11 @@
  "themeLabel": "Concept",
  "subjLabel": "",
  "introImg": "ct-complementary",
- "intro": "How color works on the canvas: what light and the eye do, how colors are named and measured, how they change one another, and how pigments behave. Concept pages explain one idea with an original diagram; example pages show it in a public-domain painting.",
- "imagesNote": "Diagrams are original to this site; paintings are public domain or openly licensed. Sources and licenses are listed under Image credits.",
+ "intro": "How color works on the canvas: what light and the eye do, how colors are named and measured, how they change one another, and how pigments behave. Concept pages explain one idea with a historic plate or an original diagram; example pages show it in a public-domain painting.",
+ "imagesNote": "Diagrams are original to this site or historic public-domain plates; paintings are public domain or openly licensed. Sources and licenses are listed under Image credits.",
  "ldDescription": "A short course on color for painters.",
- "homeDescription": "{name}: a short course on color for painters, from light and the eye to harmony, contrast and pigment, with original diagrams and public-domain paintings.",
- "creditsIntro": "The diagrams were made for this site. The paintings are public domain or openly licensed; each entry links to the file's record with its source and license.",
+ "homeDescription": "{name}: a short course on color for painters, from light and the eye to harmony, contrast and pigment, with historic plates, original diagrams and public-domain paintings.",
+ "creditsIntro": "The diagrams were made for this site, except the historic plates and drawings, which are public domain. The paintings are public domain or openly licensed; each entry links to the file's record with its source and license.",
  "creditsDescription": "Sources and licenses for the {count} diagrams and paintings in {name}.",
  "sourcesDescription": "The lectures, courses, museum records and references behind {name}."
 }
