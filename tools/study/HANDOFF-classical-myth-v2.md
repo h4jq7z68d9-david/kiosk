@@ -20,7 +20,7 @@ Status (Oct 27 2026, evening): **done and deployed** by the art business project
 
 ## Work data format (new)
 
-A work slide now has `lead` (2-sentence paragraph), `bul` (4-5 bullets), `subj` (2 sentences on the myth) instead of `fn` + `sum`. The page shows no "Made for:" label; it shows a small "The subject" heading before `subj`. `build-proto.js` already renders both formats.
+A work slide now has `lead` (2-sentence paragraph), `bul` (4-5 bullets), `subj` (2 sentences on the myth) instead of `fn` + `sum`. The page shows no "Made for:" label; it shows `subj` after a divider, with no heading (the heading was removed from every course on Oct 29 2026; set `subjLabel` in a course's settings to show one). `build-proto.js` already renders both formats.
 
 ## Steps to go live (art business project)
 

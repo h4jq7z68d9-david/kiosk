@@ -25,7 +25,7 @@ Folder `study/art-history/<slug>/`:
 A handout (= part): `{ n, wk, title, sub, quote?, overview: { img, cap: [artist, title, date], sum, bul: [], terms: [[term, def]] }, slides: [] }`.
 
 Slides, by `type`:
-- `work` — **preferred, artwork-first format:** `{ type:'work', key, artist, title, date, det, lead (2 sentences), bul (4–5), subj (2 sentences on the myth/subject), terms?, quote? }`. The page shows a small "The subject" heading before `subj`; no "Made for:" label. The older format (`fn` + `sum` + `bul`) still renders.
+- `work` — **preferred, artwork-first format:** `{ type:'work', key, artist, title, date, det, lead (2 sentences), bul (4–5), subj (2 sentences on the myth/subject), terms?, quote? }`. The page shows `subj` after a divider, with no heading (the heading was removed from every course on Oct 29 2026; set `subjLabel` in a course's settings to show one); no "Made for:" label. The older format (`fn` + `sum` + `bul`) still renders.
 - `theme` — `{ type:'theme', img, title, stmt, para, bul, terms?, works: [keys], quote? }`
 - `text` — `{ type:'text', title, sub?, sum, bul, terms }`
 

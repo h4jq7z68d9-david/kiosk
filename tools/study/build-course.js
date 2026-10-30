@@ -15,7 +15,7 @@
      imgFrom         optional: read images from another course's img/ folder
      basePath        optional: folder the course lives in (default /study/art-history; a technique course can use /study)
      themeLabel      optional: name for theme-layout pages (default Theme; a technique course uses Concept)
-     subjLabel       optional: heading over a work page's subj text (default The subject; "" = no heading)
+     subjLabel       optional: heading over a work page's subj text (default none; set a label to show one)
      imagesNote      optional: the start page's line about image rights (default: every image is public domain or CC0)
    Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
    (this page's own label in place of themeLabel, e.g. History).
@@ -54,7 +54,7 @@ const COURSE = BASE + '/' + SLUG;
 const DIR = path.join(ROOT, COURSE);
 const IMG_COURSE = BASE + '/' + (CFG.imgFrom || SLUG);
 const THEME = CFG.themeLabel || 'Theme';
-const SUBJ = CFG.subjLabel == null ? 'The subject' : CFG.subjLabel;
+const SUBJ = CFG.subjLabel == null ? '' : CFG.subjLabel;
 const IMG_DIR = path.join(ROOT, IMG_COURSE, 'img');
 const NAME = CFG.name;
 const STUDY = '/study.html';
