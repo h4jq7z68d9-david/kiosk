@@ -1,0 +1,17 @@
+{
+ "name": "Pigments and Materials",
+ "dataFiles": [
+  "data.js"
+ ],
+ "basePath": "/study",
+ "themeLabel": "Concept",
+ "subjLabel": "",
+ "introImg": "pm-binder",
+ "intro": "What paintings are made of: the pigments painters used and where they came from, the binders that turn powder into paint, the panels, canvases and grounds underneath, and how all of it changes over time. Concept pages explain one idea with an original diagram; example pages show it in a public-domain work.",
+ "imagesNote": "Diagrams are original to this site; artworks are public domain or openly licensed. Sources and licenses are listed under Image credits.",
+ "ldDescription": "A short course on painters' pigments and materials.",
+ "homeDescription": "{name}: a short course on what paintings are made of, from ancient pigments to binders, supports and grounds, with original diagrams and public-domain works.",
+ "creditsIntro": "The diagrams were made for this site. The artworks are public domain or openly licensed; each entry links to the file's record with its source and license.",
+ "creditsDescription": "Sources and licenses for the {count} diagrams and artworks in {name}.",
+ "sourcesDescription": "The lectures, courses, museum records and references behind {name}."
+}
