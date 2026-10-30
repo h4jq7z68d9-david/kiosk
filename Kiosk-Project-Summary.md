@@ -18,6 +18,7 @@
 |<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards|
 |<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course (Oct 30 2026: 5 parts, 50 pages under /study/pigments-and-materials/; concept, history and example pages), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/study/oil-vs-acrylic.html>|Oil vs Acrylic technique course (Oct 30 2026: 6 parts, 38 pages under /study/oil-vs-acrylic/; concept, history and example pages), same guide layout as Color Theory|
+|<https://davidnicholsonart.com/study/composition.html>|Composition technique course (Oct 30 2026: 6 parts, 49 pages under /study/composition/; concept, history and example pages, mostly Dow and Poore plates), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (condensed, Oct 27 2026: 60 works, 7 modules) — start page of the guide; every slide is its own indexable page under /study/art-history/classical-myth/ (70 pages), all in the guide layout (outline, search, Saved, Prev/Next, swipe)|
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
@@ -599,6 +600,22 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`lambda-deploy` user** (local seed scripts):
 
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
+
+-----
+
+## Completed This Session (October 30 2026, afternoon) — Composition course (deployed Oct 30 2026)
+
+**Composition** added at `/study/composition.html`, built by the art technique course builder (iCloud `School v2/Art Technique Course Builder/Composition/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). Technique course under `/study/`, concept pages labeled "Concept". 6 parts (A Short History; The Frame; Shape and Value; Balance and Structure; Movement and Depth; Unity); 49 pages (20 works, 6 parts, 23 other). Follows the plates-first rule: 25 plates from Arthur Wesley Dow's *Composition* (1914) and Henry R. Poore's *Pictorial Composition* (c. 1915), from Project Gutenberg scans; one original diagram (Depth by Design); 20 public-domain artworks. Data: `study/composition/data.js`, `credits.js`, `sources.js`, `img/` (46 images). Settings: `tools/study/courses/composition.json` (`introImg: poore-fundamental-forms`). `study.html`: technique-tab card after Oil vs Acrylic ("course · 6 parts") + JSON-LD entry. Sitemap: 574 URLs.
+
+**Changed from the handoff (David, Oct 30 2026):** 21 images over 1600 px resized to max 1600 px, JPEG q85 (folder 23 MB → 11 MB); rebuilt. David made this a standing rule for every install (see the to-do list). The iCloud copy still has the full-size images.
+
+**Rebuild list:** after any `guide.css`/`guide.js`/generator change, rebuild all nine courses: classical-myth, impressionism, color-theory, post-impressionism, fauvism-and-expressionism, romanticism, pigments-and-materials, oil-vs-acrylic, composition.
+
+**Tested (headless Chromium, 1440 / 390 px):** start page plus one page from each of the 6 parts, and `study.html` — every image loads, no horizontal scroll, phone Prev/Next row outside `.app`; the 393 px Dow No. 44 plate (Positive and Negative Space) reads clearly at both sizes.
+
+**Known limits (from the handoff):** several Dow and Poore plates are 400–650 px wide, Dow No. 44 is 393 px (David: use them anyway); golden ratio and rule of thirds presented with their evidence (Palmer's Berkeley result is a conference poster); visual readings in our own words for the Colonna Altarpiece symmetry, Cassatt balance, *Sudden Shower* rhythm and the Circus Sideshow look-for line; Simon Kelly (2014) lecture claims rest on auto-captions and are hedged; Brooklyn Museum credit line for Hiroshige *Plum Estate* is in credits.js; mandala medium glossed as "distemper (glue-based paint)" (standard usage, not the museum record).
+
+**Not yet shrunk (older courses, images over 1600 px):** Post-Impressionism 10, Color Theory 4, Pigments and Materials 2, Oil vs Acrylic 1.
 
 -----
 
