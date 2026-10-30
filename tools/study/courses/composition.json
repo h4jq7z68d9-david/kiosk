@@ -1,0 +1,17 @@
+{
+ "name": "Composition",
+ "dataFiles": [
+  "data.js"
+ ],
+ "basePath": "/study",
+ "themeLabel": "Concept",
+ "subjLabel": "",
+ "introImg": "poore-fundamental-forms",
+ "intro": "How painters arrange a picture: the frame, shapes and values, balance and structure, movement and depth, and how it all holds together. Concept pages explain one idea, mostly with plates from two old public-domain books on composition (Arthur Wesley Dow, 1914; Henry R. Poore, about 1915); example pages show it in a public-domain work.",
+ "imagesNote": "Most concept images are plates from Dow's Composition (1914) and Poore's Pictorial Composition (about 1915), both public domain; one diagram was made for this site; the artworks are public domain. Sources are listed under Image credits.",
+ "ldDescription": "A short course on composition in painting.",
+ "homeDescription": "{name}: a short course on how painters arrange a picture, from the frame and value massing to balance, movement and unity, with plates from two classic public-domain books and public-domain example works.",
+ "creditsIntro": "Most concept images are plates from two public-domain books, Arthur Wesley Dow's Composition (1914) and Henry R. Poore's Pictorial Composition (about 1915), from Project Gutenberg's scans. One diagram was made for this site. The artworks are public domain; each entry links to its record.",
+ "creditsDescription": "Sources and licenses for the {count} diagrams and artworks in {name}.",
+ "sourcesDescription": "The lectures, courses, museum records and references behind {name}."
+}
