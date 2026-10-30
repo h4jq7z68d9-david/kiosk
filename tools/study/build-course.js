@@ -61,7 +61,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 2, bar: 1, guideCss: 5, guideJs: 5 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 2, bar: 1, guideCss: 6, guideJs: 5 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -281,11 +281,17 @@ const OUTLINE = `<p><a class="ho" href="${HOME}">About this site</a></p>` + flat
   + flat.filter((x) => x.h === 99).map((x) => `<p><a class="ho" href="${x.url}">${esc(x.label)}</a></p>`).join('');
 
 function crumbHtml(f) {
-  if (f.kind === 'intro') return '<span>Start</span>';
-  if (f.h === 99) return `<a href="${HOME}">${esc(NAME)}</a> · <span>Sources</span>`;
+  // desktop only (hidden on phones): Study › lane › course › part; the last item is the current page, not a link
+  const lane = BASE === '/study' ? ['Technique', STUDY] : ['Art history', STUDY + '#art-history'];
+  const a = ([t, h]) => `<a href="${h}">${esc(t)}</a>`, here = (t) => `<span aria-current="page">${esc(t)}</span>`, sep = ' <span class="sep" aria-hidden="true">›</span> ';
+  const head = [a(['Study', STUDY]), a(lane)];
+  // narrow desktops show only Study › lane (the rail already names the course and part), so links are never cut off
+  const tail = (items) => `<span class="tail">${sep}${items.join(sep)}</span>`;
+  if (f.kind === 'intro') return head.join(sep) + tail([here(NAME)]);
+  const course = a([NAME, HOME]);
+  if (f.h === 99) return head.join(sep) + tail([course, here(f.label)]);
   const p = f.part || f;
-  // section shows in the page's eyebrow; the bar shows only the part (overview pages: a neutral label, since the h1 is the part)
-  return f.kind === 'overview' ? '<span aria-current="page">Overview</span>' : `<a href="${p.url}">${esc(f.hd.title)}</a>`;
+  return head.join(sep) + tail([course, f.kind === 'overview' ? here(f.hd.title) : a([f.hd.title, p.url])]);
 }
 
 function pageHtml(f, i) {
