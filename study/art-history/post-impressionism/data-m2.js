@@ -10,11 +10,11 @@ SITE.handouts.push({
    "Mont Sainte-Victoire and the Viaduct of the Arc River Valley",
    "1882–85"
   ],
-  "sum": "Paul Cézanne exhibited with the Impressionists in 1874, and from 1882 often painted landscapes around Aix-en-Provence and L'Estaque. He wanted painting to feel solid and lasting rather than momentary. His slow, structured method made him a model for the painters who came after him.",
+  "sum": "From 1882 Paul Cézanne often painted landscapes around Aix-en-Provence and L'Estaque. His slow method made him a model for the painters who came after him.",
   "bul": [
-   "Early work beside Pissarro, and the move from fleeting light toward built form",
+   "Early work beside Pissarro",
    "Provençal landscapes, portraits and still lifes organized by planes and color",
-   "The late mountain views, bathers and portraits that younger painters studied"
+   "The late mountain views, bathers and portraits"
   ],
   "terms": [
    [
@@ -84,7 +84,7 @@ SITE.handouts.push({
    "det": "Oil on canvas, 116.5 × 89.5 cm. The Metropolitan Museum of Art, New York",
    "lead": "A woman in red sits upright in a yellow chair with a tall back. He painted his wife in this dress four times; only this version places her in a furnished room.",
    "bul": [
-    "She is the steady center of a room whose chair, curtain and fireplace tilt and bend around her. The space shifts slightly, built for balance rather than strict perspective.",
+    "She is the steady center of a room whose chair, curtain and fireplace tilt and bend around her.",
     "The setting is his Paris apartment on the quai d'Anjou (1888–90).",
     "Look for the mirror above the fireplace at the far left.",
     "The blue wall is mottled, painted in uneven patches rather than one flat tone.",
@@ -135,10 +135,9 @@ SITE.handouts.push({
    "det": "Oil on paper on board, 70.6 × 57.3 cm. The Courtauld Gallery, London",
    "lead": "A small plaster cupid stands among apples and onions in a crowded studio corner, with canvases leaning on the wall behind it. The painter's own workroom and props become a puzzle about seeing.",
    "bul": [
-    "The floor tilts steeply upward, and the depth of the room is hard to judge. Space is bent so that the whole design holds together.",
+    "The floor tilts steeply upward, and the depth of the room is hard to judge.",
     "A sprouting onion sits where real produce and the fruit painted in the canvases behind seem to blur.",
     "Look at the far corner, where a green apple seems much too large.",
-    "It is painted in oil on paper laid down on board, not on canvas.",
     "It came to the Courtauld Gallery with Samuel Courtauld's bequest in 1948."
    ],
    "subj": "The cast copies a small seventeenth-century sculpture. Samuel Courtauld bought the painting in 1923 from the Glasgow dealer Alex Reid."
@@ -192,7 +191,7 @@ SITE.handouts.push({
     "Small touches of bright blue, orange and red light up the dark clothes and face.",
     "It came to the National Gallery in 1959 as a gift of Eugene and Agnes E. Meyer."
    ],
-   "subj": "Vallier was the gardener and handyman at the painter's house near Aix. The artist died in October of the year this was painted."
+   "subj": "The sitter also worked as handyman at the painter's house near Aix. The artist died in October of the year this was painted."
   }
  ]
 });

@@ -10,9 +10,9 @@ SITE.handouts.push({
    "Closed Eyes",
    "1890"
   ],
-  "sum": "In the 1880s and 1890s some French artists stopped trying to record what the eye sees. They aimed instead to suggest ideas, moods and dreams, and left the viewer to complete the meaning. Their work ranged from hushed figure painting and black prints to bright pastels and invented jungles.",
+  "sum": "In the 1880s and 1890s some French artists left the viewer to complete the meaning.",
   "bul": [
-   "A calm, simplified figure painting that younger artists treated as a model.",
+   "A calm, simplified figure painting.",
    "Prints and drawings in black that picture visions, evolution and literature, then a late turn to color.",
    "Jungle and desert scenes by a self-taught painter, built from sources found in Paris."
   ],
@@ -34,7 +34,7 @@ SITE.handouts.push({
    "lead": "A thin man stands with bowed head in a moored boat on a grey shore. Little happens in the scene, and its stillness sets the tone.",
    "bul": [
     "The color is pale and flat, with almost no modeling, and the forms are kept simple. Younger painters, among them Seurat, Gauguin, Denis and Picasso, admired the result.",
-    "It made its debut at the Salon, where it found no buyer and divided opinion.",
+    "It made its debut at the Salon, where it found no buyer.",
     "Look past the boat: a figure gathers flowers while a baby lies on the grass.",
     "Critics attacked its odd perspective and greenish palette.",
     "The French State bought it in 1887, its first purchase of a work by the painter."
@@ -71,9 +71,9 @@ SITE.handouts.push({
    "title": "The Eye, Like a Strange Balloon Moves Towards Infinity",
    "date": "1882",
    "det": "Lithograph on China paper, image 26.3 × 19.8 cm. The Art Institute of Chicago",
-   "lead": "A giant eye, fringed with lashes, floats over a dark plain like a balloon. Its pupil rolls upward, toward the open sky.",
+   "lead": "A giant eye, fringed with lashes, floats over a dark plain. Its pupil rolls upward, toward the open sky.",
    "bul": [
-    "The caption points toward infinity, something no one can see. The print gives that abstract idea a strange, concrete shape instead of recording an observed sight.",
+    "The caption points toward infinity, something no one can see. The print gives that abstract idea a strange, concrete shape.",
     "It is the first plate of the album To Edgar Poe.",
     "Look below the eye: a small head sits in the basket-like gondola hanging from it.",
     "He learned transfer lithography in 1878, and most of his prints were made for albums.",
@@ -88,7 +88,7 @@ SITE.handouts.push({
    "title": "There Was Perhaps a First Vision Attempted in the Flower",
    "date": "1883",
    "det": "Lithograph on China paper, image 22.5 × 17.7 cm. The Art Institute of Chicago",
-   "lead": "An eye opens at the top of a plant stalk, ringed by lashes like petals. The print imagines a moment when sight first appeared in living things.",
+   "lead": "An eye opens at the top of a plant stalk, ringed by lashes like petals.",
    "bul": [
     "Human anatomy and plant growth merge into one creature. Hybrid forms like this recur often in his early prints, which imagine stages of life no one could witness.",
     "It is the second of eight plates in the album Les Origines.",
@@ -124,7 +124,7 @@ SITE.handouts.push({
    "det": "Oil on canvas mounted on cardboard, 44 × 36 cm. Musée d'Orsay, Paris",
    "lead": "A head with lowered lids rises above a band of pale light. The Musée d'Orsay treats it as a defining image of Symbolist painting.",
    "bul": [
-    "With the eyes shut, the subject becomes thought rather than appearance. The museum reads the closed lids as a sign of inward life, of dreaming and absence.",
+    "The museum reads the closed lids as a sign of inward life, of dreaming and absence.",
     "It repeats a motif from one of the artist's earlier drawings.",
     "Look at the space around the bust: it is left undefined, so the figure seems to float.",
     "The paint is thin enough for the canvas weave to show through.",

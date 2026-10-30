@@ -10,11 +10,11 @@ SITE.handouts.push({
    "At the Moulin Rouge",
    "1892–95"
   ],
-  "sum": "In the 1890s, Paris artists carried painting onto the street and into the home. Montmartre's dance halls and cabarets hired painters to design posters for their stars. At the same time, a group of young friends made small, private pictures of family rooms, and printed albums of them for collectors.",
+  "sum": "Montmartre's dance halls and cabarets hired painters to design posters for their stars. At the same time, a group of young friends made small, private pictures of family rooms.",
   "bul": [
    "Posters and paintings of Montmartre nightlife, its performers and its audiences",
-   "The Nabis' patterned interiors, decorative panels and self-portraits",
-   "Color prints published by Ambroise Vollard, and a group portrait that names the painters' model"
+   "The Nabis' decorative panels and self-portraits",
+   "Color prints published by Ambroise Vollard, and a group portrait"
   ]
  },
  "slides": [
@@ -45,10 +45,10 @@ SITE.handouts.push({
    "lead": "A dancer kicks high above a crowd of black silhouettes on a street poster. This advertisement launched the artist's career as a poster designer.",
    "bul": [
     "A painter's eye is put to work selling a dance hall: flat color, bold lettering and a cropped crowd. Art and advertising now shared the same street wall.",
-    "The dance hall commissioned the poster, which stands about six feet tall.",
+    "The dance hall commissioned the poster.",
     "Look for the gray dancer in front, Valentin le Désossé, whose stage name means boneless.",
     "The Paris printer Affiches Américaines, of Charles Lévy, produced the sheets.",
-    "The Met acquired this complete three-sheet impression in 1932."
+    "The Met acquired this complete impression in 1932."
    ],
    "subj": "The hall first opened its doors in 1889, on the boulevard de Clichy. Its star dancer went by a nickname meaning the glutton.",
    "terms": [
@@ -124,7 +124,7 @@ SITE.handouts.push({
     "The friend is painted more vaguely than the sitter, so he seems to drift back.",
     "It came to the Met in 1955 as a gift of Alex M. Lewyt."
    ],
-   "subj": "The painter was 23, in a high collar that could suit a clerk or a cleric. Only the palette and brushes mark him as an artist."
+   "subj": "The painter was about 21, in a high collar that could suit a clerk or a cleric. Only the palette and brushes mark him as an artist."
   },
   {
    "type": "work",
@@ -133,7 +133,7 @@ SITE.handouts.push({
    "title": "Decorative Panels: Women in the Garden",
    "date": "1890–91",
    "det": "Distemper over carbon, crayon and chalk on paper, mounted on canvas; each panel 155 × 45 cm. Kunsthaus Zürich",
-   "lead": "Four tall, narrow panels show women walking and resting among garden leaves. Zurich's museum sees the set as his first major statement in the group's manner.",
+   "lead": "Across four panels, figures walk and rest among leaves. Zurich's museum sees the set as his first major statement in the group's manner.",
    "bul": [
     "White dots cover one red dress and lilac checks another, lying flat across the folds. The Nabis took bold patterning like this partly from Japanese prints.",
     "The panels were first conceived as one folding screen in four parts, then separated.",
@@ -150,7 +150,7 @@ SITE.handouts.push({
    "title": "Woman in a Striped Dress",
    "date": "1895",
    "det": "Oil on canvas, 65.7 × 58.7 cm. National Gallery of Art, Washington",
-   "lead": "Two women arrange flowers in a room where clothing, blossoms and background form one patchwork. Cut flowers and greenery fill the right half of the canvas.",
+   "lead": "Two women arrange flowers in a room. Cut flowers and greenery fill the right half of the canvas.",
    "bul": [
     "The sitter's features blur into the patterned room around her. Such panels sometimes hung unframed on patterned wallpaper, as if continuing the room.",
     "It is one of five decorative panels Thadée Natanson ordered for himself and Misia.",
@@ -175,7 +175,7 @@ SITE.handouts.push({
    "det": "Color lithograph on China paper, image 35.3 × 27.4 cm. The Art Institute of Chicago",
    "lead": "A corner of the artist's home is covered almost from ceiling to floor in printed pattern. The sheet comes from an album of private rooms and landscapes.",
    "bul": [
-    "Wallpaper spreads over nearly every surface until the room feels close and crowded. Pattern, more than any figure, sets the mood here.",
+    "The room feels close and crowded. Pattern, more than any figure, sets the mood here.",
     "It is plate five of an album Vollard released in 100 copies.",
     "Look at the doorway at right, where a small figure stands half hidden.",
     "The grayish-ivory sheet is slightly larger than the printed image, leaving a narrow margin.",
@@ -192,7 +192,7 @@ SITE.handouts.push({
    "det": "Lithograph in four colors, image 34.5 × 25.7 cm. The Metropolitan Museum of Art, New York (impression shown: Petit Palais, Paris)",
    "lead": "A window frames the back of an apartment building, with shutters, chimneys and one woman leaning out. The window's own dark frame runs down the left side and across the bottom.",
    "bul": [
-    "The everyday city appears in just four printed colors, mostly soft grays and beiges. A few muted inks are enough to hold the whole mood.",
+    "The everyday city appears mostly in soft grays and beiges. A few muted inks are enough to hold the whole mood.",
     "It belongs to Vollard's 1899 album of Paris life: 12 prints, issued in 100 copies.",
     "Look for the tiny touches of orange on the chimney pots.",
     "A trial proof at the Art Institute adds violet and hand-applied yellow.",
@@ -207,7 +207,7 @@ SITE.handouts.push({
    "title": "Homage to Cézanne",
    "date": "1900",
    "det": "Oil on canvas, 182 × 243.5 cm. Musée d'Orsay, Paris",
-   "lead": "Nine men and one woman crowd a room hung with other paintings. The large canvas works as a group portrait and a public statement.",
+   "lead": "Nine men and one woman crowd a room hung with other paintings. It works as a group portrait.",
    "bul": [
     "The younger generation names its model in public, gathering around a still life by the older master. It links this circle directly to his way of building pictures.",
     "The 1901 Salon of the Société nationale des beaux-arts gave it its first showing.",

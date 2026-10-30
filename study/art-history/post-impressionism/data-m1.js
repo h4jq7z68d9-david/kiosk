@@ -2,7 +2,7 @@ SITE.handouts.push({
  "n": 1,
  "wk": 1,
  "title": "Neo-Impressionism: Seurat, Signac and the Science of Color",
- "sub": "Color theory turned into a working method, from Paris to Brussels.",
+ "sub": "Theory turned into a working method.",
  "overview": {
   "img": "seurat-circus",
   "cap": [
@@ -10,11 +10,11 @@ SITE.handouts.push({
    "The Circus",
    "1891"
   ],
-  "sum": "From the mid-1880s a group of painters around Seurat and Signac tried to turn color into a method. They set pure color down in separate touches, guided by the science of their day. Within a few years the approach had followers across France and in Belgium.",
+  "sum": "From the mid-1880s a group of painters set pure color down in separate touches. Within a few years the approach had followers across France and in Belgium.",
   "bul": [
    "Seurat's large figure paintings, from the riverbank to the circus ring",
-   "Signac, the movement's champion, and the writer who named it",
-   "Followers in France and Belgium: Cross, Luce and Van Rysselberghe"
+   "Signac, the movement's champion",
+   "Followers: Cross, Luce and Van Rysselberghe"
   ],
   "terms": [
    [
@@ -76,8 +76,7 @@ SITE.handouts.push({
     "A popular dance becomes the subject of a large, serious canvas. Painters in this circle often treated city nightlife as part of modern life, a scene of freedom and spectacle.",
     "Look at the lines: legs, the conductor's hand, the bass neck and even the flowers in the background point upward.",
     "The dancers repeat one another like types rather than individual portraits.",
-    "Warm artificial light is built from tiny dots, short lines and combinations of color.",
-    "Today it hangs on display in the Kröller-Müller Museum at Otterlo."
+    "Warm artificial light is built from tiny dots, short lines and combinations of color."
    ],
    "subj": "This bold offshoot of the cancan was performed by both sexes. Its female dancers raised their hems and showed their legs, which made it a risqué spectacle."
   },
@@ -122,7 +121,7 @@ SITE.handouts.push({
    "title": "Opus 217. Against the Enamel of a Background Rhythmic with Beats and Angles, Tones, and Tints, Portrait of M. Félix Fénéon in 1890",
    "date": "1890",
    "det": "Oil on canvas, 73.5 × 92.5 cm. The Museum of Modern Art, New York",
-   "lead": "A man holding a top hat and a flower stands against a spinning background of colored bands and stars. The portrait doubles as a statement of the group's ideas about color and rhythm.",
+   "lead": "A man holding a top hat and a flower stands against a spinning background of colored bands and stars.",
    "bul": [
     "A friend of the group is posed against a pattern this close to abstract design, so the portrait becomes a tribute to the method itself.",
     "The sitter had defended the dot technique in print in 1887, urging viewers to step back.",
