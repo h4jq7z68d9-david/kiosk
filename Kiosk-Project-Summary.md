@@ -602,6 +602,21 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 30 2026, afternoon) — Plate retrofit for the three technique courses (deployed Oct 30 2026)
+
+**David's standing rule (Oct 30 2026):** technique courses use old public-domain plates instead of newly generated diagrams wherever possible. This retrofit swapped 19 diagrams for plates (iCloud `School v2/Art Technique Course Builder/HANDOFF - Plate retrofit.md`; each course folder has `RETROFIT-CHANGES.md` with before/after text and `IMG-CHANGES.json`).
+- **Color Theory (15):** Bezold, *The Theory of Color* (1876); Munsell, *Atlas* (1915); Field, *Chromatography* (1835); Ostwald, *Farbenfibel* (1921); Goethe's color circle (1809, Freies Deutsches Hochstift scan); Goethe & Schiller, *Temperamentenrose* (1798–99, Klassik Stiftung Weimar).
+- **Pigments and Materials (3):** Rand's 1841 paint-tube patent; Collaert after Stradanus, *Color Olivi* (c. 1600, Met CC0); *Encyclopédie*, Peinture Pl. IV (1771).
+- **Oil vs Acrylic (1):** Rand's 1841 paint-tube patent.
+
+Replaced `data.js`, `credits.js`, `sources.js` and `tools/study/courses/<course>.json` for each course (intro, homeDescription, imagesNote, creditsIntro now mention historic plates; Oil vs Acrylic keeps `imagesNote: ""`). 19 images added, 18 removed (the replaced `ct-*`, `pm-canvas`, `pm-h-chemists`, `pm-oil`, `oa-h-oil` diagrams; none referenced elsewhere). Rebuilt: 66, 50, 38 pages; 30 pages changed in content (19 swapped slides, Color Theory's "Value and Temperature" overview, each course's start/credits/sources); the rest changed only the `index.js?v=` hash. `study.html`: the three technique card texts updated to the new homeDescription.
+
+**Tested (headless Chromium, 1440 / 390 px):** all 30 changed pages plus `study.html` — no console errors or failed requests, every image loads, no horizontal scroll; all 19 swapped slides checked visually.
+
+**Known limits (from the handoff):** Goethe 1809 circle from museum-digital:hessen (rights field Public Domain; portal shows a generic CC BY-NC-SA notice that appears to cover its text); *Temperamentenrose* is a scan from a 2006 exhibition catalogue via Wikimedia Commons (catalogue page number retouched out); scan blemishes retouched on four plates, no drawing content altered; two long Color Theory slides — Mixing Light vs. Mixing Paint (124 words) and Complementary (96). Bezold's solar spectrum on Light and the Spectrum is a thin strip and displays small.
+
+-----
+
 ## Completed This Session (October 30 2026, afternoon) — Oil vs Acrylic course (deployed Oct 30 2026)
 
 **Oil vs Acrylic** added at `/study/oil-vs-acrylic.html`, built by the art technique course builder (iCloud `School v2/Art Technique Course Builder/Oil vs Acrylic/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). Technique course under `/study/`, concept pages labeled "Concept". 6 parts in 3 sections (Two Paints; Working with Each; Over Time); 38 pages (9 works, 6 parts, 23 other). Data: `study/oil-vs-acrylic/data.js`, `credits.js`, `sources.js`, `img/` (29 images: 20 original diagrams, 7 public-domain artworks, 2 of David's acrylics — *Early, Still* 2025 and *Umbrella, Reverie* 2024, credited "© David Nicholson"). Settings: `tools/study/courses/oil-vs-acrylic.json` (`introImg: oa-binders`). `study.html`: technique-tab card after Pigments and Materials ("course · 6 parts") + JSON-LD entry. Sitemap: 525 URLs.
