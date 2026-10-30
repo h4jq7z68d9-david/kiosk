@@ -10,7 +10,7 @@ SITE.handouts.push({
    "The Scream",
    "1893"
   ],
-  "sum": "Painters across Europe took the ideas worked out in Paris and bent them to their own cities and concerns. New exhibiting groups in Brussels, Munich and Vienna gave them a stage. The label for the whole movement came later, from Roger Fry's 1910 exhibition in London.",
+  "sum": "New exhibiting groups in Brussels, Munich and Vienna gave painters outside France a stage. The label for the whole movement came later, from Roger Fry's 1910 exhibition in London.",
   "bul": [
    "Belgium and Norway: masks, silence and dread in Ensor, Khnopff and Munch.",
    "Vienna: the Secession, and Klimt's gold and ornament.",
@@ -31,10 +31,10 @@ SITE.handouts.push({
    "title": "Christ's Entry into Brussels in 1889",
    "date": "1888–early 1890s",
    "det": "Oil on canvas, 252.6 × 431 cm. J. Paul Getty Museum, Los Angeles",
-   "lead": "A huge canvas packs a city street to its edges, with a haloed Christ almost lost in the procession. A religious entry becomes a noisy attack on modern society.",
+   "lead": "The canvas packs a city street to its edges, with a haloed Christ almost lost in the procession.",
    "bul": [
     "Masks, clowns and grotesque faces stand in for the public, turning society into a mob of frauds. The satire takes aim at religion, politics and art.",
-    "Les XX, the Brussels exhibiting group he had helped found, rejected it.",
+    "Les XX, which he had helped found, rejected it.",
     "Look for the red banner over the crowd, with a slogan for the socialist cause.",
     "He spread paint with palette knives, spatulas, and the brush handle as well as its tip.",
     "It was not shown in public until 1929, long after it was signed."
@@ -48,7 +48,7 @@ SITE.handouts.push({
    "title": "I Lock My Door upon Myself",
    "date": "1891",
    "det": "Oil on canvas, 72.7 × 141 cm. Neue Pinakothek, Munich",
-   "lead": "A pale, red-haired woman rests her chin on her hands, shut in a room of closed shapes and muted color. The picture builds a mood of withdrawal rather than telling a story.",
+   "lead": "A pale, red-haired woman rests her chin on her hands. The picture builds a mood of withdrawal rather than telling a story.",
    "bul": [
     "An empty doorway, a blank window and an inward stare shut out the world beyond the room. Here the Symbolist turn inward is staged as a sealed room.",
     "It keeps its original gilded frame.",
@@ -94,7 +94,7 @@ SITE.handouts.push({
     "A watercolour and pencil study of the same scene also dates from 1896.",
     "Look at the faces, set side by side like masks and all turned outward.",
     "MUNCH conservator Inger Grimstad found raw canvas under a hand-applied ground, and an original tinted glaze once taken for dirt.",
-    "It was recently shown in the museum's Infinite display in Oslo."
+    "It was recently shown in the museum's Infinite display."
    ],
    "subj": "Grimstad links this crowd to the Sunday stroll in his earlier painting of Karl Johan. That picture, now at KODE, sets the walkers in town."
   },
@@ -105,7 +105,7 @@ SITE.handouts.push({
    "title": "Pallas Athene",
    "date": "1898",
    "det": "Oil on canvas, 75 × 75 cm. Wien Museum, Vienna",
-   "lead": "An armored goddess stares straight out at the viewer, gripping a tall spear. The square canvas sits in a frame lettered with her name.",
+   "lead": "An armored goddess stares straight out at the viewer, gripping a tall spear. The canvas sits in a frame lettered with her name.",
    "bul": [
     "An ancient goddess is recast as an allegory, shown as a patroness rather than acting in a scene from myth. An old subject becomes a modern emblem.",
     "It is signed and dated in the upper left corner.",
@@ -141,7 +141,7 @@ SITE.handouts.push({
    "det": "Oil on canvas, 250.2 × 130.5 cm. The Metropolitan Museum of Art, New York",
    "lead": "A kneeling shepherd in an Alpine landscape dreams of eight pale women who appear in a row above him. The picture divides into two zones, earth below and vision above.",
    "bul": [
-    "The women repeat related poses in a steady, frieze-like rhythm. The painter later named this kind of ordered repetition parallelism.",
+    "The women repeat related poses in a steady, frieze-like rhythm.",
     "It was first shown in Geneva.",
     "Look at the women's stylized gestures, which recall Puvis de Chavannes.",
     "Red-brown contour lines outline the women over pale, thinly brushed color.",
@@ -151,7 +151,7 @@ SITE.handouts.push({
    "terms": [
     [
      "Parallelism",
-     "The painter's principle of repeating similar forms in symmetrical order to express unity."
+     "The painter's later name for his principle of repeating similar forms in symmetrical order to express unity."
     ]
    ]
   },
@@ -164,7 +164,7 @@ SITE.handouts.push({
    "det": "Oil on canvas, 116 × 227 cm. J. Paul Getty Museum, Los Angeles",
    "lead": "A girl leads two draught horses across a sunlit Alpine field, with snowy peaks behind. The wide view sets farm work inside a calm, high mountain world.",
    "bul": [
-    "Strands of unmixed color are set next to each other, not blended, so the eye mixes them and field and sky shimmer. Italian divisionists drew the method out into threads.",
+    "Strands of unmixed color are set next to each other, so field and sky shimmer. Italian divisionists drew the method out into threads.",
     "Munich saw it first, at the seventh Secession exhibition.",
     "Look for the sower working the plowed field behind the horses.",
     "Flecks of gold leaf and thick paint catch the light across the surface.",

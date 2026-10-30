@@ -10,10 +10,10 @@ SITE.handouts.push({
    "Vision of the Sermon (Jacob Wrestling with the Angel)",
    "1888"
   ],
-  "sum": "In Brittany in the late 1880s, Gauguin and younger painters traded observed light for flat color, firm outlines and images of belief. Their ideas spread through friendships, a café exhibition and one small panel. In Tahiti, he carried the method into pictures of a colonial society assembled from borrowed sources.",
+  "sum": "In the late 1880s, Gauguin and younger painters turned away from observed light. Their ideas spread through friendships, a café exhibition and one small panel.",
   "bul": [
    "The Pont-Aven circle: Gauguin, Bernard and Sérusier in Brittany",
-   "Self-portraits, a ceramic and a talisman that launched the Nabis",
+   "Self-portraits, a ceramic and a talisman",
    "Tahiti: paintings and prints built from many cultures, read with their colonial context"
   ],
   "terms": [
@@ -73,7 +73,7 @@ SITE.handouts.push({
     "The face sits against flat yellow wallpaper scattered with flowers, painted as pure pattern.",
     "Van Gogh's family kept it until their foundation took it over in 1962."
    ],
-   "subj": "The younger painter shown in the background had joined him at Pont-Aven in Brittany that summer. Their meeting there fed the flat, outlined style of 1888."
+   "subj": "The younger painter had joined him at Pont-Aven in Brittany that summer. Their meeting there fed the flat, outlined style of 1888."
   },
   {
    "type": "work",
@@ -82,11 +82,11 @@ SITE.handouts.push({
    "title": "The Talisman (Landscape in the Bois d'Amour)",
    "date": "1888",
    "det": "Oil on wood, 27 × 21.5 cm. Musée d'Orsay, Paris",
-   "lead": "A small wooden panel shows a riverside wood in a handful of strong hues. Dense trees fill the upper left, with a path below them.",
+   "lead": "A riverside wood is painted in a handful of strong hues. Dense trees fill the upper left, with a path below them.",
    "bul": [
     "Trees, path and mill shrink to patches of strong color. Each color is an equivalent for what he saw, not a copy.",
     "A note on the back says it was made at Pont-Aven under Gauguin's direction.",
-    "Look for the mill at right and the trees lining the river.",
+    "Look for the mill at right.",
     "Gauguin's advice, as Maurice Denis recorded it, was to paint shadow pure ultramarine.",
     "It stayed with Denis and his heirs until the Orsay bought it in 1985."
    ],
@@ -94,7 +94,7 @@ SITE.handouts.push({
    "terms": [
     [
      "Nabis",
-     "A group of young Paris painters inspired by Gauguin; the name comes from the Hebrew word for prophets."
+     "A group of painters inspired by Gauguin; the name comes from the Hebrew word for prophets."
     ]
    ]
   },
@@ -105,7 +105,7 @@ SITE.handouts.push({
    "title": "Self-Portrait in the Form of a Grotesque Head (Pot anthropomorphe)",
    "date": "1889",
    "det": "Glazed stoneware, height 28.4 cm. Musée d'Orsay, Paris",
-   "lead": "A glazed jar is modeled as a human head, its face bowed and brooding. The museum classes it as a domestic pot, but a label he attached names it The Sincerity of a Dream.",
+   "lead": "A jar is modeled as a human head, its face bowed and brooding. The museum classes it as a domestic pot, but a label he attached names it The Sincerity of a Dream.",
    "bul": [
     "The group's taste for simplified form carries over into clay. The features are reduced to a few heavy masses rather than worked into a detailed likeness.",
     "It was a gift to the painter Émile Schuffenecker, named on the label under the base.",
@@ -139,10 +139,10 @@ SITE.handouts.push({
    "title": "The Seaweed Gatherer",
    "date": "c. 1890",
    "det": "Oil on canvas, 46 × 54.9 cm. Indianapolis Museum of Art at Newfields",
-   "lead": "A stone wall runs across a stretch of Breton coast below rolling fields. Land, mounds and water are simplified into a few warm and cool shapes.",
+   "lead": "A stone wall runs across a stretch of Breton coast below rolling fields.",
    "bul": [
     "The land rises in rolling bands of color stacked up the canvas, with little sense of deep space. The coast becomes a flat, patterned surface.",
-    "The view shows the shoreline close to Le Pouldu, in Brittany.",
+    "The view shows the shoreline close to Le Pouldu.",
     "Look at the two rust-colored mounds: seaweed hauled up off the shore to feed the fields.",
     "The worker is a flat shape, his curved back echoing the hills.",
     "It came to Indianapolis in 1998 with the Samuel Josefowitz collection of Pont-Aven art."

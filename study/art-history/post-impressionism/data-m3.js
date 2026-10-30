@@ -10,7 +10,7 @@ SITE.handouts.push({
    "The Starry Night",
    "1889"
   ],
-  "sum": "This part follows one painter across about five years, from peasant scenes in the Netherlands to the asylum at Saint-Rémy. Each move brought a change in color and handling. By the end, color and line carry emotion as much as they describe what he saw.",
+  "sum": "Across about five years, from the Netherlands to Saint-Rémy, each move brought a change in Van Gogh's color and handling.",
   "bul": [
    "Nuenen and the dark, earthy palette of his peasant pictures",
    "Paris, where Japanese prints and the dot painters lightened and broke up his touch",
@@ -33,7 +33,7 @@ SITE.handouts.push({
     "Critics faulted its dark palette and awkward drawing, though he was pleased with it.",
     "Related studies and sketches for it are in the same museum."
    ],
-   "subj": "He painted it in the village of Nuenen in April and May. Today it ranks among his best-known paintings and hangs on view at the museum in Amsterdam."
+   "subj": "He painted it in the village of Nuenen in April and May. Today it ranks among his best-known paintings."
   },
   {
    "type": "work",
@@ -88,7 +88,7 @@ SITE.handouts.push({
     "He called it his garden-with-lovers picture.",
     "Look at the sky, made of slanting blue and white dashes across the whole upper half.",
     "Red touches mark the chestnut blossom, scattered through the green of the trees.",
-    "It is on view in Amsterdam, owned by the foundation that bears the painter's name."
+    "It is owned by the foundation that bears the painter's name."
    ],
    "subj": "The theme of couples together reflected his own longing for a wife and family. That hope went unmet, and he gave himself to his art instead."
   },
@@ -184,7 +184,7 @@ SITE.handouts.push({
    "title": "The Starry Night",
    "date": "1889",
    "det": "Oil on canvas, 73.7 × 92.1 cm. The Museum of Modern Art, New York",
-   "lead": "A village sleeps under a sky of swirling stars beside a towering cypress. It began with the view from his asylum window but goes far beyond it.",
+   "lead": "A village sleeps under a sky of swirling stars beside a towering cypress. It began with the view from his asylum window.",
    "bul": [
     "The village was put together from other views, and the cypress was moved closer. The motif is reshaped to carry feeling rather than to record the scene.",
     "Look for the moon blazing at right and Venus glowing at center left.",
@@ -224,7 +224,7 @@ SITE.handouts.push({
    "title": "Self-Portrait",
    "date": "1889",
    "det": "Oil on canvas, 65 × 54 cm. Musée d'Orsay, Paris",
-   "lead": "The painter turns three-quarters toward us against a pale blue-green ground. His steady, guarded gaze is set against a background in constant motion.",
+   "lead": "The painter turns three-quarters toward us against a pale blue-green ground.",
    "bul": [
     "Swirling arabesques fill the background and repeat the waves of his hair and beard. The pattern turns an ordinary backdrop into a carrier of energy and feeling.",
     "Look at the clothes: a suit, not his usual work jacket.",
