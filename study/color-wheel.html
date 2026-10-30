@@ -249,7 +249,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 #toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f1f3f5; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap; transition: opacity 0.2s, transform 0.2s; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
-<link rel="stylesheet" href="/site-chrome.css?v=1">
+<link rel="stylesheet" href="/site-chrome.css?v=2">
 </head>
 <body>
 
@@ -1928,6 +1928,6 @@ async function submitGB() {
 let toastTimer;
 function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
-<script src="/site-chrome.js?v=1"></script>
+<script src="/site-chrome.js?v=2"></script>
 </body>
 </html>

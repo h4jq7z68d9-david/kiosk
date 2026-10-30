@@ -10,9 +10,17 @@
 #menu-panel a:hover, #menu-panel button:hover { color: var(--ink); background: var(--surface); }
 #menu-panel a.current { color: var(--accent-ink); font-weight: 500; }
 #menu-panel hr { border: none; border-top: 1px solid var(--border); margin: 8px 22px; }
+#menu-panel { max-height: calc(100dvh - var(--nav-h, 62px)); overflow-y: auto; overscroll-behavior: contain; }
+#menu-panel .menu-sub { margin: 0 0 6px 22px; border-left: 1px solid var(--border); }
+#menu-panel .menu-sub a { min-height: 36px; padding: 0 16px; font-size: 15px; }
+#menu-panel .menu-sub .menu-group { display: flex; align-items: center; min-height: 30px; padding: 6px 16px 0; font-family: var(--font); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); }
+#menu-panel .menu-sub a.menu-group:hover { color: var(--accent-ink); background: none; }
 @media (max-width: 600px) {
   #menu-panel { left: 0 !important; right: 0; width: auto; border-left: none; border-right: none; }
   #menu-panel a, #menu-panel button { padding: 0 16px; min-height: 50px; font-size: 18px; }
   #menu-panel hr { margin: 8px 16px; }
+  #menu-panel .menu-sub { margin-left: 16px; }
+  #menu-panel .menu-sub a { min-height: 42px; font-size: 16px; }
+  #menu-panel .menu-sub .menu-group { min-height: 30px; font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { #menu-panel, #menu-scrim { transition: none; } }

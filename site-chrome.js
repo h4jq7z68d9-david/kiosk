@@ -14,6 +14,23 @@
     { action: 'guestbook', label: 'guest book' },
     { action: 'contact', label: 'contact' }
   ];
+  /* Study courses, listed under "study" in the menu on study pages only.
+     Technique in study.html card order; art history in date order (same as the timeline).
+     Adding a course: add one line here. */
+  var STUDY = [
+    { group: 'technique', href: '/study.html' },
+    { href: '/study/color-wheel.html', label: 'color wheel' },
+    { href: '/study/color-theory.html', label: 'color theory', section: '/study/color-theory/' },
+    { href: '/study/pigments-and-materials.html', label: 'pigments and materials', section: '/study/pigments-and-materials/' },
+    { href: '/study/oil-vs-acrylic.html', label: 'oil vs acrylic', section: '/study/oil-vs-acrylic/' },
+    { href: '/study/composition.html', label: 'composition', section: '/study/composition/' },
+    { group: 'art history', href: '/study.html#art-history' },
+    { href: '/study/art-history/classical-myth.html', label: 'classical myth in art', section: '/study/art-history/classical-myth/' },
+    { href: '/study/art-history/romanticism.html', label: 'romanticism', section: '/study/art-history/romanticism/' },
+    { href: '/study/art-history/impressionism.html', label: 'impressionism', section: '/study/art-history/impressionism/' },
+    { href: '/study/art-history/post-impressionism.html', label: 'post-impressionism', section: '/study/art-history/post-impressionism/' },
+    { href: '/study/art-history/fauvism-and-expressionism.html', label: 'fauvism and early expressionism', section: '/study/art-history/fauvism-and-expressionism/' }
+  ];
   var FOOTER = [
     { href: '/gallery.html', label: 'gallery' },
     { href: '/originals.html', label: 'available originals' },
@@ -47,7 +64,33 @@
       }
       if (item.label) el.textContent = item.label;
       panel.appendChild(el);
+      if (item.section === '/study' && here.indexOf('/study/') === 0) addStudy();
     });
+
+    /* course list under "study" — the current course is marked, so you can see where you are */
+    function addStudy() {
+      var box = document.createElement('div');
+      box.className = 'menu-sub';
+      STUDY.forEach(function (c) {
+        var a;
+        if (c.group) {
+          a = document.createElement(c.href ? 'a' : 'div');
+          if (c.href) a.href = c.href;
+          a.className = 'menu-group';
+          a.textContent = c.group;
+        } else {
+          a = document.createElement('a');
+          a.href = c.href;
+          a.textContent = c.label;
+          if (here === c.href || (c.section && here.indexOf(c.section) === 0)) {
+            a.className = 'current';
+            a.setAttribute('aria-current', 'page');
+          }
+        }
+        box.appendChild(a);
+      });
+      panel.appendChild(box);
+    }
 
     var setMenu = function (open) {
       if (open && window.innerWidth > 600) panel.style.left = Math.max(0, btn.getBoundingClientRect().left) + 'px';
