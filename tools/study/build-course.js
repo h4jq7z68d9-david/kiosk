@@ -16,7 +16,7 @@
      basePath        optional: folder the course lives in (default /study/art-history; a technique course can use /study)
      themeLabel      optional: name for theme-layout pages (default Theme; a technique course uses Concept)
      subjLabel       optional: heading over a work page's subj text (default none; set a label to show one)
-     imagesNote      optional: the start page's line about image rights (default: every image is public domain or CC0)
+     imagesNote      optional: the start page's line about image rights (default: every image is public domain or CC0; "" leaves the line out)
    Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
    (this page's own label in place of themeLabel, e.g. History).
 
@@ -149,7 +149,7 @@ function slideHtml(f) {
     if (ik && !C[ik]) throw new Error(`introImg "${ik}" has no credits entry`);
     return [ik ? 'slide' : 'slide text', (ik ? pic(ik, iw ? iw.title : ik, iw ? cap(iw) : esc(C[ik].work)) : '') + `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>${RULE}
 <p class="sum">${esc(p1)}</p>
-<ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move between pages.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a page, and Saved (top right) to find your saved pages again.</li><li>${esc(CFG.imagesNote || 'Every image is public domain or CC0; sources and licenses are listed under Image credits.')}</li></ul>
+<ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move between pages.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a page, and Saved (top right) to find your saved pages again.</li>${CFG.imagesNote === '' ? '' : `<li>${esc(CFG.imagesNote || 'Every image is public domain or CC0; sources and licenses are listed under Image credits.')}</li>`}</ul>
 <p class="contlink" id="contlink" hidden></p>
 <p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul>${ik ? crl(ik) : ''}</div>`];
   }
