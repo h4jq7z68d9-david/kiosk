@@ -1009,7 +1009,7 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 - [ ] **Fauvism: add the held Nolde page** after Jan 1 2027 if a free image exists (see the Oct 29 2026 section).
 - **Standing rule — study images (David, Oct 30 2026):** always shrink course images over 1600 px to max 1600 px on the long side (JPEG q85, Pillow LANCZOS) when installing a course, before committing. Rebuild afterwards (pages record image dimensions).
 - [ ] **Next art-history courses** (Impressionism and Post-Impressionism done Oct 28 2026, Fauvism and Early Expressionism Oct 29 2026, Romanticism Oct 30 2026; next Renaissance, Baroque…): each is a data folder `study/art-history/<slug>/` (data files, `credits.js`, optional `sources.js`, `img/`) + a settings file in `tools/study/courses/` + one `tl-item` in date order in the `study.html` art history tab (technique courses: `tools/study/courses/<slug>.json` with `basePath: /study`, data under `study/<slug>/`, a `tl-item` in the technique tab). Run `node tools/study/build-course.js <slug>`. No viewer file needed.
-- [ ] **Optional: delete the 114 unused images** in `study/art-history/classical-myth/img/` (only 60 are used since Oct 27 2026; ~20 MB).
+- [x] **Delete the 114 unused images** in `study/art-history/classical-myth/img/` — done Oct 30 2026 (22 MB; the deploy's `--delete` sync removed them from S3). Full set still in git history and on `archive-classical-myth-full-2026-10-27`. S3 bucket was ~379 MB before (receipts 173 MB, `past/` 51 MB, study courses 146 MB).
 
 ### Ongoing
 
