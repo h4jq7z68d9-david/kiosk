@@ -192,3 +192,14 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 .tl .tt { font-weight: 500; font-size: 20px; color: var(--ink); line-height: 1.25; text-transform: lowercase; }
 .tl .ts { color: var(--ink2); font-size: 14.5px; line-height: 1.55; font-weight: 300; }
 @media (max-width: 600px) { .tl-th { aspect-ratio: 4 / 3; } }
+
+/* study.html tabs (technique / art history) */
+.stabs { display: flex; gap: 28px; margin-top: 26px; border-bottom: 1px solid var(--border); }
+.stabs button { font: 500 15px var(--font); letter-spacing: .08em; text-transform: lowercase; color: var(--ink3); background: none; border: 0; border-bottom: 2px solid transparent; padding: 0 0 10px; margin-bottom: -1px; cursor: pointer; }
+.stabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.stab-panel + .stab-panel { margin-top: 40px; }   /* only matters without JS, when both panels show */
+.tl-plain { padding-left: 0; }
+.tl-plain::before, .tl-plain .tl-item::before { display: none; }
+/* technique tab: diagrams and the wheel icon are shown whole on white, not cropped */
+.tl-plain .tl-th { background: var(--panel); }
+.tl-plain .tl-th img { object-fit: contain; }
