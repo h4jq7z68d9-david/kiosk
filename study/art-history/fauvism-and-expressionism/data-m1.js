@@ -4,7 +4,7 @@ SITE.handouts.push({
  "title": "The Wild Beasts",
  "sub": "Matisse, Derain and their circle, 1904–1912",
  "overview": {
-  "img": "matisse-the-green-line",
+  "img": "matisse-woman-with-a-hat",
   "cap": ["Henri Matisse", "Portrait of Madame Matisse. The Green Line", "1905"],
   "sum": "In 1905 a few painters in Paris began choosing color for its force rather than its accuracy. This part follows that change from its first trials to the quieter pictures that came after.",
   "bul": [
