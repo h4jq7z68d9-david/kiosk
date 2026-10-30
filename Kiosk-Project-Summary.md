@@ -603,6 +603,22 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 30 2026, later) — Study navigation between courses (deployed Oct 30 2026)
+
+**Problem (David):** inside a course you got stranded: the only way out was menu → study, which always opened the technique tab; no course linked to another.
+
+**Menu course list.** On any page under `/study/`, the site menu lists every course under "study", grouped **technique** (study.html card order) and **art history** (date order, same as the timeline); the current course is marked. The group labels link to `study.html` and `study.html#art-history`. Main-site pages and `study.html` keep the plain menu. List lives in `STUDY` in `site-chrome.js` — **adding a course means adding one line there** (as well as its card on `study.html`). Menu panel now scrolls when taller than the screen (`max-height` + `overscroll-behavior: contain`); on phones guest book and contact sit below the fold on study pages. `site-chrome` cache v2 (`V.chrome` in `build-course.js`; the 11 main pages and `study.html`/`color-wheel.html` edited to `?v=2`).
+
+**Desktop breadcrumb.** The bottom-bar crumb now reads Study › Technique|Art history › Course › Part (generator `crumbHtml`; sources/credits pages end in their own label; course start page ends at the course). 901–1199 px shows only Study › lane (course and part in `.tail`, hidden) so the links are never cut off; ≥1200 px a long part name can end in "…". Phones unchanged (crumb hidden). `guide.css` v6. JSON-LD breadcrumbs unchanged.
+
+**Considered, not built:** next-course hand-off on a course's last page, course switcher in the outline rail, cross-lane "Related" links (needs tags from the course builders).
+
+**Rebuild list:** after any `guide.css`/`guide.js`/generator change, rebuild all nine courses: classical-myth, impressionism, color-theory, post-impressionism, fauvism-and-expressionism, romanticism, pigments-and-materials, oil-vs-acrylic, composition.
+
+**Tested (headless Chromium, 390 / 960 / 1210 / 1440 px):** menu on Romanticism, Color Theory and gallery; crumb on Romanticism, Fauvism, Pigments and Materials and the longest Romanticism part — no console errors, no horizontal scroll; rebuilt HTML differs from main only in crumb lines and cache strings.
+
+---
+
 ## Completed This Session (October 30 2026, afternoon) — Composition course (deployed Oct 30 2026)
 
 **Composition** added at `/study/composition.html`, built by the art technique course builder (iCloud `School v2/Art Technique Course Builder/Composition/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). Technique course under `/study/`, concept pages labeled "Concept". 6 parts (A Short History; The Frame; Shape and Value; Balance and Structure; Movement and Depth; Unity); 49 pages (20 works, 6 parts, 23 other). Follows the plates-first rule: 25 plates from Arthur Wesley Dow's *Composition* (1914) and Henry R. Poore's *Pictorial Composition* (c. 1915), from Project Gutenberg scans; one original diagram (Depth by Design); 20 public-domain artworks. Data: `study/composition/data.js`, `credits.js`, `sources.js`, `img/` (46 images). Settings: `tools/study/courses/composition.json` (`introImg: poore-fundamental-forms`). `study.html`: technique-tab card after Oil vs Acrylic ("course · 6 parts") + JSON-LD entry. Sitemap: 574 URLs.
