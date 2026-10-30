@@ -13,7 +13,7 @@
 |<https://davidnicholsonart.com/booth.html>          |Booth planner — art fair wall layout tool (noindex, admin-linked)                            |
 |<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal                                   |
 |<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)                              |
-|<https://davidnicholsonart.com/study.html>          |Study landing page — cards grouped by color and art history; menu item "study"               |
+|<https://davidnicholsonart.com/study.html>          |Study landing page — color cards, then art history as a vertical timeline in date order (Oct 30 2026); menu item "study"|
 |<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel (Oct 28 2026: moved from study/color-theory.html; flashcards tab removed). Home-screen web app `start_url`|
 |<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards|
 |<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
@@ -21,6 +21,7 @@
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
 |<https://davidnicholsonart.com/study/art-history/post-impressionism.html>|Post-Impressionism (Oct 28 2026: 74 works, 3 sections, 7 parts) — start page of the guide; every slide is its own page under /study/art-history/post-impressionism/ (84 pages), same guide layout|
 |<https://davidnicholsonart.com/study/art-history/fauvism-and-expressionism.html>|Fauvism and Early Expressionism (Oct 29 2026: 54 works, 4 sections, 6 parts) — start page of the guide; every slide is its own page under /study/art-history/fauvism-and-expressionism/ (63 pages), same guide layout|
+|<https://davidnicholsonart.com/study/art-history/romanticism.html>|Romanticism (Oct 30 2026: 64 works, 3 sections, 7 parts) — start page of the guide; every slide is its own page under /study/art-history/romanticism/ (74 pages), same guide layout|
 |<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                                                       |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
@@ -599,6 +600,20 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 30 2026) — Romanticism study section; study.html art-history timeline (deployed Oct 30 2026)
+
+**Romanticism** added at `/study/art-history/romanticism.html`, built by the art-history course builder (iCloud `School v2/Art History Course Builder/Romanticism/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). 64 works in 3 sections (Revolution and Nightmare; France; Landscape and the Sublime), 7 parts; 74 pages (64 works, 7 parts, 3 other). Data: `study/art-history/romanticism/data.js`, `data-m1.js`…`data-m7.js`, `credits.js`, `sources.js`, `img/` (64 JPEGs). Settings: `tools/study/courses/romanticism.json` (`introImg: gericault-raft-medusa`, `subjLabel: ""`). No generator change; rebuilding left the other courses' HTML unchanged. Sitemap: 437 URLs.
+
+**study.html — art history as a vertical timeline (David chose option B of two mockups, Oct 30 2026).** The art-history grid is replaced by `.tl`: one left-aligned column in date order, a rail with a dot and a date label per course, large image cards (16:7 desktop, 4:3 phone). Styles at the end of `study/study.css`; link bumped `?v=5` → `?v=6` (only study.html uses study.css). Color cards unchanged. Dates: Classical Myth c. 575 bce–1903 (earliest/latest work dates in its data), Romanticism 1760s–1860s (course settings), Impressionism 1860s–1890s, Post-Impressionism 1880s–1900s, Fauvism 1905–1918 (the last three are estimates from the course intros and work dates; David may adjust). To add a course: copy a `tl-item` in date order, plus a JSON-LD `hasPart` entry.
+
+**Rebuild list:** after any `guide.css`/`guide.js`/generator change, rebuild all six courses: classical-myth, impressionism, color-theory, post-impressionism, fauvism-and-expressionism, romanticism.
+
+**Tested (headless Chromium, 1440 / 390 px):** start page plus one work page from each of the 7 parts, and `study.html` — every image loads, no horizontal scroll, no "The subject", phone Prev/Next row outside `.app`; the only console error is the deliberately blocked GA script (same on the live Fauvism page).
+
+**Known limits (from the handoff):** #59 Durand *Kindred Spirits* low resolution (872 px, only free file); #18 Géricault *The Charging Chasseur* color not checked against the Louvre's image (swap if a better PD file appears); two photo credits (Rude relief — Jebulon CC0; Palace of Westminster — Terry Ott CC BY 2.0, credit required); provenance stated neutrally for #51 Friedrich *Wanderer* and #55 Dahl; three sources without links (two UK Parliament "Living Heritage" pages, NGA audio stop 701); #63 Church *Heart of the Andes* width 305.3 cm converted from the Met's inches.
+
+-----
+
 ## Completed This Session (October 29 2026) — Fauvism and Early Expressionism study section; "The subject" heading removed from every course (deployed Oct 29 2026)
 
 **Fauvism and Early Expressionism** added at `/study/art-history/fauvism-and-expressionism.html`, built by the art-history course builder (iCloud `School v2/Art History Course Builder/Fauvism and Early Expressionism/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). 54 works in 4 sections (Paris; Dresden and Berlin; Munich; Vienna), 6 parts; 63 pages (54 works, 6 parts, 3 other). Data: `study/art-history/fauvism-and-expressionism/data.js`, `data-m1.js`…`data-m6.js`, `credits.js`, `sources.js`, `img/` (54 JPEGs, ~16 MB). Settings: `tools/study/courses/fauvism-and-expressionism.json` (`introImg: matisse-the-green-line`). The Wild Beasts part overview uses *Woman with a Hat* (David, Oct 29; the handoff had *The Green Line*, which already opens the course). `study.html`: fourth art-history card (*The Green Line*) and a JSON-LD `hasPart` entry; meta description rewritten (it still listed the retired color theory flashcards). Sitemap: 363 URLs.
@@ -927,7 +942,7 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 - [ ] **Resubmit `sitemap.xml` in Google Search Console** (study section went live Oct 26 2026; replaced by the condensed Classical Myth Oct 27 2026 — the sitemap listed 77 URLs; 150 after Impressionism and 216 after Color Theory, both Oct 28 2026). After the Oct 27 deploy, spot-check on a phone: course home, one work page, Saved panel, search. Post-deploy checks already passed on the live site: shared bar/menu/footer on index, gallery and study pages; gallery prints load; `/color-theory.html` redirects; `#flashcards` opens the deck; course-home search; work-page pager; Jost loads.
 - [x] **Study generator generalized + one layout** — done and deployed Oct 27 2026; see that session above.
 - [ ] **Fauvism: add the held Nolde page** after Jan 1 2027 if a free image exists (see the Oct 29 2026 section).
-- [ ] **Next art-history courses** (Impressionism and Post-Impressionism done Oct 28 2026, Fauvism and Early Expressionism Oct 29 2026; next Renaissance, Baroque…): each is a data folder `study/art-history/<slug>/` (data files, `credits.js`, optional `sources.js`, `img/`) + a settings file in `tools/study/courses/` + one card on `study.html`. Run `node tools/study/build-course.js <slug>`. No viewer file needed.
+- [ ] **Next art-history courses** (Impressionism and Post-Impressionism done Oct 28 2026, Fauvism and Early Expressionism Oct 29 2026, Romanticism Oct 30 2026; next Renaissance, Baroque…): each is a data folder `study/art-history/<slug>/` (data files, `credits.js`, optional `sources.js`, `img/`) + a settings file in `tools/study/courses/` + one `tl-item` in date order on the `study.html` timeline. Run `node tools/study/build-course.js <slug>`. No viewer file needed.
 - [ ] **Optional: delete the 114 unused images** in `study/art-history/classical-myth/img/` (only 60 are used since Oct 27 2026; ~20 MB).
 
 ### Ongoing
