@@ -11,6 +11,8 @@
 #menu-panel a.current { color: var(--accent-ink); font-weight: 500; }
 #menu-panel hr { border: none; border-top: 1px solid var(--border); margin: 8px 22px; }
 #menu-panel { max-height: calc(100dvh - var(--nav-h, 62px)); overflow-y: auto; overscroll-behavior: contain; }
+/* iPad and desktop (Oct 31 2026): the same floating rounded card as on phones, instead of a square dropdown hanging off the bar */
+@media (min-width: 601px) { #menu-panel { top: calc(var(--nav-h, 62px) + 6px); border-top: 1px solid var(--border-mid, #cfd6dd); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.16); max-height: calc(100dvh - var(--nav-h, 62px) - 16px); } }
 #menu-panel .menu-sub { margin: 0 0 6px 22px; border-left: 1px solid var(--border); }
 #menu-panel .menu-sub a { min-height: 36px; padding: 0 16px; font-size: 15px; }
 #menu-panel .menu-sub .menu-group { display: flex; align-items: center; min-height: 30px; padding: 6px 16px 0; font-family: var(--font); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); }
