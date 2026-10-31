@@ -2129,6 +2129,7 @@ document.addEventListener('input', e => {
 }, true);
 
 let dragging = false, dragMoved = false, dragStartPointer = 0, dragStartRotation = 0, dragTarget = 0;
+let dragTapTarget = 0;
 function applyNeedleTransforms(){
   const n = activeCount();
   for (let i = 0; i < n; i++) {
@@ -2159,7 +2160,15 @@ function attachDrag(){
         if (dist < bestDist) { bestDist = dist; best = i; }
       }
       dragTarget = best;
+      /* The tapped (selected) row wins near-ties: if its needle is almost as close as the closest one,
+         grab it instead, so tapping a row first settles which of two neighboring needles moves. */
+      const selIdx = (typeof needleSteps === 'function') ? needleSteps().indexOf(selStep) : -1;
+      if (selIdx >= 0 && selIdx !== best) {
+        const [sx, sy] = polar(cx, cy, NEEDLE_STYLE[selIdx].arm * scale, getRotation(selIdx));
+        if (Math.hypot(e.clientX - sx, e.clientY - sy) - bestDist < 36) dragTarget = selIdx;
+      }
     }
+    dragTapTarget = (typeof needleSteps === 'function' && needleSteps().indexOf(selStep) >= 0) ? needleSteps().indexOf(selStep) : dragTarget;
     dragStartRotation = getRotation(dragTarget);
   });
   frame.addEventListener('pointermove', e => {
@@ -2189,7 +2198,7 @@ function attachDrag(){
         const sd = stepDeg();
         const idx = Math.floor(dragStartPointer / sd) % wheelSize;
         const next = idx * sd + sd / 2;
-        setRotation(dragTarget, next);
+        setRotation(dragTapTarget, next); // a tap on a wedge moves the selected row's needle
         applyNeedleTransforms();
         updateAll();
       }
