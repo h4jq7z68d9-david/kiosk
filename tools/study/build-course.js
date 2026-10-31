@@ -61,7 +61,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 4, bar: 2, guideCss: 7, guideJs: 6, search: 1 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 5, bar: 2, guideCss: 8, guideJs: 6, search: 1 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -344,6 +344,7 @@ ${NAV}
         <input id="q" type="search" placeholder="Search all courses…" aria-label="Search all study courses" autocomplete="off" aria-controls="results" aria-expanded="false">
         <div class="results" id="results" role="listbox" hidden></div>
       </div>
+      <a class="btn wheelbtn" href="/study/color-wheel.html" title="Color wheel" aria-label="Color wheel"><img src="/color-wheel-icon-512.png" alt="" width="22" height="22"></a>
       <button class="btn savedbtn" id="saved" type="button" aria-expanded="false" aria-controls="savedp">Saved (0)</button>
       <div class="savedp" id="savedp" hidden></div>
     </div>

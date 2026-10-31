@@ -9,7 +9,9 @@
     { href: '/gallery.html', label: 'prints' },
     { href: '/originals.html', label: 'available originals' },
     { hr: true },
+    { href: '/study/color-wheel.html', label: 'color wheel' },
     { href: '/study.html', label: 'study', section: '/study' },
+    { hr: true },
     { href: '/shipping.html', label: 'shipping & returns' },
     { action: 'guestbook', label: 'guest book' },
     { action: 'contact', label: 'contact' }
@@ -19,7 +21,6 @@
      Adding a course: add one line here. */
   var STUDY = [
     { group: 'technique', href: '/study.html#technique' },
-    { href: '/study/color-wheel.html', label: 'color wheel' },
     { href: '/study/color-theory.html', label: 'color theory', section: '/study/color-theory/' },
     { href: '/study/value-and-light.html', label: 'value and light', section: '/study/value-and-light/' },
     { href: '/study/composition.html', label: 'composition', section: '/study/composition/' },
@@ -60,7 +61,9 @@
   }
   function mail() { window.location = 'mai' + 'lto:' + 'david@' + 'davidnicholsonart.com'; }
   function isCurrent(item) {
-    return item.href === here || (item.section && here.indexOf(item.section) === 0);
+    if (item.href === here) return true;
+    // a section match (study) gives way to an exact menu item for this page (color wheel)
+    return !!(item.section && here.indexOf(item.section) === 0 && !MENU.some(function (m) { return m.href === here; }));
   }
 
   /* ---- menu ---- */
