@@ -184,6 +184,8 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rres{display:flex;align-items:center;gap:10px;padding-top:10px;border-top:1px solid var(--line)}
   .rsw-big{width:44px;height:44px;border-radius:9px}
   .rres .mixer-btn[disabled]{opacity:.4;cursor:default}
+  .rmixon{display:flex;justify-content:center}
+  .rmixon .mixer-btn[disabled]{opacity:.4;cursor:default}
   .rblock{display:flex;flex-direction:column}
   .rblock + .rblock, .rfold + .rblock, .rblock + .rfold, .rfold + .rfold{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
   .rbhead{display:flex;align-items:center;justify-content:space-between;padding:0 6px 2px}
@@ -2051,8 +2053,9 @@ function updateMixer(){
   $('#mixerCard').innerHTML = `
     <div class="radd">${btn('hue', '+ color')}${btn('white', '+ white')}${btn('black', '+ black')}</div>
     <div class="rsteps">${steps.length ? html : '<p class="mixer-note">Add a color, white or black to start.</p>'}</div>
-    ${steps.length ? `<div class="rres"><span class="rsw rsw-big" data-res-final style="background:${res}"></span><span class="rres-name" data-res-name>${hexName(res)}</span><button class="mixer-btn" id="mixOnBtn"${canMix ? '' : ' disabled'}>Mix</button><button class="mixer-btn mixer-btn-quiet" id="clearRecipeBtn">Clear</button></div>` : ''}
-    <div class="mixer-note">${hueSteps().length ? 'Tap a color row, then tap the wheel to change it. Mix starts a new mix from this result.' : ''}</div>`;
+    ${steps.length ? `<div class="rres"><span class="rsw rsw-big" data-res-final style="background:${res}"></span><span class="rres-name" data-res-name>${hexName(res)}</span><button class="mixer-btn mixer-btn-quiet" id="clearRecipeBtn">Clear</button></div>
+    <div class="rmixon"><button class="mixer-btn" id="mixOnBtn"${canMix ? '' : ' disabled'}>+ Mix</button></div>` : ''}
+    <div class="mixer-note">${hueSteps().length ? 'Tap a color row, then tap the wheel to change it. + Mix starts a new mix from this result.' : ''}</div>`;
   paintRecipe();
   saveRecipe();
 }
