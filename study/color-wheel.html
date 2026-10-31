@@ -192,8 +192,9 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rbase .rlbl{color:var(--muted)}
   .rfold{display:flex;align-items:center;gap:10px;width:100%;border:0;background:var(--wall-hi);border-radius:8px;padding:6px 8px;cursor:pointer;text-align:left}
   .rfold-t{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-  .rfold-sw{flex:1;display:flex;gap:3px}
-  .rfold-sw i{width:12px;height:12px;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+  .rfold .rsw{width:26px;height:26px}
+  .rfold-t{flex:1;font-family:inherit;font-size:13px;letter-spacing:0;text-transform:none;color:var(--ink)}
+  .rfold-c{color:var(--muted);font-size:12px}
 
   .rres-name{flex:1;font-size:14px;font-weight:500;color:var(--ink)}
   .mixer-slider-row{display:flex;align-items:center;gap:8px}
@@ -1879,7 +1880,7 @@ let selStep = 0;
    same recipe, so the math is unchanged; blocks only group the rows. Earlier blocks fold to one
    line and open on tap, so a first mix can still be corrected. */
 let blockStarts = [0];
-let openBlocks = new Set();
+let openBlock = 0; // one mix open at a time; the add buttons add to it
 const STEP_DEFAULT = { white: 0.25, black: 0.05 };
 const MAX_STEPS = 12;
 const RECIPE_KEY = 'dna-color-wheel-recipe';
@@ -1894,6 +1895,7 @@ function saveRecipe(){
       blockStarts = d.blockStarts.filter(n => Number.isInteger(n) && n >= 0 && n <= steps.length);
       if (!blockStarts.length || blockStarts[0] !== 0) blockStarts.unshift(0);
       selStep = Number.isInteger(d.selStep) ? d.selStep : 0;
+      openBlock = blockStarts.length - 1;
       if (steps[selStep] && steps[selStep].k === 'hue') rotation = steps[selStep].rot;
     }
   } catch (e) {}
@@ -1960,15 +1962,18 @@ function selectStep(i){
 }
 function addStep(k){
   if (steps.length >= MAX_STEPS) return;
-  const n = steps.length;
+  const at = blockEnd(openBlock);
+  const inBlock = at - blockStarts[openBlock] + (openBlock > 0 ? 1 : 0);
+  let st;
   if (k === 'hue') {
-    const hi = hueSteps();
+    const hi = hueSteps().filter(i => i < at);
     const from = hi.length ? steps[hi[hi.length - 1]].rot : rotation;
-    steps.push({ k, rot: hi.length ? (from + 180) % 360 : rotation, amt: n ? 1 / (n - blockStarts[blockStarts.length - 1] + (blockStarts.length > 1 ? 1 : 0) + 1) : 1 });
-    selectStep(steps.length - 1);
-  } else {
-    steps.push({ k, amt: n ? STEP_DEFAULT[k] : 1 });
-  }
+    st = { k, rot: hi.length ? (from + 180) % 360 : rotation, amt: at ? 1 / (inBlock + 1) : 1 };
+  } else st = { k, amt: at ? STEP_DEFAULT[k] : 1 };
+  steps.splice(at, 0, st);
+  blockStarts = blockStarts.map((b, j) => j > openBlock ? b + 1 : b);
+  if (k === 'hue') selectStep(at);
+  else if (selStep >= at) selStep++;
 }
 function removeStep(i){
   steps.splice(i, 1);
@@ -1982,12 +1987,13 @@ function startBlock(){
   const last = blockStarts[blockStarts.length - 1];
   if (!steps.length || steps.length === last || steps.length >= MAX_STEPS) return;
   blockStarts.push(steps.length);
+  openBlock = blockStarts.length - 1;
 }
 function removeBlock(k){
   if (k === 0) return;
   steps.splice(blockStarts[k], blockEnd(k) - blockStarts[k]);
   blockStarts = blockStarts.slice(0, k);
-  openBlocks.delete(k);
+  openBlock = Math.min(openBlock, blockStarts.length - 1);
   const hi = hueSteps();
   if (!hi.includes(selStep)) selStep = hi.length ? hi[hi.length - 1] : 0;
   if (steps[selStep] && steps[selStep].k === 'hue') { rotation = steps[selStep].rot; applyNeedleTransforms(); }
@@ -2025,18 +2031,18 @@ function updateMixer(){
     const s0 = blockStarts[b], e0 = blockEnd(b);
     const isLast = b === lastB;
     const resHex = e0 > 0 ? stageHexAt(e0 - 1) : '#ffffff';
-    if (!isLast && !openBlocks.has(b)) {
-      html += `<button class="rfold" data-block-open="${b}" aria-expanded="false"><span class="rfold-t">Mix ${b + 1}</span><span class="rfold-sw">${steps.slice(s0, e0).map(s => `<i style="background:${stepSwatch(s)}"></i>`).join('')}</span><span class="rsw" data-block-res="${b}" style="background:${resHex}"></span></button>`;
+    if (b !== openBlock) {
+      html += `<button class="rfold" data-block-open="${b}" aria-expanded="false"><span class="rsw" data-block-res="${b}" style="background:${resHex}"></span><span class="rfold-t">Mix ${b + 1} · <span data-block-name="${b}">${hexName(resHex)}</span></span><span class="rfold-c" aria-hidden="true">▸</span></button>`;
       continue;
     }
     html += `<div class="rblock">`;
-    if (lastB > 0) html += `<div class="rbhead"><button class="rbtitle" data-block-open="${b}"${isLast ? ' disabled' : ' aria-expanded="true"'}>Mix ${b + 1}</button>${b > 0 ? `<button class="rx" data-block-remove="${b}" aria-label="Remove mix ${b + 1}">&times;</button>` : ''}</div>`;
+    if (lastB > 0) html += `<div class="rbhead"><span class="rbtitle">Mix ${b + 1}</span>${b > 0 ? `<button class="rx" data-block-remove="${b}" aria-label="Remove mix ${b + 1}">&times;</button>` : ''}</div>`;
     if (b > 0) {
       const baseHex = stageHexAt(s0 - 1);
       html += `<div class="rstep rbase"><span class="rsw" data-base-for="${b}" style="background:${baseHex}"></span><div class="rmid"><div class="rlbl">Mix ${b} <span class="ramt" data-base-name="${b}">${hexName(baseHex)}</span></div></div><span></span><span></span></div>`;
     }
     for (let i = s0; i < e0; i++) html += stepRowHtml(steps[i], i);
-    if (isLast && e0 === s0 && b > 0) html += `<p class="mixer-note">Add a color, white or black to mix into it.</p>`;
+    if (e0 === s0 && b > 0) html += `<p class="mixer-note">Add a color, white or black to mix into it.</p>`;
     html += `</div>`;
   }
   const res = stageHexAt(steps.length - 1);
@@ -2062,6 +2068,7 @@ function refreshRecipeColors(){
   document.querySelectorAll('#mixerCard [data-base-for]').forEach(el => { el.style.background = stageHexAt(blockStarts[parseInt(el.dataset.baseFor, 10)] - 1); });
   document.querySelectorAll('#mixerCard [data-base-name]').forEach(el => { el.textContent = hexName(stageHexAt(blockStarts[parseInt(el.dataset.baseName, 10)] - 1)); });
   document.querySelectorAll('#mixerCard [data-block-res]').forEach(el => { const b = parseInt(el.dataset.blockRes, 10); el.style.background = stageHexAt(blockEnd(b) - 1); });
+  document.querySelectorAll('#mixerCard [data-block-name]').forEach(el => { const b = parseInt(el.dataset.blockName, 10); el.textContent = hexName(stageHexAt(blockEnd(b) - 1)); });
   const res = stageHexAt(steps.length - 1);
   const f = document.querySelector('#mixerCard [data-res-final]'); if (f) f.style.background = res;
   const nm = document.querySelector('#mixerCard [data-res-name]'); if (nm) nm.textContent = hexName(res);
@@ -2076,9 +2083,9 @@ document.addEventListener('click', e => {
   const rb = e.target.closest('[data-block-remove]');
   if (rb) { e.stopImmediatePropagation(); removeBlock(parseInt(rb.dataset.blockRemove, 10)); updateMixer(); return; }
   const ob = e.target.closest('[data-block-open]');
-  if (ob) { e.stopImmediatePropagation(); const b = parseInt(ob.dataset.blockOpen, 10); if (openBlocks.has(b)) openBlocks.delete(b); else openBlocks.add(b); updateMixer(); return; }
+  if (ob) { e.stopImmediatePropagation(); openBlock = parseInt(ob.dataset.blockOpen, 10); const hi = hueSteps().filter(i => blockOf(i) === openBlock && i >= blockStarts[openBlock]); if (hi.length) selectStep(hi[hi.length - 1]); updateMixer(); return; }
   if (e.target.closest('#mixOnBtn')) { e.stopImmediatePropagation(); startBlock(); updateMixer(); return; }
-  if (e.target.closest('#clearRecipeBtn')) { e.stopImmediatePropagation(); steps = []; blockStarts = [0]; openBlocks.clear(); selStep = 0; updateMixer(); return; }
+  if (e.target.closest('#clearRecipeBtn')) { e.stopImmediatePropagation(); steps = []; blockStarts = [0]; openBlock = 0; selStep = 0; updateMixer(); return; }
   const row = e.target.closest('#mixerCard .rstep.pick');
   if (row && !e.target.closest('input')) { selectStep(parseInt(row.dataset.step, 10)); updateMixer(); }
 }, true);
