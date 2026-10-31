@@ -44,7 +44,17 @@ html.wheel-open .wheel-scrim { opacity: 1; visibility: visible; transition: opac
 .wheel-x { position: absolute; top: 8px; right: 8px; z-index: 2; width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-mid, #cfd6dd); border-radius: 50%; background: var(--panel, #fff); color: var(--ink); font: 500 15px var(--font); cursor: pointer; }
 .wheel-x:hover { background: var(--surface); }
 .wheel-grab { display: none; }
-@media (max-width: 900px) {
+/* iPad and desktop: move by the top strip, resize by the bottom-right corner (site-chrome.js) */
+.wheel-move { position: absolute; top: 0; left: 0; right: 48px; height: 26px; z-index: 2; cursor: move; display: flex; align-items: center; justify-content: center; touch-action: none; }
+.wheel-move span { width: 40px; height: 4px; border-radius: 2px; background: var(--border-mid, #cfd6dd); }
+.wheel-sheet iframe { margin-top: 0; }
+.wheel-size { position: absolute; right: 0; bottom: 0; width: 22px; height: 22px; z-index: 2; cursor: nwse-resize; touch-action: none;
+  background: linear-gradient(135deg, transparent 0 55%, var(--border-mid, #cfd6dd) 55% 62%, transparent 62% 72%, var(--border-mid, #cfd6dd) 72% 79%, transparent 79%); }
+.wheel-dragging iframe { pointer-events: none; }
+.wheel-dragging { transition: none !important; user-select: none; }
+@media (min-width: 701px) { .wheel-sheet { padding-top: 26px; } }
+@media (max-width: 700px) { .wheel-move, .wheel-size { display: none; } }
+@media (max-width: 700px) {
   .wheel-sheet { top: calc(var(--nav-h, 62px) + 6px); left: 10px; right: 10px; width: auto; height: min(616px, calc(100% - var(--nav-h, 62px) - 24px)); border-radius: 16px; transform: translateY(-16px); box-shadow: 0 14px 40px rgba(0,0,0,.22); }
   .wheel-grab { display: block; flex: none; width: 36px; height: 4px; margin: 0 auto; padding: 8px 40px 12px; box-sizing: content-box; background: var(--border-mid, #cfd6dd); background-clip: content-box; }
 }

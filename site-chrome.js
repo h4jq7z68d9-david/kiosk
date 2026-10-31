@@ -79,17 +79,57 @@
       scrimW = document.createElement('div'); scrimW.className = 'wheel-scrim';
       sheet = document.createElement('div');
       sheet.className = 'wheel-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.setAttribute('aria-label', 'Color wheel');
-      sheet.innerHTML = '<button type="button" class="wheel-x" aria-label="Close color wheel">\u2715</button><iframe title="Color wheel" src="/study/color-wheel.html?embed=1"></iframe><span class="wheel-grab" aria-hidden="true"></span>';
+      sheet.innerHTML = '<div class="wheel-move" title="Drag to move" aria-hidden="true"><span></span></div><button type="button" class="wheel-x" aria-label="Close color wheel">\u2715</button><iframe title="Color wheel" src="/study/color-wheel.html?embed=1"></iframe><span class="wheel-grab" aria-hidden="true"></span><span class="wheel-size" title="Drag to resize" aria-hidden="true"></span>';
       document.body.appendChild(scrimW); document.body.appendChild(sheet);
       sheet.querySelector('.wheel-x').onclick = function () { hide(true); };
       scrimW.onclick = function () { hide(true); };
       var grab = sheet.querySelector('.wheel-grab'), y0 = null;
       grab.addEventListener('touchstart', function (e) { y0 = e.touches[0].clientY; }, { passive: true });
       grab.addEventListener('touchend', function (e) { if (y0 != null && y0 - e.changedTouches[0].clientY > 40) hide(true); y0 = null; }, { passive: true });
+      moveAndSize();
+    }
+    /* iPad and desktop (701 px and up, Oct 31 2026): drag the top strip to move the card, drag the
+       bottom-right corner to resize it. Remembered in this browser. The frame changes size only while
+       resizing (never while you use the wheel); on iPad the first tap right after a resize can be
+       swallowed by Safari — the iframe quirk in Color-Wheel-App-Reference.md. */
+    var POS_KEY = 'dna-wheel-pos', MINW = 320, MINH = 380;
+    var wide = function () { return window.innerWidth > 700; };
+    function clampBox(b) {
+      var W = window.innerWidth, H = window.innerHeight;
+      b.w = Math.max(MINW, Math.min(b.w, W - 16)); b.h = Math.max(MINH, Math.min(b.h, H - 16));
+      b.x = Math.max(8, Math.min(b.x, W - b.w - 8)); b.y = Math.max(8, Math.min(b.y, H - b.h - 8));
+      return b;
+    }
+    function applyBox(b) {
+      if (!b || !wide()) { sheet.style.left = sheet.style.top = sheet.style.right = sheet.style.width = sheet.style.height = ''; return; }
+      b = clampBox(b);
+      sheet.style.right = 'auto'; sheet.style.left = b.x + 'px'; sheet.style.top = b.y + 'px';
+      sheet.style.width = b.w + 'px'; sheet.style.height = b.h + 'px';
+    }
+    function savedBox() { try { return JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch (e) { return null; } }
+    function saveBox() { var r = sheet.getBoundingClientRect(); try { localStorage.setItem(POS_KEY, JSON.stringify({ x: r.left, y: r.top, w: r.width, h: r.height })); } catch (e) {} }
+    function moveAndSize() {
+      function drag(handle, onMove) {
+        handle.addEventListener('pointerdown', function (e) {
+          if (!wide()) return;
+          e.preventDefault();
+          var r = sheet.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+          var start = { x: r.left, y: r.top, w: r.width, h: r.height };
+          sheet.classList.add('wheel-dragging');
+          handle.setPointerCapture(e.pointerId);
+          function mv(ev) { applyBox(onMove(start, ev.clientX - x0, ev.clientY - y0)); }
+          function up() { handle.removeEventListener('pointermove', mv); handle.removeEventListener('pointerup', up); handle.removeEventListener('pointercancel', up); sheet.classList.remove('wheel-dragging'); saveBox(); }
+          handle.addEventListener('pointermove', mv); handle.addEventListener('pointerup', up); handle.addEventListener('pointercancel', up);
+        });
+      }
+      drag(sheet.querySelector('.wheel-move'), function (b, dx, dy) { return { x: b.x + dx, y: b.y + dy, w: b.w, h: b.h }; });
+      drag(sheet.querySelector('.wheel-size'), function (b, dx, dy) { return { x: b.x, y: b.y, w: b.w + dx, h: b.h + dy }; });
+      window.addEventListener('resize', function () { if (open) applyBox(wide() ? savedBox() : null); });
     }
     function show() {
       if (!sheet) make();
       if (open) return; open = true; opener = document.activeElement;
+      applyBox(wide() ? savedBox() : null);
       document.documentElement.classList.add('wheel-open');
       try { history.pushState({ wheel: 1 }, ''); } catch (e) {}
       setTimeout(function () { sheet.querySelector('.wheel-x').focus(); }, 50);
@@ -101,6 +141,7 @@
       if (fromUi && history.state && history.state.wheel) history.back();
     }
     window.addEventListener('popstate', function () { if (open) hide(false); });
+    window.addEventListener('message', function (e) { if (e.origin === location.origin && e.data && e.data.dnaWheel === 'close' && open) hide(true); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) { e.stopPropagation(); hide(true); } }, true);
     return { show: show };
   })();

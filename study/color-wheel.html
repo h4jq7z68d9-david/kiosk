@@ -303,11 +303,11 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .wheel-footer .tool-note:not(:last-child) { display: none; }
 .embed .wheel-main { padding: 8px 12px 10px; gap: 10px; }
 .embed .stage { width: 100%; gap: 10px; }
-.embed .wheel-frame { width: min(220px, 58vw); }
+.embed .wheel-frame { width: clamp(180px, min(58vw, 40vh), 380px); } /* grows when the pop-up card is resized */
 .embed .wheel-card { padding: 10px; }
 .embed .wheel-app { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin-top: 0 !important; }
 </style>
-<link rel="stylesheet" href="/site-chrome.css?v=9">
+<link rel="stylesheet" href="/site-chrome.css?v=10">
 </head>
 <body>
 
@@ -2260,8 +2260,10 @@ async function submitGB() {
 let toastTimer;
 function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
-<script src="/site-chrome.js?v=9"></script>
+<script src="/site-chrome.js?v=10"></script>
 <script>/* embedded: links leave the pop-up and open in the course page's window */
-if (document.documentElement.classList.contains('embed')) [].forEach.call(document.querySelectorAll('a[href]'), function (a) { if (a.target !== '_blank') a.target = '_top'; });</script>
+if (document.documentElement.classList.contains('embed')) [].forEach.call(document.querySelectorAll('a[href]'), function (a) { if (a.target !== '_blank') a.target = '_top'; });
+/* embedded: Escape inside the wheel closes the pop-up too */
+if (document.documentElement.classList.contains('embed')) document.addEventListener('keydown', function (e) { if (e.key === 'Escape') try { parent.postMessage({ dnaWheel: 'close' }, location.origin); } catch (err) {} });</script>
 </body>
 </html>
