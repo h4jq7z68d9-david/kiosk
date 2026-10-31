@@ -313,7 +313,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .embed .wheel-card { padding: 10px; }
 .embed .wheel-app { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin-top: 0 !important; }
 </style>
-<link rel="stylesheet" href="/site-chrome.css?v=16">
+<link rel="stylesheet" href="/site-chrome.css?v=17">
 </head>
 <body>
 
@@ -321,7 +321,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h6M2 12h3M2 18h7" stroke-width="2" stroke-linecap="square"/><rect x="9" y="2.5" width="12" height="7" fill="#D62A1E" stroke="none"/><rect x="6" y="9.5" width="9" height="5" fill="#F2B705" stroke="none"/><rect x="10" y="14.5" width="12" height="7" fill="#1F57D6" stroke="none"/></svg></button>
   <a class="nav-title" href="/index.html">david nicholson</a>
   <div class="nav-links">
-    <a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>
+    <a class="nav-ig" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="igGrad" cx="30%" cy="107%" r="150%"><stop offset="0" stop-color="#fdf497"/><stop offset=".05" stop-color="#fdf497"/><stop offset=".45" stop-color="#fd5949"/><stop offset=".6" stop-color="#d6249f"/><stop offset=".9" stop-color="#285AEB"/></radialGradient></defs><rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="url(#igGrad)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="12" r="3.3" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="16.6" cy="7.4" r="1.1" fill="#fff"/></svg></a>
     <a class="nav-cart" href="/gallery.html?cart=1" aria-label="cart">
       <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       <span class="nav-cart-count" id="cart-count">0</span>
@@ -2267,7 +2267,7 @@ async function submitGB() {
 let toastTimer;
 function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
-<script src="/site-chrome.js?v=16"></script>
+<script src="/site-chrome.js?v=17"></script>
 <script>/* embedded: links leave the pop-up and open in the course page's window */
 if (document.documentElement.classList.contains('embed')) [].forEach.call(document.querySelectorAll('a[href]'), function (a) { if (a.target !== '_blank') a.target = '_top'; });
 /* embedded: Escape inside the wheel closes the pop-up too */

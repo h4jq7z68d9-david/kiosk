@@ -75,3 +75,9 @@ html.wheel-open .wheel-scrim { opacity: 1; visibility: visible; transition: opac
 #menu-panel .menu-gtog svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .18s; }
 #menu-panel .menu-gtog[aria-expanded="true"] svg { transform: rotate(180deg); }
 #menu-panel .menu-gitems[hidden] { display: none; }
+/* header icons (Oct 31 2026, David): Instagram as its colored icon on every page except the home page,
+   and the bag in the site's navy on every page */
+.nav-ig { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; }
+.nav-ig svg { width: 24px; height: 24px; display: block; }
+.nav-ig:hover svg { transform: scale(1.06); }
+nav .nav-cart svg { stroke: var(--accent) !important; }

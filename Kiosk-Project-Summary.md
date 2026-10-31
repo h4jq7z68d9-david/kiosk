@@ -606,6 +606,12 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 31 2026, midday) — Header icons (deployed Oct 31 2026)
+
+**David:** lighter header after the home page. On every page except the home page, the "follow on instagram" button is replaced by Instagram's colored glyph (`.nav-ig`, 24 px, links to @dave_nichol_son, `aria-label="Instagram"`) — in `site-bar.js` and the 10 pages with an inline bar. The home page keeps its pill button (and has no bag). The bag icon is the site navy (`--accent`) on every page (`site-chrome.css`). `site-bar.js` v4, `site-chrome` v17, all courses rebuilt.
+
+-----
+
 ## Completed This Session (October 31 2026, late morning) — Color wheel: recipe mixer (deployed Oct 31 2026)
 
 **David's ask:** see the progression of a mix, and add white or black at any point — including starting from white ("white, a touch of yellow, a touch of red" is a different mix from adding titanium white at the end). **Built in `study/color-wheel.html` (page and menu pop-up):** the mixer is a list of steps in the order mixed. Centered **+ color / + white / + black** buttons sit above the list. Each row: what was added, a slider for how much went into the mix so far (defaults: color an even share, white 25%, black 5%), the mix after that step, and × to remove it. Result and Clear at the bottom. The wheel's needle shows the selected color row; tap a row, then tap the wheel to change it. Max 8 steps. The White/Black sliders and "+ Mix" are gone.
