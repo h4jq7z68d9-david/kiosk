@@ -4,7 +4,8 @@
 > be any step, including the first. Hues (split-primary shift among the hues only) and white blend as pigment recipes;
 > black is `shade()` at the stage's black share. Checked: every single hue = its swatch; white alone = #ffffff; hue-only
 > chains equal the old `chainHex`; white-last equals old `tint()`, black-last equals old `shade()`. The needle shows the
-> selected color row; the wheel edits that row. "Mix" starts a new block (`blockStarts`) whose base is the result so far —
+> selected color row; the wheel edits that row (later the same day: one needle per color in the open mix again, via
+> `needleSteps()` — `activeCount`/`getRotation`/`setRotation` map needles onto those rows). "Mix" starts a new block (`blockStarts`) whose base is the result so far —
 > math unchanged, blocks only group rows; one block open at a time (`openBlock`), the add buttons insert at the end
 > of the open block, the others fold to their result. The recipe persists in `localStorage`
 > (`dna-color-wheel-recipe`). The old mixer (`updateMixerOld`, White/Black sliders, + Mix) is no longer used.
