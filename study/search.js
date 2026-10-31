@@ -93,6 +93,12 @@
       else if (e.key === 'Escape') { if (qi.value) { qi.value = ''; search(); } else qi.blur(); }
     });
     document.addEventListener('click', function (e) { if (!box.contains(e.target)) { rs.hidden = true; qi.setAttribute('aria-expanded', 'false'); } });
+    /* Back button (Oct 31 2026): the browser restores this page exactly as it was left, results open over
+       the page. Close them when leaving and again on return; the search text stays, and tapping the box
+       shows the results again. */
+    var closeResults = function () { rs.hidden = true; qi.setAttribute('aria-expanded', 'false'); if (document.activeElement === qi) qi.blur(); };
+    window.addEventListener('pagehide', closeResults);
+    window.addEventListener('pageshow', closeResults);
   }
   window.StudySearch = { attach: attach };
 })();
