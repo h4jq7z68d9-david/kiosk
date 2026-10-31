@@ -32,7 +32,7 @@
 #menu-panel .wheel-bubble { justify-content: space-between; gap: 10px; color: var(--ink2); }
 #menu-panel .wheel-bubble img { order: 2; }
 
-#menu-panel .wheel-bubble img { width: 22px; height: 22px; display: block; transition: transform .2s; }
+#menu-panel .wheel-bubble img { width: 20px; height: 20px; display: block; transition: transform .2s; position: relative; top: 1px; } /* the wheel alone (no white app-icon square), nudged to sit with lower-case text */
 #menu-panel .wheel-bubble:hover img { transform: rotate(15deg); }
 html.wheel-open, html.wheel-open body { overflow: hidden; }
 .wheel-scrim { position: fixed; inset: 0; z-index: 125; background: rgba(20,26,32,.28); opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s linear .2s; }
