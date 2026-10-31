@@ -17,11 +17,13 @@
 #menu-panel .menu-sub a.menu-group:hover { color: var(--accent-ink); background: none; }
 @media (max-width: 600px) {
   /* phones (Oct 31 2026): a card with visible edges, not a full-width sheet */
-  #menu-panel { top: calc(var(--nav-h, 62px) + 6px); left: 10px !important; right: 10px; width: auto; border: 1px solid var(--border-mid, #cfd6dd); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.16); max-height: calc(100dvh - var(--nav-h, 62px) - 16px); }
-  #menu-panel a, #menu-panel button { padding: 0 16px; min-height: 50px; font-size: 18px; }
-  #menu-panel hr { margin: 8px 16px; }
-  #menu-panel .menu-sub { margin-left: 16px; }
-  #menu-panel .menu-sub a { min-height: 42px; font-size: 16px; }
+  #menu-panel { top: calc(var(--nav-h, 62px) + 6px); left: 10px !important; right: auto; width: min(250px, calc(100% - 20px)); padding: 6px 0 10px; border: 1px solid var(--border-mid, #cfd6dd); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.16); max-height: calc(100dvh - var(--nav-h, 62px) - 16px); }
+  #menu-panel a, #menu-panel button { padding: 0 18px; min-height: 42px; font-size: 17px; }
+  #menu-panel hr { margin: 5px 18px; }
+  #menu-panel .menu-wheel { padding: 8px 18px 0; }
+  #menu-panel .wheel-bubble { min-height: 0; padding: 6px 14px 6px 8px; font-size: 15px; }
+  #menu-panel .menu-sub { margin-left: 18px; }
+  #menu-panel .menu-sub a { min-height: 34px; font-size: 15px; padding: 0 14px; }
   #menu-panel .menu-sub .menu-group { min-height: 30px; font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { #menu-panel, #menu-scrim { transition: none; } }

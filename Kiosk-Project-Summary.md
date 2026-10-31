@@ -614,7 +614,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 **`study/color-wheel.html` stays as a file** — the pop-up's frame loads it, and it is still the home-screen app `start_url` — but nothing on the site links to it except three Color Theory text links. It now shows the same quick tool, has `noindex`, is out of `sitemap.xml`, and out of `study.html`'s JSON-LD and description. No bubble on that page itself.
 
-**Phones, follow-up (David):** the site menu and the wheel pop-up are now floating cards with visible edges — 10 px in from each side, 6 px under the site bar, rounded corners and a shadow — instead of full-width sheets (the menu had been full width on phones since Oct 2). `site-chrome.css` v7 (generator `V.chrome` 7). **Caches:** `site-chrome` css and js v6 on every page (generator `V.chrome` 6); `guideCss` 13, `guideJs` 10; all 12 courses rebuilt.
+**Phones, follow-up (David):** the site menu and the wheel pop-up are now floating cards with visible edges — 10 px in from each side, 6 px under the site bar, rounded corners and a shadow — instead of full-width sheets (the menu had been full width on phones since Oct 2). The phone menu card is 250 px wide with tighter rows (42 px; study course list 34 px). `site-chrome.css` v8 (generator `V.chrome` 8). **Caches:** `site-chrome` css and js v6 on every page (generator `V.chrome` 6); `guideCss` 13, `guideJs` 10; all 12 courses rebuilt.
 
 **Tested (headless Chromium, 1440 / 390 px):** bubble → pop-up on index, gallery, a Color Theory page and study.html; palette, relationships and size switch hidden; "+ Mix" on one tap; Back closes the pop-up and stays on the page; menu closed; no script errors. **Still needs the real-iPhone tap check** (to-do below).
 
