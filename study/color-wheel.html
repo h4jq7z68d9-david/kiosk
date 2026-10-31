@@ -192,7 +192,7 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rbase .rlbl{color:var(--muted)}
   .rfold{display:flex;align-items:center;gap:10px;width:100%;border:0;background:var(--wall-hi);border-radius:8px;padding:6px 8px;cursor:pointer;text-align:left}
   .rfold-t{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-  .rfold .rsw{width:26px;height:26px}
+  .rfold .rsw{width:34px;height:34px}
   .rfold-t{flex:1;font-family:inherit;font-size:13px;letter-spacing:0;text-transform:none;color:var(--ink)}
   .rfold-c{color:var(--muted);font-size:12px}
 
@@ -1953,7 +1953,7 @@ function stepSwatch(s){
 }
 function syncSelectedHue(){
   const s = steps[selStep];
-  if (s && s.k === 'hue') s.rot = rotation;
+  if (s && s.k === 'hue') { if (openBlock >= 0 && blockOf(selStep) === openBlock) s.rot = rotation; }
   else if (!steps.length) { steps.push({ k: 'hue', rot: rotation, amt: 1 }); selStep = 0; blockStarts = [0]; }
 }
 function selectStep(i){
@@ -1962,6 +1962,7 @@ function selectStep(i){
 }
 function addStep(k){
   if (steps.length >= MAX_STEPS) return;
+  if (openBlock < 0) openBlock = blockStarts.length - 1; // everything folded: add to the last mix and open it
   const at = blockEnd(openBlock);
   const inBlock = at - blockStarts[openBlock] + (openBlock > 0 ? 1 : 0);
   let st;
@@ -2036,7 +2037,7 @@ function updateMixer(){
       continue;
     }
     html += `<div class="rblock">`;
-    if (lastB > 0) html += `<div class="rbhead"><span class="rbtitle">Mix ${b + 1}</span>${b > 0 ? `<button class="rx" data-block-remove="${b}" aria-label="Remove mix ${b + 1}">&times;</button>` : ''}</div>`;
+    if (lastB > 0) html += `<div class="rbhead"><button class="rbtitle" data-block-close="${b}" aria-expanded="true">Mix ${b + 1} <span aria-hidden="true">▾</span></button>${b > 0 ? `<button class="rx" data-block-remove="${b}" aria-label="Remove mix ${b + 1}">&times;</button>` : ''}</div>`;
     if (b > 0) {
       const baseHex = stageHexAt(s0 - 1);
       html += `<div class="rstep rbase"><span class="rsw" data-base-for="${b}" style="background:${baseHex}"></span><div class="rmid"><div class="rlbl">Mix ${b} <span class="ramt" data-base-name="${b}">${hexName(baseHex)}</span></div></div><span></span><span></span></div>`;
@@ -2083,6 +2084,8 @@ document.addEventListener('click', e => {
   const rb = e.target.closest('[data-block-remove]');
   if (rb) { e.stopImmediatePropagation(); removeBlock(parseInt(rb.dataset.blockRemove, 10)); updateMixer(); return; }
   const ob = e.target.closest('[data-block-open]');
+  const cb = e.target.closest('[data-block-close]');
+  if (cb) { e.stopImmediatePropagation(); openBlock = -1; updateMixer(); return; }
   if (ob) { e.stopImmediatePropagation(); openBlock = parseInt(ob.dataset.blockOpen, 10); const hi = hueSteps().filter(i => blockOf(i) === openBlock && i >= blockStarts[openBlock]); if (hi.length) selectStep(hi[hi.length - 1]); updateMixer(); return; }
   if (e.target.closest('#mixOnBtn')) { e.stopImmediatePropagation(); startBlock(); updateMixer(); return; }
   if (e.target.closest('#clearRecipeBtn')) { e.stopImmediatePropagation(); steps = []; blockStarts = [0]; openBlock = 0; selStep = 0; updateMixer(); return; }
