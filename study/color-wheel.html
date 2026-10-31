@@ -31,6 +31,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script>/* ?embed=1: the course pages' pop-up (see /study/guide.js) shows only the tool, no site bar, title or footer */
+if (/[?&]embed=1(&|$)/.test(location.search)) document.documentElement.classList.add('embed');</script>
 <style>
 :root {
   --bg: #ffffff; --surface: #eef1f4; --border: #dfe4e9; --border-mid: #cfd6dd;
@@ -248,6 +250,10 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 /* TOAST */
 #toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #f1f3f5; font-family: var(--font); font-size: 12px; font-weight: 500; padding: 9px 18px; border-radius: 20px; opacity: 0; pointer-events: none; z-index: 300; white-space: nowrap; transition: opacity 0.2s, transform 0.2s; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* embedded in a course page's pop-up (Oct 31 2026) */
+.embed body { padding-top: 0; min-height: 0; }
+.embed nav, .embed footer, .embed #menu-panel, .embed #menu-scrim, .embed .lead { display: none !important; }
+.embed main { padding-top: 12px; }
 </style>
 <link rel="stylesheet" href="/site-chrome.css?v=2">
 </head>
@@ -1929,5 +1935,7 @@ let toastTimer;
 function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
 <script src="/site-chrome.js?v=5"></script>
+<script>/* embedded: links leave the pop-up and open in the course page's window */
+if (document.documentElement.classList.contains('embed')) [].forEach.call(document.querySelectorAll('a[href]'), function (a) { if (a.target !== '_blank') a.target = '_top'; });</script>
 </body>
 </html>

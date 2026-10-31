@@ -102,3 +102,38 @@
     sl.addEventListener('touchend', (e) => { if (x0 == null) return; const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null; if (Date.now() - t0 > 800) return; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1); }, { passive: true });
   })();
 })();
+
+/* Color wheel pop-up (Oct 31 2026): the top-bar wheel button opens /study/color-wheel.html?embed=1 in a
+   panel (desktop: slides in from the right over the notes; phones and portrait iPads: full screen),
+   so the reader keeps their place. Back, Escape or Close shuts it. The frame never changes size once
+   made (it slides in and out), because resizing an iframe on iOS eats the next tap inside it
+   (see Color-Wheel-App-Reference.md). Ctrl/Cmd-click still opens the full page. */
+(function () {
+  const btn = document.querySelector('.wheelbtn'); if (!btn) return;
+  let sheet = null, open = false;
+  function make() {
+    sheet = document.createElement('div');
+    sheet.className = 'wheelsheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.setAttribute('aria-label', 'Color wheel');
+    sheet.innerHTML = '<div class="wsbar"><a class="wsfull" href="/study/color-wheel.html">Open full page</a><button type="button" class="btn wsx">Close ✕</button></div><iframe title="Color wheel" src="/study/color-wheel.html?embed=1"></iframe>';
+    const scrim = document.createElement('div'); scrim.className = 'wheelscrim';
+    document.body.appendChild(scrim); document.body.appendChild(sheet);
+    sheet.querySelector('.wsx').onclick = () => close(true);
+    scrim.onclick = () => close(true);
+  }
+  function show() {
+    if (!sheet) make();
+    if (open) return; open = true;
+    document.body.classList.add('wheel-open'); btn.setAttribute('aria-expanded', 'true');
+    try { history.pushState({ wheel: 1 }, ''); } catch (e) {}
+    setTimeout(() => sheet.querySelector('.wsx').focus(), 50);
+  }
+  function close(fromUi) {
+    if (!open) return; open = false;
+    document.body.classList.remove('wheel-open'); btn.setAttribute('aria-expanded', 'false'); btn.focus();
+    if (fromUi && history.state && history.state.wheel) history.back();
+  }
+  btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+  btn.addEventListener('click', (e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; e.preventDefault(); show(); });
+  window.addEventListener('popstate', () => { if (open) close(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); close(true); } }, true);
+})();
