@@ -41,6 +41,22 @@
   ];
 
   var here = location.pathname.replace(/\/index\.html$/, '/');
+
+  /* ---- end of a study course: on its last page (image credits), Next goes to the
+     next course in the same STUDY group; the last course in a group keeps Next disabled ---- */
+  var nx = document.getElementById('next');
+  if (nx && nx.getAttribute('aria-disabled') === 'true') {
+    var k = -1;
+    STUDY.forEach(function (c, i) { if (c.section && (here === c.href || here.indexOf(c.section) === 0)) k = i; });
+    var nc = k >= 0 ? STUDY[k + 1] : null;
+    if (nc && nc.section) {
+      nx.href = nc.href;
+      nx.rel = 'next';
+      nx.removeAttribute('aria-disabled');
+      nx.title = 'Next course: ' + nc.label;
+      nx.textContent = 'Next course →';
+    }
+  }
   function mail() { window.location = 'mai' + 'lto:' + 'david@' + 'davidnicholsonart.com'; }
   function isCurrent(item) {
     return item.href === here || (item.section && here.indexOf(item.section) === 0);
