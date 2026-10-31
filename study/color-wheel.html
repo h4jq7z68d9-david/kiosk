@@ -313,7 +313,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .embed .wheel-card { padding: 10px; }
 .embed .wheel-app { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin-top: 0 !important; }
 </style>
-<link rel="stylesheet" href="/site-chrome.css?v=17">
+<link rel="stylesheet" href="/site-chrome.css?v=18">
 </head>
 <body>
 
@@ -2267,7 +2267,7 @@ async function submitGB() {
 let toastTimer;
 function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
-<script src="/site-chrome.js?v=17"></script>
+<script src="/site-chrome.js?v=18"></script>
 <script>/* embedded: links leave the pop-up and open in the course page's window */
 if (document.documentElement.classList.contains('embed')) [].forEach.call(document.querySelectorAll('a[href]'), function (a) { if (a.target !== '_blank') a.target = '_top'; });
 /* embedded: Escape inside the wheel closes the pop-up too */
