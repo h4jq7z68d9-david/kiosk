@@ -131,6 +131,12 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 /* /study.html: the site's page header and lowercase section labels */
 .lead { margin: 30px 0 4px; }
 .show-title { font-size: clamp(26px, 5vw, 40px); font-weight: 700; letter-spacing: -0.01em; text-transform: lowercase; line-height: 1.15; }
+.lead-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.wheel-btn { flex: none; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--ink2); font-size: 13px; font-weight: 400; letter-spacing: .06em; text-transform: lowercase; margin-top: 4px; }
+.wheel-btn img { width: 76px; height: 76px; display: block; transition: transform .2s; }
+.wheel-btn:hover { color: var(--ink); }
+.wheel-btn:hover img { transform: rotate(15deg); }
+@media (max-width: 600px) { .wheel-btn img { width: 56px; height: 56px; } .wheel-btn { font-size: 12px; } }
 .lead p { font-size: 16px; font-weight: 300; line-height: 1.85; color: var(--ink2); margin-top: 12px; max-width: 60ch; }
 .grp-h { font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink3); margin: 26px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 .landing .tile .tt { text-transform: lowercase; }

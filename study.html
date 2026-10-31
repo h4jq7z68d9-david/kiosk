@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="/site-tokens.css?v=2">
 <link rel="stylesheet" href="/site-chrome.css?v=2">
 <link rel="stylesheet" href="/site-bar.css?v=1">
-<link rel="stylesheet" href="/study/study.css?v=8">
+<link rel="stylesheet" href="/study/study.css?v=9">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","@id":"https://davidnicholsonart.com/study.html","url":"https://davidnicholsonart.com/study.html","name":"Study","publisher":{"@type":"Person","name":"David Nicholson","url":"https://davidnicholsonart.com/"},"hasPart":[{"@type":"WebPage","name":"Color wheel","url":"https://davidnicholsonart.com/study/color-wheel.html"},{"@type":"LearningResource","name":"Color Theory","url":"https://davidnicholsonart.com/study/color-theory.html"},{"@type":"LearningResource","name":"Pigments and Materials","url":"https://davidnicholsonart.com/study/pigments-and-materials.html"},{"@type":"LearningResource","name":"Oil vs Acrylic","url":"https://davidnicholsonart.com/study/oil-vs-acrylic.html"},{"@type":"LearningResource","name":"Composition","url":"https://davidnicholsonart.com/study/composition.html"},{"@type":"LearningResource","name":"Value and Light","url":"https://davidnicholsonart.com/study/value-and-light.html"},{"@type":"LearningResource","name":"Classical Myth in Art","url":"https://davidnicholsonart.com/study/art-history/classical-myth.html"},{"@type":"LearningResource","name":"Japanese Woodblock Prints","url":"https://davidnicholsonart.com/study/art-history/japanese-woodblock-prints.html"},{"@type":"LearningResource","name":"Romanticism","url":"https://davidnicholsonart.com/study/art-history/romanticism.html"},{"@type":"LearningResource","name":"Realism","url":"https://davidnicholsonart.com/study/art-history/realism.html"},{"@type":"LearningResource","name":"Impressionism","url":"https://davidnicholsonart.com/study/art-history/impressionism.html"},{"@type":"LearningResource","name":"Post-Impressionism","url":"https://davidnicholsonart.com/study/art-history/post-impressionism.html"},{"@type":"LearningResource","name":"Fauvism and Early Expressionism","url":"https://davidnicholsonart.com/study/art-history/fauvism-and-expressionism.html"}]}</script>
 </head>
 <body class="landing">
@@ -34,45 +34,21 @@
 <div id="menu-panel" aria-label="site menu"></div>
 
 <main>
-  <div class="lead">
-    <h1 class="show-title">study</h1>
-    <p>painting technique and art history study guides.</p>
+  <div class="lead lead-row">
+    <div>
+      <h1 class="show-title">study</h1>
+      <p>painting technique and art history study guides.</p>
+    </div>
+    <a class="wheel-btn" href="/study/color-wheel.html"><img src="/color-wheel-icon-512.png" alt=""><span>color wheel</span></a>
   </div>
 
-  <!-- Two tabs. Technique: tools and technique courses in one column (label "tool" or "course · N parts").
-       Art history: a vertical timeline in date order. To add a course, copy a tl-item into the right panel. -->
+  <!-- Two tabs; art history opens first, technique via #technique. Art history: a vertical timeline in date order.
+       Technique: technique courses in one column (label "course · N parts"). The color wheel is the button beside the heading.
+       To add a course, copy a tl-item into the right panel. -->
   <div class="stabs" role="tablist">
-    <button type="button" role="tab" id="t-technique" aria-controls="p-technique" aria-selected="true">technique</button>
-    <button type="button" role="tab" id="t-art-history" aria-controls="p-art-history" aria-selected="false">art history</button>
+    <button type="button" role="tab" id="t-art-history" aria-controls="p-art-history" aria-selected="true">art history</button>
+    <button type="button" role="tab" id="t-technique" aria-controls="p-technique" aria-selected="false">technique</button>
   </div>
-  <section id="p-technique" class="stab-panel" role="tabpanel" aria-labelledby="t-technique">
-  <div class="tl tl-plain">
-    <a class="tl-item" href="/study/color-wheel.html">
-      <span class="tl-date">tool</span>
-      <span class="card tl-card"><span class="tl-th icon"><img src="/color-wheel-icon-512.png" alt=""></span><span class="tl-tb"><span class="tt">color wheel</span><span class="ts">an interactive red–yellow–blue wheel: harmonies, tints and shades, and paint mixing.</span></span></span>
-    </a>
-    <a class="tl-item" href="/study/color-theory.html">
-      <span class="tl-date">course · 8 parts</span>
-      <span class="card tl-card"><span class="tl-th"><img src="/study/color-theory/img/ct-complementary.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">color theory</span><span class="ts">a short course on color for painters, from light and the eye to harmony, contrast and pigment, with historic plates, original diagrams and public-domain paintings.</span></span></span>
-    </a>
-    <a class="tl-item" href="/study/pigments-and-materials.html">
-      <span class="tl-date">course · 5 parts</span>
-      <span class="card tl-card"><span class="tl-th"><img src="/study/pigments-and-materials/img/pm-binder.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">pigments and materials</span><span class="ts">a short course on what paintings are made of, from ancient pigments to binders, supports and grounds, with historic plates, original diagrams and public-domain works.</span></span></span>
-    </a>
-    <a class="tl-item" href="/study/oil-vs-acrylic.html">
-      <span class="tl-date">course · 6 parts</span>
-      <span class="card tl-card"><span class="tl-th"><img src="/study/oil-vs-acrylic/img/oa-binders.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">oil vs acrylic</span><span class="ts">a short course on how oil and acrylic paint differ, from how each dries to how each ages, with historic plates, original diagrams and example paintings.</span></span></span>
-    </a>
-    <a class="tl-item" href="/study/composition.html">
-      <span class="tl-date">course · 6 parts</span>
-      <span class="card tl-card"><span class="tl-th"><img src="/study/composition/img/poore-fundamental-forms.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">composition</span><span class="ts">a short course on how painters arrange a picture, from the frame and value massing to balance, movement and unity, with plates from two classic public-domain books and public-domain example works.</span></span></span>
-    </a>
-    <a class="tl-item" href="/study/value-and-light.html">
-      <span class="tl-date">course · 7 parts</span>
-      <span class="card tl-card"><span class="tl-th"><img src="/study/value-and-light/img/merrifield-pl09.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">value and light</span><span class="ts">a short course on how light and dark build form, from the value scale and light on form to light sources, edges and chiaroscuro, with plates from two classic public-domain drawing books and public-domain example works.</span></span></span>
-    </a>
-  </div>
-  </section>
   <section id="p-art-history" class="stab-panel" role="tabpanel" aria-labelledby="t-art-history">
   <div class="tl">
     <a class="tl-item" href="/study/art-history/classical-myth.html">
@@ -105,6 +81,30 @@
     </a>
   </div>
   </section>
+  <section id="p-technique" class="stab-panel" role="tabpanel" aria-labelledby="t-technique">
+  <div class="tl tl-plain">
+    <a class="tl-item" href="/study/color-theory.html">
+      <span class="tl-date">course · 8 parts</span>
+      <span class="card tl-card"><span class="tl-th"><img src="/study/color-theory/img/ct-complementary.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">color theory</span><span class="ts">a short course on color for painters, from light and the eye to harmony, contrast and pigment, with historic plates, original diagrams and public-domain paintings.</span></span></span>
+    </a>
+    <a class="tl-item" href="/study/pigments-and-materials.html">
+      <span class="tl-date">course · 5 parts</span>
+      <span class="card tl-card"><span class="tl-th"><img src="/study/pigments-and-materials/img/pm-binder.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">pigments and materials</span><span class="ts">a short course on what paintings are made of, from ancient pigments to binders, supports and grounds, with historic plates, original diagrams and public-domain works.</span></span></span>
+    </a>
+    <a class="tl-item" href="/study/oil-vs-acrylic.html">
+      <span class="tl-date">course · 6 parts</span>
+      <span class="card tl-card"><span class="tl-th"><img src="/study/oil-vs-acrylic/img/oa-binders.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">oil vs acrylic</span><span class="ts">a short course on how oil and acrylic paint differ, from how each dries to how each ages, with historic plates, original diagrams and example paintings.</span></span></span>
+    </a>
+    <a class="tl-item" href="/study/composition.html">
+      <span class="tl-date">course · 6 parts</span>
+      <span class="card tl-card"><span class="tl-th"><img src="/study/composition/img/poore-fundamental-forms.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">composition</span><span class="ts">a short course on how painters arrange a picture, from the frame and value massing to balance, movement and unity, with plates from two classic public-domain books and public-domain example works.</span></span></span>
+    </a>
+    <a class="tl-item" href="/study/value-and-light.html">
+      <span class="tl-date">course · 7 parts</span>
+      <span class="card tl-card"><span class="tl-th"><img src="/study/value-and-light/img/merrifield-pl09.jpg" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">value and light</span><span class="ts">a short course on how light and dark build form, from the value scale and light on form to light sources, edges and chiaroscuro, with plates from two classic public-domain drawing books and public-domain example works.</span></span></span>
+    </a>
+  </div>
+  </section>
   <script>
   (function () {   /* tabs; #art-history opens the second tab. Without JS both panels show. */
     var tabs = [].slice.call(document.querySelectorAll('.stabs [role=tab]'));
@@ -114,10 +114,12 @@
         t.setAttribute('aria-selected', on);
         document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
       });
-      if (setHash) history.replaceState(null, '', id === 'technique' ? location.pathname : '#' + id);
+      if (setHash) history.replaceState(null, '', id === 'art-history' ? location.pathname : '#' + id);
     }
     tabs.forEach(function (t) { t.addEventListener('click', function () { show(t.id.slice(2), true); }); });
-    show(location.hash === '#art-history' ? 'art-history' : 'technique', false);
+    function fromHash() { show(location.hash === '#technique' ? 'technique' : 'art-history', false); }   // #art-history (old links) also opens art history
+    fromHash();
+    window.addEventListener('hashchange', fromHash);   // menu links to #technique / the page itself while already here
   })();
   </script>
 </main>
@@ -134,6 +136,6 @@
     <p class="f-legal">&copy; 2026 david nicholson</p>
   </div>
 </footer>
-<script src="/site-chrome.js?v=3"></script>
+<script src="/site-chrome.js?v=4"></script>
 </body>
 </html>

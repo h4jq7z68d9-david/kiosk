@@ -61,7 +61,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 3, bar: 1, guideCss: 6, guideJs: 5 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 4, bar: 1, guideCss: 6, guideJs: 5 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -282,7 +282,7 @@ const OUTLINE = `<p><a class="ho" href="${HOME}">About this site</a></p>` + flat
 
 function crumbHtml(f) {
   // desktop only (hidden on phones): Study › lane › course › part; the last item is the current page, not a link
-  const lane = BASE === '/study' ? ['Technique', STUDY] : ['Art history', STUDY + '#art-history'];
+  const lane = BASE === '/study' ? ['Technique', STUDY + '#technique'] : ['Art history', STUDY];   // study.html opens on art history
   const a = ([t, h]) => `<a href="${h}">${esc(t)}</a>`, here = (t) => `<span aria-current="page">${esc(t)}</span>`, sep = ' <span class="sep" aria-hidden="true">›</span> ';
   const head = [a(['Study', STUDY]), a(lane)];
   // narrow desktops show only Study › lane (the rail already names the course and part), so links are never cut off
