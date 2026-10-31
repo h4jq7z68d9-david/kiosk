@@ -13,7 +13,7 @@
 |<https://davidnicholsonart.com/booth.html>          |Booth planner — art fair wall layout tool (noindex, admin-linked)                            |
 |<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal                                   |
 |<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)                              |
-|<https://davidnicholsonart.com/study.html>          |Study landing page — two tabs (Oct 30 2026): art history (vertical timeline in date order, opens first) and technique (`#technique`); color wheel button beside the heading; search across all study courses (Oct 31 2026); menu item "study"|
+|<https://davidnicholsonart.com/study.html>          |Study landing page — two tabs (Oct 30 2026): art history (vertical timeline in date order, opens first) and technique (`#technique`); search across all study courses (Oct 31 2026; the color wheel button was removed the same day); menu item "study"|
 |<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel (Oct 28 2026: moved from study/color-theory.html; flashcards tab removed). Home-screen web app `start_url`|
 |<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards|
 |<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course (Oct 30 2026: 5 parts, 50 pages under /study/pigments-and-materials/; concept, history and example pages), same guide layout as Color Theory|
@@ -617,6 +617,8 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **Color wheel pop-up.** The course button opens `/study/color-wheel.html?embed=1` in a panel: desktop slides in from the right over the notes (below the site bar), phones and portrait iPads full screen. Back, Escape, Close or the scrim shuts it; "Open full page" and Ctrl/Cmd-click go to the real page. The frame is made on first open and never changes size (it slides in and out) — resizing an iframe on iOS eats the next tap inside it (see `Color-Wheel-App-Reference.md`). **`color-wheel.html` embed mode:** `?embed=1` adds `.embed` to `<html>`, hiding nav, menu, title and footer; links open in the course window (`target=_top`). The site menu's "color wheel" still opens the full page; the page stays the home-screen app `start_url`. Generator `V`: chrome 5, guideCss 9, guideJs 7 (all 12 courses rebuilt).
 
 **Tested (headless Chromium, 1440 / 390 px):** menu order and current marking; wheel button centered; pop-up opens, inner nav hidden, "+ Mix" works on one tap, Back/Escape close it and stay on the page; no script errors. **Needs a real iPhone check** (headless can't reproduce iOS Safari's iframe tap quirk).
+
+**Follow-ups the same morning:** on phones the pop-up is a bottom sheet at 85% height (rounded top, grab handle, swipe down or tap the dimmed lesson to close, ✕ only); in embed mode the wheel also hides its own "color wheel / reference" header. **`study.html` no longer has the color wheel button** beside the heading (David: the wheel is its own thing now, reached from the menu and course pages); `.wheel-btn` rules in `study.css` are unused.
 
 **Open idea (not built):** wheel page relationship labels linking to their Color Theory pages, and a "learn the ideas" row of course cards under the tool (mocked up Oct 31, awaiting David).
 
