@@ -19,12 +19,6 @@
      Technique in study.html card order; art history in date order (same as the timeline).
      Adding a course: add one line here. */
   var STUDY = [
-    { group: 'technique', href: '/study.html#technique' },
-    { href: '/study/color-theory.html', label: 'color theory', section: '/study/color-theory/' },
-    { href: '/study/value-and-light.html', label: 'value and light', section: '/study/value-and-light/' },
-    { href: '/study/composition.html', label: 'composition', section: '/study/composition/' },
-    { href: '/study/pigments-and-materials.html', label: 'pigments and materials', section: '/study/pigments-and-materials/' },
-    { href: '/study/oil-vs-acrylic.html', label: 'oil vs acrylic', section: '/study/oil-vs-acrylic/' },
     { group: 'art history', href: '/study.html' },
     { href: '/study/art-history/classical-myth.html', label: 'classical myth in art', section: '/study/art-history/classical-myth/' },
     { href: '/study/art-history/japanese-woodblock-prints.html', label: 'japanese woodblock prints', section: '/study/art-history/japanese-woodblock-prints/' },
@@ -32,7 +26,13 @@
     { href: '/study/art-history/realism.html', label: 'realism', section: '/study/art-history/realism/' },
     { href: '/study/art-history/impressionism.html', label: 'impressionism', section: '/study/art-history/impressionism/' },
     { href: '/study/art-history/post-impressionism.html', label: 'post-impressionism', section: '/study/art-history/post-impressionism/' },
-    { href: '/study/art-history/fauvism-and-expressionism.html', label: 'fauvism and early expressionism', section: '/study/art-history/fauvism-and-expressionism/' }
+    { href: '/study/art-history/fauvism-and-expressionism.html', label: 'fauvism and early expressionism', section: '/study/art-history/fauvism-and-expressionism/' },
+    { group: 'technique', href: '/study.html#technique' },
+    { href: '/study/color-theory.html', label: 'color theory', section: '/study/color-theory/' },
+    { href: '/study/value-and-light.html', label: 'value and light', section: '/study/value-and-light/' },
+    { href: '/study/composition.html', label: 'composition', section: '/study/composition/' },
+    { href: '/study/pigments-and-materials.html', label: 'pigments and materials', section: '/study/pigments-and-materials/' },
+    { href: '/study/oil-vs-acrylic.html', label: 'oil vs acrylic', section: '/study/oil-vs-acrylic/' }
   ];
   var FOOTER = [
     { href: '/gallery.html', label: 'gallery' },
@@ -185,27 +185,42 @@
     });
 
     /* course list under "study" — the current course is marked, so you can see where you are */
+    /* Oct 31 2026: art history first, then technique. Each group folds: its heading links to the study page,
+       the chevron beside it opens its course list. Inside a course, that course's group starts open. */
     function addStudy() {
+      var CHEV = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg>';
       var box = document.createElement('div');
       box.className = 'menu-sub';
+      var items = null;
       STUDY.forEach(function (c) {
-        var a;
         if (c.group) {
-          a = document.createElement(c.href ? 'a' : 'div');
-          if (c.href) a.href = c.href;
-          a.className = 'menu-group';
-          a.textContent = c.group;
-        } else {
-          a = document.createElement('a');
-          a.href = c.href;
-          a.textContent = c.label;
-          if (here === c.href || (c.section && here.indexOf(c.section) === 0)) {
-            a.className = 'current';
-            a.setAttribute('aria-current', 'page');
-          }
+          var row = document.createElement('div');
+          row.className = 'menu-grow';
+          var head = document.createElement('a');
+          head.href = c.href; head.className = 'menu-group'; head.textContent = c.group;
+          var tog = document.createElement('button');
+          tog.type = 'button'; tog.className = 'menu-gtog'; tog.innerHTML = CHEV;
+          tog.setAttribute('aria-label', 'show ' + c.group + ' courses');
+          row.appendChild(head); row.appendChild(tog); box.appendChild(row);
+          items = document.createElement('div'); items.className = 'menu-gitems'; box.appendChild(items);
+          (function (list, t) {
+            var set = function (o) { list.hidden = !o; t.setAttribute('aria-expanded', o ? 'true' : 'false'); };
+            list._set = set; set(false);
+            t.addEventListener('click', function () { set(list.hidden); });
+          })(items, tog);
+          return;
         }
-        box.appendChild(a);
+        var a = document.createElement('a');
+        a.href = c.href;
+        a.textContent = c.label;
+        if (here === c.href || (c.section && here.indexOf(c.section) === 0)) {
+          a.className = 'current';
+          a.setAttribute('aria-current', 'page');
+          items._open = true;
+        }
+        items.appendChild(a);
       });
+      [].forEach.call(box.querySelectorAll('.menu-gitems'), function (l) { if (l._open) l._set(true); });
       panel.appendChild(box);
       return box;
     }

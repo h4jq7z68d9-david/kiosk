@@ -68,3 +68,10 @@ html.wheel-open .wheel-scrim { opacity: 1; visibility: visible; transition: opac
 #menu-panel .menu-study svg { width: 12px; height: 12px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .18s; }
 #menu-panel .menu-study[aria-expanded="true"] svg { transform: rotate(180deg); }
 #menu-panel .menu-sub[hidden] { display: none; }
+/* study course groups fold (site-chrome.js, Oct 31 2026): heading links to the study page, chevron opens the list */
+#menu-panel .menu-grow { display: flex; align-items: center; justify-content: space-between; }
+#menu-panel .menu-grow .menu-group { flex: 1; width: auto; min-height: 36px; padding: 0 16px; }
+#menu-panel .menu-gtog { width: 48px; min-height: 36px; justify-content: center; padding: 0 18px 0 0; margin-left: auto; flex: none; }
+#menu-panel .menu-gtog svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .18s; }
+#menu-panel .menu-gtog[aria-expanded="true"] svg { transform: rotate(180deg); }
+#menu-panel .menu-gitems[hidden] { display: none; }
