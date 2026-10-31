@@ -255,6 +255,14 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .embed nav, .embed footer, .embed #menu-panel, .embed #menu-scrim, .embed .lead { display: none !important; }
 .embed main { padding-top: 0; }
 .embed .wheel-header { display: none; }
+/* the pop-up is the quick tool only (David, Oct 31 2026): 12-hue wheel, mixer, palette.
+   No wheel-size switch, no relationships panel, no study links; the pigment-data credit stays (CC BY 4.0). */
+.embed .wheel-toggle, .embed #readout { display: none !important; }
+.embed .wheel-footer .tool-note:not(:last-child) { display: none; }
+.embed .wheel-main { padding: 8px 12px 10px; gap: 10px; }
+.embed .stage { width: 100%; gap: 10px; }
+.embed .wheel-frame { width: min(220px, 58vw); }
+.embed .wheel-card { padding: 10px; }
 .embed .wheel-app { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin-top: 0 !important; }
 </style>
 <link rel="stylesheet" href="/site-chrome.css?v=2">

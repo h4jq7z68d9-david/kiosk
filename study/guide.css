@@ -222,27 +222,21 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .wheelbtn img{width:22px;height:22px;display:block;transition:transform .2s}
 .guide-page .wheelbtn:hover img{transform:rotate(15deg)}
 @media (max-width:900px){.guide-page .topbar{flex-wrap:nowrap}.guide-page .topbar .search{flex:1 1 0}}
-/* color wheel pop-up (guide.js). The frame keeps one size; the panel slides in and out. */
+/* color wheel pop-up (guide.js), Oct 31 2026: drops down from the top, under the site bar, sized to the
+   quick tool (wheel, mixer, palette). The frame keeps one size; the panel slides in and out. */
 .guide-page .wheelscrim{position:fixed;inset:0;z-index:125;background:rgba(20,26,32,.28);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s linear .2s}
-.guide-page .wheelsheet{position:fixed;z-index:126;top:0;right:0;bottom:0;width:min(480px,100%);display:flex;flex-direction:column;background:var(--bg);border-left:1px solid var(--border-mid);box-shadow:-8px 0 30px rgba(0,0,0,.12);
-  transform:translateX(102%);visibility:hidden;transition:transform .22s ease-out,visibility 0s linear .22s}
-.guide-page.wheel-open .wheelsheet{transform:none;visibility:visible;transition:transform .22s ease-out,visibility 0s}
+.guide-page .wheelsheet{position:fixed;z-index:126;top:calc(var(--nav-h) + 8px);right:16px;width:min(420px,calc(100% - 32px));height:min(680px,calc(100% - var(--nav-h) - 24px));
+  display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--border-mid);border-radius:14px;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,.16);
+  transform:translateY(-12px);opacity:0;visibility:hidden;transition:transform .2s ease-out,opacity .2s,visibility 0s linear .2s}
+.guide-page.wheel-open .wheelsheet{transform:none;opacity:1;visibility:visible;transition:transform .2s ease-out,opacity .2s,visibility 0s}
 .guide-page.wheel-open .wheelscrim{opacity:1;visibility:visible;transition:opacity .2s,visibility 0s}
-.guide-page .wsbar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top,0px));border-bottom:1px solid var(--border)}
-.guide-page .wsfull{font-size:.85rem;color:var(--accent-ink);text-decoration:none}
-.guide-page .wsfull:hover{text-decoration:underline}
-.guide-page .wheelsheet iframe{flex:1 1 auto;width:100%;min-height:0;border:0;display:block;background:var(--bg)}
-@media (min-width:901px){.guide-page .wheelsheet{top:var(--nav-h)}}
-/* phones and portrait iPads: a bottom sheet at 85% with the lesson dimmed behind it, so it reads as on top of the page (Oct 31 2026) */
+.guide-page .wsbar{position:absolute;top:8px;right:8px;z-index:2}
+.guide-page .wsbar .wsx{width:34px;height:34px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--panel)}
 .guide-page .wsgrab{display:none}
+.guide-page .wheelsheet iframe{flex:1 1 auto;width:100%;min-height:0;border:0;display:block;background:var(--bg)}
+/* phones and portrait iPads: full width under the site bar, rounded at the bottom with a grab handle; swipe up on it to close */
 @media (max-width:900px){
-  .guide-page .wheelsheet{top:15%;width:100%;border-left:0;border-radius:16px 16px 0 0;overflow:hidden;box-shadow:0 -6px 24px rgba(0,0,0,.14);
-    transform:translateY(102%);padding-bottom:env(safe-area-inset-bottom,0px)}
-  .guide-page .wsbar{position:absolute;top:0;left:0;right:0;z-index:2;height:22px;padding:0;border-bottom:0;background:transparent}
-  .guide-page .wsbar .wsx{position:absolute;top:8px;right:10px;width:36px;height:36px;padding:0;border-radius:50%;background:var(--panel)}
-  .guide-page .wheelsheet iframe{margin-top:22px}
-  .guide-page .wsgrab{display:block;position:absolute;top:8px;left:50%;width:36px;height:4px;margin-left:-18px;border-radius:2px;background:var(--border-mid)}
-  .guide-page .wsfull{visibility:hidden}
-  .guide-page .wsx .wsxt{display:none}
+  .guide-page .wheelsheet{top:var(--nav-h);left:0;right:0;width:100%;height:min(700px,calc(100% - var(--nav-h) - 48px));border:0;border-bottom:1px solid var(--border-mid);border-radius:0 0 16px 16px;transform:translateY(-24px)}
+  .guide-page .wsgrab{display:block;flex:none;width:36px;height:4px;margin:6px auto 10px;border-radius:2px;background:var(--border-mid);box-sizing:content-box;border:12px solid transparent;border-width:8px 40px;background-clip:content-box}
 }
 @media (prefers-reduced-motion:reduce){.guide-page .wheelsheet,.guide-page .wheelscrim{transition:none}}

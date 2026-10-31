@@ -104,24 +104,24 @@
 })();
 
 /* Color wheel pop-up (Oct 31 2026): the top-bar wheel button opens /study/color-wheel.html?embed=1 in a
-   panel (desktop: slides in from the right over the notes; phones and portrait iPads: full screen),
+   panel (drops down from the top under the site bar; full width on phones),
    so the reader keeps their place. Back, Escape or Close shuts it. The frame never changes size once
    made (it slides in and out), because resizing an iframe on iOS eats the next tap inside it
-   (see Color-Wheel-App-Reference.md). Ctrl/Cmd-click still opens the full page. */
+   (see Color-Wheel-App-Reference.md). Ctrl/Cmd-click still opens the full page; the pop-up is the quick tool only (see the .embed rules in color-wheel.html). */
 (function () {
   const btn = document.querySelector('.wheelbtn'); if (!btn) return;
   let sheet = null, open = false;
   function make() {
     sheet = document.createElement('div');
     sheet.className = 'wheelsheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.setAttribute('aria-label', 'Color wheel');
-    sheet.innerHTML = '<div class="wsbar"><span class="wsgrab" aria-hidden="true"></span><a class="wsfull" href="/study/color-wheel.html">Open full page</a><button type="button" class="btn wsx" aria-label="Close"><span class="wsxt">Close </span>✕</button></div><iframe title="Color wheel" src="/study/color-wheel.html?embed=1"></iframe>';
+    sheet.innerHTML = '<div class="wsbar"><button type="button" class="btn wsx" aria-label="Close">✕</button></div><iframe title="Color wheel" src="/study/color-wheel.html?embed=1"></iframe><span class="wsgrab" aria-hidden="true"></span>';
     const scrim = document.createElement('div'); scrim.className = 'wheelscrim';
     document.body.appendChild(scrim); document.body.appendChild(sheet);
     sheet.querySelector('.wsx').onclick = () => close(true);
-    /* phones: swipe down on the sheet's top bar closes it */
-    const bar = sheet.querySelector('.wsbar'); let y0 = null;
+    /* phones: swipe up on the grab handle closes it */
+    const bar = sheet.querySelector('.wsgrab'); let y0 = null;
     bar.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
-    bar.addEventListener('touchend', (e) => { if (y0 != null && e.changedTouches[0].clientY - y0 > 50) close(true); y0 = null; }, { passive: true });
+    bar.addEventListener('touchend', (e) => { if (y0 != null && y0 - e.changedTouches[0].clientY > 40) close(true); y0 = null; }, { passive: true });
     scrim.onclick = () => close(true);
   }
   function show() {
