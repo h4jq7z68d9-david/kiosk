@@ -233,5 +233,16 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .wsfull:hover{text-decoration:underline}
 .guide-page .wheelsheet iframe{flex:1 1 auto;width:100%;min-height:0;border:0;display:block;background:var(--bg)}
 @media (min-width:901px){.guide-page .wheelsheet{top:var(--nav-h)}}
-@media (max-width:900px){.guide-page .wheelsheet{width:100%;border-left:0;box-shadow:none;padding-bottom:env(safe-area-inset-bottom,0px)}}
+/* phones and portrait iPads: a bottom sheet at 85% with the lesson dimmed behind it, so it reads as on top of the page (Oct 31 2026) */
+.guide-page .wsgrab{display:none}
+@media (max-width:900px){
+  .guide-page .wheelsheet{top:15%;width:100%;border-left:0;border-radius:16px 16px 0 0;overflow:hidden;box-shadow:0 -6px 24px rgba(0,0,0,.14);
+    transform:translateY(102%);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .guide-page .wsbar{position:absolute;top:0;left:0;right:0;z-index:2;height:22px;padding:0;border-bottom:0;background:transparent}
+  .guide-page .wsbar .wsx{position:absolute;top:8px;right:10px;width:36px;height:36px;padding:0;border-radius:50%;background:var(--panel)}
+  .guide-page .wheelsheet iframe{margin-top:22px}
+  .guide-page .wsgrab{display:block;position:absolute;top:8px;left:50%;width:36px;height:4px;margin-left:-18px;border-radius:2px;background:var(--border-mid)}
+  .guide-page .wsfull{visibility:hidden}
+  .guide-page .wsx .wsxt{display:none}
+}
 @media (prefers-reduced-motion:reduce){.guide-page .wheelsheet,.guide-page .wheelscrim{transition:none}}
