@@ -19,6 +19,7 @@
 |<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course (Oct 30 2026: 5 parts, 50 pages under /study/pigments-and-materials/; concept, history and example pages), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/study/oil-vs-acrylic.html>|Oil vs Acrylic technique course (Oct 30 2026: 6 parts, 38 pages under /study/oil-vs-acrylic/; concept, history and example pages), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/study/composition.html>|Composition technique course (Oct 30 2026: 6 parts, 49 pages under /study/composition/; concept, history and example pages, mostly Dow and Poore plates), same guide layout as Color Theory|
+|<https://davidnicholsonart.com/study/value-and-light.html>|Value and Light technique course (Oct 30 2026: 7 parts, 51 pages under /study/value-and-light/; concept, history and example pages, mostly Merrifield and Cross plates), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (condensed, Oct 27 2026: 60 works, 7 modules) — start page of the guide; every slide is its own indexable page under /study/art-history/classical-myth/ (70 pages), all in the guide layout (outline, search, Saved, Prev/Next, swipe)|
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
@@ -601,6 +602,20 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`lambda-deploy` user** (local seed scripts):
 
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
+
+-----
+
+## Completed This Session (October 30 2026, night) — Value and Light course; Japanese Woodblock Prints menu fix (deployed Oct 30 2026)
+
+**Value and Light** added at `/study/value-and-light.html`, built by the art technique course builder (iCloud `School v2/Art Technique Course Builder/Value and Light/Public Study Site/`, see `HANDOFF to Art Business Project.md` there). Technique course under `/study/`, concept pages labeled "Concept". 7 parts in 3 sections (Foundations: A Short History, Value; Seeing Light: Light on Form, Light Sources; Light in Painting: Edges, Styles of Light, Working in Value); 51 pages (17 works, 7 parts, 27 other). Concept images mostly plates from Mary Merrifield's *Handbook of Light and Shade* (1880) and Anson Cross's *Light and Shade* (1897), Internet Archive scans; artworks public domain. Data: `study/value-and-light/data.js`, `credits.js`, `sources.js`, `img/` (41 images). Settings: `tools/study/courses/value-and-light.json` (`introImg: merrifield-pl09`). No generator change; other courses' HTML unchanged. `study.html`: technique-tab card after Composition ("course · 7 parts") + JSON-LD entry. `site-chrome.js` `STUDY`: "value and light" after composition. Sitemap: +51 URLs.
+
+**Images (standing shrink rule):** `leonardo-virgin-of-the-rocks` and `cross-figs-08-10-11` resized to 1600 px long edge; three over 300 KB re-saved at q82 (Sargent stays ~440 KB, Hammershøi ~305 KB — re-encoding didn't shrink them). All now ≤1600 px. iCloud copy unchanged.
+
+**Menu fix:** Japanese Woodblock Prints was missing from the `STUDY` list in `site-chrome.js` (added after Classical Myth, date order). `site-chrome` cache left at v2 (bumping touches every page); browsers holding the old file pick up the new lines when their cache expires.
+
+**Rebuild list:** after any `guide.css`/`guide.js`/generator change, rebuild all eleven courses: classical-myth, impressionism, color-theory, post-impressionism, fauvism-and-expressionism, romanticism, japanese-woodblock-prints, pigments-and-materials, oil-vs-acrylic, composition, value-and-light.
+
+**Tested (headless Chromium, 1440 / 390 px, GA blocked):** all 51 pages plus `study.html` — no console errors, every image loads, no horizontal scroll; screenshots of the first page of each of the 7 parts and the new card; study menu on a Japanese Woodblock Prints page lists every course with the current one marked.
 
 -----
 
