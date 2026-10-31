@@ -1,0 +1,17 @@
+{
+ "name": "Value and Light",
+ "dataFiles": [
+  "data.js"
+ ],
+ "basePath": "/study",
+ "themeLabel": "Concept",
+ "subjLabel": "",
+ "introImg": "merrifield-pl09",
+ "intro": "How light and dark build form in drawing and painting: the value scale, what one light does to a solid, kinds of light, edges, the great styles of light and shade, and ways to work in value. Concept pages explain one idea, mostly with plates from two old public-domain drawing books (Mary Merrifield, 1880; Anson Cross, 1897); example pages show it in a public-domain work.",
+ "imagesNote": "Most concept images are plates from Merrifield's Handbook of Light and Shade (1880) and Cross's Light and Shade (1897), both public domain; the artworks are public domain. Sources are listed under Image credits.",
+ "ldDescription": "A short course on value and light in drawing and painting.",
+ "homeDescription": "{name}: a short course on how light and dark build form, from the value scale and light on form to light sources, edges and chiaroscuro, with plates from two classic public-domain drawing books and public-domain example works.",
+ "creditsIntro": "Most concept images are plates from two public-domain books, Mary Merrifield's Handbook of Light and Shade (1880) and Anson Cross's Light and Shade (1897), from Internet Archive scans; some combine two figures side by side. Some concept pages show a detail of the example work that follows. The artworks are public domain; each entry links to its source.",
+ "creditsDescription": "Sources and licenses for the {count} plates and artworks in {name}.",
+ "sourcesDescription": "The lectures, courses, books, museum records and references behind {name}."
+}

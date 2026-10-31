@@ -24,6 +24,7 @@
     { href: '/study/pigments-and-materials.html', label: 'pigments and materials', section: '/study/pigments-and-materials/' },
     { href: '/study/oil-vs-acrylic.html', label: 'oil vs acrylic', section: '/study/oil-vs-acrylic/' },
     { href: '/study/composition.html', label: 'composition', section: '/study/composition/' },
+    { href: '/study/value-and-light.html', label: 'value and light', section: '/study/value-and-light/' },
     { group: 'art history', href: '/study.html#art-history' },
     { href: '/study/art-history/classical-myth.html', label: 'classical myth in art', section: '/study/art-history/classical-myth/' },
     { href: '/study/art-history/romanticism.html', label: 'romanticism', section: '/study/art-history/romanticism/' },
