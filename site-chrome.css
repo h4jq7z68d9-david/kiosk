@@ -49,3 +49,9 @@ html.wheel-open .wheel-scrim { opacity: 1; visibility: visible; transition: opac
   .wheel-grab { display: block; flex: none; width: 36px; height: 4px; margin: 0 auto; padding: 8px 40px 12px; box-sizing: content-box; background: var(--border-mid, #cfd6dd); background-clip: content-box; }
 }
 @media (prefers-reduced-motion: reduce) { .wheel-sheet, .wheel-scrim { transition: none; } }
+/* "study" toggles the course list (site-chrome.js, Oct 31 2026) */
+#menu-panel .menu-study { justify-content: space-between; }
+#menu-panel .menu-study.current { color: var(--accent-ink); font-weight: 500; }
+#menu-panel .menu-study svg { width: 12px; height: 12px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .18s; }
+#menu-panel .menu-study[aria-expanded="true"] svg { transform: rotate(180deg); }
+#menu-panel .menu-sub[hidden] { display: none; }

@@ -123,9 +123,24 @@
         el.type = 'button';
         el.setAttribute('data-menu', item.action);
       }
+      if (item.section === '/study') {
+        /* "study" opens and closes the course list (Oct 31 2026). The list is collapsed except inside a course,
+           where it starts open with the current course marked. Its "technique" / "art history" headings link to /study.html. */
+        el = document.createElement('button');
+        el.type = 'button';
+        el.className = 'menu-study' + (isCurrent(item) ? ' current' : '');
+        el.innerHTML = '<span></span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg>';
+        el.firstChild.textContent = item.label;
+        panel.appendChild(el);
+        var inCourse = STUDY.some(function (c) { return c.section && here.indexOf(c.section) === 0 || (!c.group && here === c.href); });
+        var box = addStudy();
+        var setOpen = function (o) { box.hidden = !o; el.setAttribute('aria-expanded', o ? 'true' : 'false'); };
+        setOpen(inCourse);
+        el.addEventListener('click', function () { setOpen(box.hidden); });
+        return;
+      }
       if (item.label) el.textContent = item.label;
       panel.appendChild(el);
-      if (item.section === '/study' && here.indexOf('/study/') === 0) addStudy();
     });
 
     /* course list under "study" — the current course is marked, so you can see where you are */
@@ -151,6 +166,7 @@
         box.appendChild(a);
       });
       panel.appendChild(box);
+      return box;
     }
 
     var setMenu = function (open) {
