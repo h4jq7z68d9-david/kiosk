@@ -14,7 +14,7 @@
 |<https://davidnicholsonart.com/prints/{slug}.html>  |Per-product pages with OG tags — redirect to gallery modal                                   |
 |<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)                              |
 |<https://davidnicholsonart.com/study.html>          |Study landing page — two tabs (Oct 30 2026): art history (vertical timeline in date order, opens first) and technique (`#technique`); search across all study courses (Oct 31 2026; the color wheel button was removed the same day); menu item "study"|
-|<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel (Oct 28 2026: moved from study/color-theory.html; flashcards tab removed). Home-screen web app `start_url`|
+|<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel quick tool (Oct 31 2026: unlisted, `noindex`; opened as a pop-up from the "color wheel" bubble at the bottom of the site menu). Home-screen web app `start_url`|
 |<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards|
 |<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course (Oct 30 2026: 5 parts, 50 pages under /study/pigments-and-materials/; concept, history and example pages), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/study/oil-vs-acrylic.html>|Oil vs Acrylic technique course (Oct 30 2026: 6 parts, 38 pages under /study/oil-vs-acrylic/; concept, history and example pages), same guide layout as Color Theory|
@@ -606,6 +606,20 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 31 2026, morning) — Color wheel becomes a quick tool opened from the menu (deployed Oct 31 2026)
+
+**David's call:** the wheel is a quick mixing check ("what does this green plus yellow make"), not a palette builder or a lesson. **The tool:** 12-hue wheel and the mixer only — color ratio slider, White, Black, Clear. Hidden (code left in place): the 3/6/12/24 switch, the palette and Save to Palette, the relationships panel, the tool's own "color wheel / reference" header and the study links. The PaintMixing credit line stays (CC BY 4.0 requires it).
+
+**How it's reached:** a **"color wheel" bubble (icon + words) at the very bottom of the site menu on every page** opens the wheel pop-up; the menu closes first. The pop-up code moved from `study/guide.js` to **`site-chrome.js`** (styles in `site-chrome.css`): it loads `/study/color-wheel.html?embed=1` in a frame that drops down under the site bar — a card at the right on desktop, full width on phones with a grab handle (swipe up to close); Back, Escape, the scrim or ✕ shut it; the page behind is scroll-locked while open (`html.wheel-open`) so iPhone Safari's toolbar, and with it the frame's height, can't change. **Removed:** the "color wheel" menu line, the course top-bar wheel button (generator), the earlier course-page pop-up.
+
+**`study/color-wheel.html` stays as a file** — the pop-up's frame loads it, and it is still the home-screen app `start_url` — but nothing on the site links to it except three Color Theory text links. It now shows the same quick tool, has `noindex`, is out of `sitemap.xml`, and out of `study.html`'s JSON-LD and description. No bubble on that page itself.
+
+**Caches:** `site-chrome` css and js v6 on every page (generator `V.chrome` 6); `guideCss` 13, `guideJs` 10; all 12 courses rebuilt.
+
+**Tested (headless Chromium, 1440 / 390 px):** bubble → pop-up on index, gallery, a Color Theory page and study.html; palette, relationships and size switch hidden; "+ Mix" on one tap; Back closes the pop-up and stays on the page; menu closed; no script errors. **Still needs the real-iPhone tap check** (to-do below).
+
+-----
+
 ## Completed This Session (October 31 2026, later) — Site menu regrouped, color wheel item, wheel button and pop-up on course pages (deployed Oct 31 2026)
 
 **Site menu (David, choice "B").** Three groups: home, prints, available originals — **color wheel**, study — shipping & returns, guest book, contact. "color wheel" is its own line (no icon) above "study"; it is no longer listed again in the study course list. `isCurrent` in `site-chrome.js`: a section match (study) gives way when another menu item is an exact match for the page, so on the wheel page only "color wheel" is marked. `site-chrome` cache v4 → v5 (all pages).
@@ -1097,7 +1111,7 @@ _David's instruction: don't track his tax filings or remind him to log sales —
   Either some Square Width/Height values are wrong (fix in Square), or the dropdown lists every size present. Decide before building. Generating the list from the data would keep it correct as paintings sell.
 - [ ] **After deploy, verify the at-gallery filter:** originals.html should show 42 paintings and none of Junction, KS Wind Farm No. 1, Sunflower No. 1, Sunflower No. 2, Waverly Church. If an at-gallery painting still shows, its `dna-paintings` title doesn't match the Square title and it has no `squareId` — fix the title in admin.
 - [x] **gallery.html modal link** — resolved October 2 2026: link hidden when the painting is at a gallery (`atGallery` added to `/products`).
-- [ ] **On an iPhone, check the course-page color wheel pop-up (added Oct 31 2026):** opens full screen, every control responds to one tap (especially "+ Mix" and the sliders), Back and Close return to the same lesson.
+- [ ] **On an iPhone, check the color wheel pop-up from the menu bubble (Oct 31 2026), on a shop page and a study page:** drops down from the top, every control responds to one tap (especially "+ Mix" and the sliders), Back and Close return to the same lesson.
 - [ ] **After deploy, verify the October 2 batch on a phone and a desktop:** homepage shows the whole painting with caption and name on the first screen; 2025 is collapsed and opens on tap; menu opens on every page and each link lands; a print card opens with no size chosen and the button says "choose a size"; picking a box and adding to cart puts the right size and price in the cart.
 - [ ] **After deploy, verify the true-scale wall (October 3 2026)** on a phone, an iPad and a desktop: every year is a cluster with the largest painting in the middle (top on a phone), nothing overlaps or runs off the right edge, tapping a painting opens its print card. If every painting is the same size, `/products` isn't returning `width` / `height` yet (Lambda deploy).
 - [ ] **Admin dimensions for Alley, Western Auto / Commuter / Fast Eddy** — fix in admin to match Square (16 × 20, 30 × 30, 37 × 33) if they're wrong there; originals.html reads Square, admin inventory reads `dna-paintings`.

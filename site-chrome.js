@@ -9,7 +9,6 @@
     { href: '/gallery.html', label: 'prints' },
     { href: '/originals.html', label: 'available originals' },
     { hr: true },
-    { href: '/study/color-wheel.html', label: 'color wheel' },
     { href: '/study.html', label: 'study', section: '/study' },
     { hr: true },
     { href: '/shipping.html', label: 'shipping & returns' },
@@ -65,6 +64,46 @@
     // a section match (study) gives way to an exact menu item for this page (color wheel)
     return !!(item.section && here.indexOf(item.section) === 0 && !MENU.some(function (m) { return m.href === here; }));
   }
+
+
+  /* ---- color wheel pop-up (Oct 31 2026) ----
+     Opened from the menu's color wheel bubble on every page. Loads /study/color-wheel.html?embed=1 (the quick
+     tool: wheel and mixer) in a frame that drops down under the site bar: a card at the right on desktop, full
+     width on phones with a grab handle (swipe up to close). Back, Escape, the scrim or the close button shut it.
+     The frame is made on first open and never changes size — it slides in and out — because resizing an iframe
+     on iOS eats the next tap inside it (Color-Wheel-App-Reference.md). The page behind is locked while it is
+     open so iPhone Safari's toolbar (and with it the frame's height) can't change. */
+  var wheel = (function () {
+    var sheet = null, scrimW = null, open = false, opener = null;
+    function make() {
+      scrimW = document.createElement('div'); scrimW.className = 'wheel-scrim';
+      sheet = document.createElement('div');
+      sheet.className = 'wheel-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.setAttribute('aria-label', 'Color wheel');
+      sheet.innerHTML = '<button type="button" class="wheel-x" aria-label="Close color wheel">\u2715</button><iframe title="Color wheel" src="/study/color-wheel.html?embed=1"></iframe><span class="wheel-grab" aria-hidden="true"></span>';
+      document.body.appendChild(scrimW); document.body.appendChild(sheet);
+      sheet.querySelector('.wheel-x').onclick = function () { hide(true); };
+      scrimW.onclick = function () { hide(true); };
+      var grab = sheet.querySelector('.wheel-grab'), y0 = null;
+      grab.addEventListener('touchstart', function (e) { y0 = e.touches[0].clientY; }, { passive: true });
+      grab.addEventListener('touchend', function (e) { if (y0 != null && y0 - e.changedTouches[0].clientY > 40) hide(true); y0 = null; }, { passive: true });
+    }
+    function show() {
+      if (!sheet) make();
+      if (open) return; open = true; opener = document.activeElement;
+      document.documentElement.classList.add('wheel-open');
+      try { history.pushState({ wheel: 1 }, ''); } catch (e) {}
+      setTimeout(function () { sheet.querySelector('.wheel-x').focus(); }, 50);
+    }
+    function hide(fromUi) {
+      if (!open) return; open = false;
+      document.documentElement.classList.remove('wheel-open');
+      if (opener && opener.focus) try { opener.focus(); } catch (e) {}
+      if (fromUi && history.state && history.state.wheel) history.back();
+    }
+    window.addEventListener('popstate', function () { if (open) hide(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) { e.stopPropagation(); hide(true); } }, true);
+    return { show: show };
+  })();
 
   /* ---- menu ---- */
   var btn = document.getElementById('menu-btn');
@@ -136,6 +175,15 @@
       setMenu(false);
       mail();
     });
+
+    /* color wheel bubble at the very bottom of the menu (Oct 31 2026): opens the wheel pop-up on any page */
+    if (here !== '/study/color-wheel.html') {
+      var wb = document.createElement('div');
+      wb.className = 'menu-wheel';
+      wb.innerHTML = '<button type="button" class="wheel-bubble" aria-haspopup="dialog"><img src="/color-wheel-icon-512.png" alt="" width="22" height="22">color wheel</button>';
+      panel.appendChild(wb);
+      wb.querySelector('button').addEventListener('click', function () { setMenu(false); wheel.show(); });
+    }
   }
 
   /* ---- footer links: every FOOTER page except this one, then contact,

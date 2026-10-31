@@ -217,26 +217,4 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
   .guide-page .slide:not(.text){grid-template-columns:minmax(0,1fr) clamp(320px,32vw,470px)}
   .guide-page .app.collapsed{max-width:1600px}
 }
-/* color wheel button in every course's top bar, icon only (Oct 31 2026) */
-.guide-page a.btn.wheelbtn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:38px;height:38px;padding:0;border-radius:50%}
-.guide-page .wheelbtn img{width:22px;height:22px;display:block;transition:transform .2s}
-.guide-page .wheelbtn:hover img{transform:rotate(15deg)}
 @media (max-width:900px){.guide-page .topbar{flex-wrap:nowrap}.guide-page .topbar .search{flex:1 1 0}}
-/* color wheel pop-up (guide.js), Oct 31 2026: drops down from the top, under the site bar, sized to the
-   quick tool (wheel, mixer, palette). The frame keeps one size; the panel slides in and out. */
-.guide-page .wheelscrim{position:fixed;inset:0;z-index:125;background:rgba(20,26,32,.28);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s linear .2s}
-.guide-page .wheelsheet{position:fixed;z-index:126;top:calc(var(--nav-h) + 8px);right:16px;width:min(420px,calc(100% - 32px));height:min(680px,calc(100% - var(--nav-h) - 24px));
-  display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--border-mid);border-radius:14px;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,.16);
-  transform:translateY(-12px);opacity:0;visibility:hidden;transition:transform .2s ease-out,opacity .2s,visibility 0s linear .2s}
-.guide-page.wheel-open .wheelsheet{transform:none;opacity:1;visibility:visible;transition:transform .2s ease-out,opacity .2s,visibility 0s}
-.guide-page.wheel-open .wheelscrim{opacity:1;visibility:visible;transition:opacity .2s,visibility 0s}
-.guide-page .wsbar{position:absolute;top:8px;right:8px;z-index:2}
-.guide-page .wsbar .wsx{width:34px;height:34px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--panel)}
-.guide-page .wsgrab{display:none}
-.guide-page .wheelsheet iframe{flex:1 1 auto;width:100%;min-height:0;border:0;display:block;background:var(--bg)}
-/* phones and portrait iPads: full width under the site bar, rounded at the bottom with a grab handle; swipe up on it to close */
-@media (max-width:900px){
-  .guide-page .wheelsheet{top:var(--nav-h);left:0;right:0;width:100%;height:min(700px,calc(100% - var(--nav-h) - 48px));border:0;border-bottom:1px solid var(--border-mid);border-radius:0 0 16px 16px;transform:translateY(-24px)}
-  .guide-page .wsgrab{display:block;flex:none;width:36px;height:4px;margin:6px auto 10px;border-radius:2px;background:var(--border-mid);box-sizing:content-box;border:12px solid transparent;border-width:8px 40px;background-clip:content-box}
-}
-@media (prefers-reduced-motion:reduce){.guide-page .wheelsheet,.guide-page .wheelscrim{transition:none}}

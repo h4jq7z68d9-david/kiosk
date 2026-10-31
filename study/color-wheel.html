@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Color Wheel — David Nicholson</title>
 <meta name="description" content="An interactive red–yellow–blue color wheel by David Nicholson: harmonies, tints and shades, temperature, and paint mixing.">
@@ -31,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
-<script>/* ?embed=1: the course pages' pop-up (see /study/guide.js) shows only the tool, no site bar, title or footer */
+<script>/* ?embed=1: the site menu's color wheel pop-up (see /site-chrome.js) shows only the tool, no site bar, title or footer */
 if (/[?&]embed=1(&|$)/.test(location.search)) document.documentElement.classList.add('embed');</script>
 <style>
 :root {
@@ -254,18 +255,19 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .embed body { padding-top: 0; min-height: 0; }
 .embed nav, .embed footer, .embed #menu-panel, .embed #menu-scrim, .embed .lead { display: none !important; }
 .embed main { padding-top: 0; }
-.embed .wheel-header { display: none; }
-/* the pop-up is the quick tool only (David, Oct 31 2026): 12-hue wheel, mixer, palette.
-   No wheel-size switch, no relationships panel, no study links; the pigment-data credit stays (CC BY 4.0). */
-.embed .wheel-toggle, .embed #readout { display: none !important; }
-.embed .wheel-footer .tool-note:not(:last-child) { display: none; }
+/* Quick tool only (David, Oct 31 2026), on the page and in the menu's pop-up alike: 12-hue wheel and the mixer
+   (color ratio, White, Black, Clear). Removed: wheel-size switch, palette and Save, relationships panel, the
+   tool's own "color wheel / reference" header and the study links. The pigment-data credit stays (CC BY 4.0).
+   The code behind the removed parts is left in place, only hidden. */
+.wheel-toggle, #readout, #paletteCard, #saveMixBtn, .wheel-header { display: none !important; }
+.wheel-footer .tool-note:not(:last-child) { display: none; }
 .embed .wheel-main { padding: 8px 12px 10px; gap: 10px; }
 .embed .stage { width: 100%; gap: 10px; }
 .embed .wheel-frame { width: min(220px, 58vw); }
 .embed .wheel-card { padding: 10px; }
 .embed .wheel-app { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin-top: 0 !important; }
 </style>
-<link rel="stylesheet" href="/site-chrome.css?v=2">
+<link rel="stylesheet" href="/site-chrome.css?v=6">
 </head>
 <body>
 
@@ -1944,7 +1946,7 @@ async function submitGB() {
 let toastTimer;
 function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
-<script src="/site-chrome.js?v=5"></script>
+<script src="/site-chrome.js?v=6"></script>
 <script>/* embedded: links leave the pop-up and open in the course page's window */
 if (document.documentElement.classList.contains('embed')) [].forEach.call(document.querySelectorAll('a[href]'), function (a) { if (a.target !== '_blank') a.target = '_top'; });</script>
 </body>
