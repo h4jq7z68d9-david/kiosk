@@ -27,6 +27,7 @@
 |<https://davidnicholsonart.com/study/art-history/fauvism-and-expressionism.html>|Fauvism and Early Expressionism (Oct 29 2026: 54 works, 4 sections, 6 parts) — start page of the guide; every slide is its own page under /study/art-history/fauvism-and-expressionism/ (63 pages), same guide layout|
 |<https://davidnicholsonart.com/study/art-history/japanese-woodblock-prints.html>|Japanese Woodblock Prints (Oct 30 2026: 64 works, 3 sections, 7 parts, c. 1680–1927) — start page of the guide; every slide is its own page under /study/art-history/japanese-woodblock-prints/ (74 pages), same guide layout|
 |<https://davidnicholsonart.com/study/art-history/romanticism.html>|Romanticism (Oct 30 2026: 64 works, 3 sections, 7 parts) — start page of the guide; every slide is its own page under /study/art-history/romanticism/ (74 pages), same guide layout|
+|<https://davidnicholsonart.com/study/art-history/realism.html>|Realism (Oct 30 2026: 49 works, 2 sections, 6 parts, 1830s–1890s) — start page of the guide; every slide is its own page under /study/art-history/realism/ (59 pages), same guide layout|
 |<https://kiosk.davidnicholsonllc.com>               |Legacy URL — still works, same content                                                       |
 
 The site is deployed and working. Push changes to GitHub — deploy is automatic.
@@ -602,6 +603,21 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`lambda-deploy` user** (local seed scripts):
 
 - Inline policy covering `dna-paintings`, `dna-sales`, `dna-expenses` — CreateTable, Describe, full CRUD
+
+-----
+
+## Completed This Session (October 30 2026, late night) — Realism; next-course link at the end of every course (deployed Oct 30 2026)
+
+**Realism** added at `/study/art-history/realism.html`, built by the art-history course builder (iCloud `School v2/Art History Course Builder/Realism/Public Study Site/`, see `HANDOFF to Art Business Project.md` there, including its "Update (Oct 30, after install)" section). 49 works in 2 sections (Realism in France: Barbizon and the Open Air, Courbet, Peasants and Labor, The City and the Street; Realism Abroad: Britain and Europe, America), 6 parts; 59 pages (49 works, 6 parts, 4 other). Data: `data.js`, `credits.js`, `sources.js`, `img/` (49 images). Settings: `tools/study/courses/realism.json` (`introImg: courbet-burial-at-ornans`). `study.html`: art-history timeline entry "1830s–1890s" between Romanticism and Impressionism + JSON-LD entry. `site-chrome.js` `STUDY`: "realism" after romanticism. Images: Daumier *Laundress*, Leibl, Manet *Street Singer*, Tanner cut to 1600 px long edge.
+- **Changed from the handoff (David):** "fifty works" → "forty-nine works" in `realism.json` (intro, homeDescription) and the study.html card — the course has 49 works. The iCloud `realism.json` still says fifty; don't reinstall it without fixing.
+- **Update after install:** new `data.js`, `credits.js`, `img/tanner-banjo-lesson.jpg` — dimensions for Tanner (124.5 × 90.2 cm), Repin (160.5 × 167.5 cm), Courbet *Young Ladies on the Banks of the Seine* (174 × 206 cm); new Tanner image and credit link.
+- **Known limits (from the handoff):** Repin *They Did Not Expect Him* — facts other than dimensions from secondary sources; Tanner *Banjo Lesson* colour not checked against the original; Courbet *Bonjour Monsieur Courbet* rests on the Musée Fabre education sheet; *The Stonebreakers* has no Dresden record (Winterthur version confirmed by the Oskar Reinhart collection); Eakins *Gross Clinic* image may predate the 2010 restoration; Frith *Railway Station* 800 px wide, Brown *Last of England* 932 px.
+
+**Next course at the end of every course (David).** A course runs last slide → sources → image credits; on the credits page Next (button, arrow key, swipe) now reads "Next course →" and opens the next course's start page, in `STUDY` order within the same group (technique: Color Theory → Pigments and Materials → Oil vs Acrylic → Composition → Value and Light; art history: date order). The last course in each group keeps Next disabled (no crossing between groups). Done in `site-chrome.js` (it already holds `STUDY`, and loads after `guide.js`), so adding a course to `STUDY` links it in with no extra rebuild. `site-chrome` cache v2 → v3 (`V.chrome` in `build-course.js`; every course rebuilt; the 11 main pages, `study.html` and `study/color-wheel.html` edited to `?v=3`).
+
+**Rebuild list:** after any `guide.css`/`guide.js`/generator change, rebuild all twelve courses: classical-myth, impressionism, color-theory, post-impressionism, fauvism-and-expressionism, romanticism, realism, japanese-woodblock-prints, pigments-and-materials, oil-vs-acrylic, composition, value-and-light.
+
+**Tested (headless Chromium, 1440 / 390 px, GA blocked):** all 59 Realism pages — no script errors, every image loads, no horizontal scroll; start page and each part screenshotted; every course's credits page points at the right next course; arrow key and phone tap reach it.
 
 -----
 
