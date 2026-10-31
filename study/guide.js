@@ -91,35 +91,8 @@
     if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; }
   });
 
-  /* search */
-  const norm = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  const IDX = items.map((it) => ({ i: it.i, n: norm(it.text), title: norm(it.title) + ' ' + norm(it.artist) }));
-  let hits = [], sel = -1;
-  function snippet(t, words) {
-    const n = norm(t); let p = -1; for (const w of words) { const k = n.indexOf(w); if (k >= 0 && (p < 0 || k < p)) p = k; }
-    const a = Math.max(0, p - 50), b = Math.min(t.length, a + 170); let s = t.slice(a, b); if (a > 0) s = '…' + s; if (b < t.length) s += '…';
-    let h = esc(s); for (const w of words) { if (!w) continue; h = h.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } return h;
-  }
-  const kindLabel = (it) => [it.h && it.h < 99 ? partTitle(it.h) : '', { overview: 'Overview', theme: it.tlabel || G.themeLabel || 'Theme', intro: 'Start', credits: 'Credits', sources: 'Sources' }[it.kind]].filter(Boolean).join(' · ');
-  function search() {
-    const raw = qi.value.trim(); if (!raw) { rs.hidden = true; qi.setAttribute('aria-expanded', 'false'); return; }
-    const words = norm(raw).split(/\s+/).filter(Boolean);
-    hits = IDX.filter((x) => words.every((w) => x.n.includes(w))).map((x) => ({ ...x, score: words.reduce((a, w) => a + (x.title.includes(w) ? 5 : 0), 0) })).sort((a, b) => b.score - a.score || a.i - b.i).slice(0, 40);
-    sel = hits.length ? 0 : -1;
-    rs.innerHTML = hits.length ? `<p class="rcount">${hits.length === 40 ? '40+' : hits.length} page${hits.length === 1 ? '' : 's'}</p>` + hits.map((x, k) => { const it = items[x.i], body = it.text.startsWith(it.title + ' · ') ? it.text.slice(it.title.length + 3) : it.text;
-      return `<a class="res" role="option" href="${it.url}" data-j="${k}" aria-selected="${k === sel}">${it.thumb ? `<img class="th" src="${G.img}${it.thumb}.jpg" alt="" loading="lazy">` : '<span class="ph">§</span>'}<span><span class="rk">${esc(kindLabel(it))}</span><span class="rt">${esc(it.title)}</span><span class="rs">${snippet(body, words)}</span></span></a>`; }).join('')
-      : `<p class="rnone">No pages match “${esc(raw)}”. Try a single name.</p>`;
-    rs.hidden = false; qi.setAttribute('aria-expanded', 'true');
-  }
-  function mark() { rs.querySelectorAll('.res').forEach((b, k) => { b.setAttribute('aria-selected', String(k === sel)); if (k === sel) b.scrollIntoView({ block: 'nearest' }); }); }
-  qi.addEventListener('input', search); qi.addEventListener('focus', () => { if (qi.value.trim()) search(); });
-  qi.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); if (hits.length) { sel = (sel + 1) % hits.length; mark(); } }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); if (hits.length) { sel = (sel - 1 + hits.length) % hits.length; mark(); } }
-    else if (e.key === 'Enter') { e.preventDefault(); if (hits[sel]) location.href = items[hits[sel].i].url; }
-    else if (e.key === 'Escape') { if (qi.value) { qi.value = ''; search(); } else qi.blur(); }
-  });
-  document.addEventListener('click', (e) => { if (!$('search').contains(e.target)) { rs.hidden = true; qi.setAttribute('aria-expanded', 'false'); } });
+  /* search: across every study course (/study/search.js); this course's results come first */
+  if (window.StudySearch) window.StudySearch.attach({ input: qi, results: rs, box: $('search'), current: G.slug, guide: G });
 
   /* swipe */
   (function () {

@@ -61,7 +61,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 4, bar: 1, guideCss: 6, guideJs: 5 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 4, bar: 2, guideCss: 7, guideJs: 6, search: 1 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -341,7 +341,7 @@ ${NAV}
   <main class="main" id="main">
     <div class="topbar">
       <div class="search" id="search" role="search">${SEARCH_ICON}
-        <input id="q" type="search" placeholder="Search works, artists, terms…" aria-label="Search this guide" autocomplete="off" aria-controls="results" aria-expanded="false">
+        <input id="q" type="search" placeholder="Search all courses…" aria-label="Search all study courses" autocomplete="off" aria-controls="results" aria-expanded="false">
         <div class="results" id="results" role="listbox" hidden></div>
       </div>
       <button class="btn savedbtn" id="saved" type="button" aria-expanded="false" aria-controls="savedp">Saved (0)</button>
@@ -362,6 +362,7 @@ ${NAV}
 </div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button class="x" id="lbx" type="button">Close ✕</button><img id="lbimg" alt=""><p class="cap" id="lbcap"></p></div>
 <script src="${COURSE}/index.js?v=${INDEX_V}"></script>
+<script src="/study/search.js?v=${V.search}"></script>
 <script src="/study/guide.js?v=${V.guideJs}"></script>
 <script src="/site-chrome.js?v=${V.chrome}"></script>
 </body>
@@ -412,4 +413,5 @@ for (const u of out) {
   if (s) throw new Error(`${u}: styling in the page (found "${s[0]}") — put it in /study/guide.css`);
 }
 const nWorks = flat.filter((f) => f.kind === 'work').length, nParts = flat.filter((f) => f.kind === 'overview').length;
+{ const r = require('./build-search')(); console.log(`search index (all courses): ${r.items} pages, ${Math.round(r.bytes / 1024)} KB`); }
 console.log(`wrote ${out.length} pages (${nWorks} works, ${nParts} parts, ${out.length - nWorks - nParts} other) + index.js; sitemap block ${out.length} URLs`);

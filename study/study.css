@@ -140,6 +140,10 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 .wheel-btn:hover { color: var(--ink); }
 .wheel-btn:hover img { transform: rotate(15deg); }
 @media (max-width: 600px) { .wheel-btn img { width: 40px; height: 40px; } .wheel-btn { font-size: 12px; } }
+/* Oct 31 2026: phones keep the 40px wheel; iPads and desktops get a wheel big enough to notice.
+   Larger wheels stack wheel-over-label across both rows (not on the subgrid) so the heading keeps its spacing. */
+@media (min-width: 601px) { .wheel-btn { grid-template-rows: auto auto; row-gap: 6px; align-self: center; align-content: center; } .wheel-btn img { width: 72px; height: 72px; } }
+@media (min-width: 1024px) { .wheel-btn img { width: 88px; height: 88px; } }
 .lead p { font-size: 16px; font-weight: 300; line-height: 1.85; color: var(--ink2); margin-top: 12px; max-width: 60ch; }
 .grp-h { font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: lowercase; color: var(--ink3); margin: 26px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 .landing .tile .tt { text-transform: lowercase; }
@@ -212,3 +216,21 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 /* technique tab: diagrams and the wheel icon are shown whole on white, not cropped */
 .tl-plain .tl-th { background: var(--panel); }
 .tl-plain .tl-th img { object-fit: contain; }
+
+/* search across every study course (Oct 31 2026) — same look as the course pages' search */
+.study-search { position: relative; margin: 18px 0 6px; max-width: 560px; }
+.study-search .sico { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink2); pointer-events: none; }
+.study-search input { width: 100%; box-sizing: border-box; font: 400 1rem var(--font); color: var(--ink); background: var(--panel); border: 1px solid var(--border-mid); border-radius: 22px; padding: 10px 14px 10px 40px; -webkit-appearance: none; appearance: none; }
+.study-search input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.study-search .results { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; background: var(--panel); border: 1px solid var(--border-mid); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.18); max-height: min(62vh, 560px); overflow: auto; padding: 6px; }
+.study-search .results[hidden] { display: none; }
+.study-search .rcount { margin: 4px 8px 6px; font-size: .78rem; color: var(--ink2); text-transform: uppercase; letter-spacing: .1em; }
+.study-search .res { display: flex; gap: 10px; align-items: center; padding: 8px; border-radius: 8px; color: var(--ink); text-decoration: none; }
+.study-search .res:hover, .study-search .res[aria-selected="true"] { background: var(--surface); }
+.study-search .res .th, .study-search .res .ph { width: 52px; height: 52px; flex: none; border-radius: 4px; background: var(--surface); object-fit: cover; display: flex; align-items: center; justify-content: center; color: var(--ink3); }
+.study-search .res .rk { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink3); font-weight: 500; }
+.study-search .res .rc { color: var(--accent-ink); }
+.study-search .res .rt { display: block; font-weight: 500; line-height: 1.2; }
+.study-search .res .rs { display: -webkit-box; font-size: .86rem; color: var(--ink2); line-height: 1.35; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.study-search .res mark { background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit; border-radius: 2px; padding: 0 1px; }
+.study-search .rnone { margin: 10px; color: var(--ink2); }

@@ -7,7 +7,7 @@
   var nav = document.querySelector('nav[data-chrome-nav]');
   if (!nav) return;
   nav.innerHTML =
-    '<button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>' +
+    '<button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16" stroke="#C8382F" stroke-width="2.2"/><path d="M4 12h16" stroke="#D9A520" stroke-width="2.2"/><path d="M4 17h16" stroke="#2F5FC8" stroke-width="2.2"/></svg></button>' +
     '<a class="nav-title" href="/index.html">david nicholson</a>' +
     '<div class="nav-links">' +
       '<a class="nav-btn" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span></a>' +

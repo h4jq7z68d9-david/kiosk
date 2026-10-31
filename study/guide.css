@@ -208,3 +208,12 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
     padding:calc(var(--nav-h) + 16px) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
   body.guide-page>.bar{position:relative;flex:none}
 }
+/* search results name their course first (search covers every study course) */
+.guide-page .res .rc,.landing .res .rc{color:var(--accent-ink)}
+/* Viewer on desktop (Oct 31 2026): the notes column has one width set by the window, not by the outline,
+   so hiding the outline gives all the freed space to the image. The image never grows past its own
+   pixel size (width/height auto) or the slide's height, so small images don't go soft. */
+@media (min-width:901px){
+  .guide-page .slide:not(.text){grid-template-columns:minmax(0,1fr) clamp(320px,32vw,470px)}
+  .guide-page .app.collapsed{max-width:1600px}
+}
