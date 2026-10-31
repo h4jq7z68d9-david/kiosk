@@ -4,7 +4,9 @@
 > be any step, including the first. Hues (split-primary shift among the hues only) and white blend as pigment recipes;
 > black is `shade()` at the stage's black share. Checked: every single hue = its swatch; white alone = #ffffff; hue-only
 > chains equal the old `chainHex`; white-last equals old `tint()`, black-last equals old `shade()`. The needle shows the
-> selected color row; the wheel edits that row. The old mixer (`updateMixerOld`, White/Black sliders, + Mix) is no longer used.
+> selected color row; the wheel edits that row. "Mix" starts a new block (`blockStarts`) whose base is the result so far —
+> math unchanged, blocks only group rows; earlier blocks fold and open on tap. The recipe persists in `localStorage`
+> (`dna-color-wheel-recipe`). The old mixer (`updateMixerOld`, White/Black sliders, + Mix) is no longer used.
 
 > **October 31 2026 — quick tool.** The page (and the site menu's pop-up, `?embed=1`) now shows only the 12-hue wheel and the mixer.
 > The size switch, palette/Save, relationships panel, the app's own header and the study links are hidden with CSS
