@@ -1,3 +1,11 @@
+> **October 31 2026 — recipe mixer.** The mixer is now a recipe of steps in the order mixed (`steps`, `stageHexAt`,
+> `updateMixer` in the RECIPE MIXER block). Each step is a hue, white or black; its slider is "how much of this goes into
+> the mix so far" (cascaded with `computeChainWeights`), and each row shows the mix after that step. White and black can
+> be any step, including the first. Hues (split-primary shift among the hues only) and white blend as pigment recipes;
+> black is `shade()` at the stage's black share. Checked: every single hue = its swatch; white alone = #ffffff; hue-only
+> chains equal the old `chainHex`; white-last equals old `tint()`, black-last equals old `shade()`. The needle shows the
+> selected color row; the wheel edits that row. The old mixer (`updateMixerOld`, White/Black sliders, + Mix) is no longer used.
+
 > **October 31 2026 — quick tool.** The page (and the site menu's pop-up, `?embed=1`) now shows only the 12-hue wheel and the mixer.
 > The size switch, palette/Save, relationships panel, the app's own header and the study links are hidden with CSS
 > (rules near the end of the `<style>` block); their code below is unchanged and still runs. The CC BY 4.0 credit line stays.

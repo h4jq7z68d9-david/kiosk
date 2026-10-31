@@ -163,6 +163,27 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rel-chip.big .sq{width:40px;height:40px;border-radius:8px}
   .rel-chip.big .lbl{font-size:9px}
   .mixer-sliders{display:flex;flex-direction:column;gap:8px}
+  /* recipe mixer (Oct 31 2026) */
+  .radd{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .radd .mixer-btn[disabled]{opacity:.4;cursor:default}
+  .rsteps{display:flex;flex-direction:column}
+  .rstep{display:grid;grid-template-columns:30px minmax(0,1fr) 30px 22px;gap:10px;align-items:center;padding:7px 6px;border-top:1px solid var(--line);border-radius:8px}
+  .rstep:first-child{border-top:0}
+  .rstep.pick{cursor:pointer}
+  .rstep.sel{background:var(--wall-hi)}
+  .rsw{width:30px;height:30px;border-radius:7px;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+  .rsw-white{box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+  .rmid{min-width:0;display:flex;flex-direction:column;gap:4px}
+  .rlbl{font-size:13px;color:var(--ink);display:flex;justify-content:space-between;gap:8px}
+  .ramt{font-family:var(--mono);font-size:10px;color:var(--muted)}
+  .rmid input[type=range]{width:100%;height:12px;margin:2px 0;-webkit-appearance:none;appearance:none;border-radius:6px;border:1px solid rgba(0,0,0,.12);background:var(--track,var(--wall-hi));cursor:pointer}
+  .rmid input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--thumb,#fff);border:2px solid #fff;box-shadow:0 0 0 1px rgba(43,54,64,.35),0 1px 3px rgba(0,0,0,.25)}
+  .rmid input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--thumb,#fff);border:2px solid #fff;box-shadow:0 0 0 1px rgba(43,54,64,.35),0 1px 3px rgba(0,0,0,.25)}
+  .rx{width:22px;height:22px;border-radius:50%;border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;padding:0}
+  .rx:hover{color:var(--ink);background:var(--wall-hi)}
+  .rres{display:flex;align-items:center;gap:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .rsw-big{width:44px;height:44px;border-radius:9px}
+  .rres-name{flex:1;font-size:14px;font-weight:500;color:var(--ink)}
   .mixer-slider-row{display:flex;align-items:center;gap:8px}
   .mixer-slider-row input[type=range]{flex:1;height:14px;margin:3px 0;-webkit-appearance:none;appearance:none;border-radius:7px;border:1px solid rgba(0,0,0,.12);background:var(--track,var(--wall-hi));cursor:pointer}
   .mixer-slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--thumb,#fff);border:2px solid #fff;box-shadow:0 0 0 1px rgba(43,54,64,.35),0 1px 3px rgba(0,0,0,.25)}
@@ -1146,7 +1167,7 @@ function mixPercents(){
      .slice(0, left).forEach(([, i]) => out[i]++);
   return out;
 }
-function updateMixer(){
+function updateMixerOld(){ /* replaced by the recipe mixer below (Oct 31 2026); kept for reference */
   const a = hueAtOffset(0);
   const n = mixNeedles.length + 1;
   const pcts = n > 1 ? mixPercents() : null;
@@ -1651,6 +1672,7 @@ document.addEventListener('input', e => {
 });
 
 function updateAll(){
+  syncSelectedHue();
   updateReadout();
   updateMixer();
 }
@@ -1823,6 +1845,166 @@ function updateReadout(){
    than the last, so a touch anywhere near the outer wedge ring is almost
    always angle-closer to Base regardless of intent — measuring real
    distance to each tip fixes that. */
+/* ==== RECIPE MIXER (October 31 2026, David) ====
+   The mix is a recipe: steps in the order mixed. Each step adds a hue, white or black to the
+   mix so far; its slider is "how much of this goes into the mix so far" (the same cascading
+   rule as computeChainWeights), and each row shows the mix after that step, so the
+   progression stays visible. White and black are steps like any color, at any point —
+   including first (start from white, add a touch of yellow, then red).
+   Math: the cascade gives every step its real share of the final paint. Hues (with the
+   split-primary shift among the hues only) and white are blended as measured pigment
+   recipes, so later colors mix into earlier white properly. Black stays on the hand-tuned
+   shade() model (the measured black was rejected — see the reference doc), applied to the
+   pigment result at the black share for that stage; that is the one approximation.
+   The wheel's needle shows the selected color row; tapping or dragging the wheel changes
+   that row. The old mixer state (mixNeedles, mixRatios, whiteAmt, blackAmt) is no longer
+   driven and stays at its defaults. */
+let steps = [{ k: 'hue', rot: rotation, amt: 1 }];
+let selStep = 0;
+const STEP_DEFAULT = { white: 0.25, black: 0.05 };
+const MAX_STEPS = 8;
+function hueSteps(){ return steps.map((s, i) => i).filter(i => steps[i].k === 'hue'); }
+function stepWeights(upto, override){
+  const amts = steps.slice(1, upto + 1).map((s, j) => (override && override.i === j + 1) ? override.t : s.amt);
+  return computeChainWeights(amts);
+}
+function stageHexAt(upto, override){
+  if (upto < 0 || !steps.length) return '#ffffff';
+  const w = stepWeights(upto, override);
+  const hues = [], hueW = []; let ww = 0, wb = 0;
+  for (let i = 0; i <= upto; i++) {
+    const s = steps[i];
+    if (s.k === 'hue') { hues.push(snappedAngle(s.rot)); hueW.push(w[i]); }
+    else if (s.k === 'white') ww += w[i];
+    else wb += w[i];
+  }
+  const hsum = hueW.reduce((a, b) => a + b, 0);
+  let conc = null;
+  if (hues.length && hsum > 0) {
+    const entries = hues.map((angle, j) => ({ angle, weight: hueW[j] / hsum }));
+    let hueConc;
+    if (entries.length === 1) hueConc = PIG.recipeAt(entries[0].angle);
+    else {
+      const { angle: target, magnitude } = blendAngles(entries);
+      hueConc = PIG.blend(entries.map(({ angle, weight }) => {
+        const d = ((target - angle) % 360 + 540) % 360 - 180;
+        return [PIG.recipeAt(angle + SPLIT_PRIMARY_DEG * Math.max(-1, Math.min(1, d / 60)) * magnitude), weight];
+      }));
+    }
+    conc = ww > 0 ? PIG.blend([[hueConc, hsum], [PIG.white, ww]]) : hueConc;
+  } else if (ww > 0) conc = PIG.white;
+  if (!conc) return BLACK_HEX;
+  let hex = showRecipe(conc);
+  if (wb > 0) hex = shade(hex, Math.min(1, wb));
+  return hex;
+}
+function hexName(hex){
+  const c = hexToRgb(hex), hsl = rgbToHsl(c.r, c.g, c.b);
+  return colorNameCore(nearestHueNameForRawHue(hsl.h), hsl.s, hsl.l);
+}
+function stepLabel(s){
+  if (s.k === 'white') return 'White';
+  if (s.k === 'black') return 'Black';
+  return hueAtRotation(s.rot, 0).name;
+}
+function stepSwatch(s){
+  if (s.k === 'white') return '#ffffff';
+  if (s.k === 'black') return BLACK_HEX;
+  return hueAtRotation(s.rot, 0).hex;
+}
+function syncSelectedHue(){
+  const s = steps[selStep];
+  if (s && s.k === 'hue') s.rot = rotation;
+  else if (!steps.length) { steps.push({ k: 'hue', rot: rotation, amt: 1 }); selStep = 0; }
+}
+function selectStep(i){
+  selStep = i;
+  if (steps[i] && steps[i].k === 'hue') { rotation = steps[i].rot; applyNeedleTransforms(); }
+}
+function addStep(k){
+  if (steps.length >= MAX_STEPS) return;
+  const n = steps.length;
+  if (k === 'hue') {
+    const hi = hueSteps();
+    const from = hi.length ? steps[hi[hi.length - 1]].rot : rotation;
+    steps.push({ k, rot: hi.length ? (from + 180) % 360 : rotation, amt: n ? 1 / (n + 1) : 1 });
+    selectStep(steps.length - 1);
+  } else {
+    steps.push({ k, amt: n ? STEP_DEFAULT[k] : 1 });
+  }
+}
+function removeStep(i){
+  steps.splice(i, 1);
+  if (steps.length) steps[0].amt = 1;
+  const hi = hueSteps();
+  if (!hi.includes(selStep)) selStep = hi.length ? hi[hi.length - 1] : 0;
+  if (steps[selStep] && steps[selStep].k === 'hue') { rotation = steps[selStep].rot; applyNeedleTransforms(); }
+}
+const RECIPE_TRACK_STOPS = 7;
+function trackFor(i){
+  const stops = [];
+  for (let k = 0; k < RECIPE_TRACK_STOPS; k++) {
+    const t = k / (RECIPE_TRACK_STOPS - 1);
+    stops.push(`${stageHexAt(i, { i, t })} ${Math.round(t * 100)}%`);
+  }
+  return `linear-gradient(to right, ${stops.join(', ')})`;
+}
+function updateMixer(){
+  const full = steps.length >= MAX_STEPS;
+  const btn = (k, label) => `<button class="mixer-btn${k === 'hue' ? '' : ' mixer-btn-quiet'}" data-add-step="${k}"${full ? ' disabled' : ''}>${label}</button>`;
+  let rows = '';
+  steps.forEach((s, i) => {
+    const sel = i === selStep && s.k === 'hue';
+    rows += `
+      <div class="rstep${sel ? ' sel' : ''}${s.k === 'hue' ? ' pick' : ''}" data-step="${i}">
+        <span class="rsw${s.k === 'white' ? ' rsw-white' : ''}" style="background:${stepSwatch(s)}"></span>
+        <div class="rmid">
+          <div class="rlbl">${i === 0 ? '' : '+ '}${stepLabel(s)}${i === 0 ? '' : `<span class="ramt" data-amt-for="${i}">${Math.round(s.amt * 100)}%</span>`}</div>
+          ${i === 0 ? '' : `<input type="range" min="0" max="100" step="1" value="${Math.round(s.amt * 100)}" data-step-amt="${i}" aria-label="How much ${stepLabel(s)}">`}
+        </div>
+        <span class="rsw rsw-res" data-res-for="${i}" style="background:${stageHexAt(i)}" title="Mix after this step"></span>
+        <button class="rx" data-step-remove="${i}" aria-label="Remove ${stepLabel(s)}">&times;</button>
+      </div>`;
+  });
+  const res = stageHexAt(steps.length - 1);
+  $('#mixerCard').innerHTML = `
+    <div class="radd">${btn('hue', '+ color')}${btn('white', '+ white')}${btn('black', '+ black')}</div>
+    <div class="rsteps">${rows || '<p class="mixer-note">Add a color, white or black to start.</p>'}</div>
+    ${steps.length ? `<div class="rres"><span class="rsw rsw-big" data-res-final style="background:${res}"></span><span class="rres-name" data-res-name>${hexName(res)}</span><button class="mixer-btn mixer-btn-quiet" id="clearRecipeBtn">Clear</button></div>` : ''}
+    <div class="mixer-note">${hueSteps().length ? 'Tap a color row, then tap the wheel to change it.' : ''}</div>`;
+  paintRecipe();
+}
+function paintRecipe(){
+  document.querySelectorAll('#mixerCard input[data-step-amt]').forEach(el => {
+    const i = parseInt(el.dataset.stepAmt, 10);
+    el.style.setProperty('--track', trackFor(i));
+    el.style.setProperty('--thumb', stageHexAt(i));
+  });
+}
+function refreshRecipeColors(){
+  document.querySelectorAll('#mixerCard [data-res-for]').forEach(el => { el.style.background = stageHexAt(parseInt(el.dataset.resFor, 10)); });
+  document.querySelectorAll('#mixerCard [data-amt-for]').forEach(el => { const i = parseInt(el.dataset.amtFor, 10); el.textContent = Math.round(steps[i].amt * 100) + '%'; });
+  const res = stageHexAt(steps.length - 1);
+  const f = document.querySelector('#mixerCard [data-res-final]'); if (f) f.style.background = res;
+  const nm = document.querySelector('#mixerCard [data-res-name]'); if (nm) nm.textContent = hexName(res);
+  paintRecipe();
+}
+document.addEventListener('click', e => {
+  const add = e.target.closest('[data-add-step]');
+  if (add) { e.stopImmediatePropagation(); addStep(add.dataset.addStep); updateMixer(); return; }
+  const rm = e.target.closest('[data-step-remove]');
+  if (rm) { e.stopImmediatePropagation(); removeStep(parseInt(rm.dataset.stepRemove, 10)); updateMixer(); return; }
+  if (e.target.closest('#clearRecipeBtn')) { e.stopImmediatePropagation(); steps = []; selStep = 0; updateMixer(); return; }
+  const row = e.target.closest('#mixerCard .rstep.pick');
+  if (row && !e.target.closest('input')) { selectStep(parseInt(row.dataset.step, 10)); updateMixer(); }
+}, true);
+document.addEventListener('input', e => {
+  if (e.target.dataset.stepAmt === undefined) return;
+  e.stopImmediatePropagation();
+  steps[parseInt(e.target.dataset.stepAmt, 10)].amt = e.target.value / 100;
+  refreshRecipeColors();
+}, true);
+
 let dragging = false, dragMoved = false, dragStartPointer = 0, dragStartRotation = 0, dragTarget = 0;
 function applyNeedleTransforms(){
   const n = activeCount();

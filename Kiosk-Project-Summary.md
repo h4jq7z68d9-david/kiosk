@@ -606,6 +606,14 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (October 31 2026, late morning) — Color wheel: recipe mixer (deployed Oct 31 2026)
+
+**David's ask:** see the progression of a mix, and add white or black at any point — including starting from white ("white, a touch of yellow, a touch of red" is a different mix from adding titanium white at the end). **Built in `study/color-wheel.html` (page and menu pop-up):** the mixer is a list of steps in the order mixed. Centered **+ color / + white / + black** buttons sit above the list. Each row: what was added, a slider for how much went into the mix so far (defaults: color an even share, white 25%, black 5%), the mix after that step, and × to remove it. Result and Clear at the bottom. The wheel's needle shows the selected color row; tap a row, then tap the wheel to change it. Max 8 steps. The White/Black sliders and "+ Mix" are gone.
+
+**Math:** hues and white blend as measured pigment recipes, so later colors mix into earlier white; black stays on the hand-tuned `shade()` model at each stage's black share (the measured black was rejected) — the one approximation. **Checked:** every hue alone = its swatch; white alone = #ffffff; hue-only mixes equal the old chain math exactly; white or black as the last step equals the old White/Black sliders exactly. Details in `Color-Wheel-App-Reference.md`.
+
+-----
+
 ## Completed This Session (October 31 2026, morning) — Color wheel becomes a quick tool opened from the menu (deployed Oct 31 2026)
 
 **David's call:** the wheel is a quick mixing check ("what does this green plus yellow make"), not a palette builder or a lesson. **The tool:** 12-hue wheel and the mixer only — color ratio slider, White, Black, Clear. Hidden (code left in place): the 3/6/12/24 switch, the palette and Save to Palette, the relationships panel, the tool's own "color wheel / reference" header and the study links. The PaintMixing credit line stays (CC BY 4.0 requires it).
