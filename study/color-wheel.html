@@ -185,6 +185,10 @@ main { flex: 1; width: 100%; display: flex; flex-direction: column; }
   .rsw-big{width:44px;height:44px;border-radius:9px}
   .rres .mixer-btn[disabled]{opacity:.4;cursor:default}
   .rmixon{display:flex;justify-content:center}
+  /* lower case throughout the mixer (David, Oct 31 2026) */
+  #mixerCard, #mixerCard .mixer-btn, #mixerCard .rbtitle, #mixerCard .rfold-t{text-transform:lowercase}
+  .rbhead{padding:0 2px 4px}
+  .rclear{padding:4px 12px}
   .rmixon .mixer-btn[disabled]{opacity:.4;cursor:default}
   .rblock{display:flex;flex-direction:column}
   .rblock + .rblock, .rfold + .rblock, .rblock + .rfold, .rfold + .rfold{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
@@ -2032,30 +2036,27 @@ function updateMixer(){
   let html = '';
   for (let b = 0; b <= lastB; b++) {
     const s0 = blockStarts[b], e0 = blockEnd(b);
-    const isLast = b === lastB;
     const resHex = e0 > 0 ? stageHexAt(e0 - 1) : '#ffffff';
     if (b !== openBlock) {
-      html += `<button class="rfold" data-block-open="${b}" aria-expanded="false"><span class="rsw" data-block-res="${b}" style="background:${resHex}"></span><span class="rfold-t">Mix ${b + 1} · <span data-block-name="${b}">${hexName(resHex)}</span></span><span class="rfold-c" aria-hidden="true">▸</span></button>`;
+      html += `<button class="rfold" data-block-open="${b}" aria-expanded="false"><span class="rsw" data-block-res="${b}" style="background:${resHex}"></span><span class="rfold-t">mix ${b + 1} · <span data-block-name="${b}">${hexName(resHex)}</span></span><span class="rfold-c" aria-hidden="true">▸</span></button>`;
       continue;
     }
-    html += `<div class="rblock">`;
-    if (lastB > 0) html += `<div class="rbhead"><button class="rbtitle" data-block-close="${b}" aria-expanded="true">Mix ${b + 1} <span aria-hidden="true">▾</span></button>${b > 0 ? `<button class="rx" data-block-remove="${b}" aria-label="Remove mix ${b + 1}">&times;</button>` : ''}</div>`;
+    /* open mix: its header folds it; "clear" empties it (mix 1: the whole recipe; a later mix: that mix and any after it) */
+    html += `<div class="rblock"><div class="rbhead"><button class="rbtitle" data-block-close="${b}" aria-expanded="true">mix ${b + 1} <span aria-hidden="true">▾</span></button><button class="mixer-btn mixer-btn-quiet rclear" data-block-clear="${b}">clear</button></div>`;
     if (b > 0) {
       const baseHex = stageHexAt(s0 - 1);
-      html += `<div class="rstep rbase"><span class="rsw" data-base-for="${b}" style="background:${baseHex}"></span><div class="rmid"><div class="rlbl">Mix ${b} <span class="ramt" data-base-name="${b}">${hexName(baseHex)}</span></div></div><span></span><span></span></div>`;
+      html += `<div class="rstep rbase"><span class="rsw" data-base-for="${b}" style="background:${baseHex}"></span><div class="rmid"><div class="rlbl">mix ${b} <span class="ramt" data-base-name="${b}">${hexName(baseHex)}</span></div></div><span></span><span></span></div>`;
     }
     for (let i = s0; i < e0; i++) html += stepRowHtml(steps[i], i);
-    if (e0 === s0 && b > 0) html += `<p class="mixer-note">Add a color, white or black to mix into it.</p>`;
+    if (e0 === s0 && b > 0) html += `<p class="mixer-note">add a color, white or black to mix into it.</p>`;
     html += `</div>`;
   }
-  const res = stageHexAt(steps.length - 1);
   const canMix = steps.length && steps.length > blockStarts[lastB] && !full;
   $('#mixerCard').innerHTML = `
     <div class="radd">${btn('hue', '+ color')}${btn('white', '+ white')}${btn('black', '+ black')}</div>
-    <div class="rsteps">${steps.length ? html : '<p class="mixer-note">Add a color, white or black to start.</p>'}</div>
-    ${steps.length ? `<div class="rres"><span class="rsw rsw-big" data-res-final style="background:${res}"></span><span class="rres-name" data-res-name>${hexName(res)}</span><button class="mixer-btn mixer-btn-quiet" id="clearRecipeBtn">Clear</button></div>
-    <div class="rmixon"><button class="mixer-btn" id="mixOnBtn"${canMix ? '' : ' disabled'}>+ Mix</button></div>` : ''}
-    <div class="mixer-note">${hueSteps().length ? 'Tap a color row, then tap the wheel to change it. + Mix starts a new mix from this result.' : ''}</div>`;
+    <div class="rsteps">${steps.length ? html : '<p class="mixer-note">add a color, white or black to start.</p>'}</div>
+    ${steps.length ? `<div class="rmixon"><button class="mixer-btn" id="mixOnBtn"${canMix ? '' : ' disabled'}>+ mix</button></div>` : ''}
+    <div class="mixer-note">${hueSteps().length ? 'tap a color row, then tap the wheel to change it. +&nbsp;mix starts a new mix from the last result.' : ''}</div>`;
   paintRecipe();
   saveRecipe();
 }
@@ -2091,6 +2092,8 @@ document.addEventListener('click', e => {
   if (cb) { e.stopImmediatePropagation(); openBlock = -1; updateMixer(); return; }
   if (ob) { e.stopImmediatePropagation(); openBlock = parseInt(ob.dataset.blockOpen, 10); const hi = hueSteps().filter(i => blockOf(i) === openBlock && i >= blockStarts[openBlock]); if (hi.length) selectStep(hi[hi.length - 1]); updateMixer(); return; }
   if (e.target.closest('#mixOnBtn')) { e.stopImmediatePropagation(); startBlock(); updateMixer(); return; }
+  const clb = e.target.closest('[data-block-clear]');
+  if (clb) { e.stopImmediatePropagation(); const k = parseInt(clb.dataset.blockClear, 10); if (k === 0) { steps = []; blockStarts = [0]; openBlock = 0; selStep = 0; } else { removeBlock(k); openBlock = k - 1; } updateMixer(); return; }
   if (e.target.closest('#clearRecipeBtn')) { e.stopImmediatePropagation(); steps = []; blockStarts = [0]; openBlock = 0; selStep = 0; updateMixer(); return; }
   const row = e.target.closest('#mixerCard .rstep.pick');
   if (row && !e.target.closest('input')) { selectStep(parseInt(row.dataset.step, 10)); updateMixer(); }
