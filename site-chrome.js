@@ -237,9 +237,10 @@
     if (here !== '/study/color-wheel.html') {
       var wb = document.createElement('div');
       wb.className = 'menu-wheel';
-      wb.innerHTML = '<button type="button" class="wheel-bubble" aria-haspopup="dialog"><img src="/color-wheel-icon-512.png" alt="" width="22" height="22">color wheel</button>';
+      /* a real link (search engines follow it; Ctrl/Cmd-click opens the page), but a plain click opens the pop-up */
+      wb.innerHTML = '<a class="wheel-bubble" href="/study/color-wheel.html" aria-haspopup="dialog"><img src="/color-wheel-icon-512.png" alt="" width="22" height="22">color wheel</a>';
       panel.appendChild(wb);
-      wb.querySelector('button').addEventListener('click', function () { setMenu(false); wheel.show(); });
+      wb.querySelector('a').addEventListener('click', function (e) { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; e.preventDefault(); setMenu(false); wheel.show(); });
     }
   }
 

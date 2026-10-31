@@ -2,15 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Wheel — David Nicholson</title>
-<meta name="description" content="An interactive red–yellow–blue color wheel by David Nicholson: harmonies, tints and shades, temperature, and paint mixing.">
-<meta property="og:title" content="Color Wheel — David Nicholson">
-<meta property="og:description" content="An interactive color wheel for color relationships, value, temperature and paint mixing.">
+<title>Paint Mixing Color Wheel — Mix Colors Like Paint | David Nicholson</title>
+<meta name="description" content="A free paint-mixing color wheel for painters: pick colors on a 12-hue red–yellow–blue wheel, mix them in the order you mix paint, add white or black at any step, and see the color at every stage. Mixes use measured pigment data.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="David Nicholson">
+<meta property="og:title" content="Paint Mixing Color Wheel — Mix Colors Like Paint">
+<meta property="og:description" content="Mix colors in the order you mix paint, add white or black at any step, and see each stage. A free tool for painters.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Paint Mixing Color Wheel">
+<meta name="twitter:description" content="Mix colors in the order you mix paint, add white or black at any step, and see each stage.">
 <meta property="og:image" content="https://davidnicholsonart.com/og-image.jpg">
 <meta property="og:url" content="https://davidnicholsonart.com/study/color-wheel.html">
 <link rel="canonical" href="https://davidnicholsonart.com/study/color-wheel.html">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Paint Mixing Color Wheel", "url": "https://davidnicholsonart.com/study/color-wheel.html", "description": "A free paint-mixing color wheel for painters: pick colors on a 12-hue red–yellow–blue wheel, mix them in the order you mix paint, add white or black at any step, and see the color at every stage. Mixes use measured pigment data.", "applicationCategory": "DesignApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "featureList": ["12-hue red–yellow–blue color wheel", "Mix colors step by step, in the order you mix paint", "Add white or black at any step, including starting from white", "See the mix after every step", "Mix a finished color into a new mix", "Mixing based on measured pigment data"], "creator": {"@type": "Person", "name": "David Nicholson", "url": "https://davidnicholsonart.com/"}, "isPartOf": {"@type": "CollectionPage", "name": "Study", "url": "https://davidnicholsonart.com/study.html"}}</script>
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FL5BKJFVXF"></script>
@@ -295,6 +300,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .embed body { padding-top: 0; min-height: 0; }
 .embed nav, .embed footer, .embed #menu-panel, .embed #menu-scrim, .embed .lead { display: none !important; }
 .embed main { padding-top: 0; }
+.wheel-intro { max-width: 60ch; margin: 14px auto 0; }
 /* Quick tool only (David, Oct 31 2026), on the page and in the menu's pop-up alike: 12-hue wheel and the mixer
    (color ratio, White, Black, Clear). Removed: wheel-size switch, palette and Save, relationships panel, the
    tool's own "color wheel / reference" header and the study links. The pigment-data credit stays (CC BY 4.0).
@@ -307,7 +313,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 .embed .wheel-card { padding: 10px; }
 .embed .wheel-app { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin-top: 0 !important; }
 </style>
-<link rel="stylesheet" href="/site-chrome.css?v=10">
+<link rel="stylesheet" href="/site-chrome.css?v=11">
 </head>
 <body>
 
@@ -330,6 +336,7 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
 <main>
   <div class="lead">
     <h1 class="show-title">color wheel</h1>
+    <p class="wheel-intro">a paint-mixing color wheel for painters. pick colors on the wheel, mix them in the order you'd mix paint, and add white or black at any step, starting from white if you like. every step shows the mix so far, and + mix carries a finished color into a new mix. the mixing is based on measured pigment data.</p>
   </div>
 
   <div class="deck-wrap" id="ct-wheel-wrap">
@@ -2260,7 +2267,7 @@ async function submitGB() {
 let toastTimer;
 function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800); }
 </script>
-<script src="/site-chrome.js?v=10"></script>
+<script src="/site-chrome.js?v=11"></script>
 <script>/* embedded: links leave the pop-up and open in the course page's window */
 if (document.documentElement.classList.contains('embed')) [].forEach.call(document.querySelectorAll('a[href]'), function (a) { if (a.target !== '_blank') a.target = '_top'; });
 /* embedded: Escape inside the wheel closes the pop-up too */
