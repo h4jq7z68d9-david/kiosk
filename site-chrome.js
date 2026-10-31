@@ -239,6 +239,7 @@
       wb.className = 'menu-wheel';
       /* a real link (search engines follow it; Ctrl/Cmd-click opens the page), but a plain click opens the pop-up */
       wb.innerHTML = '<a class="wheel-bubble" href="/study/color-wheel.html" aria-haspopup="dialog"><img src="/color-wheel-icon-512.png" alt="" width="22" height="22">color wheel</a>';
+      panel.appendChild(document.createElement('hr')); // its own group, under a divider
       panel.appendChild(wb);
       wb.querySelector('a').addEventListener('click', function (e) { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; e.preventDefault(); setMenu(false); wheel.show(); });
     }
