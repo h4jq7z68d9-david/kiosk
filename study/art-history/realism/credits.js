@@ -385,7 +385,7 @@ window.CREDITS = {
  },
  "tanner-banjo-lesson": {
   "work": "Henry Ossawa Tanner, The Banjo Lesson (1893)",
-  "page": "https://commons.wikimedia.org/wiki/File:Henry_Ossawa_Tanner,_The_Banjo_Lesson_(lighter).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Henry_Ossawa_Tanner,_The_Banjo_Lesson_(darker).jpg",
   "file": "Hampton University Museum, Hampton, Virginia",
   "license": "Public domain",
   "author": "Henry Ossawa Tanner",

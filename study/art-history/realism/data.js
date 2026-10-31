@@ -272,7 +272,7 @@ window.SITE = {
      "artist": "Gustave Courbet",
      "title": "Young Ladies on the Banks of the Seine (Summer)",
      "date": "1856–57",
-     "det": "Oil on canvas. Petit Palais, Musée des Beaux-Arts de la Ville de Paris",
+     "det": "Oil on canvas, 174 × 206 cm. Petit Palais, Musée des Beaux-Arts de la Ville de Paris",
      "lead": "Two young Parisian women lie on the riverbank on a summer day, one half asleep.",
      "bul": [
       "It caused a critical scandal at the Salon of 1857.",
@@ -788,7 +788,7 @@ window.SITE = {
      "artist": "Ilya Repin",
      "title": "They Did Not Expect Him",
      "date": "1884–88",
-     "det": "Oil on canvas. State Tretyakov Gallery, Moscow",
+     "det": "Oil on canvas, 160.5 × 167.5 cm. State Tretyakov Gallery, Moscow",
      "lead": "A political exile walks into his family's sitting room; the maid and the family freeze.",
      "bul": [
       "First shown in 1884 with the Wanderers.",
@@ -917,7 +917,7 @@ window.SITE = {
      "artist": "Henry Ossawa Tanner",
      "title": "The Banjo Lesson",
      "date": "1893",
-     "det": "Oil on canvas. Hampton University Museum, Hampton, Virginia",
+     "det": "Oil on canvas, 124.5 × 90.2 cm. Hampton University Museum, Hampton, Virginia",
      "lead": "An older man helps a boy hold a banjo, cool light from one side and warm firelight from the other.",
      "bul": [
       "It was admitted to the Paris Salon of 1894.",
