@@ -2,8 +2,8 @@
    Used by every course page (wired by /study/guide.js) and by /study.html.
    The full index (/study/search-index.js, built by tools/study/build-search.js) loads the first time
    someone focuses a search box, so it never slows a page load. On a course page, that course's own
-   index (window.GUIDE) answers at once while the full index loads. Results from the current course
-   come first; every result is labeled with its course. */
+   index (window.GUIDE) answers at once while the full index loads. On a course page, that course's results
+   come first under their own count, then a divider and the other courses; every result is labeled with its course. */
 (function () {
   var SRC = '/study/search-index.js';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
@@ -67,19 +67,32 @@
       var all = pool().filter(function (x) { return words.every(function (w) { return x.n.indexOf(w) >= 0; }); })
         .map(function (x) { return { x: x, score: (x.slug === cur ? 100 : 0) + words.reduce(function (a, w) { return a + (x.t.indexOf(w) >= 0 ? 5 : 0); }, 0) }; })
         .sort(function (a, b) { return b.score - a.score || a.x.i - b.x.i; });
-      var nCourses = {}; all.forEach(function (h) { nCourses[h.x.slug] = 1; });
-      hits = all.slice(0, MAX).map(function (h) { return h.x; });
+      /* Oct 31 2026: on a course page the list is split — this course's pages under their own count, then a
+         divider and the other courses' pages — one scrolling list, capped at MAX pages, this course first. */
+      var plural = function (n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); };
+      var mine = cur ? all.filter(function (h) { return h.x.slug === cur; }) : [];
+      var others = cur ? all.filter(function (h) { return h.x.slug !== cur; }) : all;
+      var oc = {}; others.forEach(function (h) { oc[h.x.slug] = 1; }); var noc = Object.keys(oc).length;
+      var mineShow = mine.slice(0, MAX), othersShow = others.slice(0, Math.max(0, MAX - mineShow.length));
+      hits = mineShow.concat(othersShow).map(function (h) { return h.x; });
       sel = hits.length ? 0 : -1;
-      var nc = Object.keys(nCourses).length;
-      rs.innerHTML = hits.length
-        ? '<p class="rcount">' + (all.length > MAX ? MAX + '+' : all.length) + ' page' + (all.length === 1 ? '' : 's') + (full ? (nc > 1 ? ' in ' + nc + ' courses' : '') : ' in this course · searching all courses…') + '</p>' +
-          hits.map(function (x, k) {
-            return '<a class="res" role="option" href="' + x.url + '" data-j="' + k + '" aria-selected="' + (k === sel) + '">' +
-              (x.thumb ? '<img class="th" src="' + x.thumb + '" alt="" loading="lazy">' : '<span class="ph">§</span>') +
-              '<span><span class="rk"><span class="rc">' + esc(x.course) + '</span>' + (x.label ? ' · ' + esc(x.label) : '') + '</span>' +
-              '<span class="rt">' + esc(x.title) + '</span><span class="rs">' + snippet(x.text, words) + '</span></span></a>';
-          }).join('')
-        : (full ? '<p class="rnone">No pages match “' + esc(raw) + '”. Try a single name.</p>' : '<p class="rnone">Searching all courses…</p>');
+      var row = function (x, k) {
+        return '<a class="res" role="option" href="' + x.url + '" data-j="' + k + '" aria-selected="' + (k === sel) + '">' +
+          (x.thumb ? '<img class="th" src="' + x.thumb + '" alt="" loading="lazy">' : '<span class="ph">§</span>') +
+          '<span><span class="rk"><span class="rc">' + esc(x.course) + '</span>' + (x.label ? ' · ' + esc(x.label) : '') + '</span>' +
+          '<span class="rt">' + esc(x.title) + '</span><span class="rs">' + snippet(x.text, words) + '</span></span></a>';
+      };
+      var html = '';
+      if (cur) {
+        if (mineShow.length) html += '<p class="rcount">' + plural(mine.length, 'page') + ' in this course</p>' + mineShow.map(function (h, k) { return row(h.x, k); }).join('');
+        if (!full) html += '<p class="rdiv"><span>searching other courses…</span></p>';
+        else if (others.length) html += '<p class="rdiv"><span>' + plural(others.length, 'page') + ' in ' + noc + ' other course' + (noc === 1 ? '' : 's') + '</span></p>' + othersShow.map(function (h, k) { return row(h.x, mineShow.length + k); }).join('');
+      } else if (hits.length) {
+        var nCourses = {}; all.forEach(function (h) { nCourses[h.x.slug] = 1; }); var nc = Object.keys(nCourses).length;
+        html += '<p class="rcount">' + plural(all.length, 'page') + (nc > 1 ? ' in ' + nc + ' courses' : '') + '</p>' + othersShow.map(function (h, k) { return row(h.x, k); }).join('');
+      }
+      if (!hits.length && full) html = '<p class="rnone">No pages match “' + esc(raw) + '”. Try a single name.</p>';
+      rs.innerHTML = html || '<p class="rnone">Searching…</p>';
       rs.hidden = false; qi.setAttribute('aria-expanded', 'true');
     }
     function mark() { [].forEach.call(rs.querySelectorAll('.res'), function (b, k) { b.setAttribute('aria-selected', String(k === sel)); if (k === sel) b.scrollIntoView({ block: 'nearest' }); }); }

@@ -218,3 +218,7 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
   .guide-page .app.collapsed{max-width:1600px}
 }
 @media (max-width:900px){.guide-page .topbar{flex-wrap:nowrap}.guide-page .topbar .search{flex:1 1 0}}
+/* search results split (search.js, Oct 31 2026): divider between this course's pages and other courses' */
+.guide-page .results .rdiv{display:flex;align-items:center;gap:8px;margin:10px 8px 6px;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.guide-page .results .rdiv::before,.guide-page .results .rdiv::after{content:"";flex:1;height:1px;background:var(--border)}
+.guide-page .results .rdiv span{white-space:nowrap}
