@@ -286,8 +286,8 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
         <div class="wheel-card-inner">
           <div class="wheel-toggle">
             <button class="wheel-toggle-btn" data-size="3">3</button>
-            <button class="wheel-toggle-btn active" data-size="6">6</button>
-            <button class="wheel-toggle-btn" data-size="12">12</button>
+            <button class="wheel-toggle-btn" data-size="6">6</button>
+            <button class="wheel-toggle-btn active" data-size="12">12</button>
             <button class="wheel-toggle-btn" data-size="24">24</button>
           </div>
           <div class="wheel-frame" id="wheelFrame">
@@ -469,7 +469,7 @@ function stepDeg(){
 }
 
 let rotation = 0; // degrees, Base needle angle (0 = north/Red, clockwise positive)
-let wheelSize = 6; // 3, 6, 12, or 24 — toggled by the wheel-size switch
+let wheelSize = 12; // 3, 6, 12, or 24 — toggled by the wheel-size switch
 let mixing = false; // extra needles only exist once Mix is pressed
 let mixNeedles = []; // rotation angles for each additional color, in the order added
 let mixRatios = []; // mixRatios[i] = share of mixNeedles[i] when it was blended in; same length as mixNeedles
