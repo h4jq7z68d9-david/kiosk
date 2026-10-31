@@ -16,7 +16,8 @@
 #menu-panel .menu-sub .menu-group { display: flex; align-items: center; min-height: 30px; padding: 6px 16px 0; font-family: var(--font); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); }
 #menu-panel .menu-sub a.menu-group:hover { color: var(--accent-ink); background: none; }
 @media (max-width: 600px) {
-  #menu-panel { left: 0 !important; right: 0; width: auto; border-left: none; border-right: none; }
+  /* phones (Oct 31 2026): a card with visible edges, not a full-width sheet */
+  #menu-panel { top: calc(var(--nav-h, 62px) + 6px); left: 10px !important; right: 10px; width: auto; border: 1px solid var(--border-mid, #cfd6dd); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.16); max-height: calc(100dvh - var(--nav-h, 62px) - 16px); }
   #menu-panel a, #menu-panel button { padding: 0 16px; min-height: 50px; font-size: 18px; }
   #menu-panel hr { margin: 8px 16px; }
   #menu-panel .menu-sub { margin-left: 16px; }
@@ -42,7 +43,7 @@ html.wheel-open .wheel-scrim { opacity: 1; visibility: visible; transition: opac
 .wheel-x:hover { background: var(--surface); }
 .wheel-grab { display: none; }
 @media (max-width: 900px) {
-  .wheel-sheet { top: var(--nav-h, 62px); left: 0; right: 0; width: 100%; height: min(616px, calc(100% - var(--nav-h, 62px) - 48px)); border: 0; border-bottom: 1px solid var(--border-mid, #cfd6dd); border-radius: 0 0 16px 16px; transform: translateY(-24px); }
+  .wheel-sheet { top: calc(var(--nav-h, 62px) + 6px); left: 10px; right: 10px; width: auto; height: min(616px, calc(100% - var(--nav-h, 62px) - 24px)); border-radius: 16px; transform: translateY(-16px); box-shadow: 0 14px 40px rgba(0,0,0,.22); }
   .wheel-grab { display: block; flex: none; width: 36px; height: 4px; margin: 0 auto; padding: 8px 40px 12px; box-sizing: content-box; background: var(--border-mid, #cfd6dd); background-clip: content-box; }
 }
 @media (prefers-reduced-motion: reduce) { .wheel-sheet, .wheel-scrim { transition: none; } }
