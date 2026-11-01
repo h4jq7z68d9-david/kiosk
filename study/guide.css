@@ -100,6 +100,7 @@ blockquote cite{display:block;margin-top:6px;font-family:var(--sans);font-style:
 .lb .x{position:absolute;top:max(12px,env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 12px;font:600 .9rem var(--sans);cursor:pointer}
 .lb .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:10px 14px;font:600 1.1rem var(--sans);cursor:pointer}
 .lb .nav.l{left:max(12px,env(safe-area-inset-left,0px))} .lb .nav.r{right:max(12px,env(safe-area-inset-right,0px))}
+.lb .nav:disabled{opacity:.3;cursor:default}
 @media (max-width:900px){
   .tog,.rail,.lb .nav{display:none}
   .app{grid-template-columns:1fr}

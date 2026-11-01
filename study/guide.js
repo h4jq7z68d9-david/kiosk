@@ -74,19 +74,38 @@
   ['prev', 'next'].forEach((r) => { const a = $(r); if (a && a.href) { const l = document.createElement('link'); l.rel = 'prefetch'; l.href = a.href; document.head.appendChild(l); } });
   const go = (d) => { const a = $(d > 0 ? 'next' : 'prev'); if (a && a.getAttribute('href')) location.href = a.href; };
 
-  /* lightbox (current page's image) */
+  /* lightbox: steps through every image in the course, as the original guide did.
+     Neighbouring pages are fetched for their image; closing goes to the page last shown. */
   const lb = $('lb'), lbi = $('lbimg'), lbc = $('lbcap');
-  function openLb(im) { lbi.src = im.src; lbi.alt = im.alt; lbc.innerHTML = im.dataset.cap || ''; lb.hidden = false; $('lbx').focus(); }
-  function closeLb() { lb.hidden = true; const im = document.querySelector('.pic img'); im && im.focus(); }
-  document.querySelectorAll('.pic img').forEach((im) => { im.onclick = () => openLb(im); im.onkeydown = (e) => { if (e.key === 'Enter') openLb(im); }; });
+  const pics = items.filter((x) => x.thumb || x.id === curId && document.querySelector('.pic img'));
+  let lbAt = cur, lbSeq = 0; const lbCache = {};
+  function picOf(it) {
+    if (it.id === curId) { const im = document.querySelector('.pic img'); return Promise.resolve(im ? { src: im.src, alt: im.alt, cap: im.dataset.cap || '' } : null); }
+    if (!lbCache[it.id]) lbCache[it.id] = fetch(it.url).then((r) => r.ok ? r.text() : Promise.reject()).then((t) => {
+      const im = new DOMParser().parseFromString(t, 'text/html').querySelector('.pic img');
+      return im ? { src: new URL(im.getAttribute('src'), location.href).href, alt: im.alt, cap: im.dataset.cap || '' } : null;
+    }).catch(() => { delete lbCache[it.id]; return null; });
+    return lbCache[it.id];
+  }
+  function showLb(it, p) { lbAt = it; lbi.src = p.src; lbi.alt = p.alt; lbc.innerHTML = p.cap; const k = pics.indexOf(it); $('lbp').disabled = k <= 0; $('lbn').disabled = k < 0 || k >= pics.length - 1; }
+  function openLb() { picOf(cur).then((p) => { if (!p) return; showLb(cur, p); lb.hidden = false; $('lbx').focus(); stepLb(0); }); }
+  function stepLb(d) {
+    const k = pics.indexOf(lbAt); if (k < 0) return;
+    if (d === 0) { [pics[k - 1], pics[k + 1]].forEach((x) => { if (x) picOf(x).then((p) => { if (p) new Image().src = p.src; }); }); return; }
+    const it = pics[k + d]; if (!it) return; const seq = ++lbSeq;
+    picOf(it).then((p) => { if (!p || seq !== lbSeq || lb.hidden) return; showLb(it, p); stepLb(0); });
+  }
+  function closeLb() { lb.hidden = true; lbSeq++; if (lbAt !== cur) { location.href = lbAt.url; return; } const im = document.querySelector('.pic img'); im && im.focus(); }
+  document.querySelectorAll('.pic img').forEach((im) => { im.onclick = openLb; im.onkeydown = (e) => { if (e.key === 'Enter') openLb(); }; });
   lb.onclick = (e) => { if (e.target === lb || e.target === lbi) closeLb(); }; $('lbx').onclick = closeLb;
+  if ($('lbp')) { $('lbp').onclick = (e) => { e.stopPropagation(); stepLb(-1); }; $('lbn').onclick = (e) => { e.stopPropagation(); stepLb(1); }; }
 
   /* keys */
   const qi = $('q'), rs = $('results');
   document.addEventListener('keydown', (e) => {
     if (e.key === '/' && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { e.preventDefault(); qi.focus(); return; }
     if (/SELECT|INPUT|TEXTAREA/.test(e.target.tagName) || e.metaKey || e.ctrlKey || e.altKey) return;
-    if (!lb.hidden) { if (e.key === 'Escape') closeLb(); return; }
+    if (!lb.hidden) { if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowRight') stepLb(1); if (e.key === 'ArrowLeft') stepLb(-1); return; }
     if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1);
     if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; }
   });
@@ -99,6 +118,9 @@
     let x0 = null, y0 = null, t0 = 0;
     const sl = $('slide');
     sl.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); }, { passive: true });
-    sl.addEventListener('touchend', (e) => { if (x0 == null) return; const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null; if (Date.now() - t0 > 800) return; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1); }, { passive: true });
+    const ts = (e) => { if (e.touches.length !== 1) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); };
+    const te = (fn) => (e) => { if (x0 == null) return; const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null; if (Date.now() - t0 > 800) return; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) fn(dx < 0 ? 1 : -1); };
+    sl.addEventListener('touchend', te(go), { passive: true });
+    lb.addEventListener('touchstart', ts, { passive: true }); lb.addEventListener('touchend', te(stepLb), { passive: true });
   })();
 })();

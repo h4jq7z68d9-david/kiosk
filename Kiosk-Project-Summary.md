@@ -606,6 +606,12 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## Completed This Session (November 1 2026) — Study lightbox steps through images again (deployed Nov 1 2026)
+
+**David:** the full-screen image on study pages couldn't advance like the original guide's. Restored: ←/→ buttons (hidden ≤900 px, as before), arrow keys and swipe inside the lightbox step through every image in the course (items with a `thumb`, plus the current page's image); the next/previous page is fetched for its image and preloaded; closing goes to the page of the last image shown; buttons dim at the first/last image. Markup in `build-course.js` (`#lbp` / `#lbn`), behavior in `guide.js`, `.lb .nav:disabled` in `guide.css`. `guideJs` v11, `guideCss` v15, all 12 courses rebuilt (only the lightbox line and cache strings changed). New courses get it automatically from the generator — nothing per course. Tested headless at 1440 / 390 px; real iPhone swipe not yet confirmed.
+
+-----
+
 ## Completed This Session (October 31 2026, midday) — Header icons (deployed Oct 31 2026)
 
 **David:** lighter header after the home page. On every page except the home page, the "follow on instagram" button is replaced by Instagram's colored glyph (`.nav-ig`, 24 px, links to @dave_nichol_son, `aria-label="Instagram"`) — in `site-bar.js` and the 10 pages with an inline bar. The home page keeps its pill button (and has no bag). The bag icon is the site navy (`--accent`) on every page (`site-chrome.css`). `site-bar.js` v4, `site-chrome` v17, all courses rebuilt.

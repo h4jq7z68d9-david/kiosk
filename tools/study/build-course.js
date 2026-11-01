@@ -61,7 +61,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 18, bar: 4, guideCss: 14, guideJs: 10, search: 3 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 18, bar: 4, guideCss: 15, guideJs: 11, search: 3 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -360,7 +360,7 @@ ${NAV}
     </div>
   </main>
 </div>
-<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button class="x" id="lbx" type="button">Close ✕</button><img id="lbimg" alt=""><p class="cap" id="lbcap"></p></div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button class="x" id="lbx" type="button">Close ✕</button><button class="nav l" id="lbp" type="button" aria-label="Previous image">←</button><img id="lbimg" alt=""><p class="cap" id="lbcap"></p><button class="nav r" id="lbn" type="button" aria-label="Next image">→</button></div>
 <script src="${COURSE}/index.js?v=${INDEX_V}"></script>
 <script src="/study/search.js?v=${V.search}"></script>
 <script src="/study/guide.js?v=${V.guideJs}"></script>
