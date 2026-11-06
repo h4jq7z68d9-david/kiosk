@@ -13,8 +13,16 @@ const vm = require('vm');
 const ROOT = path.resolve(__dirname, '..', '..');
 const CHECK = process.argv.includes('--check');
 const ORIGIN = 'https://davidnicholsonart.com';
-const MAIN_PAGES = ['index', 'gallery', 'originals', 'shipping', 'varied-readings', 'art-westport-2025', 'art-westport-2026',
-  'lawrence-art-in-the-park-2025', 'lawrence-art-in-the-park-2026', 'overland-park-2026', 'study'];
+/* every .html in the repo except generated print pages: the hand-maintained pages are what matter, and the
+   generated course pages are rebuilt right after anyway (listing pages by name missed study/color-wheel.html) */
+function allHtml(dir, out = []) {
+  for (const f of fs.readdirSync(dir)) {
+    const p = path.join(dir, f);
+    if (f === '.git' || f === 'node_modules' || f === 'prints' || f === 'tools') continue;
+    if (fs.statSync(p).isDirectory()) allHtml(p, out); else if (f.endsWith('.html')) out.push(p);
+  }
+  return out;
+}
 const R = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 const fail = (m) => { console.error('build-registry: ' + m); process.exit(1); };
@@ -97,12 +105,13 @@ if (chromeChanged) {
   const m = src.match(/chrome: (\d+)/); if (!m) fail('build-course.js: V.chrome not found');
   const v = Number(m[1]) + 1;
   fs.writeFileSync(bc, src.replace(/chrome: \d+/, 'chrome: ' + v));
-  for (const p of MAIN_PAGES) {
-    const f = path.join(ROOT, p + '.html');
-    const h = fs.readFileSync(f, 'utf8').replace(/\/site-chrome\.(js|css)\?v=\d+/g, '/site-chrome.$1?v=' + v);
-    fs.writeFileSync(f, h);
+  let n = 0;
+  for (const f of allHtml(ROOT)) {
+    const h = fs.readFileSync(f, 'utf8');
+    const h2 = h.replace(/\/site-chrome\.(js|css)\?v=\d+/g, '/site-chrome.$1?v=' + v);
+    if (h2 !== h) { fs.writeFileSync(f, h2); n++; }
   }
-  console.log(`build-registry: site-chrome.js STUDY updated; V.chrome → ${v} in build-course.js and ${MAIN_PAGES.length} pages. Now rebuild every course.`);
+  console.log(`build-registry: site-chrome.js STUDY updated; V.chrome → ${v} in build-course.js and ${n} pages. Now rebuild every course.`);
 }
 console.log(`build-registry: ${courses.length} courses — ${htmlChanged ? 'study.html written' : 'study.html unchanged'}, ${chromeChanged ? 'site-chrome.js written' : 'site-chrome.js unchanged'}`);
 
