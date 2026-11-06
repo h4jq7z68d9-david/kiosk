@@ -20,6 +20,28 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Decide whether the site check runs
+        # Run tools/site/check.js only when something it validates changed: pages, study content/generator,
+        # shared chrome/bar files, the site tools, or this workflow. A deploy that only touches index.mjs,
+        # admin-sw.js, images or docs skips it. index.mjs and tools/lambda/ count because check.js runs the Lambda route tests. A push with no usable "before" (new branch, force-push) runs it.
+        id: gate
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] || ! git fetch -q --depth=1 origin "$BEFORE"; then
+            echo "no usable base commit — running the check"; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}")
+          echo "$CHANGED" | sed 's/^/  changed: /'
+          if echo "$CHANGED" | grep -qE '^(study/|tools/study/|tools/site/|tools/lambda/|index\.mjs$|site-[a-z-]+\.(js|css)$|\.github/workflows/deploy\.yml$|[^/]+\.html$)'; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "nothing the site check validates changed — skipping it"; echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Site check (tools/site/check.js)
+        # Static gate: pages, cache versions, course data, image sizes, course registry, Lambda route tests.
+        # Fails the deploy before anything is uploaded.
+        if: steps.gate.outputs.run == 'true'
+        run: node tools/site/check.js
       - name: Generate print pages
         run: node --input-type=module < generate-prints.js
       - name: Stamp admin service-worker cache name from content

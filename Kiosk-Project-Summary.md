@@ -107,6 +107,7 @@ Fully configured. Push any file to the repo → live in ~60 seconds.
 - **Generate print pages step:** runs `generate-prints.js` before S3 sync — fetches catalog from Lambda API Gateway URL directly (bypasses CloudFront), writes `prints/*.html` and `hero-pool.js` locally, S3 sync picks them up
 
 
+- **Site check gate (Nov 6 2026):** `tools/site/check.js` runs first when the push touched pages, study content/generator, shared chrome, the site/Lambda tools, `index.mjs` or the workflow; it fails the deploy before upload. Pushes that only change `admin-sw.js`, images or docs skip it (see the step comment in `deploy.yml`).
 -----
 
 ## Square
@@ -658,7 +659,7 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [x] **Lambda route tests** (built Nov 6 2026) — `tools/lambda/test.js` runs the real `index.mjs` handler with every `@aws-sdk/*` import swapped for an in-memory stub (`tools/lambda/hooks.mjs` + `aws-stubs.mjs`) and `https.request` replaced by a fake Square; no SDK, credentials or network. Asserts: no token → 401 on all 38 `/admin/*` + 19 `/admin/jill/*` route patterns with no table touched; `JILL_TOKEN` rejected on every `/admin/*` route and `ADMIN_TOKEN` on every `/admin/jill/*` route; `/checkout` and `/cart` send exactly `SQUARE_LOC` and never `LHXVQB0QCW9R1` even when the client injects it (and the id must not appear in `index.mjs`); a gallery print sale writes one conditional decrement to `dna-gallery-stock` and nothing to `dna-paintings` (fair sale: the reverse; zero stock: `reduced:false`, never negative). 262 assertions; `check.js` runs it and fails on any failure.
 - [x] **Service-worker bump automated** (Nov 6 2026) — `deploy.yml` stamps the cache name from a content hash; no manual bump. `check.js` verifies the step exists and `node --check`s `index.mjs` and `admin-sw.js`.
 - [x] **Gated pages in `smoke.js`** (Nov 6 2026) — admin, Jill's page, kiosk and booth are loaded logged-out at 1440/390: 0 console errors, no sideways scroll, gate present.
-- [ ] Deploy gate: once `check.js` is stable, run it in `deploy.yml` only when `study/`, `tools/study/` or `*.html` changed, so a false positive can't block an unrelated Lambda push.
+- [x] Deploy gate (built Nov 6 2026, branch `deploy-gate`) — `deploy.yml` runs `node tools/site/check.js` before anything is generated or uploaded, when the push changed `study/`, `tools/study/`, `tools/site/`, `tools/lambda/`, `index.mjs`, `site-*.js/.css`, a top-level `.html`, or the workflow itself (decided by `git diff --name-only` against `github.event.before`; a push with no usable base runs it). Other pushes (admin-sw.js, images, docs) skip it. A failed check fails the deploy with nothing uploaded.
 
 ### Next session — pick up here (from September 30 2026)
 

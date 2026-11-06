@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 6 2026, midday) — Deploy gate (branch `deploy-gate`)
+
+Sixth and last item of the process backlog. Two steps added to `deploy.yml` ahead of "Generate print pages": one decides from `git diff --name-only <before> <sha>` (the base commit is fetched with `--depth=1`, no full-history clone) whether anything `check.js` validates changed, the other runs `node tools/site/check.js` when it did. Trigger paths go beyond the backlog's `study/`, `tools/study/`, `*.html`: `tools/site/`, `tools/lambda/`, `index.mjs` (the route tests live in `check.js` now), `site-*.js/.css` (an unbumped chrome edit is what the check catches) and the workflow itself (changing the gate exercises it). Verified the path filter against 16 sample paths and the shell step by simulation against real commits; the first live run is the push of this branch, which touches the workflow and so runs the gate.
+
+-----
+
 ## Completed This Session (November 6 2026, late morning) — Steering-doc split (branch `steering-split`)
 
 Fifth item of the process backlog. `Kiosk-Project-Summary.md` (1660 lines) is now current state only — 26 sections, ~800 lines: Start here, What's Live, infrastructure, HTML files, tables, IAM, Pending, On the Horizon, setup notes, Key Principles, Contacts. All 52 "Completed This Session" blocks, the two "Previously Completed" sections and the Sept 30 2026 "Findings This Session" block moved here unchanged, newest first. Verified by script: each of the original 81 `##` headings appears in exactly one of the two files; the only lines that differ are six cross-references rewritten to say "in `CHANGELOG.md`" (Start-here steps 2 and 6, the admin four-tab note, and three Pending items). Start-here step 6 now says new session blocks go at the top of this file. `check.js` PASS.
