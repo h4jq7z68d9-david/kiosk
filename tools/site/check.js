@@ -199,6 +199,15 @@ for (const slug of courses) {
   for (const f of ['index.mjs', 'admin-sw.js']) { try { execSync(`node --check ${f}`, { cwd: ROOT, stdio: 'pipe' }); } catch (e) { err(`${f}: node --check failed`); } }
 }
 
+/* ---------- Lambda route tests (tools/lambda/test.js: auth gates, Missouri location, gallery stock) ---------- */
+{
+  const { spawnSync } = require('child_process');
+  const r = spawnSync(process.execPath, ['tools/lambda/test.js'], { cwd: ROOT, encoding: 'utf8' });
+  const lines = (r.stdout || '').trim().split('\n');
+  console.log(lines[0] || 'lambda tests: no output');
+  if (r.status !== 0) { err('tools/lambda/test.js failed'); lines.slice(1).forEach((l) => err(l.trim())); }
+}
+
 /* ---------- output ---------- */
 const fmt = (o) => Object.entries(o).map(([k, v]) => `${k} ${v}`).join(', ');
 if (FOCUS) { if (report[FOCUS]) console.log(`${FOCUS}: ${fmt(report[FOCUS])}`); else err(`no course "${FOCUS}" in tools/study/courses/`); }
