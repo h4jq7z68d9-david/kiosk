@@ -1,4 +1,6 @@
 // Admin PWA Service Worker — cache version: dna-admin-v91
+// The deploy workflow replaces the cache name below with a content hash of admin.html + manifest + this file,
+// so every admin change gets a fresh cache automatically. No manual bump needed (Nov 6 2026).
 const CACHE = 'dna-admin-v91';
 const SHELL = [
   '/admin.html',

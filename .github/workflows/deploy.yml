@@ -22,6 +22,12 @@ jobs:
           node-version: '20'
       - name: Generate print pages
         run: node --input-type=module < generate-prints.js
+      - name: Stamp admin service-worker cache name from content
+        # Any change to the admin shell gets a new cache automatically; no manual bump in admin-sw.js.
+        run: |
+          H=$(cat admin.html admin.webmanifest admin-sw.js | sha256sum | cut -c1-12)
+          sed -i "s/dna-admin-[0-9a-z]*/dna-admin-$H/g" admin-sw.js
+          grep -n "dna-admin-" admin-sw.js | head -2
       - name: Upload to S3
         run: |
           aws s3 sync . s3://kiosk.davidnicholsonllc \
