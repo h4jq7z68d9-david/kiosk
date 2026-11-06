@@ -1,5 +1,23 @@
 # Kiosk Project Summary
 
+## Start here (every session) — added Nov 6 2026
+
+Follow this in order. It overrides any older workflow note further down in this file.
+
+1. **Get the code:** `git clone --depth 1 https://github.com/h4jq7z68d9-david/kiosk.git` (git protocol; never `raw.githubusercontent.com`). If a clone already exists from earlier in the session, `git pull` before reading anything — David may have pushed.
+2. **Read:** this section, "What's Live", and "Pending". Read a "Completed This Session" block only when the task touches that feature. Do not read every file in the repo.
+3. **Load the skill that governs the task** (they live in Claude's skill library, not in the repo):
+   - any file in this repo, any bash, any AWS or Square call → `dna-kiosk-conventions` (the footgun list; always)
+   - installing or changing a study course → `study-site-builder` §9 (the install runbook); the course-builder skills are not used here
+   - the AWS MCP connector is read-only plus DynamoDB item writes; Lambda config, IAM, tables, CloudFront stay with David in the console
+4. **Work on a branch.** Nothing from a throwaway test fixture is committed. Validate JS with `node --check` (extract inline `<script>` blocks first). Rebuild and headless-test; show David screenshots, bad news first, unverified items listed.
+5. **Push to `main` only when David says so.** A push to `main` deploys (GitHub Actions → S3 `--delete` sync → CloudFront invalidation). Never upload to S3 by hand. No pull requests.
+6. **Before the session ends:** add a "Completed This Session (date)" block below, update "What's Live" and "Pending", and push it with the batch (David expects this without being asked).
+
+Content rule: this project installs course bundles and owns the generator, tests and deploy. It never writes or edits course text; corrections go back to the course-builder project that produced the bundle.
+
+Style rules that apply to every visible change (David, Oct 2026): left-aligned by default, never centered unless asked; fewer words in the UI; menus and pop-ups are floating cards with visible edges, not full-width sheets; a style change made at one screen size is made at all sizes or flagged; no dark mode anywhere. For layout decisions, show options as mockups before writing code; it is fine to look at other artists' and museums' sites for ideas (screenshots as references, never a copy of a specific site).
+
 ## What’s Live
 
 |URL                                                 |Purpose                                                                                      |
@@ -330,7 +348,7 @@ Shopify has been cancelled. All product images were already in Square — no ima
 
 All are currently single-file with no framework. **This is how they were first built, not a rule** (David, October 2 2026) — shared files are allowed where they save duplicate edits; see the shared header/footer to-do under Pending.
 
-**Session workflow:** Claude generates files here, David downloads and pushes to GitHub. GitHub is NOT the source of truth during a session — the latest file Claude produced is. At the start of each session, upload all files from the repo as a starting point.
+**Session workflow:** see "Start here" at the top of this file. (The earlier note here — David downloads and pushes, upload files at session start — is retired as of Nov 6 2026; GitHub `main` is the source of truth between sessions, and Claude pushes approved batches.)
 
 ### Artist Style & Bio
 
@@ -1090,6 +1108,18 @@ Goal: stop the two-step fair routine (charge in the Square app, log prints in ad
 -----
 
 ## Pending — In Order of Priority
+
+### Process and tooling backlog (David, Nov 6 2026) — not started
+
+Agreed in a process review. Quality gates (fact review, paraphrase check, best-of-three images, David's approval before `main`) are not to be automated or shortened. Order below is the agreed sequence.
+
+- [ ] **`tools/site/check.js`** — static check over every `*.html` and every built course: each image and local link resolves; `<title>`, canonical and `og:*` unique and present; JSON-LD parses; every `sitemap.xml` URL exists and every page is in the sitemap; no `?v=` string older than the current `V` in `build-course.js` / `site-chrome` version; banned phrases ("Week N", "Free study guide", authorship lines); every `work` slide with `look` has exactly 3 bullets; every image key has a credits entry; course images ≤ 1600 px long edge. Run after every build; fail loudly. Site-wide from the start, not study-only.
+- [ ] **`tools/site/smoke.js`** — headless Chromium (GA blocked) at 1440 and 390 px over index, gallery, originals, shipping, study.html, show pages and one page per course: 0 console errors, no sideways scroll, site menu opens, Prev/Next pinned on phones in courses, hero fits on index; writes the two screenshots David reviews. Same script every time; its output is the report.
+- [ ] **Shared chrome for the main pages** — move the 11 pages with an inline top bar (index, gallery, originals, shipping, varied-readings, shop, the five show pages) onto `site-bar.js`, and their inline `<style>` into `site-*.css`, so one edit restyles the site and cache bumps happen in one place. kiosk, admin, booth and Jill's page keep their own layouts. Mockup first.
+- [ ] **Course registry** — one file (`tools/study/courses.json` or fields in each course's settings JSON) holding lane, order, date range, card text and card image; generate `study.html`'s cards + JSON-LD and the `STUDY` array in `site-chrome.js` from it. Removes two hand edits per install and the missed-menu-entry bug (Japanese Woodblock Prints, Oct 30).
+- [ ] **`tools/study/install-course.js <slug>`** — copy bundle → resize images → build → check → smoke → commit on a branch, one command.
+- [ ] **Split this document** — keep "Start here", "What's Live", infrastructure and "Pending"; move the "Completed This Session" blocks to `CHANGELOG.md`.
+- [ ] Deploy gate: once `check.js` is stable, run it in `deploy.yml` only when `study/`, `tools/study/` or `*.html` changed, so a false positive can't block an unrelated Lambda push.
 
 ### Next session — pick up here (from September 30 2026)
 
