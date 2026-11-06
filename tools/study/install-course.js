@@ -3,7 +3,9 @@
    Usage:
      node tools/study/install-course.js <slug> --bundle <folder> --lane art-history|technique \
           --name "Course Name" --label "course name" --card-img <imgKey> --card-text "lowercase card text" \
-          [--dates "1830s–1890s"] [--force] [--trailer "Co-Authored-By: …"]...
+          [--dates "1830s–1890s"] [--after <slug> | --first] [--force] [--trailer "Co-Authored-By: …"]...
+   Placement in its lane: after the last course of the lane by default; --after <slug> puts it right after that
+   course (art history is in date order, so name the course that comes before it); --first puts it at the top.
    The bundle folder holds data.js (+ extra data files), credits.js, sources.js, img/ and <slug>.json.
    Registry flags are needed only the first time (they write the tools/study/courses.json entry); a re-run with
    --force reuses the existing entry. Held works, retired pages and handoff-approved generator changes (§9.3)
@@ -94,10 +96,17 @@ if (!reg.courses.some((c) => c.slug === slug)) {
   const entry = { slug, lane, name: opt('name'), label: opt('label') };
   if (lane === 'art-history') entry.dates = opt('dates');
   entry.card = { img: opt('card-img'), text: opt('card-text') };
-  const last = reg.courses.map((c, i) => c.lane === lane ? i : -1).filter((i) => i >= 0).pop();
-  reg.courses.splice(last == null ? reg.courses.length : last + 1, 0, entry);   // after the last course in its lane; reorder by hand for date order
+  const laneIdx = reg.courses.map((c, i) => c.lane === lane ? i : -1).filter((i) => i >= 0);
+  let at, where;
+  if (opt('after')) {
+    const i = reg.courses.findIndex((c) => c.slug === opt('after'));
+    if (i < 0 || reg.courses[i].lane !== lane) die(`--after ${opt('after')}: no ${lane} course with that slug in the registry`);
+    at = i + 1; where = `after ${opt('after')}`;
+  } else if (flag('first')) { at = laneIdx.length ? laneIdx[0] : reg.courses.length; where = `first in ${lane}`; }
+  else { at = laneIdx.length ? laneIdx[laneIdx.length - 1] + 1 : reg.courses.length; where = `after the last ${lane} course`; }
+  reg.courses.splice(at, 0, entry);
   fs.writeFileSync(regFile, JSON.stringify(reg, null, 1) + '\n');
-  console.log(`added to the registry after the last ${lane} course${lane === 'art-history' ? ' — move it into date order in tools/study/courses.json if that is not its place, then re-run with --force' : ''}`);
+  console.log(`added to the registry ${where}${lane === 'art-history' && !opt('after') && !flag('first') ? ' — art history is in date order; use --after <slug> if this is not its place' : ''}`);
 } else console.log('already in the registry');
 const r = run('node', ['tools/study/build-registry.js']);
 if (r.status !== 0) die('build-registry failed:\n' + (r.stdout + r.stderr).trim());
