@@ -188,6 +188,23 @@ for (const slug of courses) {
   report[slug] = { pages: built, works, looks, images: files, mb: +(bytes / 1048576).toFixed(1), parts: S.handouts.length };
 }
 
+/* ---------- admin service worker: every admin.html change needs a new cache name ---------- */
+{
+  const { execSync } = require('child_process');
+  const changed = (f) => { try { return execSync(`git diff --quiet origin/main -- ${f}; echo $?`, { cwd: ROOT }).toString().trim() === '1'; } catch (e) { return null; } };
+  const sw = fs.readFileSync(path.join(ROOT, 'admin-sw.js'), 'utf8');
+  const cache = (sw.match(/const CACHE = '([^']+)'/) || [])[1];
+  if (!cache) err('admin-sw.js: no CACHE constant');
+  const a = changed('admin.html'), b = changed('admin-sw.js');
+  if (a === null) warn('admin-sw.js: no origin/main to compare against; cache-bump check skipped');
+  else if (a && !b) err(`admin.html changed since origin/main but admin-sw.js CACHE is still ${cache} — bump it or the admin serves stale code`);
+  const m = sw.match(/const CACHE = '[^']+'/g);
+  const head = sw.match(/cache version: ([\w-]+)/);
+  if (head && head[1] !== cache) err(`admin-sw.js: header says ${head[1]} but CACHE is ${cache}`);
+  try { execSync('node --check index.mjs', { cwd: ROOT, stdio: 'pipe' }); } catch (e) { err('index.mjs: node --check failed'); }
+  try { execSync('node --check admin-sw.js', { cwd: ROOT, stdio: 'pipe' }); } catch (e) { err('admin-sw.js: node --check failed'); }
+}
+
 /* ---------- output ---------- */
 const fmt = (o) => Object.entries(o).map(([k, v]) => `${k} ${v}`).join(', ');
 if (FOCUS) { if (report[FOCUS]) console.log(`${FOCUS}: ${fmt(report[FOCUS])}`); else err(`no course "${FOCUS}" in tools/study/courses/`); }

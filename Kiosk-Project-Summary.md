@@ -346,6 +346,8 @@ Shopify has been cancelled. All product images were already in Square — no ima
 
 ## HTML Files
 
+**Jill's page (`expenses-jill-nicholson.html`) stays separate from `admin.html`** (David, Nov 6 2026): no shared module, even though ~22 functions are duplicated. Fix big bugs in both; any functionality improvement is discussed with Jill before it is built.
+
 All are currently single-file with no framework. **This is how they were first built, not a rule** (David, October 2 2026) — shared files are allowed where they save duplicate edits; see the shared header/footer to-do under Pending.
 
 **Session workflow:** see "Start here" at the top of this file. (The earlier note here — David downloads and pushes, upload files at session start — is retired as of Nov 6 2026; GitHub `main` is the source of truth between sessions, and Claude pushes approved batches.)
@@ -631,6 +633,8 @@ All tables: PAY_PER_REQUEST, us-east-1.
 **`tools/site/check.js`** (static, ~2 s): local links/images resolve; `<title>`, canonical, description, `og:title`, `og:image` on every indexable page, titles and canonicals unique; JSON-LD parses; sitemap ↔ files both ways; `?v=` on shared assets matches `V` in `build-course.js`; banned phrases on study pages (course codes allowed only in `sources.html`); per course: Look-at = 3 bullets, image keys ↔ credits ↔ `img/` files, long edge ≤ 1600 px, course present in `STUDY` and `study.html`, sources/credits pages exist. Skips admin, kiosk, booth, Jill's page, shop (legacy); treats `/hero-pool.js` as build-time. Exit 1 on errors.
 
 **`tools/site/smoke.js`** (Playwright, ~2 min): serves the repo locally with analytics hosts blocked; 9 main pages and every course's home, one work page and credits page at 1440 and 390 px: console errors, sideways scroll, images loaded, menu opens and lists every course; course pages: site bar, search, outline, search results, on phones document does not scroll and Prev/Next bar is inside the viewport; focus course (`smoke.js <slug>`): lightbox opens, bookmark survives reload, screenshots `tools/site/out/<slug>-home-1440.png` and `<slug>-work-390.png` (gitignored). Needs `npm i playwright` in `../pw` (outside the repo) and Chromium or `/usr/bin/google-chrome`.
+
+**Admin side (later the same morning).** `check.js` now fails when `admin.html` differs from `origin/main` without a new `CACHE` name in `admin-sw.js` (proved: an unbumped edit fails, restored), and `node --check`s `index.mjs` and `admin-sw.js`. `smoke.js` loads admin and Jill's page logged out at 1440/390 and kiosk/booth at iPad widths (1024/820, 1440/820 — kiosk overflows at 390 px by design; it is not a phone page). Decisions: Jill's page stays separate from admin (big bugs only; functionality changes discussed with Jill first); the admin mobile/UX overhaul to-do is closed — improved incrementally, nothing outstanding. Lambda route tests added to the backlog.
 
 **First run on main found 31 problems, all fixed the same session:** 16 portrait course images capped at 1200 wide but 1627–2388 px tall (Color Theory 4, Post-Impressionism 10, Oil vs Acrylic 1, Pigments 1) resized to 1600 px long edge, q85, and those four courses rebuilt (only `og:image` dimensions changed); canonicals added to the five show pages and varied-readings, the five show pages added to `sitemap.xml`; `og:url`/`og:title`/`og:image` added to shipping.html; `study.html` `site-bar.css?v=1` → `?v=4`. Both checks pass on main.
 
@@ -1129,6 +1133,9 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [ ] **Course registry** — one file (`tools/study/courses.json` or fields in each course's settings JSON) holding lane, order, date range, card text and card image; generate `study.html`'s cards + JSON-LD and the `STUDY` array in `site-chrome.js` from it. Removes two hand edits per install and the missed-menu-entry bug (Japanese Woodblock Prints, Oct 30).
 - [ ] **`tools/study/install-course.js <slug>`** — copy bundle → resize images → build → check → smoke → commit on a branch, one command.
 - [ ] **Split this document** — keep "Start here", "What's Live", infrastructure and "Pending"; move the "Completed This Session" blocks to `CHANGELOG.md`.
+- [ ] **Lambda route tests** — `tools/lambda/test.js`: load `index.mjs` with stubbed DynamoDB/Square clients and assert the documented invariants: no token → 401; `JILL_TOKEN` rejected on every `/admin/*` route and `ADMIN_TOKEN` rejected on `/admin/jill/*`; online checkout never passes the Missouri location `LHXVQB0QCW9R1`; a gallery sale decrements `dna-gallery-stock`, not `dna-paintings`. Run from `check.js`. Half a day; its own session.
+- [x] **Service-worker bump enforced** (Nov 6 2026) — `check.js` fails when `admin.html` differs from `origin/main` and `admin-sw.js`'s `CACHE` does not; also `node --check`s `index.mjs` and `admin-sw.js`. (Deriving the cache name from a content hash in `deploy.yml` would remove the step entirely — David's call, since it edits the workflow.)
+- [x] **Gated pages in `smoke.js`** (Nov 6 2026) — admin, Jill's page, kiosk and booth are loaded logged-out at 1440/390: 0 console errors, no sideways scroll, gate present.
 - [ ] Deploy gate: once `check.js` is stable, run it in `deploy.yml` only when `study/`, `tools/study/` or `*.html` changed, so a false positive can't block an unrelated Lambda push.
 
 ### Next session — pick up here (from September 30 2026)
@@ -1202,7 +1209,7 @@ _David's instruction: don't track his tax filings or remind him to log sales —
 ### Ongoing
 
 - [ ] **Meta/Instagram Ads — launching now** — $25/week test campaign, 4-week minimum run. Setup and creative plan are in "Completed This Session (July 10 2026)" below. After 4 weeks: review per-ad results, double down on winners, pause losers, log spend under the Advertising expense category.
-- [ ] **Admin panel mobile/UX overhaul** — admin.html has grown to five dense tabs and is hard to use on iPad/iPhone (surfaced when trying to export the sales CSV on iPad). Ideas: split into more pages/views, rework tables for touch, make exports easier to reach on mobile. Scope TBD — discuss before building.
+- [x] **Admin panel mobile/UX overhaul** — closed Nov 6 2026 (David): the UI was improved incrementally over October; no functionality changes are needed. Not a to-do.
 - [ ] **Pinterest Ads** — ~$30/day minimum, paused (too expensive for now)
 
 ## On the Horizon

@@ -14,6 +14,8 @@ const OUT = path.join(__dirname, 'out');
 const FOCUS = process.argv[2] || null;
 const PORT = 8731;
 const BLOCK = /googletagmanager|google-analytics|facebook\.(com|net)|pinimg|pinterest|doubleclick|googleads/;
+/* Gated or tool pages: logged-out render only — load, no errors, no sideways scroll, gate or UI present. */
+const GATED = [['/admin.html', '#gate', [1440, 390]], ['/expenses-jill-nicholson.html', '#gate', [1440, 390]], ['/kiosk.html', 'body', [1024, 820]], ['/booth.html', 'body', [1440, 820]]];   // kiosk and booth are iPad tools, not phone pages
 const MAIN_PAGES = ['/', '/gallery.html', '/originals.html', '/shipping.html', '/varied-readings.html', '/study.html',
   '/art-westport-2026.html', '/lawrence-art-in-the-park-2026.html', '/overland-park-2026.html'];
 
@@ -131,6 +133,9 @@ async function courseCheck(page, tag, width) {
       if (u === '/' || u === '/study.html' || u === '/gallery.html' || FOCUS === 'main') await shot(`${u === '/' ? 'index' : u.replace(/[\/.]/g, '_').replace(/^_/, '').replace(/_html$/, '')}-${w}`);
     }
   }
+  for (const [u, sel, widths] of GATED) for (const w of widths) {
+    await visit(page, u, w, async (p, tag) => { if (!(await p.$(sel))) fail(`${tag}: ${sel} not present`); });
+  }
   /* index hero fits */
   await page.setViewportSize({ width: 1440, height: 900 }); await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'load' }); await page.waitForTimeout(800);
   const hero = await page.evaluate(() => { const i = document.querySelector('.hero img, #hero img, img[fetchpriority="high"]'); if (!i) return null; const b = i.getBoundingClientRect(); return { w: b.width, h: b.height, fits: b.width <= innerWidth && b.height <= innerHeight }; });
@@ -158,7 +163,7 @@ async function courseCheck(page, tag, width) {
   }
 
   await browser.close(); server.close();
-  console.log(`smoke: ${MAIN_PAGES.length} main pages, ${courses.length} courses × 3 pages, at 1440 and 390 px`);
+  console.log(`smoke: ${MAIN_PAGES.length} main pages, ${GATED.length} gated pages (logged out), ${courses.length} courses × 3 pages, at 1440 and 390 px`);
   if (notes.length) { console.log('\nNOTES'); notes.forEach((n) => console.log('  ' + n)); }
   if (fails.length) { console.log(`\nFAIL (${fails.length})`); fails.forEach((f) => console.log('  ' + f)); }
   else console.log('\nsmoke: PASS');
