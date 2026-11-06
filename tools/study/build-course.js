@@ -19,6 +19,8 @@
      imagesNote      optional: the start page's line about image rights (default: every image is public domain or CC0; "" leaves the line out)
    Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
    (this page's own label in place of themeLabel, e.g. History).
+   Work slides may carry "look" (the "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list →
+   img/<key>-detail.jpg if present (alt from "detailAlt", else "Detail of <title>") → divider → "bul".
 
    Paths below use the default basePath.
    Reads   study/art-history/<slug>/{<dataFiles>,credits.js,sources.js (optional)}
@@ -61,7 +63,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 18, bar: 4, guideCss: 15, guideJs: 11, search: 3 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 18, bar: 4, guideCss: 16, guideJs: 12, search: 3 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -137,6 +139,16 @@ const quote = (q) => (q ? `<blockquote><p>“${esc(q.q)}”</p><cite>${esc(q.by)
 const RULE = '<hr class="rule">';
 const crl = (k) => { const c = C[k]; return c ? `<p class="crl">Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(srcOf(c))}</a> · ${esc(c.license)}</p>` : ''; };
 const pic = (k, alt, capHtml) => { const d = dims(k); return `<div class="pic"><img src="${img(k)}" width="${d.w}" height="${d.h}" alt="${esc(alt)}" data-cap="${esc(capHtml)}" tabindex="0" fetchpriority="high"></div>`; };
+/* "Look at" list (work slides with `look`, model of Nov 5 2026): small label, the bullets, then the detail crop
+   img/<key>-detail.jpg when that file exists (full screen on click, like the main image; alt from the slide's
+   `detailAlt`, else "Detail of <title>"). Slides without `look` render exactly as before. */
+const detail = (s) => {
+  const file = path.join(IMG_DIR, s.key + '-detail.jpg');
+  if (!fs.existsSync(file)) return '';
+  const d = jpegSize(file), alt = s.detailAlt || `Detail of ${s.title}`;
+  return `<figure class="detail"><img src="${IMG_COURSE}/img/${s.key}-detail.jpg" width="${d.w}" height="${d.h}" alt="${esc(alt)}" data-cap="${esc(`${cap(s)} (detail)`)}" tabindex="0" loading="lazy"></figure>`;
+};
+const look = (s) => (s.look && s.look.length ? `<p class="lab">Look at</p><ul class="b look">${s.look.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>${detail(s)}${RULE}` : '');
 const wl = (keys) => `<ul class="wl">${keys.filter((k) => byKey[k] != null).map((k) => `<li><a class="wlink" href="${flat[byKey[k]].url}">${esc(flat[byKey[k]].d.title)}</a></li>`).join('')}</ul>`;
 const partLink = (f) => `<a href="${f.part.url}">${esc(f.hd.title)}</a>`;
 const themesOf = (key) => flat.filter((t) => t.kind === 'theme' && (t.d.works || []).includes(key));
@@ -163,9 +175,9 @@ function slideHtml(f) {
     const th = themesOf(d.key);
     const tail = (th.length ? `<p class="lab">${esc(THEME)}s</p><ul class="wl">${th.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.d.title)}</a></li>`).join('')}</ul>` : '') + crl(d.key);
     const head = `<p class="eyebrow">${esc(sec(f.hd.wk))}</p>${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}`;
-    if (d.lead) {   // artwork-first format: lead paragraph, bullets, then the subject
+    if (d.lead) {   // artwork-first format: lead paragraph, [Look at list + detail crop + divider], bullets, then the subject
       return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
-<p class="sum">${esc(d.lead)}</p>${bul(d.bul)}${d.subj ? RULE + (SUBJ ? `<p class="lab">${esc(SUBJ)}</p>` : '') + `<p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${tail}</div>`];
+<p class="sum">${esc(d.lead)}</p>${look(d)}${bul(d.bul)}${d.subj ? RULE + (SUBJ ? `<p class="lab">${esc(SUBJ)}</p>` : '') + `<p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${tail}</div>`];
     }
     return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
 <p class="fn"><b>Made for:</b> ${esc(d.fn)}</p><p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}${quote(d.quote)}${tail}</div>`];
@@ -201,7 +213,7 @@ function textOf(f) {
   if (f.kind === 'overview') { const o = d.overview; p.push(d.title, d.sub, o.sum, ...(o.bul || []), ...(o.terms || []).flat(), ...(o.cap || [])); }
   else if (f.kind === 'intro' || f.kind === 'credits') p.push(f.label);
   else if (f.kind === 'sources') p.push(f.label, SRCS.intro, ...SRCS.groups.flatMap((g) => g.items.map((i) => i.html.replace(/<[^>]+>/g, ''))));
-  else p.push(d.title, d.artist, d.date, d.det, d.lead, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.bul || []), ...(d.terms || []).flat(), d.subj, d.quote && d.quote.q);
+  else p.push(d.title, d.artist, d.date, d.det, d.lead, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.look || []), ...(d.bul || []), ...(d.terms || []).flat(), d.subj, d.quote && d.quote.q);
   return p.filter(Boolean).join(' · ');
 }
 const thumb = (f) => (f.kind === 'work' ? f.d.key : f.kind === 'theme' ? f.d.img : f.kind === 'overview' ? f.d.overview.img : null);

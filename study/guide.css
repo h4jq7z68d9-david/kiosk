@@ -223,3 +223,10 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .results .rdiv{display:flex;align-items:center;gap:8px;margin:10px 8px 6px;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
 .guide-page .results .rdiv::before,.guide-page .results .rdiv::after{content:"";flex:1;height:1px;background:var(--border)}
 .guide-page .results .rdiv span{white-space:nowrap}
+/* Work pages with a "Look at" list (Nov 5 2026): the label sits tight on its list; the detail crop is a small
+   left-aligned thumbnail under the list, full screen on click like the main image. Pages without `look` are unchanged. */
+.guide-page .lab+ul.look{margin-top:-6px}
+.guide-page .detail{margin:-4px 0 0;flex:none}
+.guide-page .detail img{display:block;width:auto;height:auto;max-width:min(100%,260px);max-height:180px;border:1px solid var(--border);border-radius:4px;cursor:zoom-in}
+/* the details line (medium · size · museum) wraps on narrow screens instead of forcing a sideways scroll */
+.guide-page .det{overflow-wrap:anywhere}

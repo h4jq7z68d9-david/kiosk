@@ -606,6 +606,12 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 -----
 
+## In Progress (November 5 2026) — "Look at" list and detail crop on study work pages (branch `study-look-list-detail-crop`, NOT on main)
+
+From the Art History Course Builder project (page model approved Nov 5 2026). `build-course.js`: a `work` slide may carry `look: []`; the page renders lead → "Look at" label + list → `img/<key>-detail.jpg` as a small thumbnail when that file exists (full screen on click; alt from `detailAlt`, else "Detail of <title>") → divider → `bul` with no label. Slides without `look` render exactly as before: a rebuild of all 12 courses changed only the two cache strings per page (`guideCss` 16, `guideJs` 12). `guide.css`: `.look` label spacing, `.detail` thumbnail, `.det` wraps anywhere. `guide.js`: detail crop opens the lightbox on its own (no stepping; Escape closes without navigating). `look` is in the search index. Inches with ¼ ½ ¾ in `det` confirmed clean at 390 px. Not done: WebP/srcset output (item d) — separate branch; the deploy workflow would also need `*.webp` in the S3 sync. Skill note for the course-builder projects: `tools/study/SKILL-UPDATE-2026-11-05.md`. Headless-tested on a throwaway fixture at 1440/390 px (fixture removed); waiting on David's approval before merging.
+
+-----
+
 ## Completed This Session (November 1 2026) — Study lightbox steps through images again (deployed Nov 1 2026)
 
 **David:** the full-screen image on study pages couldn't advance like the original guide's. Restored: ←/→ buttons (hidden ≤900 px, as before), arrow keys and swipe inside the lightbox step through every image in the course (items with a `thumb`, plus the current page's image); the next/previous page is fetched for its image and preloaded; closing goes to the page of the last image shown; buttons dim at the first/last image. Markup in `build-course.js` (`#lbp` / `#lbn`), behavior in `guide.js`, `.lb .nav:disabled` in `guide.css`. `guideJs` v11, `guideCss` v15, all 12 courses rebuilt (only the lightbox line and cache strings changed). New courses get it automatically from the generator — nothing per course. Tested headless at 1440 / 390 px; real iPhone swipe not yet confirmed.
