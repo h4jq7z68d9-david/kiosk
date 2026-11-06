@@ -88,22 +88,15 @@
     return lbCache[it.id];
   }
   function showLb(it, p) { lbAt = it; lbi.src = p.src; lbi.alt = p.alt; lbc.innerHTML = p.cap; const k = pics.indexOf(it); $('lbp').disabled = k <= 0; $('lbn').disabled = k < 0 || k >= pics.length - 1; }
-  function openLb() { lbDetail = null; picOf(cur).then((p) => { if (!p) return; showLb(cur, p); lb.hidden = false; $('lbx').focus(); stepLb(0); }); }
+  function openLb() { picOf(cur).then((p) => { if (!p) return; showLb(cur, p); lb.hidden = false; $('lbx').focus(); stepLb(0); }); }
   function stepLb(d) {
-    if (lbDetail) return;
     const k = pics.indexOf(lbAt); if (k < 0) return;
     if (d === 0) { [pics[k - 1], pics[k + 1]].forEach((x) => { if (x) picOf(x).then((p) => { if (p) new Image().src = p.src; }); }); return; }
     const it = pics[k + d]; if (!it) return; const seq = ++lbSeq;
     picOf(it).then((p) => { if (!p || seq !== lbSeq || lb.hidden) return; showLb(it, p); stepLb(0); });
   }
-  let lbDetail = null;   // the detail crop (.detail img) shown full screen; it is outside the course's image sequence
-  function closeLb() { lb.hidden = true; lbSeq++; if (lbDetail) { const d = lbDetail; lbDetail = null; d.focus(); return; } if (lbAt !== cur) { location.href = lbAt.url; return; } const im = document.querySelector('.pic img'); im && im.focus(); }
+  function closeLb() { lb.hidden = true; lbSeq++; if (lbAt !== cur) { location.href = lbAt.url; return; } const im = document.querySelector('.pic img'); im && im.focus(); }
   document.querySelectorAll('.pic img').forEach((im) => { im.onclick = openLb; im.onkeydown = (e) => { if (e.key === 'Enter') openLb(); }; });
-  /* detail crop: full screen on its own, no stepping to other images */
-  document.querySelectorAll('.detail img').forEach((im) => {
-    const open = () => { lbDetail = im; lbAt = cur; lbi.src = im.src; lbi.alt = im.alt; lbc.innerHTML = im.dataset.cap || ''; $('lbp').disabled = true; $('lbn').disabled = true; lb.hidden = false; $('lbx').focus(); };
-    im.onclick = open; im.onkeydown = (e) => { if (e.key === 'Enter') open(); };
-  });
   lb.onclick = (e) => { if (e.target === lb || e.target === lbi) closeLb(); }; $('lbx').onclick = closeLb;
   if ($('lbp')) { $('lbp').onclick = (e) => { e.stopPropagation(); stepLb(-1); }; $('lbn').onclick = (e) => { e.stopPropagation(); stepLb(1); }; }
 
