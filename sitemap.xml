@@ -21,6 +21,31 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://davidnicholsonart.com/art-westport-2025.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://davidnicholsonart.com/art-westport-2026.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://davidnicholsonart.com/lawrence-art-in-the-park-2025.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://davidnicholsonart.com/lawrence-art-in-the-park-2026.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://davidnicholsonart.com/overland-park-2026.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://davidnicholsonart.com/shipping.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
