@@ -15,10 +15,10 @@
     { action: 'guestbook', label: 'guest book' },
     { action: 'contact', label: 'contact' }
   ];
-  /* Study courses, listed under "study" in the menu on study pages only.
-     Technique in study.html card order; art history in date order (same as the timeline).
-     Adding a course: add one line here. */
+  /* Study courses under "study" in the menu, and the next-course chain. Generated from tools/study/courses.json
+     by tools/study/build-registry.js (Nov 6 2026) — add a course to the registry, run the script, rebuild courses. */
   var STUDY = [
+  /* STUDY:START */
     { group: 'art history', href: '/study.html' },
     { href: '/study/art-history/classical-myth.html', label: 'classical myth in art', section: '/study/art-history/classical-myth/' },
     { href: '/study/art-history/japanese-woodblock-prints.html', label: 'japanese woodblock prints', section: '/study/art-history/japanese-woodblock-prints/' },
@@ -33,6 +33,7 @@
     { href: '/study/composition.html', label: 'composition', section: '/study/composition/' },
     { href: '/study/pigments-and-materials.html', label: 'pigments and materials', section: '/study/pigments-and-materials/' },
     { href: '/study/oil-vs-acrylic.html', label: 'oil vs acrylic', section: '/study/oil-vs-acrylic/' }
+  /* STUDY:END */
   ];
   var FOOTER = [
     { href: '/gallery.html', label: 'gallery' },

@@ -1,0 +1,144 @@
+{
+ "_doc": "Course registry — the one place a course is listed. tools/study/build-registry.js turns it into the STUDY array in site-chrome.js (menu, next-course chain) and the cards + JSON-LD in study.html. Order within a lane is the order here. Art history: dates shown on the timeline; technique: \"course · N parts\" is counted from the data.",
+ "lanes": [
+  {
+   "id": "art-history",
+   "group": "art history",
+   "href": "/study.html"
+  },
+  {
+   "id": "technique",
+   "group": "technique",
+   "href": "/study.html#technique"
+  }
+ ],
+ "courses": [
+  {
+   "slug": "classical-myth",
+   "lane": "art-history",
+   "name": "Classical Myth in Art",
+   "label": "classical myth in art",
+   "dates": "c. 575 bce–1903",
+   "card": {
+    "img": "h1_aphrodite",
+    "text": "the greek and roman gods and heroes in 60 paintings, sculptures, and vases, across 7 modules."
+   }
+  },
+  {
+   "slug": "japanese-woodblock-prints",
+   "lane": "art-history",
+   "name": "Japanese Woodblock Prints",
+   "label": "japanese woodblock prints",
+   "dates": "c. 1680–1927",
+   "card": {
+    "img": "hokusai-red-fuji",
+    "text": "ukiyo-e from moronobu and harunobu to utamaro, sharaku, hokusai, hiroshige and kuniyoshi."
+   }
+  },
+  {
+   "slug": "romanticism",
+   "lane": "art-history",
+   "name": "Romanticism",
+   "label": "romanticism",
+   "dates": "1760s–1860s",
+   "card": {
+    "img": "gericault-raft-medusa",
+    "text": "sixty-four works trace romanticism from fuseli, blake and goya to géricault, delacroix, turner, constable, friedrich and the hudson river school."
+   }
+  },
+  {
+   "slug": "realism",
+   "lane": "art-history",
+   "name": "Realism",
+   "label": "realism",
+   "dates": "1830s–1890s",
+   "card": {
+    "img": "courbet-burial-at-ornans",
+    "text": "forty-nine works trace realism from the barbizon painters, courbet, millet and daumier to menzel, repin, homer, eakins and tanner."
+   }
+  },
+  {
+   "slug": "impressionism",
+   "lane": "art-history",
+   "name": "Impressionism",
+   "label": "impressionism",
+   "dates": "1860s–1890s",
+   "card": {
+    "img": "monet-impression",
+    "text": "from the paris salon and manet to monet’s water lilies in 60 works, across 6 parts."
+   }
+  },
+  {
+   "slug": "post-impressionism",
+   "lane": "art-history",
+   "name": "Post-Impressionism",
+   "label": "post-impressionism",
+   "dates": "1880s–1900s",
+   "card": {
+    "img": "vangogh-starry-night",
+    "text": "from seurat and cézanne to van gogh, gauguin, the nabis and the symbolists in 74 works, across 7 parts."
+   }
+  },
+  {
+   "slug": "fauvism-and-expressionism",
+   "lane": "art-history",
+   "name": "Fauvism and Early Expressionism",
+   "label": "fauvism and early expressionism",
+   "dates": "1905–1918",
+   "card": {
+    "img": "matisse-the-green-line",
+    "text": "fifty-four works trace fauvism and early expressionism from matisse and derain to die brücke, the blue rider and vienna."
+   }
+  },
+  {
+   "slug": "color-theory",
+   "lane": "technique",
+   "name": "Color Theory",
+   "label": "color theory",
+   "card": {
+    "img": "ct-complementary",
+    "text": "a short course on color for painters, from light and the eye to harmony, contrast and pigment, with historic plates, original diagrams and public-domain paintings."
+   }
+  },
+  {
+   "slug": "value-and-light",
+   "lane": "technique",
+   "name": "Value and Light",
+   "label": "value and light",
+   "card": {
+    "img": "merrifield-pl09",
+    "text": "a short course on how light and dark build form, from the value scale and light on form to light sources, edges and chiaroscuro, with plates from two classic public-domain drawing books and public-domain example works."
+   }
+  },
+  {
+   "slug": "composition",
+   "lane": "technique",
+   "name": "Composition",
+   "label": "composition",
+   "card": {
+    "img": "poore-fundamental-forms",
+    "text": "a short course on how painters arrange a picture, from the frame and value massing to balance, movement and unity, with plates from two classic public-domain books and public-domain example works."
+   }
+  },
+  {
+   "slug": "pigments-and-materials",
+   "lane": "technique",
+   "name": "Pigments and Materials",
+   "label": "pigments and materials",
+   "card": {
+    "img": "pm-binder",
+    "text": "a short course on what paintings are made of, from ancient pigments to binders, supports and grounds, with historic plates, original diagrams and public-domain works."
+   }
+  },
+  {
+   "slug": "oil-vs-acrylic",
+   "lane": "technique",
+   "name": "Oil vs Acrylic",
+   "label": "oil vs acrylic",
+   "card": {
+    "img": "oa-binders",
+    "text": "a short course on how oil and acrylic paint differ, from how each dries to how each ages, with historic plates, original diagrams and example paintings."
+   }
+  }
+ ]
+}

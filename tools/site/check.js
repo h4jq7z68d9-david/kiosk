@@ -188,6 +188,13 @@ for (const slug of courses) {
   report[slug] = { pages: built, works, looks, images: files, mb: +(bytes / 1048576).toFixed(1), parts: S.handouts.length };
 }
 
+/* ---------- course registry: site-chrome.js STUDY array and study.html cards/JSON-LD must match tools/study/courses.json ---------- */
+{
+  const { spawnSync } = require('child_process');
+  const r = spawnSync(process.execPath, ['tools/study/build-registry.js', '--check'], { cwd: ROOT, encoding: 'utf8' });
+  if (r.status !== 0) err((r.stderr || r.stdout || 'build-registry --check failed').trim());
+}
+
 /* ---------- admin service worker: deploy.yml stamps CACHE from a content hash; here just sanity ---------- */
 {
   const { execSync } = require('child_process');
