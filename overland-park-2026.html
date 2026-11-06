@@ -14,37 +14,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #ffffff; --surface: #eef1f4; --border: #dfe4e9; --border-mid: #cfd6dd;
-  --ink: #2b3640; --ink2: #586470; --ink3: #697480;
-  --accent: #2f4f75; --accent-hi: #3d5f88; --accent-ink: #33557d;
-  --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif; --nav-h: 62px;
-}
+
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   background: var(--bg); color: var(--ink); font-family: var(--font);
   font-weight: 300; -webkit-font-smoothing: antialiased;
   min-height: 100vh; display: flex; flex-direction: column; padding-top: var(--nav-h);
 }
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 80; height: var(--nav-h); background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 12px; }
-@media (min-width: 701px) { nav { padding: 0 40px; } footer { padding-left: 40px; padding-right: 40px; } }
-@media (min-width: 1100px) { nav { padding: 0 60px; } footer { padding-left: 60px; padding-right: 60px; } }
-.nav-title { font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: 0.05em; text-transform: lowercase; white-space: nowrap; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; text-decoration: none; display: flex; align-items: center; height: 100%; }
-.nav-cart { position: relative; background: none; border: none; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; text-decoration: none; }
-.nav-cart svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.nav-cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #fff; border-radius: 20px; font-size: 10px; font-weight: 600; padding: 1px 5px; display: none; min-width: 18px; text-align: center; }
-.nav-cart-count.on { display: block; }
-.nav-links { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.nav-btn { background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 12px 26px; font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff; cursor: pointer; white-space: nowrap; transition: background 0.2s, border-color 0.2s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-sizing: border-box; }
-.nav-btn:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
-@media (max-width: 700px) { .nav-title { font-size: 17px; } }
-@media (max-width: 500px) {
-  .nav-title { font-size: 14px; letter-spacing: 0.03em; }
-  .nav-btn { font-size: 11px; padding: 10px 22px; letter-spacing: 0.08em; min-height: 44px; }
-  .nav-btn .btn-text-long { display: none; }
-  .nav-btn .btn-text-short { display: inline; }
-}
-@media (min-width: 501px) { .btn-text-short { display: none; } }
+
+@media (min-width: 701px) { footer { padding-left: 40px; padding-right: 40px; } }
+@media (min-width: 1100px) { footer { padding-left: 60px; padding-right: 60px; } }
+
 main { flex: 1; width: 100%; max-width: 780px; margin: 0 auto; padding: 0 40px; box-sizing: border-box; }
 .lead { margin: 48px 0 8px; text-align: center; }
 .show-title { font-size: clamp(26px, 5vw, 40px); font-weight: 700; letter-spacing: -0.01em; text-transform: lowercase; color: var(--ink); line-height: 1.15; }
@@ -72,21 +52,14 @@ footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 64px 20
   footer { padding: 48px 20px 40px; }
 }
 </style>
+<link rel="stylesheet" href="/site-tokens.css?v=2">
+<link rel="stylesheet" href="/site-bar.css?v=5">
 <link rel="stylesheet" href="/site-chrome.css?v=18">
 </head>
 <body>
 
-<nav>
-  <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h6M2 12h3M2 18h7" stroke-width="2" stroke-linecap="square"/><rect x="9" y="2.5" width="12" height="7" fill="#D62A1E" stroke="none"/><rect x="6" y="9.5" width="9" height="5" fill="#F2B705" stroke="none"/><rect x="10" y="14.5" width="12" height="7" fill="#1F57D6" stroke="none"/></svg></button>
-  <a class="nav-title" href="/index.html">david nicholson</a>
-  <div class="nav-links">
-    <a class="nav-ig" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="igGrad" cx="30%" cy="107%" r="150%"><stop offset="0" stop-color="#fdf497"/><stop offset=".05" stop-color="#fdf497"/><stop offset=".45" stop-color="#fd5949"/><stop offset=".6" stop-color="#d6249f"/><stop offset=".9" stop-color="#285AEB"/></radialGradient></defs><rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="url(#igGrad)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="12" r="3.3" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="16.6" cy="7.4" r="1.1" fill="#fff"/></svg></a>
-    <a class="nav-cart" href="/gallery.html?cart=1" aria-label="cart">
-      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span class="nav-cart-count" id="cart-count">0</span>
-    </a>
-  </div>
-</nav>
+<nav data-chrome-nav></nav>
+<script src="/site-bar.js?v=5"></script>
 
 <!-- SITE MENU -->
 <div id="menu-scrim"></div>

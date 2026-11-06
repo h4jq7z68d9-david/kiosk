@@ -53,15 +53,10 @@ src="https://www.facebook.com/tr?id=1480355107052738&ev=PageView&noscript=1"
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #ffffff; --surface: #eef1f4; --border: #dfe4e9;
-  --ink: #2b3640; --ink2: #586470; --ink3: #697480;
-  --accent: #2f4f75; --accent-hi: #3d5f88; --accent-lo: #274261; --accent-ink: #33557d;
-  --font: 'Jost', Futura, 'Trebuchet MS', Arial, sans-serif;
-  --wrap: 1200px;
-}
+:root { --accent-lo: #274261; --wrap: 1200px; }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+body { padding-top: var(--nav-h); }
 body { background: var(--bg); color: var(--ink); font-family: var(--font); font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
@@ -69,30 +64,10 @@ img { display: block; max-width: 100%; }
 @media (min-width: 900px) { .wrap { padding: 0 48px; } }
 
 /* ---------- nav ---------- */
-nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 20px; }
-@media (min-width: 701px) { nav { padding: 0 40px; } }
-@media (min-width: 1100px) { nav { padding: 0 60px; } }
-@media (max-width: 500px) { nav { padding: 0 16px; } }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 62px; }
-.brand { font-size: 19px; font-weight: 500; letter-spacing: 0.05em; text-transform: lowercase; height: 100%; display: flex; align-items: center; margin-right: auto; white-space: nowrap; }
-@media (max-width: 360px) { .brand { font-size: 16px; } }
-.nav-links { display: flex; align-items: center; gap: 28px; }
+
 .pill { display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: #fff !important; background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 9px 22px; min-height: 40px; box-sizing: border-box; transition: background 0.2s, border-color 0.2s; }
 .pill:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
 /* Easter egg: hover the nav instagram pill ~1.5s to reveal the story. Mouse/trackpad only — touch devices have no hover. */
-.ig-egg { position: absolute; top: calc(100% + 10px); right: 0; width: 270px; padding: 12px 14px; background: var(--ink); color: #f1f3f5; border-radius: 8px; font-size: 13px; font-weight: 300; line-height: 1.5; letter-spacing: 0.01em; text-transform: none; text-align: left; white-space: normal; pointer-events: none; opacity: 0; transform: translateY(-4px); transition: opacity 0.2s, transform 0.2s; transition-delay: 0s; z-index: 101; }
-.ig-egg em { font-style: italic; }
-.ig-egg svg { width: 15px; height: 15px; vertical-align: -3px; margin-left: 2px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-@media (hover: hover) and (pointer: fine) {
-  nav .pill.has-egg { position: relative; }
-  nav .pill.has-egg:hover .ig-egg { opacity: 1; transform: none; transition-delay: 1.5s; }
-}
-@media (max-width: 500px) {
-  nav .pill { font-size: 11px; padding: 6px 16px; letter-spacing: 0.08em; min-height: 40px; }
-  nav .pill .btn-text-long { display: none; }
-  nav .pill .btn-text-short { display: inline; }
-}
-@media (min-width: 501px) { .btn-text-short { display: none; } }
 
 /* ---------- hero ---------- */
 /* The whole painting, never cropped, in a navy outline. The box takes the painting's own
@@ -177,21 +152,16 @@ footer .wrap { padding: 0 20px; }
   .ev-past .chev { transition: none; }
 }
 </style>
+<link rel="stylesheet" href="/site-tokens.css?v=2">
+<link rel="stylesheet" href="/site-bar.css?v=5">
 <link rel="stylesheet" href="/site-chrome.css?v=18">
 <link rel="icon" type="image/png" sizes="96x96" href="favicon96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon180.png">
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <button class="nav-menu" type="button" id="menu-btn" aria-label="menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h6M2 12h3M2 18h7" stroke-width="2" stroke-linecap="square"/><rect x="9" y="2.5" width="12" height="7" fill="#D62A1E" stroke="none"/><rect x="6" y="9.5" width="9" height="5" fill="#F2B705" stroke="none"/><rect x="10" y="14.5" width="12" height="7" fill="#1F57D6" stroke="none"/></svg></button>
-    <a class="brand" href="/">david nicholson</a>
-    <div class="nav-links">
-      <a class="pill has-egg" href="https://instagram.com/dave_nichol_son" target="_blank" rel="noopener"><span class="btn-text-long">follow on instagram</span><span class="btn-text-short">instagram</span><span class="ig-egg" aria-hidden="true">This button is here because one time someone scanned a business card and they were upset that it <em>only</em> went to my website and they didn't see <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg></span></a>
-    </div>
-  </div>
-</nav>
+<nav data-chrome-nav data-ig="pill" data-cart="off"></nav>
+<script src="/site-bar.js?v=5"></script>
 
 <!-- SITE MENU -->
 <div id="menu-scrim"></div>

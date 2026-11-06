@@ -22,3 +22,18 @@ nav[data-chrome-nav] .btn-text-short { display: none; }
 }
 /* the menu panel follows the theme on pages that use the shared bar */
 nav[data-chrome-nav] ~ #menu-panel { background: var(--panel); }
+/* homepage variant (data-ig="pill"): the "follow on instagram" pill with its hidden note; title stays 19px on phones */
+nav[data-chrome-nav] .pill { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: lowercase; color: var(--on-accent) !important; background: var(--accent); border: 1px solid var(--accent); border-radius: 22px; padding: 9px 22px; min-height: 40px; box-sizing: border-box; text-decoration: none; white-space: nowrap; transition: background 0.2s, border-color 0.2s; }
+nav[data-chrome-nav] .pill:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
+nav[data-chrome-nav] .ig-egg { position: absolute; top: calc(100% + 10px); right: 0; width: 270px; padding: 12px 14px; background: var(--ink); color: #f1f3f5; border-radius: 8px; font-size: 13px; font-weight: 300; line-height: 1.5; letter-spacing: 0.01em; text-transform: none; text-align: left; white-space: normal; pointer-events: none; opacity: 0; transform: translateY(-4px); transition: opacity 0.2s, transform 0.2s; transition-delay: 0s; z-index: 101; }
+nav[data-chrome-nav] .ig-egg em { font-style: italic; }
+nav[data-chrome-nav] .ig-egg svg { width: 15px; height: 15px; vertical-align: -3px; margin-left: 2px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (hover: hover) and (pointer: fine) { nav[data-chrome-nav] .pill.has-egg:hover .ig-egg { opacity: 1; transform: none; transition-delay: 1.5s; } }
+nav[data-chrome-nav][data-ig="pill"] .nav-title { font-size: 19px; letter-spacing: 0.05em; }
+@media (max-width: 500px) {
+  nav[data-chrome-nav][data-ig="pill"] { padding: 0 16px; }
+  nav[data-chrome-nav] .pill { font-size: 11px; padding: 6px 16px; letter-spacing: 0.08em; }
+  nav[data-chrome-nav] .pill .btn-text-long { display: none; }
+  nav[data-chrome-nav] .pill .btn-text-short { display: inline; }
+}
+@media (max-width: 360px) { nav[data-chrome-nav][data-ig="pill"] .nav-title { font-size: 16px; } }
