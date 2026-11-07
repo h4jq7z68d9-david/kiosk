@@ -1,65 +1,350 @@
-/* Classical Myth in Art, condensed edition (Oct 2026). Facts from museum records; see sources.js. */
 window.SITE = {
-  title: 'Classical Myth in Art',
-  sections: { 1: 'Gods and stories', 2: 'Heroes and Troy', 3: 'Reading myth' },
-  handouts: []
+ "title": "Classical Myth in Art",
+ "sections": {
+  "1": "Greece to Paris, 530 BCE–1890"
+ },
+ "handouts": [
+  {
+   "n": 1,
+   "wk": 1,
+   "title": "What to Look For",
+   "sub": "The myths in eighteen works",
+   "overview": {
+    "img": "h1_aphrodite",
+    "cap": [
+     "Sandro Botticelli",
+     "The Birth of Venus",
+     "about 1485"
+    ],
+    "sum": "The gods and heroes of Greece and Rome have been painted and carved for some 2,400 years. These eighteen works run from an Athenian wine cup of about 530 BCE to a Paris studio picture of about 1890, and each shows one way to recognize the myth, and the maker, from what is on the surface.",
+    "bul": []
+   },
+   "slides": [
+    {
+     "type": "work",
+     "key": "h9_exekias",
+     "artist": "Exekias",
+     "title": "Dionysus Cup",
+     "date": "about 530 BCE",
+     "det": "Black-figure terracotta, about 12 in. across. Staatliche Antikensammlungen, Munich",
+     "lead": "Exekias (Athenian potter and painter, 6th century BCE). Look at the figures: they are flat black silhouettes, with the detail scratched into them.",
+     "look": [
+      "Ship, god, grapes and dolphins are solid black shapes against the orange-red ground.",
+      "Lines inside the shapes, like the grape bunches and the ship's planking, are cut through the black to the clay below.",
+      "The sail is the one pale shape, so it reads as a hole of light in the upper half of the bowl.",
+      "The design has no ground line: the dolphins circle the ship at every angle, so the whole inside of the cup is sea."
+     ],
+     "bul": [
+      "The god is Dionysus; the dolphins are the pirates he turned into fish. Only the inside is shown here."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h12_antaios",
+     "artist": "Euphronios",
+     "title": "Krater with Heracles Wrestling Antaeus",
+     "date": "about 515–510 BCE",
+     "det": "Red-figure terracotta, 18 in. high. Louvre, Paris",
+     "lead": "Euphronios (Athenian painter, 6th–5th century BCE). Look at the two wrestlers: they are drawn with a brush, in thin lines on the reddish clay, and the black is the background.",
+     "look": [
+      "Muscles, ribs and knees are laid out as fine dark lines on the clay, drawn rather than scratched.",
+      "The two bodies cross as diagonals, Heracles pushing from the left, Antaeus flattened under him.",
+      "Antaeus's hair is a rough fringe and Heracles's is a cap of tiny raised dots, so the two heads read differently at a glance.",
+      "The women at either side rise upright in long dress folds, arms out, and frame the struggle between them."
+     ],
+     "bul": [
+      "Heracles kneels and strangles Antaeus; three women flee. Heracles's club, quiver and lion skin are drawn at the left."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h1_poseidon",
+     "artist": "Greek, sculptor unknown",
+     "title": "Bronze God from Cape Artemision",
+     "date": "about 460 BCE",
+     "det": "Bronze, 82 1/4 in. high. National Archaeological Museum, Athens",
+     "lead": "Look at the pose: the whole body is one wide stance, arms stretched out to balance a throw that is about to happen.",
+     "look": [
+      "The arms reach almost the figure's full height side to side, so the statue is as wide as it is tall.",
+      "Both feet are planted wide, one leg bent and one straight, a stride caught mid-step.",
+      "Chest and stomach are modelled as broad, firm planes, with no strain in the face.",
+      "The beard is a mass of tight curls and the hair a flat braid, the only fine detail on a plain body."
+     ],
+     "bul": [
+      "Nothing is in either hand, so it is read as Zeus with a thunderbolt or Poseidon with a trident. It was pulled from the sea off Euboea."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h1_apollo",
+     "artist": "Roman, after a Greek bronze",
+     "title": "Apollo Belvedere",
+     "date": "early 2nd century CE",
+     "det": "Marble. Vatican Museums, Vatican City",
+     "lead": "Look at the line of the body: it bends in a slow S from the turned head down through the hip to the back foot.",
+     "look": [
+      "The head turns one way while the outstretched arm reaches the other, so the figure twists instead of facing you square.",
+      "One leg carries the weight and the other trails, which tips the hips and starts the curve.",
+      "The cloak hangs from the shoulder in deep, shadowed folds that set off the smooth skin beside them.",
+      "The surface is worked to an even white, and the face stays calm; nothing in the carving suggests effort."
+     ],
+     "bul": [
+      "A Roman copy of a Greek bronze of about 330 BCE. Apollo has just loosed an arrow; the outstretched hand once held the bow."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h6_milo",
+     "artist": "Greek, sculptor unknown",
+     "title": "Venus de Milo",
+     "date": "about 150–125 BCE",
+     "det": "Parian marble, 80 1/4 in. high. Louvre, Paris",
+     "lead": "Look at the twist: the hips turn one way and the shoulders the other, so the figure is a spiral you have to walk around.",
+     "look": [
+      "The weight is on one hip, so the stomach curves and one side of the waist folds in.",
+      "The torso is carved as rounded, weighty masses, with soft transitions and no hard edges.",
+      "The cloth bunches in thick ridges at the hips, a heavy block that holds the smooth body above it up.",
+      "The skin surface is slightly grainy, so it catches light more gently than a polish would."
+     ],
+     "bul": [
+      "Carved in two blocks joined at the hips. Both arms are missing, all but a stub."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h1_aphrodite",
+     "artist": "Sandro Botticelli",
+     "title": "The Birth of Venus",
+     "date": "about 1485",
+     "det": "Tempera on canvas, 68 × 109 3/4 in. Uffizi Gallery, Florence",
+     "lead": "Sandro Botticelli (Italian, 1445–1510). Look at the outlines: every figure is drawn with a clean contour, and the colour inside is nearly flat.",
+     "look": [
+      "A dark line runs round the goddess's body, hair and shell, so she reads as a cut-out shape on the sea.",
+      "The sea is a sheet of pale green with small white V-marks for waves, more pattern than water.",
+      "The figures hardly cast shadows, and the light comes from nowhere in particular.",
+      "Hair, cloaks and falling roses are pulled into long curling lines that all show the same wind, blowing in from the left."
+     ],
+     "bul": [
+      "Venus comes ashore on a shell, blown by the wind gods; the woman at right holds out her cloak."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h6_actaeon",
+     "artist": "Titian",
+     "title": "Diana and Actaeon",
+     "date": "1556–59",
+     "det": "Oil on canvas, 72 3/4 × 79 1/2 in. The National Gallery, London, and National Galleries of Scotland",
+     "lead": "Titian (Italian, about 1488–1576). Look at how the picture is split: the hunter stands alone at the left and the goddess's group fills the right.",
+     "look": [
+      "A pulled-back red curtain and a stone pillar divide the canvas into two unequal halves.",
+      "The hunter's raised hand is higher than any head in the picture; the bathers' heads sit lower, bunched across the right.",
+      "The pale bodies are packed together in the lower right, so the eye lands there after the hunter.",
+      "The blue sky shows mainly through the arch, a bright patch that fills the gap between the two sides."
+     ],
+     "bul": [
+      "One of six myth paintings for Philip II of Spain, known as the poesie, with subjects from Ovid."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h5_europa",
+     "artist": "Titian",
+     "title": "The Rape of Europa",
+     "date": "1559–62",
+     "det": "Oil on canvas, 70 × 80 3/4 in. Isabella Stewart Gardner Museum, Boston",
+     "lead": "Look at the brushwork: the red scarf, the clouds and the water are dragged on in loose strokes that never tidy up into detail.",
+     "look": [
+      "The scarf at upper right is a few wide sweeps of pink and white that stay visible as strokes.",
+      "The distant mountains and shore are smudged into the sky with almost no edge between them.",
+      "The bull's head, the woman and the cupids are brought to a finish; sky, water and shore are left open.",
+      "Her pose is a loose diagonal across the lower right, legs thrown one way and arm the other."
+     ],
+     "bul": [
+      "Also painted for Philip II; signed at lower left, under the cupid on the dolphin."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h9_bacchus",
+     "artist": "Caravaggio",
+     "title": "Bacchus",
+     "date": "about 1598",
+     "det": "Oil on canvas, 37 1/2 × 33 1/2 in. Uffizi Gallery, Florence",
+     "lead": "Caravaggio (Italian, 1571–1610). Look at the light: one source from the upper left falls on skin, cloth and fruit, and the wall behind drops away into brown.",
+     "look": [
+      "The bare shoulder at left is the brightest patch in the picture, and the face is turned so its shaded side falls away from it.",
+      "The white drapery is modelled in big folds with hard lights and deep creases, like carved marble.",
+      "The fruit bowl is painted as closely as the face, with bruises and wormholes left in.",
+      "The wine glass is held out toward you, at the front edge of the picture."
+     ],
+     "bul": [
+      "A youth crowned with vine leaves as the wine god, offering a glass."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h3_phaeton",
+     "artist": "Peter Paul Rubens",
+     "title": "The Fall of Phaeton",
+     "date": "about 1604–05, probably reworked about 1606–08",
+     "det": "Oil on canvas, 38 3/4 × 51 1/2 in. National Gallery of Art, Washington",
+     "lead": "Peter Paul Rubens (Flemish, 1577–1640). Look at the composition: everything tumbles along one diagonal, from the rearing horse at upper right down to the tangle of horses at lower left.",
+     "look": [
+      "Horses, chariot and bodies are bunched into a single swirling mass with no still point.",
+      "Shafts of light cut across the scene from the upper right, slicing through the clouds.",
+      "Figures at the edges are cropped by the frame, as if the action spills out of the picture.",
+      "The paint is thin and sketchy in the clouds and thicker on the horses, so the centre has the most weight."
+     ],
+     "bul": [
+      "The sun's chariot breaks apart; the butterfly-winged women at left are the seasons, in terror."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h15_laocoon",
+     "artist": "El Greco",
+     "title": "Laocoön",
+     "date": "about 1610–14",
+     "det": "Oil on canvas, 54 × 68 in. National Gallery of Art, Washington",
+     "lead": "El Greco (Greek, 1541–1614). Look at the shapes of the bodies: they are stretched long and thin, and their edges flicker.",
+     "look": [
+      "Legs and torsos are pulled out past natural length, so the figures look taller than they could stand.",
+      "The flesh is grey-white with streaks of darker grey, lit from no clear direction.",
+      "The sky is painted in broken, sweeping strokes of blue, grey and white, as restless as the figures.",
+      "The city sits small in the middle distance, in hard little shapes, while the figures loom huge in front."
+     ],
+     "bul": [
+      "The Trojan priest and his sons are attacked by snakes; the city behind is Toledo."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h1_hephaestus",
+     "artist": "Diego Velázquez",
+     "title": "Vulcan's Forge",
+     "date": "1630",
+     "det": "Oil on canvas, 87 3/4 × 114 1/4 in. Museo del Prado, Madrid",
+     "lead": "Diego Velázquez (Spanish, 1599–1660). Look at the paint handling: the god at left is a glow of thin, quick strokes, while the smiths are built up solidly.",
+     "look": [
+      "Rays around Apollo's head are flicked on in short pale lines over the wall.",
+      "His orange robe is painted in long fluid strokes, with the folds barely described.",
+      "The smiths' backs and arms are modelled firmly in warm light and cool shadow, every muscle in place.",
+      "The space is made by the figures: each stands at a different depth, and the room recedes behind them."
+     ],
+     "bul": [
+      "Apollo tells the smith god that his wife is unfaithful; the workers freeze at the news."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h9_bernini",
+     "artist": "Rembrandt",
+     "title": "The Abduction of Proserpina",
+     "date": "about 1630–31",
+     "det": "Oil on oak panel, 33 1/4 × 31 1/4 in. Gemäldegalerie, Berlin",
+     "lead": "Rembrandt (Dutch, 1606–1669). Look at the surface: the lit parts are thick, textured paint, and the rest sinks into a dark ground.",
+     "look": [
+      "The woman's dress and the chariot are built up in crusted, pale strokes.",
+      "The whole right half is near-black, with only a horse's rump and some foliage picked out.",
+      "The sky at upper left is a block of pure blue against which the dark trees are silhouetted.",
+      "The light runs from the blue corner down to the horses, so the eye travels out of the day and into the dark."
+     ],
+     "bul": [
+      "Pluto drags the girl down to the underworld; her companions cling to her cloak."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h15_paris",
+     "artist": "Peter Paul Rubens",
+     "title": "The Judgement of Paris",
+     "date": "probably 1632–35",
+     "det": "Oil on panel, probably oak, 57 × 76 1/4 in. The National Gallery, London",
+     "lead": "Look at the colour: three warm pink bodies stand against cool greens and greys, with strong red held to the cloaks at the edges and the robe of the nude seen from behind.",
+     "look": [
+      "Each nude is a slightly different pink, from cool and pearly at left to golden in the centre.",
+      "The evening sky behind them grades from yellow at the horizon to grey-blue above.",
+      "Silk, velvet, feathers and hair are painted with soft edges that blur into the flesh beside them.",
+      "The line of figures runs across the picture like a frieze, with the landscape opening on the right."
+     ],
+     "bul": [
+      "Paris hands the apple to Venus, in the centre; the owl marks Minerva at left and the peacock Juno at right."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h14_ingres",
+     "artist": "Jean-Auguste-Dominique Ingres",
+     "title": "Oedipus Explains the Riddle of the Sphinx",
+     "date": "1808",
+     "det": "Oil on canvas, 74 1/2 × 56 3/4 in. Louvre, Paris",
+     "lead": "Jean-Auguste-Dominique Ingres (French, 1780–1867). Look at the edge of the body: a single unbroken contour, drawn as if with a pen, with no visible brushwork inside it.",
+     "look": [
+      "The figure is in strict profile, so the outline from brow to heel reads as one continuous line.",
+      "Skin is smoothed to an even, waxy finish.",
+      "The lit body stands against a dark cave, which makes the contour sharper still.",
+      "Colour is kept to a few flat notes: tan skin, red cloth, ochre rock, blue sky."
+     ],
+     "bul": [
+      "Oedipus answers the Sphinx's riddle; a foot and bones lie at lower left."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h16_turner",
+     "artist": "J. M. W. Turner",
+     "title": "Ulysses Deriding Polyphemus",
+     "date": "1829",
+     "det": "Oil on canvas, 52 1/4 × 80 in. The National Gallery, London",
+     "lead": "J. M. W. Turner (British, 1775–1851). Look at the colour as light: the story is told by a sunrise of yellow, pink and blue, and the figures are hard to find.",
+     "look": [
+      "The sun at right is the brightest point, and everything near it dissolves into pale yellow.",
+      "The giant is a shadowy brown-purple shape in the clouds at upper left, barely more solid than they are.",
+      "Thin, dry colour is dragged over the sky, so pinks and yellows sit on top of each other in layers.",
+      "The ship is the sharpest place in the picture: a gilded hull and crisp pale sails against the glare."
+     ],
+     "bul": [
+      "Ulysses, in red under a red banner, taunts the giant; sea nymphs glimmer at the bow."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h18_moreau",
+     "artist": "Gustave Moreau",
+     "title": "Oedipus and the Sphinx",
+     "date": "1864",
+     "det": "Oil on canvas, 81 1/4 × 41 1/4 in. The Metropolitan Museum of Art, New York",
+     "lead": "Gustave Moreau (French, 1826–1898). Look at the surface detail: the wings, the jewels and the urn are picked out feather by feather and bead by bead.",
+     "look": [
+      "Every edge is sharp, from the wing tips to the red cord of beads around the creature's chest.",
+      "The strokes are tiny and build up ornament rather than texture.",
+      "The two heads are locked eye to eye at the top of a tall, narrow canvas, which squeezes the drama into a vertical.",
+      "The background rocks are cool grey-blue, so the gold-brown body and the pale flesh come forward."
+     ],
+     "bul": [
+      "The same riddle scene as two slides back, now a close standoff; shown at the Paris Salon of 1864."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "h6_pygmalion",
+     "artist": "Jean-Léon Gérôme",
+     "title": "Pygmalion and Galatea",
+     "date": "about 1890",
+     "det": "Oil on canvas, 35 × 27 in. The Metropolitan Museum of Art, New York",
+     "lead": "Jean-Léon Gérôme (French, 1824–1904). Look at the colour of the statue: it is chalk white at the feet and warms to living flesh as it rises.",
+     "look": [
+      "The change from marble to skin happens in a smooth gradient up the legs, with no line where one stops.",
+      "The sculptor's blue tunic is the strongest colour, set against the grey-green upper wall.",
+      "The surface is as smooth as the statue it shows, even across the whole picture.",
+      "The pair are seen from behind, so the kiss is half hidden and the back of the figure fills the picture."
+     ],
+     "bul": [
+      "The statue is the painter's own marble group, brought to life as he kisses it."
+     ]
+    }
+   ]
+  }
+ ]
 };
-
-/* ---------- Module 1 ---------- */
-SITE.handouts.push({
-  n: 1, wk: 1, title: 'The Gods of Olympus', sub: 'Who the gods are, and how artists made each one recognizable',
-  overview: {
-    img: 'h1_aphrodite', cap: ['Sandro Botticelli', 'The Birth of Venus', 'c. 1485'],
-    sum: 'The Greeks pictured their gods as a family of twelve living on Mount Olympus, and the Romans took them over under Latin names. Because the gods look human, artists marked each one with a fixed set of objects, animals and poses, so a viewer could name the god at a glance.',
-    bul: ['Ancient statues set the standard types that later painters copied.', 'Renaissance and Baroque artists revived the gods for princely palaces and collections.', 'Learn the attributes here and the rest of the guide becomes easier to read.'],
-    terms: [['Attribute', 'An object, animal or feature that identifies a figure, such as Zeus’s thunderbolt or Athena’s owl and aegis.']]
-  },
-  slides: [
-    { type: 'work', key: 'h1_zeus', artist: 'Roman, sculptor unknown', title: 'Jupiter of Smyrna', date: '2nd century CE', det: 'Marble, 270 cm high · Louvre, Paris',
-      lead: 'An over-life-size statue, carved in the province of Asia and possibly copied from a Greek original about three centuries older. Much of what you see was rebuilt for Louis XIV.',
-      bul: ['Recorded at Smyrna (modern İzmir) in 1680, owned by a Dutch merchant, and bought for Louis XIV.', 'Pierre Granier restored it in 1686: the shoulder, raised arm and thunderbolt, nose, feet and base are his.', 'Stood on the Allée Royale at Versailles from 1687; moved to the museum after the Revolution.', 'Look for the deep drill work in the hair and beard, typical of 2nd-century Roman carving.', 'Since the thunderbolt is modern, the museum also lists Asclepius, god of healing, as a possible identity.'],
-      subj: 'Zeus (Roman Jupiter) is king of the gods and god of sky and thunder, who took power by overthrowing his father Cronus. Sculptors showed him as a mature, bearded man, bare-chested, with scepter and thunderbolt.',
-      terms: [['Himation', 'A large rectangular cloak worn by Greek men.']] },
-    { type: 'work', key: 'h1_hera', artist: 'Peter Paul Rubens', title: 'Juno and Argus', date: 'c. 1610', det: 'Oil on canvas, 249 × 296 cm · Wallraf-Richartz-Museum, Cologne',
-      lead: 'Painted soon after the artist came home to Antwerp from eight years in Italy, the picture is a showcase for the Venetian colour he had just studied.',
-      bul: ['Juno lifts the eyes from the headless body of Argus, helped by Iris, goddess of the rainbow, and a crowd of putti.', 'A rainbow runs through the centre; the museum notes the picture is built on blue, yellow and red.', 'Its design echoes the title page he drew for a 1613 book on optics.', 'Given to the museum in 1894 by a group of Cologne art lovers; the original patron is not known.'],
-      subj: 'Hera (Roman Juno) is queen of the gods and goddess of marriage. She set hundred-eyed Argus to guard Io, one of Zeus’s loves; when Hermes killed him, she placed his eyes on her sacred bird, the peacock.' },
-    { type: 'work', key: 'h1_poseidon', artist: 'Greek, sculptor unknown', title: 'Bronze God from Cape Artemision', date: 'c. 460 BCE', det: 'Bronze, 209 cm high · National Archaeological Museum, Athens',
-      lead: 'One of the very few full-size Greek bronzes to survive, raised from the sea off northern Euboea. Most ancient bronzes were melted down; this one lasted because it sank.',
-      bul: ['Fishermen netted an arm around 1926; the nearly complete statue was brought up in September 1928.', 'The museum groups it with bronzes lost when Roman ships carrying art from Greece were wrecked.', 'Look at the arms: stretched to balance a throw, with a span (210 cm) slightly wider than the figure is tall.', 'The weapon in the right hand is lost, so it may be Zeus with a thunderbolt or Poseidon with a trident.'],
-      subj: 'Poseidon (Roman Neptune), brother of Zeus, rules the sea, earthquakes and horses.' },
-    { type: 'work', key: 'h6_varvakeion', artist: 'Roman, after Pheidias', title: 'Varvakeion Athena', date: '200–250 CE', det: 'Marble with traces of paint, about 1 m high · National Archaeological Museum, Athens',
-      lead: 'A small copy of the most famous statue in Athens, the gold-and-ivory Athena Parthenos, which stood about 12 m high inside the Parthenon. The original is lost, so copies like this are the best evidence of how it looked.',
-      bul: ['Found in Athens near the Varvakeion, in the ruins of a Roman house.', 'Traces of paint stood in for the gold and ivory of the original.', 'Its details match the ancient description by Pausanias: Victory in one hand, a shield at her feet and a serpent beside it.', 'Cambridge’s cast collection describes such statuettes as souvenirs of the famous original.'],
-      subj: 'Athena (Roman Minerva) is goddess of wisdom, crafts and strategic war, born fully armed from Zeus’s head. Athens, her city, built the Parthenon in her honour.' },
-    { type: 'work', key: 'h1_athena', artist: 'Andrea Mantegna', title: 'Minerva Expelling the Vices from the Garden of Virtue', date: 'completed 1502', det: 'Tempera on canvas, 160 × 192 cm · Louvre, Paris',
-      lead: 'Made for Isabella d’Este’s studiolo in Mantua, a small private study she filled with paintings on moral themes.',
-      bul: ['One of five canvases for the room; it hung opposite his Parnassus.', 'Look for the Vices in flight, among them armless Sloth and Ignorance carried by Ingratitude.', 'Hidden images: a tree in human form and a face in a cloud.', 'Inscriptions in several alphabets label the figures.', 'Later owned by Cardinal Richelieu; entered the French state collections in 1801.'],
-      subj: 'Minerva was a natural champion of virtue over vice. Here the myth is used as a moral lesson rather than a story.' },
-    { type: 'work', key: 'h1_apollo', artist: 'Roman, after a Greek bronze', title: 'Apollo Belvedere', date: 'early 2nd century CE', det: 'Marble · Vatican Museums, Vatican City',
-      lead: 'The original dates from about 330 BCE and was probably by Leochares. Found in Rome in 1489, it became for three centuries the model of ideal male beauty.',
-      bul: ['Cardinal Giuliano della Rovere owned it and, as Pope Julius II, set it in the Vatican’s Belvedere court by 1508.', 'Montorsoli rebuilt the missing arm and hand in 1532–33; the left hand is now a cast of an ancient fragment found at Baia.', 'Look at the pose: the god has just loosed an arrow; the bow in his left hand is lost.', 'Taken to Paris under Napoleon and returned in 1816.'],
-      subj: 'Apollo, son of Zeus, is god of light, music, prophecy and archery. He is always young and beardless, often with bow, lyre or laurel.',
-      terms: [['Chlamys', 'A short cloak pinned at the shoulder, here hanging from Apollo’s arm.']] },
-    { type: 'work', key: 'h1_artemis', artist: 'Johannes Vermeer', title: 'Diana and Her Nymphs', date: 'c. 1653–54', det: 'Oil on canvas, 97.8 × 104.6 cm · Mauritshuis, The Hague',
-      lead: 'One of the artist’s earliest paintings, made just after he joined the Delft painters’ guild and years before his quiet interiors.',
-      bul: ['Long sold as a work by Nicolaes Maes; in 1885 the “N.M.” monogram proved a forgery over Vermeer’s signature.', 'Look for the small crescent moon on Diana’s head and a nymph washing her feet.', 'A later blue sky was covered in 1999–2000 to bring back the night setting.', 'The canvas was cut down on the right, cropping the kneeling figure at the edge.'],
-      subj: 'Artemis (Roman Diana), Apollo’s twin, is goddess of the hunt, wild places and the moon, and a virgin protector of young women.' },
-    { type: 'work', key: 'h1_ares', artist: 'Diego Velázquez', title: 'Mars', date: 'c. 1638', det: 'Oil on canvas, 179 × 95 cm · Museo del Prado, Madrid',
-      lead: 'The painter turns the god of war into a weary man sitting on a bed, naked except for his helmet. The painting was recorded in Philip IV’s hunting lodge, the Torre de la Parada.',
-      bul: ['Recorded there in 1701–03, beside his Aesop and Menippus of similar size.', 'Look for armour, shield and sword dropped at the foot of the bed and the baton resting on the floor.', 'The museum traces the pose to the ancient Ludovisi Ares and to Michelangelo’s Pensieroso.', 'Loose brushwork builds the body with soft outlines.'],
-      subj: 'Ares (Roman Mars) is the god of war, admired by the Romans more than the Greeks.' },
-    { type: 'work', key: 'h1_aphrodite', artist: 'Sandro Botticelli', title: 'The Birth of Venus', date: 'c. 1485', det: 'Tempera on canvas, 172.5 × 278.5 cm · Uffizi Gallery, Florence',
-      lead: 'One of the first large paintings of a pagan goddess since antiquity, very probably made for a member of the Medici family. It is painted on canvas, a support then used for decoration in great houses.',
-      bul: ['First recorded in 1550 by Vasari at the Medici villa of Castello.', 'Venus’s pose comes from ancient statues; gold highlights run through her hair.', 'The two winds at left are modelled on an ancient gem owned by Lorenzo the Magnificent.', 'Orange trees, a Medici emblem, and roses blown on the wind.', 'The cloaked woman is sometimes identified as the Hora of spring or one of the Graces.'],
-      subj: 'Aphrodite (Roman Venus) is the goddess of love and beauty. In Hesiod she rises full-grown from the sea foam and comes ashore on Cyprus.' },
-    { type: 'work', key: 'h1_hephaestus', artist: 'Diego Velázquez', title: 'Vulcan’s Forge', date: '1630', det: 'Oil on canvas, 223 × 290 cm · Museo del Prado, Madrid',
-      lead: 'Painted in Rome during the painter’s first Italian trip, without a commission, then sold by the artist to Philip IV in 1634.',
-      bul: ['Apollo, in orange with a laurel wreath and a halo of light, tells Vulcan that his wife Venus is Mars’s lover.', 'The armour on the anvil is being made for Mars.', 'Look at whole bodies freezing mid-movement, not only faces, to show the shock.', 'His first large work on a lead-white ground, giving it a lighter tone.'],
-      subj: 'Hephaestus (Roman Vulcan) is the lame smith god, maker of the gods’ weapons. Apollo is the god who sees everything.' },
-    { type: 'work', key: 'h1_hermes', artist: 'Attributed to Praxiteles', title: 'Hermes and the Infant Dionysus', date: '4th century BCE or later (disputed)', det: 'Parian marble, about 2.1 m high · Archaeological Museum of Olympia',
-      lead: 'Found in 1877 in the Temple of Hera at Olympia, where the ancient travel writer Pausanias recorded a Hermes by Praxiteles. Whether this is that original, a later work or a copy is still debated.',
-      bul: ['Excavated in May 1877; the right foot turned up in later digs.', 'Pausanias is the only ancient source to mention it.', 'The baby sits on his left arm; the lost right hand probably dangled grapes.', 'Proposed dates run from the mid-4th century BCE to about 100 BCE.'],
-      subj: 'Hermes (Roman Mercury) is the messenger god and guide of travellers. Zeus gave him the infant Dionysus to carry to safety, away from Hera’s jealousy.' }
-  ]
-});

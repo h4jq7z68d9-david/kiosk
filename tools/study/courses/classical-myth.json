@@ -1,11 +1,14 @@
 {
-  "name": "Classical Myth in Art",
-  "dataFiles": ["data.js", "data_m2.js", "data_m3.js", "data_m4.js", "data_m5.js", "data_m6.js"],
-  "greekKey": true,
-  "introImg": "h1_persephone",
-  "homeDescription": "A study guide to Greek and Roman myth in art: sixty paintings, sculptures and vases, each with the story of the object itself and the myth it shows.",
-  "ldDescription": "Greek and Roman myths told through sixty paintings, sculptures and vases, each with the story of the object itself.",
-  "sourcesDescription": "The museum records, catalogues and references behind {name}.",
-  "creditsIntro": "All images come from Wikimedia Commons and are marked public domain or CC0 there. Many are museum open-access files; the rest are photographs or reproductions their authors released into the public domain. Follow each link for the file’s full record.",
-  "creditsDescription": "Sources and licenses for the {count} public-domain and CC0 images in {name}, all from Wikimedia Commons."
+ "name": "Classical Myth in Art",
+ "dataFiles": [
+  "data.js"
+ ],
+ "greekKey": true,
+ "introImg": "h1_aphrodite",
+ "intro": "Eighteen works, from an Athenian wine cup to a Paris studio, each with one thing to look for.",
+ "homeDescription": "Eighteen works show how to recognize the Greek and Roman myths in art, from Exekias and the Venus de Milo to Titian, Rubens, Ingres and Turner.",
+ "ldDescription": "A short guide to recognizing classical myth in art, about 530 BCE to 1890, in eighteen works, compiled from museum collection records.",
+ "sourcesDescription": "Museum collection records, references and curricula used to compile {name}.",
+ "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source."
 }
