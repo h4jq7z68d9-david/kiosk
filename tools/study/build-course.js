@@ -9,7 +9,8 @@
      name            course name (required)
      dataFiles       data files in study/art-history/<slug>/, in order (required)
      greekKey        true = Greek-key divider (Classical Myth); otherwise a plain rule
-     intro           optional: the course home's paragraph (a course with several parts; none if unset)
+     intro, intro2   optional: the course home's one or two short paragraphs (a course with several parts; none if unset)
+     introBul        optional: a few bullets on the course home (highlights, main points)
      introImg        required: image key (usually a work key) shown on the start page — every course starts with an image
      ldDescription, homeDescription, creditsIntro, creditsDescription, sourcesDescription
      imgFrom         optional: read images from another course's img/ folder
@@ -153,15 +154,16 @@ function slideHtml(f) {
   if (f.kind === 'intro') {
     const ik = CFG.introImg, iw = ik && byKey[ik] != null ? flat[byKey[ik]].d : null;   // optional start-page image: a work key
     if (ik && !C[ik]) throw new Error(`introImg "${ik}" has no credits entry`);
-    return [ik ? 'slide' : 'slide text', (ik ? pic(ik, iw ? iw.title : ik, iw ? cap(iw) : esc(C[ik].work)) : '') + `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>${RULE}
-${CFG.intro ? `<p class="sum">${esc(CFG.intro)}</p>
-` : ''}<p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul>${ik ? crl(ik) : ''}</div>`];
+    /* title page (David, Nov 7 2026): one or two short paragraphs, or a paragraph and a few bullets; no contents list (the outline has it) */
+    const para = [CFG.intro, CFG.intro2].filter(Boolean).map((t) => `<p class="sum">${esc(t)}</p>`).join('\n');
+    return [ik ? 'slide' : 'slide text', (ik ? pic(ik, iw ? iw.title : ik, iw ? cap(iw) : esc(C[ik].work)) : '') + `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>
+${para}${CFG.introBul && CFG.introBul.length ? RULE + bul(CFG.introBul) : ''}${ik ? crl(ik) : ''}</div>`];
   }
   if (f.kind === 'overview') {
     const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
     return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><p class="eyebrow">${esc(sec(d.wk))}</p><h1 class="htitle">${esc(ONE ? NAME : d.title)}</h1><p class="hsub">${esc(d.sub)}</p>
-<p class="sum">${esc(o.sum)}</p>${quote(d.quote)}${RULE}${bul(o.bul)}${o.terms && o.terms.length ? RULE + terms(o.terms) : ''}
-<p class="lab">${ONE ? 'Works' : 'Works in this part'}</p>${wl(d.slides.filter((s) => s.type === 'work').map((s) => s.key))}${crl(o.img)}</div>`];
+<p class="sum">${esc(o.sum)}</p>${o.sum2 ? `<p class="sum">${esc(o.sum2)}</p>` : ''}${quote(d.quote)}${o.bul && o.bul.length ? RULE + bul(o.bul) : ''}${o.terms && o.terms.length ? RULE + terms(o.terms) : ''}
+${crl(o.img)}</div>`];   // title page: no works list (the outline has them)
   }
   if (f.kind === 'work') {
     const th = themesOf(d.key);
@@ -202,7 +204,7 @@ function creditKeys() {
 /* ---------- per-course index: outline + search (read by /study/guide.js) ---------- */
 function textOf(f) {
   const d = f.d || {}, p = [];
-  if (f.kind === 'overview') { const o = d.overview; p.push(d.title, d.sub, o.sum, ...(o.bul || []), ...(o.terms || []).flat(), ...(o.cap || [])); }
+  if (f.kind === 'overview') { const o = d.overview; p.push(d.title, d.sub, o.sum, o.sum2, ...(o.bul || []), ...(o.terms || []).flat(), ...(o.cap || [])); }
   else if (f.kind === 'intro' || f.kind === 'credits') p.push(f.label);
   else if (f.kind === 'sources') p.push(f.label, SRCS.intro, ...SRCS.groups.flatMap((g) => g.items.map((i) => i.html.replace(/<[^>]+>/g, ''))));
   else p.push(d.title, d.artist, d.date, d.det, d.lead, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.look || []), ...(d.bul || []), ...(d.terms || []).flat(), d.subj, d.quote && d.quote.q);

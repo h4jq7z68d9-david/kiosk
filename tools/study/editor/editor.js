@@ -84,7 +84,9 @@
     if (F.has('section')) s.section = child('p.eyebrow');
     if (k === 'intro') {
       s.ldDescription = child('p.hsub') || after(h1, el('p', 'hsub ed-new'));
-      s.intro = sums[0] || after(child('hr.rule') || s.ldDescription, el('p', 'sum ed-new'));
+      s.intro = sums[0] || after(s.ldDescription, el('p', 'sum ed-new'));
+      s.intro2 = sums[1] || after(s.intro, el('p', 'sum ed-new'));
+      s.introBul = ensure('ul.b', 'ul', 'b', s.intro2);
     } else if (k === 'credits') {
       s.creditsIntro = sums[0];
     } else if (k === 'sources') {
@@ -94,8 +96,9 @@
     } else if (k === 'overview') {
       s.sub = child('p.hsub') || after(h1, el('p', 'hsub ed-new'));
       s.sum = sums[0];
+      s.sum2 = sums[1] || after(s.sum, el('p', 'sum ed-new'));
       quote();
-      s.bul = ensure('ul.b', 'ul', 'b', nextRule(lastOf(sums[0], child('blockquote'))) || sums[0]);
+      s.bul = ensure('ul.b', 'ul', 'b', lastOf(s.sum2, child('blockquote')));
       terms(s.bul);
     } else if (k === 'work') {
       s.artist = child('p.artist') || before(h1, el('p', 'artist ed-new'));

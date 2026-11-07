@@ -181,7 +181,9 @@ function pageFields(files, id) {
   const S = C.settings;
   if (id === 'start') {
     out.push(field('ldDescription', 'Course subtitle', 'string', S.file, S.node, 'ldDescription', ['CFG']));
-    out.push(field('intro', 'Intro paragraph', 'string', S.file, S.node, 'intro', ['CFG']));
+    out.push(field('intro', 'Paragraph', 'string', S.file, S.node, 'intro', ['CFG']));
+    out.push(field('intro2', 'Second paragraph', 'string', S.file, S.node, 'intro2', ['CFG']));
+    out.push(field('introBul', 'Bullet', 'list', S.file, S.node, 'introBul', ['CFG']));
     return { kind: 'intro', fields: out };
   }
   if (id === 'credits') {
@@ -228,7 +230,8 @@ function pageFields(files, id) {
       section();
       if (C.handouts.length > 1) out.push(field('title', 'Part title', 'string', f, h, 'title', H));   // a one-part course's overview shows the course name
       out.push(field('sub', 'Part subtitle', 'string', f, h, 'sub', H));
-      out.push(field('sum', 'Overview', 'string', f, O, 'sum', OP));
+      out.push(field('sum', 'Paragraph', 'string', f, O, 'sum', OP));
+      out.push(field('sum2', 'Second paragraph', 'string', f, O, 'sum2', OP));
       quote(h, H);
       out.push(field('bul', 'Bullet', 'list', f, O, 'bul', OP));
       out.push(field('terms', 'Term', 'pairs', f, O, 'terms', OP));
