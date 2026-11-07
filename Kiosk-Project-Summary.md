@@ -39,7 +39,7 @@ Style rules that apply to every visible change (David, Oct 2026): left-aligned b
 |<https://davidnicholsonart.com/study/value-and-light.html>|Value and Light technique course (Oct 30 2026: 7 parts, 51 pages under /study/value-and-light/; concept, history and example pages, mostly Merrifield and Cross plates), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (condensed, Oct 27 2026: 60 works, 7 modules) — start page of the guide; every slide is its own indexable page under /study/art-history/classical-myth/ (70 pages), all in the guide layout (outline, search, Saved, Prev/Next, swipe)|
-|<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Oct 28 2026: 60 works, 3 sections, 6 parts, 4 theme pages) — start page of the guide; every slide is its own page under /study/art-history/impressionism/ (73 pages), same guide layout as Classical Myth|
+|<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Mode 2 rebuild, Nov 7 2026: 18 works, 1 section, 1 part; 21 pages) — opens on its overview; works under /study/art-history/impressionism/paris-1863-1906/; 70 retired URLs redirect (retired-urls.tsv)|
 |<https://davidnicholsonart.com/study/art-history/post-impressionism.html>|Post-Impressionism (Oct 28 2026: 74 works, 3 sections, 7 parts) — start page of the guide; every slide is its own page under /study/art-history/post-impressionism/ (84 pages), same guide layout|
 |<https://davidnicholsonart.com/study/art-history/fauvism-and-expressionism.html>|Fauvism and Early Expressionism (Oct 29 2026: 54 works, 4 sections, 6 parts) — start page of the guide; every slide is its own page under /study/art-history/fauvism-and-expressionism/ (63 pages), same guide layout|
 |<https://davidnicholsonart.com/study/art-history/japanese-woodblock-prints.html>|Japanese Woodblock Prints (Oct 30 2026: 64 works, 3 sections, 7 parts, c. 1680–1927) — start page of the guide; every slide is its own page under /study/art-history/japanese-woodblock-prints/ (74 pages), same guide layout|
@@ -660,6 +660,13 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [x] **Service-worker bump automated** (Nov 6 2026) — `deploy.yml` stamps the cache name from a content hash; no manual bump. `check.js` verifies the step exists and `node --check`s `index.mjs` and `admin-sw.js`.
 - [x] **Gated pages in `smoke.js`** (Nov 6 2026) — admin, Jill's page, kiosk and booth are loaded logged-out at 1440/390: 0 console errors, no sideways scroll, gate present.
 - [x] Deploy gate (built Nov 6 2026, branch `deploy-gate`) — `deploy.yml` runs `node tools/site/check.js` before anything is generated or uploaded, when the push changed `study/`, `tools/study/`, `tools/site/`, `tools/lambda/`, `index.mjs`, `site-*.js/.css`, a top-level `.html`, or the workflow itself (decided by `git diff --name-only` against `github.event.before`; a push with no usable base runs it). Other pushes (admin-sw.js, images, docs) skip it. A failed check fails the deploy with nothing uploaded.
+
+### From November 7 2026 (Impressionism Mode 2 + title pages)
+
+- [ ] **Title pages are thin in the 12 other courses:** part overviews now show only their one-sentence summary (the works lists were removed). Add a second paragraph or a few bullets per overview in the slide editor, or as each course gets its Mode 2 rebuild. Classical Myth's home has no paragraph (it had no `intro`).
+- [ ] **Impressionism open flags (David):** *The Child's Bath* (toddler bare from the waist up, kept); *Summer's Day* on loan to the Hugh Lane 2026–31 while `det` says National Gallery, London; *White Frost* image is a scan of a printed reproduction; catalogue raisonné numbers unverified (not shown on pages). Ten leads open with the artist's name, nationality and dates.
+- [ ] **Resubmit `sitemap.xml` in Google Search Console:** Impressionism's URLs changed (21 pages; old URLs redirect, noindex).
+- [ ] **Slide editor on David's Macs:** MacBook Air has the clone; `edit-course` is to be switched to `source ~/kiosk/tools/study/edit-course.zsh` and a fine-grained GitHub token (kiosk, Contents read/write) made before the first send (README).
 
 ### Next session — pick up here (from September 30 2026)
 

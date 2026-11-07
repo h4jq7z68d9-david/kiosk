@@ -161,7 +161,7 @@ ${para}${CFG.introBul && CFG.introBul.length ? RULE + bul(CFG.introBul) : ''}${i
   }
   if (f.kind === 'overview') {
     const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
-    return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><p class="eyebrow">${esc(sec(d.wk))}</p><h1 class="htitle">${esc(ONE ? NAME : d.title)}</h1><p class="hsub">${esc(d.sub)}</p>
+    return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><p class="eyebrow">${esc(sec(d.wk))}</p><h1 class="htitle">${esc(ONE ? NAME : d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}
 <p class="sum">${esc(o.sum)}</p>${o.sum2 ? `<p class="sum">${esc(o.sum2)}</p>` : ''}${quote(d.quote)}${o.bul && o.bul.length ? RULE + bul(o.bul) : ''}${o.terms && o.terms.length ? RULE + terms(o.terms) : ''}
 ${crl(o.img)}</div>`];   // title page: no works list (the outline has them)
   }

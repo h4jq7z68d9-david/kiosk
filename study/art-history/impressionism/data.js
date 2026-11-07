@@ -8,7 +8,7 @@ window.SITE = {
    "n": 1,
    "wk": 1,
    "title": "What to Look For",
-   "sub": "The movement in eighteen pictures",
+   "sub": "",
    "overview": {
     "img": "monet-impression",
     "cap": [

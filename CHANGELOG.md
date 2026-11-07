@@ -4,6 +4,16 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 7 2026) — Impressionism Mode 2 rebuild; title pages; slide editor (branch `install-impressionism`, pushed to `main`)
+
+- **Impressionism (Mode 2):** replaced the 60-work course with the 18-work rebuild (one section, one part; 21 pages). 70 retired URLs redirect: 18 old work pages to the same work's new page, 52 to the course home. David's edit from the slide editor: the part subtitle cleared.
+- **check.js:** Mode 2 slides may have 3 to 5 Look-at bullets (was exactly 3).
+- **Generator, all courses:** no "About this site" page and no how-to bullets, images note or "Continue where you left off". A one-part course opens on its part overview, titled and listed with the course name, with no part heading. Title pages (part overviews, multi-part course homes) list no works or parts; they take one or two paragraphs (`sum2`; settings `intro2`) and optional bullets (settings `introBul`). An empty part subtitle is left out. "Saved (n)" is "Bookmarks (n)", hidden until a page is bookmarked. `guideCss` 17, `guideJs` 13.
+- **Redirect stubs** are written by `build-course.js` from `<course>/retired-urls.tsv` on every build. Rebuilds used to delete hand-made stubs (any subfolder holding only `.html` is cleared).
+- **Slide editor (local only, never deployed):** `tools/study/edit-server.js <slug>` + `tools/study/editor/` + `tools/study/edit-course.zsh` (`edit-course <slug>`). Every page's text is editable in the real layout, titles and section names included; Save patches only the changed values in the course files, verifies the result, rebuilds and runs check.js. Title moves retarget `retired-urls.tsv` and add redirects for URLs already live. Ctrl-C commits and pushes the edits to `edits-<slug>` (or the install branch), never `main`. `deploy.yml` excludes the editor from the S3 sync; `check.js` enforces that and fails on any page referencing `/__edit/`. README.md added (editor documentation).
+
+-----
+
 ## Completed This Session (November 6 2026, late night) — Khnopff and Exekias text fixes (not deployed; branch `text-fixes`)
 
 Applied the two course-builder text fixes by replacing only the listed data file each: Post-Impressionism `data-m7.js` (three Khnopff bullets: the far-off street view, frame "not shown here", cool greys with the warm notes named) and Classical Myth `data_m4.js` (Exekias bullet now "On the outside, not shown here: …"). Diffed against `main`: only those four strings changed. Rebuilt both courses (84 and 70 pages); every other page in the two courses changed only in the search-index cache string. `check.js` PASS, `smoke.js` PASS; new text is on both work pages and in the site search index. Open flag from the Classical Myth HANDOFF, not applied: the cup is dated "c. 530 BCE" on the page; the CVA catalogue says "um 540 v. Chr."
