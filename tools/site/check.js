@@ -57,6 +57,7 @@ const attr = (tag, name) => { const m = tag.match(new RegExp(name + '=["\']([^"\
 for (const [f, h] of html) {
   const r = rel(f);
   const dir = path.dirname(f);
+  if (h.includes('/__edit/')) err(`${r}: references the local slide editor (/__edit/); built pages must not`);
   /* local src/href resolve (markup only; script bodies hold template strings) */
   const markup = h.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
   for (const m of markup.matchAll(/<(?:img|script|link|a|source)\b[^>]*?\s(?:src|href)=["']([^"']+)["']/gi)) {
@@ -203,6 +204,8 @@ for (const slug of courses) {
   if (!cache) err("admin-sw.js: CACHE must be a 'dna-admin-…' string (deploy.yml rewrites it)");
   const wf = fs.readFileSync(path.join(ROOT, '.github/workflows/deploy.yml'), 'utf8');
   if (!/sed -i "s\/dna-admin-\[0-9a-z\]\*\/dna-admin-\$H\/g" admin-sw\.js/.test(wf)) err('deploy.yml: the admin-sw cache stamp step is missing or changed');
+  /* the local slide editor (tools/study/edit-server.js) must never ship: excluded from the upload, never referenced by a page */
+  if (!wf.includes('--exclude "tools/study/edit-server.js"') || !wf.includes('--exclude "tools/study/editor/*"')) err('deploy.yml: the S3 sync must exclude tools/study/edit-server.js and tools/study/editor/*');
   for (const f of ['index.mjs', 'admin-sw.js']) { try { execSync(`node --check ${f}`, { cwd: ROOT, stdio: 'pipe' }); } catch (e) { err(`${f}: node --check failed`); } }
 }
 

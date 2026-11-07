@@ -1,0 +1,54 @@
+/* Local slide editor styles. Loaded only by tools/study/edit-server.js; never part of the built site. */
+.ed-panel {
+  position: fixed; left: 16px; bottom: 84px; z-index: 900;
+  width: 340px; max-height: calc(100vh - 180px); overflow: auto;
+  background: var(--panel, #fff); color: var(--ink, #2b3640);
+  border: 1px solid var(--border-mid, #cfd6dd); border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(20, 30, 40, 0.16);
+  padding: 12px 14px; font: 14px/1.45 var(--font, sans-serif); text-align: left;
+}
+.ed-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin-bottom: 8px; }
+.ed-head b { font-weight: 500; }
+.ed-min { margin-left: auto; font: inherit; font-size: 12px; background: none; border: 0; padding: 0; color: var(--accent-ink, #33557d); cursor: pointer; }
+.ed-file { flex-basis: 100%; font-size: 12px; color: var(--ink3, #697480); word-break: break-all; }
+.ed-folded > :not(.ed-head), .ed-folded .ed-file { display: none; }
+.ed-folded .ed-head { margin-bottom: 0; }
+.ed-btns { display: flex; gap: 8px; }
+.ed-btn {
+  font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border-mid, #cfd6dd); background: var(--bg, #fff); color: var(--ink, #2b3640);
+}
+.ed-btn:disabled { opacity: 0.5; cursor: default; }
+.ed-primary { background: var(--accent, #2f4f75); border-color: var(--accent, #2f4f75); color: var(--on-accent, #fff); }
+.ed-help { margin: 10px 0 0; font-size: 13px; color: var(--ink2, #586470); }
+.ed-msg { margin-top: 10px; font-size: 13px; color: var(--ink2, #586470); }
+.ed-msg:empty { display: none; }
+.ed-msg ul { margin: 4px 0 6px; padding-left: 18px; }
+.ed-msg li { margin: 2px 0; }
+.ed-ok { color: #1f6b3a; }
+.ed-warn { color: #7a5600; }
+.ed-bad { color: #a4262c; padding: 8px 10px; border: 1px solid #e6b3b5; border-radius: 8px; background: #fdf3f3; }
+.ed-log { margin-top: 10px; font-size: 12px; }
+.ed-log summary { cursor: pointer; color: var(--ink2, #586470); }
+.ed-log pre { white-space: pre-wrap; word-break: break-word; max-height: 260px; overflow: auto; margin: 6px 0 0; padding: 8px; background: var(--surface, #eef1f4); border-radius: 6px; }
+
+/* editable fields */
+.ed-on .ed-field { outline: 1px dashed var(--accent, #2f4f75); outline-offset: 3px; border-radius: 2px; cursor: text; }
+/* .notes is a flex column; a taller slide in edit mode must scroll, not squash the fields */
+.ed-on .notes > * { flex-shrink: 0; }
+.ed-on .ed-field:empty { min-height: 1.4em; }
+.ed-on .ed-field:focus { outline: 2px solid var(--accent, #2f4f75); background: rgba(47, 79, 117, 0.05); }
+.ed-on .ed-field:empty::before { content: attr(data-ed-label); color: var(--ink3, #697480); font-style: italic; }
+.ed-on p.ed-field, .ed-on .ed-t { display: block; }
+.ed-li { position: relative; padding-right: 28px; }
+.ed-x {
+  position: absolute; right: 0; top: 0; width: 22px; height: 22px; padding: 0; line-height: 20px;
+  border: 1px solid var(--border-mid, #cfd6dd); border-radius: 50%; background: var(--bg, #fff);
+  color: var(--ink3, #697480); cursor: pointer; font-size: 14px;
+}
+.ed-x:hover { color: #a4262c; border-color: #a4262c; }
+.ed-add {
+  display: inline-block; align-self: flex-start; text-align: left; margin: 0; padding: 4px 12px; font: inherit; font-size: 13px; cursor: pointer;
+  border: 1px dashed var(--border-mid, #cfd6dd); border-radius: 999px; background: none; color: var(--accent-ink, #33557d);
+}
+@media (max-width: 900px) { .ed-panel { left: 8px; right: 8px; width: auto; bottom: 72px; max-height: 45vh; } }

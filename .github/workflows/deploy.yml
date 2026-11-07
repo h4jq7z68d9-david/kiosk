@@ -65,6 +65,8 @@ jobs:
             --include "site-*.css" \
             --include "study/*.css" \
             --exclude "receipts/*" \
+            --exclude "tools/study/edit-server.js" \
+            --exclude "tools/study/editor/*" \
             --delete
       - name: No-cache headers for Jill's page
         # Browsers otherwise keep a stale copy for hours after a deploy (S3 sends no Cache-Control).
