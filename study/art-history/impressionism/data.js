@@ -1,175 +1,42 @@
 window.SITE = {
  "title": "Impressionism",
  "sections": {
-  "1": "Beginnings",
-  "2": "Modern Life",
-  "3": "Late Impressionism"
+  "1": "Paris, 1863–1906"
  },
  "handouts": [
   {
    "n": 1,
    "wk": 1,
-   "title": "Before 1874: The Salon, Realism and Manet",
-   "sub": "What the Impressionists rejected, and what they took",
+   "title": "What to Look For",
+   "sub": "The movement in eighteen pictures",
    "overview": {
-    "img": "manet-dejeuner",
+    "img": "monet-impression",
     "cap": [
-     "Édouard Manet",
-     "Le Déjeuner sur l'herbe",
-     "1863"
+     "Claude Monet",
+     "Impression, Sunrise",
+     "1872"
     ],
-    "sum": "Before 1874, a French painter's career ran through the Salon, whose jury rewarded polished, idealized work. In the 1860s Courbet, Manet and the young Monet and Bazille challenged that standard, pointing toward the traits of Impressionism: visible brushwork, bright color, outdoor scenes and subjects from modern life. The younger painters' trouble getting a fair hearing at the Salon led to the independent exhibition of 1874.",
-    "bul": [
-     "A Salon jury chose what was hung, and success brought state purchases, prizes and buyers.",
-     "In 1863 works the jury refused went on view at a separate Salon des Refusés.",
-     "Courbet's Realism and Manet's modern subjects showed that present-day life could fill a large canvas."
-    ],
-    "terms": [
-     [
-      "Salon",
-      "The official Paris art exhibition, chosen by a state jury."
-     ],
-     [
-      "Academic art",
-      "Painting taught by the École des Beaux-Arts: classical subjects, careful drawing, smooth finish."
-     ],
-     [
-      "Realism",
-      "Courbet's movement, from about 1850, painting present-day life without idealizing it."
-     ]
-    ]
+    "sum": "Impressionism is a way of painting that took shape in and around Paris from the late 1860s. Its painters first showed together in 1874, in an exhibition they organized themselves.",
+    "bul": []
    },
    "slides": [
-    {
-     "type": "work",
-     "key": "cabanel-venus",
-     "artist": "Alexandre Cabanel",
-     "title": "The Birth of Venus",
-     "date": "1875",
-     "det": "Oil on canvas, 106 × 182.6 cm. The Metropolitan Museum of Art, New York",
-     "lead": "A smaller replica, by Cabanel himself, of the nude that drew crowds at the 1863 Salon. It shows the polished academic manner the future Impressionists were judged against.",
-     "bul": [
-      "Academic painters smoothed away their brushstrokes, as Cabanel does here. The Impressionists did the opposite and left their strokes visible on purpose.",
-      "Napoleon III bought the first version.",
-      "The New York collector John Wolfe ordered this replica from Cabanel in 1875.",
-      "Look at the cupids overhead.",
-      "Wolfe gave it to the Met in 1893."
-     ],
-     "subj": "In Greek myth, Venus was born from the foam of the sea. Salon painters used such stories to show the nude as an ideal, not a real woman.",
-     "terms": [
-      [
-       "Replica",
-       "A copy an artist makes of his own earlier work."
-      ]
-     ]
-    },
-    {
-     "type": "work",
-     "key": "courbet-parrot",
-     "artist": "Gustave Courbet",
-     "title": "Woman with a Parrot",
-     "date": "1866",
-     "det": "Oil on canvas, 129.5 × 195.6 cm. The Metropolitan Museum of Art, New York",
-     "lead": "A life-size nude sprawled on a rumpled sheet, shown at the 1866 Salon by the leader of Realism. Courbet used the scale of a Salon nude but gave her no myth.",
-     "bul": [
-      "Courbet paints a real body, tangled hair and all, not an ideal one. The Impressionists took from Realism this demand to paint people as they are.",
-      "Several critics objected to the awkward pose.",
-      "The state briefly thought of buying it, but it stayed with Courbet until 1870.",
-      "Manet began his own woman with a parrot the same year.",
-      "Louisine Havemeyer's bequest brought it to the Met in 1929."
-     ],
-     "subj": "Courbet refused gods and heroes as subjects. Here he turned that stance on the nude, the academy's most valued subject."
-    },
-    {
-     "type": "work",
-     "key": "manet-dejeuner",
-     "artist": "Édouard Manet",
-     "title": "Le Déjeuner sur l'herbe",
-     "date": "1863",
-     "det": "Oil on canvas, 207 × 265 cm. Musée d'Orsay, Paris",
-     "lead": "Two clothed men and a naked woman picnic in a wood. Refused by the 1863 Salon jury, it became the main attraction of the Salon des Refusés.",
-     "bul": [
-      "Shown as Le Bain (The Bath), it drew laughter and charges of obscenity.",
-      "The theme comes from the Louvre's Concert champêtre, today given to Titian.",
-      "Victorine Meurent posed for the nude, who turns to look straight at the viewer.",
-      "The woods behind are only roughly sketched, with little depth, on purpose. The Impressionists would push this sketch-like finish much further.",
-      "Étienne Moreau-Nélaton gave it to the French state in 1906."
-     ],
-     "subj": "Picnics in the woods near Paris were a common Sunday outing. Set there, beside men in modern dress, the nude reads as a real woman."
-    },
     {
      "type": "work",
      "key": "manet-olympia",
      "artist": "Édouard Manet",
      "title": "Olympia",
      "date": "1863",
-     "det": "Oil on canvas, 130.5 × 191 cm. Musée d'Orsay, Paris",
-     "lead": "A reclining nude on a white bed, with a Black maid bringing flowers. Manet recast Titian's Venus of Urbino as a Paris prostitute.",
-     "bul": [
-      "Manet lights the pale body flatly and sets it hard against the dark background. This flat, bright light, with little gradual shading, anticipated the Impressionists' lighter, less modeled painting.",
-      "First shown at the 1865 Salon, where critics attacked it fiercely.",
-      "Émile Zola led the small group that defended it.",
-      "She meets the viewer's eye. Look for the black ribbon at her neck.",
-      "Monet raised a public subscription in 1890 to give it to the French state."
+     "det": "Oil on canvas, 51 1/2 × 75 1/4 in. Musée d'Orsay, Paris",
+     "lead": "Édouard Manet (French, 1832–1883). Look at how little shading there is on the body: Manet paints it as a pale, nearly flat shape.",
+     "look": [
+      "Light falls straight from the front, so there are almost no shadows.",
+      "The flowers and the shawl are quick, loose touches of color.",
+      "The whites of the sheets and pillows are laid on in broad strokes.",
+      "The dark green and brown background pushes the pale figure forward."
      ],
-     "subj": "Salon nudes were usually goddesses or harem women in an imagined East.",
-     "terms": [
-      [
-       "Odalisque",
-       "A harem woman, a common type for 19th-century nudes."
-      ]
+     "bul": [
+      "First shown at the Salon of 1865, the state-run exhibition in Paris, where it caused a scandal."
      ]
-    },
-    {
-     "type": "work",
-     "key": "fantin-batignolles",
-     "artist": "Henri Fantin-Latour",
-     "title": "A Studio at Les Batignolles",
-     "date": "1870",
-     "det": "Oil on canvas, 204 × 273.5 cm. Musée d'Orsay, Paris",
-     "lead": "Young painters and writers gather around Manet at his easel. Shown at the 1870 Salon, it presents the future Impressionists as serious, respectable men.",
-     "bul": [
-      "Fantin paints the circle as a group of friends. Monet and Renoir, both here, would later exhibit together, and showing as a group became how the Impressionists made their name.",
-      "Named for Les Batignolles, the Paris district where Manet and several younger painters lived.",
-      "Among the men: Manet seated, Renoir in a hat, Zola, Bazille standing tall, and Monet.",
-      "Look for a statuette of Minerva, a sign of respect for ancient art, and a Japanese-style pot, a sign of taste for Japanese art.",
-      "The Musée du Luxembourg acquired it in 1892."
-     ],
-     "subj": "Group portraits of artists were a way to announce a shared cause in public. Within months, the Franco-Prussian War scattered this circle."
-    },
-    {
-     "type": "work",
-     "key": "manet-railway",
-     "artist": "Édouard Manet",
-     "title": "The Railway",
-     "date": "1873",
-     "det": "Oil on canvas, 93.3 × 111.5 cm. National Gallery of Art, Washington",
-     "lead": "A young woman with a book and a puppy sits by an iron railing while a girl looks through at the steam below. Manet sent it to the Salon of 1874.",
-     "bul": [
-      "Manet kept to the official Salon and did not join the independent exhibition his friends opened in April 1874.",
-      "The setting is the rail yard leading into the Gare Saint-Lazare, beside Manet's new studio.",
-      "Manet never says whether the two are mother and daughter or nanny and child. Impressionist pictures likewise show a slice of modern life with no story attached.",
-      "The figures mirror each other: one faces us, the other turns away.",
-      "Horace Havemeyer gave it to the National Gallery in 1956, in memory of his mother, Louisine."
-     ],
-     "subj": "The Gare Saint-Lazare served the western suburbs and the Normandy coast. Monet and Caillebotte also painted its iron bridge, the Pont de l'Europe."
-    },
-    {
-     "type": "work",
-     "key": "monet-sainte-adresse",
-     "artist": "Claude Monet",
-     "title": "Garden at Sainte-Adresse",
-     "date": "1867",
-     "det": "Oil on canvas, 98.1 × 129.9 cm. The Metropolitan Museum of Art, New York",
-     "lead": "A terrace above the Channel in strong sunlight, painted when Monet was 26. It is one of the boldest pictures he made before Impressionism had a name.",
-     "bul": [
-      "Painted in summer at Sainte-Adresse, a resort by Le Havre, where Monet's family stayed.",
-      "The seated man in the Panama hat is the artist's father, Adolphe.",
-      "The high viewpoint and flat bands of bright color come from Japanese woodblock prints, a source the Impressionists kept returning to.",
-      "Look at the two flags, pulled hard by the same sea wind.",
-      "It hung in the fourth Impressionist exhibition in 1879; the Met bought it in 1967."
-     ],
-     "subj": "By the 1860s, rail lines had made the Normandy coast a holiday ground for city families. The picture records that new middle-class leisure."
     },
     {
      "type": "work",
@@ -177,185 +44,34 @@ window.SITE = {
      "artist": "Claude Monet",
      "title": "La Grenouillère",
      "date": "1869",
-     "det": "Oil on canvas, 74.6 × 99.7 cm. The Metropolitan Museum of Art, New York",
-     "lead": "Bathers and boaters at a floating café on the Seine, painted quickly beside Renoir. It points straight toward the style later called Impressionist.",
-     "bul": [
-      "The name means \"the frog pond\"; the spot was at Croissy, west of Paris.",
-      "Monet called his pictures here poor rough sketches; this is thought to be one.",
-      "Renoir painted almost the same view, now in Stockholm.",
-      "Monet paints the rippling water in short, separate strokes of blue, green and black, not blended. This broken brushwork became the hallmark of Impressionism.",
-      "It came to the Met in 1929 with Louisine Havemeyer's bequest."
+     "det": "Oil on canvas, 29 1/4 × 39 1/4 in. The Metropolitan Museum of Art, New York",
+     "lead": "Claude Monet (French, 1840–1926). Look at the water: it is built from separate strokes, not smoothly blended paint.",
+     "look": [
+      "Short, curved strokes of blue, white, green and black sit side by side across the water.",
+      "Each stroke stays distinct, so the water seems to move and catch the light.",
+      "The figures on the round island are a few dark dabs each.",
+      "The trees behind are broad patches of yellow-green, with little detail."
      ],
-     "subj": "New resorts on the Seine drew Parisians of every class for weekend boating and swimming. Here women in black bathing suits mix with men in top hats.",
-     "terms": [
-      [
-       "Plein air",
-       "French for \"open air\": painting outdoors, in front of the subject."
-      ]
+     "bul": [
+      "Monet painted it at a riverside bathing spot near Paris, working beside Renoir."
      ]
     },
-    {
-     "type": "work",
-     "key": "bazille-family",
-     "artist": "Frédéric Bazille",
-     "title": "Family Reunion",
-     "date": "1867",
-     "det": "Oil on canvas, 152 × 230 cm. Musée d'Orsay, Paris",
-     "lead": "Ten members of the painter's family on a shaded terrace near Montpellier, with Bazille at far left.",
-     "bul": [
-      "Painted in summer and shown at the 1868 Salon, which refused Monet's bolder work.",
-      "Bazille admired Monet's outdoor pictures and had bought his Women in the Garden.",
-      "Bazille sets his family in deep shade, with sunlight breaking through the leaves onto pale dresses. Showing how outdoor light falls on figures was a core Impressionist aim.",
-      "Most sitters gaze out at the viewer, as if posing for a photographer.",
-      "The French national museums bought it in 1905 with help from his brother Marc."
-     ],
-     "subj": "The family spent summers at Méric, its estate outside Montpellier. Bazille was killed in the Franco-Prussian War in 1870, at 28."
-    }
-   ]
-  },
-  {
-   "n": 2,
-   "wk": 1,
-   "title": "1874: The First Exhibition",
-   "sub": "An artist-run show, and a mocking new name",
-   "overview": {
-    "img": "renoir-loge",
-    "cap": [
-     "Pierre-Auguste Renoir",
-     "La Loge",
-     "1874"
-    ],
-    "sum": "In the spring of 1874 Monet, Renoir, Degas, Morisot, Pissarro, Sisley and Cézanne held their own show, alongside two dozen other artists, most of them little known today.",
-    "bul": [
-     "The show ran from 15 April to 15 May 1874 on the boulevard des Capucines.",
-     "The artists ran it through a société anonyme, a company they formed, and showed about 200 works.",
-     "Little sold, but the press covered the show widely."
-    ],
-    "terms": [
-     [
-      "catalogue number",
-      "A work's number in the 1874 booklet, used to match surviving paintings to the show."
-     ]
-    ]
-   },
-   "slides": [
     {
      "type": "work",
      "key": "monet-impression",
      "artist": "Claude Monet",
      "title": "Impression, Sunrise",
      "date": "1872",
-     "det": "Oil on canvas, 50 × 65 cm. Musée Marmottan Monet, Paris",
-     "lead": "Le Havre harbor at dawn, painted in autumn. Its one-word title gave the critic Louis Leroy his mocking name for the group.",
-     "bul": [
-      "Monet painted the mist and rising sun in a few hours and showed the canvas in 1874. Impressionist painters often worked this fast, finishing a picture in a single session.",
-      "He painted it early one morning from his room at the Hôtel de l'Amirauté.",
-      "Look for cranes, chimneys and masts fading into mist behind the rowing boats and orange sun.",
-      "Monet titled it Impression because he judged it did not work as a record of the town.",
-      "Given to the Musée Marmottan in 1940 by Eugène and Victorine Donop de Monchy."
+     "det": "Oil on canvas, 19 3/4 × 25 1/2 in. Musée Marmottan Monet, Paris",
+     "lead": "Look at how thin and quick the paint is: Monet painted it in a few hours.",
+     "look": [
+      "Thin, watery paint lets the weave of the canvas show through in the upper sky.",
+      "The nearest boat is a single dark shape, with no detail.",
+      "The orange sun and its broken reflection are the brightest marks; orange streaks in the sky echo them.",
+      "Ships and cranes behind are faint blue-gray shapes in the haze."
      ],
-     "subj": "Le Havre, Monet's hometown, was one of France's main ports for Atlantic ships. Here its smoke and machinery become a study of light and moist air.",
-     "terms": [
-      [
-       "impression",
-       "Painters' word for a quick record of overall light and atmosphere, not detail."
-      ]
-     ]
-    },
-    {
-     "type": "work",
-     "key": "monet-capucines",
-     "artist": "Claude Monet",
-     "title": "Boulevard des Capucines",
-     "date": "1873–74",
-     "det": "Oil on canvas, 80.3 × 60.3 cm. The Nelson-Atkins Museum of Art, Kansas City",
-     "lead": "A cold day on one of the new Paris boulevards, seen from high above. Monet painted it from the rooms that housed the 1874 exhibition.",
      "bul": [
-      "The crowd below is a scatter of dry, brushy dabs, not individual people. The Impressionists painted city crowds as the eye takes them in, as moving marks.",
-      "Monet worked from a balcony of Nadar's former studio, in late 1873 or early 1874.",
-      "The museum identifies a horizontal view from the same spot, now in Moscow, as the one exhibited.",
-      "Look for the pink balloons at lower right and two men in top hats watching from a balcony.",
-      "Very likely sold by Monet in 1875, it was bought by the Nelson-Atkins in 1972."
-     ],
-     "subj": "Baron Haussmann redesigned the boulevard under Napoleon III, lining it with new hotels and cafés. Monet's high, tilted view echoes Nadar's balloon photographs of Paris."
-    },
-    {
-     "type": "theme",
-     "img": "monet-impression",
-     "title": "Organizing the Show",
-     "stmt": "In April 1874 thirty-one artists bypassed the Salon and showed their work themselves.",
-     "para": "On 17 January 1874 the organizers announced an open exhibition with no jury and no prizes. The members avoided a group name that would suggest a school.",
-     "bul": [
-      "About 3,500 people came, against roughly half a million at the 1874 Salon; the artists' company soon closed.",
-      "Conservative critics faulted the unfinished look, while friendly ones welcomed scenes of modern Paris."
-     ],
-     "works": [
-      "monet-impression",
-      "monet-capucines",
-      "renoir-dancer",
-      "cezanne-modern-olympia"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "renoir-loge",
-     "artist": "Pierre-Auguste Renoir",
-     "title": "La Loge",
-     "date": "1874",
-     "det": "Oil on canvas, 80 × 63.5 cm. The Courtauld Gallery, London",
-     "lead": "A fashionable couple in a theater box, painted as a play of black, white and pink. Shown in 1874, its modern subject drew both praise and suspicion.",
-     "bul": [
-      "Renoir paints up-to-date evening dress and a night at the theater, not history or myth. Scenes of modern Paris pleasures were a core Impressionist subject.",
-      "Renoir's brother Edmond and a model named Nini Lopez posed for it in the studio.",
-      "He raises his opera glasses toward the audience; she lowers hers and is herself on view.",
-      "Look at the broad black and white stripes of her dress against the soft strokes of her face.",
-      "Samuel Courtauld bought it in 1925 and bequeathed it in 1948."
-     ],
-     "subj": "A theater box was for being seen as much as for watching. Fashion and satirical papers both pictured box scenes, so viewers knew the setting.",
-     "terms": [
-      [
-       "loge",
-       "A private theater box."
-      ]
-     ]
-    },
-    {
-     "type": "work",
-     "key": "renoir-dancer",
-     "artist": "Pierre-Auguste Renoir",
-     "title": "The Dancer",
-     "date": "1874",
-     "det": "Oil on canvas, 142.5 × 94.5 cm. National Gallery of Art, Washington",
-     "lead": "A young ballet dancer in fifth position on a canvas nearly five feet tall. It was one of Renoir's seven 1874 entries and among the better received.",
-     "bul": [
-      "Her tulle skirt melts into the hazy green background with no hard outline. Letting edges dissolve into light and air was typical of Impressionist painting.",
-      "Shown as no. 141, it struck some critics as a weak sketch and others as graceful.",
-      "The National Gallery identifies the model as almost certainly the young actress Henriette Henriot.",
-      "The centered, full-length pose borrows from formal portraiture, unlike Degas's dancers caught in rehearsal.",
-      "It joined the Widener collection and came to the National Gallery in 1942."
-     ]
-    },
-    {
-     "type": "work",
-     "key": "degas-races-countryside",
-     "artist": "Edgar Degas",
-     "title": "At the Races in the Countryside",
-     "date": "1869",
-     "det": "Oil on canvas, 36.5 × 55.9 cm. Museum of Fine Arts, Boston",
-     "lead": "A Normandy family outing that mixes landscape, everyday scene and family portrait. Degas included this small canvas among his 1874 entries.",
-     "bul": [
-      "The man at the reins is Degas's friend Paul Valpinçon, with his wife, baby son and wet nurse.",
-      "Degas pushes the race into the distance and leaves the middle empty, like a passing glance. Impressionist painters often aimed for this glimpsed look.",
-      "Look for the carriage cropped at the edge and the family dog echoing its master's pose.",
-      "The MFA points out that the wet nurse sets paid work beside leisure.",
-      "The baritone Jean-Baptiste Faure owned it in 1874; the MFA bought it in 1926."
-     ],
-     "subj": "Horse racing was a fashionable pastime for the French upper classes, in Paris and the provinces. Well-off families commonly hired wet nurses.",
-     "terms": [
-      [
-       "wet nurse",
-       "A woman paid to breastfeed another family's baby."
-      ]
+      "Shown at the 1874 exhibition. A critic used its title to mock the group, and the name stuck."
      ]
     },
     {
@@ -364,33 +80,17 @@ window.SITE = {
      "artist": "Berthe Morisot",
      "title": "The Cradle",
      "date": "1872",
-     "det": "Oil on canvas, 56 × 46.5 cm. Musée d'Orsay, Paris",
-     "lead": "Morisot's sister Edma watches her sleeping daughter Blanche through a veil of white gauze. It is Morisot's first mother-and-child picture and was shown in 1874.",
-     "bul": [
-      "Morisot gives a quiet moment between mother and child at home a place in a public exhibition. Everyday private life became a serious Impressionist subject.",
-      "With it, Morisot became the first woman to exhibit with the group.",
-      "One slanting line runs from the curtain through Edma's lowered eyes and arm to the child.",
-      "Edma draws the veil across the cradle, screening the child from the viewer.",
-      "Morisot failed to sell it; the Louvre bought it from the family in 1930."
+     "det": "Oil on canvas, 22 × 18 1/4 in. Musée d'Orsay, Paris",
+     "lead": "Berthe Morisot (French, 1841–1895). Look at the veil over the cradle: it is painted in thin, see-through strokes.",
+     "look": [
+      "Most of the canvas is white and pale pink, laid on in loose, open strokes.",
+      "The veil's edge runs on a diagonal from the woman's hand up to the top right.",
+      "Her dark blue dress and the dark wall at the top right frame the pale cradle.",
+      "Soft edges, more than outlines, separate the cradle from the curtains behind."
      ],
-     "subj": "Middle-class home life, with mothers, sisters and children, was the world Morisot knew best. Motherhood became one of her lasting themes."
-    },
-    {
-     "type": "work",
-     "key": "morisot-lorient",
-     "artist": "Berthe Morisot",
-     "title": "The Harbor at Lorient",
-     "date": "1869",
-     "det": "Oil on canvas, 43.5 × 73 cm. National Gallery of Art, Washington",
-     "lead": "A young woman with a pink parasol sits on a harbor wall above calm, reflecting water. Morisot gave it to Manet in 1869, and it was shown in 1874 as Marine.",
      "bul": [
-      "Quick, light strokes only suggest the scene, even the woman's face. Impressionist painters often suggested forms like this rather than describing them in detail.",
-      "When the National Gallery exhibited it in 1966, the figure was identified as Edma Morisot.",
-      "Most of the canvas is water and sky; look at the ships' reflections across the channel.",
-      "The pale pink parasol stands out against the blues of water and sky.",
-      "Ailsa Mellon Bruce bought it in 1955 and bequeathed it to the National Gallery in 1970."
-     ],
-     "subj": "Lorient is a port town on the south coast of Brittany."
+      "The sitter is Morisot's sister Edma, watching her baby daughter."
+     ]
     },
     {
      "type": "work",
@@ -398,115 +98,86 @@ window.SITE = {
      "artist": "Camille Pissarro",
      "title": "White Frost",
      "date": "1873",
-     "det": "Oil on canvas, 65.5 × 93.2 cm. Musée d'Orsay, Paris",
-     "lead": "A plowed field near Pontoise on a frosty morning, with a lone figure on the path. It hung in 1874, the first of the eight group shows Pissarro joined.",
+     "det": "Oil on canvas, 25 3/4 × 36 3/4 in. Musée d'Orsay, Paris",
+     "lead": "Camille Pissarro (French, 1830–1903). Look at the long tree shadows on the frosty field: they are blue, not brown or black.",
+     "look": [
+      "The sunlit ground between the shadows is warm orange and tan.",
+      "Warm light next to cool shadow makes the field look cold and bright.",
+      "Small, thick dabs cover the furrows, giving the whole field an even texture."
+     ],
      "bul": [
-      "Pissarro paints one passing condition instead of a timeless landscape. Catching effects like this became central to Impressionism.",
-      "Louis Leroy ridiculed it, while Philippe Burty likened it to the best of Millet.",
-      "Look at the furrows climbing the slope and the man walking with a load on his back.",
-      "Pissarro laid the paint on thickly, partly with a knife, so the frozen field feels dense.",
-      "Jean-Baptiste Faure bought it in 1874; it has been at the Musée d'Orsay since 1986."
-     ],
-     "subj": "Pissarro lived at Pontoise, northwest of Paris, for much of the 1870s. Its fields and farm workers, not suburban leisure, were his main subject."
-    },
-    {
-     "type": "work",
-     "key": "sisley-villeneuve",
-     "artist": "Camille Pissarro",
-     "title": "Orchard in Bloom, Louveciennes",
-     "date": "1872",
-     "det": "Oil on canvas, 45.1 × 54.9 cm. National Gallery of Art, Washington",
-     "lead": "A small spring landscape with a tree in white blossom, a plowed field and two farm workers. Pissarro sent it to the 1874 show as Le verger (The Orchard).",
-     "bul": [
-      "Pissarro paints a working field and a plain fruit tree, not a famous or scenic view. The Impressionists chose ordinary, lived-in country like this.",
-      "Listed first among his entries, as no. 136; the museum suggests personal reasons may explain why.",
-      "Painted in spring, months after the family returned from wartime London.",
-      "Short dabs build the blossoms, and the sky shifts from pale gray to strong blue.",
-      "Bought by Ailsa Mellon Bruce in 1960, it came to the National Gallery in 1970."
-     ],
-     "subj": "Pissarro came home in late 1871 to find much of his stored work lost. The museum reads the flowering tree as a sign of recovery."
-    },
-    {
-     "type": "work",
-     "key": "cezanne-modern-olympia",
-     "artist": "Paul Cézanne",
-     "title": "A Modern Olympia",
-     "date": "1873–74",
-     "det": "Oil on canvas, 46.2 × 55.5 cm. Musée d'Orsay, Paris",
-     "lead": "A man in a dark suit looks at a nude on a bed as a Black servant pulls back her sheet. Cézanne's answer to Manet's Olympia baffled viewers in 1874.",
-     "bul": [
-      "Cézanne lays on hot reds and pinks in quick, heavy strokes, with no polished finish. Many Impressionist painters used brighter, stronger color than the Salon favored.",
-      "Painted at Auvers-sur-Oise in the house of Dr. Paul Gachet, who lent it to the show.",
-      "Cézanne adds a clothed visitor who faces the woman from the viewer's side.",
-      "A review in L'Artiste in May 1874 went so far as to call the painter mad.",
-      "Gachet's son Paul gave it to the French national museums in 1951."
-     ],
-     "subj": "Here Manet's theme becomes a scene about looking."
-    }
-   ]
-  },
-  {
-   "n": 3,
-   "wk": 2,
-   "title": "Modern Paris: Boulevards, Leisure and Labor",
-   "sub": "Where Parisians worked and played",
-   "overview": {
-    "img": "caillebotte-rainy-day",
-    "cap": [
-     "Gustave Caillebotte",
-     "Paris Street; Rainy Day",
-     "1877"
-    ],
-    "sum": "In the mid-1800s Paris was rebuilt with broad boulevards, railway stations, cafés and theaters. The Impressionists and painters close to them made this new city their subject. These ten pictures, from about 1874 to 1897, show its crowds, pleasures and workers.",
-    "bul": [
-     "Baron Haussmann's rebuilding replaced old streets with wide avenues and uniform apartment blocks.",
-     "The third Impressionist exhibition, in April 1877, showed several of these works together."
-    ],
-    "terms": [
-     [
-      "modern life",
-      "Present-day city subjects, in place of history, myth or religion."
-     ],
-     [
-      "grands boulevards",
-      "Broad Right Bank streets lined with cafés, theaters and shops."
+      "Shown at the 1874 exhibition."
      ]
-    ]
-   },
-   "slides": [
+    },
+    {
+     "type": "work",
+     "key": "monet-capucines",
+     "artist": "Claude Monet",
+     "title": "Boulevard des Capucines",
+     "date": "1873–74",
+     "det": "Oil on canvas, 31 1/2 × 23 3/4 in. The Nelson-Atkins Museum of Art, Kansas City",
+     "lead": "Look down at the crowd: Monet paints each person with one or two strokes.",
+     "look": [
+      "The street tilts up, so the pavement fills the lower half.",
+      "The bare trees are a haze of thin gray-violet strokes.",
+      "A cluster of pink balloons at the right is the brightest spot of warm color in a cool picture."
+     ],
+     "bul": [
+      "Monet painted this view twice; the version shown in 1874 was probably the other one."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "renoir-loge",
+     "artist": "Pierre-Auguste Renoir",
+     "title": "La Loge",
+     "date": "1874",
+     "det": "Oil on canvas, 31 1/2 × 25 in. The Courtauld Gallery, London",
+     "lead": "Pierre-Auguste Renoir (French, 1841–1919). Look at the black stripes of the dress: black is used as a strong color, not just for shadow.",
+     "look": [
+      "Black stripes and white silk make the strongest contrast in the picture.",
+      "The blacks are brushed with visible strokes, so they look soft, not flat.",
+      "The woman's face is smooth and clear, while the man behind her is looser and darker.",
+      "Pink flowers at her chest and in her hair add soft touches of color."
+     ],
+     "bul": [
+      "The models were Renoir's brother Edmond and a model known as Nini."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "degas-dance-class",
+     "artist": "Edgar Degas",
+     "title": "The Dance Class",
+     "date": "1874",
+     "det": "Oil on canvas, 32 3/4 × 30 1/2 in. The Metropolitan Museum of Art, New York",
+     "lead": "Edgar Degas (French, 1834–1917). Look at the empty floor at the lower right: the dancers are pushed to the left, the back and the right edge.",
+     "look": [
+      "An empty stretch of floorboards runs from the lower right back into the room.",
+      "Figures crowd the left and right, and some are cut off by the frame.",
+      "A double bass and a music stand at the lower left cut into the view.",
+      "The white skirts are light, feathery strokes against the green wall."
+     ],
+     "bul": [
+      "The teacher leaning on a stick is the ballet master Jules Perrot."
+     ]
+    },
     {
      "type": "work",
      "key": "renoir-galette",
      "artist": "Pierre-Auguste Renoir",
      "title": "Bal du moulin de la Galette",
      "date": "1876",
-     "det": "Oil on canvas, 131.5 × 176.5 cm. Musée d'Orsay, Paris",
-     "lead": "A crowded open-air dance on Montmartre. It gave an ordinary city pleasure the size of a Salon picture and is usually ranked first among his mid-1870s works.",
-     "bul": [
-      "Sunlight through the trees falls in patches on hats, jackets and dusty ground, in quick, broken touches. Impressionist painters often favored dappled light like this, filtered through leaves.",
-      "Shown at the third Impressionist exhibition in April 1877.",
-      "Friends posed among the dancers, but the subject is the whole crowd, not one figure.",
-      "Critics disliked its blurred look, an effect many now see as the point.",
-      "Gustave Caillebotte bought it by 1879; his bequest brought it to the French state in 1896."
+     "det": "Oil on canvas, 51 3/4 × 69 1/2 in. Musée d'Orsay, Paris",
+     "lead": "Look at the spots of light on the dancers: sun through the leaves is painted as loose, pale patches.",
+     "look": [
+      "The patches cross the figures without following their shapes, so light and figure blend.",
+      "Dark blue jackets and hats make strong shapes among the pale patches.",
+      "Strokes of blue, pink and yellow repeat across the whole crowd, tying it together."
      ],
-     "subj": "The Moulin de la Galette was a popular dance garden on the Butte Montmartre, at the northern edge of Paris. The museum stresses the crowd's cheerful mood."
-    },
-    {
-     "type": "work",
-     "key": "renoir-boating",
-     "artist": "Pierre-Auguste Renoir",
-     "title": "Luncheon of the Boating Party",
-     "date": "1880–81",
-     "det": "Oil on canvas, 130.2 × 175.6 cm. The Phillips Collection, Washington, DC",
-     "lead": "Renoir's friends linger after lunch on a restaurant balcony at Chatou, west of Paris. It joins group portrait, still life and landscape in one large canvas.",
      "bul": [
-      "No preparatory drawings are known, and scans show repainted sitters: Renoir seems to have composed it on the canvas itself. Working directly, rather than from studies, suited the Impressionists' approach.",
-      "Painted mostly on the balcony of the Fournaise family's restaurant.",
-      "Aline Charigot, Renoir's future wife, plays with a small dog.",
-      "The painter Gustave Caillebotte sits backward on his chair.",
-      "Duncan Phillips bought it in 1923 for his Washington gallery."
-     ],
-     "subj": "The restaurant owner's son leans on the railing; the woman resting her elbows on it is thought to be his sister."
+      "Some of Renoir's friends posed for it."
+     ]
     },
     {
      "type": "work",
@@ -514,138 +185,53 @@ window.SITE = {
      "artist": "Gustave Caillebotte",
      "title": "Paris Street; Rainy Day",
      "date": "1877",
-     "det": "Oil on canvas, 212.2 × 276.2 cm. The Art Institute of Chicago",
-     "lead": "Life-size Parisians cross a wet, newly built intersection near the Gare Saint-Lazare. It is Caillebotte's most ambitious picture of the rebuilt city and dominated the 1877 Impressionist exhibition.",
-     "bul": [
-      "The streets themselves, newly cut through an old quarter under Haussmann's plan, are the subject. Taking the changing city of the moment as material for a major picture was central to Impressionism.",
-      "Shown as no. 1 at the third Impressionist exhibition, which Caillebotte largely organized.",
-      "Its finish, perspective and size suited Salon taste; its lopsided layout and cropped figures were new.",
-      "Look at the green lamppost splitting the scene and the man cut off at right.",
-      "Sold by the Caillebotte family in 1954; bought by the Art Institute in 1964."
+     "det": "Oil on canvas, 83 1/2 × 108 3/4 in. The Art Institute of Chicago",
+     "lead": "Gustave Caillebotte (French, 1848–1894). Look at the deep space: a new Paris street runs far back, with figures close up at the front.",
+     "look": [
+      "Building edges and paving stones run back to distant points, so the space feels deep.",
+      "A green lamppost splits the canvas into two halves.",
+      "The couple at the right is close and large; people across the square are tiny.",
+      "The paint is smooth and finely blended, like the finish taught in art schools."
      ],
-     "subj": "The figures wear the newest styles of 1877, and their umbrellas were a recent design. Caillebotte, son of a wealthy family, painted the well-dressed middle class."
-    },
-    {
-     "type": "work",
-     "key": "caillebotte-floor-scrapers",
-     "artist": "Gustave Caillebotte",
-     "title": "The Floor Scrapers",
-     "date": "1875",
-     "det": "Oil on canvas, 102 × 147 cm. Musée d'Orsay, Paris",
-     "lead": "Three workmen plane the floor of a bare room, seen from above. It is one of the first large exhibition pictures of city laborers.",
      "bul": [
-      "Earlier painters of labor showed peasants and country workers. Caillebotte chose city tradesmen, carrying the Impressionist interest in modern urban life into the world of work.",
-      "Rejected by the Salon in 1875, it was shown at the second Impressionist exhibition in 1876.",
-      "Trained under Léon Bonnat, Caillebotte drew each part separately, then transferred it with a squared grid.",
-      "Look at the curls of wood shaved from the boards, lit from the balcony door.",
-      "Given to the French state by Caillebotte's heirs in 1894."
-     ],
-     "subj": "The bare-chested workers look more like classical nudes than real tradesmen. Unlike Millet or Courbet, the museum notes, Caillebotte makes no moral or political point."
-    },
-    {
-     "type": "work",
-     "key": "caillebotte-window",
-     "artist": "Gustave Caillebotte",
-     "title": "Young Man at His Window",
-     "date": "1876",
-     "det": "Oil on canvas, 116.1 × 81 cm. J. Paul Getty Museum, Los Angeles",
-     "lead": "Caillebotte's brother René stands at an open window in the family apartment, looking down at a sunlit street. It was among the most praised works of the artist's 1876 debut.",
-     "bul": [
-      "The street is seen from inside the home, past René's back, toward a lone woman far below. The Impressionists kept looking for new viewpoints on the city, and the window was one.",
-      "Shown at the second Impressionist exhibition in 1876, with The Floor Scrapers.",
-      "One of three 1876 family interiors, with Young Man Playing the Piano and Luncheon.",
-      "Strong outside light turns the dark-suited figure almost into a silhouette.",
-      "Bought by the Getty at Christie's in 2021, its first Caillebotte."
-     ],
-     "subj": "The family lived in an upper-floor apartment on a street closed in by tall blocks. The red armchair suggests René has just stood up."
-    },
-    {
-     "type": "work",
-     "key": "monet-saint-lazare",
-     "artist": "Claude Monet",
-     "title": "Arrival of the Normandy Train, Gare Saint-Lazare",
-     "date": "1877",
-     "det": "Oil on canvas, 60.3 × 80.2 cm. The Art Institute of Chicago",
-     "lead": "A train pulls in under the glass-and-iron shed of the Paris terminal for Normandy. The station pictures were Monet's first series, a method he kept for life.",
-     "bul": [
-      "Monet paints the steam under the roof and the daylight through the glass, not the train. Impressionist painters often treated modern city sites as studies of changing atmosphere.",
-      "Eight of his twelve known station canvases were ready for the April 1877 exhibition.",
-      "Sold in March 1877 to the collector Ernest Hoschedé.",
-      "After this group Monet largely gave up city subjects for landscape.",
-      "Left to the Art Institute in 1933 by the Chicago collector Martin A. Ryerson."
-     ],
-     "subj": "The station stood in the same new quarter as the street in Caillebotte's Paris Street; Rainy Day. Monet's outdoor method had taken shape in Normandy in the 1860s.",
-     "terms": [
-      [
-       "series",
-       "Paintings of one motif made in sequence to record changing light or weather."
-      ]
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "monet-saint-lazare",
-     "title": "Tools for Painting Outdoors",
-     "stmt": "Railways, paint in metal tubes and folding easels made it practical to paint a whole picture outdoors.",
-     "para": "These tools did not create Impressionism, but they made its outdoor practice far easier.",
-     "bul": [
-      "Rail: a morning train took a painter and kit from Paris to a country motif.",
-      "Tube paint: John G. Rand's collapsible tin tube of 1841 replaced leaky pigs’ bladders.",
-      "Easels and brushes: folding easels, and flat brushes that laid broad strokes quickly, helped painters keep pace with light."
-     ],
-     "works": [
-      "monet-saint-lazare",
-      "renoir-boating"
+      "It was the centerpiece of the group's 1877 exhibition, which Caillebotte did much to organize."
      ]
     },
     {
      "type": "work",
-     "key": "degas-absinthe",
-     "artist": "Edgar Degas",
-     "title": "In a Café (L'Absinthe)",
-     "date": "1875–76",
-     "det": "Oil on canvas, 92 × 68.5 cm. Musée d'Orsay, Paris",
-     "lead": "A man and a woman sit side by side in a café, silent and apart, a glass of absinthe before her. It is among Degas's bleakest city scenes.",
-     "bul": [
-      "Degas hems the pair in between empty tabletops and the wall behind them. Unlike most of his Impressionist friends, he preferred enclosed city spaces to open landscape.",
-      "Shown at the third Impressionist exhibition in 1877, though not in the catalogue.",
-      "Degas painted it in the studio, with friends posing: the actress Ellen Andrée and the engraver Marcellin Desboutin.",
-      "Look at the mirror behind them, where their shadows merge into one dark shape.",
-      "Came to the Louvre in 1911 with Count Isaac de Camondo's bequest."
+     "key": "cassatt-blue-armchair",
+     "artist": "Mary Cassatt",
+     "title": "Little Girl in a Blue Armchair",
+     "date": "1878",
+     "det": "Oil on canvas, 35 1/4 × 51 in. National Gallery of Art, Washington",
+     "lead": "Mary Cassatt (American, 1844–1926). Look at the big blue shapes of the chairs: they fill the room and crowd the girl.",
+     "look": [
+      "Blue armchairs and a sofa make large, rounded shapes across the canvas.",
+      "The gray floor is a plain, open shape between the chairs.",
+      "Quick, loose strokes of red, green and white mark the pattern on the chairs.",
+      "Her slumped body makes a long diagonal down the chair."
      ],
-     "subj": "Absinthe, a strong anise spirit, was thought harmful and later banned in France. The café, the Nouvelle Athènes on the place Pigalle, was a meeting place for artists."
+     "bul": [
+      "Cassatt wrote that Degas helped with it; he probably painted part of the background."
+     ]
     },
     {
      "type": "work",
-     "key": "pissarro-montmartre",
-     "artist": "Camille Pissarro",
-     "title": "The Boulevard Montmartre on a Winter Morning",
-     "date": "1897",
-     "det": "Oil on canvas, 64.8 × 81.3 cm. The Metropolitan Museum of Art, New York",
-     "lead": "A busy boulevard seen from a hotel window on a gray winter morning. In this late series Pissarro brought the Impressionist study of light and weather to Haussmann's Paris.",
-     "bul": [
-      "Bare trees and gray light tie this canvas to one winter morning. Its fifteen companions from the same window change the hour and weather.",
-      "In February 1897 he took a big room in the Grand Hôtel de Russie.",
-      "The street climbs from the bottom edge to a distant vanishing point.",
-      "Given to the Met in 1960 by Katrin S. Vietor, honoring her husband."
+     "key": "morisot-summers-day",
+     "artist": "Berthe Morisot",
+     "title": "Summer's Day",
+     "date": "c. 1879",
+     "det": "Oil on canvas, 18 × 29 1/2 in. The National Gallery, London",
+     "lead": "Look at the speed of the strokes, from the zigzags on the dress to the flicks on the water.",
+     "look": [
+      "Zigzag strokes run down the dress of the woman at the left.",
+      "On the water, quick flicks of paint run mostly side to side.",
+      "The far shore sits near the top edge, so water fills most of the picture.",
+      "The two women are cut off at the left and bottom edges."
      ],
-     "subj": "Pissarro, mostly a painter of villages and fields, left Eragny for long city stays in the 1890s."
-    },
-    {
-     "type": "work",
-     "key": "gonzales-loge",
-     "artist": "Eva Gonzalès",
-     "title": "A Loge at the Théâtre des Italiens",
-     "date": "c. 1874",
-     "det": "Oil on canvas, 97.7 × 130 cm. Musée d'Orsay, Paris",
-     "lead": "A young woman in pale blue sits in a theater box, a man at her shoulder. Gonzalès, Manet's pupil by her own account, painted it at the same time as Renoir's La Loge, and shares its theme.",
      "bul": [
-      "Pale faces and light fabrics stand out against the dark box, in Manet's manner. Gonzalès, like Manet, showed at the Salon.",
-      "An earlier state may have been refused by the 1874 Salon; reworked, it was well received in 1879.",
-      "Look at the bouquet on the ledge, which echoes the flowers in Manet's Olympia.",
-      "Given to the Louvre in 1927 by her son, Jean Guérard."
-     ],
-     "subj": "The models were her sister Jeanne and Henri Guérard, whom she married. Their cool detachment, the museum notes, recalls Manet's refusal to explain a scene."
+      "Very likely shown in 1880 as The Lake in the Bois de Boulogne, a park in Paris."
+     ]
     },
     {
      "type": "work",
@@ -653,16 +239,107 @@ window.SITE = {
      "artist": "Édouard Manet",
      "title": "A Bar at the Folies-Bergère",
      "date": "1882",
-     "det": "Oil on canvas, 96 × 130 cm. The Courtauld, London",
-     "lead": "A barmaid stands behind a marble counter at a Paris music hall, the crowded room behind her seen in a mirror. It was Manet's last major painting.",
-     "bul": [
-      "Reflections of the barmaid and the man who seems to be her customer are shifted right. The puzzling mirror conveys the hall's bustle, a night-life subject the Impressionists also painted.",
-      "Shown at the Salon of 1882, the year before Manet died.",
-      "Manet sketched at the hall, then painted it in the studio with a barmaid called Suzon posing.",
-      "Look at the counter: champagne, crème de menthe and Bass ale with its red triangle.",
-      "Samuel Courtauld bought it in 1926 and gave it to the Courtauld in 1934."
+     "det": "Oil on canvas, 37 3/4 × 51 1/4 in. The Courtauld Gallery, London",
+     "lead": "Look at the mirror behind the barmaid: her reflection and the man's are not where they should be.",
+     "look": [
+      "The mirror fills the background, so the hall and crowd appear only as reflections.",
+      "Her reflection sits far to the right, though she faces us straight on.",
+      "A man in a top hat appears in the mirror but not in front of the bar.",
+      "Bottles and oranges in front are quick, sure strokes with bright highlights."
      ],
-     "subj": "The Folies-Bergère, opened about a decade earlier, was one of the most popular music halls in Paris. Its barmaids worked in full view as part of the show."
+     "bul": [
+      "Manet made sketches at the hall, then painted the picture in his studio."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "degas-shallow-tub",
+     "artist": "Edgar Degas",
+     "title": "Woman Bathing in a Shallow Tub",
+     "date": "1885",
+     "det": "Charcoal and pastel on paper, 32 × 22 1/4 in. The Metropolitan Museum of Art, New York",
+     "lead": "Look at the lines that build the body: Degas draws with color, in strokes you can count.",
+     "look": [
+      "Pastel, sticks of dry color, is laid on in hatched lines across the back.",
+      "Pale green and lilac touches on the skin take the place of smooth shading.",
+      "The bent body folds into one compact, rounded shape over the tub.",
+      "Blue in the tub and ochre on the floor are rubbed in roughly, so the paper's grain shows."
+     ],
+     "bul": [
+      "One of a set of nudes Degas showed at the 1886 Impressionist exhibition."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "monet-wheat-stacks",
+     "artist": "Claude Monet",
+     "title": "Stacks of Wheat (End of Summer)",
+     "date": "1890–91",
+     "det": "Oil on canvas, 23 1/2 × 39 1/2 in. The Art Institute of Chicago",
+     "lead": "Look at the color of the light: this is one of a series, a group of pictures of one subject, painted in different seasons and light.",
+     "look": [
+      "Low sun turns the edges of the stacks orange and pink.",
+      "The sky is pale yellow near the hills and pale green-blue above.",
+      "The same pinks, blues and greens are mixed through land, sky and stacks.",
+      "Thick strokes cover the whole surface; in the sky they all slant the same way."
+     ],
+     "bul": [
+      "Fifteen of the stack paintings hung together in one room at a Paris gallery in May 1891."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "cassatt-childs-bath",
+     "artist": "Mary Cassatt",
+     "title": "The Child's Bath",
+     "date": "1893",
+     "det": "Oil on canvas, 40 × 26 1/2 in. The Art Institute of Chicago",
+     "lead": "Look at the flat patterns and clear outlines: Cassatt developed this style after an 1890 show of Japanese prints.",
+     "look": [
+      "Broad stripes on the woman's dress make a bold, flat pattern.",
+      "Firm outlines trace the arms, legs and basin.",
+      "Carpet, wallpaper and chest add more patterns, packed edge to edge.",
+      "The skin is smooth and solid against the busy patterns around it."
+     ],
+     "bul": [
+      "First shown in Cassatt's 1893 exhibition at Durand-Ruel's gallery in Paris."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "monet-rouen-sunlight",
+     "artist": "Claude Monet",
+     "title": "Rouen Cathedral, West Façade, Sunlight",
+     "date": "1894",
+     "det": "Oil on canvas, 39 1/2 × 26 in. National Gallery of Art, Washington",
+     "lead": "Look at the surface: the stone front is built from thick, crusted paint.",
+     "look": [
+      "The paint is rough and lumpy, like the stone it shows.",
+      "Up close, the carvings break into patches of white, yellow, blue and pink.",
+      "The façade fills almost the whole canvas; blue sky shows only between the towers.",
+      "Tiny figures at the lower left show the building's scale."
+     ],
+     "bul": [
+      "Monet worked on it in a room facing the cathedral, then finished it at Giverny."
+     ]
+    },
+    {
+     "type": "work",
+     "key": "monet-water-lilies-1906",
+     "artist": "Claude Monet",
+     "title": "Water Lilies",
+     "date": "1906",
+     "det": "Oil on canvas, 35 1/2 × 37 in. The Art Institute of Chicago",
+     "lead": "Look for the horizon: there is none, so the pond's surface fills the whole canvas.",
+     "look": [
+      "Every edge of the canvas cuts through water or lily pads.",
+      "Reflected sky and trees show as soft blue and violet in the water.",
+      "Lily pads shrink and flatten toward the top, which suggests distance.",
+      "Pads and flowers are thick strokes of green, white and pink over thinner blue paint."
+     ],
+     "bul": [
+      "Shown in Paris in 1909, in an exhibition of Monet's water-lily paintings."
+     ]
     }
    ]
   }

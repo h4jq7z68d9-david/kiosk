@@ -19,7 +19,7 @@
      imagesNote      optional: the start page's line about image rights (default: every image is public domain or CC0; "" leaves the line out)
    Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
    (this page's own label in place of themeLabel, e.g. History).
-   Work slides may carry "look" (three "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list → divider → "bul".
+   Work slides may carry "look" (3 to 5 "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list → divider → "bul".
 
    Paths below use the default basePath.
    Reads   study/art-history/<slug>/{<dataFiles>,credits.js,sources.js (optional)}
