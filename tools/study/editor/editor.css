@@ -41,6 +41,8 @@
 .ed-on .ed-field:empty::before { content: attr(data-ed-label); color: var(--ink3, #697480); font-style: italic; }
 .ed-on p.ed-field, .ed-on .ed-t { display: block; }
 .ed-li { position: relative; padding-right: 28px; }
+.ed-pair { position: relative; padding-right: 28px; }
+.ed-pair .ed-t { display: block; }
 .ed-x {
   position: absolute; right: 0; top: 0; width: 22px; height: 22px; padding: 0; line-height: 20px;
   border: 1px solid var(--border-mid, #cfd6dd); border-radius: 50%; background: var(--bg, #fff);

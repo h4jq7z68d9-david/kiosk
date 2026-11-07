@@ -2,9 +2,9 @@
    to course pages as it serves them. The built pages and the production viewer (study/guide.js) never
    reference this file, and deploy.yml excludes tools/study/editor/ from the upload.
 
-   Edit slide → the slide's text becomes editable in place, showing the data file's text exactly.
-   Save → the server writes the changed fields to the data file, rebuilds the course, runs check.js,
-   and this page reloads with the result. Part overview: sub, sum, bul. Work: det, lead, look, bul. */
+   Edit page → the page's text becomes editable in place, showing the course files' text exactly.
+   Save → the server writes the changed fields, rebuilds the course, runs check.js, and this page
+   reloads with the result. Every page type is editable except titles (they set URLs) and credit entries. */
 (() => {
   'use strict';
   const id = document.body.dataset.id;
@@ -20,10 +20,10 @@
   panel.className = 'ed-panel';
   panel.setAttribute('aria-label', 'Slide editor');
   panel.innerHTML = '<div class="ed-head"><b>Slide editor</b><button type="button" class="ed-min" aria-expanded="true">Hide</button><span class="ed-file"></span></div>'
-    + '<div class="ed-btns"><button type="button" class="ed-btn ed-edit" disabled>Edit slide</button>'
+    + '<div class="ed-btns"><button type="button" class="ed-btn ed-edit" disabled>Edit page</button>'
     + '<button type="button" class="ed-btn ed-primary ed-save" hidden>Save</button>'
     + '<button type="button" class="ed-btn ed-cancel" hidden>Discard</button></div>'
-    + '<p class="ed-help" hidden>Click any outlined text to change it. Enter adds a bullet; Backspace in an empty bullet removes it. Save writes this slide to the data file.</p>'
+    + '<p class="ed-help" hidden>Click any outlined text to change it. In a list, Enter adds an item and Backspace in an empty item removes it. Save writes this page to the course files.</p>'
     + '<div class="ed-msg" role="status"></div>'
     + '<details class="ed-log" hidden><summary>Build and check.js output</summary><pre></pre></details>';
   document.body.appendChild(panel);
@@ -59,58 +59,121 @@
     }
   }
 
-  /* ---------- the slide's field elements ---------- */
+  /* ---------- where each field sits on the page ---------- */
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   const after = (ref, node) => { ref.parentNode.insertBefore(node, ref.nextSibling); return node; };
-  const child = (sel) => Array.from(notes.children).find((e) => e.matches(sel));
+  const before = (ref, node) => { ref.parentNode.insertBefore(node, ref); return node; };
+  const kids = (sel) => Array.from(notes.children).filter((e) => e.matches(sel));
+  const child = (sel) => kids(sel)[0];
+  const nextRule = (e) => { let r = e && e.nextElementSibling; while (r && !r.matches('hr.rule')) r = r.nextElementSibling; return r; };
+  const lastOf = (...a) => a.filter(Boolean).pop();
+  /* a list or terms block that is not on the page yet goes after `ref` */
+  const ensure = (sel, tag, cls, ref) => child(sel) || after(ref, el(tag, cls + ' ed-new'));
 
-  /* Each field: { el, kind: 'string'|'list', label }. Missing elements are created empty, in the place the
-     generator would put them, so an absent field can be filled in. */
-  function fields() {
-    const f = {};
-    if (data.kind === 'work') {
-      const date = child('p.date'), lead = child('p.sum');
-      f.det = { el: child('p.det') || after(date, el('p', 'det ed-new')), kind: 'string', label: 'Details line' };
-      f.lead = { el: lead, kind: 'string', label: 'Lead' };
-      let look = child('ul.look');
-      if (!look) { const lab = after(lead, el('p', 'lab ed-new', 'Look at')); look = after(lab, el('ul', 'b look ed-new')); after(look, el('hr', 'rule ed-new')); }
-      f.look = { el: look, kind: 'list', label: 'Look at bullet' };
-      let bul = child('ul.b:not(.look)');
-      if (!bul) { const ref = look.nextElementSibling && look.nextElementSibling.matches('hr.rule') ? look.nextElementSibling : look; bul = after(ref, el('ul', 'b ed-new')); }
-      f.bul = { el: bul, kind: 'list', label: 'History bullet' };
-    } else {
-      const title = child('h1'), sum = child('p.sum');
-      f.sub = { el: child('p.hsub') || after(title, el('p', 'hsub ed-new')), kind: 'string', label: 'Part subtitle' };
-      f.sum = { el: sum, kind: 'string', label: 'Overview' };
-      let bul = child('ul.b');
-      if (!bul) { let ref = sum.nextElementSibling; while (ref && !ref.matches('hr.rule')) ref = ref.nextElementSibling; bul = after(ref || sum, el('ul', 'b ed-new')); }
-      f.bul = { el: bul, kind: 'list', label: 'Bullet' };
+  /* Returns { key: element } for this page. Elements a field needs but the page lacks (empty lists,
+     a missing details line) are created empty, where the generator would put them. */
+  function slots() {
+    const s = {}, F = new Set(data.fields.map((f) => f.key)), k = data.kind;
+    const h1 = child('h1'), sums = kids('p.sum');
+    const quote = () => { const bq = child('blockquote'); if (bq) { s['quote.q'] = bq.querySelector('p'); s['quote.by'] = bq.querySelector('cite'); } };
+    const terms = (ref) => { s.terms = ensure('dl.terms', 'dl', 'terms', ref); };
+    if (k === 'intro') {
+      s.ldDescription = child('p.hsub') || after(h1, el('p', 'hsub ed-new'));
+      s.intro = sums[0];
+      const ul = child('ul.b');
+      s.imagesNote = ul.children[3] || ul.appendChild(el('li', 'ed-new'));
+    } else if (k === 'credits') {
+      s.creditsIntro = sums[0];
+    } else if (k === 'sources') {
+      s.intro = sums[0];
+      kids('p.lab').forEach((e, i) => { s[`groups.${i}.title`] = e; });
+      kids('div.cred').forEach((d, i) => Array.from(d.children).forEach((e, j) => { s[`groups.${i}.items.${j}.html`] = e; }));
+    } else if (k === 'overview') {
+      s.sub = child('p.hsub') || after(h1, el('p', 'hsub ed-new'));
+      s.sum = sums[0];
+      quote();
+      s.bul = ensure('ul.b', 'ul', 'b', nextRule(lastOf(sums[0], child('blockquote'))) || sums[0]);
+      terms(s.bul);
+    } else if (k === 'work') {
+      s.artist = child('p.artist') || before(h1, el('p', 'artist ed-new'));
+      s.date = child('p.date');
+      s.det = child('p.det') || after(s.date, el('p', 'det ed-new'));
+      if (data.format === 'lead') {
+        s.lead = sums[0];
+        let look = child('ul.look');
+        if (!look) { const lab = after(s.lead, el('p', 'lab ed-new', 'Look at')); look = after(lab, el('ul', 'b look ed-new')); after(look, el('hr', 'rule ed-new')); }
+        s.look = look;
+        const lr = look.nextElementSibling && look.nextElementSibling.matches('hr.rule') ? look.nextElementSibling : look;
+        s.bul = child('ul.b:not(.look)') || after(lr, el('ul', 'b ed-new'));
+        if (F.has('subj')) s.subj = sums[1];
+        terms(lastOf(s.bul, s.subj));
+      } else {
+        s.fn = child('p.fn'); s.sum = sums[0];
+        s.bul = ensure('ul.b', 'ul', 'b', nextRule(s.sum) || s.sum);
+        terms(s.bul);
+      }
+      quote();
+    } else if (k === 'theme') {
+      s.stmt = child('p.stmt'); s.para = sums[0];
+      s.bul = ensure('ul.b', 'ul', 'b', nextRule(s.para) || s.para);
+      terms(s.bul); quote();
+    } else if (k === 'text') {
+      s.sub = child('p.hsub') || after(h1, el('p', 'hsub ed-new'));
+      s.sum = sums[0];
+      s.bul = ensure('ul.b', 'ul', 'b', nextRule(s.sum) || s.sum);
+      terms(s.bul);
     }
-    return f;
+    return s;
   }
-  let F = null;
+  let S = null;
 
+  /* ---------- edit mode ---------- */
   function editable(e, label) {
     e.contentEditable = 'plaintext-only';
     if (e.contentEditable !== 'plaintext-only') e.contentEditable = 'true';
     e.classList.add('ed-field'); e.dataset.edLabel = label; e.spellcheck = true;
   }
+  function removable(row, label) {
+    const x = el('button', 'ed-x ed-ui', '×');
+    x.type = 'button'; x.title = 'Remove this ' + label.toLowerCase(); x.setAttribute('aria-label', x.title);
+    x.onclick = () => { row.remove(); dirty = true; };
+    row.append(x);
+  }
   function item(text, label) {
-    const li = el('li', 'ed-li'), t = el('span', 'ed-t', text), x = el('button', 'ed-x ed-ui', '×');
-    editable(t, label); x.type = 'button'; x.title = 'Remove this bullet'; x.setAttribute('aria-label', 'Remove this bullet');
-    x.onclick = () => { li.remove(); dirty = true; };
-    li.append(t, x); return li;
+    const li = el('li', 'ed-li'), t = el('span', 'ed-t', text);
+    editable(t, label); li.append(t); removable(li, label);
+    return li;
+  }
+  function pair(p, label) {
+    const row = el('div', 'ed-pair'), dt = el('dt'), dd = el('dd');
+    const a = el('span', 'ed-t ed-pa', p[0]), b = el('span', 'ed-t ed-pb', p[1]);
+    editable(a, label); editable(b, 'Meaning'); dt.append(a); dd.append(b);
+    row.append(dt, dd); removable(row, label);
+    return row;
+  }
+  function addButton(after_, label, make) {
+    const add = el('button', 'ed-add ed-ui', '+ Add ' + label.toLowerCase()); add.type = 'button';
+    add.onclick = () => { const r = make(); r.querySelector('.ed-t').focus(); dirty = true; };
+    after(after_, add);
   }
   function start() {
-    F = fields();
-    for (const [k, f] of Object.entries(F)) {
-      const v = data.values[k];
-      if (f.kind === 'string') { f.el.textContent = v; editable(f.el, f.label); f.el.hidden = false; continue; }
-      f.el.textContent = '';
-      v.forEach((x) => f.el.append(item(x, f.label)));
-      const add = el('button', 'ed-add ed-ui', '+ Add ' + f.label.toLowerCase()); add.type = 'button';
-      add.onclick = () => { const li = item('', f.label); f.el.append(li); li.firstChild.focus(); dirty = true; };
-      after(f.el, add);
+    S = slots();
+    for (const f of data.fields) {
+      const e = S[f.key];
+      if (!e) continue;
+      if (f.type === 'string') {
+        if (f.value === null) e.dataset.edDefault = norm(e.textContent);   // the built-in default text is showing
+        else e.textContent = f.value;
+        editable(e, f.label); e.hidden = false;
+      } else if (f.type === 'list') {
+        e.textContent = '';
+        f.value.forEach((x) => e.append(item(x, f.label)));
+        addButton(e, f.label, () => e.appendChild(item('', f.label)));
+      } else {
+        e.textContent = '';
+        f.value.forEach((p) => e.append(pair(p, f.label)));
+        addButton(e, f.label, () => e.appendChild(pair(['', ''], f.label)));
+      }
     }
     document.body.classList.add('ed-on');
     editing = true; btnEdit.hidden = true; btnSave.hidden = false; btnCancel.hidden = false;
@@ -119,15 +182,26 @@
   }
   function values() {
     const v = {};
-    for (const [k, f] of Object.entries(F)) {
-      v[k] = f.kind === 'string' ? norm(f.el.innerText) : Array.from(f.el.querySelectorAll('.ed-t')).map((t) => norm(t.innerText)).filter(Boolean);
+    for (const f of data.fields) {
+      const e = S[f.key];
+      if (!e) continue;
+      if (f.type === 'string') {
+        const t = norm(e.textContent);
+        v[f.key] = f.value === null && t === e.dataset.edDefault ? null : t;
+      } else if (f.type === 'list') {
+        v[f.key] = Array.from(e.querySelectorAll('.ed-t')).map((t) => norm(t.textContent)).filter(Boolean);
+      } else {
+        v[f.key] = Array.from(e.querySelectorAll('.ed-pair')).map((r) => [norm(r.querySelector('.ed-pa').textContent), norm(r.querySelector('.ed-pb').textContent)]).filter((p) => p[0] || p[1]);
+      }
     }
     return v;
   }
+  const unchanged = (v) => data.fields.every((f) => !(f.key in v) || JSON.stringify(v[f.key]) === JSON.stringify(f.value));
+
   async function save() {
     if (saving) return;
     const v = values();
-    if (JSON.stringify(v) === JSON.stringify(data.values)) { msg('No changes to save.'); return; }
+    if (unchanged(v)) { msg('No changes to save.'); return; }
     saving = true; btnSave.disabled = btnCancel.disabled = true;
     msg('Saving, then rebuilding the course and running check.js. This takes about 15 seconds.');
     let r;
@@ -145,8 +219,10 @@
   /* ---------- events ---------- */
   btnEdit.onclick = start;
   btnSave.onclick = save;
-  btnCancel.onclick = () => { if (!dirty || confirm('Discard the changes on this slide?')) { dirty = false; location.reload(); } };
+  btnCancel.onclick = () => { if (!dirty || confirm('Discard the changes on this page?')) { dirty = false; location.reload(); } };
   notes.addEventListener('input', () => { dirty = true; });
+  /* links on the page (sources entries, works lists) do not navigate away while a field is being edited */
+  notes.addEventListener('click', (e) => { if (editing && e.target.closest('.ed-field')) e.preventDefault(); });
   window.addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
   /* keys typed in a field stay in the field: the viewer's arrow-key and "/" shortcuts must not fire */
   window.addEventListener('keydown', (e) => {
@@ -156,12 +232,17 @@
     e.stopPropagation();
     if (e.key === 'Enter') {
       e.preventDefault();
+      if (t.classList.contains('ed-pa')) { t.closest('.ed-pair').querySelector('.ed-pb').focus(); return; }
+      if (t.classList.contains('ed-pb')) { const row = pair(['', ''], t.closest('.ed-pair').querySelector('.ed-pa').dataset.edLabel); t.closest('.ed-pair').after(row); row.querySelector('.ed-pa').focus(); dirty = true; return; }
       if (t.classList.contains('ed-t')) { const li = item('', t.dataset.edLabel); t.parentNode.after(li); li.firstChild.focus(); dirty = true; }
-    } else if (e.key === 'Backspace' && t.classList.contains('ed-t') && !norm(t.innerText)) {
+    } else if (e.key === 'Backspace' && t.classList.contains('ed-t') && !t.classList.contains('ed-pb') && !norm(t.textContent)) {
+      const row = t.closest('.ed-pair') || t.parentNode;
+      if (row.classList.contains('ed-pair') && norm(row.querySelector('.ed-pb').textContent)) return;
       e.preventDefault();
-      const li = t.parentNode, prev = li.previousElementSibling;
-      li.remove(); dirty = true;
-      if (prev) { const p = prev.querySelector('.ed-t'); p.focus(); document.getSelection().selectAllChildren(p); document.getSelection().collapseToEnd(); }
+      const prev = row.previousElementSibling;
+      row.remove(); dirty = true;
+      const p = prev && (prev.querySelector('.ed-pb') || prev.querySelector('.ed-t'));
+      if (p) { p.focus(); document.getSelection().selectAllChildren(p); document.getSelection().collapseToEnd(); }
     }
   }, true);
   /* paste as plain text on one line */
@@ -177,9 +258,9 @@
   try { stored = JSON.parse(sessionStorage.getItem('ed-result') || 'null'); sessionStorage.removeItem('ed-result'); } catch (e) { /* none */ }
   fetch(API + 'slide?id=' + encodeURIComponent(id), { cache: 'no-store' }).then((r) => r.json()).then((d) => {
     data = d;
-    if (d.error) msg('<b>Cannot edit this slide:</b> ' + esc(d.error), 'bad');
+    if (d.error) msg('<b>Cannot edit this page:</b> ' + esc(d.error), 'bad');
     if (d.editable) { btnEdit.disabled = false; $('.ed-file').textContent = d.file; }
-    else { btnEdit.hidden = true; if (!d.error) msg('This page has no editable text. Part overviews and work pages do.'); }
+    else { btnEdit.hidden = true; if (!d.error) msg('This page has no editable text.'); }
     const r = stored && stored.id === id ? stored : d.last;
     if (r) showResult(r, r === stored);
   }).catch((e) => msg('<b>The editor server did not answer.</b> ' + esc(e.message), 'bad'));

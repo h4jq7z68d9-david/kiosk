@@ -11,7 +11,8 @@
    Save (one slide at a time) writes the changed fields back into the course's data file, word for word,
    changing only those values; then runs  node tools/study/build-course.js <slug>  and
    node tools/site/check.js <slug>  and returns both outputs to the editor, which reloads the slide.
-   Editable: part overview (sub, sum, bul) and work slides (det, lead, look, bul).
+   Editable: the text of every page of the course (course home, part overviews, work, theme and text
+   pages, sources page, credits intro), except titles, which set page URLs, and the credits entries.
 
    Listens on 127.0.0.1 only. deploy.yml excludes this file and tools/study/editor/ from the S3 upload. */
 'use strict';
@@ -39,7 +40,14 @@ const DIR = path.join(ROOT, COURSE);
 const EDITOR_DIR = path.join(__dirname, 'editor');
 if (!fs.existsSync(path.join(ROOT, HOME))) { console.error(`${HOME} is not built yet: run node tools/study/build-course.js ${SLUG}`); process.exit(1); }
 
-const readFiles = () => CFG.dataFiles.map((name) => ({ name, src: fs.readFileSync(path.join(DIR, name), 'utf8') }));
+/* every file a save may write, as repo-relative names */
+const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/');
+function readFiles() {
+  const list = CFG.dataFiles.map((n) => ({ name: rel(path.join(DIR, n)), role: 'data' }));
+  if (fs.existsSync(path.join(DIR, 'sources.js'))) list.push({ name: rel(path.join(DIR, 'sources.js')), role: 'sources' });
+  list.push({ name: rel(CFG_FILE), role: 'settings' });
+  return list.map((f) => Object.assign(f, { src: fs.readFileSync(path.join(ROOT, f.name), 'utf8') }));
+}
 const revOf = (files) => crypto.createHash('sha1').update(files.map((f) => f.name + '\0' + f.src).join('\0')).digest('hex').slice(0, 16);
 
 /* ---------- running build and check ---------- */
@@ -60,14 +68,13 @@ async function save(body) {
   if (body.rev !== revOf(files)) {
     return { ok: false, stale: true, error: 'The data file changed on disk after this page was loaded. Nothing was saved. Reload the page and make the edit again.' };
   }
-  const values = body.values || {};
-  const patched = E.patch(files, body.id, values);
+  const patched = E.patch(files, body.id, body.values || {});
   if (!patched.changed.length) return { ok: true, changed: [], note: 'No changes to save.' };
-  E.verify(files, body.id, values, patched);
-  fs.writeFileSync(path.join(DIR, patched.name), patched.src);
+  E.verify(files, patched);
+  for (const f of patched.files) fs.writeFileSync(path.join(ROOT, f.name), f.src);
   const build = await run(['tools/study/build-course.js', SLUG]);
   const check = build.code === 0 ? await run(['tools/site/check.js', SLUG]) : null;
-  const r = { ok: true, id: body.id, file: path.relative(ROOT, path.join(DIR, patched.name)), changed: patched.changed, build, check, at: new Date().toLocaleTimeString() };
+  const r = { ok: true, id: body.id, file: patched.files.map((f) => f.name).join(', '), changed: patched.changed, build, check, at: new Date().toLocaleTimeString() };
   last = r;
   const status = build.code !== 0 ? 'BUILD FAILED' : (check.code === 0 ? 'check PASS' : 'check FAIL');
   console.log(`${r.at}  saved ${body.id} (${patched.changed.join(', ')}) in ${r.file}: ${status}`);
@@ -104,9 +111,10 @@ const server = http.createServer((req, res) => {
   if (p === '/__edit/api/slide' && req.method === 'GET') {
     try {
       const files = readFiles();
-      const loc = E.locate(files, u.searchParams.get('id') || '');
-      if (!loc) return json(res, 200, { editable: false, last });
-      return json(res, 200, { editable: true, kind: loc.kind, file: path.relative(ROOT, path.join(DIR, loc.file)), values: E.current(loc), rev: revOf(files), last });
+      const pf = E.pageFields(files, u.searchParams.get('id') || '');
+      if (!pf || !pf.fields.length) return json(res, 200, { editable: false, last });
+      const names = [...new Set(pf.fields.map((x) => x.file))];
+      return json(res, 200, { editable: true, kind: pf.kind, format: pf.format || null, file: names.join(', '), fields: E.publicFields(pf), rev: revOf(files), last });
     } catch (e) { return json(res, 500, { editable: false, error: e.message, last }); }
   }
   if (p === '/__edit/api/save' && req.method === 'POST') {
@@ -141,6 +149,6 @@ server.on('error', (e) => {
 });
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`Slide editor for ${CFG.name}: http://localhost:${PORT}${HOME}`);
-  console.log(`Saves write to ${path.relative(ROOT, DIR)}/ (${CFG.dataFiles.join(', ')}) on branch ${branch()}. Stop with Ctrl-C.`);
+  console.log(`Saves write to ${readFiles().map((f) => f.name).join(', ')} on branch ${branch()}. Stop with Ctrl-C.`);
 });
 function branch() { try { return require('child_process').execSync('git branch --show-current', { cwd: ROOT, encoding: 'utf8' }).trim() || '(detached)'; } catch (e) { return '(unknown)'; } }
