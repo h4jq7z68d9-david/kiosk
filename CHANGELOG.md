@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 6 2026, evening) — Neoclassicism and Rococo installed (not deployed; branch `install-neoclassicism-and-rococo`)
+
+First course installed with `tools/study/install-course.js`. Bundle staged from iCloud (`School v2/Art History Course Builder/Neoclassicism and Rococo/Public Study Site/`); placed `--after japanese-woodblock-prints` (directly before Romanticism). Counts match the handoff: 3 sections, 7 parts, 68 works, 78 pages; 68 images, 18.2 MB; three under 1600 px as the handoff lists (Robert 1440, David self-portrait 1452, Kauffman 1538 — Déjeuner is now 1600). `V.chrome` 18→19, 13 courses rebuilt, `check.js` PASS, `smoke.js` PASS (credits chain: Japanese Woodblock Prints → Neoclassicism and Rococo → Romanticism). Handoff flag 7 closed: the Yale record (tms:810) confirms Gavin Hamilton, *The Death of Lucretia*, 1763–67, 84 × 104 in. Flags 1–6 stay open with David; flag 1 can change a part URL, so this is held until he approves.
+
+-----
+
 ## Completed This Session (November 6 2026, midday) — Deploy gate (branch `deploy-gate`)
 
 Sixth and last item of the process backlog. Two steps added to `deploy.yml` ahead of "Generate print pages": one decides from `git diff --name-only <before> <sha>` (the base commit is fetched with `--depth=1`, no full-history clone) whether anything `check.js` validates changed, the other runs `node tools/site/check.js` when it did. Trigger paths go beyond the backlog's `study/`, `tools/study/`, `*.html`: `tools/site/`, `tools/lambda/`, `index.mjs` (the route tests live in `check.js` now), `site-*.js/.css` (an unbumped chrome edit is what the check catches) and the workflow itself (changing the gate exercises it). Verified the path filter against 16 sample paths and the shell step by simulation against real commits; the first live run is the push of this branch, which touches the workflow and so runs the gate.
