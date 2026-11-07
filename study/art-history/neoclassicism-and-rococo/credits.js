@@ -8,11 +8,10 @@ window.CREDITS = {
  },
  "boucher-dejeuner": {
   "work": "François Boucher, Le Déjeuner, 1739",
-  "page": "https://commons.wikimedia.org/wiki/File:Boucher,_il_pranzo,_1739,_01.JPG",
-  "file": "Boucher, il pranzo, 1739, 01.JPG",
-  "license": "CC BY 3.0",
-  "source": "Wikimedia Commons",
-  "author": "Sailko"
+  "page": "https://collections.louvre.fr/ark:/53355/cl010059924",
+  "file": "Louvre collections image 0000355129",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "source": "Musée du Louvre"
  },
  "boucher-diana": {
   "work": "François Boucher, Diane sortant du bain, 1742",
@@ -32,11 +31,10 @@ window.CREDITS = {
  },
  "boucher-triumph-venus": {
   "work": "François Boucher, The Triumph of Venus (Venus triumf), 1740",
-  "page": "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Venus,_by_Fran%C3%A7ois_Boucher.jpg",
-  "file": "The Triumph of Venus, by François Boucher.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "Musée du Louvre"
+  "page": "https://collection.nationalmuseum.se/en/collection/item/17773/",
+  "file": "The Triumph of Venus (François Boucher) - Nationalmuseum - 17773.tif",
+  "license": "Public domain (Nationalmuseum open access)",
+  "source": "Nationalmuseum, Stockholm, via Wikimedia Commons"
  },
  "boullee-newton": {
   "work": "Étienne-Louis Boullée, Cénotaphe à Newton, élévation perspective, 1784",
@@ -76,11 +74,10 @@ window.CREDITS = {
  },
  "canova-theseus": {
   "work": "Antonio Canova, Theseus and the Minotaur, 1782",
-  "page": "https://commons.wikimedia.org/wiki/File:Theseus_and_the_Minotaur_by_Antonio_Canova,_Victoria_and_Albert_Museum.jpg",
-  "file": "Theseus and the Minotaur by Antonio Canova, Victoria and Albert Museum.jpg",
-  "license": "CC BY 4.0",
-  "source": "Wikimedia Commons",
-  "author": "APK"
+  "page": "https://commons.wikimedia.org/wiki/File:Canova_-_Theseus_%26_Minotaur.jpg",
+  "file": "Canova - Theseus & Minotaur.jpg (cropped to the sculpture)",
+  "license": "Public domain (photographer’s own release, PD-self)",
+  "source": "Wikimedia Commons"
  },
  "carriera-boyne": {
   "work": "Rosalba Carriera, Gustavus Hamilton (1710–1746), Second Viscount Boyne, in Masquerade Costume, 1730–31",
@@ -99,19 +96,17 @@ window.CREDITS = {
  },
  "chardin-raie": {
   "work": "Jean-Siméon Chardin, La Raie, 1728",
-  "page": "https://commons.wikimedia.org/wiki/File:La_Raie_-_Jean_Baptiste_Sim%C3%A9on_Chardin_-_Mus%C3%A9e_du_Louvre_Peintures_INV_3197.jpg",
-  "file": "La Raie - Jean Baptiste Siméon Chardin - Musée du Louvre Peintures INV 3197.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "photo Shonagon 2022-06-21"
+  "page": "https://collections.louvre.fr/en/ark:/53355/cl010065938",
+  "file": "Louvre collections image 0000135610",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "source": "Musée du Louvre"
  },
  "chardin-toton": {
   "work": "Jean-Siméon Chardin, L'Enfant au toton, Salon 1738 (Louvre: 1725-1738)",
-  "page": "https://commons.wikimedia.org/wiki/File:L%27Enfant_au_toton_-_Jean_Baptiste_Sim%C3%A9on_Chardin_-_Mus%C3%A9e_du_Louvre_Peintures_RF_1705.jpg",
-  "file": "L'Enfant au toton - Jean Baptiste Siméon Chardin - Musée du Louvre Peintures RF 1705.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "photo Shonagon 2022-06-21"
+  "page": "https://collections.louvre.fr/en/ark:/53355/cl010066602",
+  "file": "Louvre collections image 0000135477",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "source": "Musée du Louvre"
  },
  "copley-watson-shark": {
   "work": "John Singleton Copley, Watson and the Shark, 1778",
@@ -155,10 +150,9 @@ window.CREDITS = {
  "david-napoleon-alps": {
   "work": "Jacques-Louis David, Le Premier Consul franchissant les Alpes au col du Grand Saint-Bernard, 1800-01",
   "page": "https://commons.wikimedia.org/wiki/File:David_-_Napoleon_crossing_the_Alps_-_Malmaison2.jpg",
-  "file": "David - Napoleon crossing the Alps - Malmaison2.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "kb.dk pic"
+  "file": "David - Napoleon crossing the Alps - Malmaison2.jpg (colour adjusted to the museum photograph)",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "source": "Wikimedia Commons"
  },
  "david-recamier": {
   "work": "Jacques-Louis David, Portrait de Juliette Récamier, née Bernard (1777-1849), 1800 (unfinished)",
@@ -178,8 +172,8 @@ window.CREDITS = {
  "david-self-portrait": {
   "work": "Jacques-Louis David, Autoportrait, 1794",
   "page": "https://collections.louvre.fr/ark:/53355/cl010063624",
-  "file": "0001335193_OG.JPG",
-  "license": "Public domain in the US (PD-Art); photo © GrandPalaisRmn / Musée du Louvre",
+  "file": "Louvre collections image 0001335193",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "source": "Musée du Louvre"
  },
  "david-socrates": {
@@ -214,11 +208,10 @@ window.CREDITS = {
  },
  "fragonard-swing": {
   "work": "Jean-Honoré Fragonard, The Swing (Les hasards heureux de l'escarpolette), c. 1767–68",
-  "page": "https://commons.wikimedia.org/wiki/File:Joean_Honor%C3%A9_Fragonard_-_The_Swing.jpg",
-  "file": "Joean Honoré Fragonard - The Swing.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "The Wallace Collection"
+  "page": "https://commons.wikimedia.org/wiki/File:The_Swing_(P430).jpg",
+  "file": "The Swing (P430).jpg",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "source": "Wikimedia Commons (image of the painting after its 2021 conservation, The Wallace Collection)"
  },
  "fragonard-verrou": {
   "work": "Jean-Honoré Fragonard, Le Verrou, c. 1777–78",
@@ -267,11 +260,10 @@ window.CREDITS = {
  },
  "hamilton-lucretia": {
   "work": "Gavin Hamilton, The Death of Lucretia (formerly The Oath of Brutus), 1763-67",
-  "page": "https://commons.wikimedia.org/wiki/File:Gavin_Hamilton_-_The_Death_of_Lucretia_-_Google_Art_Project.jpg",
-  "file": "Gavin Hamilton - The Death of Lucretia - Google Art Project.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "gwGQ9Zcyub8e8Q at Google Cultural Institute maximum zoom level"
+  "page": "https://collections.britishart.yale.edu/catalog/tms:810",
+  "file": "YCBA open-access image, B1981.25.318",
+  "license": "CC0 (Yale Center for British Art open access)",
+  "source": "Yale Center for British Art, Paul Mellon Collection"
  },
  "hogarth-gin-lane": {
   "work": "William Hogarth, Gin Lane, February 1, 1751",
@@ -329,11 +321,10 @@ window.CREDITS = {
  },
  "longhi-rhinoceros": {
   "work": "Pietro Longhi, Exhibition of a Rhinoceros at Venice, probably 1751",
-  "page": "https://commons.wikimedia.org/wiki/File:Pietro_longhi,_esibizione_di_un_rinoceronte_a_venezia,_1751_ca.jpg",
-  "file": "Pietro longhi, esibizione di un rinoceronte a venezia, 1751 ca.jpg",
-  "license": "CC BY 3.0",
-  "source": "Wikimedia Commons",
-  "author": "Sailko"
+  "page": "https://www.nationalgallery.org.uk/paintings/pietro-longhi-exhibition-of-a-rhinoceros-at-venice",
+  "file": "National Gallery image n-1101-00-000021",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "source": "The National Gallery, London"
  },
  "mengs-winckelmann": {
   "work": "Anton Raphael Mengs, Johann Joachim Winckelmann (1717-1768), ca. 1777",
@@ -395,18 +386,17 @@ window.CREDITS = {
  },
  "stubbs-whistlejacket": {
   "work": "George Stubbs, Whistlejacket, about 1762",
-  "page": "https://commons.wikimedia.org/wiki/File:Whistlejacket_by_George_Stubbs_edit.jpg",
-  "file": "Whistlejacket by George Stubbs edit.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons"
+  "page": "https://commons.wikimedia.org/wiki/File:Whistlejacket_-_George_Stubbs.jpg",
+  "file": "Whistlejacket - George Stubbs.jpg",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "source": "Wikimedia Commons (National Gallery, London image)"
  },
  "suvee-drawing": {
   "work": "Joseph-Benoît Suvée, Invention of the Art of Drawing (De ontdekking van de tekenkunst), 1791",
-  "page": "https://commons.wikimedia.org/wiki/File:Joseph-Beno%C3%AEt_Suv%C3%A9e_-_Ontdekking_van_de_tekenkunst_(1791).jpg",
-  "file": "Joseph-Benoît Suvée - Ontdekking van de tekenkunst (1791).jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "Lukas - Art in Flanders VZW"
+  "page": "https://dam.museabrugge.be/iiif/3/412/manifest.json",
+  "file": "Musea Brugge IIIF image 412, 0000.GRO0132.I",
+  "license": "Public Domain Mark 1.0",
+  "source": "Musea Brugge, Groeningemuseum"
  },
  "tiepolo-planets": {
   "work": "Giovanni Battista Tiepolo, Allegory of the Planets and Continents, 1752",
@@ -414,14 +404,6 @@ window.CREDITS = {
   "file": "DP-14286-007.jpg",
   "license": "CC0 (Met Open Access)",
   "source": "The Metropolitan Museum of Art Open Access"
- },
- "tiepolo-wurzburg": {
-  "work": "Giovanni Battista Tiepolo (with Giovanni Domenico Tiepolo), Staircase ceiling fresco, Würzburg Residenz, 1752–53",
-  "page": "https://commons.wikimedia.org/wiki/File:Tiepolo-residenz-wuerzburg.jpg",
-  "file": "Tiepolo-residenz-wuerzburg.jpg",
-  "license": "CC BY-SA 4.0",
-  "source": "Wikimedia Commons",
-  "author": "Myriam Thyes"
  },
  "vigee-le-brun-straw-hat": {
   "work": "Élisabeth Louise Vigée Le Brun, Self Portrait in a Straw Hat, 1782",
@@ -494,19 +476,17 @@ window.CREDITS = {
  },
  "wright-blacksmith": {
   "work": "Joseph Wright of Derby, The Blacksmith's Shop, 1771",
-  "page": "https://commons.wikimedia.org/wiki/File:Joseph_Wright_of_Derby_-_The_Blacksmith%27s_Shop_-_Google_Art_Project.jpg",
-  "file": "Joseph Wright of Derby - The Blacksmith's Shop - Google Art Project.jpg",
-  "license": "Public domain",
-  "source": "Wikimedia Commons",
-  "author": "Google Arts &amp; Culture  — YQG7cp1C1rHxag"
+  "page": "https://collections.britishart.yale.edu/catalog/tms:5042",
+  "file": "YCBA open-access image, B1981.25.712",
+  "license": "CC0 (Yale Center for British Art open access)",
+  "source": "Yale Center for British Art, Paul Mellon Collection"
  },
  "zimmermann-wieskirche": {
   "work": "Dominikus and Johann Baptist Zimmermann, Wieskirche interior (Pilgrimage Church of Wies), 1745–54",
-  "page": "https://commons.wikimedia.org/wiki/File:Wieskirche_05.jpg",
-  "file": "Wieskirche 05.jpg",
-  "license": "CC BY-SA 3.0",
-  "source": "Wikimedia Commons",
-  "author": "Llez"
+  "page": "https://commons.wikimedia.org/wiki/File:Bavaria_The_Wies,_Pilgrimage_Church_of_the_Scourged_Saviour_(9812973145).jpg",
+  "file": "Bavaria The Wies, Pilgrimage Church of the Scourged Saviour (9812973145).jpg",
+  "license": "CC0 (photographer’s public-domain dedication)",
+  "source": "Wikimedia Commons, from Flickr"
  },
  "zoffany-tribuna": {
   "work": "Johan Zoffany, The Tribuna of the Uffizi, 1772-77",

@@ -83,10 +83,6 @@ window.SOURCES = {
      "url": "https://www.artic.edu/artworks/4788/lady-sarah-bunbury-sacrificing-to-the-graces"
     },
     {
-     "html": "Bayerische Schlösserverwaltung (Residenz Würzburg). &ldquo;Giovanni Battista Tiepolo, with Giovanni Domenico Tiepolo, <em>Staircase ceiling, Residenz, Würzburg</em>, 1752–53.&rdquo; Collection record.",
-     "url": "https://residenz-wuerzburg.de/englisch/residenz/treppe.htm"
-    },
-    {
      "html": "Bibliothèque nationale de France, Estampes et photographie. &ldquo;Étienne-Louis Boullée, <em>Cenotaph for Newton</em>, 1784.&rdquo; Collection record.",
      "url": "https://gallica.bnf.fr/ark:/12148/btv1b531645749"
     },

@@ -237,9 +237,9 @@ window.SITE = {
      "det": "Oil on canvas, 51 1/4 × 63 3/4 in. Nationalmuseum, Stockholm",
      "lead": "Venus rises from the sea foam, but the picture is really about blue and pink: colour is the point and the story the excuse.",
      "look": [
-      "Sky, water and skin share one cool blue and pink; the only dark mass is the cloud and cliff at right.",
+      "The palette keeps to cool blue and pink: blue sky and drapery, pink cloth and flesh. The largest dark mass is the cloud and cliff at right.",
       "The striped drapery loops across the top and the bodies curve round in a spiral, so the eye never rests.",
-      "Foam and cloud are brushed with the same soft edge, so even that dark mass reads as shape, not threat."
+      "The storm cloud at right has soft, blended edges. It melts into the pale sky beside it."
      ],
      "bul": [
       "First exhibited at the 1740 Salon in Paris; the Swedish diplomat Carl Gustaf Tessin bought it from Boucher's studio and carried it to Sweden in 1741.",
@@ -280,7 +280,7 @@ window.SITE = {
      "lead": "A family at a small table is the occasion, but the room is the subject: mirror, gilt clock, lacquer and a Chinese figure on the shelf, the Rococo as a way of living.",
      "look": [
       "Clock case, candle brackets, mirror crest and the gilt console at far left are all C- and S-curves; straight lines come mainly from window bars, mirror rails and floorboards.",
-      "One window at the left lights the group, and the tall mirror throws the light back, so a narrow room reads as deep.",
+      "A tall window at left lights the group. The mirror shows a doorway beyond, so the room reads as deep.",
       "Colour comes in small saturated notes — the red lacquer table, a red cape, a blue dress — against gold and brown."
      ],
      "bul": [
@@ -320,7 +320,7 @@ window.SITE = {
       "The foliage is loose feathery touches; the dress is the most sharply painted passage, its highlights laid in as small crisp strokes."
      ],
      "bul": [
-      "Doyen turned the 1767 commission down and passed it to Fragonard, who cut the bishop the still-unnamed patron wanted at the ropes.",
+      "Doyen turned the 1767 commission down and passed it to Fragonard. The unnamed patron wanted a bishop at the ropes; Fragonard painted a layman.",
       "Cleaned in 2021: the yellowed varnish came off and small changes to the knee and petticoat were found."
      ]
     },
@@ -410,16 +410,16 @@ window.SITE = {
    "title": "Venice and the German lands",
    "sub": "Pastel, view painting and the painted sky, 1725–1754",
    "overview": {
-    "img": "tiepolo-wurzburg",
+    "img": "tiepolo-planets",
     "cap": [
      "Giovanni Battista Tiepolo",
-     "Staircase ceiling, Residenz",
-     "1752–53"
+     "Allegory of the Planets and Continents",
+     "1752"
     ],
-    "sum": "Outside France the style had other customers: Venetians sold portraits and views to visiting foreigners, while in Bavaria a Venetian decorator and local builders made ceilings seem to give way to cloud.",
+    "sum": "Outside France the style had other customers: Venetians sold portraits and views to visiting foreigners, while at Würzburg and in Bavaria a Venetian painter and local builders made ceilings seem to give way to cloud.",
     "bul": [
      "Portraits and views made for the Grand Tourist",
-     "From sketch to painted vault",
+     "The sketch for a painted vault",
      "The small picture of city life",
      "Stucco, gold and fresco as a sacred interior"
     ],
@@ -476,30 +476,6 @@ window.SITE = {
       [
        "Oil sketch",
        "a small, quickly painted version made to plan a large work or to show a patron."
-      ]
-     ]
-    },
-    {
-     "type": "work",
-     "key": "tiepolo-wurzburg",
-     "artist": "Giovanni Battista Tiepolo, with Giovanni Domenico Tiepolo",
-     "title": "Staircase ceiling, Residenz, Würzburg",
-     "date": "1752–53",
-     "det": "Fresco, about 59 × 98 ft. Residenz, Würzburg (Bayerische Schlösserverwaltung)",
-     "lead": "The sketch realised at some 600 square metres, with the four continents along the cornice: the ceiling as world theatre.",
-     "look": [
-      "Cloud and pale blue fill the middle; the figures are pushed to the rim against the white moulding, so the vault reads as open air.",
-      "Each side is painted upright for someone standing beneath it, so the picture has four tops and is read while climbing.",
-      "The sunburst left of centre is the warmest point, pink cloud drifts across the right, and the margins darken to brown and blue-grey."
-     ],
-     "bul": [
-      "Balthasar Neumann's staircase rises in three flights under an unsupported vault 23 metres high; the owners claim no larger ceiling fresco exists.",
-      "Father and son worked so closely that their hands cannot be told apart; Neumann himself is portrayed in the fresco."
-     ],
-     "terms": [
-      [
-       "Fresco",
-       "painting on fresh wet plaster, so the colour becomes part of the wall."
       ]
      ]
     },
@@ -566,9 +542,9 @@ window.SITE = {
      "det": "Stucco, fresco and gilding. Steingaden, Bavaria",
      "lead": "The style of the boudoir becomes a vision of heaven: white, gold and pastel stucco under a ceiling painted to open to the sky.",
      "look": [
-      "White walls and piers carry gold and pale pastel ornament, so the whole interior is light rather than shadow.",
+      "White piers and walls carry gold ornament. The strongest light enters through the tall side windows.",
       "The chancel narrows between paired red-marbled columns, so the colour deepens as the eye moves from the white nave to the altar.",
-      "No edge runs straight: cornices, frames and capitals break into scrolls and shell forms."
+      "Gilt scrolls spill over the straight edges of the white piers and arches."
      ],
      "bul": [
       "Built 1745–54 by Dominikus Zimmermann for the Premonstratensian abbot at Steingaden, with his brother Johann Baptist doing the decoration; the choir was consecrated in 1749.",
@@ -586,7 +562,7 @@ window.SITE = {
   {
    "n": 4,
    "wk": 2,
-   "title": "Chardin, Greuze and Diderot's Salons",
+   "title": "Chardin, Greuze and the Salon",
    "sub": "Kitchens, children and family drama, 1728–1796",
    "overview": {
     "img": "chardin-house-of-cards",
@@ -600,7 +576,7 @@ window.SITE = {
      "Still life and genre in the Academy's ranking",
      "Quiet figures absorbed in small tasks",
      "Pastel alongside oil",
-     "Greuze's household dramas",
+     "Moral scenes from family life",
      "Ruin painting at the Louvre"
     ]
    },
@@ -654,11 +630,11 @@ window.SITE = {
      "title": "L'Enfant au toton",
      "date": "by 1738",
      "det": "Oil on canvas, 26 1/2 × 30 in. Musée du Louvre, Paris",
-     "lead": "A boy watches a spinning top while his books and pen wait: a portrait that is really a picture of attention.",
+     "lead": "Books and a quill sit unused while the jeweller's son watches his top: a portrait that is really a picture of attention.",
      "look": [
       "Light from the left falls on the powdered hair, face and shirt; the rest of the figure stays in soft brown.",
       "His lowered gaze runs down to the small top at the table's edge, so the eye follows his look to the point of the picture.",
-      "Edges are soft and the brushwork blurred, so nothing is outlined: the quiet is in the handling."
+      "The face, hair and hands are blended with soft edges. No line outlines them."
      ],
      "bul": [
       "The sitter is Auguste Gabriel Godefroy, the jeweller Charles Godefroy's younger son; the picture hung in the 1738 Salon.",
@@ -876,7 +852,7 @@ window.SITE = {
      "title": "The Blacksmith's Shop",
      "date": "1771",
      "det": "Oil on canvas, 50 1/2 × 41 in. Yale Center for British Art, New Haven",
-     "lead": "A smithy at night, lit by the white-hot iron on the anvil: manual work made the subject of a large, dramatic night piece.",
+     "lead": "White-hot iron on the anvil is the main light in the scene: manual work made the subject of a large, dramatic night piece.",
      "look": [
       "Faces and shirts nearest the anvil glow yellow, a second fire burns low behind the figures at left, and the rest of the shop sinks into brown dark.",
       "The figures bend in a ring around the anvil, and the man in silhouette at left frames it.",
@@ -1123,7 +1099,7 @@ window.SITE = {
      "det": "Oil on canvas, 84 × 104 in. Yale Center for British Art, New Haven",
      "lead": "A Roman woman's suicide and the men swearing revenge over her: a public oath painted about twenty years before David's Oath of the Horatii.",
      "look": [
-      "The raised dagger at centre is the meeting point of the composition; arms reach toward it from three sides.",
+      "The raised dagger is the focal point, just right of centre, where Brutus's outstretched arm meets the old man's grip.",
       "Figures stand in a shallow band across the front, like a relief.",
       "Strong reds, blues, purple and yellow are set in broad blocks against a dark background."
      ],
@@ -1184,7 +1160,7 @@ window.SITE = {
      "lead": "A hero carved in the calm, idealised manner of ancient statues, seated on the Minotaur he has killed, club in hand.",
      "look": [
       "The group is a stable pyramid, with the seated figure as the apex and the fallen body as the base.",
-      "The hero's smooth body stands out against the textured hide on the Minotaur's back.",
+      "The hero's smooth body stands out against the rougher, pitted rock at the base of the group.",
       "The pose is quiet, head lowered and limbs at rest, with none of the twisting of Baroque sculpture."
      ],
      "bul": [
@@ -1277,7 +1253,7 @@ window.SITE = {
      "title": "Le Serment des Horaces",
      "date": "1784–85",
      "det": "Oil on canvas, 130 × 167 1/4 in. Musée du Louvre, Paris",
-     "lead": "The whole story sits in one row of figures at the front of a shallow stage, like a Roman relief — the Neoclassical answer to Rococo's scattered compositions.",
+     "lead": "The whole story sits in one row of figures at the front of a shallow stage, like a Roman relief.",
      "look": [
       "Three arches behind divide the scene into three groups: the sons, the father with the swords, the women.",
       "The men are built from straight lines and sharp angles; the women at right collapse in soft curves.",
