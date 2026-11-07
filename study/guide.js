@@ -31,7 +31,9 @@
   G.parts.forEach((p) => {
     if (p.section !== lastWk) { html += `<p class="wk">${esc(p.section)}</p>`; lastWk = p.section; }
     const its = items.filter((x) => x.h === p.h);
-    html += `<div class="grp" data-h="${p.h}"><a class="ho" href="${its[0].url}"${its[0].id === curId ? ' aria-current="page"' : ''}>${esc(p.title)}</a><ul class="items${p.h === curH ? ' open' : ''}">${its.map((x) => `<li><a href="${x.url}" class="${x.kind === 'theme' ? 'th' : ''}"${x.id === curId ? ' aria-current="page"' : ''}>${x.kind === 'theme' ? esc(x.tlabel || G.themeLabel || 'Theme') + ': ' : ''}${esc(x.label)}</a></li>`).join('')}</ul></div>`;
+    const li = (x) => `<li><a href="${x.url}" class="${x.kind === 'theme' ? 'th' : ''}"${x.id === curId ? ' aria-current="page"' : ''}>${x.kind === 'theme' ? esc(x.tlabel || G.themeLabel || 'Theme') + ': ' : ''}${esc(x.label)}</a></li>`;
+    if (p.only) { html += `<div class="grp" data-h="${p.h}"><ul class="items open">${its.map(li).join('')}</ul></div>`; return; }   // one-part course: no part heading
+    html += `<div class="grp" data-h="${p.h}"><a class="ho" href="${its[0].url}"${its[0].id === curId ? ' aria-current="page"' : ''}>${esc(p.title)}</a><ul class="items${p.h === curH ? ' open' : ''}">${its.map(li).join('')}</ul></div>`;
   });
   html += '<p class="wk">Sources</p>' + items.filter((x) => x.h === 99).map((x) => `<a class="ho" href="${x.url}"${x.id === curId ? ' aria-current="page"' : ''}>${esc(x.label)}</a>`).join('');
   out.innerHTML = html;

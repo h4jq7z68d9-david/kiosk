@@ -62,7 +62,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 19, bar: 5, guideCss: 17, guideJs: 12, search: 3 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 19, bar: 5, guideCss: 17, guideJs: 13, search: 3 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -159,9 +159,9 @@ ${CFG.intro ? `<p class="sum">${esc(CFG.intro)}</p>
   }
   if (f.kind === 'overview') {
     const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
-    return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><p class="eyebrow">${esc(sec(d.wk))}</p><h1 class="htitle">${esc(d.title)}</h1><p class="hsub">${esc(d.sub)}</p>
+    return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><p class="eyebrow">${esc(sec(d.wk))}</p><h1 class="htitle">${esc(ONE ? NAME : d.title)}</h1><p class="hsub">${esc(d.sub)}</p>
 <p class="sum">${esc(o.sum)}</p>${quote(d.quote)}${RULE}${bul(o.bul)}${o.terms && o.terms.length ? RULE + terms(o.terms) : ''}
-<p class="lab">Works in this part</p>${wl(d.slides.filter((s) => s.type === 'work').map((s) => s.key))}${crl(o.img)}</div>`];
+<p class="lab">${ONE ? 'Works' : 'Works in this part'}</p>${wl(d.slides.filter((s) => s.type === 'work').map((s) => s.key))}${crl(o.img)}</div>`];
   }
   if (f.kind === 'work') {
     const th = themesOf(d.key);
@@ -211,7 +211,7 @@ function textOf(f) {
 const thumb = (f) => (f.kind === 'work' ? f.d.key : f.kind === 'theme' ? f.d.img : f.kind === 'overview' ? f.d.overview.img : null);
 const GUIDE = {
   slug: SLUG, name: NAME, img: IMG_COURSE + '/img/', themeLabel: THEME,
-  parts: S.handouts.map((h) => ({ h: h.n, title: h.title, section: sec(h.wk) })),
+  parts: S.handouts.map((h) => ({ h: h.n, title: ONE ? NAME : h.title, section: sec(h.wk), only: ONE || undefined })),   // one part: shown under the course name
   items: flat.map((f) => ({ id: f.id, url: f.url, h: f.h, kind: f.kind, label: f.label, tlabel: (f.kind === 'theme' && f.d.label) || undefined, title: (f.d && f.d.title) || f.label, artist: (f.d && f.d.artist) || '', thumb: thumb(f), text: textOf(f) })),
 };
 
@@ -246,7 +246,7 @@ function meta(f) {
         hasPart: d.slides.filter((s) => s.type === 'work').map((s) => ({ '@type': 'VisualArtwork', name: s.title, url: abs(flat[byKey[s.key]].url) })) }, crumbLd(cr)] };
   }
   if (f.kind === 'work') {
-    const cr = [...base, [f.hd.title, f.part.url], [d.title, f.url]];
+    const cr = [...base, ...(ONE ? [] : [[f.hd.title, f.part.url]]), [d.title, f.url]];
     const text = d.lead || d.sum, title = `${d.artist ? `${d.artist}, ${d.title}` : d.title} – ${NAME}`;
     return { title, desc: describe(text), image: d.key, alt: d.title, type: 'article',
       ld: [{ '@type': 'VisualArtwork', '@id': abs(f.url) + '#work', name: d.title, url: abs(f.url), description: text,
@@ -255,7 +255,7 @@ function meta(f) {
         about: { '@id': abs(f.url) + '#work' }, isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(d.key) }, crumbLd(cr)] };
   }
   if (f.kind === 'theme' || f.kind === 'text') {
-    const cr = [...base, [f.hd.title, f.part.url], [d.title, f.url]];
+    const cr = [...base, ...(ONE ? [] : [[f.hd.title, f.part.url]]), [d.title, f.url]];
     const text = f.kind === 'theme' ? d.para : d.sum, im = f.kind === 'theme' ? d.img : f.hd.overview.img;
     return { title: `${d.title} – ${NAME}`, desc: describe(text), image: im, alt: f.kind === 'theme' ? (d.alt || d.title) : f.hd.overview.cap[1], type: 'article',
       ld: [{ '@type': 'LearningResource', '@id': abs(f.url), url: abs(f.url), name: d.title, description: describe(text), inLanguage: 'en',
@@ -297,6 +297,7 @@ function crumbHtml(f) {
   const course = a([NAME, HOME]);
   if (f.h === 99) return head.join(sep) + tail([course, here(f.label)]);
   const p = f.part || f;
+  if (ONE) return head.join(sep) + tail([course]);   // one part: no part level
   return head.join(sep) + tail([course, f.kind === 'overview' ? here(f.hd.title) : a([f.hd.title, p.url])]);
 }
 

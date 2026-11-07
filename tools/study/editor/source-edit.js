@@ -226,7 +226,7 @@ function pageFields(files, id) {
       if (!ov || ov.value.type !== 'obj') throw new Error(`${f}: part ${m[1]} has no overview object`);
       const O = ov.value, OP = H.concat('overview');
       section();
-      out.push(field('title', 'Part title', 'string', f, h, 'title', H));
+      if (C.handouts.length > 1) out.push(field('title', 'Part title', 'string', f, h, 'title', H));   // a one-part course's overview shows the course name
       out.push(field('sub', 'Part subtitle', 'string', f, h, 'sub', H));
       out.push(field('sum', 'Overview', 'string', f, O, 'sum', OP));
       quote(h, H);
