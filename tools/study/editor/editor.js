@@ -4,7 +4,8 @@
 
    Edit page → the page's text becomes editable in place, showing the course files' text exactly.
    Save → the server writes the changed fields, rebuilds the course, runs check.js, and this page
-   reloads with the result. Every page type is editable except titles (they set URLs) and credit entries. */
+   reloads with the result. Every page type is editable, titles included; not the per-image credit entries.
+   A title or section-name change moves the page: the server fixes the redirects and the editor opens the new URL. */
 (() => {
   'use strict';
   const id = document.body.dataset.id;
@@ -47,7 +48,8 @@
     const log = $('.ed-log'), pre = log.querySelector('pre');
     const out = [r.build && ('$ ' + r.build.cmd + '\n' + r.build.out), r.check && ('$ ' + r.check.cmd + '\n' + r.check.out)].filter(Boolean).join('\n\n');
     pre.textContent = out; log.hidden = !out;
-    const what = here ? `Saved ${esc(r.changed.join(', '))} to ${esc(r.file)} at ${esc(r.at)}.` : `Last save: ${esc(r.id)} (${esc(r.changed.join(', '))}) at ${esc(r.at)}.`;
+    const moved = (r.moves || []).map((m) => `<br>Moved ${esc(m.from)} → ${esc(m.to)}${m.redirect ? ' (live URL: redirect added)' : ''}.`).join('');
+    const what = (here ? `Saved ${esc(r.changed.join(', '))} to ${esc(r.file)} at ${esc(r.at)}.` : `Last save: ${esc(r.id)} (${esc(r.changed.join(', '))}) at ${esc(r.at)}.`) + moved;
     if (r.build && r.build.code !== 0) { msg(`${what}<br><b>The build failed.</b> The pages were not rebuilt; see the output below.`, 'bad'); log.open = true; return; }
     const errs = block(r.check.out, 'ERRORS'), warns = block(r.check.out, 'WARNINGS');
     const list = (a) => '<ul>' + a.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>';
@@ -77,11 +79,12 @@
     const h1 = child('h1'), sums = kids('p.sum');
     const quote = () => { const bq = child('blockquote'); if (bq) { s['quote.q'] = bq.querySelector('p'); s['quote.by'] = bq.querySelector('cite'); } };
     const terms = (ref) => { s.terms = ensure('dl.terms', 'dl', 'terms', ref); };
+    /* titles: the h1; the section name: the eyebrow over it (overview, work and text pages) */
+    if (F.has('title')) s.title = h1;
+    if (F.has('section')) s.section = child('p.eyebrow');
     if (k === 'intro') {
       s.ldDescription = child('p.hsub') || after(h1, el('p', 'hsub ed-new'));
-      s.intro = sums[0];
-      const ul = child('ul.b');
-      s.imagesNote = ul.children[3] || ul.appendChild(el('li', 'ed-new'));
+      s.intro = sums[0] || after(child('hr.rule') || s.ldDescription, el('p', 'sum ed-new'));
     } else if (k === 'credits') {
       s.creditsIntro = sums[0];
     } else if (k === 'sources') {
@@ -213,7 +216,9 @@
     if (!r.ok) { msg('<b>Not saved.</b> ' + esc(r.error) + '<br>Your text is still on the page.', 'bad'); return; }
     if (!r.changed.length) { msg('No changes to save.'); return; }
     try { sessionStorage.setItem('ed-result', JSON.stringify(r)); } catch (e) { /* the result also comes back as "last" */ }
-    dirty = false; location.reload();
+    dirty = false;
+    if (r.url && r.url !== location.pathname) location.href = r.url;   // the page moved
+    else location.reload();
   }
 
   /* ---------- events ---------- */

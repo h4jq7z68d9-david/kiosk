@@ -11,13 +11,15 @@ A local tool for reviewing and editing a study course's text in the real page la
 - `tools/study/edit-server.js` is a small local web server. It serves the built course pages from the repo and adds an editor panel to them as it sends them to the browser. The pages on disk are not changed.
 - `tools/study/editor/` holds the editor itself (`editor.js`, `editor.css`) and the code that writes the course files (`source-edit.js`).
 - Every page of the course is editable:
-  - course home: subtitle, intro paragraph, images note (settings file `tools/study/courses/<slug>.json`)
-  - part overview: subtitle, overview text, bullets, terms
-  - work pages: artist, date, details line, lead, Look-at bullets, history bullets, and subject, terms and quotation where the course has them
-  - theme and text pages: their statement, paragraph or summary, bullets and terms
+  - course home (courses with several parts): subtitle and paragraph (settings file `tools/study/courses/<slug>.json`)
+  - part overview: section name, part title, subtitle, overview text, bullets, terms (a one-part course's overview is its home page)
+  - work pages: section name, artist, title, date, details line, lead, Look-at bullets, history bullets, and subject, terms and quotation where the course has them
+  - theme and text pages: title, statement, paragraph or summary, bullets and terms
   - sources page: intro, group headings and each entry (entries show their HTML as written, e.g. `&ldquo;`)
   - credits page: the intro only
-- Not editable: titles (they set page URLs and file names) and the credit entries for each image.
+- Not editable: the course name (it is also in the course registry) and the credit entry for each image.
+- **Titles and section names set URLs.** When one changes, its pages move to new URLs. The server then fixes `<course>/retired-urls.tsv`: redirects that pointed at a moved page point at its new URL, and a moved page that is already live (on `origin/main` in this clone) gets a redirect from its old URL. The editor then opens the page at its new URL.
+- `retired-urls.tsv` (a header line, then `old URL<TAB>new URL`) is read by `build-course.js`, which writes a small redirect page for every line on each build.
 - **Edit page** makes that page's text editable in place. In a list, Enter adds an item and Backspace in an empty item removes it.
 - **Save** (or Cmd-S) writes the changed fields into the course files exactly as typed, changing nothing else in the files. It then runs `node tools/study/build-course.js <slug>` and `node tools/site/check.js <slug>` and reloads the slide. check.js errors and warnings are shown in the panel, on every page, until the next save.
 - **Discard** reloads the page without saving.

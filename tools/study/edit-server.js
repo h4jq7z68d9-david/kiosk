@@ -12,7 +12,10 @@
    changing only those values; then runs  node tools/study/build-course.js <slug>  and
    node tools/site/check.js <slug>  and returns both outputs to the editor, which reloads the slide.
    Editable: the text of every page of the course (course home, part overviews, work, theme and text
-   pages, sources page, credits intro), except titles, which set page URLs, and the credits entries.
+   pages, sources page, credits intro), including titles and section names; not the per-image credit entries.
+   A title or section-name change moves pages to new URLs. The server then fixes the redirects in the
+   course's retired-urls.tsv: lines that pointed at a moved page point at its new URL, and a moved page that
+   is already live (present on origin/main) gets a new line from its old URL, so links to it keep working.
 
    Listens on 127.0.0.1 only. deploy.yml excludes this file and tools/study/editor/ from the S3 upload. */
 'use strict';
@@ -60,6 +63,40 @@ function run(cmd) {
     p.on('close', (code) => resolve({ cmd: 'node ' + cmd.join(' '), code, out: out.trim() }));
   });
 }
+/* id → URL of every page, from the built index.js */
+function pageUrls() {
+  const f = path.join(DIR, 'index.js');
+  if (!fs.existsSync(f)) return {};
+  const ctx = {}; require('vm').runInNewContext(fs.readFileSync(f, 'utf8'), { window: ctx });
+  const m = {}; ((ctx.GUIDE && ctx.GUIDE.items) || []).forEach((it) => { m[it.id] = it.url; });
+  return m;
+}
+/* is this URL live: is the file on origin/main in this clone? */
+function live(url) {
+  const r = require('child_process').spawnSync('git', ['cat-file', '-e', 'origin/main:' + url.replace(/^\//, '')], { cwd: ROOT });
+  return r.status === 0;
+}
+/* After pages moved: retarget and extend retired-urls.tsv. Returns [{ from, to, redirect }]. */
+function fixRedirects(before, after) {
+  const moves = Object.keys(after).filter((id) => before[id] && before[id] !== after[id]).map((id) => ({ from: before[id], to: after[id] }));
+  if (!moves.length) return moves;
+  const file = path.join(DIR, 'retired-urls.tsv');
+  const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : 'old\tredirect to\n';
+  const lines = text.split(/\r?\n/), head = lines[0];
+  let rows = lines.slice(1).filter((l) => l.trim()).map((l) => l.split('\t').map((x) => x.trim()));
+  for (const mv of moves) {
+    rows.forEach((r) => { if (r[1] === mv.from) r[1] = mv.to; });
+    mv.redirect = live(mv.from);
+    if (mv.redirect && !rows.some((r) => r[0] === mv.from)) rows.push([mv.from, mv.to]);
+  }
+  const current = new Set(Object.values(after));
+  rows = rows.filter((r) => !current.has(r[0]));                    // a URL in use again is a page, not a redirect
+  const to = new Map(rows.map((r) => [r[0], r[1]]));
+  rows.forEach((r) => { let t = r[1], n = 0; while (to.has(t) && n++ < 50) t = to.get(t); r[1] = t; });   // no redirect chains
+  fs.writeFileSync(file, [head, ...rows.map((r) => r.join('\t'))].join('\n') + '\n');
+  return moves;
+}
+
 let last = null;            // the last save's result, shown on every page
 let busy = Promise.resolve();
 
@@ -71,10 +108,17 @@ async function save(body) {
   const patched = E.patch(files, body.id, body.values || {});
   if (!patched.changed.length) return { ok: true, changed: [], note: 'No changes to save.' };
   E.verify(files, patched);
+  const urlsBefore = pageUrls();
   for (const f of patched.files) fs.writeFileSync(path.join(ROOT, f.name), f.src);
-  const build = await run(['tools/study/build-course.js', SLUG]);
+  /* pages first, to learn any new URLs; then fix retired-urls.tsv; then the full build with the stubs */
+  let build = await run(['tools/study/build-course.js', SLUG, '--no-stubs']);
+  let moves = [];
+  if (build.code === 0) {
+    moves = fixRedirects(urlsBefore, pageUrls());
+    build = await run(['tools/study/build-course.js', SLUG]);
+  }
   const check = build.code === 0 ? await run(['tools/site/check.js', SLUG]) : null;
-  const r = { ok: true, id: body.id, file: patched.files.map((f) => f.name).join(', '), changed: patched.changed, build, check, at: new Date().toLocaleTimeString() };
+  const r = { ok: true, id: body.id, file: patched.files.map((f) => f.name).join(', '), changed: patched.changed, moves, url: pageUrls()[body.id] || null, build, check, at: new Date().toLocaleTimeString() };
   last = r;
   const status = build.code !== 0 ? 'BUILD FAILED' : (check.code === 0 ? 'check PASS' : 'check FAIL');
   console.log(`${r.at}  saved ${body.id} (${patched.changed.join(', ')}) in ${r.file}: ${status}`);

@@ -13,7 +13,7 @@
 
    Page ids are the built page's <body data-id>: "start" (course home), "h<n>-0" (part overview),
    the work key (work page), "h<n>-<i>" (theme or text slide i), "sources", "credits".
-   Titles are never editable here: they set page URLs. Credits entries are not editable here. */
+   Titles and section names are editable (the server then fixes the URLs); per-image credit entries are not. */
 'use strict';
 const LS = String.fromCharCode(0x2028), PS = String.fromCharCode(0x2029);
 
@@ -108,7 +108,7 @@ Parser.prototype.obj = function () {
 /* The top-level objects in one course file: `window.X = {…}` for X in SITE / SOURCES / CREDITS, and the
    arguments of `SITE.handouts.push(…)`. Strings and comments are skipped while looking for them. */
 function rootsIn(src, name) {
-  const out = { handouts: [], SOURCES: null };
+  const out = { handouts: [], SOURCES: null, SITE: null };
   const p = new Parser(src);
   let i = 0;
   while (i < src.length) {
@@ -124,7 +124,7 @@ function rootsIn(src, name) {
         p.i = i + m[0].length;
         const v = p.value();
         if (v.type !== 'obj') throw new Error(`${name}: ${m[1]} is not an object`);
-        if (m[1] === 'SITE') { const h = prop(v, 'handouts'); if (h && h.value.type === 'arr') h.value.items.forEach((n) => out.handouts.push(n)); }
+        if (m[1] === 'SITE') { out.SITE = v; const h = prop(v, 'handouts'); if (h && h.value.type === 'arr') h.value.items.forEach((n) => out.handouts.push(n)); }
         if (m[1] === 'SOURCES') out.SOURCES = v;
         i = p.i; continue;
       }
@@ -154,14 +154,15 @@ const val = (obj, key) => (obj && prop(obj, key) ? prop(obj, key).value.value : 
 /* files: [{ name, src, role: 'data'|'sources'|'settings' }] */
 function course(files) {
   const handouts = [];   // in SITE.handouts order: { node, file }
-  let sources = null, settings = null;
+  let sources = null, settings = null, site = null;
   for (const f of files) {
     if (f.role === 'settings') { const p = new Parser(f.src); settings = { node: p.value(), file: f.name }; continue; }
     const r = rootsIn(f.src, f.name);
     r.handouts.forEach((node) => handouts.push({ node, file: f.name }));
     if (r.SOURCES) sources = { node: r.SOURCES, file: f.name };
+    if (r.SITE) site = { node: r.SITE, file: f.name };
   }
-  return { handouts, sources, settings };
+  return { handouts, sources, settings, site };
 }
 
 /* A field: one editable value. type: 'string' | 'list' (strings) | 'pairs' (terms: [term, meaning]).
@@ -180,8 +181,7 @@ function pageFields(files, id) {
   const S = C.settings;
   if (id === 'start') {
     out.push(field('ldDescription', 'Course subtitle', 'string', S.file, S.node, 'ldDescription', ['CFG']));
-    out.push(field('intro', 'Intro paragraph', 'string', S.file, S.node, 'intro', ['CFG'], { dflt: true }));
-    out.push(field('imagesNote', 'Images note', 'string', S.file, S.node, 'imagesNote', ['CFG'], { dflt: true }));
+    out.push(field('intro', 'Intro paragraph', 'string', S.file, S.node, 'intro', ['CFG']));
     return { kind: 'intro', fields: out };
   }
   if (id === 'credits') {
@@ -207,6 +207,13 @@ function pageFields(files, id) {
   for (let hi = 0; hi < C.handouts.length; hi++) {
     const { node: h, file: f } = C.handouts[hi];
     const H = ['SITE', 'handouts', hi];
+    /* the section name (page eyebrow) lives in SITE.sections; renaming it moves every page in the section */
+    const section = () => {
+      const sn = C.site && prop(C.site.node, 'sections');
+      const wk = val(h, 'wk');
+      if (!sn || sn.value.type !== 'obj' || wk == null || !prop(sn.value, String(wk))) return;
+      out.push(field('section', 'Section name', 'string', C.site.file, sn.value, String(wk), ['SITE', 'sections']));
+    };
     const quote = (obj, path) => {
       const q = prop(obj, 'quote');
       if (!q || q.value.type !== 'obj') return;
@@ -218,6 +225,8 @@ function pageFields(files, id) {
       const ov = prop(h, 'overview');
       if (!ov || ov.value.type !== 'obj') throw new Error(`${f}: part ${m[1]} has no overview object`);
       const O = ov.value, OP = H.concat('overview');
+      section();
+      out.push(field('title', 'Part title', 'string', f, h, 'title', H));
       out.push(field('sub', 'Part subtitle', 'string', f, h, 'sub', H));
       out.push(field('sum', 'Overview', 'string', f, O, 'sum', OP));
       quote(h, H);
@@ -235,7 +244,8 @@ function pageFields(files, id) {
       if (!hit) continue;
       const F = (k, label, t, extra) => out.push(field(k, label, t, f, s, k, P, extra));
       if (type === 'work') {
-        F('artist', 'Artist', 'string'); F('date', 'Date', 'string'); F('det', 'Details line', 'string');
+        section();
+        F('artist', 'Artist', 'string'); F('title', 'Title', 'string'); F('date', 'Date', 'string'); F('det', 'Details line', 'string');
         if (val(s, 'lead') != null) {
           F('lead', 'Lead', 'string'); F('look', 'Look at bullet', 'list'); F('bul', 'History bullet', 'list');
           if (val(s, 'subj') != null) F('subj', 'Subject', 'string');
@@ -246,9 +256,10 @@ function pageFields(files, id) {
         return { kind: 'work', format: 'old', file: f, fields: out };
       }
       if (type === 'theme') {
-        F('stmt', 'Statement', 'string'); F('para', 'Paragraph', 'string'); F('bul', 'Bullet', 'list'); F('terms', 'Term', 'pairs'); quote(s, P);
+        F('title', 'Title', 'string'); F('stmt', 'Statement', 'string'); F('para', 'Paragraph', 'string'); F('bul', 'Bullet', 'list'); F('terms', 'Term', 'pairs'); quote(s, P);
         return { kind: 'theme', file: f, fields: out };
       }
+      section(); F('title', 'Title', 'string');
       F('sub', 'Subtitle', 'string'); F('sum', 'Summary', 'string'); F('bul', 'Bullet', 'list'); F('terms', 'Term', 'pairs');
       return { kind: 'text', file: f, fields: out };
     }

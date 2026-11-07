@@ -1,7 +1,7 @@
 /* Shared behavior for every study-guide page (all courses).
    Reads window.GUIDE (per-course index.js). Pages work without this script: the slide,
    Prev/Next links and the part links are plain HTML. This adds the outline, search,
-   Saved pages, Continue, keyboard, swipe and the full-screen image. */
+   Bookmarks, keyboard, swipe and the full-screen image. */
 /* Phones and portrait iPads: move the Prev/Next bar out of the scrolling .app to sit under it (see guide.css). */
 (function () {
   const bar = document.querySelector('.main > .bar'); if (!bar || !window.matchMedia) return;
@@ -20,13 +20,14 @@
     get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
   };
-  const KB = 'study:' + G.slug + ':saved', KL = 'study:' + G.slug + ':last', KR = 'study:' + G.slug + ':rail';
+  const KB = 'study:' + G.slug + ':saved', KR = 'study:' + G.slug + ':rail';
   const items = G.items, byId = {}; items.forEach((it, i) => { it.i = i; byId[it.id] = it; });
   const curId = document.body.dataset.id, cur = byId[curId] || items[0], curH = cur.h;
   const partTitle = (h) => { const p = G.parts.find((x) => x.h === h); return p ? p.title : (h === 99 ? 'Sources' : 'Start'); };
 
   /* outline */
-  const out = $('outline'); let html = `<a class="ho" href="${items[0].url}"${cur.i === 0 ? ' aria-current="page"' : ''}>About this site</a>`, lastWk = null;
+  /* a course home that is its own page (several parts) heads the outline under the course name; a one-part course's home is its part overview */
+  const out = $('outline'); let html = items[0].kind === 'intro' ? `<a class="ho" href="${items[0].url}"${cur.i === 0 ? ' aria-current="page"' : ''}>${esc(items[0].label)}</a>` : '', lastWk = null;
   G.parts.forEach((p) => {
     if (p.section !== lastWk) { html += `<p class="wk">${esc(p.section)}</p>`; lastWk = p.section; }
     const its = items.filter((x) => x.h === p.h);
@@ -42,7 +43,7 @@
 
   /* jump select (small screens) */
   const j = $('jump'); let o = '', g = null;
-  items.forEach((it) => { const gt = partTitle(it.h); if (gt !== g) { if (g !== null) o += '</optgroup>'; o += `<optgroup label="${esc(gt)}">`; g = gt; } o += `<option value="${it.url}"${it.id === curId ? ' selected' : ''}>${esc(it.kind === 'overview' ? gt : it.label)}</option>`; });
+  items.forEach((it) => { const gt = partTitle(it.h); if (gt !== g) { if (g !== null) o += '</optgroup>'; o += `<optgroup label="${esc(gt)}">`; g = gt; } o += `<option value="${it.url}"${it.id === curId ? ' selected' : ''}>${esc(it.kind === 'overview' && it.label === 'Overview' ? gt : it.label)}</option>`; });
   j.innerHTML = o + '</optgroup>'; j.onchange = () => { location.href = j.value; };
 
   /* rail toggle */
@@ -51,23 +52,21 @@
   function setRail(open) { app.classList.toggle('collapsed', !open); tog.setAttribute('aria-expanded', String(open)); tog.setAttribute('aria-label', open ? 'Hide outline' : 'Show outline'); tog.title = open ? 'Hide outline' : 'Show outline'; store.set(KR + ':open', open); }
   setRail(store.get(KR + ':open', true) !== false); tog.onclick = () => setRail(app.classList.contains('collapsed'));
 
-  /* saved pages, bookmark, continue */
+  /* bookmarks: the Bookmarks button appears once a page is bookmarked */
   let saved = store.get(KB, []).filter((id) => byId[id]);
   const savedBtn = $('saved'), panel = $('savedp'), bm = $('bm');
   function paint() {
-    savedBtn.textContent = 'Saved (' + saved.length + ')';
+    savedBtn.textContent = 'Bookmarks (' + saved.length + ')';
+    savedBtn.hidden = !saved.length;
+    if (!saved.length) { panel.hidden = true; savedBtn.setAttribute('aria-expanded', 'false'); }
     const on = saved.includes(curId); bm.setAttribute('aria-pressed', String(on)); bm.querySelector('.bmt').textContent = on ? 'Bookmarked' : 'Bookmark';
     bm.querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none');
-    const lastId = store.get(KL, null), lastIt = lastId && byId[lastId];
-    const cont = lastIt && lastIt.id !== curId ? `<a class="cont" href="${lastIt.url}">Continue: ${esc(lastIt.title)}</a>` : '';
-    panel.innerHTML = cont + '<h2>Saved pages</h2>' + (saved.length ? '<ul>' + saved.map((id) => `<li><a href="${byId[id].url}">${esc(byId[id].title)}<small>${esc(partTitle(byId[id].h))}</small></a><button type="button" data-rm="${id}" aria-label="Remove ${esc(byId[id].title)} from saved">✕</button></li>`).join('') + '</ul>' : '<p class="none">Nothing saved yet. Use Bookmark on any page.</p>') + '<p class="note">Saved in this browser only.</p>';
+    panel.innerHTML = '<h2>Bookmarks</h2><ul>' + saved.map((id) => `<li><a href="${byId[id].url}">${esc(byId[id].title)}<small>${esc(partTitle(byId[id].h))}</small></a><button type="button" data-rm="${id}" aria-label="Remove ${esc(byId[id].title)} from bookmarks">✕</button></li>`).join('') + '</ul><p class="note">Kept in this browser only.</p>';
     panel.querySelectorAll('[data-rm]').forEach((b) => { b.onclick = () => { saved = saved.filter((x) => x !== b.dataset.rm); store.set(KB, saved); paint(); }; });
-    const cl = $('contlink'); if (cl) { if (lastIt && lastIt.id !== curId) { cl.innerHTML = `<a href="${lastIt.url}">Continue where you left off: ${esc(lastIt.title)}</a>`; cl.hidden = false; } else cl.hidden = true; }
   }
   bm.onclick = () => { saved = saved.includes(curId) ? saved.filter((x) => x !== curId) : saved.concat(curId); store.set(KB, saved); paint(); };
   savedBtn.onclick = (e) => { e.stopPropagation(); const open = panel.hidden; panel.hidden = !open; savedBtn.setAttribute('aria-expanded', String(open)); };
   document.addEventListener('click', (e) => { if (!panel.hidden && !panel.contains(e.target) && e.target !== savedBtn) { panel.hidden = true; savedBtn.setAttribute('aria-expanded', 'false'); } });
-  if (cur.id !== 'start') store.set(KL, curId);
   paint();
 
   /* prefetch neighbors */

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Builds one art history study course: one real, indexable page per slide, all in the guide's layout.
 
-   Run from the repo root:   node tools/study/build-course.js <course-slug>
+   Run from the repo root:   node tools/study/build-course.js <course-slug>   [--no-stubs: skip the redirect stubs]
    (node tools/study/build-classical-myth.js still works; it runs this with classical-myth.)
    Re-run after editing any data file; it rewrites every generated page.
 
@@ -9,14 +9,14 @@
      name            course name (required)
      dataFiles       data files in study/art-history/<slug>/, in order (required)
      greekKey        true = Greek-key divider (Classical Myth); otherwise a plain rule
-     intro           optional: the start page's first paragraph
+     intro           optional: the course home's paragraph (a course with several parts; none if unset)
      introImg        required: image key (usually a work key) shown on the start page — every course starts with an image
      ldDescription, homeDescription, creditsIntro, creditsDescription, sourcesDescription
      imgFrom         optional: read images from another course's img/ folder
      basePath        optional: folder the course lives in (default /study/art-history; a technique course can use /study)
      themeLabel      optional: name for theme-layout pages (default Theme; a technique course uses Concept)
      subjLabel       optional: heading over a work page's subj text (default none; set a label to show one)
-     imagesNote      optional: the start page's line about image rights (default: every image is public domain or CC0; "" leaves the line out)
+     imagesNote      no longer shown (Nov 7 2026: the course home has no how-to or image-rights lines; the credits page covers rights)
    Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
    (this page's own label in place of themeLabel, e.g. History).
    Work slides may carry "look" (3 to 5 "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list → divider → "bul".
@@ -62,7 +62,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 19, bar: 5, guideCss: 16, guideJs: 11, search: 3 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 19, bar: 5, guideCss: 17, guideJs: 12, search: 3 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -112,12 +112,16 @@ const LICENSE_URL = { 'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/
 
 /* ---------- flatten the course into one ordered list of pages ---------- */
 const flat = [];
-flat.push({ h: 0, kind: 'intro', id: 'start', label: 'About this site', url: HOME });
+/* Course home (David, Nov 7 2026): no "About this site" page. A course with one part opens on that part's
+   overview, listed under the course name. A course with several parts keeps a home page (course name, image,
+   optional paragraph, list of parts), listed under the course name. */
+const ONE = S.handouts.length === 1;
+if (!ONE) flat.push({ h: 0, kind: 'intro', id: 'start', label: NAME, url: HOME });
 const used = new Set([HOME]);
 const claim = (u) => { if (used.has(u)) throw new Error('duplicate URL ' + u); used.add(u); return u; };
 S.handouts.forEach((h) => {
   const secSlug = slug(sec(h.wk)) || 'part-' + h.n;
-  const part = { h: h.n, kind: 'overview', d: h, hd: h, id: `h${h.n}-0`, label: 'Overview', url: claim(`${COURSE}/${secSlug}/${slug(h.title)}.html`) };
+  const part = { h: h.n, kind: 'overview', d: h, hd: h, id: `h${h.n}-0`, label: ONE ? NAME : 'Overview', url: ONE ? HOME : claim(`${COURSE}/${secSlug}/${slug(h.title)}.html`) };
   flat.push(part);
   h.slides.forEach((s, i) => {
     const name = s.type === 'work' ? slug(s.title) : (s.type === 'theme' ? 'theme-' : 'note-') + slug(s.title);
@@ -128,7 +132,6 @@ if (SRCS) flat.push({ h: 99, kind: 'sources', id: 'sources', label: 'Sources and
 flat.push({ h: 99, kind: 'credits', id: 'credits', label: 'Image credits', url: claim(COURSE + '/credits.html') });
 const byKey = {}; flat.forEach((f, i) => { if (f.kind === 'work') byKey[f.d.key] = i; });
 const ids = new Set(); flat.forEach((f) => { if (ids.has(f.id)) throw new Error('duplicate slide id ' + f.id); ids.add(f.id); });
-const HAS_THEMES = flat.some((f) => f.kind === 'theme');
 
 /* ---------- slide markup ---------- */
 const cap = (s) => [s.artist && esc(s.artist), '<i>' + esc(s.title) + '</i>', s.date && esc(s.date)].filter(Boolean).join(', ');
@@ -148,14 +151,11 @@ const themesOf = (key) => flat.filter((t) => t.kind === 'theme' && (t.d.works ||
 function slideHtml(f) {
   const d = f.d;
   if (f.kind === 'intro') {
-    const p1 = CFG.intro || 'Each page pairs one work of art with a short account of what it shows, how and why it was made, and the key names and terms.' + (HAS_THEMES ? ` ${THEME} pages step back to the bigger ideas that connect the works.` : '');
     const ik = CFG.introImg, iw = ik && byKey[ik] != null ? flat[byKey[ik]].d : null;   // optional start-page image: a work key
     if (ik && !C[ik]) throw new Error(`introImg "${ik}" has no credits entry`);
     return [ik ? 'slide' : 'slide text', (ik ? pic(ik, iw ? iw.title : ik, iw ? cap(iw) : esc(C[ik].work)) : '') + `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>${RULE}
-<p class="sum">${esc(p1)}</p>
-<ul class="b"><li>Use the outline, the arrow keys, or Prev/Next to move between pages.</li><li>Click any image to see it full screen.</li><li>Use Bookmark to save a page, and Saved (top right) to find your saved pages again.</li>${CFG.imagesNote === '' ? '' : `<li>${esc(CFG.imagesNote || 'Every image is public domain or CC0; sources and licenses are listed under Image credits.')}</li>`}</ul>
-<p class="contlink" id="contlink" hidden></p>
-<p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul>${ik ? crl(ik) : ''}</div>`];
+${CFG.intro ? `<p class="sum">${esc(CFG.intro)}</p>
+` : ''}<p class="lab">Contents</p><ul class="wl">${flat.filter((x) => x.kind === 'overview').map((x) => `<li><a class="wlink" href="${x.url}">${esc(x.d.title)}</a></li>`).join('')}</ul>${ik ? crl(ik) : ''}</div>`];
   }
   if (f.kind === 'overview') {
     const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
@@ -228,11 +228,13 @@ const FIRST_IMG = S.handouts[0].overview.img, FIRST_ALT = S.handouts[0].overview
 function meta(f) {
   const d = f.d || {};
   const base = [['Study', STUDY], [NAME, HOME]];
-  if (f.kind === 'intro') {
+  if (f.url === HOME) {   // the course home: its own page, or a one-part course's overview
+    const parts = ONE ? f.d.slides.filter((s) => s.type === 'work').map((s) => ({ '@type': 'VisualArtwork', name: s.title, url: abs(flat[byKey[s.key]].url) }))
+      : flat.filter((x) => x.kind === 'overview').map((x) => ({ '@type': 'LearningResource', name: x.d.title, url: abs(x.url) }));
     return { title: `${NAME} – Study – David Nicholson`, desc: fill(CFG.homeDescription || '{name}: a study guide to the works, with the story and key terms for each.'), image: FIRST_IMG, alt: FIRST_ALT, type: 'website',
       ld: [Object.assign({}, COURSE_LD, { description: fill(CFG.ldDescription || '{name}: an illustrated study guide to the works and the stories they tell.'), inLanguage: 'en',
         learningResourceType: 'Study guide', educationalLevel: 'Introductory', publisher: PUBLISHER, isAccessibleForFree: true,
-        hasPart: flat.filter((x) => x.kind === 'overview').map((x) => ({ '@type': 'LearningResource', name: x.d.title, url: abs(x.url) })) }), crumbLd(base)] };
+        hasPart: parts }), crumbLd(base)] };
   }
   if (f.kind === 'overview') {
     const o = d.overview, cr = [...base, [d.title, f.url]];
@@ -281,7 +283,7 @@ const NAV = `<nav data-chrome-nav></nav>
 <div id="menu-panel" aria-label="site menu"></div>`;
 const BM_ICON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5h9v15l-4.5-3.6-4.5 3.6z"/></svg>';
 const SEARCH_ICON = '<svg class="sico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6l4.4 4.4"/></svg>';
-const OUTLINE = `<p><a class="ho" href="${HOME}">About this site</a></p>` + flat.filter((x) => x.kind === 'overview').map((x) => `<p><a class="ho" href="${x.url}">${esc(x.d.title)}</a></p>`).join('')
+const OUTLINE = (ONE ? '' : `<p><a class="ho" href="${HOME}">${esc(NAME)}</a></p>`) + flat.filter((x) => x.kind === 'overview').map((x) => `<p><a class="ho" href="${x.url}">${esc(x.d.title)}</a></p>`).join('')
   + flat.filter((x) => x.h === 99).map((x) => `<p><a class="ho" href="${x.url}">${esc(x.label)}</a></p>`).join('');
 
 function crumbHtml(f) {
@@ -291,7 +293,7 @@ function crumbHtml(f) {
   const head = [a(['Study', STUDY]), a(lane)];
   // narrow desktops show only Study › lane (the rail already names the course and part), so links are never cut off
   const tail = (items) => `<span class="tail">${sep}${items.join(sep)}</span>`;
-  if (f.kind === 'intro') return head.join(sep) + tail([here(NAME)]);
+  if (f.url === HOME) return head.join(sep) + tail([here(NAME)]);
   const course = a([NAME, HOME]);
   if (f.h === 99) return head.join(sep) + tail([course, here(f.label)]);
   const p = f.part || f;
@@ -348,7 +350,7 @@ ${NAV}
         <input id="q" type="search" placeholder="Search" aria-label="Search the study courses" autocomplete="off" aria-controls="results" aria-expanded="false">
         <div class="results" id="results" role="listbox" hidden></div>
       </div>
-      <button class="btn savedbtn" id="saved" type="button" aria-expanded="false" aria-controls="savedp">Saved (0)</button>
+      <button class="btn savedbtn" id="saved" type="button" aria-expanded="false" aria-controls="savedp" hidden>Bookmarks (0)</button>
       <div class="savedp" id="savedp" hidden></div>
     </div>
     <select id="jump" class="jump" aria-label="Jump to page"></select>
@@ -392,6 +394,46 @@ flat.forEach((f, i) => {
   out.push(f.url);
 });
 
+/* ---------- redirect stubs for retired URLs (Nov 7 2026) ----------
+   <course>/retired-urls.tsv: a header line, then "old URL<TAB>new URL" per line. Each old URL gets a small
+   noindex page that sends the visitor on (same form as /color-theory.html). The stubs are rewritten on every
+   build, so the clean-up at the top of this section never loses them; they are not in the sitemap. */
+let nStubs = 0;
+{
+  /* --no-stubs: build the pages only (the slide editor uses it to learn the new URLs before it fixes the file) */
+  const tsv = path.join(DIR, 'retired-urls.tsv');
+  if (!process.argv.includes('--no-stubs') && fs.existsSync(tsv)) {
+    const outSet = new Set(out);
+    fs.readFileSync(tsv, 'utf8').split(/\r?\n/).slice(1).forEach((line, n) => {
+      if (!line.trim()) return;
+      const [from, to] = line.split('\t').map((x) => (x || '').trim());
+      const where = `retired-urls.tsv line ${n + 2}`;
+      if (!from || !to) throw new Error(`${where}: needs "old URL<TAB>new URL"`);
+      if (!from.startsWith(COURSE + '/') || !from.endsWith('.html')) throw new Error(`${where}: ${from} is not a page of this course`);
+      if (outSet.has(from)) throw new Error(`${where}: ${from} is a current page; remove the line`);
+      if (!outSet.has(to) && !fs.existsSync(path.join(ROOT, to))) throw new Error(`${where}: target ${to} does not exist`);
+      const file = path.join(ROOT, from);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${esc(NAME)} — David Nicholson</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="${ORIGIN}${to}">
+<meta http-equiv="refresh" content="0; url=${to}">
+<script>location.replace('${to}' + location.search + location.hash);</script>
+</head>
+<body>
+<p>This page moved to <a href="${to}">${to}</a>.</p>
+</body>
+</html>
+`);
+      nStubs++;
+    });
+  }
+}
+
 /* ---------- sitemap: replace this course's block in /sitemap.xml ---------- */
 {
   const START_PREFIX = `  <!-- study: ${SLUG} (`;
@@ -418,4 +460,4 @@ for (const u of out) {
 }
 const nWorks = flat.filter((f) => f.kind === 'work').length, nParts = flat.filter((f) => f.kind === 'overview').length;
 { const r = require('./build-search')(); console.log(`search index (all courses): ${r.items} pages, ${Math.round(r.bytes / 1024)} KB`); }
-console.log(`wrote ${out.length} pages (${nWorks} works, ${nParts} parts, ${out.length - nWorks - nParts} other) + index.js; sitemap block ${out.length} URLs`);
+console.log(`wrote ${out.length} pages (${nWorks} works, ${nParts} parts, ${out.length - nWorks - nParts} other) + index.js; sitemap block ${out.length} URLs` + (nStubs ? `; ${nStubs} redirect stubs` : ''));
