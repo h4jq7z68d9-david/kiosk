@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 6 2026, late night) — Khnopff and Exekias text fixes (not deployed; branch `text-fixes`)
+
+Applied the two course-builder text fixes by replacing only the listed data file each: Post-Impressionism `data-m7.js` (three Khnopff bullets: the far-off street view, frame "not shown here", cool greys with the warm notes named) and Classical Myth `data_m4.js` (Exekias bullet now "On the outside, not shown here: …"). Diffed against `main`: only those four strings changed. Rebuilt both courses (84 and 70 pages); every other page in the two courses changed only in the search-index cache string. `check.js` PASS, `smoke.js` PASS; new text is on both work pages and in the site search index. Open flag from the Classical Myth HANDOFF, not applied: the cup is dated "c. 530 BCE" on the page; the CVA catalogue says "um 540 v. Chr."
+
+-----
+
 ## Completed This Session (November 6 2026, night) — Neoclassicism and Rococo re-install; installer `--force` fix
 
 Re-installed Neoclassicism and Rococo from the licence-clean bundle: 67 works, 77 pages, 67 images (17.0 MB), every image public domain or CC0. Part 4 is now "Chardin, Greuze and the Salon" (`enlightenment/chardin-greuze-and-the-salon.html`); the old Part 4 page, the Würzburg ceiling page and `tiepolo-wurzburg.jpg` are gone and nothing in the sitemap or search index points at them. Kept its place after Japanese Woodblock Prints / before Romanticism (the HANDOFF's `--after classical-myth` was not used). The re-install exposed two installer gaps, done by hand that time and now fixed in `install-course.js`: `--force` did not delete files a new bundle drops, and did not update an existing registry entry (the card would have kept "sixty-eight works"). Tested on a throwaway course: planted stale files removed, card text updated, checks green; test branch deleted. Released together with the licence updates below.

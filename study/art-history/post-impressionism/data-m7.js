@@ -50,10 +50,10 @@ SITE.handouts.push({
    "det": "Oil on canvas, 72.7 × 141 cm. Neue Pinakothek, Munich",
    "lead": "A pale, red-haired woman rests her chin on her hands. The picture builds a mood of withdrawal rather than telling a story.",
    "bul": [
-    "An empty doorway, a blank window and an inward stare shut out the world beyond the room. Here the Symbolist turn inward is staged as a sealed room.",
-    "It keeps its original gilded frame.",
+    "Her fixed, pale stare and the far-off street view at right keep the outside world at a distance. Here the Symbolist turn inward is staged as a sealed room.",
+    "Its original frame survives, though it is not shown here.",
     "Look for the bust of Hypnos, Greek god of sleep, on a high shelf beside a red poppy.",
-    "Soft greys fill the room; only her hair, the poppy and withered flowers add warmth.",
+    "Cool greys and blue-black fill most of the room; her red hair, the poppy and the withered flowers are the warmest notes.",
     "The Munich collection bought it from the artist at the city's 1893 annual exhibition."
    ],
    "subj": "The title is a line from a Christina Rossetti poem about inner conflict. Her brother, the Pre-Raphaelite painter Dante Gabriel Rossetti, strongly influenced the artist."
