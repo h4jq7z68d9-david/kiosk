@@ -213,7 +213,7 @@ window.CREDITS = {
   "file": "Los Angeles County Museum of Art, M.77.73",
   "license": "Public domain (LACMA)",
   "author": "Georges de La Tour",
-  "source": "Los Angeles County Museum of Art (photo © Museum Associates/LACMA)"
+  "source": "Los Angeles County Museum of Art"
  },
  "latour-magdalen-smoking-flame-detail": {
   "work": "Georges de La Tour, The Magdalen with the Smoking Flame (about 1635–37), detail",
@@ -221,7 +221,7 @@ window.CREDITS = {
   "file": "Los Angeles County Museum of Art, M.77.73",
   "license": "Public domain (LACMA)",
   "author": "Georges de La Tour",
-  "source": "Los Angeles County Museum of Art (photo © Museum Associates/LACMA)"
+  "source": "Los Angeles County Museum of Art"
  },
  "wright-air-pump": {
   "work": "Joseph Wright of Derby, An Experiment on a Bird in the Air Pump (1768)",

@@ -451,7 +451,7 @@ window.CREDITS = {
   "work": "Edvard Munch, The Scream, 1893",
   "page": "https://www.nasjonalmuseet.no/en/collection/object/NG.M.00939",
   "file": "https://ms01.nasjonalmuseet.no/iip/?iiif=/tif/NG.M.00939.tif/full/1200,/0/default.jpg",
-  "license": "Work: public domain (no known copyright restrictions). Photo: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Edvard Munch; photo: Børre Høstland, Nasjonalmuseet",
   "source": "Nasjonalmuseet, Oslo"
  },
