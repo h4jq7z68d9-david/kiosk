@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 6 2026, night) — Image licence updates for five live courses (not deployed; branch `licence-updates`)
+
+David's rule (Nov 6): images must be certainly public domain or CC0 — no CC BY / BY-SA, no "©" in credits. Applied the course-builder bundles by copying only the files each HANDOFF listed (no text, URL or generator change): Post-Impressionism (`khnopff-door`, `klimt-pallas` images + credits + settings `creditsIntro`/`imagesNote`), Romanticism (`barry-pugin-palace-of-westminster` → Library of Congress photochrom + credits + settings), Classical Myth (`h9_exekias` → PD-self photo + credits), Color Theory (Munch credit line + settings), Value and Light (two La Tour credit lines). Verified by diff that only the listed credit entries and the two settings keys changed; new images are 1600 px RGB. All courses rebuilt; `check.js` PASS, `smoke.js` PASS. Sweep of every course's `credits.js`: no CC BY anywhere; the only "©" left is David's own work in Oil vs. Acrylic. Open flags from the HANDOFFs (text, not applied): three Khnopff reviewer notes; Exekias bullet describes the outside of the cup, which the image doesn't show.
+
+-----
+
 ## Completed This Session (November 6 2026, midday) — Deploy gate (branch `deploy-gate`)
 
 Sixth and last item of the process backlog. Two steps added to `deploy.yml` ahead of "Generate print pages": one decides from `git diff --name-only <before> <sha>` (the base commit is fetched with `--depth=1`, no full-history clone) whether anything `check.js` validates changed, the other runs `node tools/site/check.js` when it did. Trigger paths go beyond the backlog's `study/`, `tools/study/`, `*.html`: `tools/site/`, `tools/lambda/`, `index.mjs` (the route tests live in `check.js` now), `site-*.js/.css` (an unbumped chrome edit is what the check catches) and the workflow itself (changing the gate exercises it). Verified the path filter against 16 sample paths and the shell step by simulation against real commits; the first live run is the push of this branch, which touches the workflow and so runs the gate.

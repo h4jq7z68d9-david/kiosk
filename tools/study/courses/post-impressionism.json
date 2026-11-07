@@ -15,7 +15,7 @@
  "ldDescription": "An artwork-by-artwork guide to Post-Impressionism, about 1884–1910, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
- "creditsIntro": "Every image in this section is in the public domain, released under CC0, or used under the open license named in its entry. Each entry links to the file and names its source.",
- "imagesNote": "Every image is public domain, CC0, or used under an open license; sources and licenses are listed under Image credits.",
+ "creditsIntro": "Every image in this section is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "imagesNote": "Every image is public domain or CC0; sources are listed under Image credits.",
  "introImg": "vangogh-starry-night"
 }

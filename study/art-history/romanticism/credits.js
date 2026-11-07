@@ -353,11 +353,10 @@ window.CREDITS = {
  },
  "barry-pugin-palace-of-westminster": {
   "work": "Charles Barry and A.W.N. Pugin, Palace of Westminster (Houses of Parliament) (designed 1836; built 1840–c. 1870)",
-  "page": "https://commons.wikimedia.org/wiki/File:Houses_of_Parliament_in_2022.jpg",
-  "file": "File:Houses of Parliament in 2022.jpg",
-  "license": "CC BY 2.0",
-  "author": "Photo: Terry Ott",
-  "source": "Wikimedia Commons"
+  "page": "https://www.loc.gov/pictures/item/2002696921/",
+  "file": "Houses of Parliament from the river, London, England (photochrom print, Detroit Publishing Co., between c. 1890 and c. 1900), LCCN 2002696921",
+  "license": "Public domain (no known restrictions on publication)",
+  "source": "Library of Congress, Prints and Photographs Division, Photochrom Print Collection"
  },
  "runge-hulsenbeck-children": {
   "work": "Philipp Otto Runge, The Hülsenbeck Children (1805–06)",

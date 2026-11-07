@@ -486,11 +486,10 @@ window.CREDITS = {
  },
  "khnopff-door": {
   "work": "Fernand Khnopff, I Lock My Door upon Myself (1891)",
-  "page": "https://www.sammlung.pinakothek.de/en/artwork/ma4dqNqxrO",
-  "file": "Bayerische Staatsgemäldesammlungen – Neue Pinakothek München, inv. 7921",
-  "license": "CC BY-SA 4.0",
-  "author": "Fernand Khnopff",
-  "source": "Bayerische Staatsgemäldesammlungen – Neue Pinakothek München, CC BY-SA 4.0"
+  "page": "https://commons.wikimedia.org/wiki/File:Fernand_Khnopff_-_I_lock_my_door_upon_myself.jpeg",
+  "file": "File:Fernand Khnopff - I lock my door upon myself.jpeg (colour matched to the Neue Pinakothek photograph)",
+  "license": "Public domain (PD-Art)",
+  "author": "Fernand Khnopff"
  },
  "munch-scream": {
   "work": "Edvard Munch, The Scream (1893)",
@@ -508,11 +507,10 @@ window.CREDITS = {
  },
  "klimt-pallas": {
   "work": "Gustav Klimt, Pallas Athene (1898)",
-  "page": "https://sammlung.wienmuseum.at/en/object/102991-pallas-athene/",
-  "file": "Wien Museum, inv. 100686",
-  "license": "CC BY 4.0",
-  "author": "Gustav Klimt; Foto: TimTom",
-  "source": "CC BY 4.0, Foto: TimTom, Wien Museum"
+  "page": "https://commons.wikimedia.org/wiki/File:Klimt_-_Pallas_Athene.jpeg",
+  "file": "File:Klimt - Pallas Athene.jpeg (colour adjusted toward the Wien Museum photograph)",
+  "license": "Public domain (PD-Art)",
+  "author": "Gustav Klimt"
  },
  "klimt-kiss": {
   "work": "Gustav Klimt, The Kiss (c. 1907–09)",

@@ -15,8 +15,8 @@
  "ldDescription": "An artwork-by-artwork guide to Romantic art, 1760s–1860s, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
- "creditsIntro": "The images in this section are in the public domain or released under CC0 or the Public Domain Mark, except two photographs credited to their photographers: Jebulon (CC0) and Terry Ott (CC BY 2.0). Each entry links to the file and names its source.",
- "imagesNote": "Images are public domain or openly licensed; one photograph is CC BY 2.0. Sources are listed under Image credits.",
+ "creditsIntro": "The images in this section are in the public domain or released under CC0 or the Public Domain Mark; one photograph is credited to its photographer, Jebulon (CC0). Each entry links to the file and names its source.",
+ "imagesNote": "Images are public domain or CC0. Sources are listed under Image credits.",
  "introImg": "gericault-raft-medusa",
  "subjLabel": ""
 }

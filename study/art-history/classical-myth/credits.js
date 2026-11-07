@@ -274,11 +274,11 @@ window.CREDITS = {
  },
  "h9_exekias": {
   "work": "Exekias, Dionysus Cup, c. 530 BCE (Black-figure terracotta, 30.5 cm diameter · Staatliche Antikensammlungen, Munich)",
-  "file": "Kylix Dionysus on a ship between dolphins 530 BC, Staatliche Antikensammlungen Munich 120637.jpg",
-  "page": "https://commons.wikimedia.org/wiki/File:Kylix_Dionysus_on_a_ship_between_dolphins_530_BC,_Staatliche_Antikensammlungen_Munich_120637.jpg",
+  "file": "Exekias Dionysos Staatliche Antikensammlungen 2044 n2.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Exekias_Dionysos_Staatliche_Antikensammlungen_2044_n2.jpg",
   "license": "Public domain",
-  "author": "Zde",
-  "credit": "Own work"
+  "author": "Bibi Saint-Pol",
+  "credit": "Own work, released into the public domain"
  },
  "h10_patinir": {
   "work": "Joachim Patinir, Charon Crossing the Styx, 1520–24 (Oil on panel, 64 × 103 cm · Museo del Prado, Madrid)",
