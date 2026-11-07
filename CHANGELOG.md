@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 6 2026, night) — Neoclassicism and Rococo re-install; installer `--force` fix
+
+Re-installed Neoclassicism and Rococo from the licence-clean bundle: 67 works, 77 pages, 67 images (17.0 MB), every image public domain or CC0. Part 4 is now "Chardin, Greuze and the Salon" (`enlightenment/chardin-greuze-and-the-salon.html`); the old Part 4 page, the Würzburg ceiling page and `tiepolo-wurzburg.jpg` are gone and nothing in the sitemap or search index points at them. Kept its place after Japanese Woodblock Prints / before Romanticism (the HANDOFF's `--after classical-myth` was not used). The re-install exposed two installer gaps, done by hand that time and now fixed in `install-course.js`: `--force` did not delete files a new bundle drops, and did not update an existing registry entry (the card would have kept "sixty-eight works"). Tested on a throwaway course: planted stale files removed, card text updated, checks green; test branch deleted. Released together with the licence updates below.
+
+-----
+
 ## Completed This Session (November 6 2026, night) — Image licence updates for five live courses (not deployed; branch `licence-updates`)
 
 David's rule (Nov 6): images must be certainly public domain or CC0 — no CC BY / BY-SA, no "©" in credits. Applied the course-builder bundles by copying only the files each HANDOFF listed (no text, URL or generator change): Post-Impressionism (`khnopff-door`, `klimt-pallas` images + credits + settings `creditsIntro`/`imagesNote`), Romanticism (`barry-pugin-palace-of-westminster` → Library of Congress photochrom + credits + settings), Classical Myth (`h9_exekias` → PD-self photo + credits), Color Theory (Munch credit line + settings), Value and Light (two La Tour credit lines). Verified by diff that only the listed credit entries and the two settings keys changed; new images are 1600 px RGB. All courses rebuilt; `check.js` PASS, `smoke.js` PASS. Sweep of every course's `credits.js`: no CC BY anywhere; the only "©" left is David's own work in Oil vs. Acrylic. Open flags from the HANDOFFs (text, not applied): three Khnopff reviewer notes; Exekias bullet describes the outside of the cup, which the image doesn't show.
