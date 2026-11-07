@@ -26,21 +26,30 @@ A local tool for reviewing and editing a study course's text in the real page la
 - If the data file was changed on disk after the page was opened, Save refuses and nothing is written.
 - Google Analytics tags are removed from the pages it serves, so editing sends no page views.
 
+**Set up a Mac (once)**
+
+1. Install Node.js (nodejs.org) if `node -v` prints nothing. Git comes with macOS.
+2. `git clone https://github.com/h4jq7z68d9-david/kiosk.git ~/kiosk`
+3. `echo 'source ~/kiosk/tools/study/edit-course.zsh' >> ~/.zshrc && source ~/.zshrc`
+   (If an older `edit-course() { … }` block was pasted into `~/.zshrc`, remove it first: `sed -i '' '/^edit-course() {/,/^}/d' ~/.zshrc`.)
+4. GitHub sign-in, for sending edits: the first time edits are sent, Terminal asks for a GitHub username and password. The password is a fine-grained personal access token (GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens; repository access: only `kiosk`; permission: Contents, read and write). macOS keeps it in the Keychain after that.
+
 **Start**
 
-One-time setup on a Mac with git and Node: `git clone https://github.com/h4jq7z68d9-david/kiosk.git ~/kiosk`.
-
-From the repo root, on the course's branch (for example `install-impressionism`):
-
 ```
-node tools/study/edit-server.js <course-slug>
+edit-course <course-slug>
 ```
 
-Then open the address it prints, e.g. `http://localhost:8770/study/art-history/impressionism.html`. To use another port, add `--port 8771`.
+It fetches GitHub, picks the branch, starts the editor and opens the course in the browser. The branch, in this order:
+- `edits-<slug>`: earlier edits that are not published yet (new edits add to them)
+- `install-<slug>`: a course being installed that is not published yet
+- `main`: the published course; the edits then go to a new `edits-<slug>` branch
 
-**Stop**
+Without the shell command: `node tools/study/edit-server.js <course-slug>` from the repo root (add `--port 8771` for another port).
 
-Press Ctrl-C in the terminal where it is running. If that terminal is closed, run `pkill -f edit-server.js`.
+**Stop and send**
+
+Press Ctrl-C in the editor's Terminal window. If anything was saved, the editor commits it on the branch and pushes the branch to GitHub. It never pushes to `main`, so nothing changes on the live site. Claude then checks the branch (check.js, smoke.js, screenshots) and publishes it to `main` only on your word. If no Terminal window is left, `pkill -f edit-server.js` stops it the same way.
 
 **It never ships**
 
@@ -49,4 +58,4 @@ Press Ctrl-C in the terminal where it is running. If that terminal is closed, ru
 - `tools/site/check.js` fails if that exclusion is removed, or if any built page references `/__edit/`.
 - The server listens on 127.0.0.1 only, and accepts saves only from its own editor page.
 
-After editing, the course files on the branch hold your wording. Commit it on the branch and rerun `node tools/site/check.js` and `tools/site/smoke.js` before the branch goes to `main` (runbook: `study-site-builder` section 9.9).
+After editing, the course files on the branch hold your wording. Before the branch goes to `main`, Claude pulls it, rebuilds every course, and reruns `node tools/site/check.js` and `tools/site/smoke.js` (runbook: `study-site-builder` section 9.9).

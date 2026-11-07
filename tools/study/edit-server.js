@@ -17,6 +17,10 @@
    course's retired-urls.tsv: lines that pointed at a moved page point at its new URL, and a moved page that
    is already live (present on origin/main) gets a new line from its old URL, so links to it keep working.
 
+   Stop (Ctrl-C): if anything was saved, the server commits it and pushes the branch to GitHub, never main.
+   On main (a published course) it first moves the edits to a new branch edits-<slug>. --no-send skips this.
+   Start it with  edit-course <slug>  (tools/study/edit-course.zsh), which picks the branch.
+
    Listens on 127.0.0.1 only. deploy.yml excludes this file and tools/study/editor/ from the S3 upload. */
 'use strict';
 const fs = require('fs');
@@ -185,6 +189,40 @@ const server = http.createServer((req, res) => {
   if (!fs.existsSync(f) || !fs.statSync(f).isFile()) { res.writeHead(404, { 'Content-Type': 'text/plain' }); return res.end('not found: ' + p); }
   sendFile(res, f, p);
 });
+
+/* ---------- on stop: commit the edits and push the branch (never main) ---------- */
+function sendEdits() {
+  const { spawnSync } = require('child_process');
+  const git = (args, inherit) => spawnSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: inherit ? 'inherit' : 'pipe' });
+  const st = git(['status', '--porcelain']);
+  if (st.status !== 0) { console.log('git status failed; your edits are still in the files. Tell Claude.'); return; }
+  if (!st.stdout.trim()) { console.log('No edits to send.'); return; }
+  let br = git(['branch', '--show-current']).stdout.trim();
+  if (!br || br === 'main') {
+    const t = 'edits-' + SLUG;
+    if (git(['checkout', '-q', '-B', t]).status !== 0) { console.log(`Could not make branch ${t}; your edits are still in the files. Tell Claude.`); return; }
+    br = t;
+  }
+  if (!/^(edits|install)-/.test(br)) { console.log(`On branch ${br}: edits left uncommitted. Tell Claude.`); return; }
+  git(['add', '-A']);
+  const who = git(['config', 'user.email']).stdout.trim() ? [] : ['-c', 'user.name=David Nicholson', '-c', 'user.email=h4jq7z68d9-david@users.noreply.github.com'];
+  if (git([...who, 'commit', '-q', '-m', `Edits to ${CFG.name} from the slide editor`]).status !== 0) { console.log('Commit failed; your edits are still in the files. Tell Claude.'); return; }
+  console.log(`Committed your edits on ${br}. Sending to GitHub…`);
+  if (git(['push', '-q', '-u', 'origin', br], true).status !== 0) {
+    console.log(`Not sent: the push failed. Your edits are safe in the commit on ${br}. Run  git push -u origin ${br}  or tell Claude.`);
+    return;
+  }
+  console.log(`Sent. Tell Claude: "my edits are on ${br}".`);
+}
+let stopping = false;
+function stop() {
+  if (stopping) return; stopping = true;
+  console.log('\nStopping the editor.');
+  server.close();
+  busy.then(() => { if (!args.includes('--no-send')) sendEdits(); process.exit(0); });
+}
+process.on('SIGINT', stop);
+process.on('SIGTERM', stop);
 
 server.on('error', (e) => {
   if (e.code === 'EADDRINUSE') console.error(`port ${PORT} is in use: another editor may be running (stop it with Ctrl-C in its terminal), or pass --port 8771`);
