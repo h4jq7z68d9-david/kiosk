@@ -22,6 +22,7 @@
     { group: 'art history', href: '/study.html' },
     { href: '/study/art-history/classical-myth.html', label: 'classical myth in art', section: '/study/art-history/classical-myth/' },
     { href: '/study/art-history/japanese-woodblock-prints.html', label: 'japanese woodblock prints', section: '/study/art-history/japanese-woodblock-prints/' },
+    { href: '/study/art-history/neoclassicism-and-rococo.html', label: 'neoclassicism and rococo', section: '/study/art-history/neoclassicism-and-rococo/' },
     { href: '/study/art-history/romanticism.html', label: 'romanticism', section: '/study/art-history/romanticism/' },
     { href: '/study/art-history/realism.html', label: 'realism', section: '/study/art-history/realism/' },
     { href: '/study/art-history/impressionism.html', label: 'impressionism', section: '/study/art-history/impressionism/' },
