@@ -8,7 +8,7 @@ window.SITE = {
    "n": 1,
    "wk": 1,
    "title": "What to Look For",
-   "sub": "The myths in eighteen works",
+   "sub": "",
    "overview": {
     "img": "h1_aphrodite",
     "cap": [
@@ -16,7 +16,7 @@ window.SITE = {
      "The Birth of Venus",
      "about 1485"
     ],
-    "sum": "The gods and heroes of Greece and Rome have been painted and carved for some 2,400 years. These eighteen works run from an Athenian wine cup of about 530 BCE to a Paris studio picture of about 1890, and each shows one way to recognize the myth, and the maker, from what is on the surface.",
+    "sum": "The gods and heroes of Greece and Rome have been painted and carved for some 2,400 years. These works run from an Athenian wine cup of about 530 BCE to a Paris studio picture of about 1890, and each shows one way to recognize the myth, and the maker, from what is on the surface.",
     "bul": []
    },
    "slides": [
