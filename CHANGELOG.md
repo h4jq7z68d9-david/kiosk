@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 7 2026, evening) — Classical Myth Mode 2 rebuild; count taglines removed (branch `install-classical-myth`, pushed to `main`)
+
+- **Classical Myth in Art (Mode 2):** replaced the 60-work, 7-part course with the 18-work rebuild (one section "Greece to Paris, 530 BCE–1890", one part; 21 pages; 18 images, 5.2 MB) via `install-course.js --force`; kept its first place in the art history lane. 67 retired URLs redirect: 18 old work pages to the same work's new page, 49 (7 part overviews, 42 cut works) to the course home. No generator changes.
+- **Count taglines removed (David's instruction):** Classical Myth part subtitle cleared; "eighteen" removed from the home summary, settings `intro`, `homeDescription`, `ldDescription` and the card text. Impressionism card text: "in 18 works" removed. Rule proposed for study-site-builder §4: no work/part counts in visible or metadata text.
+- `check.js` PASS, `smoke.js` PASS after each change; other courses' pages unchanged.
+
+-----
+
 ## Completed This Session (November 7 2026) — Impressionism Mode 2 rebuild; title pages; slide editor (branch `install-impressionism`, pushed to `main`)
 
 - **Impressionism (Mode 2):** replaced the 60-work course with the 18-work rebuild (one section, one part; 21 pages). 70 retired URLs redirect: 18 old work pages to the same work's new page, 52 to the course home. David's edit from the slide editor: the part subtitle cleared.
