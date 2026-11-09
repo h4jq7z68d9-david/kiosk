@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 9 2026) — Post-Impressionism Mode 2 rebuild (branch `install-post-impressionism`, pushed to `main` on David's word, before slide-editor review)
+
+- **Post-Impressionism (Mode 2):** replaced the 74-work, 7-part course with the 18-work rebuild (one section "France, 1884–1906", one part; 21 pages; 18 images, 6.6 MB) via `install-course.js --force`; kept its place after Impressionism. 81 retired URLs redirect: 18 kept works to their new pages under `france-1884-1906/`, 56 cut works and 7 part pages to the course home. Card text updated. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
+
+-----
+
 ## Completed This Session (November 7 2026, evening) — Classical Myth Mode 2 rebuild; count taglines removed (branch `install-classical-myth`, pushed to `main`)
 
 - **Classical Myth in Art (Mode 2):** replaced the 60-work, 7-part course with the 18-work rebuild (one section "Greece to Paris, 530 BCE–1890", one part; 21 pages; 18 images, 5.2 MB) via `install-course.js --force`; kept its first place in the art history lane. 67 retired URLs redirect: 18 old work pages to the same work's new page, 49 (7 part overviews, 42 cut works) to the course home. No generator changes.
