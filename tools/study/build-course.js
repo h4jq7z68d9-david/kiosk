@@ -412,7 +412,9 @@ let nStubs = 0;
       const [from, to] = line.split('\t').map((x) => (x || '').trim());
       const where = `retired-urls.tsv line ${n + 2}`;
       if (!from || !to) throw new Error(`${where}: needs "old URL<TAB>new URL"`);
-      if (!from.startsWith(COURSE + '/') || !from.endsWith('.html')) throw new Error(`${where}: ${from} is not a page of this course`);
+      /* retiredSlugs (settings, optional): old course slugs in the same lane whose URLs this course now answers for (Nov 9 2026) */
+      const retired = (CFG.retiredSlugs || []).some((s) => from === `${BASE}/${s}.html` || from.startsWith(`${BASE}/${s}/`));
+      if (!(from.startsWith(COURSE + '/') || retired) || !from.endsWith('.html')) throw new Error(`${where}: ${from} is not a page of this course or of a slug in retiredSlugs`);
       if (outSet.has(from)) throw new Error(`${where}: ${from} is a current page; remove the line`);
       if (!outSet.has(to) && !fs.existsSync(path.join(ROOT, to))) throw new Error(`${where}: target ${to} does not exist`);
       const file = path.join(ROOT, from);
