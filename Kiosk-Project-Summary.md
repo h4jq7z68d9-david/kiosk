@@ -42,6 +42,8 @@ Style rules that apply to every visible change (David, Oct 2026): left-aligned b
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Mode 2 rebuild, Nov 7 2026: 18 works, 1 section, 1 part; 21 pages) — opens on its overview; works under /study/art-history/impressionism/paris-1863-1906/; 70 retired URLs redirect (retired-urls.tsv)|
 |<https://davidnicholsonart.com/study/art-history/post-impressionism.html>|Post-Impressionism (Mode 2 rebuild, Nov 9 2026: 18 works, 1 section, 1 part; 21 pages) — opens on its overview; works under /study/art-history/post-impressionism/france-1884-1906/; 81 retired URLs redirect (retired-urls.tsv)|
 |<https://davidnicholsonart.com/study/art-history/fauvism-and-expressionism.html>|Fauvism and Early Expressionism (Mode 2 rebuild, Nov 9 2026: 18 works, 1 section, 1 part; 21 pages) — opens on its overview; works under /study/art-history/fauvism-and-expressionism/paris-germany-and-vienna-1905-1915/; 60 retired URLs redirect (retired-urls.tsv); Nolde *The Last Supper* held to Jan 2027|
+|<https://davidnicholsonart.com/study/art-history/rococo.html>|Rococo (Mode 2, Nov 9 2026: 13 works, 1 section "France, Venice and Bavaria, 1717–1772", 1 part; 16 pages) — first half of the split of the retired `neoclassicism-and-rococo`; after Japanese Woodblock Prints in the registry|
+|<https://davidnicholsonart.com/study/art-history/neoclassicism.html>|Neoclassicism (Mode 2, Nov 9 2026: 18 works, 1 section "Rome, Paris and London, 1760s–1806", 1 part; 21 pages) — second half of the split; settings `retiredSlugs: ["neoclassicism-and-rococo"]`; its retired-urls.tsv writes the 77 redirect stubs for the old course (76 under /study/art-history/neoclassicism-and-rococo/ plus the old home)|
 |<https://davidnicholsonart.com/study/art-history/japanese-woodblock-prints.html>|Japanese Woodblock Prints (Oct 30 2026: 64 works, 3 sections, 7 parts, c. 1680–1927) — start page of the guide; every slide is its own page under /study/art-history/japanese-woodblock-prints/ (74 pages), same guide layout|
 |<https://davidnicholsonart.com/study/art-history/romanticism.html>|Romanticism (Oct 30 2026: 64 works, 3 sections, 7 parts) — start page of the guide; every slide is its own page under /study/art-history/romanticism/ (74 pages), same guide layout|
 |<https://davidnicholsonart.com/study/art-history/realism.html>|Realism (Oct 30 2026: 49 works, 2 sections, 6 parts, 1830s–1890s) — start page of the guide; every slide is its own page under /study/art-history/realism/ (59 pages), same guide layout|
@@ -660,6 +662,14 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [x] **Service-worker bump automated** (Nov 6 2026) — `deploy.yml` stamps the cache name from a content hash; no manual bump. `check.js` verifies the step exists and `node --check`s `index.mjs` and `admin-sw.js`.
 - [x] **Gated pages in `smoke.js`** (Nov 6 2026) — admin, Jill's page, kiosk and booth are loaded logged-out at 1440/390: 0 console errors, no sideways scroll, gate present.
 - [x] Deploy gate (built Nov 6 2026, branch `deploy-gate`) — `deploy.yml` runs `node tools/site/check.js` before anything is generated or uploaded, when the push changed `study/`, `tools/study/`, `tools/site/`, `tools/lambda/`, `index.mjs`, `site-*.js/.css`, a top-level `.html`, or the workflow itself (decided by `git diff --name-only` against `github.event.before`; a push with no usable base runs it). Other pushes (admin-sw.js, images, docs) skip it. A failed check fails the deploy with nothing uploaded.
+
+### From November 9 2026, late afternoon (Rococo + Neoclassicism split)
+
+- [ ] **Rococo open flags (David):** Wieskirche interior plate (CC0, only free candidate) is dim and slightly soft; Boucher *Le Déjeuner* 1440 px (Louvre caps at 1500). Not yet reviewed in the slide editor (`edit-course rococo`).
+- [ ] **Neoclassicism open flags (David):** Kauffman *Cornelia* 1538 px (VMFA). Napoleon plate colour-corrected Nov 6 to the Malmaison photo (no action). Not yet reviewed in the slide editor (`edit-course neoclassicism`).
+- [ ] **Card dates overlap** (Rococo 1710s–1770s, Neoclassicism 1760s–1800s): deliberate.
+- [ ] **Generator:** `build-course.js` now accepts an optional settings key `retiredSlugs` (old slugs in the same lane whose URLs a course redirects). The old slug `neoclassicism-and-rococo` is retired for good; its stubs are rebuilt with every Neoclassicism build.
+- [ ] **Resubmit `sitemap.xml` in Google Search Console:** two new courses; the old combined course's URLs now redirect (noindex).
 
 ### From November 9 2026, afternoon (Fauvism and Early Expressionism Mode 2)
 

@@ -4,6 +4,16 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 9 2026, late afternoon) — Neoclassicism and Rococo split into two Mode 2 courses (branches `install-rococo`, `install-neoclassicism`, pushed to `main` together on David's word, before slide-editor review)
+
+- **Retired `neoclassicism-and-rococo`** (hand step, Neoclassicism handoff §4 A): removed the course folder, home page, settings file, registry entry and sitemap block; ran `build-registry.js`; rebuilt every course.
+- **Generator (approved, Neoclassicism handoff §3):** `build-course.js` redirect-stub check now also accepts URLs of slugs listed in an optional settings key `retiredSlugs`. No `V` bump. Test: Neoclassicism build wrote 76 stubs under `study/art-history/neoclassicism-and-rococo/` plus `neoclassicism-and-rococo.html` → `/study/art-history/neoclassicism.html`; `sitemap.xml` has no `neoclassicism-and-rococo` URL.
+- **Rococo (new, slug `rococo`):** 13 works, 16 pages, 13 images 3.7 MB; after Japanese Woodblock Prints. `check.js` PASS, `smoke.js` PASS.
+- **Neoclassicism (new, slug `neoclassicism`):** 18 works, 21 pages, 18 images 3.7 MB; after Rococo. `check.js` PASS, `smoke.js` PASS.
+- Rococo was held on its branch rather than pushed alone (David's choice), so the old course's URLs never went without redirects.
+
+-----
+
 ## Completed This Session (November 9 2026, afternoon) — Fauvism and Early Expressionism Mode 2 rebuild (branch `install-fauvism-and-expressionism`, pushed to `main` on David's word, before slide-editor review)
 
 - **Fauvism and Early Expressionism (Mode 2):** replaced the 54-work, 6-part course with the 18-work rebuild (one section "Paris, Germany and Vienna, 1905–1915", one part; 21 pages; 18 images, 8.0 MB) via `install-course.js --force`; kept its place after Post-Impressionism. Registry: dates 1905–1918 → 1905–1915, card image The Green Line → Woman with a Hat, card text replaced (no work count). 60 retired URLs redirect: 18 kept works to their new pages under `paris-germany-and-vienna-1905-1915/`, 36 cut works and 6 part pages to the course home. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
