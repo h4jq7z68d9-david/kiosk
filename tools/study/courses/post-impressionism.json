@@ -1,21 +1,13 @@
 {
  "name": "Post-Impressionism",
  "dataFiles": [
-  "data.js",
-  "data-m1.js",
-  "data-m2.js",
-  "data-m3.js",
-  "data-m4.js",
-  "data-m5.js",
-  "data-m6.js",
-  "data-m7.js"
+  "data.js"
  ],
- "intro": "Post-Impressionism was never one style. From the mid-1880s, painters who had learned from the Impressionists pushed past recording light: some toward structure and color science, others toward emotion, symbol and decoration. This section follows them through seventy-four works, from Seurat, Cézanne, Van Gogh and Gauguin to the Nabis, the Symbolists and painters across Europe, with the facts of each object drawn from museum collection records.",
- "homeDescription": "Seventy-four works trace Post-Impressionism from Seurat and Cézanne to Van Gogh, Gauguin, the Nabis, the Symbolists and painters beyond France.",
- "ldDescription": "An artwork-by-artwork guide to Post-Impressionism, about 1884–1910, compiled from museum collection records.",
+ "intro": "After Impressionism, painters in France took its bright colour somewhere new: toward solid structure, strong feeling, flat colour and pattern. Each picture here shows one thing to look for.",
+ "homeDescription": "How to recognize Post-Impressionism, from Seurat and Cézanne to Van Gogh, Gauguin, Toulouse-Lautrec and Rousseau, in a short illustrated guide.",
+ "ldDescription": "A short guide to recognizing Post-Impressionism in France, about 1884 to 1906, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
- "creditsIntro": "Every image in this section is in the public domain or released under CC0. Each entry links to the file and names its source.",
- "imagesNote": "Every image is public domain or CC0; sources are listed under Image credits.",
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
  "introImg": "vangogh-starry-night"
 }
