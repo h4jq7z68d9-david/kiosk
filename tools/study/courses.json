@@ -47,6 +47,17 @@
    }
   },
   {
+   "slug": "neoclassicism",
+   "lane": "art-history",
+   "name": "Neoclassicism",
+   "label": "neoclassicism",
+   "dates": "1760s–1800s",
+   "card": {
+    "img": "david-horatii",
+    "text": "how to recognize neoclassicism, from hamilton, west and mengs to david, canova and girodet."
+   }
+  },
+  {
    "slug": "romanticism",
    "lane": "art-history",
    "name": "Romanticism",

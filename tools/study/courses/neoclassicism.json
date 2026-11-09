@@ -1,0 +1,16 @@
+{
+ "name": "Neoclassicism",
+ "dataFiles": [
+  "data.js"
+ ],
+ "intro": "Neoclassicism is the return to the clear lines, calm order and stern subjects of ancient Greece and Rome, from Rome in the 1760s to Paris under Napoleon. Each picture here shows one thing to look for.",
+ "homeDescription": "How to recognize Neoclassicism, from Hamilton, West and Mengs to David, Canova and Girodet, in a short illustrated guide.",
+ "ldDescription": "A short guide to recognizing Neoclassical art in Rome, Paris and London, about 1763 to 1806, compiled from museum collection records.",
+ "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
+ "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "introImg": "david-horatii",
+ "retiredSlugs": [
+  "neoclassicism-and-rococo"
+ ]
+}
