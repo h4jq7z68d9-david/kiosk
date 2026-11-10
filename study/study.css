@@ -211,6 +211,27 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 .stabs button { font: 500 15px var(--font); letter-spacing: .08em; text-transform: lowercase; color: var(--ink3); background: none; border: 0; border-bottom: 2px solid transparent; padding: 0 0 10px; margin-bottom: -1px; cursor: pointer; }
 .stabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
 .stab-panel:not([hidden]) + .stab-panel:not([hidden]) { margin-top: 40px; }   /* only without JS, when both panels show */
+/* art history timeline (Nov 10 2026): small square cards alternating either side of a centre line, date beside each dot */
+.tl-alt { --gap: 22px; padding-left: 0; max-width: 560px; gap: 14px; }
+.tl-alt::before { left: 50%; margin-left: -1px; top: 0; bottom: 0; }
+.tl-alt .tl-item { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gap) * 2); align-items: center; }
+.tl-alt .tl-item::before { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.tl-alt .tl-card { grid-row: 1; width: min(230px, 100%); aspect-ratio: 1 / 1; overflow: hidden; }
+.tl-alt .tl-date { grid-row: 1; }
+.tl-alt .tl-item:nth-child(odd) .tl-card { grid-column: 1; justify-self: end; }
+.tl-alt .tl-item:nth-child(odd) .tl-date { grid-column: 2; }
+.tl-alt .tl-item:nth-child(even) .tl-card { grid-column: 2; justify-self: start; }
+.tl-alt .tl-item:nth-child(even) .tl-date { grid-column: 1; text-align: right; }
+.tl-alt .tl-th { flex: 1; min-height: 0; aspect-ratio: auto; }
+.tl-alt .tl-tb { padding: 8px 10px 9px; }
+.tl-alt .tt { font-size: 16px; line-height: 1.2; }
+@media (max-width: 600px) {
+  .tl-alt { --gap: 16px; gap: 12px; }
+  .tl-alt .tl-th { aspect-ratio: auto; }
+  .tl-alt .tl-tb { padding: 6px 8px 7px; }
+  .tl-alt .tt { font-size: 14px; }
+  .tl-alt .tl-date { font-size: 12px; letter-spacing: .08em; }
+}
 .tl-plain { padding-left: 0; }
 .tl-plain::before, .tl-plain .tl-item::before { display: none; }
 /* technique tab: diagrams and the wheel icon are shown whole on white, not cropped */

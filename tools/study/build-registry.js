@@ -66,14 +66,19 @@ study = study.replace(/,\n$/, '\n');
 const chromeNew = replaceBetween(R('site-chrome.js'), '  /* STUDY:START */\n', '  /* STUDY:END */', study, 'site-chrome.js');
 
 /* ---- study.html cards + JSON-LD ---- */
+/* art history (Nov 10 2026): small square cards alternating sides of a centre line — image and title only, date beside the dot */
+const sqCard = (c) => `    <a class="tl-item" href="${c.href}">
+      <span class="tl-date">${esc(c.date)}</span>
+      <span class="card tl-card"><span class="tl-th"><img src="${c.img}" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">${esc(c.label)}</span></span></span>
+    </a>\n`;
 const card = (c) => `    <a class="tl-item" href="${c.href}">
       <span class="tl-date">${esc(c.date)}</span>
       <span class="card tl-card"><span class="tl-th"><img src="${c.img}" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">${esc(c.label)}</span><span class="ts">${esc(c.card.text)}</span></span></span>
     </a>\n`;
 let panels = '';
 for (const lane of reg.lanes) {
-  panels += `  <section id="p-${lane.id}" class="stab-panel" role="tabpanel" aria-labelledby="t-${lane.id}">\n  <div class="tl${lane.id === 'technique' ? ' tl-plain' : ''}">\n`;
-  panels += courses.filter((x) => x.lane === lane).map(card).join('');
+  panels += `  <section id="p-${lane.id}" class="stab-panel" role="tabpanel" aria-labelledby="t-${lane.id}">\n  <div class="tl${lane.id === 'technique' ? ' tl-plain' : ' tl-alt'}">\n`;
+  panels += courses.filter((x) => x.lane === lane).map(lane.id === 'technique' ? card : sqCard).join('');
   panels += '  </div>\n  </section>\n';
 }
 let studyHtml = replaceBetween(R('study.html'), '<!-- COURSES:START -->\n', '<!-- COURSES:END -->', panels, 'study.html');
