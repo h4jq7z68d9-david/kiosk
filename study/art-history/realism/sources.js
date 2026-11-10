@@ -1,5 +1,5 @@
 window.SOURCES = {
- "intro": "The text of this section was compiled for general readers from the sources below. The ideas and facts come from them; the wording is new, and any quotations are credited where they appear.",
+ "intro": "The text of this course was compiled for general readers from the sources below. The facts come from the museums' own records and the reference entries; the lectures and curricula shaped what was included; the wording is new.",
  "groups": [
   {
    "title": "Lectures",
@@ -47,60 +47,20 @@ window.SOURCES = {
    "title": "Museum records",
    "items": [
     {
-     "html": "Alte Nationalgalerie, Berlin. <em>The Iron Rolling Mill (Modern Cyclopes)</em>, Adolph Menzel, A I 201.",
+     "html": "Alte Nationalgalerie, Berlin. <em>The Iron Rolling Mill</em>, Adolph Menzel, A I 201.",
      "url": "https://smb.museum-digital.de/json/object/142741"
-    },
-    {
-     "html": "Alte Nationalgalerie, Berlin. <em>Women Plucking Geese</em>, Max Liebermann, A I 524.",
-     "url": "https://smb.museum-digital.de/json/object/143796"
     },
     {
      "html": "Art Institute of Chicago. <em>The Song of the Lark</em>, Jules Breton, 1894.1033.",
      "url": "https://www.artic.edu/artworks/94841/the-song-of-the-lark"
     },
     {
-     "html": "Birmingham Museums Trust. <em>The Last of England</em>, Ford Madox Brown, 1891P24.",
-     "url": "https://dams.birminghammuseums.org.uk/asset-bank/action/viewAsset?id=11554"
-    },
-    {
-     "html": "Hamburger Kunsthalle. <em>Three Women in Church</em>, Wilhelm Leibl, HK-1534.",
-     "url": "https://online-sammlung.hamburger-kunsthalle.de/de/objekt/HK-1534"
-    },
-    {
-     "html": "J. Paul Getty Museum, Los Angeles. <em>Man with a Hoe</em>, Jean-François Millet, 85.PA.114.",
-     "url": "https://www.getty.edu/art/collection/object/103RGZ"
-    },
-    {
-     "html": "Manchester Art Gallery. <em>Work</em>, Ford Madox Brown, 1885.1.",
-     "url": "https://artuk.org/discover/artworks/work-205502"
-    },
-    {
-     "html": "Museum of Fine Arts, Boston. <em>Street Singer</em>, Édouard Manet, 66.304.",
-     "url": "https://collections.mfa.org/objects/33971"
-    },
-    {
      "html": "Museum of Fine Arts, Boston. <em>The Sower</em>, Jean-François Millet, 17.1485.",
      "url": "https://collections.mfa.org/objects/31601"
     },
     {
-     "html": "Musée Fabre, Montpellier. <em>The Meeting (Bonjour Monsieur Courbet)</em>, Gustave Courbet, 868.1.23.",
-     "url": "https://museefabre-old.montpellier3m.fr/content/download/10066/79382/file/XIXeCourbet_La_rencontre.pdf"
-    },
-    {
-     "html": "Musée d'Orsay, Paris (on deposit from the Louvre). <em>Oxen Going to Work, Morning Effect</em>, Constant Troyon, RF 127.",
-     "url": "https://www.musee-orsay.fr/fr/oeuvres/boeufs-allant-au-labour-effet-de-matin-894"
-    },
-    {
      "html": "Musée d'Orsay, Paris. <em>A Burial at Ornans</em>, Gustave Courbet, RF 325.",
      "url": "https://www.musee-orsay.fr/fr/oeuvres/un-enterrement-ornans-924"
-    },
-    {
-     "html": "Musée d'Orsay, Paris. <em>Haymaking</em>, Jules Bastien-Lepage, RF 2748.",
-     "url": "https://www.musee-orsay.fr/fr/oeuvres/les-foins-9174"
-    },
-    {
-     "html": "Musée d'Orsay, Paris. <em>Ploughing in the Nivernais</em>, Rosa Bonheur, RF 64.",
-     "url": "https://www.musee-orsay.fr/fr/oeuvres/labourage-nivernais-68"
     },
     {
      "html": "Musée d'Orsay, Paris. <em>The Angelus</em>, Jean-François Millet, RF 1877.",
@@ -115,60 +75,16 @@ window.SOURCES = {
      "url": "https://www.musee-orsay.fr/fr/oeuvres/latelier-du-peintre-927"
     },
     {
-     "html": "Musée du Louvre, Paris. <em>Souvenir of Mortefontaine</em>, Camille Corot, MI 692 bis.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010066968"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>Carrefour de l'Epine</em>, Eugène Cuvelier, 1995.36.71.",
-     "url": "https://www.nga.gov/artworks/92299-carrefour-de-lepine"
-    },
-    {
      "html": "National Gallery of Art, Washington. <em>Forest of Fontainebleau</em>, Camille Corot, 1963.10.109.",
      "url": "https://www.nga.gov/artworks/46584-forest-fontainebleau"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>Rue Saint-Jacques</em>, Charles Marville, 2003.17.1.",
-     "url": "https://www.nga.gov/artworks/125705-rue-saint-jacques"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>Sunset from the Forest of Fontainebleau</em>, Théodore Rousseau, 2003.70.1.",
-     "url": "https://www.nga.gov/artworks/127430-sunset-forest-fontainebleau"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>The Dead Toreador</em>, Édouard Manet, 1942.9.40.",
-     "url": "https://www.nga.gov/artworks/1179-dead-toreador"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>The Edge of the Forest at Les Monts-Girard, Fontainebleau</em>, Narcisse Diaz de la Peña, 2000.37.1.",
-     "url": "https://www.nga.gov/collection/art-object-page.111573.html"
     },
     {
      "html": "National Gallery of Art, Washington. <em>The Old Musician</em>, Édouard Manet, 1963.10.162.",
      "url": "https://www.nga.gov/artworks/46637-old-musician"
     },
     {
-     "html": "National Gallery of Art, Washington. <em>The Stream (Le Ruisseau du Puits-Noir; vallée de la Loue)</em>, Gustave Courbet, 1943.15.2.",
-     "url": "https://www.nga.gov/content/ngaweb/Collection/art-object-page.30231.html"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>Washerwomen at the Oise River near Valmondois</em>, Charles-François Daubigny, 1949.1.3.",
-     "url": "https://www.nga.gov/collection/art-object-page.35087.html"
-    },
-    {
-     "html": "Petit Palais, Musée des Beaux-Arts de la Ville de Paris. <em>Young Ladies on the Banks of the Seine (Summer)</em>, Gustave Courbet.",
-     "url": "https://www.petitpalais.paris.fr/en/node/653"
-    },
-    {
      "html": "Philadelphia Museum of Art and Pennsylvania Academy of the Fine Arts. <em>Portrait of Dr. Samuel D. Gross (The Gross Clinic)</em>, Thomas Eakins, PAFA 2007.2; PMA 2007-1-1.",
      "url": "https://philamuseum.org/collection/object/299524"
-    },
-    {
-     "html": "Royal Holloway, University of London. <em>Applicants for Admission to a Casual Ward</em>, Luke Fildes, THC0021.",
-     "url": "https://royalholloway.ac.uk/about-us/art-collections/see-the-art/applicants-for-admission-to-a-casual-ward"
-    },
-    {
-     "html": "Royal Holloway, University of London. <em>The Railway Station</em>, William Powell Frith, THC0022.",
-     "url": "https://artuk.org/discover/artworks/the-railway-station-12825"
     },
     {
      "html": "State Russian Museum, St Petersburg. <em>Barge Haulers on the Volga</em>, Ilya Repin, Ж-4056.",
@@ -179,24 +95,8 @@ window.SOURCES = {
      "url": "https://sammlung.staedelmuseum.de/en/work/the-wave"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. <em>Joan of Arc</em>, Jules Bastien-Lepage, 89.21.1.",
-     "url": "https://www.metmuseum.org/art/collection/search/435621"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>Le Ventre législatif (The Legislative Belly)</em>, Honoré Daumier, 20.60.5.",
-     "url": "https://www.metmuseum.org/art/collection/search/356494"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>Prisoners from the Front</em>, Winslow Homer, 22.207.",
-     "url": "https://www.metmuseum.org/art/collection/search/11133"
-    },
-    {
      "html": "The Metropolitan Museum of Art, New York. <em>Rue Transnonain, April 15, 1834</em>, Honoré Daumier, 20.23.",
      "url": "https://www.metmuseum.org/art/collection/search/365806"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>Snap the Whip</em>, Winslow Homer, 50.41.",
-     "url": "https://www.metmuseum.org/art/collection/search/11140"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. <em>The Champion Single Sculls (Max Schmitt in a Single Scull)</em>, Thomas Eakins, 34.92.",
@@ -211,24 +111,12 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/435702"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. <em>The Laundress</em>, Honoré Daumier, 47.122.",
-     "url": "https://www.metmuseum.org/art/collection/search/436091"
-    },
-    {
      "html": "The Metropolitan Museum of Art, New York. <em>The Third-Class Carriage</em>, Honoré Daumier, 29.100.129.",
      "url": "https://www.metmuseum.org/art/collection/search/436095"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. <em>The Veteran in a New Field</em>, Winslow Homer, 67.187.131.",
      "url": "https://www.metmuseum.org/art/collection/search/11145"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>Woman with a Rake</em>, Jean-François Millet, 38.75.",
-     "url": "https://www.metmuseum.org/art/collection/search/437099"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>Young Ladies of the Village</em>, Gustave Courbet, 40.175.",
-     "url": "https://www.metmuseum.org/art/collection/search/438820"
     }
    ]
   },
@@ -252,16 +140,20 @@ window.SOURCES = {
      "url": "https://smarthistory.org/?p=52310"
     },
     {
-     "html": "Government Art Collection (UK). Entry on Francis Holl's engraving after Frith, <em>The Railway Station</em>.",
-     "url": "https://artcollection.culture.gov.uk/?p=2352"
+     "html": "Tate. “Realism.” <em>Art Terms</em>. Accessed November 10, 2026.",
+     "url": "https://www.tate.org.uk/art/art-terms/r/realism"
     },
     {
-     "html": "Musée Fabre, Montpellier. <em>La rencontre</em> (education sheet, PDF).",
-     "url": "https://museefabre-old.montpellier3m.fr/content/download/10066/79382/file/XIXeCourbet_La_rencontre.pdf"
+     "html": "Tate. “Lithography.” <em>Art Terms</em>. Accessed November 10, 2026.",
+     "url": "https://www.tate.org.uk/art/art-terms/l/lithography"
     },
     {
-     "html": "Hampton University Museum. Page on Henry Ossawa Tanner, <em>The Banjo Lesson</em>.",
-     "url": "https://home.hamptonu.edu/msm/?p=9916"
+     "html": "Tate. “Salon.” <em>Art Terms</em>. Accessed November 10, 2026.",
+     "url": "https://www.tate.org.uk/art/art-terms/s/salon"
+    },
+    {
+     "html": "National Gallery of Art, Washington. Open data: constituents (artist nationality and dates). Accessed November 10, 2026.",
+     "url": "https://github.com/NationalGalleryOfArt/opendata"
     }
    ]
   }
