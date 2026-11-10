@@ -212,11 +212,12 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 .stabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
 .stab-panel:not([hidden]) + .stab-panel:not([hidden]) { margin-top: 40px; }   /* only without JS, when both panels show */
 /* art history timeline (Nov 10 2026): small square cards alternating either side of a centre line, date beside each dot */
-.tl-alt { --gap: 22px; padding-left: 0; max-width: 560px; gap: 14px; }
+.tl-alt { --gap: 22px; padding-left: 0; max-width: 880px; gap: 14px; }
 .tl-alt::before { left: 50%; margin-left: -1px; top: 0; bottom: 0; }
 .tl-alt .tl-item { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gap) * 2); align-items: center; }
 .tl-alt .tl-item::before { left: 50%; top: 50%; transform: translate(-50%, -50%); }
 .tl-alt .tl-card { grid-row: 1; width: min(230px, 100%); aspect-ratio: 1 / 1; overflow: hidden; }
+@media (min-width: 901px) { .tl-alt .tl-card { width: min(280px, 100%); } }
 .tl-alt .tl-date { grid-row: 1; }
 .tl-alt .tl-item:nth-child(odd) .tl-card { grid-column: 1; justify-self: end; }
 .tl-alt .tl-item:nth-child(odd) .tl-date { grid-column: 2; }
@@ -232,11 +233,18 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
   .tl-alt .tt { font-size: 14px; }
   .tl-alt .tl-date { font-size: 12px; letter-spacing: .08em; }
 }
-.tl-plain { padding-left: 0; }
-.tl-plain::before, .tl-plain .tl-item::before { display: none; }
-/* technique tab: diagrams and the wheel icon are shown whole on white, not cropped */
-.tl-plain .tl-th { background: var(--panel); }
-.tl-plain .tl-th img { object-fit: contain; }
+/* technique tab (Nov 10 2026): a grid of small square cards (image + title), "N parts" under each; two across on phones */
+.tl-grid { padding-left: 0; gap: 14px; max-width: none; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+@media (min-width: 701px) { .tl-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 20px; } }
+.tl-grid::before, .tl-grid .tl-item::before { display: none; }
+.tl-grid .tl-item { gap: 5px; }
+.tl-grid .tl-card { order: 1; aspect-ratio: 1 / 1; overflow: hidden; }
+.tl-grid .tl-date { order: 2; font-size: 12px; letter-spacing: .08em; }
+.tl-grid .tl-th { flex: 1; min-height: 0; aspect-ratio: auto; background: var(--panel); }
+.tl-grid .tl-th img { object-fit: contain; }   /* diagrams and plates shown whole on white, not cropped */
+.tl-grid .tl-tb { padding: 6px 8px 7px; }
+.tl-grid .tt { font-size: 14px; line-height: 1.2; }
+@media (min-width: 701px) { .tl-grid .tl-tb { padding: 8px 10px 9px; } .tl-grid .tt { font-size: 16px; } }
 
 /* search across every study course (Oct 31 2026) — same look as the course pages' search */
 .study-search { position: relative; margin: 18px 0 6px; max-width: 560px; }
