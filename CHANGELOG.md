@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, afternoon) — Japonisme Mode 2, new course (branch `install-japonisme`, pushed to `main` per runbook 9.9, before slide-editor review)
+
+- **Japonisme (new, Mode 2):** 17 works, one section "Europe and the United States, 1864–1900", one part; 20 pages; 17 images, 5.1 MB. Installed with `install-course.js --after impressionism` (no `--force`, no redirects); timeline card 1864–1900, image Van Gogh's Flowering Plum Orchard. Registry rebuild bumped `V.chrome` → 23 and the `?v=` on every page; next-course chain now Impressionism → Japonisme → Post-Impressionism. No generator changes. `check.js` PASS, `smoke.js` PASS.
+- **Open flags from the handoff** (David decides in the slide editor): overlaps with Japanese Woodblock Prints (Dow, Cassatt, Van Gogh's Hiroshige copies) and Impressionism (a Cassatt bath print), kept as approved; La Japonaise is a Commons copy, colour unverified (MFA refused scripted requests); Van Gogh and Whistler lines have no nationality; Van Gogh Museum licence wording not captured; Degas and Lautrec Japanese link credited to Colta Ives's Met essay; Bridge in the Rain doesn't name the Hiroshige print; Lautrec width rounded to 46 in; slides 72–110 words.
+
+-----
+
 ## Completed This Session (November 10 2026, late morning) — Realism Mode 2 rebuild (branch `install-realism`, pushed to `main` per runbook 9.9, before slide-editor review)
 
 - **Realism (Mode 2):** replaced the 49-work, 6-part course with the 18-work rebuild (one section "Europe and the United States, 1834–1899", one part; 21 pages; 18 images, 4.8 MB) via `install-course.js --force`; kept its place after Romanticism. Registry: dates → 1834–1899, card image Burial at Ornans → The Gleaners, card text replaced. 56 retired URLs redirect: 18 kept works to their new pages, 31 cut works, 6 part pages and the Pavilion of Realism theme page to the course home. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
