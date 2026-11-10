@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, morning) — study.html cards redesigned (branch `study-timeline-squares`, pushed to `main` on David's word)
+
+- **Art history tab:** the full-width cards are now small square cards (image + title, no description) alternating either side of a centre line; each date sits beside its dot on the opposite side (right-aligned on the left). Cards cap at 230 px, 280 px above 900 px; about two per phone screen. No stagger (David's call).
+- **Technique tab:** now a grid of the same square cards, label "N parts" under each (was "course · N parts"); two across on phones, three across from 701 px, max width 880 px. Descriptions dropped from the cards (still in `courses.json`, used nowhere else on the page).
+- **Generator:** `build-registry.js` emits one card template for both lanes (container class `tl-alt` / `tl-grid`; `tl-plain` and the big-card template are gone). CSS in `study/study.css` (`?v=13`). JSON-LD unchanged. `check.js` PASS, `smoke.js` PASS.
+
+-----
+
 ## Completed This Session (November 9 2026, late afternoon) — Neoclassicism and Rococo split into two Mode 2 courses (branches `install-rococo`, `install-neoclassicism`, pushed to `main` together on David's word, before slide-editor review)
 
 - **Retired `neoclassicism-and-rococo`** (hand step, Neoclassicism handoff §4 A): removed the course folder, home page, settings file, registry entry and sitemap block; ran `build-registry.js`; rebuilt every course.
