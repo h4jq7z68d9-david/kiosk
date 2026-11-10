@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, morning) — Romanticism Mode 2 rebuild (branch `install-romanticism`, pushed to `main` per runbook 9.9, before slide-editor review)
+
+- **Romanticism (Mode 2):** replaced the 64-work, 7-part course with the 18-work rebuild (one section "Europe and the United States, 1781–1863", one part; 21 pages; 18 images, 4.5 MB) via `install-course.js --force`; kept its place after Neoclassicism. Registry: dates 1760s–1860s → 1781–1863, card image Raft of the Medusa → Wanderer above the Sea of Fog, card text replaced. 71 retired URLs redirect: 18 kept works to their new pages, 46 cut works and 7 part pages to the course home. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
+- **Open flags from the handoff** (David decides in the slide editor): three Louvre plates under 1600 px (Raft 1470, Sardanapalus 1458, Liberty 1471; chosen for colour); Women of Algiers is a 2024 visitor photo, colour unverified; four plates not compared on the museum's own site; Slave Ship history line rests on the title; Wanderer dating not secure ("about 1817"); Heart of the Andes uses the inch width; slides 71–124 words.
+
+-----
+
 ## Completed This Session (November 10 2026, morning) — Japanese Woodblock Prints Mode 2 rebuild (branch `install-japanese-woodblock-prints`, pushed to `main` per runbook 9.9, before slide-editor review)
 
 - **Japanese Woodblock Prints (Mode 2):** replaced the 64-work, 7-part course with the 18-work rebuild (one section "Japan, 1680s–1880s", one part; 21 pages; 18 images, 6.0 MB) via `install-course.js --force`; kept its place after Classical Myth. Registry: dates c. 1680–1927 → 1680s–1880s, card text replaced (card image unchanged, Red Fuji). 71 retired URLs redirect: 18 kept works to their new pages, 46 cut works and 7 part pages to the course home. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
