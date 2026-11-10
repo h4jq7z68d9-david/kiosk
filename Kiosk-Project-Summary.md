@@ -666,7 +666,7 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 
 ### From November 10 2026, evening (technique slide model)
 
-- [ ] **Slide editor support for `topen` / `concept` slides** — `tools/study/editor/` only edits work/theme/text/overview pages. Needed before the first technique course is rebuilt in the new model, if David will edit it live.
+- [x] **Slide editor support for `topen` / `concept` slides** (Nov 10 2026, text fields only). Image swaps (img, alt, credit, example image + thumbnail) deferred by David until needed.
 - [ ] **Technique rebuilds** (Color Theory, Pigments and Materials, Oil vs Acrylic, Composition, Value and Light) still use the old theme/work model until each comes back from the technique course builder with `topen`/`concept` data. Fixture test: `node tools/study/test-technique-slides.js`.
 
 ### From November 9 2026, late afternoon (Rococo + Neoclassicism split)

@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, evening, later) — Slide editor: technique slide types (branch `editor-technique-slides`, pushed to `main` on David's instruction)
+
+- **`topen` pages:** edit section name, `title`, `para`. **`concept` pages:** edit section name, `title`, `stmt`, each `look` bullet (save blocked outside 2–4), `bul` (a one-item list in the file stays a list), and the example's `artist`, `title`, `date`, `line`, plus `det` and `alt` in a grey box under the example (not visible on the page otherwise). Required fields can't be saved empty; the page blocks the save and the server rejects it too. Renaming a concept moves its page and fixes redirects, as for work slides.
+- **Not included (David, Nov 10 2026):** image swaps (`img`, main-image `alt`, `credit`, example image + thumbnail). Deferred until needed.
+- **Editor pages only:** `@view-transition { navigation: none; }` in `editor.css` (Chromium logged an aborted fade after a save that renamed a page). Built pages unchanged.
+- **Tests:** `node tools/study/test-editor-technique.js` runs the real editor on the fixture in a temp copy: edits every field, saves, checks the data file and rebuilt pages, checks the blocked saves, and loads edit mode at 390, 820 and 1440 px with 0 console errors. PASS 3 runs in a row. `test-technique-slides.js` PASS, `check.js` PASS; every page of Impressionism and Color Theory still patches and verifies. Fixture gained a placeholder `sources.js`.
+
+-----
+
 ## Completed This Session (November 10 2026, evening) — Technique slide model in the study generator (branch `technique-slide-model`, pushed to `main` on David's instruction, before review)
 
 - **New slide types for technique courses** (`build-course.js`): `topen` (title, para, optional img/credit/alt) and `concept` (title, img, credit?, alt, stmt, look 2–4, ex, optional one-line bul). `ex` = key, artist, title, date, det, alt, line (optional img/credit). A part with no `overview` whose first slide is a `topen` opens on it. Build fails if either type is used outside basePath `/study`. Concept pages show no "Theme"/"Concept" label; only "Look at", as on art history work slides.

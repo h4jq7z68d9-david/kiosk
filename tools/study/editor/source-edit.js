@@ -169,9 +169,22 @@ function course(files) {
    obj: the object node holding it; prop: its property name; path: where it sits in the loaded data
    (root, then keys), used by verify(). dflt: the page shows built-in default text when the property is absent. */
 function field(key, label, type, file, obj, p, path, extra) {
-  const v = val(obj, p);
+  let v = val(obj, p);
+  /* oneLine: a string that the file may also hold as a one-item list (a concept's `bul`); edited as a string */
+  if (extra && extra.oneLine && Array.isArray(v)) v = v.length ? v[0] : '';
   const value = type === 'string' ? (v == null ? (extra && extra.dflt ? null : '') : v) : (Array.isArray(v) ? JSON.parse(JSON.stringify(v)) : []);
   return Object.assign({ key, label, type, file, obj, prop: p, path: path.concat(p), value }, extra || {});
+}
+/* Save rules (technique slide model, Nov 10 2026): required strings and list items may not be empty;
+   a list may carry min/max item counts. Returns an error message or null. */
+function rule(fld, v) {
+  if (fld.type === 'string' && fld.required && !String(v).trim()) return `${fld.label} can't be empty`;
+  if (fld.type === 'list') {
+    if (fld.required && v.some((x) => !x.trim())) return `${fld.label}: an item is empty`;
+    if (fld.min != null && v.length < fld.min) return `${fld.label}: needs ${fld.min} to ${fld.max}, has ${v.length}`;
+    if (fld.max != null && v.length > fld.max) return `${fld.label}: needs ${fld.min} to ${fld.max}, has ${v.length}`;
+  }
+  return null;
 }
 
 /* The fields of one page, in page order. Returns null when the id is not a page of this course. */
@@ -262,6 +275,23 @@ function pageFields(files, id) {
         F('title', 'Title', 'string'); F('stmt', 'Statement', 'string'); F('para', 'Paragraph', 'string'); F('bul', 'Bullet', 'list'); F('terms', 'Term', 'pairs'); quote(s, P);
         return { kind: 'theme', file: f, fields: out };
       }
+      /* technique slide model (Nov 10 2026): text only; images, main-image alt text and credits are not edited here */
+      const R = { required: true };
+      if (type === 'topen') {
+        section(); F('title', 'Title', 'string', R); F('para', 'Paragraph', 'string', R);
+        return { kind: 'topen', file: f, fields: out };
+      }
+      if (type === 'concept') {
+        section(); F('title', 'Concept name', 'string', R); F('stmt', 'Definition', 'string', R);
+        F('look', 'Look at bullet', 'list', { required: true, min: 2, max: 4 });
+        const ex = prop(s, 'ex');
+        if (!ex || ex.value.type !== 'obj') throw new Error(`${f}: concept "${val(s, 'title')}" has no ex object`);
+        const X = (k, label) => out.push(field('ex.' + k, label, 'string', f, ex.value, k, P.concat('ex'), R));
+        X('artist', 'Example artist'); X('title', 'Example title'); X('date', 'Example date'); X('line', 'Example line');
+        X('det', 'Example details line (shown in the enlarged view)'); X('alt', 'Example alt text (read aloud, not shown)');
+        F('bul', 'Closing line', 'string', { oneLine: true });
+        return { kind: 'concept', file: f, fields: out };
+      }
       section(); F('title', 'Title', 'string');
       F('sub', 'Subtitle', 'string'); F('sum', 'Summary', 'string'); F('bul', 'Bullet', 'list'); F('terms', 'Term', 'pairs');
       return { kind: 'text', file: f, fields: out };
@@ -271,7 +301,8 @@ function pageFields(files, id) {
 }
 
 /* What the editor shows: key, label, type, value (null = the built-in default is showing). */
-const publicFields = (pf) => pf.fields.map((x) => ({ key: x.key, label: x.label, type: x.type, value: x.value, dflt: !!x.dflt }));
+const publicFields = (pf) => pf.fields.map((x) => ({ key: x.key, label: x.label, type: x.type, value: x.value, dflt: !!x.dflt,
+  required: !!x.required || undefined, min: x.min, max: x.max }));
 
 /* ---------- writing ---------- */
 function lit(v, q) {
@@ -343,6 +374,11 @@ function edits(src, fld, value) {
     return [{ start: at, end: at, text: (last ? ',' : '') + (multi ? '\n' + ind : ' ') + keyTxt + ': ' + valTxt }];
   }
   const v = p.value;
+  if (kind === 'string' && fld.oneLine && v.type === 'arr') {   // one-item list in the file: keep it a list
+    if (v.items.length === 1 && v.items[0].type === 'str') return v.items[0].value === value ? [] : [{ start: v.items[0].start, end: v.items[0].end, text: lit(value, v.items[0].quote) }];
+    if (v.items.length > 1) throw new Error(`"${key}" in the file has more than one line`);
+    return [{ start: v.start, end: v.end, text: '[' + lit(value, q) + ']' }];
+  }
   if (kind === 'string') {
     if (v.type !== 'str' && !(v.type === 'lit' && v.value == null)) throw new Error(`"${key}" is not a string in the file`);
     if (v.value === value) return [];
@@ -365,9 +401,13 @@ function patch(files, id, values) {
     if (!(fld.key in values) || values[fld.key] === null) continue;
     const v = values[fld.key];
     if (!shapeOk(fld.type, v)) throw new Error(`"${fld.key}" has the wrong shape`);
+    const bad = rule(fld, v);
+    if (bad) throw new Error(bad + '. Nothing was saved.');
     const src = files.find((x) => x.name === fld.file).src;
     const r = edits(src, fld, v);
-    if (r.length) { (byFile[fld.file] = byFile[fld.file] || []).push(...r.map((x) => Object.assign(x, { seq: seq++ }))); changed.push(fld.key); applied.push({ path: fld.path, value: v }); }
+    const cur = prop(fld.obj, fld.prop);
+    const stored = fld.oneLine && cur && cur.value.type === 'arr' ? [v] : v;   // what the file holds after the edit
+    if (r.length) { (byFile[fld.file] = byFile[fld.file] || []).push(...r.map((x) => Object.assign(x, { seq: seq++ }))); changed.push(fld.key); applied.push({ path: fld.path, value: stored }); }
   }
   const out = [];
   for (const [name, reps] of Object.entries(byFile)) {

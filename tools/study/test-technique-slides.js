@@ -30,6 +30,7 @@ execSync(`tar --exclude=.git --exclude=tools/site/out -cf - . | tar -xf - -C ${J
 const CDIR = path.join(TMP, 'study', SLUG);
 fs.mkdirSync(path.join(CDIR, 'img'), { recursive: true });
 fs.copyFileSync(path.join(FIX, 'data.js'), path.join(CDIR, 'data.js'));
+fs.copyFileSync(path.join(FIX, 'sources.js'), path.join(CDIR, 'sources.js'));
 fs.copyFileSync(path.join(FIX, 'settings.json'), path.join(TMP, 'tools/study/courses', SLUG + '.json'));
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(CDIR, 'data.js'), 'utf8'), ctx);

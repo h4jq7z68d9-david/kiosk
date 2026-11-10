@@ -123,6 +123,31 @@
       s.stmt = child('p.stmt'); s.para = sums[0];
       s.bul = ensure('ul.b', 'ul', 'b', nextRule(s.para) || s.para);
       terms(s.bul); quote();
+    } else if (k === 'topen') {   // technique slide model: opening slide
+      s.para = sums[0];
+    } else if (k === 'concept') {   // technique slide model: concept with its example painting
+      s.stmt = child('p.stmt');
+      s.look = child('ul.look');
+      const ex = child('div.ex');
+      if (ex) {
+        s['ex.artist'] = ex.querySelector('.ex-a');
+        /* the page shows "<i>title</i>, date" in one line: split it so title and date are separate fields */
+        const t = ex.querySelector('.ex-t'), i = t.querySelector('i');
+        if (!t.querySelector('.ed-date')) { const d = el('span', 'ed-date', t.textContent.slice(i.textContent.length).replace(/^,\s*/, '')); t.textContent = ''; t.append(i, ', ', d); }
+        s['ex.title'] = i; s['ex.date'] = t.querySelector('.ed-date');
+        s['ex.line'] = ex.querySelector('.ex-l');
+        /* fields not visible on the page: shown in a box under the example while editing */
+        const box = ex.parentNode.querySelector('.ed-extra') || after(ex, el('div', 'ed-extra ed-new'));
+        ['ex.det', 'ex.alt'].forEach((key) => {
+          const f = data.fields.find((x) => x.key === key);
+          if (!f || box.querySelector(`[data-ed-key="${key}"]`)) return;
+          const lab = el('p', 'ed-xlab', f.label); const p = el('p', 'ed-xval'); p.dataset.edKey = key;
+          box.append(lab, p); s[key] = p;
+        });
+        ['ex.det', 'ex.alt'].forEach((key) => { s[key] = s[key] || box.querySelector(`[data-ed-key="${key}"]`); });
+      }
+      /* closing line: a divider and a paragraph after the example, created empty if the slide has none */
+      s.bul = sums[0] || after(after(child('.ed-extra') || ex, el('hr', 'rule ed-new')), el('p', 'sum ed-new'));
     } else if (k === 'text') {
       s.sub = child('p.hsub') || after(h1, el('p', 'hsub ed-new'));
       s.sum = sums[0];
@@ -204,10 +229,23 @@
   }
   const unchanged = (v) => data.fields.every((f) => !(f.key in v) || JSON.stringify(v[f.key]) === JSON.stringify(f.value));
 
+  /* the same rules the server applies (required text, list sizes), checked here first so nothing is sent */
+  function problems(v) {
+    const out = [];
+    for (const f of data.fields) {
+      if (!(f.key in v) || v[f.key] === null) continue;
+      const x = v[f.key];
+      if (f.type === 'string' && f.required && !x) out.push(`${f.label} can't be empty`);
+      if (f.type === 'list' && f.min != null && (x.length < f.min || x.length > f.max)) out.push(`${f.label}: needs ${f.min} to ${f.max}, has ${x.length}`);
+    }
+    return out;
+  }
   async function save() {
     if (saving) return;
     const v = values();
     if (unchanged(v)) { msg('No changes to save.'); return; }
+    const bad = problems(v);
+    if (bad.length) { msg('<b>Not saved.</b><ul>' + bad.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>Your text is still on the page.', 'bad'); return; }
     saving = true; btnSave.disabled = btnCancel.disabled = true;
     msg('Saving, then rebuilding the course and running check.js. This takes about 15 seconds.');
     let r;

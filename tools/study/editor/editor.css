@@ -54,3 +54,13 @@
   border: 1px dashed var(--border-mid, #cfd6dd); border-radius: 999px; background: none; color: var(--accent-ink, #33557d);
 }
 @media (max-width: 900px) { .ed-panel { left: 8px; right: 8px; width: auto; bottom: 72px; max-height: 45vh; } }
+
+/* technique slide model: example-painting fields that the page does not show (details line, alt text) */
+.ed-extra { display: grid; gap: 4px; padding: 10px 12px; border: 1px dashed var(--border-mid, #cfd6dd); border-radius: 8px; background: var(--surface, #eef1f4); }
+.ed-extra .ed-xlab { margin: 4px 0 0; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink3, #697480); }
+.ed-extra .ed-xval { margin: 0; font-size: 14px; }
+.ed-date { display: inline; }
+.ed-on .ed-date.ed-field { display: inline-block; min-width: 3em; }
+.ed-on .ex-t i.ed-field { display: inline-block; }
+/* no cross-page fade while editing: after a save that renames a page, Chromium aborted the fade and logged a console error */
+@view-transition { navigation: none; }
