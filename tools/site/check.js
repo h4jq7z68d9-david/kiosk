@@ -16,7 +16,7 @@ const FOCUS = process.argv[2] || null;
 /* Pages that are tools or legacy and are not held to the public-page rules. */
 const SKIP_PAGES = new Set(['admin.html', 'kiosk.html', 'booth.html', 'expenses-jill-nicholson.html', 'shop.html']);
 /* Shared assets whose ?v= must match the generator's V object. */
-const VERSIONED = { 'site-tokens.css': 'tokens', 'site-chrome.js': 'chrome', 'site-chrome.css': 'chrome', 'site-bar.js': 'bar', 'site-bar.css': 'bar', 'guide.css': 'guideCss', 'guide.js': 'guideJs', 'search.js': 'search' };
+const VERSIONED = { 'site-tokens.css': 'tokens', 'site-chrome.js': 'chrome', 'site-chrome.css': 'chrome', 'site-bar.js': 'bar', 'site-bar.css': 'bar', 'guide.css': 'guideCss', 'guide.js': 'guideJs', 'search.js': 'search', 'lightbox.css': 'lightboxCss', 'lightbox.js': 'lightboxJs' };
 const BANNED = [/\bweek \d+\b/i, /free study guide/i, /\bwritten by\b/i, /\bcomprised\b/i];
 const BANNED_BODY = [/\bART ?\d{3}\b/];   // course codes: banned on pages, allowed in the sources bibliography
 /* Files written by the deploy workflow (generate-prints.js), not in the repo. */
@@ -164,6 +164,13 @@ for (const slug of courses) {
     for (const s of p.slides || []) {
       if (s.type === 'work') { works++; keys.add(s.key); if (s.look) { looks++; if (s.look.length < 3 || s.look.length > 5) err(`${tag}: "${s.title}" has ${s.look.length} Look-at bullets, needs 3 to 5`); } if (!s.lead && !s.sum) warn(`${tag}: "${s.title}" has no lead`); }
       if (s.type === 'theme' && s.img) keys.add(s.img);
+      /* technique slide model (Nov 10 2026) */
+      if (s.type === 'topen' && s.img) keys.add(s.img);
+      if (s.type === 'concept') {
+        works++; keys.add(s.img);
+        if (s.ex) { const k = s.ex.img || s.ex.key; keys.add(k); if (!fs.existsSync(path.join(imgDir, 'thumb', k + '.jpg'))) err(`${tag}: example "${s.ex.title}" has no img/thumb/${k}.jpg (rebuild the course)`); }
+        if (!s.look || s.look.length < 2 || s.look.length > 4) err(`${tag}: concept "${s.title}" needs 2 to 4 Look-at bullets`);
+      }
     }
   }
   if (cfg.introImg) keys.add(cfg.introImg);
@@ -174,6 +181,7 @@ for (const slug of courses) {
   for (const k of Object.keys(C)) if (!keys.has(k) && !cfg.imgFrom) warn(`${tag}: credits entry "${k}" is not used by any slide`);
   let big = 0, files = 0, bytes = 0;
   if (fs.existsSync(imgDir) && !cfg.imgFrom) for (const f of fs.readdirSync(imgDir)) {
+    if (f === 'thumb') continue;   // example-painting thumbnails, made by build-course.js
     if (!f.endsWith('.jpg')) { warn(`${tag}: img/${f} is not a .jpg`); continue; }
     files++; bytes += fs.statSync(path.join(imgDir, f)).size;
     const k = f.slice(0, -4);

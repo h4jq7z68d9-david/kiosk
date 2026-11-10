@@ -36,6 +36,8 @@ function buildSearch() {
       const label = [it.h && it.h < 99 ? partTitle(it.h) : '', it.kind === 'theme' ? (it.tlabel || G.themeLabel || 'Theme') : kind[it.kind]].filter(Boolean).join(' · ');
       const body = it.text.startsWith(it.title + ' · ') ? it.text.slice(it.title.length + 3) : it.text;
       items.push([c, it.url, label, it.title, it.artist || '', it.thumb || '', body]);
+      /* technique slide model: the example painting is its own result (artist + title), opening its concept page */
+      if (it.ex) items.push([c, it.url, [label, 'Example'].filter(Boolean).join(' · '), it.ex.title, it.ex.artist, 'thumb/' + it.ex.key, [it.ex.date, it.ex.line, it.title].filter(Boolean).join(' · ')]);
     }
   }
   const js = 'window.STUDY_SEARCH=' + JSON.stringify({ courses, items }).replace(/</g, '\\u003c') + ';\n';

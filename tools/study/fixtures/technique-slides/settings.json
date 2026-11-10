@@ -1,0 +1,9 @@
+{
+ "name": "Technique Slide Fixture",
+ "dataFiles": ["data.js"],
+ "basePath": "/study",
+ "introImg": "chevreul-chromatic-circle",
+ "ldDescription": "Test fixture for the technique slide model.",
+ "homeDescription": "{name}: test fixture, not published.",
+ "creditsDescription": "Sources and licenses for the {count} images in {name}."
+}

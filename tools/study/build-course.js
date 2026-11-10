@@ -22,6 +22,17 @@
    (this page's own label in place of themeLabel, e.g. History).
    Work slides may carry "look" (3 to 5 "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list → divider → "bul".
 
+   Technique slide model (Nov 10 2026; technique courses only, basePath /study). The old theme/work technique pages
+   keep working until each course is rebuilt.
+     topen    { type:'topen', title, para, img?, credit?, alt? }   opening slide. A part with no `overview` whose first
+              slide is a topen opens on it (it takes the part's URL; in a one-part course, the course home).
+     concept  { type:'concept', title, img, credit?, alt, stmt, look:[2–4], ex, bul? }   bul: one line (string or [one]).
+     ex       { key, artist, title, date, det, img?, credit?, alt, line }   example painting under the Look-at list:
+              thumbnail (img/thumb/<key>.jpg, made here) + artist, title, date, line; the thumbnail opens the shared
+              lightbox (/study/lightbox.js + .css, loaded only on pages that have an ex). `img` defaults to `key`.
+     `credit` (optional) is the visible credit text; without it the line comes from credits.js. Every image key still
+     needs a credits.js entry (the credits page lists main and ex images).
+
    Paths below use the default basePath.
    Reads   study/art-history/<slug>/{<dataFiles>,credits.js,sources.js (optional)}
            study/art-history/<slug>/img/<key>.jpg                      (for width/height)
@@ -63,7 +74,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 17, guideJs: 13, search: 3 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 17, guideJs: 13, search: 3, lightboxCss: 1, lightboxJs: 1 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -101,6 +112,25 @@ function jpegSize(file) {
 const DIMS = {};
 const dims = (k) => (DIMS[k] = DIMS[k] || jpegSize(path.join(IMG_DIR, k + '.jpg')));
 
+/* Example-painting thumbnails (technique slide model): img/thumb/<key>.jpg, THUMB_W px wide (never upscaled).
+   Made with python3 + Pillow, or macOS sips; only when missing or when the source's shape changed, so a text-only
+   rebuild (the slide editor) never needs either tool. To force a new thumbnail, delete it and rebuild. */
+const THUMB_W = 320;
+const THUMB_DIR = path.join(IMG_DIR, 'thumb');
+const thumbUrl = (k) => `${IMG_COURSE}/img/thumb/${k}.jpg`;
+function ensureThumb(k) {
+  const src = path.join(IMG_DIR, k + '.jpg'), out = path.join(THUMB_DIR, k + '.jpg');
+  const d = dims(k), w = Math.min(THUMB_W, d.w), h = Math.round(d.h * w / d.w);
+  if (fs.existsSync(out)) { const t = jpegSize(out); if (t.w === w && Math.abs(t.h - h) <= 1) return t; }
+  fs.mkdirSync(THUMB_DIR, { recursive: true });
+  const { spawnSync } = require('child_process');
+  const py = `import sys\nfrom PIL import Image, ImageOps\nim = ImageOps.exif_transpose(Image.open(sys.argv[1])).convert('RGB')\nim = im.resize((int(sys.argv[3]), int(sys.argv[4])), Image.LANCZOS)\nim.save(sys.argv[2], 'JPEG', quality=82, optimize=True, progressive=True)\n`;
+  let r = spawnSync('python3', ['-c', py, src, out, String(w), String(h)], { encoding: 'utf8' });
+  if (r.status !== 0) r = spawnSync('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', '82', '-z', String(h), String(w), src, '--out', out], { encoding: 'utf8' });
+  if (r.status !== 0 || !fs.existsSync(out)) throw new Error(`could not make thumbnail img/thumb/${k}.jpg (needs python3 + Pillow, or sips): ${(r.stderr || '').trim().slice(0, 200)}`);
+  return jpegSize(out);
+}
+
 function describe(text) {
   const t = String(text || '').replace(/\s+/g, ' ').trim();
   const first = (t.match(/^.+?[.!?](?=\s|$)/) || [t])[0];
@@ -120,18 +150,48 @@ const ONE = S.handouts.length === 1;
 if (!ONE) flat.push({ h: 0, kind: 'intro', id: 'start', label: NAME, url: HOME });
 const used = new Set([HOME]);
 const claim = (u) => { if (used.has(u)) throw new Error('duplicate URL ' + u); used.add(u); return u; };
+/* technique slide model (topen / concept): technique courses only, never under an art-history path */
+const NEW_TYPES = new Set(['topen', 'concept']);
+const KNOWN = new Set(['work', 'theme', 'text', 'topen', 'concept']);
+S.handouts.forEach((h) => h.slides.forEach((s, i) => {
+  const at = `part ${h.n} slide ${i + 1}${s.title ? ` ("${s.title}")` : ''}`;
+  if (!KNOWN.has(s.type)) throw new Error(`${at}: unknown slide type "${s.type}"`);
+  if (!NEW_TYPES.has(s.type)) return;
+  if (BASE !== '/study') throw new Error(`${at}: "${s.type}" slides are for technique courses (basePath /study), not ${BASE}`);
+  const need = (o, ks, w) => ks.forEach((k) => { if (o[k] == null || o[k] === '' || (Array.isArray(o[k]) && !o[k].length)) throw new Error(`${at}: ${w || s.type} needs "${k}"`); });
+  if (s.type === 'topen') { need(s, ['title', 'para']); if (i !== 0) throw new Error(`${at}: a topen must be the first slide of its part`); }
+  if (s.type === 'concept') {
+    need(s, ['title', 'img', 'alt', 'stmt', 'look', 'ex']);
+    if (s.look.length < 2 || s.look.length > 4) throw new Error(`${at}: "look" needs 2 to 4 bullets, has ${s.look.length}`);
+    if (Array.isArray(s.bul) && s.bul.length > 1) throw new Error(`${at}: "bul" is one line`);
+    need(s.ex, ['key', 'artist', 'title', 'date', 'det', 'alt', 'line'], 'ex');
+  }
+}));
+const exImg = (e) => e.img || e.key;
 S.handouts.forEach((h) => {
   const secSlug = slug(sec(h.wk)) || 'part-' + h.n;
-  const part = { h: h.n, kind: 'overview', d: h, hd: h, id: `h${h.n}-0`, label: ONE ? NAME : 'Overview', url: ONE ? HOME : claim(`${COURSE}/${secSlug}/${slug(h.title)}.html`) };
+  const partUrl = () => (ONE ? HOME : claim(`${COURSE}/${secSlug}/${slug(h.title)}.html`));
+  /* a part opens on its overview, or (technique slide model) on its first slide when that is a topen and there is no overview */
+  const opener = !h.overview && h.slides[0] && h.slides[0].type === 'topen';
+  if (!h.overview && !opener) throw new Error(`part ${h.n}: needs an "overview" or a topen as its first slide`);
+  const part = opener
+    ? { h: h.n, kind: 'topen', d: h.slides[0], hd: h, id: `h${h.n}-1`, label: h.slides[0].title, url: partUrl(), isPart: true }
+    : { h: h.n, kind: 'overview', d: h, hd: h, id: `h${h.n}-0`, label: ONE ? NAME : 'Overview', url: partUrl(), isPart: true };
   flat.push(part);
   h.slides.forEach((s, i) => {
-    const name = s.type === 'work' ? slug(s.title) : (s.type === 'theme' ? 'theme-' : 'note-') + slug(s.title);
+    if (opener && i === 0) return;
+    const name = s.type === 'work' ? slug(s.title) : s.type === 'concept' || s.type === 'topen' ? slug(s.title) : (s.type === 'theme' ? 'theme-' : 'note-') + slug(s.title);
     flat.push({ h: h.n, kind: s.type, d: s, hd: h, part, id: s.type === 'work' ? s.key : `h${h.n}-${i + 1}`, label: s.title, url: claim(`${COURSE}/${secSlug}/${name}.html`) });
   });
 });
+/* the picture that stands for a part (overview image, or the opening slide's image; else the course start image) */
+const partImg = (h) => (h.overview ? h.overview.img : (h.slides[0] && h.slides[0].img) || CFG.introImg);
+const partAlt = (h) => (h.overview ? h.overview.cap[1] : (h.slides[0] && (h.slides[0].alt || h.slides[0].img && h.slides[0].title)) || (C[CFG.introImg] && C[CFG.introImg].work) || NAME);
 if (SRCS) flat.push({ h: 99, kind: 'sources', id: 'sources', label: 'Sources and further reading', url: claim(COURSE + '/sources.html') });
 flat.push({ h: 99, kind: 'credits', id: 'credits', label: 'Image credits', url: claim(COURSE + '/credits.html') });
 const byKey = {}; flat.forEach((f, i) => { if (f.kind === 'work') byKey[f.d.key] = i; });
+/* image key → page it appears on, for credits-page links (concept and topen images, example paintings) */
+const imgPage = {}; flat.forEach((f) => { if (f.kind === 'concept') { imgPage[f.d.img] = imgPage[f.d.img] || f; imgPage[exImg(f.d.ex)] = imgPage[exImg(f.d.ex)] || f; } if (f.kind === 'topen' && f.d.img) imgPage[f.d.img] = imgPage[f.d.img] || f; });
 const ids = new Set(); flat.forEach((f) => { if (ids.has(f.id)) throw new Error('duplicate slide id ' + f.id); ids.add(f.id); });
 
 /* ---------- slide markup ---------- */
@@ -148,6 +208,18 @@ const look = (s) => (s.look && s.look.length ? `<p class="lab">Look at</p><ul cl
 const wl = (keys) => `<ul class="wl">${keys.filter((k) => byKey[k] != null).map((k) => `<li><a class="wlink" href="${flat[byKey[k]].url}">${esc(flat[byKey[k]].d.title)}</a></li>`).join('')}</ul>`;
 const partLink = (f) => `<a href="${f.part.url}">${esc(f.hd.title)}</a>`;
 const themesOf = (key) => flat.filter((t) => t.kind === 'theme' && (t.d.works || []).includes(key));
+/* technique slide model: visible credit line (the slide's own `credit` text, else the credits.js line) */
+const crx = (k, credit) => { if (!credit) return crl(k); const c = C[k]; return `<p class="crl">Image: ${c && c.page ? `<a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(credit)}</a>` : esc(credit)}</p>`; };
+const creditText = (k, credit) => credit || (C[k] ? `${srcOf(C[k])} · ${C[k].license}` : '');
+const oneLine = (b) => (Array.isArray(b) ? b[0] : b);
+/* example painting: thumbnail button + artist, title, date, line. The full image loads only when the lightbox opens. */
+function exHtml(e) {
+  const k = exImg(e), d = dims(k), t = ensureThumb(k);
+  const label = `Enlarge: ${e.artist}, ${e.title}, ${e.date}`;
+  return `<div class="ex"><button type="button" class="ex-th" data-lightbox data-full="${img(k)}" data-w="${d.w}" data-h="${d.h}" data-alt="${esc(e.alt)}" data-det="${esc(e.det)}" data-credit="${esc(creditText(k, e.credit))}" data-title="${esc(`${e.artist}, ${e.title}, ${e.date}`)}" aria-haspopup="dialog" aria-label="${esc(label)}">`
+    + `<img src="${thumbUrl(k)}" width="${t.w}" height="${t.h}" alt="${esc(e.alt)}" loading="lazy" decoding="async"></button>`
+    + `<div class="ex-cap"><p class="ex-a">${esc(e.artist)}</p><p class="ex-t"><i>${esc(e.title)}</i>, ${esc(e.date)}</p><p class="ex-l">${esc(e.line)}</p></div></div>`;
+}
 
 function slideHtml(f) {
   const d = f.d;
@@ -181,6 +253,15 @@ ${crl(o.img)}</div>`];   // title page: no works list (the outline has them)
     return ['slide', pic(d.img, d.alt || d.title, w) + `<div class="notes"><p class="eyebrow">${esc(d.label || THEME)} · ${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="sum">${esc(d.para)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}
 ${d.works && d.works.length ? `<p class="lab">See</p>${wl(d.works)}` : ''}${quote(d.quote)}${crl(d.img)}</div>`];
   }
+  if (f.kind === 'topen') {   // opening slide: image left (optional), title and one or two lines of history right
+    const body = `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="htitle">${esc(d.title)}</h1><p class="sum">${esc(d.para)}</p>${d.img ? crx(d.img, d.credit) : ''}</div>`;
+    return d.img ? ['slide', pic(d.img, d.alt || d.title, C[d.img] ? esc(C[d.img].work) : esc(d.title)) + body] : ['slide text', body];
+  }
+  if (f.kind === 'concept') {   // concept: plate left; statement, Look at, example painting, one line; no "Theme"/"Concept" label
+    const b = oneLine(d.bul);
+    return ['slide', pic(d.img, d.alt, C[d.img] ? esc(C[d.img].work) : esc(d.title)) + `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="lab">Look at</p><ul class="b look">${d.look.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+${exHtml(d.ex)}${b ? RULE + `<p class="sum">${esc(b)}</p>` : ''}${crx(d.img, d.credit)}</div>`];
+  }
   if (f.kind === 'text') {
     return ['slide text', `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="htitle">${esc(d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}<p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${RULE}${terms(d.terms)}</div>`];
   }
@@ -193,11 +274,13 @@ ${SRCS.groups.map((g) => `${RULE}<p class="lab">${esc(g.title)}</p><div class="c
   const keys = creditKeys();
   return ['slide text', `<div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Image credits</h1>${SRCS ? `<p class="det"><a href="${COURSE}/sources.html">Sources and further reading</a></p>` : ''}<p class="sum">${esc(CFG.creditsIntro || 'Every image is public domain or CC0. Each entry below links to the file’s record with its source and license.')}</p>
 <div class="cred">${keys.map((k) => { const c = C[k]; const au = (c.author || '').replace(/\s+/g, ' ').slice(0, 80); const w = byKey[k] != null ? flat[byKey[k]] : null;
-    return `<div><b>${w ? `<a href="${w.url}">${esc(c.work)}</a>` : esc(c.work)}</b><br>File: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.file)}</a><br>${esc(c.license)}${au ? ' · Author/source field: ' + esc(au) : ''}</div>`; }).join('\n')}</div></div>`];
+    const pg = w || imgPage[k] || null;
+    return `<div><b>${pg ? `<a href="${pg.url}">${esc(c.work)}</a>` : esc(c.work)}</b><br>File: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.file)}</a><br>${esc(c.license)}${au ? ' · Author/source field: ' + esc(au) : ''}</div>`; }).join('\n')}</div></div>`];
 }
 function creditKeys() {
   const order = [];
-  flat.forEach((x) => { if (x.kind === 'overview') order.push(x.d.overview.img); if (x.kind === 'work') order.push(x.d.key); if (x.kind === 'theme') order.push(x.d.img); });
+  flat.forEach((x) => { if (x.kind === 'overview') order.push(x.d.overview.img); if (x.kind === 'work') order.push(x.d.key); if (x.kind === 'theme') order.push(x.d.img);
+    if (x.kind === 'topen' && x.d.img) order.push(x.d.img); if (x.kind === 'concept') order.push(x.d.img, exImg(x.d.ex)); });
   return [...new Set(order)].filter((k) => C[k]);
 }
 
@@ -207,14 +290,18 @@ function textOf(f) {
   if (f.kind === 'overview') { const o = d.overview; p.push(d.title, d.sub, o.sum, o.sum2, ...(o.bul || []), ...(o.terms || []).flat(), ...(o.cap || [])); }
   else if (f.kind === 'intro' || f.kind === 'credits') p.push(f.label);
   else if (f.kind === 'sources') p.push(f.label, SRCS.intro, ...SRCS.groups.flatMap((g) => g.items.map((i) => i.html.replace(/<[^>]+>/g, ''))));
+  else if (f.kind === 'topen') p.push(d.title, d.para);
+  else if (f.kind === 'concept') { const e = d.ex; p.push(d.title, d.stmt, ...d.look, e.artist, e.title, e.date, e.line, oneLine(d.bul)); }
   else p.push(d.title, d.artist, d.date, d.det, d.lead, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.look || []), ...(d.bul || []), ...(d.terms || []).flat(), d.subj, d.quote && d.quote.q);
   return p.filter(Boolean).join(' · ');
 }
-const thumb = (f) => (f.kind === 'work' ? f.d.key : f.kind === 'theme' ? f.d.img : f.kind === 'overview' ? f.d.overview.img : null);
+const thumb = (f) => (f.kind === 'work' ? f.d.key : f.kind === 'theme' || f.kind === 'concept' ? f.d.img : f.kind === 'topen' ? f.d.img || null : f.kind === 'overview' ? f.d.overview.img : null);
+/* concept items carry their example painting so build-search.js can index it as its own result (artist + title) */
+const exOf = (f) => (f.kind === 'concept' ? { key: exImg(f.d.ex), artist: f.d.ex.artist, title: f.d.ex.title, date: f.d.ex.date, line: f.d.ex.line } : undefined);
 const GUIDE = {
   slug: SLUG, name: NAME, img: IMG_COURSE + '/img/', themeLabel: THEME,
   parts: S.handouts.map((h) => ({ h: h.n, title: ONE ? NAME : h.title, section: sec(h.wk), only: ONE || undefined })),   // one part: shown under the course name
-  items: flat.map((f) => ({ id: f.id, url: f.url, h: f.h, kind: f.kind, label: f.label, tlabel: (f.kind === 'theme' && f.d.label) || undefined, title: (f.d && f.d.title) || f.label, artist: (f.d && f.d.artist) || '', thumb: thumb(f), text: textOf(f) })),
+  items: flat.map((f) => ({ id: f.id, url: f.url, h: f.h, kind: f.kind, label: f.label, tlabel: (f.kind === 'theme' && f.d.label) || undefined, title: (f.d && f.d.title) || f.label, artist: (f.d && f.d.artist) || '', thumb: thumb(f), text: textOf(f), ex: exOf(f) })),
 };
 
 /* ---------- SEO: title, description, image and JSON-LD per page ---------- */
@@ -225,14 +312,15 @@ const imageLd = (k) => {
   return { '@type': 'ImageObject', contentUrl: abs(img(k)), width: d.w, height: d.h, license: LICENSE_URL[c.license] || undefined, acquireLicensePage: c.page, creditText: c.page ? srcOf(c) : undefined };
 };
 const crumbLd = (list) => ({ '@type': 'BreadcrumbList', itemListElement: list.map(([name, href], i) => ({ '@type': 'ListItem', position: i + 1, name, item: abs(href) })) });
-const FIRST_IMG = S.handouts[0].overview.img, FIRST_ALT = S.handouts[0].overview.cap[1];
+const FIRST_IMG = partImg(S.handouts[0]), FIRST_ALT = partAlt(S.handouts[0]);
 
 function meta(f) {
   const d = f.d || {};
   const base = [['Study', STUDY], [NAME, HOME]];
   if (f.url === HOME) {   // the course home: its own page, or a one-part course's overview
-    const parts = ONE ? f.d.slides.filter((s) => s.type === 'work').map((s) => ({ '@type': 'VisualArtwork', name: s.title, url: abs(flat[byKey[s.key]].url) }))
-      : flat.filter((x) => x.kind === 'overview').map((x) => ({ '@type': 'LearningResource', name: x.d.title, url: abs(x.url) }));
+    const parts = ONE ? f.hd.slides.filter((s) => s.type === 'work').map((s) => ({ '@type': 'VisualArtwork', name: s.title, url: abs(flat[byKey[s.key]].url) }))
+        .concat(flat.filter((x) => x.kind === 'concept').map((x) => ({ '@type': 'LearningResource', name: x.d.title, url: abs(x.url) })))
+      : flat.filter((x) => x.isPart).map((x) => ({ '@type': 'LearningResource', name: x.hd.title, url: abs(x.url) }));
     return { title: `${NAME} – Study – David Nicholson`, desc: fill(CFG.homeDescription || '{name}: a study guide to the works, with the story and key terms for each.'), image: FIRST_IMG, alt: FIRST_ALT, type: 'website',
       ld: [Object.assign({}, COURSE_LD, { description: fill(CFG.ldDescription || '{name}: an illustrated study guide to the works and the stories they tell.'), inLanguage: 'en',
         learningResourceType: 'Study guide', educationalLevel: 'Introductory', publisher: PUBLISHER, isAccessibleForFree: true,
@@ -256,10 +344,18 @@ function meta(f) {
       { '@type': 'WebPage', '@id': abs(f.url), url: abs(f.url), name: title, description: describe(text), inLanguage: 'en',
         about: { '@id': abs(f.url) + '#work' }, isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(d.key) }, crumbLd(cr)] };
   }
+  if (f.kind === 'topen' || f.kind === 'concept') {   // technique slide model
+    const cr = [...base, ...(ONE || f.isPart ? [] : [[f.hd.title, f.part.url]]), [d.title, f.url]];
+    const text = f.kind === 'topen' ? d.para : d.stmt, im = d.img || partImg(f.hd), e = d.ex;
+    return { title: `${d.title} – ${NAME}`, desc: describe(text), image: im, alt: d.img ? (d.alt || d.title) : partAlt(f.hd), type: 'article',
+      ld: [{ '@type': 'LearningResource', '@id': abs(f.url), url: abs(f.url), name: d.title, description: describe(text), inLanguage: 'en',
+        learningResourceType: 'Study guide', isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(im),
+        mentions: e ? [{ '@type': 'VisualArtwork', name: e.title, dateCreated: e.date, creator: { '@type': 'Person', name: e.artist }, image: imageLd(exImg(e)) }] : undefined }, crumbLd(cr)] };
+  }
   if (f.kind === 'theme' || f.kind === 'text') {
     const cr = [...base, ...(ONE ? [] : [[f.hd.title, f.part.url]]), [d.title, f.url]];
-    const text = f.kind === 'theme' ? d.para : d.sum, im = f.kind === 'theme' ? d.img : f.hd.overview.img;
-    return { title: `${d.title} – ${NAME}`, desc: describe(text), image: im, alt: f.kind === 'theme' ? (d.alt || d.title) : f.hd.overview.cap[1], type: 'article',
+    const text = f.kind === 'theme' ? d.para : d.sum, im = f.kind === 'theme' ? d.img : partImg(f.hd);
+    return { title: `${d.title} – ${NAME}`, desc: describe(text), image: im, alt: f.kind === 'theme' ? (d.alt || d.title) : partAlt(f.hd), type: 'article',
       ld: [{ '@type': 'LearningResource', '@id': abs(f.url), url: abs(f.url), name: d.title, description: describe(text), inLanguage: 'en',
         learningResourceType: 'Study guide', isPartOf: COURSE_LD, publisher: PUBLISHER, primaryImageOfPage: imageLd(im) }, crumbLd(cr)] };
   }
@@ -285,7 +381,7 @@ const NAV = `<nav data-chrome-nav></nav>
 <div id="menu-panel" aria-label="site menu"></div>`;
 const BM_ICON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5h9v15l-4.5-3.6-4.5 3.6z"/></svg>';
 const SEARCH_ICON = '<svg class="sico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6l4.4 4.4"/></svg>';
-const OUTLINE = (ONE ? '' : `<p><a class="ho" href="${HOME}">${esc(NAME)}</a></p>`) + flat.filter((x) => x.kind === 'overview').map((x) => `<p><a class="ho" href="${x.url}">${esc(x.d.title)}</a></p>`).join('')
+const OUTLINE = (ONE ? '' : `<p><a class="ho" href="${HOME}">${esc(NAME)}</a></p>`) + flat.filter((x) => x.isPart).map((x) => `<p><a class="ho" href="${x.url}">${esc(x.hd.title)}</a></p>`).join('')
   + flat.filter((x) => x.h === 99).map((x) => `<p><a class="ho" href="${x.url}">${esc(x.label)}</a></p>`).join('');
 
 function crumbHtml(f) {
@@ -305,6 +401,7 @@ function crumbHtml(f) {
 
 function pageHtml(f, i) {
   const [cls, inner] = slideHtml(f), prev = flat[i - 1], next = flat[i + 1], m = meta(f), u = abs(f.url), im = dims(m.image);
+  const LB = inner.includes('data-lightbox');   // example-painting lightbox: only pages that have one load it
   const ld = { '@context': 'https://schema.org', '@graph': m.ld };
   return `<!DOCTYPE html>
 <html lang="en">
@@ -337,7 +434,7 @@ ${FONTS}
 <link rel="stylesheet" href="/site-chrome.css?v=${V.chrome}">
 <link rel="stylesheet" href="/site-bar.css?v=${V.bar}">
 <link rel="stylesheet" href="/study/guide.css?v=${V.guideCss}">
-${prev ? `<link rel="prev" href="${prev.url}">\n` : ''}${next ? `<link rel="next" href="${next.url}">\n` : ''}<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
+${LB ? `<link rel="stylesheet" href="/study/lightbox.css?v=${V.lightboxCss}">\n` : ''}${prev ? `<link rel="prev" href="${prev.url}">\n` : ''}${next ? `<link rel="next" href="${next.url}">\n` : ''}<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
 </head>
 <body class="guide-page${CFG.greekKey === true ? ' greek-key' : ''}" data-id="${esc(f.id)}">
 ${NAV}
@@ -373,7 +470,7 @@ ${NAV}
 <script src="${COURSE}/index.js?v=${INDEX_V}"></script>
 <script src="/study/search.js?v=${V.search}"></script>
 <script src="/study/guide.js?v=${V.guideJs}"></script>
-<script src="/site-chrome.js?v=${V.chrome}"></script>
+${LB ? `<script src="/study/lightbox.js?v=${V.lightboxJs}"></script>\n` : ''}<script src="/site-chrome.js?v=${V.chrome}"></script>
 </body>
 </html>
 `;
@@ -463,6 +560,6 @@ for (const u of out) {
   const s = body.match(STYLED);
   if (s) throw new Error(`${u}: styling in the page (found "${s[0]}") — put it in /study/guide.css`);
 }
-const nWorks = flat.filter((f) => f.kind === 'work').length, nParts = flat.filter((f) => f.kind === 'overview').length;
+const nWorks = flat.filter((f) => f.kind === 'work' || f.kind === 'concept').length, nParts = flat.filter((f) => f.isPart).length;
 { const r = require('./build-search')(); console.log(`search index (all courses): ${r.items} pages, ${Math.round(r.bytes / 1024)} KB`); }
 console.log(`wrote ${out.length} pages (${nWorks} works, ${nParts} parts, ${out.length - nWorks - nParts} other) + index.js; sitemap block ${out.length} URLs` + (nStubs ? `; ${nStubs} redirect stubs` : ''));

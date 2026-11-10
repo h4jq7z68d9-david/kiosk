@@ -1,0 +1,34 @@
+/* Shared example-painting thumbnail + lightbox (technique slide model, Nov 10 2026).
+   One file for every course: restyle here and every concept page follows. Loaded only by pages that have an
+   example painting (build-course.js adds it). Colors and fonts come from /site-tokens.css; light only. */
+
+/* thumbnail beside artist, title, date and one line */
+.ex{display:grid;grid-template-columns:140px minmax(0,1fr);gap:14px;align-items:start;flex:none}
+.ex-th{display:block;width:140px;margin:0;padding:0;border:1px solid var(--border);border-radius:4px;background:var(--surface);line-height:0;cursor:zoom-in;overflow:hidden}
+.ex-th img{display:block;width:100%;height:auto}
+.ex-th:hover{border-color:var(--border-mid)}
+.ex-th:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ex-cap{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ex-cap p{margin:0}
+.ex-a{font-size:.95rem;font-weight:500;color:var(--ink2)}
+.ex-t{font-size:1rem;color:var(--ink)}
+.ex-cap .ex-l{margin-top:6px;font-size:.95rem;line-height:1.5;color:var(--ink)}
+@media (max-width:600px){.ex{grid-template-columns:110px minmax(0,1fr);gap:12px}.ex-th{width:110px}}
+
+/* lightbox: full image at its own size at most, inside the viewport; details and credit under it, left-aligned */
+.dlb{position:fixed;inset:0;z-index:130;display:flex;align-items:center;justify-content:center;
+  padding:max(60px,calc(env(safe-area-inset-top,0px) + 52px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  background:var(--bg);cursor:zoom-out;overscroll-behavior:contain}
+.dlb[hidden]{display:none}
+.dlb-fig{margin:0;display:grid;justify-items:start;gap:10px;max-width:100%;max-height:100%;min-height:0}
+.dlb-img{display:block;width:auto;height:auto;max-width:100%;max-height:calc(100vh - 170px);max-height:calc(100dvh - 170px);cursor:default;background:var(--surface);box-shadow:0 2px 18px color-mix(in srgb,var(--ink) 18%,transparent)}
+.dlb-cap{width:0;min-width:100%;font-family:var(--font);cursor:default}   /* never wider than the image */
+.dlb-cap p{margin:0;font-size:.9rem;line-height:1.45;color:var(--ink2);overflow-wrap:anywhere}
+.dlb-cap .dlb-cr{font-size:.78rem;color:var(--ink3)}
+.dlb-cap p:empty{display:none}
+.dlb-x{position:absolute;top:max(12px,env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));
+  font:500 .92rem var(--font);color:var(--ink);background:var(--panel);border:1px solid var(--border-mid);border-radius:22px;padding:7px 14px;cursor:pointer}
+.dlb-x:hover{border-color:var(--accent)}
+.dlb-x:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* the page behind does not scroll while it is open (phones scroll .app, desktops .notes) */
+html.dlb-open,html.dlb-open body,html.dlb-open .app,html.dlb-open .notes{overflow:hidden !important}

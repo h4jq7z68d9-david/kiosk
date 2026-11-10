@@ -4,6 +4,17 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, evening) — Technique slide model in the study generator (branch `technique-slide-model`, pushed to `main` on David's instruction, before review)
+
+- **New slide types for technique courses** (`build-course.js`): `topen` (title, para, optional img/credit/alt) and `concept` (title, img, credit?, alt, stmt, look 2–4, ex, optional one-line bul). `ex` = key, artist, title, date, det, alt, line (optional img/credit). A part with no `overview` whose first slide is a `topen` opens on it. Build fails if either type is used outside basePath `/study`. Concept pages show no "Theme"/"Concept" label; only "Look at", as on art history work slides.
+- **Example painting:** a 140 px (110 px at ≤600 px) lazy thumbnail from `img/thumb/<key>.jpg` (320 px wide, made by the build with python3+Pillow or sips, only when missing or reshaped) beside artist, *title*, date and the line. It opens the shared lightbox in `study/lightbox.js` + `study/lightbox.css` (new, `V.lightboxCss`/`V.lightboxJs`), loaded only on pages with an example: full image loads on open, capped at natural size and viewport, `det` and credit underneath; Close button, Esc or click outside; focus in and back; aria-modal; page behind locked; arrow keys don't change page while open.
+- **Credits and search:** credits pages list concept, opening and example images (linked to their page). `build-search.js` adds each example as its own result (artist + title, labeled with course · part · Example).
+- **No existing page changed:** all 15 courses rebuilt before and after; zero diff in built pages, `search-index.js` and `sitemap.xml`. `guide.css`/`guide.js` untouched.
+- **Test fixture:** `tools/study/fixtures/technique-slides/` + `node tools/study/test-technique-slides.js` builds a 2-slide fixture in a temp copy (Color Theory images) and checks 390, iPad 820/1180 and 1440 px: no sideways scroll, 0 console errors, 0 broken images, lightbox by click, tap, Esc, Enter, Space. Never installed; `deploy.yml` now excludes `tools/study/fixtures/*`. `check.js` knows the new types and skips `img/thumb/`. `check.js` PASS, `smoke.js` PASS.
+- **Not done:** the slide editor (`tools/study/editor/`) only knows work/theme/text/overview slides; it can't edit `topen`/`concept` text yet.
+
+-----
+
 ## Completed This Session (November 10 2026, afternoon) — Japonisme Mode 2, new course (branch `install-japonisme`, pushed to `main` per runbook 9.9, before slide-editor review)
 
 - **Japonisme (new, Mode 2):** 17 works, one section "Europe and the United States, 1864–1900", one part; 20 pages; 17 images, 5.1 MB. Installed with `install-course.js --after impressionism` (no `--force`, no redirects); timeline card 1864–1900, image Van Gogh's Flowering Plum Orchard. Registry rebuild bumped `V.chrome` → 23 and the `?v=` on every page; next-course chain now Impressionism → Japonisme → Post-Impressionism. No generator changes. `check.js` PASS, `smoke.js` PASS.

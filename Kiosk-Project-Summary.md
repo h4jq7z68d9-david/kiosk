@@ -664,6 +664,11 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [x] **Gated pages in `smoke.js`** (Nov 6 2026) — admin, Jill's page, kiosk and booth are loaded logged-out at 1440/390: 0 console errors, no sideways scroll, gate present.
 - [x] Deploy gate (built Nov 6 2026, branch `deploy-gate`) — `deploy.yml` runs `node tools/site/check.js` before anything is generated or uploaded, when the push changed `study/`, `tools/study/`, `tools/site/`, `tools/lambda/`, `index.mjs`, `site-*.js/.css`, a top-level `.html`, or the workflow itself (decided by `git diff --name-only` against `github.event.before`; a push with no usable base runs it). Other pushes (admin-sw.js, images, docs) skip it. A failed check fails the deploy with nothing uploaded.
 
+### From November 10 2026, evening (technique slide model)
+
+- [ ] **Slide editor support for `topen` / `concept` slides** — `tools/study/editor/` only edits work/theme/text/overview pages. Needed before the first technique course is rebuilt in the new model, if David will edit it live.
+- [ ] **Technique rebuilds** (Color Theory, Pigments and Materials, Oil vs Acrylic, Composition, Value and Light) still use the old theme/work model until each comes back from the technique course builder with `topen`/`concept` data. Fixture test: `node tools/study/test-technique-slides.js`.
+
 ### From November 9 2026, late afternoon (Rococo + Neoclassicism split)
 
 - [ ] **Rococo open flags (David):** Wieskirche interior plate (CC0, only free candidate) is dim and slightly soft; Boucher *Le Déjeuner* 1440 px (Louvre caps at 1500). Not yet reviewed in the slide editor (`edit-course rococo`).
