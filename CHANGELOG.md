@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, morning) — Japanese Woodblock Prints Mode 2 rebuild (branch `install-japanese-woodblock-prints`, pushed to `main` per runbook 9.9, before slide-editor review)
+
+- **Japanese Woodblock Prints (Mode 2):** replaced the 64-work, 7-part course with the 18-work rebuild (one section "Japan, 1680s–1880s", one part; 21 pages; 18 images, 6.0 MB) via `install-course.js --force`; kept its place after Classical Myth. Registry: dates c. 1680–1927 → 1680s–1880s, card text replaced (card image unchanged, Red Fuji). 71 retired URLs redirect: 18 kept works to their new pages, 46 cut works and 7 part pages to the course home. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
+- **Open flags from the handoff** (David decides in the slide editor): Kuniyoshi *Ghosts of the Taira* date (1849–52 vs the Met's other impression 1843–47); Harunobu *Lovers Walking in the Snow* range runs past his death; standard-definition terms with no museum line; work slides 83–111 words. Japonisme works (Whistler, Cassatt, Dow) and Yoshida held for the Japonisme course.
+
+-----
+
 ## Completed This Session (November 10 2026, morning) — study.html cards redesigned (branch `study-timeline-squares`, pushed to `main` on David's word)
 
 - **Art history tab:** the full-width cards are now small square cards (image + title, no description) alternating either side of a centre line; each date sits beside its dot on the opposite side (right-aligned on the left). Cards cap at 230 px, 280 px above 900 px; about two per phone screen. No stagger (David's call).
