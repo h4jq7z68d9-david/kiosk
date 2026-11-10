@@ -1,22 +1,13 @@
 {
  "name": "Romanticism",
  "dataFiles": [
-  "data.js",
-  "data-m1.js",
-  "data-m2.js",
-  "data-m3.js",
-  "data-m4.js",
-  "data-m5.js",
-  "data-m6.js",
-  "data-m7.js"
+  "data.js"
  ],
- "intro": "From the 1760s to the 1860s, painters and sculptors in Spain, France, Britain, Germany and the United States turned from calm, rule-bound classicism to feeling, imagination, nature and the news of their own day. This section follows them through sixty-four works, with the facts of each object drawn from museum collection records.",
- "homeDescription": "Sixty-four works trace Romanticism from Fuseli, Blake and Goya to Géricault, Delacroix, Turner, Constable, Friedrich and the Hudson River School.",
- "ldDescription": "An artwork-by-artwork guide to Romantic art, 1760s–1860s, compiled from museum collection records.",
+ "intro": "Romanticism is the name given to a shift in art and literature that was at its height from about 1780 to 1830 and was felt long after. Artists in Britain, Spain, Germany, France and the United States turned away from classical restraint and put personal feeling, the workings of the mind and the natural world at the center of their pictures.",
+ "homeDescription": "How to recognize Romantic painting, from Fuseli, Blake and Goya to Friedrich, Géricault, Delacroix, Constable, Turner and the American landscape painters, in a short illustrated guide.",
+ "ldDescription": "A short guide to recognizing Romantic art in Europe and the United States, 1781 to 1863, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
- "creditsIntro": "The images in this section are in the public domain or released under CC0 or the Public Domain Mark; one photograph is credited to its photographer, Jebulon (CC0). Each entry links to the file and names its source.",
- "imagesNote": "Images are public domain or CC0. Sources are listed under Image credits.",
- "introImg": "gericault-raft-medusa",
- "subjLabel": ""
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "introImg": "friedrich-wanderer"
 }
