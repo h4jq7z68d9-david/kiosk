@@ -233,9 +233,9 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
   .tl-alt .tt { font-size: 14px; }
   .tl-alt .tl-date { font-size: 12px; letter-spacing: .08em; }
 }
-/* technique tab (Nov 10 2026): a grid of small square cards (image + title), "N parts" under each; two across on phones */
-.tl-grid { padding-left: 0; gap: 14px; max-width: none; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-@media (min-width: 701px) { .tl-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 20px; } }
+/* technique tab (Nov 10 2026): a grid of small square cards (image + title), "N parts" under each; two across on phones, three on larger screens */
+.tl-grid { padding-left: 0; gap: 14px; max-width: 880px; grid-template-columns: repeat(2, 1fr); }   /* two across on phones */
+@media (min-width: 701px) { .tl-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }   /* three across on iPad and desktop, same width as the timeline */
 .tl-grid::before, .tl-grid .tl-item::before { display: none; }
 .tl-grid .tl-item { gap: 5px; }
 .tl-grid .tl-card { order: 1; aspect-ratio: 1 / 1; overflow: hidden; }
