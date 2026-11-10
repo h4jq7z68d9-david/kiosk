@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, late morning) — Realism Mode 2 rebuild (branch `install-realism`, pushed to `main` per runbook 9.9, before slide-editor review)
+
+- **Realism (Mode 2):** replaced the 49-work, 6-part course with the 18-work rebuild (one section "Europe and the United States, 1834–1899", one part; 21 pages; 18 images, 4.8 MB) via `install-course.js --force`; kept its place after Romanticism. Registry: dates → 1834–1899, card image Burial at Ornans → The Gleaners, card text replaced. 56 retired URLs redirect: 18 kept works to their new pages, 31 cut works, 6 part pages and the Pavilion of Realism theme page to the course home. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
+- **Open flags from the handoff** (David decides in the slide editor): Tanner's Banjo Lesson cut (no record or museum-quality image), Homer's Gulf Stream in its place; Repin line has no nationality; Orsay plates (Burial, Studio, Gleaners, Angelus) colour-checked against small copies only, Studio file source undocumented, Burial predates its 2025–26 restoration; Repin and Sower are Google Arts & Culture scans; slides 70–114 words.
+- **Deploy note:** the Romanticism doc push this morning overlapped its install deploy and failed on a Lambda update conflict (rerun green). From now on, wait for the install run to finish before pushing the doc update.
+
+-----
+
 ## Completed This Session (November 10 2026, morning) — Romanticism Mode 2 rebuild (branch `install-romanticism`, pushed to `main` per runbook 9.9, before slide-editor review)
 
 - **Romanticism (Mode 2):** replaced the 64-work, 7-part course with the 18-work rebuild (one section "Europe and the United States, 1781–1863", one part; 21 pages; 18 images, 4.5 MB) via `install-course.js --force`; kept its place after Neoclassicism. Registry: dates 1760s–1860s → 1781–1863, card image Raft of the Medusa → Wanderer above the Sea of Fog, card text replaced. 71 retired URLs redirect: 18 kept works to their new pages, 46 cut works and 7 part pages to the course home. No generator changes; other courses' pages unchanged. `check.js` PASS, `smoke.js` PASS.
