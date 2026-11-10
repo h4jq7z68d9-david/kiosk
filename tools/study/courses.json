@@ -91,6 +91,17 @@
    }
   },
   {
+   "slug": "japonisme",
+   "lane": "art-history",
+   "name": "Japonisme",
+   "label": "japonisme",
+   "dates": "1864–1900",
+   "card": {
+    "img": "vangogh-flowering-plum-orchard",
+    "text": "how japanese prints changed western art, from whistler, manet, monet and degas to van gogh, cassatt, lautrec, bonnard and dow."
+   }
+  },
+  {
    "slug": "post-impressionism",
    "lane": "art-history",
    "name": "Post-Impressionism",

@@ -27,6 +27,7 @@
     { href: '/study/art-history/romanticism.html', label: 'romanticism', section: '/study/art-history/romanticism/' },
     { href: '/study/art-history/realism.html', label: 'realism', section: '/study/art-history/realism/' },
     { href: '/study/art-history/impressionism.html', label: 'impressionism', section: '/study/art-history/impressionism/' },
+    { href: '/study/art-history/japonisme.html', label: 'japonisme', section: '/study/art-history/japonisme/' },
     { href: '/study/art-history/post-impressionism.html', label: 'post-impressionism', section: '/study/art-history/post-impressionism/' },
     { href: '/study/art-history/fauvism-and-expressionism.html', label: 'fauvism and early expressionism', section: '/study/art-history/fauvism-and-expressionism/' },
     { group: 'technique', href: '/study.html#technique' },

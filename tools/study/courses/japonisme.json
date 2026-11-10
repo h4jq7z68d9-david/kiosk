@@ -1,0 +1,13 @@
+{
+ "name": "Japonisme",
+ "dataFiles": [
+  "data.js"
+ ],
+ "intro": "Japonisme is the French name for a passion for the art and design of Japan that took hold in France and spread through Europe and North America after Japan resumed trade with the West in the 1850s. The critic Philippe Burty is generally credited with the word, in the early 1870s. Some artists painted fans, kimono and prints as studio props; others borrowed what the woodblock prints did with form: flat, bright color, firm outlines, long or tall formats, views from above, figures cut by the edge and wide empty areas.",
+ "homeDescription": "How Japanese prints and design changed Western art, from Whistler, Manet, Monet and Degas to Van Gogh, Cassatt, Lautrec, Bonnard and Dow, in a short illustrated guide.",
+ "ldDescription": "A short guide to recognizing Japonisme in European and American art, 1864 to 1900, compiled from museum collection records.",
+ "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
+ "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "introImg": "vangogh-flowering-plum-orchard"
+}
