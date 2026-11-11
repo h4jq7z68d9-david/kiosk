@@ -6,13 +6,13 @@ window.CREDITS = {
   "license": "CC0 (Met Open Access)",
   "source": "The Metropolitan Museum of Art Open Access"
  },
- "pm-whites": {
-  "work": "Diagram: white pigments",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "rickard-white-lead-pot": {
+  "work": "T. A. Rickard, White Lead from Mine to Battleship (San Francisco, [1908]), p. 37, Fig. 4 (a perforated lead \"buckle\") and Fig. 5 (corroding pot); line drawings, shown side by side and cropped",
+  "page": "https://archive.org/details/whiteleadfrommin00rickrich/page/n40/",
+  "file": "https://archive.org/download/whiteleadfrommin00rickrich/page/n40.jpg",
+  "license": "Public domain",
+  "author": "T. A. Rickard",
+  "source": "University of California Libraries via Internet Archive"
  },
  "rembrandt-self-portrait-63": {
   "work": "Rembrandt van Rijn, Self Portrait at the Age of 63 (1669)",
@@ -22,13 +22,13 @@ window.CREDITS = {
   "author": "Rembrandt van Rijn",
   "source": "Wikimedia Commons"
  },
- "pm-blacks": {
-  "work": "Diagram: black pigments",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "lampblack-chamber-1906": {
+  "work": "\"Fabrication du noir de fumée\" (Fig. 33), wood engraving signed Perot, from B. Bussard and H. Dubois, Leçons élémentaires de chimie (1906), p. 39; caption cropped",
+  "page": "https://commons.wikimedia.org/wiki/File:Noir_de_fumee.jpg",
+  "file": "File:Noir de fumee.jpg",
+  "license": "Public domain",
+  "author": "Perot (engraver)",
+  "source": "Wikimedia Commons"
  },
  "manet-music-tuileries": {
   "work": "Édouard Manet, Music in the Tuileries Gardens (1862)",
@@ -38,13 +38,13 @@ window.CREDITS = {
   "author": "Édouard Manet",
   "source": "Wikimedia Commons"
  },
- "pm-earths": {
-  "work": "Diagram: earth pigments",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "sowerby-ochres": {
+  "work": "James Sowerby, British Mineralogy, vol. 3 (London, 1809): Tab. CCLIV, yellow ochres, and Tab. CCLV, red ochres (both plates dated Feb. 1, 1808); hand-colored engravings, shown side by side and cropped",
+  "page": "https://archive.org/details/britishmineralog03sowe/page/n213/",
+  "file": "https://archive.org/download/britishmineralog03sowe/page/n213.jpg ; https://archive.org/download/britishmineralog03sowe/page/n217.jpg",
+  "license": "Public domain",
+  "author": "James Sowerby",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
  "rembrandt-self-portrait-1659": {
   "work": "Rembrandt van Rijn, Self-Portrait (1659)",
@@ -85,13 +85,13 @@ window.CREDITS = {
   "author": "Johannes Vermeer",
   "source": "Wikimedia Commons"
  },
- "pm-greens": {
-  "work": "Diagram: green pigments",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "sowerby-malachite": {
+  "work": "James Sowerby, British Mineralogy, vol. 1 (London, 1804): Tab. XLVII, carbonate of copper (malachite); hand-colored engraving, cropped",
+  "page": "https://archive.org/details/britishmineralog01sowe/page/n207/",
+  "file": "https://archive.org/download/britishmineralog01sowe/page/n207.jpg",
+  "license": "Public domain",
+  "author": "James Sowerby",
+  "source": "Smithsonian Libraries via Internet Archive"
  },
  "uccello-battle-san-romano": {
   "work": "Paolo Uccello, The Battle of San Romano (probably about 1438–40)",
@@ -117,13 +117,13 @@ window.CREDITS = {
   "author": "Vincent van Gogh",
   "source": "Wikimedia Commons"
  },
- "pm-tempera": {
-  "work": "Diagram: egg tempera",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "fei-madonna-detail": {
+  "work": "Paolo di Giovanni Fei, Madonna and Child (1370s), tempera on wood, gold ground, The Metropolitan Museum of Art, 41.190.13 (detail)",
+  "page": "https://www.metmuseum.org/art/collection/search/437248",
+  "file": "https://images.metmuseum.org/CRDImages/ep/original/DP293270.jpg",
+  "license": "CC0 (Met Open Access)",
+  "author": "Paolo di Giovanni Fei",
+  "source": "The Metropolitan Museum of Art Open Access"
  },
  "giotto-madonna-child": {
   "work": "Giotto, Madonna and Child (c. 1310/1315)",
@@ -133,13 +133,13 @@ window.CREDITS = {
   "author": "Giotto",
   "source": "NGA Open Access (via Wikimedia Commons)"
  },
- "pm-fresco": {
-  "work": "Diagram: fresco and secco",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "boscoreale-fragment": {
+  "work": "Wall painting fragment from the north wall of Room H of the Villa of P. Fannius Synistor at Boscoreale (ca. 50–40 BCE), fresco, The Metropolitan Museum of Art, 03.14.8 (cropped)",
+  "page": "https://www.metmuseum.org/art/collection/search/247012",
+  "file": "https://images.metmuseum.org/CRDImages/gr/original/DP165185.jpg",
+  "license": "CC0 (Met Open Access)",
+  "author": "Roman",
+  "source": "The Metropolitan Museum of Art Open Access"
  },
  "arlanza-lion": {
   "work": "Spanish (Castile), Lion, from the Chapter House of San Pedro de Arlanza (after 1200)",
@@ -165,13 +165,13 @@ window.CREDITS = {
   "author": "Rogier van der Weyden",
   "source": "Wikimedia Commons"
  },
- "pm-watercolor": {
-  "work": "Diagram: watercolor and gouache",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "sargent-red-drapery-detail": {
+  "work": "John Singer Sargent, Man with Red Drapery (after 1900), watercolor and graphite on white wove paper, The Metropolitan Museum of Art, 50.130.73 (detail)",
+  "page": "https://www.metmuseum.org/art/collection/search/12089",
+  "file": "https://images.metmuseum.org/CRDImages/ad/original/DT11905.jpg",
+  "license": "CC0 (Met Open Access)",
+  "author": "John Singer Sargent",
+  "source": "The Metropolitan Museum of Art Open Access"
  },
  "homer-return-tynemouth": {
   "work": "Winslow Homer, The Return, Tynemouth (recto) (1881)",
@@ -181,13 +181,13 @@ window.CREDITS = {
   "author": "Winslow Homer",
   "source": "Art Institute of Chicago"
  },
- "pm-pastel": {
-  "work": "Diagram: pastel",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "degas-hair-combed-detail": {
+  "work": "Edgar Degas, Woman Having Her Hair Combed (ca. 1886–88), pastel on light green wove paper, now discolored to warm gray, The Metropolitan Museum of Art, 29.100.35 (detail of the lower right)",
+  "page": "https://www.metmuseum.org/art/collection/search/436173",
+  "file": "https://images.metmuseum.org/CRDImages/ep/original/DP253480.jpg",
+  "license": "CC0 (Met Open Access)",
+  "author": "Edgar Degas",
+  "source": "The Metropolitan Museum of Art Open Access"
  },
  "liotard-maria-frederike": {
   "work": "Jean-Étienne Liotard, Portrait of Maria Frederike van Reede-Athlone at Seven Years of Age (1755–56)",
@@ -197,13 +197,13 @@ window.CREDITS = {
   "author": "Jean-Étienne Liotard",
   "source": "Getty Open Content (via Wikimedia Commons)"
  },
- "pm-encaustic": {
-  "work": "Diagram: encaustic",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "eutyches-portrait": {
+  "work": "Portrait of the Boy Eutyches (100–150 CE), Roman Egypt, encaustic on wood, The Metropolitan Museum of Art, 18.9.2 (cropped)",
+  "page": "https://www.metmuseum.org/art/collection/search/547951",
+  "file": "https://images.metmuseum.org/CRDImages/eg/original/DP-25887-001.jpg",
+  "license": "CC0 (Met Open Access)",
+  "author": "Roman Egypt",
+  "source": "The Metropolitan Museum of Art Open Access"
  },
  "fayum-young-woman-red": {
   "work": "Roman Egypt, Portrait of a young woman in red (A.D. 90–120)",
@@ -261,13 +261,13 @@ window.CREDITS = {
   "author": "Peter Paul Rubens",
   "source": "Wikimedia Commons"
  },
- "pm-fading": {
-  "work": "Diagram: how colors change",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "vangogh-roses": {
+  "work": "Vincent van Gogh, Roses (1890), oil on canvas, The Metropolitan Museum of Art, 1993.400.5",
+  "page": "https://www.metmuseum.org/art/collection/search/436534",
+  "file": "https://images.metmuseum.org/CRDImages/ep/original/DP346475.jpg",
+  "license": "CC0 (Met Open Access)",
+  "author": "Vincent van Gogh",
+  "source": "The Metropolitan Museum of Art Open Access"
  },
  "vangogh-bedroom": {
   "work": "Vincent van Gogh, The Bedroom (1889)",

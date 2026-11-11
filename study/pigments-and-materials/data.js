@@ -19,12 +19,13 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Whites",
-     "img": "pm-whites",
-     "alt": "Three white swatches over a striped backing, with bars showing when lead, zinc and titanium white were in use",
-     "stmt": "Until about 1900 the painter's main white was lead white, produced by hanging strips of lead over vinegar until the fumes turned them to a white crust.",
+     "img": "rickard-white-lead-pot",
+     "alt": "Two line drawings: a round lead disc pierced with rows of rectangular openings, and a tall pot that narrows below a shoulder, with a vent hole in its upper wall",
+     "stmt": "Until about 1900 the painter's main white was lead white, made by letting the fumes of vinegar eat into lead until it turned to a white crust.",
      "look": [
-      "On the same striped backing, the stripes still show through zinc white but vanish under lead and titanium white.",
-      "Zinc white reached artists in the 1830s, first as a watercolor, and titanium white only in the 1920s, so older oil paintings lean on lead white."
+      "Left: a disc of lead, pierced with openings so more of the metal is exposed to the fumes.",
+      "Right: the pot it sat in. Acetic acid, the acid in vinegar, filled the narrow lower part.",
+      "The discs rested on the shoulder above, bathed in fumes but clear of the liquid."
      ],
      "ex": {
       "key": "rembrandt-self-portrait-63",
@@ -40,12 +41,12 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Blacks",
-     "img": "pm-blacks",
-     "alt": "A bone, a smoking lamp and a vine twig, each with an arrow down to a black swatch",
+     "img": "lampblack-chamber-1906",
+     "alt": "Engraved cutaway of a tall chamber with a large cone hung from a pulley under its roof, thick smoke billowing in from a firebox at the lower right",
      "stmt": "Traditional blacks take their color from carbon, collected as soot from a flame or left behind when bones or vine twigs are charred.",
      "look": [
-      "Lamp black, gathered from a smoky flame, is soft and slightly blue, and oils left in it can keep linseed oil from drying properly.",
-      "What tubes sell as ivory black is almost always bone black: calcium phosphate from the bone, with carbon only part of the mix."
+      "In the small furnace at the lower right, resin burns with too little air, so it gives off dense smoke instead of a clean flame.",
+      "The smoke rolls up into the tall chamber, and its soot settles inside as lamp black, gathered once the fire is out and the chamber has cooled."
      ],
      "ex": {
       "key": "manet-music-tuileries",
@@ -56,17 +57,18 @@ window.SITE = {
       "alt": "Crowd of men in black top hats and women in pale dresses gathered under tall trees in a park",
       "line": "Manet built the dark hats and coats from ivory black, tinted with cobalt blue and an orange-brown ochre."
      },
-     "bul": "In his Incredulity of Saint Thomas (1502–04), Cima da Conegliano used vine black for a cool gray drapery and bone black for warmer areas."
+     "bul": "What tubes sell as ivory black is almost always bone black: calcium phosphate from the bone, with carbon only part of the mix."
     },
     {
      "type": "concept",
      "title": "Earth Pigments",
-     "img": "pm-earths",
-     "alt": "A yellow ochre swatch, an arrow marked with a flame, and a red ochre swatch",
+     "img": "sowerby-ochres",
+     "alt": "Two hand-colored mineral plates side by side: lumps of yellow ochre from pale straw to orange, and lumps of red ochre from pink to deep red-brown",
      "stmt": "Yellow and red earths owe their color to iron minerals mixed into clay and quartz.",
      "look": [
-      "The yellow is goethite, an iron mineral that holds water in its structure.",
-      "Fire drives the water out of goethite and leaves hematite, the red; people were already reddening ochre this way about 40,000 years ago."
+      "Left: yellow ochres, two of them dug in Wales, running from pale straw to a deep orange.",
+      "Right: red ochres from the Isle of Man, Devon and near Belfast, from a soft pink to a deep red-brown.",
+      "Burnt, the yellows on the left can turn nearly as red as those on the right: fire drives the water out of goethite, the yellow iron mineral, and leaves hematite, the red."
      ],
      "ex": {
       "key": "rembrandt-self-portrait-1659",
@@ -125,12 +127,12 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Greens",
-     "img": "pm-greens",
-     "alt": "Four green swatches on a timeline: malachite, verdigris half green and half brown, emerald green and viridian",
+     "img": "sowerby-malachite",
+     "alt": "Hand-colored plate of a lump of malachite: rounded green knobs ringed with pale bands, on tan rock",
      "stmt": "Many old greens came from copper: malachite, a crushed mineral, and verdigris, made by exposing copper to vinegar.",
      "look": [
-      "The verdigris swatch is half blue-green and half brown, because copper greens can darken in light.",
-      "Of the newer greens, emerald green was a vivid copper-and-arsenic compound, while viridian, made from chromium, is cool in tone and very stable."
+      "Malachite forms crusts of rounded green knobs; the fine stippling gives them the downy look Sowerby thought more like a plant than a mineral.",
+      "Pale rims ring the knobs where the crust has broken open."
      ],
      "ex": {
       "key": "uccello-battle-san-romano",
@@ -167,12 +169,13 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Egg Tempera",
-     "img": "pm-tempera",
-     "alt": "Egg yolk plus a mound of pigment paste making a bowl of paint, above a sphere shaded with small hatched strokes",
+     "img": "fei-madonna-detail",
+     "alt": "Detail of a gold-ground panel: the Christ Child in a pink robe nursing, held by the Virgin's hands, his arm and legs modeled in fine parallel strokes",
      "stmt": "Egg tempera uses yolk to hold the pigment, and it was the standard paint for Italian panels through the Middle Ages and early Renaissance.",
      "look": [
-      "The sphere has no smooth blends anywhere: egg paint dries quickly, so its form is built from short, separate marks.",
-      "On the sphere, tightly packed strokes read as shadow and open spacing as light."
+      "Egg paint dries too quickly to blend smoothly, so fine parallel strokes curve along the Child's arm and legs instead, tracing their roundness.",
+      "Shadows come from packing those strokes closer and darker, not from softening their edges.",
+      "Behind the Child, the background is gold leaf, with his halo punched into it in rings of tiny dots."
      ],
      "ex": {
       "key": "giotto-madonna-child",
@@ -181,19 +184,19 @@ window.SITE = {
       "date": "about 1310–15",
       "det": "Tempera on poplar panel, 33 1/2 × 24 1/4 in. National Gallery of Art, Washington",
       "alt": "Madonna in a dark blue mantle holding the Christ Child, against a gold background in a pointed arch",
-      "line": "Under the flesh lies a green underpaint for the shadows; fine hatching and wider strokes then round out the forms."
+      "line": "Beneath the pink of the flesh lies a green underpaint that sets the shadows before any warm color goes on."
      },
      "bul": "By the late 1400s Italian painters often combined tempera with oil, and after about 1500 tempera became less common."
     },
     {
      "type": "concept",
      "title": "Fresco",
-     "img": "pm-fresco",
-     "alt": "Two cross-sections of plastered wall: blue grains sunk into wet top plaster under arrows from the air, and grains sitting on dry plaster with a flake lifting",
+     "img": "boscoreale-fragment",
+     "alt": "Ragged fragment of Roman wall painting set into a modern panel: a paneled door and a red altar at left, a standing figure in blue-green and a seated figure in a pale mantle at right",
      "stmt": "In fresco the color goes onto lime plaster that is still damp, so it ends up inside the wall instead of on it.",
      "look": [
-      "On the left, carbon dioxide from the air slowly turns the lime back into something like stone, locking the grains in.",
-      "On the right, color on dry plaster has no lime to bind it, so it needs a binder of its own and wears less well; a flake has come loose."
+      "The wall's reds and blue-greens have lasted since about 50–40 BCE: as the plaster drew carbon dioxide from the air, it turned back into something like stone around the pigment.",
+      "Where the wall broke, the color broke with it; no loose skin of paint lifts along the ragged edges."
      ],
      "ex": {
       "key": "arlanza-lion",
@@ -230,12 +233,13 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Watercolor and Gouache",
-     "img": "pm-watercolor",
-     "alt": "Two cross-sections of paper: a thin scatter of blue grains with light passing through to the paper, and a dense blue layer reflecting light from its surface",
+     "img": "sargent-red-drapery-detail",
+     "alt": "Detail of a loose watercolor: a reclining figure's leg in tan washes beside a red cloth, with patches of bare white paper and broken strokes along the bottom",
      "stmt": "Watercolor is pigment bound in gum arabic and thinned with water; its brightness comes from the paper beneath.",
      "look": [
-      "In the thin wash, light slips between the grains, bounces off the white paper and comes back tinted.",
-      "Gouache carries more pigment for its gum, so light stops at the surface and the paper is hidden."
+      "Patches left bare give the lightest lights, on the thigh and the cloth beneath it.",
+      "Where a wash dried, its pigment pooled into a darker rim, as along the folds of the red drapery.",
+      "Along the bottom, the brush skipped across the paper's texture and left flecks of white."
      ],
      "ex": {
       "key": "homer-return-tynemouth",
@@ -245,17 +249,19 @@ window.SITE = {
       "det": "Transparent watercolor with touches of opaque watercolor and gum glaze, over graphite, on paper, 13 1/2 × 13 1/2 in. Art Institute of Chicago",
       "alt": "Two fishermen, one in a yellow oilskin, beside a beached boat, a sailboat on a pale sea behind them",
       "line": "The soft pinks of sky and boat were painted with lightfast pigments and have survived; many of Homer's other watercolors have lost washes like them."
-     }
+     },
+     "bul": "Gouache carries more pigment for its gum, so it covers the paper instead of letting it glow through."
     },
     {
      "type": "concept",
      "title": "Pastel",
-     "img": "pm-pastel",
-     "alt": "Pigment, chalk and a drop of gum combining into a pastel stick, above a jagged paper surface with powder caught on its peaks",
+     "img": "degas-hair-combed-detail",
+     "alt": "Detail of a pastel: a yellow-green fringed seat drawn in streaky vertical strokes, a white cloth at left, and a floor of crossed blue and white marks",
      "stmt": "A pastel stick is pigment and a pale filler like chalk, barely held together by a little weak gum.",
      "look": [
-      "Grains sit loose on the peaks and in the hollows of the paper's rough surface, with almost nothing binding them.",
-      "Loose powder scatters light, which makes pastel look soft and velvety, and a finger can smear it."
+      "Strokes of yellow, orange and green run down the cushion side by side and over one another, unblended, so the colors beneath still show.",
+      "On the floor, short blue and white marks cross over the bare paper, which was light green and has aged to a warm gray.",
+      "Up close each stroke is grainy, a dry dusting of color rather than a smooth film of paint."
      ],
      "ex": {
       "key": "liotard-maria-frederike",
@@ -271,12 +277,13 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Encaustic",
-     "img": "pm-encaustic",
-     "alt": "Wax colors melting in a tray over flames, a heated tool working warm wax strokes on a board, and the finished portrait set hard",
+     "img": "eutyches-portrait",
+     "alt": "Painted wooden board with a portrait of a boy with short dark hair and large brown eyes, wearing a white tunic with a purple stripe, a Greek inscription across the chest",
      "stmt": "Encaustic paint is pigment carried in beeswax; the word comes from the Greek for \"burnt in\".",
      "look": [
-      "Warm wax brushes on like paint and stiffens as it cools, which is why most encaustic painters kept their colors hot.",
-      "Going back over cooled strokes with a heated tool softens them again so they can be smoothed."
+      "Warm wax brushes on like paint, so the face could be shaded in smooth, curving strokes from light to dark, much as in oil.",
+      "In the white tunic the wax sits thicker, in raised, ridged strokes.",
+      "Wax stiffens as it cools, which is why most encaustic painters kept their colors hot."
      ],
      "ex": {
       "key": "fayum-young-woman-red",
@@ -355,12 +362,12 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Fading and Darkening",
-     "img": "pm-fading",
-     "alt": "Four pairs of swatches, then and now: violet to blue, blue to gray-brown, green to brown and white to near-black",
+     "img": "vangogh-roses",
+     "alt": "Thickly painted bouquet of pale roses with dark green leaves in a green vase, against a light green wall, a few blossoms on the table",
      "stmt": "Some pigments shift color over the years as they react with light, with the air or with the oil that binds them.",
      "look": [
-      "Smalt is a blue glass; potassium leaches out of it into the oil, the blue is lost and the oil yellows, turning the paint gray-brown.",
-      "The white turning nearly black is lead white reacting with polluted air, which happens mostly on paper and in water-based paint."
+      "The roses read as white today, but traces of pink at the edges of the petals show they were painted pink and the pink has faded.",
+      "The thick, swirling paint of each bloom still stands up from the canvas: the brushwork survived even where the color did not."
      ],
      "ex": {
       "key": "vangogh-bedroom",

@@ -565,6 +565,10 @@ window.SOURCES = {
     {
      "html": "ColourLex. &ldquo;Chrome Yellow.&rdquo;",
      "url": "https://colourlex.com/project/chrome-yellow/"
+    },
+    {
+     "html": "Shelley, Marjorie. &ldquo;Precious Powder: The Fragility of Degas&rsquo;s Pastels.&rdquo; Essay, The Metropolitan Museum of Art, 2020.",
+     "url": "https://www.metmuseum.org/essays/precious-powder-degas"
     }
    ]
   },
@@ -662,6 +666,30 @@ window.SOURCES = {
     {
      "html": "Wellcome Collection. &ldquo;A plantation of cochineal cacti with workers gathering and preparing cochineal. Engraving.&rdquo; 25317i.",
      "url": "https://wellcomecollection.org/works/q26yjrny"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Madonna and Child</i>&rdquo; (1370s), Paolo di Giovanni Fei. Collection record, 41.190.13.",
+     "url": "https://www.metmuseum.org/art/collection/search/437248"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. &ldquo;Wall painting fragment from the north wall of Room H of the Villa of P. Fannius Synistor at Boscoreale&rdquo; (ca. 50&ndash;40 BCE). Collection record, 03.14.8.",
+     "url": "https://www.metmuseum.org/art/collection/search/247012"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Man with Red Drapery</i>&rdquo; (after 1900), John Singer Sargent. Collection record, 50.130.73.",
+     "url": "https://www.metmuseum.org/art/collection/search/12089"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Woman Having Her Hair Combed</i>&rdquo; (ca. 1886&ndash;88), Edgar Degas. Collection record, 29.100.35.",
+     "url": "https://www.metmuseum.org/art/collection/search/436173"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Portrait of the Boy Eutyches</i>&rdquo; (100&ndash;150 CE), Roman Egypt. Collection record, 18.9.2.",
+     "url": "https://www.metmuseum.org/art/collection/search/547951"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Roses</i>&rdquo; (1890), Vincent van Gogh. Collection record, 1993.400.5.",
+     "url": "https://www.metmuseum.org/art/collection/search/436534"
     }
    ]
   },
@@ -687,6 +715,22 @@ window.SOURCES = {
     {
      "html": "Sowerby, James. <i>Exotic Mineralogy: or, Coloured Figures of Foreign Minerals</i>. 2 vols. London, 1811&ndash;17. Internet Archive (Smithsonian Libraries).",
      "url": "https://archive.org/details/Exoticmineralog1Sowe"
+    },
+    {
+     "html": "Sowerby, James. <i>British Mineralogy: or, Coloured Figures Intended to Elucidate the Mineralogy of Great Britain</i>. Vols. 1 and 3. London, 1804 and 1809. Internet Archive (Smithsonian Libraries).",
+     "url": "https://archive.org/details/britishmineralog03sowe"
+    },
+    {
+     "html": "Rickard, T. A. <i>White Lead from Mine to Battleship</i>. San Francisco, [1908]. Internet Archive (University of California Libraries).",
+     "url": "https://archive.org/details/whiteleadfrommin00rickrich"
+    },
+    {
+     "html": "Riffault des H&ecirc;tres, J. R. D., A. D. Vergnaud, and G. A. Toussaint. <i>A Practical Treatise on the Manufacture of Colors for Painting</i>. Edited by F. Malepeyre, translated by A. A. Fesquet. Philadelphia, 1874. Internet Archive.",
+     "url": "https://archive.org/details/practicaltreatis00riffrich"
+    },
+    {
+     "html": "Bussard, B., and H. Dubois. <i>Le&ccedil;ons &eacute;l&eacute;mentaires de chimie</i>. Paris, 1906. Fig. 33, via Wikimedia Commons.",
+     "url": "https://commons.wikimedia.org/wiki/File:Noir_de_fumee.jpg"
     }
    ]
   }
