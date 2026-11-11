@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, evening) — Pigments and Materials image redo installed (branch `install-pigments-and-materials-images`, pushed to `main` per §9.9)
+
+- **Live check first:** no commits touched `study/pigments-and-materials/data.js`, `credits.js` or `sources.js` since bcc44f2, and no `edits-pigments-and-materials` branch existed.
+- **Installed** with `install-course.js --force` from a clean copy of the bundle holding only the 35 current images (the staging folder still had the ten retired diagrams). The stale local `install-pigments-and-materials` branch was deleted first and the result renamed `install-pigments-and-materials-images`. `wrote 20 pages (17 works, 1 parts, 2 other)`, 35 images, 11.7 MB; same 47 redirect stubs and URLs (`sitemap.xml` unchanged); card unchanged.
+- **Images:** removed `pm-whites`, `pm-blacks`, `pm-earths`, `pm-greens`, `pm-tempera`, `pm-fresco`, `pm-watercolor`, `pm-pastel`, `pm-encaustic`, `pm-fading`; added `rickard-white-lead-pot`, `lampblack-chamber-1906`, `sowerby-ochres`, `sowerby-malachite`, `fei-madonna-detail`, `boscoreale-fragment`, `sargent-red-drapery-detail`, `degas-hair-combed-detail`, `eutyches-portrait`, `vangogh-roses`. `pm-panel` and `pm-layers` stay. No old key referenced anywhere on the site.
+- check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS. Nothing changed from the handoff.
+
+-----
+
 ## Completed This Session (November 11 2026, late afternoon) — Oil vs Acrylic image redo installed (branch `install-oil-vs-acrylic-images`, pushed to `main` per §9.9)
 
 - **Live check first:** no commits touched `study/oil-vs-acrylic/data.js`, `credits.js` or `sources.js` since 4e41958, and no `edits-oil-vs-acrylic` branch existed.
