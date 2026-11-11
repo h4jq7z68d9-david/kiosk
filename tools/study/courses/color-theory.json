@@ -1,17 +1,12 @@
 {
  "name": "Color Theory",
- "dataFiles": [
-  "data.js"
- ],
+ "dataFiles": ["data.js"],
  "basePath": "/study",
- "themeLabel": "Concept",
- "subjLabel": "",
- "introImg": "ct-complementary",
- "intro": "How color works on the canvas: what light and the eye do, how colors are named and measured, how they change one another, and how pigments behave. Concept pages explain one idea with a historic plate or an original diagram; example pages show it in a public-domain painting.",
- "imagesNote": "Diagrams are original to this site or historic public-domain plates; paintings are public domain. Sources and licenses are listed under Image credits.",
- "ldDescription": "A short course on color for painters.",
- "homeDescription": "{name}: a short course on color for painters, from light and the eye to harmony, contrast and pigment, with historic plates, original diagrams and public-domain paintings.",
- "creditsIntro": "The diagrams were made for this site, except the historic plates and drawings, which are public domain. The paintings are public domain; each entry links to the file's record with its source.",
- "creditsDescription": "Sources and licenses for the {count} diagrams and paintings in {name}.",
- "sourcesDescription": "The lectures, courses, museum records and references behind {name}."
+ "introImg": "chevreul-chromatic-circle",
+ "imagesNote": "Most concept images are plates from public-domain color books of 1704 to 1921; two are diagrams made for this site. The paintings are public domain.",
+ "ldDescription": "A short course on how color works, for painters.",
+ "homeDescription": "{name}: how color works for painters, from light and the color wheel to contrast, mixing and mood, shown with historic color plates and public-domain paintings.",
+ "creditsIntro": "The concept images are plates from public-domain books on color, published between 1704 and 1921, except two diagrams made for this site. The example paintings are public domain; each entry links to the record of its source.",
+ "creditsDescription": "Sources and licenses for the {count} plates, diagrams and paintings in {name}.",
+ "sourcesDescription": "The lectures, courses, museum records, references and public-domain books behind {name}."
 }

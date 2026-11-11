@@ -59,10 +59,6 @@ window.SOURCES = {
      "url": "https://www.nga.gov/artworks/46524-rouen-cathedral-west-facade"
     },
     {
-     "html": "National Gallery of Art. Claude Monet, <i>Rouen Cathedral, West Façade, Sunlight</i>, 1894. Accession 1963.10.179. Collection record.",
-     "url": "https://www.nga.gov/collection/art-object-page.46654.html"
-    },
-    {
      "html": "National Gallery of Art, Washington. “James McNeill Whistler, <i>Symphony in White, No. 1: The White Girl</i>, 1861–1863, 1872.” Collection record 1943.6.2. Accessed October 28, 2026.",
      "url": "https://www.nga.gov/artworks/12198-symphony-white-no-1-white-girl"
     },
@@ -99,28 +95,8 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/435983"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. &ldquo;Georges Seurat, <i>Circus Sideshow (Parade de cirque)</i>, 1887&ndash;88.&rdquo; Collection record, with technical notes by Charlotte Hale and Silvia A. Centeno.",
-     "url": "https://www.metmuseum.org/art/collection/search/437654"
-    },
-    {
      "html": "The National Gallery, London. &ldquo;Titian, <i>Bacchus and Ariadne</i>, 1520&ndash;3.&rdquo; Collection record (NG35).",
      "url": "https://www.nationalgallery.org.uk/paintings/titian-bacchus-and-ariadne"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. &ldquo;Anders Zorn, <i>Frieda Schiff (1876&ndash;1958), Later Mrs. Felix M. Warburg</i>, 1894.&rdquo; Collection record.",
-     "url": "https://www.metmuseum.org/art/collection/search/437964"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. &ldquo;Vincent van Gogh, <i>Irises</i>, 1890.&rdquo; Collection record.",
-     "url": "https://www.metmuseum.org/art/collection/search/436528"
-    },
-    {
-     "html": "The National Gallery, London. &ldquo;Cosimo Tura, <i>A Muse (Calliope?)</i>, probably 1455&ndash;60.&rdquo; Collection record (NG3070).",
-     "url": "https://www.nationalgallery.org.uk/paintings/cosimo-tura-a-muse-calliope"
-    },
-    {
-     "html": "The Metropolitan Museum of Art. “Claude Lorrain (Claude Gellée), <i>Sunrise</i>, possibly 1646–47.” Object 47.12. Catalogue entry by Mary Sprinson de Jesús, 2011.",
-     "url": "https://www.metmuseum.org/art/collection/search/435907"
     },
     {
      "html": "Art Institute of Chicago. “Paul Gauguin, <i>Mahana no atua (Day of the God)</i>, 1894.” 1926.198.",
@@ -135,8 +111,16 @@ window.SOURCES = {
      "url": "https://www.nationalgallery.org.uk/paintings/sassoferrato-the-virgin-in-prayer"
     },
     {
-     "html": "Munch Museum. <i>The Scream</i>, 1895, hand-coloured lithograph, MM.G.00193-03. Oslo: Munch Museum. Accessed October 28, 2026.",
-     "url": "https://www.munch.no/en/object/MM.G.00193-03"
+     "html": "J. Paul Getty Museum. &ldquo;Vincent van Gogh, <i>Irises</i>, 1889.&rdquo; Collection record 90.PA.20.",
+     "url": "http://www.getty.edu/art/collection/objects/826/vincent-van-gogh-irises-dutch-1889/"
+    },
+    {
+     "html": "The Metropolitan Museum of Art. &ldquo;Paul Signac, <i>Evening Calm, Concarneau, Opus 220 (Allegro Maestoso)</i>, 1891.&rdquo; Collection record 1975.1.209.",
+     "url": "https://www.metmuseum.org/art/collection/search/459119"
+    },
+    {
+     "html": "The Metropolitan Museum of Art. &ldquo;Henri-Edmond Cross, <i>Pines Along the Shore</i>, 1896.&rdquo; Collection record 1975.1.164.",
+     "url": "https://www.metmuseum.org/art/collection/search/459095"
     }
    ]
   },
@@ -144,20 +128,8 @@ window.SOURCES = {
    "title": "Reference sources",
    "items": [
     {
-     "html": "Munsell, Albert H. “Color-Sphere and Mount.” US Patent 640,792, granted January 9, 1900. Google Patents.",
-     "url": "https://patents.google.com/patent/US640792"
-    },
-    {
      "html": "Indivero, Victoria M. “A Colorful Life.” <i>Distillations</i>, Science History Institute, November 3, 2009.",
      "url": "https://www.sciencehistory.org/stories/magazine/a-colorful-life"
-    },
-    {
-     "html": "Museo Nacional Thyssen-Bornemisza. “Itten, Johannes.” Artist biography.",
-     "url": "https://www.museothyssen.org/en/node/14632"
-    },
-    {
-     "html": "Museo Nacional Thyssen-Bornemisza. “Albers, Josef.” Artist biography.",
-     "url": "https://www.museothyssen.org/en/node/14312"
     },
     {
      "html": "Encyclopaedia Britannica. “Philipp Otto Runge.” Accessed October 28, 2026.",
@@ -172,16 +144,8 @@ window.SOURCES = {
      "url": "https://webvision.med.utah.edu/book/part-vii-color-vision/color-vision/"
     },
     {
-     "html": "Colour &amp; Vision Research Laboratory. Stockman &amp; Sharpe (2000) 2-degree cone fundamentals and CIE 1931 color-matching functions. University College London.",
-     "url": "http://www.cvrl.org/"
-    },
-    {
      "html": "WebExhibits. “Color Mixing.” <i>Causes of Color</i>. Accessed October 28, 2026.",
      "url": "https://webexhibits.org/causesofcolor/1BA.html"
-    },
-    {
-     "html": "Pokorny, Joel, Vivianne C. Smith, and Margaret Lutze. “Aging of the Human Lens.” <i>Applied Optics</i> 26, no. 8 (1987): 1437–40.",
-     "url": "https://doi.org/10.1364/AO.26.001437"
     },
     {
      "html": "Minneapolis Institute of Art and Walker Art Center. “Color Wheel.” <i>The Artist's Toolkit: Visual Elements and Principles</i>. ArtsConnectEd. Accessed October 28, 2026.",
@@ -192,20 +156,8 @@ window.SOURCES = {
      "url": "https://www.nga.gov/sites/default/files/migrate_images/content/dam/ngaweb/research/publications/pdfs/american-paintings-of-the-nineteenth-century-part-ii.pdf"
     },
     {
-     "html": "National Gallery, London. “Jean-Baptiste-Camille Corot.” Artist biography. Accessed October 28, 2026.",
-     "url": "https://www.nationalgallery.org.uk/artists/jean-baptiste-camille-corot"
-    },
-    {
      "html": "WebExhibits. “Umber” and “Yellow Ochre.” <i>Pigments through the Ages</i>. Accessed October 28, 2026.",
      "url": "https://www.webexhibits.org/pigments/indiv/overview/umber.html"
-    },
-    {
-     "html": "Dupree, Catherine. “The Neurobiology of Art.” <i>Harvard Magazine</i>, July–August 2003. On Margaret Livingstone, <i>Vision and Art: The Biology of Seeing</i>.",
-     "url": "https://www.harvardmagazine.com/2003/07/the-neurobiology-of-art-html"
-    },
-    {
-     "html": "Corney, David, John-Dylan Haynes, Geraint Rees, and R. Beau Lotto. “The Brightness of Colour.” <i>PLoS ONE</i> 4, no. 3 (2009): e5091.",
-     "url": "https://doi.org/10.1371/journal.pone.0005091"
     },
     {
      "html": "Manasse, A., and M. Mellini. “Iron (Hydr)oxide Nanocrystals in Raw and Burnt Sienna Pigments.” <i>European Journal of Mineralogy</i> 18, no. 6 (2006): 845–53.",
@@ -220,52 +172,24 @@ window.SOURCES = {
      "url": "https://jcolore.gruppodelcolore.it/ojs/index.php/CCSJ/article/view/ccsj.i82017.02"
     },
     {
-     "html": "Itten, Johannes. <i>The Art of Color: The Subjective Experience and Objective Rationale of Color</i>. Translated by Ernst van Haagen. New York: Reinhold, 1961. Ideas summarized in new words; no text or plates reproduced.",
-     "url": ""
-    },
-    {
-     "html": "WebExhibits. &ldquo;Causes of Color: Luminance Differences Affect Our Perceptions.&rdquo;",
-     "url": "https://www.webexhibits.org/colorart/anuszkiewicz.html"
-    },
-    {
-     "html": "Albers, Josef. <i>Interaction of Color</i>. New Haven: Yale University Press, 1963. Ideas summarized in new words; no plates or text reproduced.",
-     "url": ""
-    },
-    {
-     "html": "Jansson, Emma. <i>Zorn&rsquo;s Studio: The Artist&rsquo;s Materials and Techniques</i>. Mora: Zornmuseet, 2023.",
-     "url": "https://shop.zorn.se/product.html/zorns-studio---the-artists-materials-and-techniques"
-    },
-    {
-     "html": "ColourLex. &ldquo;Azurite.&rdquo;",
-     "url": "https://colourlex.com/project/azurite/"
-    },
-    {
-     "html": "ASTM International. D4302-14(2021), &ldquo;Standard Specification for Artists&rsquo; Oil, Resin-Oil, and Alkyd Paints.&rdquo;",
-     "url": "https://store.astm.org/d4302-14r21.html"
-    },
-    {
-     "html": "Michalski, Stefan. &ldquo;Agent of Deterioration: Light, Ultraviolet and Infrared.&rdquo; Canadian Conservation Institute.",
-     "url": "https://www.canada.ca/en/conservation-institute/services/agents-deterioration/light.html"
-    },
-    {
-     "html": "Britannica Editors. “Aerial Perspective.” <i>Encyclopaedia Britannica</i>.",
-     "url": "https://www.britannica.com/art/aerial-perspective"
-    },
-    {
      "html": "Kitaoka, Akiyoshi. “Chromostereopsis.” In <i>Encyclopedia of Color Science and Technology</i>, edited by M. Ronnier Luo. New York: Springer, 2015.",
      "url": "https://www.psy.ritsumei.ac.jp/akitaoka/Kitaoka2015_ReferenceWorkEntry_Chromostereopsis.pdf"
     },
     {
-     "html": "Hatch, Evie. “A History of the Colour Blue in Art.” National Gallery, London.",
-     "url": "https://www.nationalgallery.org.uk/podcast/colour-stories-blue"
+     "html": "J. Paul Getty Museum. &ldquo;Irises at the Getty.&rdquo; Getty News.",
+     "url": "https://www.getty.edu/news/irises-at-the-getty/"
     },
     {
-     "html": "Monico, Letizia, et al. “Probing the Chemistry of CdS Paints in <i>The Scream</i> by In Situ Noninvasive Spectroscopies and Synchrotron Radiation X-ray Techniques.” <i>Science Advances</i> 6, no. 20 (2020): eaay3514. Summary: University of Antwerp, AXIS research group, “The Chemistry of <i>The Scream</i> (1910?).”",
-     "url": "https://www.uantwerpen.be/en/projects/the-scream-munch/"
+     "html": "J. Paul Getty Museum. &ldquo;Getty Investigates Color Change of Van Gogh&rsquo;s Irises.&rdquo; Getty News, July 17, 2024.",
+     "url": "https://getty.edu/news/getty-investigates-color-change-of-van-goghs-irises"
     },
     {
-     "html": "Cowley, Les. “Blue Haze.” <i>Atmospheric Optics</i>. Accessed October 28, 2026.",
-     "url": "https://www.atoptics.co.uk/fz589.htm"
+     "html": "Cramer, Charles, and Kim Grant. &ldquo;Neo-Impressionist Color Theory.&rdquo; Smarthistory.",
+     "url": "https://smarthistory.org/?p=47654"
+    },
+    {
+     "html": "Amory, Dita. &ldquo;Georges Seurat (1859&ndash;1891) and Neo-Impressionism.&rdquo; In <i>Heilbrunn Timeline of Art History</i>. New York: The Metropolitan Museum of Art, 2004.",
+     "url": "https://www.metmuseum.org/essays/georges-seurat-1859-1891-and-neo-impressionism"
     }
    ]
   },
@@ -275,10 +199,6 @@ window.SOURCES = {
     {
      "html": "Newton, Isaac. <i>Opticks: or, A Treatise of the Reflexions, Refractions, Inflexions and Colours of Light</i>. London: Sam. Smith and Benj. Walford, 1704. Internet Archive (Smithsonian Libraries).",
      "url": "https://archive.org/details/optickstreatise00newta"
-    },
-    {
-     "html": "Goethe, Johann Wolfgang von. <i>Zur Farbenlehre</i>. Atlas volume. Tübingen: J. G. Cotta, 1810. Internet Archive (Getty Research Institute).",
-     "url": "https://archive.org/details/gri_c00333125012875338"
     },
     {
      "html": "Goethe, Johann Wolfgang von. <i>Goethe's Theory of Colours</i>. Translated by Charles Lock Eastlake. London: John Murray, 1840. Internet Archive.",
@@ -323,6 +243,10 @@ window.SOURCES = {
     {
      "html": "Ostwald, Wilhelm. <i>Die Farbenfibel</i>. 6th ed. Leipzig: Unesma, 1921. Science History Institute Digital Collections.",
      "url": "https://digital.sciencehistory.org/works/3f462642b"
+    },
+    {
+     "html": "Chevreul, M. E. <i>The Principles of Harmony and Contrast of Colours, and Their Applications to the Arts</i>. Translated by Charles Martel. 3rd ed. London: George Bell and Sons, 1890. Internet Archive (UCL Library Services; Wellcome Collection).",
+     "url": "https://archive.org/details/b21285676"
     }
    ]
   }

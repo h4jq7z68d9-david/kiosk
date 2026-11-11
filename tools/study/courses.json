@@ -129,8 +129,8 @@
    "name": "Color Theory",
    "label": "color theory",
    "card": {
-    "img": "ct-complementary",
-    "text": "a short course on color for painters, from light and the eye to harmony, contrast and pigment, with historic plates, original diagrams and public-domain paintings."
+    "img": "chevreul-chromatic-circle",
+    "text": "how color works for painters, from light and the color wheel to contrast, mixing and mood, shown with historic color plates and public-domain paintings."
    }
   },
   {

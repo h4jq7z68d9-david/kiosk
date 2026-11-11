@@ -19,7 +19,7 @@ window.SITE = {
         {
           type: 'concept',
           title: 'Fixture concept',
-          img: 'bezold-plate-iii',
+          img: 'chevreul-1890-plate-ii',
           alt: 'Three red disks on purple, yellow and gray grounds',
           stmt: 'Placeholder one-sentence definition of the concept.',
           look: [

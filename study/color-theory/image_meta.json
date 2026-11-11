@@ -1,0 +1,12 @@
+{
+ "_note": "Mode 2 rebuild, Nov 10 2026. Keys carried from the live course keep their earlier image_meta (Public Study Site/). New or changed images below.",
+ "chevreul-1890-plate-i": {"source": "https://archive.org/download/b21285676/page/n71.jpg", "orig_px": "2198x3483", "crop": "137,137,2098,3352", "out_px": "~970x1600", "viewed": "Mode 2 rebuild/p1_check.jpg"},
+ "chevreul-1890-plate-ii": {"source": "https://archive.org/download/b21285676/page/n77.jpg", "orig_px": "2153x3504", "crop": "81,161,1857,3229", "out_px": "926x1600", "viewed": "Mode 2 rebuild/sheet_plates2.jpg"},
+ "chevreul-1890-plate-v": {"source": "https://archive.org/download/b21285676/page/n115.jpg", "orig_px": "1992x3407", "crop": "349,149,1619,3212", "out_px": "663x1600", "viewed": "sheet_plates2.jpg"},
+ "chevreul-1890-plate-vi-detail": {"source": "https://archive.org/download/b21285676/page/n120.jpg", "orig_px": "1976x3350", "crop": "0,74,1556,3285", "out_px": "775x1600", "viewed": "sheet_plates2.jpg"},
+ "chevreul-1890-plate-x": {"source": "https://archive.org/download/b21285676/page/n218.jpg", "orig_px": "2093x3520", "crop": "78,157,2066,3400", "out_px": "981x1600", "viewed": "sheet_plates2.jpg"},
+ "rood-1879-mixing-pigments": {"source": "Public Study Site/unused/plates/rood-1879-frontispiece.jpg (IA modernchromatics00rood n5)", "crop": "105,126,1900,1806", "out_px": "1600x1497", "viewed": "sheet_plates1.jpg"},
+ "signac-evening-calm": {"candidates": ["Met DT1148 via Commons, 3809 px, CC0 (pick: museum photograph, largest)", "Met RLC9 680 px", "pubhist 800 px"], "met_api_isPublicDomain": false, "rights": "Signac d. 1935, painted 1891: public domain; 2D rule", "crop": "16 px black border removed", "out_px": "1568x1261", "viewed": "Mode 2 rebuild/signac_check.jpg"},
+ "vangogh-irises-getty": {"candidates": ["Getty Open Content via Commons 'Vincent van Gogh - Irises (1889).jpg', 9600 px (pick: museum's own file)", "Google Arts & Culture via Commons, 11516 px (tested first; canvas edge visible)", "Commons 'VanGogh-Irises' copies (smaller)"], "out_px": "1600x1236", "viewed": "Mode 2 rebuild/irises_check2.jpg"},
+ "cross-pines-shore": {"candidates": ["Met Open Access DP-34471-001, 4000 px (pick)"], "crop": "34/30 px black border and canvas edge removed", "out_px": "~1532x1276", "viewed": "Mode 2 rebuild/cross_check.jpg"}
+}

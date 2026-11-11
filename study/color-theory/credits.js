@@ -15,45 +15,13 @@ window.CREDITS = {
   "author": "Isaac Newton",
   "source": "Smithsonian Libraries via Internet Archive"
  },
- "goethe-farbenlehre-plate1": {
-  "work": "Johann Wolfgang von Goethe, Zur Farbenlehre, atlas, Plate I (Tübingen: Cotta, 1810), detail",
-  "page": "https://archive.org/details/gri_c00333125012875338",
-  "file": "Scan leaf n28, detail of upper half",
-  "license": "Public domain",
-  "author": "Johann Wolfgang von Goethe",
-  "source": "Getty Research Institute via Internet Archive"
- },
- "chevreul-chromatic-circle": {
-  "work": "M. E. Chevreul, Plate V: Premier cercle chromatique renfermant les couleurs franches, in Des couleurs et de leurs applications aux arts industriels (Paris: J.-B. Baillière et fils, 1864); engraved by René Henri Digeon",
-  "page": "https://digital.sciencehistory.org/works/d217qp656",
-  "file": "Large JPG, cropped to the plate",
-  "license": "Public domain",
-  "author": "Michel-Eugène Chevreul",
-  "source": "Science History Institute Digital Collections"
- },
- "munsell-sphere-1905": {
-  "work": "Albert H. Munsell, A Balanced Color Sphere, frontispiece of A Color Notation (Boston, 1905)",
-  "page": "https://commons.wikimedia.org/wiki/File:Munsell_color_sphere.png",
-  "file": "File:Munsell color sphere.png",
-  "license": "Public domain",
-  "author": "Albert H. Munsell",
-  "source": "Wikimedia Commons, from Google Books (id naYa8D6TkgEC)"
- },
- "ct-light-path": {
-  "work": "Diagram: daylight, a red surface and the light that reaches the eye",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "bezold-plate-i-solar-spectrum": {
-  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate I, Fig. 1, solar spectrum (rotated upright and cropped)",
-  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n9/",
-  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n9.jpg",
-  "license": "Public domain",
-  "author": "Wilhelm von Bezold",
-  "source": "Smithsonian Libraries via Internet Archive"
+ "monet-rouen-west-facade": {
+  "work": "Claude Monet, Rouen Cathedral, West Façade (1894)",
+  "page": "https://www.nga.gov/artworks/46524-rouen-cathedral-west-facade",
+  "file": "NGA Open Access image, 1963.10.49",
+  "license": "CC0",
+  "author": "Claude Monet",
+  "source": "National Gallery of Art Open Access"
  },
  "bezold-plate-i-mixtures": {
   "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate I, Figs. 2–5, spectra of gamboge, Prussian blue, the pigments mixed and their colors mixed (rotated upright and cropped)",
@@ -63,37 +31,13 @@ window.CREDITS = {
   "author": "Wilhelm von Bezold",
   "source": "Smithsonian Libraries via Internet Archive"
  },
- "ct-cones": {
-  "work": "Diagram: sensitivity of the three cone types (Stockman & Sharpe data)",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-light-changes-color": {
-  "work": "Diagram: one surface under three lights, with and without adaptation",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-metamerism": {
-  "work": "Diagram: two samples that match in daylight but not under a warm lamp",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "monet-rouen-west-facade": {
-  "work": "Claude Monet, Rouen Cathedral, West Façade (1894)",
-  "page": "https://www.nga.gov/artworks/46524-rouen-cathedral-west-facade",
-  "file": "NGA Open Access image, 1963.10.49",
-  "license": "CC0",
-  "author": "Claude Monet",
-  "source": "National Gallery of Art Open Access"
+ "titian-bacchus-ariadne": {
+  "work": "Titian, Bacchus and Ariadne (1520–23)",
+  "page": "https://commons.wikimedia.org/wiki/File:Titian_Bacchus_and_Ariadne.jpg",
+  "file": "File:Titian Bacchus and Ariadne.jpg",
+  "license": "Public domain",
+  "author": "Titian",
+  "source": "Wikimedia Commons (from The National Gallery, London, NG35)"
  },
  "ostwald-farbenfibel-triangle": {
   "work": "Wilhelm Ostwald, Die Farbenfibel, 6th ed. (1921): p. 33, Die Farbzeichen, tone triangle of one yellow (detail)",
@@ -103,21 +47,29 @@ window.CREDITS = {
   "author": "Wilhelm Ostwald",
   "source": "Science History Institute Digital Collections"
  },
- "field-chromatography-plate-1": {
-  "work": "George Field, Chromatography; or, A Treatise on Colours and Pigments (1835): Plate I, Fig. 2, Chromatic Equivalents, and Fig. 3, Definitive or Fundamental Scale of Colours (detail)",
-  "page": "https://archive.org/details/gri_c00033125008687523/page/n5/",
-  "file": "https://archive.org/download/gri_c00033125008687523/page/n5.jpg",
+ "sassoferrato-virgin-prayer": {
+  "work": "Sassoferrato, The Virgin in Prayer, 1640–50",
+  "page": "https://commons.wikimedia.org/wiki/File:SASSOFERRATO_-_Virgen_rezando_(National_Gallery,_Londres,_1640-50).jpg",
+  "file": "SASSOFERRATO - Virgen rezando (National Gallery, Londres, 1640-50).jpg",
   "license": "Public domain",
-  "author": "George Field",
-  "source": "Getty Research Institute via Internet Archive"
+  "author": "Sassoferrato (Giovanni Battista Salvi); photograph of the painting in the National Gallery, London",
+  "source": "Wikimedia Commons"
  },
- "munsell-atlas-chroma-branches": {
-  "work": "Albert H. Munsell, Atlas of the Munsell Color System (1915): Chart C, Chromatic Branches of the Color Tree",
-  "page": "https://archive.org/details/AtlasMunsellcol00Muns/page/n12/",
-  "file": "https://archive.org/download/AtlasMunsellcol00Muns/page/n12.jpg",
+ "chevreul-chromatic-circle": {
+  "work": "M. E. Chevreul, Plate V: Premier cercle chromatique renfermant les couleurs franches, in Des couleurs et de leurs applications aux arts industriels (Paris: J.-B. Baillière et fils, 1864); engraved by René Henri Digeon",
+  "page": "https://digital.sciencehistory.org/works/d217qp656",
+  "file": "Large JPG, cropped to the plate",
   "license": "Public domain",
-  "author": "Albert H. Munsell",
-  "source": "Smithsonian Libraries via Internet Archive"
+  "author": "Michel-Eugène Chevreul",
+  "source": "Science History Institute Digital Collections"
+ },
+ "signac-evening-calm": {
+  "work": "Paul Signac, Evening Calm, Concarneau, Opus 220 (Allegro Maestoso) (1891), The Metropolitan Museum of Art, 1975.1.209",
+  "page": "https://www.metmuseum.org/art/collection/search/459119",
+  "file": "https://commons.wikimedia.org/wiki/File:Evening_Calm,_Concarneau,_Opus_220_(Allegro_Maestoso)_MET_DT1148.jpg",
+  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
+  "author": "Paul Signac",
+  "source": "The Metropolitan Museum of Art (museum photograph DT1148, via Wikimedia Commons)"
  },
  "munsell-atlas-value-axis": {
   "work": "Albert H. Munsell, Atlas of the Munsell Color System (1915): Chart V, Axis of the Color Tree",
@@ -127,22 +79,6 @@ window.CREDITS = {
   "author": "Albert H. Munsell",
   "source": "Smithsonian Libraries via Internet Archive"
  },
- "field-chromatography-fig-2": {
-  "work": "George Field, Chromatography; or, A Treatise on Colours and Pigments (1835): Plate I, Fig. 2, Chromatic Equivalents (detail)",
-  "page": "https://archive.org/details/gri_c00033125008687523/page/n5/",
-  "file": "https://archive.org/download/gri_c00033125008687523/page/n5.jpg",
-  "license": "Public domain",
-  "author": "George Field",
-  "source": "Getty Research Institute via Internet Archive"
- },
- "ct-neutrals": {
-  "work": "Diagram: complementary pairs mixed toward neutral, and five earth pigments",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
  "whistler-white-girl": {
   "work": "James McNeill Whistler, Symphony in White, No. 1: The White Girl, 1861–1863, 1872",
   "page": "https://www.nga.gov/artworks/12198-symphony-white-no-1-white-girl",
@@ -151,117 +87,13 @@ window.CREDITS = {
   "author": "National Gallery of Art, Washington",
   "source": "National Gallery of Art Open Access"
  },
- "turner-temeraire": {
-  "work": "Joseph Mallord William Turner, The Fighting Temeraire, 1839",
-  "page": "https://commons.wikimedia.org/wiki/File:The_Fighting_Temeraire,_JMW_Turner,_National_Gallery.jpg",
-  "file": "The_Fighting_Temeraire,_JMW_Turner,_National_Gallery.jpg",
-  "license": "Public domain",
-  "author": "J. M. W. Turner; photograph via Wikimedia Commons (The National Gallery, London)",
-  "source": "Wikimedia Commons"
- },
- "corot-ville-davray": {
-  "work": "Camille Corot, Ville-d'Avray, 1870",
-  "page": "https://www.metmuseum.org/art/collection/search/435988",
-  "file": "https://images.metmuseum.org/CRDImages/ep/original/DP-19283-001.jpg",
-  "license": "CC0",
-  "author": "The Metropolitan Museum of Art, New York",
-  "source": "The Met Open Access"
- },
- "ct-seven-contrasts": {
-  "work": "Diagram: seven kinds of color contrast as swatch pairs",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-monochromatic": {
-  "work": "Diagram: one blue at eight values, and a river scene made from them",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-analogous": {
-  "work": "Diagram: five neighboring hues on the painter's color wheel",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-complementary": {
-  "work": "Diagram: complementary pairs on the painter's color wheel",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "bezold-plate-iv-pairs": {
-  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate IV, Figs. 1–6, pairs",
-  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n328/",
-  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n328.jpg",
-  "license": "Public domain",
-  "author": "Wilhelm von Bezold",
-  "source": "Smithsonian Libraries via Internet Archive"
- },
- "bezold-plate-iv-triads": {
-  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate IV, Figs. 7–10, triads",
-  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n328/",
-  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n328.jpg",
-  "license": "Public domain",
-  "author": "Wilhelm von Bezold",
-  "source": "Smithsonian Libraries via Internet Archive"
- },
- "munsell-atlas-chroma-steps": {
-  "work": "Albert H. Munsell, Atlas of the Munsell Color System (1915): Chart C, Chromatic Branches of the Color Tree, detail of the yellow, red and purple branches",
+ "munsell-atlas-chroma-branches": {
+  "work": "Albert H. Munsell, Atlas of the Munsell Color System (1915): Chart C, Chromatic Branches of the Color Tree",
   "page": "https://archive.org/details/AtlasMunsellcol00Muns/page/n12/",
   "file": "https://archive.org/download/AtlasMunsellcol00Muns/page/n12.jpg",
   "license": "Public domain",
   "author": "Albert H. Munsell",
   "source": "Smithsonian Libraries via Internet Archive"
- },
- "ct-extension": {
-  "work": "Diagram: complement pairs sized by area ratios (after Itten and Schopenhauer)",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "whistler-battersea-reach": {
-  "work": "James McNeill Whistler, Nocturne: Blue and Silver—Battersea Reach, 1870–75",
-  "page": "https://asia.si.edu/object/F1902.97a-b/",
-  "file": "https://ids.si.edu/ids/deliveryService?id=FS-F1902.97a-b_002",
-  "license": "CC0",
-  "author": "National Museum of Asian Art, Smithsonian Institution",
-  "source": "Smithsonian Open Access"
- },
- "monet-water-lilies-agapanthus": {
-  "work": "Claude Monet, Water Lilies (Agapanthus), c. 1915–26",
-  "page": "https://clevelandart.org/art/1960.81",
-  "file": "https://openaccess-cdn.clevelandart.org/1960.81/1960.81_print.jpg",
-  "license": "CC0",
-  "author": "The Cleveland Museum of Art",
-  "source": "Cleveland Museum of Art Open Access"
- },
- "vangogh-night-cafe": {
-  "work": "Vincent van Gogh, The Night Café, 1888",
-  "page": "https://artgallery.yale.edu/collections/objects/12507",
-  "file": "https://images.collections.yale.edu/iiif/2/yuag:3b072179-2fc7-42bc-87cc-9ee4d782b270/full/full/0/default.jpg",
-  "license": "Public domain",
-  "author": "Yale University Art Gallery",
-  "source": "Yale University Art Gallery (IIIF, marked public domain)"
- },
- "vermeer-milkmaid": {
-  "work": "Johannes Vermeer, The Milkmaid, c. 1660",
-  "page": "https://www.rijksmuseum.nl/en/collection/SK-A-2344",
-  "file": "https://iiif.micr.io/QkOGy/full/max/0/default.jpg",
-  "license": "Public domain",
-  "author": "Rijksmuseum, Amsterdam",
-  "source": "Rijksmuseum open data"
  },
  "goya-red-boy": {
   "work": "Francisco de Goya, Manuel Osorio Manrique de Zuñiga, 1787–88",
@@ -271,6 +103,110 @@ window.CREDITS = {
   "author": "The Metropolitan Museum of Art",
   "source": "The Met Open Access"
  },
+ "field-chromatography-fig-2": {
+  "work": "George Field, Chromatography; or, A Treatise on Colours and Pigments (1835): Plate I, Fig. 2, Chromatic Equivalents (detail)",
+  "page": "https://archive.org/details/gri_c00033125008687523/page/n5/",
+  "file": "https://archive.org/download/gri_c00033125008687523/page/n5.jpg",
+  "license": "Public domain",
+  "author": "George Field",
+  "source": "Getty Research Institute via Internet Archive"
+ },
+ "turner-temeraire": {
+  "work": "Joseph Mallord William Turner, The Fighting Temeraire, 1839",
+  "page": "https://commons.wikimedia.org/wiki/File:The_Fighting_Temeraire,_JMW_Turner,_National_Gallery.jpg",
+  "file": "The_Fighting_Temeraire,_JMW_Turner,_National_Gallery.jpg",
+  "license": "Public domain",
+  "author": "J. M. W. Turner; photograph via Wikimedia Commons (The National Gallery, London)",
+  "source": "Wikimedia Commons"
+ },
+ "rood-1879-mixing-pigments": {
+  "work": "Ogden N. Rood, Modern Chromatics (New York: D. Appleton, 1879): frontispiece, Effects produced by mixing pigments (detail)",
+  "page": "https://archive.org/details/modernchromatics00rood/page/n5/",
+  "file": "https://archive.org/download/modernchromatics00rood/page/n5.jpg",
+  "license": "Public domain",
+  "author": "Ogden N. Rood",
+  "source": "Getty Research Institute via Internet Archive"
+ },
+ "corot-ville-davray": {
+  "work": "Camille Corot, Ville-d'Avray, 1870",
+  "page": "https://www.metmuseum.org/art/collection/search/435988",
+  "file": "https://images.metmuseum.org/CRDImages/ep/original/DP-19283-001.jpg",
+  "license": "CC0",
+  "author": "The Metropolitan Museum of Art, New York",
+  "source": "The Met Open Access"
+ },
+ "chevreul-1890-plate-i": {
+  "work": "M. E. Chevreul, The Principles of Harmony and Contrast of Colours, trans. Charles Martel, 3rd ed. (London: George Bell and Sons, 1890): Plate I, Illustration of Simultaneous Contrast of Colours (cropped to the plate)",
+  "page": "https://archive.org/details/b21285676/page/n71/",
+  "file": "https://archive.org/download/b21285676/page/n71.jpg",
+  "license": "Public domain",
+  "author": "Michel-Eugène Chevreul",
+  "source": "Wellcome Collection (UCL Library Services copy) via Internet Archive"
+ },
+ "vangogh-night-cafe": {
+  "work": "Vincent van Gogh, The Night Café, 1888",
+  "page": "https://artgallery.yale.edu/collections/objects/12507",
+  "file": "https://images.collections.yale.edu/iiif/2/yuag:3b072179-2fc7-42bc-87cc-9ee4d782b270/full/full/0/default.jpg",
+  "license": "Public domain",
+  "author": "Yale University Art Gallery",
+  "source": "Yale University Art Gallery (IIIF, marked public domain)"
+ },
+ "chevreul-1890-plate-v": {
+  "work": "M. E. Chevreul, The Principles of Harmony and Contrast of Colours, trans. Charles Martel, 3rd ed. (1890): Plate V, Chromatic Scale of Tones (cropped to the plate)",
+  "page": "https://archive.org/details/b21285676/page/n115/",
+  "file": "https://archive.org/download/b21285676/page/n115.jpg",
+  "license": "Public domain",
+  "author": "Michel-Eugène Chevreul",
+  "source": "Wellcome Collection (UCL Library Services copy) via Internet Archive"
+ },
+ "whistler-battersea-reach": {
+  "work": "James McNeill Whistler, Nocturne: Blue and Silver—Battersea Reach, 1870–75",
+  "page": "https://asia.si.edu/object/F1902.97a-b/",
+  "file": "https://ids.si.edu/ids/deliveryService?id=FS-F1902.97a-b_002",
+  "license": "CC0",
+  "author": "National Museum of Asian Art, Smithsonian Institution",
+  "source": "Smithsonian Open Access"
+ },
+ "chevreul-1890-plate-vi-detail": {
+  "work": "M. E. Chevreul, The Principles of Harmony and Contrast of Colours, trans. Charles Martel, 3rd ed. (1890): Plate VI, Chromatic Circle of Hues, right-hand page of the double plate",
+  "page": "https://archive.org/details/b21285676/page/n120/",
+  "file": "https://archive.org/download/b21285676/page/n120.jpg",
+  "license": "Public domain",
+  "author": "Michel-Eugène Chevreul",
+  "source": "Wellcome Collection (UCL Library Services copy) via Internet Archive"
+ },
+ "monet-water-lilies-agapanthus": {
+  "work": "Claude Monet, Water Lilies (Agapanthus), c. 1915–26",
+  "page": "https://clevelandart.org/art/1960.81",
+  "file": "https://openaccess-cdn.clevelandart.org/1960.81/1960.81_print.jpg",
+  "license": "CC0",
+  "author": "The Cleveland Museum of Art",
+  "source": "Cleveland Museum of Art Open Access"
+ },
+ "bezold-plate-iv-triads": {
+  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate IV, Figs. 7–10, triads",
+  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n328/",
+  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n328.jpg",
+  "license": "Public domain",
+  "author": "Wilhelm von Bezold",
+  "source": "Smithsonian Libraries via Internet Archive"
+ },
+ "vermeer-milkmaid": {
+  "work": "Johannes Vermeer, The Milkmaid, c. 1660",
+  "page": "https://www.rijksmuseum.nl/en/collection/SK-A-2344",
+  "file": "https://iiif.micr.io/QkOGy/full/max/0/default.jpg",
+  "license": "Public domain",
+  "author": "Rijksmuseum, Amsterdam",
+  "source": "Rijksmuseum open data"
+ },
+ "ct-extension": {
+  "work": "Diagram: complement pairs sized by area ratios (after Itten and Schopenhauer)",
+  "page": "https://davidnicholsonart.com/",
+  "file": "Original diagram",
+  "license": "Original work",
+  "author": "David Nicholson Art",
+  "source": "Made for this site"
+ },
  "corot-river-tower": {
   "work": "Camille Corot, River with a Distant Tower, 1865",
   "page": "https://www.metmuseum.org/art/collection/search/435983",
@@ -279,133 +215,37 @@ window.CREDITS = {
   "author": "The Metropolitan Museum of Art",
   "source": "The Met Open Access"
  },
- "bezold-plate-iii": {
-  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate III a, b and c, red disks on purple and yellow grounds and on a neutral ground (shown side by side)",
-  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n322/",
-  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n322.jpg, n324.jpg, n326.jpg",
+ "chevreul-1890-plate-ii": {
+  "work": "M. E. Chevreul, The Principles of Harmony and Contrast of Colours, trans. Charles Martel, 3rd ed. (1890): Plate II, Grey Designs upon Coloured Grounds (cropped to the plate)",
+  "page": "https://archive.org/details/b21285676/page/n77/",
+  "file": "https://archive.org/download/b21285676/page/n77.jpg",
   "license": "Public domain",
-  "author": "Wilhelm von Bezold",
-  "source": "Smithsonian Libraries via Internet Archive"
+  "author": "Michel-Eugène Chevreul",
+  "source": "Wellcome Collection (UCL Library Services copy) via Internet Archive"
  },
- "ct-afterimage": {
-  "work": "Diagram: stare-and-look afterimage test",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "bezold-plate-v-fig-3": {
-  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate V, Fig. 3, red ornament on blue",
-  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n330/",
-  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n330.jpg",
-  "license": "Public domain",
-  "author": "Wilhelm von Bezold",
-  "source": "Smithsonian Libraries via Internet Archive"
- },
- "bezold-plate-v-figs-5-6": {
-  "work": "Wilhelm von Bezold, The Theory of Color in Its Relation to Art and Art-Industry, trans. S. R. Koehler (1876): Plate V, Figs. 5 and 6, red ornament with black and white",
-  "page": "https://archive.org/details/theoryofcolorin00bezo/page/n330/",
-  "file": "https://archive.org/download/theoryofcolorin00bezo/page/n330.jpg",
-  "license": "Public domain",
-  "author": "Wilhelm von Bezold",
-  "source": "Smithsonian Libraries via Internet Archive"
- },
- "ct-vibrating-edges": {
-  "work": "Diagram: equal-value edges that vibrate or vanish",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-transparency": {
-  "work": "Diagram: flat colors that read as transparent overlap",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "seurat-circus-sideshow": {
-  "work": "Georges Seurat, Circus Sideshow (Parade de cirque) (1887–88)",
-  "page": "https://www.metmuseum.org/art/collection/search/437654",
-  "file": "DP375450_cropped.jpg",
-  "license": "CC0",
-  "author": "Georges Seurat",
-  "source": "The Met Open Access, 61.101.17"
- },
- "ct-pigment-sources": {
-  "work": "Diagram: where common pigments come from",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-limited-palette": {
-  "work": "Diagram: a four-color palette, its mixtures, and a full palette",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-pigment-behavior": {
-  "work": "Diagram: how binder, grinding and light change a pigment's color",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "ct-glazing": {
-  "work": "Diagram: glazing compared with direct opaque mixing",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "titian-bacchus-ariadne": {
-  "work": "Titian, Bacchus and Ariadne (1520–23)",
-  "page": "https://commons.wikimedia.org/wiki/File:Titian_Bacchus_and_Ariadne.jpg",
-  "file": "File:Titian Bacchus and Ariadne.jpg",
-  "license": "Public domain",
-  "author": "Titian",
-  "source": "Wikimedia Commons (from The National Gallery, London, NG35)"
- },
- "zorn-frieda-schiff": {
-  "work": "Anders Zorn, Frieda Schiff (1876–1958), Later Mrs. Felix M. Warburg (1894)",
-  "page": "https://www.metmuseum.org/art/collection/search/437964",
-  "file": "DP160821.jpg",
-  "license": "CC0",
-  "author": "Anders Zorn",
-  "source": "The Met Open Access, 1988.72"
- },
- "vangogh-irises": {
-  "work": "Vincent van Gogh, Irises (1890)",
-  "page": "https://www.metmuseum.org/art/collection/search/436528",
-  "file": "File:Vincent van Gogh - Irises (1890).jpg",
-  "license": "CC0",
+ "vangogh-irises-getty": {
+  "work": "Vincent van Gogh, Irises (1889), J. Paul Getty Museum, 90.PA.20",
+  "page": "http://www.getty.edu/art/collection/objects/826/vincent-van-gogh-irises-dutch-1889/",
+  "file": "https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_Irises_(1889).jpg",
+  "license": "Public domain (Getty Open Content)",
   "author": "Vincent van Gogh",
-  "source": "The Met Open Access, 58.187 (CC0; file via Wikimedia Commons)"
+  "source": "J. Paul Getty Museum Open Content Program (via Wikimedia Commons)"
  },
- "tura-muse": {
-  "work": "Cosimo Tura, A Muse (Calliope?) (probably 1455–60)",
-  "page": "https://commons.wikimedia.org/wiki/File:Studiolo_di_belfiore,_calliope_di_cosm%C3%A8_tura,_national_gallery_di_londra.jpg",
-  "file": "File:Studiolo di belfiore, calliope di cosmè tura, national gallery di londra.jpg",
+ "chevreul-1890-plate-x": {
+  "work": "M. E. Chevreul, The Principles of Harmony and Contrast of Colours, trans. Charles Martel, 3rd ed. (1890): Plate X, Mixture of Coloured Threads (cropped to the plate)",
+  "page": "https://archive.org/details/b21285676/page/n218/",
+  "file": "https://archive.org/download/b21285676/page/n218.jpg",
   "license": "Public domain",
-  "author": "Cosimo Tura",
-  "source": "Wikimedia Commons (PD-Art; original in The National Gallery, London, NG3070)"
+  "author": "Michel-Eugène Chevreul",
+  "source": "Wellcome Collection (UCL Library Services copy) via Internet Archive"
  },
- "ct-color-space": {
-  "work": "Diagram: ridges growing lighter and bluer with distance; red and blue squares on black",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "cross-pines-shore": {
+  "work": "Henri-Edmond Cross, Pines Along the Shore (1896), The Metropolitan Museum of Art, 1975.1.164",
+  "page": "https://www.metmuseum.org/art/collection/search/459095",
+  "file": "https://images.metmuseum.org/CRDImages/rl/original/DP-34471-001.jpg",
+  "license": "Public domain (Met Open Access)",
+  "author": "Henri-Edmond Cross",
+  "source": "The Metropolitan Museum of Art Open Access"
  },
  "ct-local-expressive": {
   "work": "Diagram: one sky, hill and tree in local, sunset-lit and invented colors",
@@ -415,30 +255,6 @@ window.CREDITS = {
   "author": "David Nicholson Art",
   "source": "Made for this site"
  },
- "goethe-schiller-temperamentenrose": {
-  "work": "Johann Wolfgang von Goethe and Friedrich Schiller, Die Temperamentenrose (drawing, 1798–99). Klassik Stiftung Weimar",
-  "page": "https://commons.wikimedia.org/wiki/File:Goethe_Schiller_Die_Temperamentenrose.jpg",
-  "file": "https://upload.wikimedia.org/wikipedia/commons/8/82/Goethe_Schiller_Die_Temperamentenrose.jpg",
-  "license": "Public domain",
-  "author": "Johann Wolfgang von Goethe and Friedrich Schiller",
-  "source": "Wikimedia Commons (scan from Biedermeier: Die Erfindung der Einfachheit, Hatje Cantz, 2006, p. 103)"
- },
- "goethe-farbenkreis-1809": {
-  "work": "Johann Wolfgang von Goethe, Farbenkreis zur Symbolisierung des menschlichen Geistes- und Seelenlebens (watercolor, 1809), inv. III-14047",
-  "page": "https://hessen.museum-digital.de/object/96949",
-  "file": "https://assets.museum-digital.org/hessen/images/1/202204/96949/farbenkreis-zur-symbolisierung-des-menschlichen-geistes-und-seelenlebens-96949.jpg",
-  "license": "Public domain (Public Domain Mark)",
-  "author": "Johann Wolfgang von Goethe",
-  "source": "Freies Deutsches Hochstift, Frankfurter Goethe-Museum, via museum-digital:hessen"
- },
- "claude-sunrise": {
-  "work": "Claude Lorrain, Sunrise, possibly 1646–47",
-  "page": "https://www.metmuseum.org/art/collection/search/435907",
-  "file": "https://images.metmuseum.org/CRDImages/ep/original/DP-14936-013.jpg",
-  "license": "CC0",
-  "author": "Claude Lorrain (Claude Gellée); image: The Metropolitan Museum of Art",
-  "source": "The Met Open Access"
- },
  "gauguin-day-of-god": {
   "work": "Paul Gauguin, Mahana no atua (Day of the God), 1894",
   "page": "https://www.artic.edu/artworks/27943/mahana-no-atua-day-of-the-god",
@@ -447,6 +263,14 @@ window.CREDITS = {
   "author": "Paul Gauguin; image: The Art Institute of Chicago",
   "source": "Art Institute of Chicago Open Access"
  },
+ "goethe-schiller-temperamentenrose": {
+  "work": "Johann Wolfgang von Goethe and Friedrich Schiller, Die Temperamentenrose (drawing, 1798–99). Klassik Stiftung Weimar",
+  "page": "https://commons.wikimedia.org/wiki/File:Goethe_Schiller_Die_Temperamentenrose.jpg",
+  "file": "https://upload.wikimedia.org/wikipedia/commons/8/82/Goethe_Schiller_Die_Temperamentenrose.jpg",
+  "license": "Public domain",
+  "author": "Johann Wolfgang von Goethe and Friedrich Schiller",
+  "source": "Wikimedia Commons (scan from Biedermeier: Die Erfindung der Einfachheit, Hatje Cantz, 2006, p. 103)"
+ },
  "munch-scream": {
   "work": "Edvard Munch, The Scream, 1893",
   "page": "https://www.nasjonalmuseet.no/en/collection/object/NG.M.00939",
@@ -454,13 +278,5 @@ window.CREDITS = {
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Edvard Munch; photo: Børre Høstland, Nasjonalmuseet",
   "source": "Nasjonalmuseet, Oslo"
- },
- "sassoferrato-virgin-prayer": {
-  "work": "Sassoferrato, The Virgin in Prayer, 1640–50",
-  "page": "https://commons.wikimedia.org/wiki/File:SASSOFERRATO_-_Virgen_rezando_(National_Gallery,_Londres,_1640-50).jpg",
-  "file": "SASSOFERRATO - Virgen rezando (National Gallery, Londres, 1640-50).jpg",
-  "license": "Public domain",
-  "author": "Sassoferrato (Giovanni Battista Salvi); photograph of the painting in the National Gallery, London",
-  "source": "Wikimedia Commons"
  }
 };
