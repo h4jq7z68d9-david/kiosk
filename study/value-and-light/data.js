@@ -1,721 +1,273 @@
 window.SITE = {
  "title": "Value and Light",
  "sections": {
-  "1": "Foundations",
-  "2": "Seeing Light",
-  "3": "Light in Painting"
+  "1": "Light, Shade and Form"
  },
  "handouts": [
   {
    "n": 1,
    "wk": 1,
-   "title": "A Short History",
-   "sub": "From Leonardo to the drawing manual",
-   "overview": {
-    "img": "merrifield-pl01",
-    "cap": [
-     "Mary P. Merrifield",
-     "Plate 1, Handbook of Light and Shade",
-     "about 1880"
-    ],
-    "sum": "Painters have studied how light builds form for five centuries: Leonardo in his notes, Caravaggio with one strong light, and later teachers with white models and printed plates.",
-    "bul": [
-     "Leonardo's Relief",
-     "Caravaggio's Single Light",
-     "The Drawing Manual"
-    ]
-   },
+   "title": "The Ideas",
    "slides": [
     {
-     "type": "theme",
+     "type": "topen",
+     "title": "Value and Light",
      "img": "cross-fig21",
-     "alt": "Reproduction of a drapery study by Leonardo da Vinci: heavy cloth falling in deep folds over a seated figure's knees, lit from the upper left, with the hollows in near-black shadow.",
-     "title": "Leonardo's Relief",
-     "stmt": "Leonardo da Vinci treated light and shade as the way a flat picture gains relief: the look of solid, rounded form.",
-     "para": "He studied how light falls on faces and folds of cloth and wrote about it at length.",
-     "bul": [
-      "Studies of drapery like this one let him work out light on folds in detail.",
-      "In 1897 the drawing teacher Anson Cross reproduced this study to show the care great artists took over light and shade."
-     ],
-     "label": "History"
+     "alt": "Black-and-white reproduction of a drapery study by Leonardo: heavy cloth falling in deep folds, lit from the upper left",
+     "para": "Leonardo da Vinci saw light and shade as what lets a flat picture look solid. In the 1800s, drawing manuals by Mary Merrifield and Anson Cross taught the same ideas with plain white models."
     },
     {
-     "type": "theme",
-     "img": "caravaggio-calling-of-saint-matthew-detail",
-     "alt": "Detail of Caravaggio's Calling of Saint Matthew: beneath a half-shuttered window, a beam of light slants across the dark wall from the upper right, past Christ's pointing hand, toward the seated group.",
-     "title": "Caravaggio's Single Light",
-     "stmt": "Around 1600 Caravaggio lit his figures with one strong light against deep darkness.",
-     "para": "He painted from live models posed under that light. Curator Letizia Treves of the National Gallery, London, says the light \"always really underpins the meaning\" in his pictures.",
-     "bul": [
-      "His first public works, in the Contarelli Chapel in Rome, caused a sensation when they were unveiled about 1600.",
-      "Visiting artists took the style home. The candlelit night scene grew out of his dark manner, though, as Treves notes, he never painted a candle himself.",
-      "He fell out of favor by the mid-1600s and was rediscovered only in the 1900s."
-     ],
-     "label": "History",
-     "works": [
-      "caravaggio-calling-of-saint-matthew"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "caravaggio-calling-of-saint-matthew",
-     "artist": "Caravaggio",
-     "title": "The Calling of Saint Matthew",
-     "date": "1599–1600",
-     "det": "Oil on canvas, about 324 × 340 cm. Contarelli Chapel, San Luigi dei Francesi, Rome",
-     "lead": "The story is told by the light: it enters from high at the right, beyond the frame, and slants down toward the tax collector Christ is calling.",
-     "bul": [
-      "The figures at the table are caught in the beam; the room around them stays dark.",
-      "The painted window, which one source describes as covered with oilskin, adds a diffused light; the same source suggests it recalls a painter's studio window."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "merrifield-pl01",
-     "alt": "Plate from Merrifield's handbook: a strip of five tones labeled Light, Half Light, Middle Tint, Half Dark and Dark, beside a lit cube, a cylinder and a small house shape with their cast shadows.",
-     "title": "The Drawing Manual",
-     "stmt": "In the 1800s, drawing manuals taught light and shade with plain white models: cubes, cylinders, spheres and plaster casts.",
-     "para": "White models show light and shade without color getting in the way. Mary Merrifield's handbook, published by the London colormen George Rowney & Co., was in its twelfth edition by about 1880; Anson Cross published his in Boston in 1897.",
-     "bul": [
-      "Cross's book prints photographs of one white group under six kinds of light. This course uses them and Merrifield's plates.",
-      "Both books build up from a single object under a single light."
-     ],
-     "label": "History"
-    }
-   ]
-  },
-  {
-   "n": 2,
-   "wk": 1,
-   "title": "Value",
-   "sub": "The ruler for light and dark",
-   "overview": {
-    "img": "zurbaran-still-life-lemons",
-    "cap": [
-     "Francisco de Zurbarán",
-     "Still Life with Lemons, Oranges and a Rose",
-     "1633"
-    ],
-    "sum": "Value is how light or dark a tone is, from white to black. Light and shade are built from it. For value in color, see Color Theory.",
-    "bul": [
-     "The Value Scale",
-     "Local Value and Light",
-     "High Key and Low Key"
-    ]
-   },
-   "slides": [
-    {
-     "type": "theme",
-     "img": "merrifield-pl02-scale",
-     "alt": "Merrifield's strip of ten tones running from near-white at the left to black at the right.",
+     "type": "concept",
      "title": "The Value Scale",
-     "stmt": "A value scale runs in steps from the lightest light to the darkest dark.",
-     "para": "It gives a painter a ruler for tone. Merrifield also named five broad steps: light, half light, middle tint, half dark and dark.",
-     "bul": [
-      "Teachers use five, seven, nine or ten steps; even spacing matters more than the count.",
-      "On any lit object, Merrifield observed, middle tints take up most of the surface; the brightest and darkest spots are small."
-     ]
+     "img": "merrifield-pl02-scale",
+     "alt": "A horizontal strip of ten bands stepping from white at the left through grays to black at the right",
+     "stmt": "Value means how light or dark something is, whatever its color, and a value scale lays it out in steps from white to black.",
+     "look": [
+      "Ten bands step from paper white at the left to solid black at the right, each a shade darker than the last.",
+      "Merrifield pointed out that each flat band looks darker along the edge where it meets a lighter one."
+     ],
+     "ex": {
+      "key": "ingres-odalisque-grisaille",
+      "artist": "Jean-Auguste-Dominique Ingres",
+      "title": "Odalisque in Grisaille",
+      "date": "about 1824–34",
+      "det": "Oil on canvas, 32 3/4 × 43 in. The Metropolitan Museum of Art, New York",
+      "alt": "A reclining nude seen from behind, turning her head over her shoulder, painted almost entirely in grays beside a gray curtain, on a pale cream cushion",
+      "line": "Ingres modeled this unfinished, smaller repeat of his 1814 Grande Odalisque almost entirely in grays, so value does nearly all the work of building the body."
+     },
+     "bul": "Merrifield noticed that on a lit object most of the surface sits in the middle values, with only small patches at either extreme."
     },
     {
-     "type": "theme",
-     "img": "cross-fig07",
-     "alt": "Cross's photograph of two polished spheres under one light, a white one at the left, partly behind the red one, its lit side lost against the white ground so that mainly its shadow side and cast shadow show, and a red one in front with a bright side, a shadow side and a cast shadow; a stick of charcoal lies in the red sphere's shadow.",
+     "type": "concept",
      "title": "Local Value and Light",
-     "stmt": "Local value is a surface's own lightness or darkness, apart from the light falling on it; light and shade are added on top.",
-     "para": "Cross's photograph shows a white sphere and a red one under the same light. He notes both show the same pattern of light and dark, but the range on the red one is narrower.",
-     "bul": [
-      "Cross pointed out that the lit side of a dark object can look lighter than the shadow side of a light one.",
-      "The highlight shows more strongly on the dark sphere, against its deep color.",
-      "To judge a tone, ask two questions: how light is this surface, and how much light is it getting?"
+     "img": "cross-fig07",
+     "alt": "Photograph of a white ball and a darker ball side by side under the same light, each with a lit side and a shadow side",
+     "stmt": "Every surface has its own lightness, its local value; the light falling on it then adds lights and shadows on top.",
+     "look": [
+      "The two balls share one light, and each turns from a lit side to a shadow side in the same places.",
+      "On the darker ball the whole pattern is shifted down and squeezed into a narrower range, so its shine stands out more."
      ],
-     "works": [
-      "zurbaran-still-life-lemons"
-     ]
+     "ex": {
+      "key": "zurbaran-still-life-lemons",
+      "artist": "Francisco de Zurbarán",
+      "title": "Still Life with Lemons, Oranges and a Rose",
+      "date": "1633",
+      "det": "Oil on canvas, 24 1/2 × 43 in. Norton Simon Museum, Pasadena",
+      "alt": "Pale lemons on a plate, a basket of oranges and a cup with a rose, lit from the left on a dark table",
+      "line": "Light from the left strikes pale lemons, darker oranges and a white cup, and each holds on to its own lightness whether lit or shaded."
+     },
+     "bul": "Cross noted that the lit side of a dark object can look lighter than the shaded side of a light one."
     },
     {
-     "type": "work",
-     "key": "zurbaran-still-life-lemons",
-     "artist": "Francisco de Zurbarán",
-     "title": "Still Life with Lemons, Oranges and a Rose",
-     "date": "1633",
-     "det": "Oil on canvas, 62.2 × 109.5 cm. Norton Simon Museum, Pasadena",
-     "lead": "Light from the left falls on objects of very different local value: pale yellow citrons, darker oranges, a white cup and reflective pewter plates.",
-     "bul": [
-      "Each object keeps its own value in light and in shadow, so the row reads clearly against the dark background.",
-      "The museum notes that the orange leaves create a \"rhythm of light and shadow\".",
-      "A 2008 cleaning removed opaque varnish; this older photograph probably shows the duller surface from before it."
-     ]
+     "type": "concept",
+     "title": "High and Low Key",
+     "img": "morisot-summers-day",
+     "alt": "Two women in a rowboat on bright, rippling water, one in a dark blue coat, the other in pale gray",
+     "stmt": "Key describes where a picture's values mostly fall: a picture built mainly from lights is high key, one built mainly from darks is low key.",
+     "look": [
+      "Almost all the values sit at the light end, so the whole scene reads as bright air over water.",
+      "The deep blue coat on the left-hand woman is the biggest dark area anywhere in it."
+     ],
+     "ex": {
+      "key": "rembrandt-philosopher-in-meditation",
+      "artist": "Rembrandt van Rijn",
+      "title": "Philosopher in Meditation",
+      "date": "1632",
+      "det": "Oil on wood, 11 × 13 1/2 in. Musée du Louvre, Paris",
+      "alt": "An old man seated by a bright window in a dark room with a spiral staircase, a small fire glowing at the right",
+      "line": "Darkness fills most of the panel; daylight from the window reaches the old man, and a fire at the right adds one small, separate glow."
+     },
+     "bul": "Key and contrast are separate: a bright picture may still hold some deep darks, and a dark one some brilliant lights."
     },
     {
-     "type": "theme",
-     "img": "key-high-low",
-     "alt": "Two paintings side by side: at left, a pale, light-filled boating scene; at right, a small dark interior where a window and a hearth make the only lights.",
-     "title": "High Key and Low Key",
-     "stmt": "A picture's key is where most of its values sit: mostly light is high key, mostly dark is low key.",
-     "para": "Key does much to set the mood. It is separate from contrast: a high-key picture can still hold a few strong darks, and a low-key one a few bright lights.",
-     "bul": [],
-     "works": [
-      "morisot-summers-day",
-      "rembrandt-philosopher-in-meditation"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "morisot-summers-day",
-     "artist": "Berthe Morisot",
-     "title": "Summer's Day",
-     "date": "about 1879",
-     "det": "Oil on canvas, 45.7 × 75.2 cm. The National Gallery, London, in partnership with Hugh Lane Gallery, Dublin (on long loan to Dublin, 2026–31)",
-     "lead": "Almost every value here is light, so the picture reads as bright outdoor air.",
-     "bul": [
-      "The dark blue coat at the left is the largest dark in the picture.",
-      "The National Gallery says her zigzag strokes catch \"the play of light on the water\"."
-     ]
-    },
-    {
-     "type": "work",
-     "key": "rembrandt-philosopher-in-meditation",
-     "artist": "Rembrandt",
-     "title": "Philosopher in Meditation",
-     "date": "1632",
-     "det": "Oil on wood, 28 × 34 cm. Musée du Louvre, Paris",
-     "lead": "Most of this small panel is dark.",
-     "bul": [
-      "Broad window light falls on the old man; the fire at the right is a small, separate glow.",
-      "Yellowed varnish probably makes the whole picture warmer and dimmer than it was painted."
-     ]
-    }
-   ]
-  },
-  {
-   "n": 3,
-   "wk": 2,
-   "title": "Light on Form",
-   "sub": "What one light does to a solid",
-   "overview": {
-    "img": "merrifield-pl09",
-    "cap": [
-     "Mary P. Merrifield",
-     "Plate 9, Handbook of Light and Shade",
-     "about 1880"
-    ],
-    "sum": "Under one light, every rounded solid shows the same families of light and dark. Once you can name them, you can find them on anything.",
-    "bul": [
-     "The Light and Shadow Sequence",
-     "Highlights",
-     "The Core Shadow",
-     "Reflected Light",
-     "Cast Shadows",
-     "Flat Planes and Round Forms"
-    ]
-   },
-   "slides": [
-    {
-     "type": "theme",
-     "img": "merrifield-pl09",
-     "alt": "Merrifield's plate of spheres: an outline sphere with a line drawn through its highlight to its darkest band, and shaded spheres showing the full turn from light to dark with their cast shadows.",
+     "type": "concept",
      "title": "The Light and Shadow Sequence",
-     "stmt": "On a round form under one light, values come in a set order: highlight, light, halftone, core shadow, reflected light, and the cast shadow on the ground.",
-     "para": "Surfaces facing the light get the most; the rest turn away and get less. Some drawing courses call this light logic.",
-     "bul": [
-      "The order holds on an apple, a head or a fold of cloth.",
-      "Merrifield noted that a line through the highlight and the center of a sphere crosses the middle of its darkest band."
+     "img": "merrifield-pl09",
+     "alt": "Plate of four spheres: an outline with a line drawn through its highlight and center, a sphere shaded below, a sphere lit as a crescent with a long shadow, and a shaded sphere with a shine and a cast shadow",
+     "stmt": "When one light falls on a rounded form, the values run in a set order: a highlight, the light side, a halftone, the darkest band of shadow, reflected light, then the shadow thrown on the ground.",
+     "look": [
+      "The lower-right sphere is lit from the upper left: a small shine, then darker tones as the surface turns away, and a shadow on the table.",
+      "In the upper-right diagram a line runs from the highlight through the center; Merrifield noted that it crosses the middle of the darkest band."
      ],
-     "works": [
-      "sanchez-cotan-quince-cabbage"
-     ],
-     "terms": [
-      [
-       "Halftone",
-       "the grays between full light and shadow, where the surface begins to turn away."
-      ],
-      [
-       "Terminator",
-       "the line on a form where light gives way to shadow; also called the shadow edge."
-      ]
-     ]
+     "ex": {
+      "key": "sanchez-cotan-quince-cabbage",
+      "artist": "Juan Sánchez Cotán",
+      "title": "Quince, Cabbage, Melon and Cucumber",
+      "date": "about 1602",
+      "det": "Oil on canvas, 27 1/4 × 33 1/4 in. The San Diego Museum of Art",
+      "alt": "A quince and a cabbage hanging on strings, a cut melon and a cucumber on a stone ledge, in a dark opening",
+      "line": "In the dark opening, the lit fronts of the quince and the cabbage give way to deep shadow on the sides farthest from the light."
+     },
+     "bul": "The darkest band sits a little in from the edge, and light bounced back from nearby surfaces lightens the shadow near the rim."
     },
     {
-     "type": "work",
-     "key": "sanchez-cotan-quince-cabbage",
-     "artist": "Juan Sánchez Cotán",
-     "title": "Quince, Cabbage, Melon and Cucumber",
-     "date": "about 1602",
-     "det": "Oil on canvas. The San Diego Museum of Art",
-     "lead": "Simple fruits and vegetables against black show the sequence plainly.",
-     "bul": [
-      "The cabbage and melon turn from lit fronts into deep shadow on their far sides.",
-      "The cut melon shows flat cut faces and the round rind taking light differently."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "cross-fig16",
-     "alt": "Cross's photograph of a black bottle with a handle, standing on a white block, with two small bright window reflections on its body.",
+     "type": "concept",
      "title": "Highlights",
-     "stmt": "A highlight is the light source reflected off a surface.",
-     "para": "Cross's black bottle shows two highlights because the window it faced was divided in two.",
-     "bul": [
-      "Highlights appear only where a surface reflects the light straight to the eye, so they shift as the viewer moves."
+     "img": "cross-fig16",
+     "alt": "Photograph of a dark, round, glazed bottle on a pale block, with small bright reflections on its shoulder",
+     "stmt": "On a polished surface, a highlight is a small reflected image of the light source.",
+     "look": [
+      "The dark bottle shows two small highlights, one for each half of the divided window it faced.",
+      "The pale top of the block shows in the bottle's glaze as a curved reflected shape."
      ],
-     "works": [
-      "heda-still-life-oysters"
-     ]
+     "ex": {
+      "key": "heda-still-life-oysters",
+      "artist": "Willem Claesz Heda",
+      "title": "Still Life with Oysters, a Silver Tazza, and Glassware",
+      "date": "1635",
+      "det": "Oil on wood, 19 1/2 × 31 3/4 in. The Metropolitan Museum of Art, New York",
+      "alt": "Oysters on pewter plates, a tall glass of beer and an overturned silver cup on a table with a dark cloth",
+      "line": "Tiny, crisp highlights tell us the tall glass and the tipped silver cup are polished; the oysters' wet shine is broader and softer."
+     },
+     "bul": "The Met points to a gleaming spoon that leads the eye on to a shard of glass and other curving forms."
     },
     {
-     "type": "work",
-     "key": "heda-still-life-oysters",
-     "artist": "Willem Claesz Heda",
-     "title": "Still Life with Oysters, a Silver Tazza, and Glassware",
-     "date": "1635",
-     "det": "Oil on wood, 49.8 × 80.6 cm. The Metropolitan Museum of Art, New York",
-     "lead": "Glass, silver and oyster shell each catch the light in their own way.",
-     "bul": [
-      "The Met notes Heda worked \"almost exclusively in shades of gray\".",
-      "Small, sharp highlights on the tall glass and the overturned silver cup read as hard, polished surfaces; the oysters' wet sheen is broader and softer."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "merrifield-pl07",
-     "alt": "Merrifield's plate of four cylinders, one of them hollow, each with a darker vertical band just past the turn from light to shadow and a cast shadow on the ground.",
-     "title": "The Core Shadow",
-     "stmt": "The core shadow is the darkest band on the form itself, just past the turn into shadow.",
-     "para": "In Merrifield's first cylinder this \"extreme dark\" sits a little in from the edge, not at the outline.",
-     "bul": [
-      "Cross stressed careful drawing of \"the dividing line of light and shade\".",
-      "Under the same light, a soft core means a gentle curve and a crisp one a sharper turn."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "merrifield-pl10",
-     "alt": "Merrifield's plate of spheres and egg shapes against light and dark backgrounds; on those lit from the side, the shadow side lightens slightly near its outer edge.",
-     "title": "Reflected Light",
-     "stmt": "Reflected light is light bounced back into a shadow from nearby surfaces.",
-     "para": "It lightens the shadow near the edge and helps the form turn. Cross reminded students that, seen as part of the whole picture, reflected lights \"are not lights but darks\".",
-     "bul": [
-      "Merrifield found it often \"warmer in colour\" than the rest of the object.",
-      "Cross warned that students tend to exaggerate it."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "merrifield-pl03",
-     "alt": "Merrifield's plate of four cubes lit from the left, each casting a shadow to the right, against a light or dark background.",
+     "type": "concept",
      "title": "Cast Shadows",
-     "stmt": "A cast shadow is the shape an object blocks out on another surface.",
-     "para": "It is usually darkest and sharpest where the object meets the surface, and softer farther away.",
-     "bul": [
-      "Its direction and length show where the light is."
+     "img": "merrifield-pl03",
+     "alt": "Plate of four cubes on a table, two against dark backgrounds and two against light ones, each throwing a dark shadow to one side",
+     "stmt": "When an object stands in the light's path, it throws its shape onto nearby surfaces as a cast shadow.",
+     "look": [
+      "Each cube throws a band of shadow across the table on the side away from the light.",
+      "Each cast shadow is darker than the shaded side of the cube that throws it."
      ],
-     "works": [
-      "hammershoi-dust-motes"
-     ]
+     "ex": {
+      "key": "hammershoi-dust-motes",
+      "artist": "Vilhelm Hammershøi",
+      "title": "Dust Motes Dancing in the Sunbeams",
+      "date": "1901",
+      "det": "Oil on canvas, 24 3/4 × 20 3/4 in. Ordrupgaard, Copenhagen",
+      "alt": "An empty gray room with a tall window and a closed door, sunbeams slanting through the air onto the floor",
+      "line": "The window bars block parts of the sunbeams, so the patches of sun on the floor carry the window's grid of shadow."
+     },
+     "bul": "Cast shadows are usually darkest and crispest next to the object, and which way they point and how far they stretch reveal where the light sits."
     },
     {
-     "type": "work",
-     "key": "hammershoi-dust-motes",
-     "artist": "Vilhelm Hammershøi",
-     "title": "Dust Motes Dancing in the Sunbeams",
-     "date": "1901",
-     "det": "Oil on canvas, 63 × 52.5 cm. Ordrupgaard, Copenhagen",
-     "lead": "Here the light itself is the subject: an empty room, a window, and shafts of sun.",
-     "bul": [
-      "Ordrupgaard says the light lies \"like a geometrical form across the floor\".",
-      "The shafts show in the air, crossing the room diagonally from the window."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "merrifield-pl05-pl07",
-     "alt": "Two Merrifield plates stacked: above, prisms whose flat faces each keep a narrow range of tone, with sharp changes at the corners; below, cylinders that shade gradually from light to dark.",
-     "title": "Flat Planes and Round Forms",
-     "stmt": "Flat faces change value mostly at their edges; curved surfaces change value gradually.",
-     "para": "Compare Merrifield's Plate 5 prisms, above, with her Plate 7 cylinders, below.",
-     "bul": [
-      "Many painters block in round forms as a few flat planes, then soften the joins."
-     ]
-    }
-   ]
-  },
-  {
-   "n": 4,
-   "wk": 2,
-   "title": "Light Sources",
-   "sub": "Where the light comes from and what kind it is",
-   "overview": {
-    "img": "cross-figs-09-12",
-    "cap": [
-     "Anson K. Cross",
-     "Figs. 9 and 12, Light and Shade",
-     "1897"
-    ],
-    "sum": "The same objects look different under every light. Direction, size and number of sources each change the pattern of light and dark.",
-    "bul": [
-     "Direction of Light",
-     "Hard and Soft Light",
-     "Backlight",
-     "Candlelight",
-     "Two Lights at Once"
-    ]
-   },
-   "slides": [
-    {
-     "type": "theme",
-     "img": "cross-figs-08-10-11",
-     "alt": "Three photographs of the same white cone, sphere, cylinder and block: lit from the side at top, from behind the camera in the middle, and from in front of the camera at bottom.",
+     "type": "concept",
      "title": "Direction of Light",
-     "stmt": "Where the light comes from decides how much of a subject is in light and how much in shadow.",
-     "para": "Cross's photographs show one white group lit three ways: from the upper left (top), from behind the viewer (middle) and from in front of the viewer (bottom).",
-     "bul": [
-      "Side light divides each form into light and shadow, which makes its shape easy to read.",
-      "Light from behind the viewer flattens form; Cross wrote that its contrasts come mostly from local color."
-     ]
+     "img": "cross-figs-08-10-11",
+     "alt": "Three photographs of the same white cone, sphere, block and cylinder: lit from the side, lit from behind the camera, and lit from behind the group",
+     "stmt": "The direction of the light sets how a subject divides between lit and shaded areas.",
+     "look": [
+      "Top: light from the side splits each white form into a lit half and a shadow half, so the shapes read clearly.",
+      "Middle: light from behind the viewer reaches almost every face, and the forms flatten out.",
+      "Bottom: light from behind the group leaves most surfaces in shadow, with bright tops and outlines."
+     ],
+     "ex": {
+      "key": "prudhon-blue-paper",
+      "artist": "Pierre-Paul Prud'hon",
+      "title": "Study of Drapery",
+      "date": "about 1813",
+      "det": "Black and white chalk with stumping on blue paper, 10 × 10 1/4 in. The Metropolitan Museum of Art, New York",
+      "alt": "Drawing of cloth falling in heavy folds, in black and white chalk on blue paper",
+      "line": "Light from one side catches the ridges of the cloth in white chalk, the deepest folds go to black, and the blue paper serves as the middle value."
+     },
+     "bul": "Cross wrote that with the light behind the viewer, what contrast remains comes mostly from local color."
     },
     {
-     "type": "theme",
-     "img": "cross-figs-09-12",
-     "alt": "Two photographs of the same white group: above, in direct sun with crisp dark cast shadows; below, in weak diffused light with faint, soft shadows.",
+     "type": "concept",
      "title": "Hard and Soft Light",
-     "stmt": "A source that looks small from the subject, such as the distant sun, gives hard light; one that looks large, such as an overcast sky or a nearby big window, gives soft light.",
-     "para": "Hard light makes sharp-edged shadows and strong contrast. Soft light wraps around forms and its shadows fade at the edges.",
-     "bul": [
-      "Outdoors, Cross noted, light reflected from every direction makes shadows lighter than indoors."
+     "img": "cross-figs-09-12",
+     "alt": "Two photographs of the same white group: in direct sunlight with sharp dark shadows, and in weak, spread-out studio light with faint shadows",
+     "stmt": "The smaller a light looks from where the subject stands, the harder it is: the distant sun gives hard light, a cloudy sky or a big nearby window soft light.",
+     "look": [
+      "Top: in direct sun the shadows have crisp edges.",
+      "Bottom: weak light arriving from several sides wraps around the forms, and the faint shadows fade at their edges."
      ],
-     "works": [
-      "sorolla-sewing-the-sail"
-     ]
+     "ex": {
+      "key": "sorolla-sewing-the-sail",
+      "artist": "Joaquín Sorolla",
+      "title": "Sewing the Sail",
+      "date": "1896",
+      "det": "Oil on canvas, 87 1/2 × 118 in. Ca' Pesaro, International Gallery of Modern Art, Venice",
+      "alt": "Women and men sewing a huge white sail spread across a sunlit terrace under vines and flowers",
+      "line": "Sunshine broken up by the leaves spatters the white sail with crisp spots of light and shade."
+     },
+     "bul": "Outdoors, Cross observed, light bouncing in from every side makes shadows lighter than they are indoors."
     },
     {
-     "type": "work",
-     "key": "sorolla-sewing-the-sail",
-     "artist": "Joaquín Sorolla",
-     "title": "Sewing the Sail",
-     "date": "1896",
-     "det": "Oil on canvas, 222 × 300 cm. Ca' Pesaro, International Gallery of Modern Art, Venice",
-     "lead": "Sun filtering through plants scatters hard-edged patches of light and shade across a white sail.",
-     "bul": [
-      "The sunlit patches on the sail are among the lightest values in the picture; the figures, largely in shade, stay readable against them."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "cross-fig11",
-     "alt": "Cross's photograph of the white group lit from in front of the camera: the near faces of the cone, sphere and cylinder are in shadow, with light on their tops and edges and cast shadows running toward the viewer.",
-     "title": "Backlight",
-     "stmt": "Backlight comes from behind the subject, toward the viewer.",
-     "para": "Most of what we see is in shadow; light mainly catches the tops and outlines.",
-     "bul": [
-      "Cast shadows run toward the viewer and become large, dark shapes."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "latour-magdalen-smoking-flame-detail",
-     "alt": "Detail of a flame burning on a floating wick in a glass of oil and water on a table, lighting the face, hand and white sleeve of a woman who gazes at it; everything farther away falls into brown darkness.",
+     "type": "concept",
      "title": "Candlelight",
-     "stmt": "A candle or lamp inside the picture lights nearby things strongly; its light fades quickly with distance.",
-     "para": "When the flame is in view it becomes part of the subject, and the picture gets one bright center.",
-     "bul": [
-      "Candlelight was ordinary evening light in Wright of Derby's day, Christine Riding of the National Gallery, London, points out, so such scenes showed something familiar.",
-      "A hidden source can still be read from what it lights and the shadows it throws."
+     "img": "wright-air-pump-detail",
+     "alt": "Detail of faces gathered close together, lit by a hidden flame behind a glass bowl",
+     "stmt": "A candle or lamp within the scene lights nearby things strongly, and its light drops off fast with distance.",
+     "look": [
+      "The faces nearest the glass bowl are brightest; those set farther back sink toward shadow.",
+      "The flame itself is hidden behind the glass bowl at the bottom, yet where it sits is clear from what it lights."
      ],
-     "works": [
-      "latour-magdalen-smoking-flame",
-      "wright-air-pump"
-     ]
+     "ex": {
+      "key": "latour-magdalen-smoking-flame",
+      "artist": "Georges de La Tour",
+      "title": "The Magdalen with the Smoking Flame",
+      "date": "about 1635–37",
+      "det": "Oil on canvas, 46 × 36 1/4 in. Los Angeles County Museum of Art",
+      "alt": "A young woman seated by a candle, her chin on her hand and a skull in her lap",
+      "line": "Her face, hand and sleeve, closest to the flame, are brightest; the skull in her lap is dimmer and her legs fade into shadow."
+     },
+     "bul": "If the flame itself is shown, it turns into part of the subject and gives the whole picture one bright focus."
     },
     {
-     "type": "work",
-     "key": "latour-magdalen-smoking-flame",
-     "artist": "Georges de La Tour",
-     "title": "The Magdalen with the Smoking Flame",
-     "date": "about 1635–37",
-     "det": "Oil on canvas, 117 × 91.8 cm. Los Angeles County Museum of Art",
-     "lead": "Her face, hand and sleeve, nearest the flame, are brightest; the lap and skull are dimmer, and the legs fade into shadow.",
-     "bul": [
-      "LACMA calls the candle the painting's \"chief symbol and true subject\".",
-      "The skull's polish and the books' leather answer the flame in different ways.",
-      "His sharp turns from light to dark descend from Caravaggio, whose manner reached him through the painter Jean Le Clerc."
-     ]
-    },
-    {
-     "type": "work",
-     "key": "wright-air-pump",
-     "artist": "Joseph Wright of Derby",
-     "title": "An Experiment on a Bird in the Air Pump",
-     "date": "1768",
-     "det": "Oil on canvas, 183 × 244 cm. The National Gallery, London",
-     "lead": "One candle the viewer cannot see, hidden behind a glass on the table, lights a ring of faces.",
-     "bul": [
-      "The National Gallery traces colors darkening with distance: the lecturer's robe is \"salmon pink in the candlelight\", then magenta farther off.",
-      "Lighting this forceful, the Gallery says, was \"new in British art\"."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "sargent-carnation-lily-detail",
-     "alt": "Detail of two girls in white dresses lighting paper lanterns among lilies at dusk; the left lantern glows orange-pink, and the pale one in front of the girl at right lights her face from below.",
-     "title": "Two Lights at Once",
-     "stmt": "When two sources light a scene, each makes its own lights and shadows, often of different color.",
-     "para": "Cross warned that daylight and lamplight together make effects so varied that rules become \"impossible\".",
-     "bul": [
-      "Sort out which surfaces face which source.",
-      "A warm source and a cool one make the difference easy to see."
-     ],
-     "works": [
-      "sargent-carnation-lily"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "sargent-carnation-lily",
-     "artist": "John Singer Sargent",
-     "title": "Carnation, Lily, Lily, Rose",
-     "date": "1885–6",
-     "det": "Oil on canvas, 174 × 153.7 cm. Tate, London",
-     "lead": "Two lights meet here: the fading mauve of dusk and the orange glow of paper lanterns.",
-     "bul": [
-      "Tate notes that a lily or leaves in front of a lantern become back-lit shapes.",
-      "The effect lasted only minutes a day: ten by Sargent's own letter, up to twenty-five by a friend's account."
-     ]
-    }
-   ]
-  },
-  {
-   "n": 5,
-   "wk": 3,
-   "title": "Edges",
-   "sub": "Sharp, soft and lost",
-   "overview": {
-    "img": "cross-fig13",
-    "cap": [
-     "Anson K. Cross",
-     "Fig. 13, Light and Shade",
-     "1897"
-    ],
-    "sum": "An edge is the line where one value meets another. How sharp it is helps show form and space.",
-    "bul": [
-     "Hard, Soft and Lost Edges",
-     "Sfumato"
-    ]
-   },
-   "slides": [
-    {
-     "type": "theme",
+     "type": "concept",
+     "title": "Edges",
      "img": "cross-fig13",
-     "alt": "Cross's photograph of the white group in strong light and deep shadow; part of the cylinder's outline disappears where it passes into the shadow of the block.",
-     "title": "Hard, Soft and Lost Edges",
-     "stmt": "A hard edge is sharp, a soft edge is blended, and a lost edge disappears where two values match.",
-     "para": "In Cross's photograph the cylinder's outline is lost for a short stretch inside the block's shadow. He wrote that a contour should not be drawn where it cannot be seen.",
-     "bul": [
-      "Losing some edges, Cross argued, is part of \"the charm of the best artistic work\"."
+     "alt": "Photograph of a white cone, sphere, block and a cylinder lying on its side under strong light, with a curved shadow across the cylinder and dark cast shadows behind",
+     "stmt": "An edge is where one value meets another: hard when the change is sharp, soft when it blends, lost when the two values match.",
+     "look": [
+      "Inside the block's dark shadow, the cylinder's outline disappears for a short stretch.",
+      "Where the white forms meet the darker backdrop, the edges are hard and clear."
      ],
-     "works": [
-      "velazquez-juan-de-pareja"
-     ]
+     "ex": {
+      "key": "velazquez-juan-de-pareja",
+      "artist": "Diego Velázquez",
+      "title": "Juan de Pareja",
+      "date": "1650",
+      "det": "Oil on canvas, 32 × 27 1/2 in. The Metropolitan Museum of Art, New York",
+      "alt": "Portrait of a man with dark curly hair and a beard, wearing a lace collar and a dark coat against a dark background",
+      "line": "The white collar has crisp edges, while the beard melts into the hair and the dark coat into the dark background."
+     },
+     "bul": "Cross taught that where an outline can't be seen, it shouldn't be drawn."
     },
     {
-     "type": "work",
-     "key": "velazquez-juan-de-pareja",
-     "artist": "Diego Velázquez",
-     "title": "Juan de Pareja",
-     "date": "1650",
-     "det": "Oil on canvas, 81.3 × 69.9 cm. The Metropolitan Museum of Art, New York",
-     "lead": "Compare the edges: crisp at the white collar, soft where the face and beard turn into the hair and where the dark coat meets the dark background.",
-     "bul": [
-      "The white collar is the lightest value in the picture and sets off the face."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "leonardo-virgin-of-the-rocks-detail",
-     "alt": "Detail of the Virgin's face and shoulders against a rocky grotto; her features turn into shadow with no visible outline.",
-     "title": "Sfumato",
-     "stmt": "Sfumato, from the Italian for \"to turn to smoke\", blends light into shadow with no visible line.",
-     "para": "Cross quoted Leonardo's advice that lights and shadows should meet \"as smoke loses itself in the air\". In a 2019 lecture Caroline Campbell, then of the National Gallery, London, stressed that his lighting is a set of deliberate choices, not a copy of nature.",
-     "bul": [
-      "Cross added that even Leonardo's advice should be tested against nature, not taken literally."
-     ],
-     "works": [
-      "leonardo-virgin-of-the-rocks"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "leonardo-virgin-of-the-rocks",
-     "artist": "Leonardo da Vinci",
-     "title": "The Virgin of the Rocks",
-     "date": "about 1491/2–9 and 1506–8",
-     "det": "Oil on wood, 189.5 × 120 cm. The National Gallery, London",
-     "lead": "Out of the dark grotto the figures appear by soft degrees; the Virgin's temples and nose have no hard outline.",
-     "bul": [
-      "A shaft of light enters from the upper left.",
-      "The far mountains are painted blue, with softened edges, so they look hazy and distant."
-     ]
-    }
-   ]
-  },
-  {
-   "n": 6,
-   "wk": 3,
-   "title": "Styles of Light",
-   "sub": "Balanced or extreme",
-   "overview": {
-    "img": "rembrandt-aristotle",
-    "cap": [
-     "Rembrandt",
-     "Aristotle with a Bust of Homer",
-     "1653"
-    ],
-    "sum": "Two terms describe painting built on strong light and shade. They differ in how far they push the contrast.",
-    "bul": [
-     "Chiaroscuro",
-     "Tenebrism"
-    ]
-   },
-   "slides": [
-    {
-     "type": "theme",
-     "img": "rembrandt-aristotle-detail",
-     "alt": "Detail of a bearded man in a dark hat, his face partly shadowed, resting one hand on a pale bust that catches the light.",
+     "type": "concept",
      "title": "Chiaroscuro",
-     "stmt": "Chiaroscuro, Italian for \"light-dark\", is the balance and pattern of light and shade that models forms.",
-     "para": "Lit and shadowed parts are arranged into one design; the turns between them can be gradual or abrupt.",
-     "bul": [
-      "The word also names drawings and prints made in light and dark tones."
+     "img": "rembrandt-aristotle-detail",
+     "alt": "Detail of a bearded man in a broad black hat, his face half in shadow, his hand resting on a marble bust",
+     "stmt": "Chiaroscuro (Italian for \"light-dark\") is the balance and pattern of light and shade across a whole picture, arranged as one design.",
+     "look": [
+      "Only a few things catch the light: the face, the pale sleeve, the hand and the bust it rests on, while everything else drops into brown gloom.",
+      "A band of shadow runs over the upper face and keeps the eyes partly veiled."
      ],
-     "works": [
-      "rembrandt-aristotle"
-     ]
+     "ex": {
+      "key": "leonardo-virgin-of-the-rocks",
+      "artist": "Leonardo da Vinci",
+      "title": "The Virgin of the Rocks",
+      "date": "about 1491/2–9 and 1506–8",
+      "det": "Oil on wood, 74 1/2 × 47 1/4 in. The National Gallery, London",
+      "alt": "The Virgin with the infant John the Baptist, the Christ Child and an angel in a dark, rocky grotto",
+      "line": "The figures come out of the dark grotto by soft degrees, with no hard outline at the Virgin's temples or nose, an effect later called sfumato, from the Italian for \"to turn to smoke\"."
+     },
+     "bul": "Leonardo built these figures over an underpainting in black and white, so their values were set before color went on."
     },
     {
-     "type": "work",
-     "key": "rembrandt-aristotle",
-     "artist": "Rembrandt",
-     "title": "Aristotle with a Bust of Homer",
-     "date": "1653",
-     "det": "Oil on canvas, 143.5 × 136.5 cm. The Metropolitan Museum of Art, New York",
-     "lead": "Light picks out the face, the white sleeves, the gold chain and the hand resting on the bust; the rest sinks into brown shadow.",
-     "bul": [
-      "The Met describes his \"dark palette and almost sculptural buildup of paint\".",
-      "Shadow falls across part of the face, so the eyes stay half hidden."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "gentileschi-judith-detroit-detail",
-     "alt": "Detail of a woman in yellow raising one hand toward a candle, shading its light; her face and hand are lit against near-black darkness, her forearm in shadow.",
+     "type": "concept",
      "title": "Tenebrism",
-     "stmt": "Tenebrism pushes chiaroscuro to an extreme: figures lit sharply against near-black, with few middle tones.",
-     "para": "The name comes from the Italian tenebroso, \"dark\".",
-     "bul": [
-      "The darkness hides the setting and pushes the figures toward us."
+     "img": "caravaggio-calling-of-saint-matthew-detail",
+     "alt": "Detail of a dark room with a shuttered window, a beam of light slanting across the wall onto a group of seated men",
+     "stmt": "Tenebrism, from the Latin tenebrae, \"darkness\", is chiaroscuro at its most extreme: brightly lit figures set against near-total darkness, with little in between.",
+     "look": [
+      "A single beam enters high at the right, from beyond the frame, and slants down across the seated men.",
+      "The painted window above lets in only a dim, diffused glow; the beam is what picks out the figures."
      ],
-     "works": [
-      "gentileschi-judith-detroit"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "gentileschi-judith-detroit",
-     "artist": "Artemisia Gentileschi",
-     "title": "Judith and Her Maidservant with the Head of Holofernes",
-     "date": "about 1623–25",
-     "det": "Oil on canvas, 187.2 × 142 cm. Detroit Institute of Arts",
-     "lead": "A single candle lights the scene; Judith raises a hand beside the flame, as if to screen its light.",
-     "bul": [
-      "The Detroit Institute of Arts says its theatrical lighting echoes Caravaggio.",
-      "Almost everything outside the candle's reach is lost in darkness."
-     ]
-    }
-   ]
-  },
-  {
-   "n": 7,
-   "wk": 3,
-   "title": "Working in Value",
-   "sub": "Planning light and dark before color",
-   "overview": {
-    "img": "cross-figs-22-23",
-    "cap": [
-     "Anson K. Cross",
-     "Figs. 22 and 23, Light and Shade",
-     "1897"
-    ],
-    "sum": "Draftsmen and painters have practical ways to work in value first: simplify, start from a middle tone, or paint in grays.",
-    "bul": [
-     "Simplifying What You See",
-     "Drawing on Toned Paper",
-     "Grisaille"
-    ]
-   },
-   "slides": [
-    {
-     "type": "theme",
-     "img": "cross-figs-22-23",
-     "alt": "Side by side: a photograph of shingled buildings in sun, and a sepia watercolor sketch of the same view in a few broad washes of light and dark.",
-     "title": "Simplifying What You See",
-     "stmt": "Simplifying groups many small values into a few large ones.",
-     "para": "Cross set a photograph of shingled buildings beside a sepia sketch of the same view: the shingles are only suggested, while the masses of light and shadow remain.",
-     "bul": [
-      "Cross told students to blur their eyes and decide whether each detail reads as part of the light or the dark.",
-      "For planning a picture in values, see Color Theory and Composition."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "prudhon-blue-paper-detail",
-     "alt": "Detail of a chalk drawing of hanging cloth on blue paper: black chalk in the folds, white chalk on the ridges, and the blue of the paper showing through the grays between.",
-     "title": "Drawing on Toned Paper",
-     "stmt": "On toned paper the paper's own color serves as a middle value; the artist works down to the darks and up to the lights.",
-     "para": "Black and white chalk on a mid-toned sheet cover the whole range of values.",
-     "bul": [
-      "Artist Pamela Lawton's drawing demonstration for the Met does the same in graphite: tone the whole sheet, erase out the lights, add the darks."
-     ],
-     "works": [
-      "prudhon-blue-paper"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "prudhon-blue-paper",
-     "artist": "Pierre-Paul Prud'hon",
-     "title": "Study of Drapery",
-     "date": "about 1813",
-     "det": "Black and white chalk with stumping on blue paper, 25.5 × 26 cm. The Metropolitan Museum of Art, New York",
-     "lead": "A study for the hem of a gown falling over a chair: white is kept for the ridges, black for the deepest folds, and the bare paper shows between.",
-     "bul": [
-      "Stumping, or rubbing the chalk to blend it, gives what the Met calls \"a velvety yet radiant quality\"."
-     ]
-    },
-    {
-     "type": "theme",
-     "img": "ingres-odalisque-grisaille-detail",
-     "alt": "Detail of a reclining woman painted almost entirely in grays, her back and turbaned head turned toward the viewer against a dark wall.",
-     "title": "Grisaille",
-     "stmt": "Grisaille is painting in shades of a single color, usually gray.",
-     "para": "Used as an underpainting, it sets the values before color goes on; Leonardo's figures in the Virgin of the Rocks were built this way, over black and white.",
-     "bul": [
-      "A grisaille can also stand on its own as a finished work."
-     ],
-     "works": [
-      "ingres-odalisque-grisaille"
-     ]
-    },
-    {
-     "type": "work",
-     "key": "ingres-odalisque-grisaille",
-     "artist": "Jean-Auguste-Dominique Ingres",
-     "title": "Odalisque in Grisaille",
-     "date": "about 1824–34",
-     "det": "Oil on canvas, 83.2 × 109.2 cm. The Metropolitan Museum of Art, New York",
-     "lead": "An unfinished, reduced repeat of his Grande Odalisque of 1814, with the form modeled almost entirely in grays.",
-     "bul": [
-      "The Met notes grisailles often guided engravers making black-and-white prints; this one's purpose is uncertain, and it may have served his teaching studio.",
-      "A faint blush of color shows on her back and right ear."
-     ]
+     "ex": {
+      "key": "gentileschi-judith-detroit",
+      "artist": "Artemisia Gentileschi",
+      "title": "Judith and Her Maidservant with the Head of Holofernes",
+      "date": "about 1623–25",
+      "det": "Oil on canvas, 73 3/4 × 56 in. Detroit Institute of Arts",
+      "alt": "Judith in a gold gown raising a hand beside a candle while her maid kneels below with a sack",
+      "line": "A lone candle lights the room; Judith lifts a hand near it as though shading it, and the maid kneeling below catches the same light."
+     },
+     "bul": "The Detroit Institute of Arts links this painting's theatrical lighting to Caravaggio."
     }
    ]
   }

@@ -51,8 +51,8 @@ window.SOURCES = {
    "title": "Books (public domain)",
    "items": [
     {
-     "html": "Cross, Anson K. <em>Light and Shade, with Chapters on Charcoal, Pencil, and Brush Drawing</em>. Boston: Ginn, 1897. Scan, Cornell University Library, Internet Archive.",
-     "url": "https://archive.org/details/cu31924032652434"
+     "html": "Cross, Anson K. <em>Light and Shade, with Chapters on Charcoal, Pencil, and Brush Drawing</em>. Boston: Ginn, 1897. Scan, Cornell University Library, Internet Archive (University of Toronto Libraries).",
+     "url": "https://archive.org/details/lightshadewithch00crosuoft"
     },
     {
      "html": "Merrifield, Mary P. <em>Handbook of Light and Shade, with Especial Reference to Model Drawing</em>. 12th ed. London: George Rowney &amp; Co., about 1880. Internet Archive.",
@@ -118,10 +118,6 @@ window.SOURCES = {
     {
      "html": "AMACI (Associazione dei Musei d'Arte Contemporanea Italiani). <em>Sewing the Sail</em>, Joaquín Sorolla, Ca' Pesaro, Venice.",
      "url": "https://www.amaci.org/en/artworks/617a54b50fbc91fbd4cce79b"
-    },
-    {
-     "html": "Art UK. <em>Carnation, Lily, Lily, Rose</em>, John Singer Sargent, Tate N01615.",
-     "url": "https://batch.artuk.org/discover/artworks/carnation-lily-lily-rose-117693"
     }
    ]
   },
@@ -131,14 +127,6 @@ window.SOURCES = {
     {
      "html": "Harris, Beth, and Steven Zucker. “Caravaggio, <em>Calling of Saint Matthew</em>.” Smarthistory.",
      "url": "https://smarthistory.org/?p=2445"
-    },
-    {
-     "html": "Hellen, Rebecca, and Elaine Kilmurray. “<em>Carnation, Lily, Lily, Rose</em> and the Process of Painting.” <em>British Art Studies</em>, no. 2 (2016).",
-     "url": "https://britishartstudies.ac.uk/issues/02/sargent-conservation/"
-    },
-    {
-     "html": "Tate. “Audio Description: <em>Carnation, Lily, Lily, Rose</em>.”",
-     "url": "https://tate.org.uk/art/artworks/sargent-carnation-lily-lily-rose-n01615/audio-description-carnation-lily-lily-rose"
     },
     {
      "html": "The Metropolitan Museum of Art. “The Body Hidden, the Body Revealed: Neoclassical Drapery Studies.” Perspectives.",
