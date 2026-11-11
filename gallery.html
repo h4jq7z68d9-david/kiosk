@@ -602,6 +602,35 @@ function wallRows(items, W, gap) {
   return placed;
 }
 
+// Wide screens (Nov 11 2026): keep the cluster's order, but hang it as left-justified
+// rows — read the cluster row by row, left to right, then pack from the left edge,
+// up to four per row, bottom-aligned, 40px apart.
+const WALL_ROW_GAP = 40, WALL_ROW_MAX = 4;
+function wallLeftRows(items, W, gap) {
+  const cl = wallCluster(items, W, gap).sort((a, b) => (a.y + a.h / 2) - (b.y + b.h / 2) || a.x - b.x);
+  const bands = [];
+  cl.forEach(r => {
+    const cy = r.y + r.h / 2;
+    const b = bands.find(b => Math.abs(b.cy - cy) < Math.max(b.h, r.h) / 2);
+    if (b) b.items.push(r); else bands.push({ cy, h: r.h, items: [r] });
+  });
+  const seq = bands.flatMap(b => b.items.sort((a, c) => a.x - c.x));
+  const placed = [];
+  let y = 0, row = [], x = 0;
+  const flush = () => {
+    const rh = Math.max(...row.map(r => r.h));
+    row.forEach(r => placed.push({ it: r.it, x: Math.round(r.x), y: Math.round(y + rh - r.h), w: r.w, h: r.h }));
+    y += rh + WALL_ROW_GAP; row = []; x = 0;
+  };
+  seq.forEach(r => {
+    if (row.length && (x + r.w > W || row.length >= WALL_ROW_MAX)) flush();
+    row.push({ it: r.it, x, w: r.w, h: r.h });
+    x += r.w + WALL_ROW_GAP;
+  });
+  if (row.length) flush();
+  return placed;
+}
+
 let wallW = 0;
 function layoutWalls() {
   const grid = document.getElementById('grid');
@@ -612,7 +641,7 @@ function layoutWalls() {
   grid.querySelectorAll('.wall').forEach(wall => {
     if (!wall._items || !wall._items.length) return;
     const items = wallSizes(wall._items, scale, W);
-    const placed = rows ? wallRows(items, W, gap) : wallCluster(items, W, gap);
+    const placed = rows ? wallRows(items, W, gap) : wallLeftRows(items, W, gap);
     let H = 0;
     placed.forEach(r => {
       const s = r.it.card.style;
