@@ -19,12 +19,12 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Two Binders",
-     "img": "oa-binders",
-     "alt": "Two squares of red pigment grains: one in a solid field of linseed oil, one among many small acrylic droplets in water",
+     "img": "ostade-painter-studio",
+     "alt": "Etching detail: a painter at his easel by a leaded window, and behind him two young assistants working at a small table under a staircase",
      "stmt": "In oil paint the pigment is carried by a plant oil that hardens on contact with air; in acrylic it is mixed with a cloud of tiny plastic droplets suspended in water.",
      "look": [
-      "On the left the grains sit in one continuous body of oil.",
-      "On the right the grains are crowded among acrylic droplets that are smaller and far more numerous."
+      "Behind the easel, two young assistants bend over a small table under the stairs, grinding colors for the painter.",
+      "The nearer assistant works at a small pot with both hands; the one behind him bends over the same table with a tool raised."
      ],
      "ex": {
       "key": "bruegel-harvesters",
@@ -82,12 +82,12 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Open Time",
-     "img": "oa-open-time",
-     "alt": "Two bars on a time scale from a minute to a year: acrylic wet for a short stretch, oil wet for about two days, both then hardening",
+     "img": "vermeer-lady-writing-detail",
+     "alt": "Painting detail: a woman's hands writing with a quill at a table covered by a blue cloth, a string of pearls and a yellow ribbon beside the paper",
      "stmt": "Open time is how long paint stays workable on the canvas: acrylic is dry to the touch in minutes to a few hours, oil in about two days.",
      "look": [
-      "On the same time scale, acrylic's wet stretch is a short band at the left, while oil's runs past the one-day mark.",
-      "Acrylic's dark band blurs gradually into its pale stretch, while oil's stops at a sharp line just past one day."
+      "The fingers and the folds of the blue cloth have soft edges, with no crisp outline where one shape meets the next.",
+      "Researchers at the National Gallery of Art trace that blur to strokes laid into paint that was still wet, which oil's long open time allows."
      ],
      "ex": {
       "key": "monet-stacks-of-wheat-end-of-summer",
@@ -124,33 +124,33 @@ window.SITE = {
     {
      "type": "concept",
      "title": "Blending",
-     "img": "oa-blending",
-     "alt": "Two bars from red to blue: one melting softly from one color to the other, one meeting in a hard line",
+     "img": "ginevra-blending-detail",
+     "alt": "Painting detail: a young woman's cheek and curls beside a dark spiky juniper bush, pale blue sky and feathery brown trees",
      "stmt": "Blending means working two colors into each other while both are still wet, so the change from one to the other is gradual.",
      "look": [
-      "In the top bar the red and blue overlap across a wide middle band, where the two were worked together.",
-      "In the bottom bar no band forms at all: the blue meets the red along one straight line."
+      "The brown trees thin into the pale sky in soft, broken patches, without a firm outline.",
+      "The National Gallery of Art notes that Leonardo used his hands to blend where the sky meets the juniper; his fingerprints are still in the paint."
      ],
      "ex": {
-      "key": "leonardo-ginevra-de-benci",
-      "artist": "Leonardo da Vinci",
-      "title": "Ginevra de' Benci",
-      "date": "about 1474–78",
-      "det": "Oil on panel, 15 × 14 1/2 in. National Gallery of Art, Washington",
-      "alt": "A pale young woman before a dark juniper bush, a misty landscape with trees and water at the right",
-      "line": "Leonardo smoothed the paint with his fingers where the juniper meets the sky, and his fingerprints can still be found there."
+      "key": "rotari-girl-flower",
+      "artist": "Pietro Rotari",
+      "title": "A Girl with a Flower in Her Hair",
+      "date": "1760–62",
+      "det": "Oil on canvas, 18 × 14 in. National Gallery of Art, Washington",
+      "alt": "A young woman with a white flower in her dark hair tilts her head and smiles, in a blue bodice over a white blouse",
+      "line": "The National Gallery of Art reports delicate blended brushstrokes in her face, with the flower and her features finished last."
      },
      "bul": "To keep acrylic workable, painters mist the palette or add a little retarder; overdoing the retarder gives a soft paint film that can stay tacky."
     },
     {
      "type": "concept",
      "title": "Impasto",
-     "img": "oa-impasto",
-     "alt": "Two cross-sections of thick paint ridges of the same height and jagged outline: a yellowish oil ridge and a pale gray acrylic one",
+     "img": "van-gogh-green-wheat-detail",
+     "alt": "Painting detail: thick swirling strokes of white, pale green and lavender paint in a cloudy sky",
      "stmt": "Impasto is paint applied so thickly that it rises off the surface and holds the shape of each brush or knife stroke.",
      "look": [
-      "The two ridges stand equally tall with the same jagged peaks; what differs is the body holding them up.",
-      "Red pigment runs right up into the peaks of both ridges, so the color stays even through the thickest part."
+      "Where the lavender swirls cross the white, they sit on top as raised bands instead of mixing into it.",
+      "Fine grooves left by the bristles run through each swirl, and the paint folds over into small lips where the brush lifted away."
      ],
      "ex": {
       "key": "rembrandt-lucretia",
@@ -187,12 +187,12 @@ window.SITE = {
     {
      "type": "concept",
      "title": "How Oil Ages",
-     "img": "oa-oil-ages",
-     "alt": "Two squares of the same small landscape: young and smooth, and old, yellowed and cracked, with an earlier red circle showing faintly",
+     "img": "chaperon-craquelure",
+     "alt": "Painting detail: a man's face under a red turban, the paint covered in a fine net of cracks",
      "stmt": "Over the decades oil paint stiffens, can yellow and grows more see-through, so changes the painter covered may start to show.",
      "look": [
-      "In the old square, the red circle's first position has surfaced as a pale ghost beside it.",
-      "A web of cracks has opened where the brittle paint could no longer move with its support."
+      "A fine net of cracks covers the face, splitting the skin tones into small irregular islands.",
+      "The cracks run through light and shadow alike: the whole paint layer stiffened and shrank as it aged, and split."
      ],
      "ex": {
       "key": "velazquez-philip-iv",

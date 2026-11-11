@@ -211,6 +211,18 @@ window.SOURCES = {
      "url": "https://vpa.uncg.edu/wp-content/uploads/2024/05/painting.pdf"
     },
     {
+     "html": "Gifford, E. Melanie, Dina Anchin, Alexandra Libby, Marjorie E. Wieseman, Kathryn A. Dooley, Lisha Deming Glinsman, and John K. Delaney. “First Steps in Vermeer’s Creative Process: New Findings from the National Gallery of Art.” <em>Journal of Historians of Netherlandish Art</em> 14, no. 2 (2022).",
+     "url": "https://jhna.org/articles/first-steps-in-vermeers-creative-process/"
+    },
+    {
+     "html": "National Gallery of Art, Washington. “10 Surprising Facts About Leonardo da Vinci’s <em>Ginevra de’ Benci</em>.” Stories.",
+     "url": "https://www.nga.gov/stories/10-surprising-facts-about-ginevra.html"
+    },
+    {
+     "html": "The National Gallery, London. “Craquelure.” Glossary.",
+     "url": "https://nationalgallery.org.uk/paintings/glossary/craquelure"
+    },
+    {
      "html": "Gallagher, Michael. “Velázquez’s <em>Philip IV</em> in the Metropolitan Museum.” <em>Metropolitan Museum Journal</em> 45 (2010).",
      "url": "https://resources.metmuseum.org/resources/metpublications/pdf/Velazquezs_Philip_IV_in_the_Metropolitan_Museum_The_Metropolitan_Museum_Journal_v_45_2010.pdf"
     }
@@ -242,6 +254,30 @@ window.SOURCES = {
     {
      "html": "National Gallery of Art, Washington. Rembrandt van Rijn, <em>Lucretia</em>, 1664 (1937.1.76): collection record and systematic catalogue entry (Wheelock, 1995).",
      "url": "https://www.nga.gov/artworks/83-lucretia"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. Adriaen van Ostade, <em>The Painter in His Studio</em>, ca. 1667 (17.50.15-349): collection record.",
+     "url": "https://www.metmuseum.org/art/collection/search/370478"
+    },
+    {
+     "html": "The Morgan Library &amp; Museum. Adriaen van Ostade, etching of a painter in his studio (another impression): collection record.",
+     "url": "https://www.themorgan.org/printed-books/406441"
+    },
+    {
+     "html": "National Gallery of Art, Washington. Johannes Vermeer, <em>A Lady Writing</em>, c. 1665 (1962.10.1): collection record.",
+     "url": "https://www.nga.gov/collection/art-object-page.46437.html"
+    },
+    {
+     "html": "National Gallery of Art, Washington. Pietro Rotari, <em>A Girl with a Flower in Her Hair</em>, 1760/1762 (1939.1.108): collection record and technical summary.",
+     "url": "https://www.nga.gov/collection/art-object-page.249.html"
+    },
+    {
+     "html": "National Gallery of Art, Washington. Vincent van Gogh, <em>Green Wheat Fields, Auvers</em>, 1890 (2013.122.1): collection record.",
+     "url": "https://www.nga.gov/artworks/163323-green-wheat-fields-auvers"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. Netherlandish Painter, <em>Portrait of a Man in a Chaperon</em>, 1440s (49.7.24): collection record and technical notes.",
+     "url": "https://www.metmuseum.org/art/collection/search/437488"
     },
     {
      "html": "Museo Nacional del Prado. Diego Velázquez, <em>Philip IV</em> (P001182), as described and illustrated in Gallagher 2010, fig. 3."

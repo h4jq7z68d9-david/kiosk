@@ -7,13 +7,13 @@ window.CREDITS = {
   "author": "John Rand",
   "source": "US Patent and Trademark Office (via Google Patents)"
  },
- "oa-binders": {
-  "work": "Two Binders",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "ostade-painter-studio": {
+  "work": "Adriaen van Ostade, The Painter in His Studio (ca. 1667), etching (detail)",
+  "page": "https://www.metmuseum.org/art/collection/search/370478",
+  "file": "https://images.metmuseum.org/CRDImages/dp/original/DP821918.jpg",
+  "license": "Public Domain (Met Open Access)",
+  "author": "Adriaen van Ostade",
+  "source": "The Metropolitan Museum of Art, New York"
  },
  "bruegel-harvesters": {
   "work": "Pieter Bruegel the Elder, The Harvesters (1565)",
@@ -55,13 +55,13 @@ window.CREDITS = {
   "author": "David Nicholson",
   "source": "David Nicholson Art"
  },
- "oa-open-time": {
-  "work": "Open Time",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "vermeer-lady-writing-detail": {
+  "work": "Johannes Vermeer, A Lady Writing (c. 1665) (detail)",
+  "page": "https://www.nga.gov/collection/art-object-page.46437.html",
+  "file": "https://api.nga.gov/iiif/ea55879e-57f1-494d-9043-6dedb384bdc8/full/max/0/default.jpg",
+  "license": "Public domain (NGA Open Access, CC0)",
+  "author": "Johannes Vermeer",
+  "source": "National Gallery of Art, Washington"
  },
  "monet-stacks-of-wheat-end-of-summer": {
   "work": "Claude Monet, Stacks of Wheat (End of Summer) (1890–91)",
@@ -87,29 +87,29 @@ window.CREDITS = {
   "author": "David Nicholson",
   "source": "David Nicholson Art"
  },
- "oa-blending": {
-  "work": "Blending",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
- },
- "leonardo-ginevra-de-benci": {
-  "work": "Leonardo da Vinci, Ginevra de' Benci (c. 1474/1478)",
+ "ginevra-blending-detail": {
+  "work": "Leonardo da Vinci, Ginevra de' Benci (c. 1474/1478) (detail)",
   "page": "https://www.nga.gov/artworks/50724-ginevra-de-benci-obverse",
-  "file": "National Gallery of Art, 1967.6.1.a",
-  "license": "Public domain (NGA Open Access)",
+  "file": "https://api.nga.gov/iiif/8f29e3c9-a289-4d53-abf0-31a66e9e98fa/full/max/0/default.jpg",
+  "license": "Public domain (NGA Open Access, CC0)",
   "author": "Leonardo da Vinci",
-  "source": "National Gallery of Art open access"
+  "source": "National Gallery of Art, Washington"
  },
- "oa-impasto": {
-  "work": "Brushwork and Impasto",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "rotari-girl-flower": {
+  "work": "Pietro Rotari, A Girl with a Flower in Her Hair (1760/1762)",
+  "page": "https://www.nga.gov/collection/art-object-page.249.html",
+  "file": "https://api.nga.gov/iiif/9d1455d3-8732-45af-9511-b0299968ad29/full/max/0/default.jpg",
+  "license": "Public domain (NGA Open Access, CC0)",
+  "author": "Pietro Rotari",
+  "source": "National Gallery of Art, Washington"
+ },
+ "van-gogh-green-wheat-detail": {
+  "work": "Vincent van Gogh, Green Wheat Fields, Auvers (1890) (detail)",
+  "page": "https://www.nga.gov/artworks/163323-green-wheat-fields-auvers",
+  "file": "https://api.nga.gov/iiif/b479275a-4f8a-4702-83c2-9dcc4cbe60ce/full/max/0/default.jpg",
+  "license": "Public domain (NGA Open Access, CC0)",
+  "author": "Vincent van Gogh",
+  "source": "National Gallery of Art, Washington"
  },
  "rembrandt-lucretia": {
   "work": "Rembrandt van Rijn, Lucretia (1664)",
@@ -135,13 +135,13 @@ window.CREDITS = {
   "author": "Titian",
   "source": "National Gallery of Art open access"
  },
- "oa-oil-ages": {
-  "work": "How Oil Ages",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site"
+ "chaperon-craquelure": {
+  "work": "Netherlandish Painter, Portrait of a Man in a Chaperon (1440s) (detail)",
+  "page": "https://www.metmuseum.org/art/collection/search/437488",
+  "file": "https://images.metmuseum.org/CRDImages/ep/original/DT200207.jpg",
+  "license": "Public Domain (Met Open Access)",
+  "author": "Netherlandish Painter",
+  "source": "The Metropolitan Museum of Art, New York"
  },
  "velazquez-philip-iv": {
   "work": "Diego Velázquez, Philip IV (about 1628)",

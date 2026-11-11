@@ -5,10 +5,10 @@
  ],
  "basePath": "/study",
  "introImg": "rand-1841-tube-patent",
- "imagesNote": "The concept images are diagrams made for this site, apart from John Rand's 1841 paint-tube patent drawing. The example paintings are public domain, except two acrylics by David Nicholson.",
+ "imagesNote": "Most concept images are details of public-domain paintings and prints; four are diagrams made for this site, and one is John Rand's 1841 paint-tube patent drawing. The example paintings are public domain, except two acrylics by David Nicholson.",
  "ldDescription": "A short course comparing oil and acrylic paint.",
  "homeDescription": "{name}: how oil and acrylic paint differ, from their binders and drying to open time, blending, impasto, painting over and aging, shown with diagrams and paintings.",
- "creditsIntro": "The diagrams were made for this site. The patent drawing and the older paintings are public domain or CC0; the two acrylic paintings are by David Nicholson and remain his copyright. Each entry links to its source.",
- "creditsDescription": "Sources and licenses for the {count} diagrams and paintings in {name}.",
+ "creditsIntro": "Four diagrams were made for this site. The patent drawing, the print and the older paintings are public domain or CC0; the two acrylic paintings are by David Nicholson and remain his copyright. Each entry links to its source.",
+ "creditsDescription": "Sources and licenses for the {count} images in {name}.",
  "sourcesDescription": "The lectures, courses, museum records and references behind {name}."
 }
