@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, later afternoon) — Composition Mode 2 rebuild installed (branch `install-composition`, pushed to `main` per §9.9)
+
+- **Installed** from `School v2/Art Technique Course Builder/Composition/Public Study Site - Mode 2/` with `install-course.js --force`: one `topen` (course home) + 16 `concept` slides, each with an example work. `wrote 19 pages (16 works, 1 parts, 2 other)`, 46 redirect stubs (65 pages; the old `foundations`, `arranging-the-picture` and `putting-it-together` folders hold only stubs), 33 images, 6.9 MB. Registry: new card text; same position and card image. Only this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS. All five technique courses are now on the slide model.
+- **Nothing changed from the handoff.** Open flags (handoff §6) in Pending.
+- **Course switcher** mocked up (option B) and deferred by David; in Pending.
+
+-----
+
 ## Completed This Session (November 11 2026, afternoon) — Oil vs Acrylic Mode 2 rebuild installed (branch `install-oil-vs-acrylic`, pushed to `main` per §9.9)
 
 - **Installed** from `School v2/Art Technique Course Builder/Oil vs Acrylic/Public Study Site - Mode 2/` with `install-course.js --force`: one `topen` (course home) + 9 `concept` slides, each with an example painting. `wrote 12 pages (9 works, 1 parts, 2 other)`, 35 redirect stubs (47 pages), 19 images, 4.0 MB. Registry: new card text; card image was already `oa-binders`. Only this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS.
