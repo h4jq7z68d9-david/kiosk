@@ -33,7 +33,7 @@ Style rules that apply to every visible change (David, Oct 2026): left-aligned b
 |<https://davidnicholsonart.com/study.html>          |Study landing page — two tabs (Oct 30 2026): art history (timeline in date order of small square cards alternating either side of a centre line, Nov 10 2026; opens first) and technique (`#technique`; grid of the same square cards, three across, two on phones, Nov 10 2026); search across all study courses (Oct 31 2026; the color wheel button was removed the same day); menu item "study"|
 |<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel quick tool (Oct 31 2026: unlisted, `noindex`; opened as a pop-up from the "color wheel" bubble at the bottom of the site menu). Home-screen web app `start_url`|
 |<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards|
-|<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course (Oct 30 2026: 5 parts, 50 pages under /study/pigments-and-materials/; concept, history and example pages), same guide layout as Color Theory|
+|<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course — Mode 2 rebuild on the technique slide model (Nov 11 2026): one `topen` home + 17 `concept` slides with example paintings, 20 pages + 47 redirect stubs from the Oct 30 pages, 35 images (8.3 MB)|
 |<https://davidnicholsonart.com/study/oil-vs-acrylic.html>|Oil vs Acrylic technique course (Oct 30 2026: 6 parts, 38 pages under /study/oil-vs-acrylic/; concept, history and example pages), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/study/composition.html>|Composition technique course (Oct 30 2026: 6 parts, 49 pages under /study/composition/; concept, history and example pages, mostly Dow and Poore plates), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/study/value-and-light.html>|Value and Light technique course (Oct 30 2026: 7 parts, 51 pages under /study/value-and-light/; concept, history and example pages, mostly Merrifield and Cross plates), same guide layout as Color Theory|
@@ -664,10 +664,15 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [x] **Gated pages in `smoke.js`** (Nov 6 2026) — admin, Jill's page, kiosk and booth are loaded logged-out at 1440/390: 0 console errors, no sideways scroll, gate present.
 - [x] Deploy gate (built Nov 6 2026, branch `deploy-gate`) — `deploy.yml` runs `node tools/site/check.js` before anything is generated or uploaded, when the push changed `study/`, `tools/study/`, `tools/site/`, `tools/lambda/`, `index.mjs`, `site-*.js/.css`, a top-level `.html`, or the workflow itself (decided by `git diff --name-only` against `github.event.before`; a push with no usable base runs it). Other pushes (admin-sw.js, images, docs) skip it. A failed check fails the deploy with nothing uploaded.
 
+### From November 11 2026 (Pigments and Materials Mode 2)
+
+- [ ] **Pigments and Materials open flags (David):** Rembrandt *Self-Portrait* (1659, NGA) also in Oil vs Acrylic — swap it there at that rebuild; 12 diagrams kept and most example paintings 1200 px; Giotto binder "Tempera" per NGA (egg not confirmed, page makes no egg claim); Arlanza lion not confirmed as true fresco; *Magdalen Reading* image from an aggregator, colour not checked against the National Gallery; cochineal engraving undated (Wellcome); Liotard size from the Getty record; slides run about 85–115 words. Not yet reviewed in the slide editor (`edit-course pigments-and-materials`).
+- [ ] **Resubmit `sitemap.xml` in Google Search Console:** Pigments and Materials' URLs changed (20 pages; 47 old URLs redirect, noindex).
+
 ### From November 10 2026, evening (technique slide model)
 
 - [x] **Slide editor support for `topen` / `concept` slides** (Nov 10 2026, text fields only). Image swaps (img, alt, credit, example image + thumbnail) deferred by David until needed.
-- [ ] **Technique rebuilds** (Color Theory, Pigments and Materials, Oil vs Acrylic, Composition, Value and Light) still use the old theme/work model until each comes back from the technique course builder with `topen`/`concept` data. Fixture test: `node tools/study/test-technique-slides.js`.
+- [ ] **Technique rebuilds** (Oil vs Acrylic, Composition, Value and Light; Color Theory done Nov 10, Pigments and Materials Nov 11 2026) still use the old theme/work model until each comes back from the technique course builder with `topen`/`concept` data. Fixture test: `node tools/study/test-technique-slides.js`.
 
 ### From November 9 2026, late afternoon (Rococo + Neoclassicism split)
 

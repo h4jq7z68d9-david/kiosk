@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, morning) — Pigments and Materials Mode 2 rebuild installed (branch `install-pigments-and-materials`, pushed to `main` per §9.9)
+
+- **Installed** from `School v2/Art Technique Course Builder/Pigments and Materials/Public Study Site - Mode 2/` with `install-course.js --force`: second course on the technique slide model — one `topen` (course home) + 17 `concept` slides, each with an example painting. `wrote 20 pages (17 works, 1 parts, 2 other)`, 47 redirect stubs (67 pages), 35 images, 8.3 MB. Registry: card image `amenhotep-palette`, new card text, same position. Other courses unchanged (no files outside this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed). check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS.
+- **Nothing changed from the handoff.** No generator or test changes (fixture self-contained since 779eafb).
+- **Open flags (handoff §6):** in Pending.
+
+-----
+
 ## Completed This Session (November 11 2026, early morning) — Technique-slides test fixture made self-contained (branch `fixture-self-contained`, pushed to `main` on David's instruction)
 
 - **Fixture images and credits now live in the fixture:** `tools/study/fixtures/technique-slides/img/` (chevreul-chromatic-circle, chevreul-1890-plate-ii, vangogh-night-cafe; copied from Color Theory) and `credits.js` (same three entries). `test-technique-slides.js` and `test-editor-technique.js` read only from the fixture folder and stop with a clear message if a fixture image is missing. A Color Theory rebuild can no longer break either test.
