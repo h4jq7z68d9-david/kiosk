@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, afternoon) — Oil vs Acrylic Mode 2 rebuild installed (branch `install-oil-vs-acrylic`, pushed to `main` per §9.9)
+
+- **Installed** from `School v2/Art Technique Course Builder/Oil vs Acrylic/Public Study Site - Mode 2/` with `install-course.js --force`: one `topen` (course home) + 9 `concept` slides, each with an example painting. `wrote 12 pages (9 works, 1 parts, 2 other)`, 35 redirect stubs (47 pages), 19 images, 4.0 MB. Registry: new card text; card image was already `oa-binders`. Only this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS.
+- **Repeats cleared:** *The Milkmaid* (Color Theory) and Rembrandt's 1659 *Self-Portrait* (Pigments and Materials) are no longer in this course.
+- **Nothing else changed from the handoff.** Open flags (handoff §6) in Pending.
+
+-----
+
 ## Completed This Session (November 11 2026, midday) — Value and Light Mode 2 rebuild installed (branch `install-value-and-light`, pushed to `main` per §9.9)
 
 - **Installed** from `School v2/Art Technique Course Builder/Value and Light/Public Study Site - Mode 2/` with `install-course.js --force`: one `topen` (course home) + 12 `concept` slides, each with an example work. `wrote 15 pages (12 works, 1 parts, 2 other)`, 48 redirect stubs (63 pages), 25 images, 5.4 MB. Registry: card image `cross-fig21`, new card text, same position. Only this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS.
