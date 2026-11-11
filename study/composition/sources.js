@@ -75,32 +75,12 @@ window.SOURCES = {
      "url": "https://bop.unibe.ch/JEMR/article/view/6922"
     },
     {
-     "html": "Brooklyn Museum. “Hiroshige's <em>One Hundred Famous Views of Edo</em>: Autumn (Part I).” Exhibition page, 1986. Accessed October 30, 2026.",
-     "url": "https://www.brooklynmuseum.org/opencollection/exhibitions/2611"
-    },
-    {
      "html": "Fischler, Roger. “On the Application of the Golden Ratio in the Visual Arts.” <em>Leonardo</em> 14 (1981): 31–32.",
      "url": "https://people.math.carleton.ca/~rhfischl/PUBLICATIONS/on_applications_golden_ratio_visual_arts.pdf"
     },
     {
-     "html": "Fraser. “Academic Art and Arts Education.” Chapter 1.2, <em>Origins of Contemporary Art, Design, and Interiors</em>. Open textbook, eCampusOntario Pressbooks. Accessed October 30, 2026.",
-     "url": "https://ecampusontario.pressbooks.pub/artcultures/chapter/1-2-academic-art-and-arts-education/"
-    },
-    {
      "html": "Georgia O'Keeffe Museum. “Learning Activity: Positive and Negative Space.” Education resource. Accessed October 30, 2026.",
      "url": "https://okeeffemuseum.org/resources/learning-activity-positive-and-negative-space"
-    },
-    {
-     "html": "Green, C. D. “All That Glitters: A Review of Psychological Research on the Aesthetics of the Golden Section.” <em>Perception</em> 24 (1995): 937–968.",
-     "url": "https://www.yorku.ca/christo/papers/Green.golden.Perception-1995.pdf"
-    },
-    {
-     "html": "Harris, Beth, and Steven Zucker. Conversation on Raphael's <em>The Alba Madonna</em>. Smarthistory video page. Accessed October 30, 2026.",
-     "url": "https://smarthistory.org/raphael-alba-madonna"
-    },
-    {
-     "html": "Ives, Colta. “Japonisme.” <em>Heilbrunn Timeline of Art History</em>. New York: The Metropolitan Museum of Art, 2004.",
-     "url": "https://www.metmuseum.org/essays/japonisme"
     },
     {
      "html": "Kemp, Martin. “A Certain Ratio.” <em>Nature</em> 428 (2004): 370.",
@@ -115,66 +95,34 @@ window.SOURCES = {
      "url": "https://www.nationalgallery.org.uk/paintings/glossary/leon-battista-alberti"
     },
     {
-     "html": "The National Gallery, London. “<em>The Garvagh Madonna</em>” (about 1510–11), Raphael. Painting page, NG744. Accessed October 30, 2026.",
-     "url": "https://www.nationalgallery.org.uk/paintings/NG744"
-    },
-    {
-     "html": "National Gallery of Art, Washington. “<em>Little Girl in a Blue Armchair</em>.” Feature, <em>Degas/Cassatt</em> exhibition. Accessed October 30, 2026.",
-     "url": "https://www.nga.gov/features/degas-cassatt/little-girl-in-a-blue-armchair.html"
-    },
-    {
-     "html": "National Gallery of Art, Washington. Press release for the exhibition <em>Degas/Cassatt</em> (May 11–October 5, 2014). December 16, 2013.",
-     "url": "https://nga.gov/press/exh/3646.html"
-    },
-    {
-     "html": "National Gallery of Art, Washington. “<em>The Alba Madonna</em>.” Collection highlight page. Accessed October 30, 2026.",
-     "url": "https://www.nga.gov/Collection/highlights/highlight26.html"
-    },
-    {
-     "html": "Palmer Lab, University of California, Berkeley. “Spatial Composition.” Research page. Accessed October 30, 2026.",
-     "url": "https://palmerlab.berkeley.edu/spatial.html"
-    },
-    {
      "html": "Schenkel, Ruth. “Edgar Degas (1834–1917): Painting and Drawing.” <em>Heilbrunn Timeline of Art History</em>. New York: The Metropolitan Museum of Art, 2004.",
      "url": "https://www.metmuseum.org/essays/edgar-degas-1834-1917-painting-and-drawing"
-    },
-    {
-     "html": "Smarthistory. Essay on Katsushika Hokusai's <em>Under the Wave off Kanagawa</em>. Accessed October 30, 2026.",
-     "url": "https://smarthistory.org/?p=1953"
-    },
-    {
-     "html": "Smarthistory. Essay on the Académie Royale de Peinture et de Sculpture and academic training. Accessed October 30, 2026.",
-     "url": "https://smarthistory.org/?p=51200"
     },
     {
      "html": "Smarthistory. “How One-Point Linear Perspective Works.” Accessed October 30, 2026.",
      "url": "https://smarthistory.org/how-one-point-linear-perspective-works"
     },
     {
-     "html": "Tate. “Genres.” Art term. Accessed October 30, 2026.",
-     "url": "https://www.tate.org.uk/art/art-terms/g/genres"
-    },
-    {
-     "html": "Van Gogh Museum, Amsterdam. “<em>Flowering Plum Orchard (after Hiroshige)</em>” (1887), Vincent van Gogh. Collection record, s0115V1962.",
-     "url": "https://www.vangoghmuseum.nl/en/collection/s0115v1962"
-    },
-    {
-     "html": "Wade, N. J. “Looking at Buswell's Pictures.” <em>Journal of Eye Movement Research</em> 13, no. 2 (2020). On Guy Thomas Buswell, <em>How People Look at Pictures</em> (1935).",
-     "url": "https://bop.unibe.ch/JEMR/article/view/6723"
-    },
-    {
      "html": "Whitney Museum of American Art. Positive and negative space activity. K–12 teaching materials. Accessed October 30, 2026.",
      "url": "https://whitney.org/education/schools-educators/k-12/teaching-materials/activities/115"
-    },
-    {
-     "html": "Zygmont, Bryan. “Thomas Cole, <em>The Oxbow</em>.” Smarthistory, August 9, 2015. Reprinted in <em>ARTH 2720</em>, UEN Pressbooks.",
-     "url": "https://uen.pressbooks.pub/arth2720/chapter/thomas-cole-the-oxbow/"
     }
    ]
   },
   {
    "title": "Museum collection records",
    "items": [
+    {
+     "html": "Brooklyn Museum, New York. “<em>Plum Estate, Kameido, from One Hundred Famous Views of Edo</em>” (1857), Utagawa Hiroshige. Collection record, 30.1478.30.",
+     "url": "https://opencollection.brooklynmuseum.org/objects/4202"
+    },
+    {
+     "html": "National Gallery of Art, Washington. “<em>Little Girl in a Blue Armchair</em>” (1878), Mary Cassatt. Collection record, 1983.1.18.",
+     "url": "https://nga.gov/collection/art-object-page.61368.html"
+    },
+    {
+     "html": "The Art Institute of Chicago. “<em>A Sunday on La Grande Jatte — 1884</em>” (1884–86), Georges Seurat. Collection record, 1926.224.",
+     "url": "https://www.artic.edu/artworks/27992/a-sunday-on-la-grande-jatte-1884"
+    },
     {
      "html": "The Art Institute of Chicago. “<em>Laziness (La Paresse)</em>” (1896), Félix Vallotton. Collection record, 1947.454.",
      "url": "https://www.artic.edu/artworks/60694"
@@ -184,20 +132,20 @@ window.SOURCES = {
      "url": "https://www.artic.edu/artworks/61616"
     },
     {
-     "html": "The Art Institute of Chicago. “<em>Paris Street; Rainy Day</em>” (1877), Gustave Caillebotte. Collection record, 1964.336.",
-     "url": "https://www.artic.edu/artworks/20684/paris-street-rainy-day"
-    },
-    {
-     "html": "The Art Institute of Chicago. “<em>A Sunday on La Grande Jatte — 1884</em>” (1884–86), Georges Seurat. Collection record, 1926.224.",
-     "url": "https://www.artic.edu/artworks/27992/a-sunday-on-la-grande-jatte-1884"
-    },
-    {
-     "html": "Brooklyn Museum, New York. “<em>Plum Estate, Kameido, from One Hundred Famous Views of Edo</em>” (1857), Utagawa Hiroshige. Collection record, 30.1478.30.",
-     "url": "https://opencollection.brooklynmuseum.org/objects/4202"
+     "html": "The Metropolitan Museum of Art, New York. “<em>A Woman Seated beside a Vase of Flowers (Madame Paul Valpinçon?)</em>” (1865), Edgar Degas. Collection record, 29.100.128.",
+     "url": "https://www.metmuseum.org/art/collection/search/436121"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. “<em>Circus Sideshow (Parade de cirque)</em>” (1887–88), Georges Seurat. Collection record, 61.101.17.",
      "url": "https://www.metmuseum.org/art/collection/search/437654"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. “<em>Madonna and Child Enthroned with Saints (Colonna Altarpiece)</em>” (ca. 1504), Raphael. Collection record, 16.30ab.",
+     "url": "https://www.metmuseum.org/art/collection/search/437372"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. “<em>Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo</em>” (1857), Utagawa Hiroshige. Collection record, JP643.",
+     "url": "https://www.metmuseum.org/art/collection/search/36461"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. “<em>The Death of Socrates</em>” (1787), Jacques Louis David. Collection record, 31.45.",
@@ -208,20 +156,8 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/437986"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. “<em>The Harvesters</em>” (1565), Pieter Bruegel the Elder. Collection record, 19.164.",
-     "url": "https://metmuseum.org/art/collection/search/435809"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<em>Madonna and Child Enthroned with Saints (Colonna Altarpiece)</em>” (ca. 1504), Raphael. Collection record, 16.30ab.",
-     "url": "https://www.metmuseum.org/art/collection/search/437372"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<em>Mandala of Jnanadakini</em>” (late 14th century), unknown artist, Tibet. Collection record, 1987.16.",
-     "url": "https://metmuseum.org/en/art/collection/search/37802"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<em>Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo</em>” (1857), Utagawa Hiroshige. Collection record, JP643.",
-     "url": "https://www.metmuseum.org/art/collection/search/36461"
+     "html": "The Metropolitan Museum of Art, New York. “<em>The Holy Family with the Young Saint John the Baptist</em>” (ca. 1528), Andrea del Sarto. Collection record, 22.75.",
+     "url": "https://www.metmuseum.org/art/collection/search/437609"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. “<em>Under the Wave off Kanagawa (The Great Wave), from Thirty-six Views of Mount Fuji</em>” (ca. 1830–32), Katsushika Hokusai. Collection record, JP1847.",
@@ -236,24 +172,8 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/359416"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. “<em>A Woman Seated beside a Vase of Flowers (Madame Paul Valpinçon?)</em>” (1865), Edgar Degas. Collection record, 29.100.128.",
-     "url": "https://www.metmuseum.org/art/collection/search/436121"
-    },
-    {
      "html": "The Metropolitan Museum of Art, New York. “<em>Young Woman with a Water Pitcher</em>” (ca. 1662), Johannes Vermeer. Collection record, 89.15.21.",
      "url": "https://www.metmuseum.org/art/collection/search/437881"
-    },
-    {
-     "html": "National Gallery of Art, Washington. “<em>The Alba Madonna</em>” (c. 1510), Raphael. Collection record, 1937.1.24.",
-     "url": "https://www.nga.gov/artworks/26-alba-madonna"
-    },
-    {
-     "html": "National Gallery of Art, Washington. “<em>Little Girl in a Blue Armchair</em>” (1878), Mary Cassatt. Collection record, 1983.1.18.",
-     "url": "https://nga.gov/collection/art-object-page.61368.html"
-    },
-    {
-     "html": "Rijksmuseum, Amsterdam. “<em>The Night Watch</em>” (1642), Rembrandt van Rijn. Collection record, SK-C-5.",
-     "url": "https://www.rijksmuseum.nl/en/collection/sk-c-5"
     }
    ]
   },
@@ -279,10 +199,6 @@ window.SOURCES = {
     {
      "html": "Poore, Henry Rankin. <em>Pictorial Composition and the Critical Judgment of Pictures</em>. New York: G. P. Putnam's Sons, 1903. Text and plates from a later edition with a tenth-edition preface (about 1915). Project Gutenberg.",
      "url": "https://www.gutenberg.org/ebooks/26638"
-    },
-    {
-     "html": "Reynolds, Joshua. Annotations in Charles-Alphonse Du Fresnoy, <em>The Art of Painting</em>, translated by William Mason. York, 1783. Internet Archive (Getty Research Institute copy).",
-     "url": "https://archive.org/details/gri_33125009337888"
     },
     {
      "html": "Smith, John Thomas. <em>Remarks on Rural Scenery</em>. London, 1797. Internet Archive (Getty Research Institute copy).",
