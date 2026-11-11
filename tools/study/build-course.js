@@ -74,7 +74,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 17, guideJs: 13, search: 3, lightboxCss: 1, lightboxJs: 1 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 18, guideJs: 14, search: 3, lightboxCss: 1, lightboxJs: 1 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -445,6 +445,7 @@ ${NAV}
     <div id="outline">${OUTLINE}</div>
   </nav>
   <main class="main" id="main">
+    <nav class="crumb topcrumb" aria-label="Breadcrumb">${crumbHtml(f)}</nav>
     <div class="topbar">
       <div class="search" id="search" role="search">${SEARCH_ICON}
         <input id="q" type="search" placeholder="Search" aria-label="Search the study courses" autocomplete="off" aria-controls="results" aria-expanded="false">
@@ -457,7 +458,6 @@ ${NAV}
     <article class="${cls}" id="slide" tabindex="-1">${inner}</article>
     <div class="bar">
       <button class="btn tog" id="tog" type="button" aria-controls="rail" aria-expanded="true" aria-label="Hide outline" title="Hide outline"></button>
-      <nav class="crumb" aria-label="Breadcrumb">${crumbHtml(f)}</nav>
       <span class="spacer"></span>
       <span class="pos">${i + 1} / ${flat.length}</span>
       <button class="btn bm" id="bm" type="button" aria-pressed="false">${BM_ICON}<span class="bmt">Bookmark</span></button>

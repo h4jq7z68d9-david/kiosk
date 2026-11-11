@@ -46,7 +46,11 @@
   /* jump select (small screens) */
   const j = $('jump'); let o = '', g = null;
   items.forEach((it) => { const gt = partTitle(it.h); if (gt !== g) { if (g !== null) o += '</optgroup>'; o += `<optgroup label="${esc(gt)}">`; g = gt; } o += `<option value="${it.url}"${it.id === curId ? ' selected' : ''}>${esc(it.kind === 'overview' && it.label === 'Overview' ? gt : it.label)}</option>`; });
-  j.innerHTML = o + '</optgroup>'; j.onchange = () => { location.href = j.value; };
+  j.innerHTML = o + '</optgroup>';
+  /* study home first, then a divider (Nov 11 2026); built with DOM calls because the HTML parser drops <hr> inside <select> */
+  const home = document.createElement('option'); home.value = '/study.html'; home.textContent = 'study home'; home.className = 'home';
+  j.insertBefore(document.createElement('hr'), j.firstChild); j.insertBefore(home, j.firstChild);
+  j.onchange = () => { location.href = j.value; };
 
   /* rail toggle */
   const app = $('app'), tog = $('tog');
