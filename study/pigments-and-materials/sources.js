@@ -17,10 +17,6 @@ window.SOURCES = {
      "url": "https://www.youtube.com/watch?v=lA_0zderUOY"
     },
     {
-     "html": "Peggie, David. &ldquo;Beneath the Surface: Examining Paintings at the National Gallery.&rdquo; Lecture (Scientific Department, The National Gallery, London), Royal Society of Chemistry. YouTube video, 1:20:54. 2014.",
-     "url": "https://www.youtube.com/watch?v=p8PqiOUUPvc"
-    },
-    {
      "html": "Russell, Joanna. &ldquo;The Story of Ultramarine from the Silk Road to Renoir: The Chemistry of Colour.&rdquo; Gallery video (Scientific Department), The National Gallery, London. YouTube video, 8:05. 2024.",
      "url": "https://www.youtube.com/watch?v=1EzUlnRtDGM"
     }
@@ -339,10 +335,6 @@ window.SOURCES = {
      "url": "https://www.gdch.de/fileadmin/downloads/Netzwerk_und_Strukturen/Fachgruppen/Geschichte_der_Chemie/Mitteilungen_Band_22/2012-22-02.pdf"
     },
     {
-     "html": "Leona, Marco. &ldquo;Hokusai's Great Wave.&rdquo; Essay, The Metropolitan Museum of Art, April 10, 2020.",
-     "url": "https://www.metmuseum.org/en/essays/hokusai-great-wave"
-    },
-    {
      "html": "Linda Hall Library. &ldquo;Scientist of the Day: John Goffe Rand.&rdquo; Accessed October 30, 2026.",
      "url": "https://www.lindahall.org/about/news/scientist-of-the-day/john-goffe-rand"
     },
@@ -411,10 +403,6 @@ window.SOURCES = {
      "url": "https://www.nga.gov/research/publications/technical-glossary"
     },
     {
-     "html": "National Gallery of Art, Washington. &ldquo;Varnishes for Paintings.&rdquo; Conservation Science. Accessed October 30, 2026.",
-     "url": "https://nga.gov/conservation/science/varnishes-for-paintings.html"
-    },
-    {
      "html": "The National Gallery, London. &ldquo;Binder.&rdquo; Glossary. Accessed October 30, 2026.",
      "url": "https://www.nationalgallery.org.uk/paintings/glossary/binder"
     },
@@ -465,10 +453,6 @@ window.SOURCES = {
     {
      "html": "The National Gallery, London. &ldquo;Van Eyck's Handling of Oil Paint.&rdquo; In <i>The Restoration of Margaret, the Artist's Wife</i>. Research paper. Accessed October 30, 2026.",
      "url": "https://www.nationalgallery.org.uk/research/research-resources/research-papers/the-restoration-of-margaret-the-artist-s-wife/van-eyck-s-handling-of-oil-paint"
-    },
-    {
-     "html": "The National Gallery, London. &ldquo;Varnish.&rdquo; Glossary. Accessed October 30, 2026.",
-     "url": "https://nationalgallery.org.uk/paintings/glossary/varnish"
     },
     {
      "html": "The National Gallery, London. &ldquo;Vincent Van Gogh: Chrome Yellow.&rdquo; Story on Google Arts &amp; Culture. Accessed October 30, 2026.",
@@ -573,6 +557,14 @@ window.SOURCES = {
     {
      "html": "Winterthur Museum. &ldquo;Materials and Scientific Analysis.&rdquo; In <i>Lasting Impressions</i>. Online exhibition. Accessed October 30, 2026.",
      "url": "https://lastingimpressions.winterthur.org/creating-currier-ives-prints/materials/"
+    },
+    {
+     "html": "Monico, Letizia, et al. &ldquo;Chrome Yellow in Nineteenth Century Art: Historic Reconstructions of an Artists&rsquo; Pigment.&rdquo; <i>RSC Advances</i> 2 (2012).",
+     "url": "https://pubs.rsc.org/en/content/articlehtml/2012/ra/c1ra00614b"
+    },
+    {
+     "html": "ColourLex. &ldquo;Chrome Yellow.&rdquo;",
+     "url": "https://colourlex.com/project/chrome-yellow/"
     }
    ]
   },
@@ -620,10 +612,6 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/547860"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Under the Wave off Kanagawa (The Great Wave)</i>, from <i>Thirty-six Views of Mount Fuji</i>&rdquo; (ca. 1830&ndash;32), Katsushika Hokusai. Collection record, JP1847.",
-     "url": "https://www.metmuseum.org/art/collection/search/45434"
-    },
-    {
      "html": "Museu Nacional d'Art de Catalunya, Barcelona. &ldquo;<i>Paintings from Arlanza</i>&rdquo; (first quarter of the 13th century), anonymous, Castile. Collection record, 040142-CJT.",
      "url": "https://www.museunacional.cat/en/node/33732"
     },
@@ -666,6 +654,14 @@ window.SOURCES = {
     {
      "html": "The National Gallery, London. &ldquo;<i>The Vendramin Family</i>&rdquo; (about 1540&ndash;45), Titian. Collection record, NG4452.",
      "url": "https://www.nationalgallery.org.uk/paintings/NG4452"
+    },
+    {
+     "html": "The Metropolitan Museum of Art. &ldquo;Painter&rsquo;s Palette Inscribed with the Name of Amenhotep III.&rdquo; Collection record 26.7.1294.",
+     "url": "https://www.metmuseum.org/art/collection/search/544518"
+    },
+    {
+     "html": "Wellcome Collection. &ldquo;A plantation of cochineal cacti with workers gathering and preparing cochineal. Engraving.&rdquo; 25317i.",
+     "url": "https://wellcomecollection.org/works/q26yjrny"
     }
    ]
   },
@@ -687,6 +683,10 @@ window.SOURCES = {
     {
      "html": "Rand, John. &ldquo;Improvement in the Construction of Vessels or Apparatus for Preserving Paint, &amp;c.&rdquo; US Patent 2,252, September 11, 1841. Google Patents.",
      "url": "https://patents.google.com/patent/US2252A/en"
+    },
+    {
+     "html": "Sowerby, James. <i>Exotic Mineralogy: or, Coloured Figures of Foreign Minerals</i>. 2 vols. London, 1811&ndash;17. Internet Archive (Smithsonian Libraries).",
+     "url": "https://archive.org/details/Exoticmineralog1Sowe"
     }
    ]
   }
