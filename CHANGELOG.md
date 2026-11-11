@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, evening) — Gallery left-justified rows (branch `gallery-left-rows`, pushed to `main` on David's word)
+
+- `gallery.html`: new `wallLeftRows()` for wide screens (>600px). It runs `wallCluster()` only for the order (read row by row, left to right), then hangs cards from the left edge, up to 4 per row, 40px gaps, bottom-aligned. `wallDims` / `wallParams` / `wallSizes` unchanged, so true-scale sizes stay. Phones still use centred `wallRows()` — flagged to David, not yet decided.
+- Verified by running the branch code on the live gallery in David's Chrome at 1440px (2026, top of 2025); 2024/2023/2014 not inspected. check.js PASS, smoke.js PASS (smoke can't load `/products`, so its gallery shot shows placeholders only).
+
+-----
+
 ## Completed This Session (November 11 2026, evening) — Study course navigation (branch `study-nav-top`, pushed to `main` on David's word)
 
 - **Phones:** the page dropdown now starts with "study home" (bold class) and a divider, then the course pages (`study/guide.js`; the divider is added with DOM calls because the HTML parser drops `<hr>` inside `<select>`). No breadcrumb row on phones.
