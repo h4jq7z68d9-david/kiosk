@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, midday) — Value and Light Mode 2 rebuild installed (branch `install-value-and-light`, pushed to `main` per §9.9)
+
+- **Installed** from `School v2/Art Technique Course Builder/Value and Light/Public Study Site - Mode 2/` with `install-course.js --force`: one `topen` (course home) + 12 `concept` slides, each with an example work. `wrote 15 pages (12 works, 1 parts, 2 other)`, 48 redirect stubs (63 pages), 25 images, 5.4 MB. Registry: card image `cross-fig21`, new card text, same position. Only this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS.
+- **Cross images (same keys, new crops):** none of the six is an example image, so no thumbnails exist for them; `--force` cleared the old folder and every thumbnail (12, all example paintings) was made fresh. Each Cross `<img>` carries the new file's width/height (checked on every page, `study.html` included).
+- **Nothing changed from the handoff.** Open flags (handoff §6) in Pending.
+
+-----
+
 ## Completed This Session (November 11 2026, morning) — Pigments and Materials Mode 2 rebuild installed (branch `install-pigments-and-materials`, pushed to `main` per §9.9)
 
 - **Installed** from `School v2/Art Technique Course Builder/Pigments and Materials/Public Study Site - Mode 2/` with `install-course.js --force`: second course on the technique slide model — one `topen` (course home) + 17 `concept` slides, each with an example painting. `wrote 20 pages (17 works, 1 parts, 2 other)`, 47 redirect stubs (67 pages), 35 images, 8.3 MB. Registry: card image `amenhotep-palette`, new card text, same position. Other courses unchanged (no files outside this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed). check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS.

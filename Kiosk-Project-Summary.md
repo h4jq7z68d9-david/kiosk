@@ -36,7 +36,7 @@ Style rules that apply to every visible change (David, Oct 2026): left-aligned b
 |<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course — Mode 2 rebuild on the technique slide model (Nov 11 2026): one `topen` home + 17 `concept` slides with example paintings, 20 pages + 47 redirect stubs from the Oct 30 pages, 35 images (8.3 MB)|
 |<https://davidnicholsonart.com/study/oil-vs-acrylic.html>|Oil vs Acrylic technique course (Oct 30 2026: 6 parts, 38 pages under /study/oil-vs-acrylic/; concept, history and example pages), same guide layout as Color Theory|
 |<https://davidnicholsonart.com/study/composition.html>|Composition technique course (Oct 30 2026: 6 parts, 49 pages under /study/composition/; concept, history and example pages, mostly Dow and Poore plates), same guide layout as Color Theory|
-|<https://davidnicholsonart.com/study/value-and-light.html>|Value and Light technique course (Oct 30 2026: 7 parts, 51 pages under /study/value-and-light/; concept, history and example pages, mostly Merrifield and Cross plates), same guide layout as Color Theory|
+|<https://davidnicholsonart.com/study/value-and-light.html>|Value and Light technique course — Mode 2 rebuild on the technique slide model (Nov 11 2026): one `topen` home + 12 `concept` slides with example works, 15 pages + 48 redirect stubs from the Oct 30 pages, 25 images (5.4 MB); Cross plates re-cropped from the University of Toronto scan|
 |<https://davidnicholsonart.com/color-theory.html>, `/color-theory-app.html`, `/study/color-theory-app.html`|Redirect stubs → /study/color-theory.html (noindex; flashcards retired Oct 28 2026)|
 |<https://davidnicholsonart.com/study/art-history/classical-myth.html>|Classical Myth in Art (Mode 2 rebuild, Nov 7 2026: 18 works, 1 section, 1 part; 21 pages) — opens on its overview; works under /study/art-history/classical-myth/greece-to-paris-530-bce-1890/; 67 retired URLs redirect (retired-urls.tsv)|
 |<https://davidnicholsonart.com/study/art-history/impressionism.html>|Impressionism (Mode 2 rebuild, Nov 7 2026: 18 works, 1 section, 1 part; 21 pages) — opens on its overview; works under /study/art-history/impressionism/paris-1863-1906/; 70 retired URLs redirect (retired-urls.tsv)|
@@ -664,6 +664,11 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [x] **Gated pages in `smoke.js`** (Nov 6 2026) — admin, Jill's page, kiosk and booth are loaded logged-out at 1440/390: 0 console errors, no sideways scroll, gate present.
 - [x] Deploy gate (built Nov 6 2026, branch `deploy-gate`) — `deploy.yml` runs `node tools/site/check.js` before anything is generated or uploaded, when the push changed `study/`, `tools/study/`, `tools/site/`, `tools/lambda/`, `index.mjs`, `site-*.js/.css`, a top-level `.html`, or the workflow itself (decided by `git diff --name-only` against `github.event.before`; a push with no usable base runs it). Other pushes (admin-sw.js, images, docs) skip it. A failed check fails the deploy with nothing uploaded.
 
+### From November 11 2026, midday (Value and Light Mode 2)
+
+- [ ] **Value and Light open flags (David):** painting details used as concept images (Morisot, Wright, Rembrandt *Aristotle*, Caravaggio *Calling*; about 650–800 px); Prud'hon drawing as the Direction of Light example; Morisot *Summer's Day* also in Impressionism (allowed) and on loan to the Hugh Lane 2026–31; Sánchez Cotán size from the Meadows Museum (San Diego record behind a bot gate); Sorolla facts from AMACI (no Ca' Pesaro record); Caravaggio in situ, no museum record; paintings and Merrifield plates 1200 px. Not yet reviewed in the slide editor (`edit-course value-and-light`).
+- [ ] **Resubmit `sitemap.xml` in Google Search Console:** Value and Light's URLs changed (15 pages; 48 old URLs redirect, noindex).
+
 ### From November 11 2026 (Pigments and Materials Mode 2)
 
 - [ ] **Pigments and Materials open flags (David):** Rembrandt *Self-Portrait* (1659, NGA) also in Oil vs Acrylic — swap it there at that rebuild; 12 diagrams kept and most example paintings 1200 px; Giotto binder "Tempera" per NGA (egg not confirmed, page makes no egg claim); Arlanza lion not confirmed as true fresco; *Magdalen Reading* image from an aggregator, colour not checked against the National Gallery; cochineal engraving undated (Wellcome); Liotard size from the Getty record; slides run about 85–115 words. Not yet reviewed in the slide editor (`edit-course pigments-and-materials`).
@@ -672,7 +677,7 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 ### From November 10 2026, evening (technique slide model)
 
 - [x] **Slide editor support for `topen` / `concept` slides** (Nov 10 2026, text fields only). Image swaps (img, alt, credit, example image + thumbnail) deferred by David until needed.
-- [ ] **Technique rebuilds** (Oil vs Acrylic, Composition, Value and Light; Color Theory done Nov 10, Pigments and Materials Nov 11 2026) still use the old theme/work model until each comes back from the technique course builder with `topen`/`concept` data. Fixture test: `node tools/study/test-technique-slides.js`.
+- [ ] **Technique rebuilds** (Oil vs Acrylic, Composition; Color Theory done Nov 10, Pigments and Materials and Value and Light Nov 11 2026) still use the old theme/work model until each comes back from the technique course builder with `topen`/`concept` data. Fixture test: `node tools/study/test-technique-slides.js`.
 
 ### From November 9 2026, late afternoon (Rococo + Neoclassicism split)
 
