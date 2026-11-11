@@ -51,7 +51,7 @@ const courses = reg.courses.map((c) => {
   catch (e) { fail(`${c.slug}: data failed to load: ${e.message}`); }
   const parts = (ctx.SITE && ctx.SITE.handouts || []).length;
   if (!parts) fail(`${c.slug}: no parts found in the data`);
-  const date = c.lane === 'art-history' ? c.dates : `${parts} parts`;
+  const date = c.lane === 'art-history' ? c.dates : `${parts} part${parts === 1 ? "" : "s"}`;
   return { ...c, lane, href, section, img, parts, date };
 });
 

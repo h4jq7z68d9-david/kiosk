@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 10 2026, night) — Color Theory Mode 2 rebuild installed (branch `install-color-theory`, pushed to `main` per §9.9)
+
+- **Installed** from `School v2/Art Technique Course Builder/Color Theory/Public Study Site - Mode 2/` with `install-course.js --force`: first course on the technique slide model — one `topen` (course home) + 17 `concept` slides, each with an example painting. `wrote 20 pages (17 works, 1 parts, 2 other)`, 63 redirect stubs (83 pages), 35 images, 9.1 MB, 17 example thumbnails. Registry: card image `chevreul-chromatic-circle`, new card text. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS, `test-editor-technique.js` PASS.
+- **Fixture fix (handoff §3):** fixture concept image `bezold-plate-iii` → `chevreul-1890-plate-ii` (the old plate is not in the rebuilt course).
+- **Fix not in the handoff:** `build-registry.js` wrote "1 parts" on the study.html card for a one-part technique course; now "1 part".
+- **Open flags (handoff §6):** *The Milkmaid* repeats in Oil vs Acrylic (swap at that rebuild); many carried images 1200 px, Temperamentenrose 934 px; two generated diagrams remain; Signac credited under the 2D rule (Met not open access, Commons CC0 file).
+
+-----
+
 ## Completed This Session (November 10 2026, evening, later) — Slide editor: technique slide types (branch `editor-technique-slides`, pushed to `main` on David's instruction)
 
 - **`topen` pages:** edit section name, `title`, `para`. **`concept` pages:** edit section name, `title`, `stmt`, each `look` bullet (save blocked outside 2–4), `bul` (a one-item list in the file stays a list), and the example's `artist`, `title`, `date`, `line`, plus `det` and `alt` in a grey box under the example (not visible on the page otherwise). Required fields can't be saved empty; the page blocks the save and the server rejects it too. Renaming a concept moves its page and fixes redirects, as for work slides.
