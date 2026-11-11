@@ -47,10 +47,6 @@ window.SOURCES = {
    "title": "Conservation and reference sources",
    "items": [
     {
-     "html": "Casadio, Francesca. “Art Scene Investigation: What's in the Dots?” Article, The Art Institute of Chicago. Accessed October 30, 2026.",
-     "url": "https://www.artic.edu/articles/312/art-scene-investigation-whats-in-the-dots"
-    },
-    {
      "html": "Connecting to Collections Care. Summary of the Smithsonian Museum Conservation Institute's guidance on caring for acrylic paintings. Accessed October 30, 2026.",
      "url": "https://connectingtocollections.org/?p=136083"
     },
@@ -91,10 +87,6 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/essays/heavy-metal-soap-oil-paintings"
     },
     {
-     "html": "The Metropolitan Museum of Art. Press release for the 2016 exhibition on Jan van Eyck's <em>The Crucifixion; The Last Judgment</em>. Accessed October 30, 2026.",
-     "url": "https://www.metmuseum.org/press/exhibitions/2016/van-eyck-masterpiece"
-    },
-    {
      "html": "Museum Boijmans Van Beuningen, Rotterdam. “Impressionism.” Collection in depth. Accessed October 30, 2026.",
      "url": "https://www.boijmans.nl/en/collection/in-depth/impressionism"
     },
@@ -115,10 +107,6 @@ window.SOURCES = {
      "url": "https://cameo.mfa.org/wiki/Magna_Plastic_Colors"
     },
     {
-     "html": "The Museum of Modern Art, New York. Press release on Helen Frankenthaler, 1989.",
-     "url": "https://assets.moma.org/documents/moma_press-release_327543.pdf"
-    },
-    {
      "html": "Narragansett Bay Commission, with the Rhode Island School of Design, RIDEM and RISCA. Best management practices brochure for artists. Hosted by Brandeis University Environmental Health and Safety. Accessed October 30, 2026.",
      "url": "https://www.brandeis.edu/environmental-health-safety/docs/artist-best-management-practices.pdf"
     },
@@ -129,10 +117,6 @@ window.SOURCES = {
     {
      "html": "National Gallery of Art, Washington. “10 Surprising Facts about <em>Ginevra</em>.” Story. Accessed October 30, 2026.",
      "url": "https://www.nga.gov/stories/10-surprising-facts-about-ginevra.html"
-    },
-    {
-     "html": "National Gallery of Art, Washington. “<em>Self-Portrait</em>, 1659.” Catalogue entry (Rembrandt van Rijn), <em>Dutch Paintings of the Seventeenth Century</em>. Online edition. Accessed October 30, 2026.",
-     "url": "https://www.nga.gov/research/publications/online-editions/dutch-paintings-seventeenth-century-self-portrait-1659"
     },
     {
      "html": "National Gallery of Art, Washington. “The Beginnings of Impressionist Landscape.” Gallery 87 guide (archived copy, 2009, UNT Libraries Web Archive).",
@@ -155,16 +139,8 @@ window.SOURCES = {
      "url": "https://patents.google.com/patent/US2252A/en"
     },
     {
-     "html": "Rijksmuseum, Amsterdam. “Rijksmuseum Reveals Major Discoveries on Vermeer's Painting <em>The Milkmaid</em>.” Press release, September 8, 2022.",
-     "url": "https://www.rijksmuseum.nl/en/press/press-releases/rijksmuseum-reveals-major-discoveries-on-vermeer-s-painting-the-milkmaid"
-    },
-    {
      "html": "Science History Institute. “Pioneers in Acrylic Emulsions.” Photograph record, Digital Collections. Accessed October 30, 2026.",
      "url": "https://digital.sciencehistory.org/works/99dxpmw"
-    },
-    {
-     "html": "Science History Institute. Plexiglas panels. Object record, Digital Collections. Accessed October 30, 2026.",
-     "url": "https://digital.sciencehistory.org/works/3f462622v"
     },
     {
      "html": "Shaw, Jill, and Kimberley Muir. “<em>Stacks of Wheat</em>, 1890–91,” cats. 27–33. In <em>Monet Paintings and Drawings at the Art Institute of Chicago</em>. Online catalogue, The Art Institute of Chicago. Accessed October 30, 2026.",
@@ -235,8 +211,8 @@ window.SOURCES = {
      "url": "https://vpa.uncg.edu/wp-content/uploads/2024/05/painting.pdf"
     },
     {
-     "html": "Whitney Museum of American Art. “Siqueiros and the Experimental Workshop.” Section 8, <em>Vida Americana: Mexican Muralists Remake American Art, 1925–1945</em>. Exhibition website. Accessed October 30, 2026.",
-     "url": "https://whitney.org/exhibitions/vida-americana/art?section=8"
+     "html": "Gallagher, Michael. “Velázquez’s <em>Philip IV</em> in the Metropolitan Museum.” <em>Metropolitan Museum Journal</em> 45 (2010).",
+     "url": "https://resources.metmuseum.org/resources/metpublications/pdf/Velazquezs_Philip_IV_in_the_Metropolitan_Museum_The_Metropolitan_Museum_Journal_v_45_2010.pdf"
     }
    ]
   },
@@ -248,40 +224,27 @@ window.SOURCES = {
      "url": "https://www.artic.edu/artworks/64818/stacks-of-wheat-end-of-summer"
     },
     {
-     "html": "Guggenheim Museum Bilbao. “<em>Santorini</em>” (1965), Helen Frankenthaler. Collection record.",
-     "url": "https://www.guggenheim-bilbao.eus/en/the-collection/works/santorini"
-    },
-    {
      "html": "The Metropolitan Museum of Art, New York. “<em>Moonlight Marine</em>” (1870–90), Albert Pinkham Ryder. Collection record, 34.55.",
      "url": "https://www.metmuseum.org/art/collection/search/11979"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<em>The Crucifixion; The Last Judgment</em>” (ca. 1436–38), Jan van Eyck. Collection record, 33.92ab.",
-     "url": "https://www.metmuseum.org/en/art/collection/search/436282"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. “<em>The Harvesters</em>” (1565), Pieter Bruegel the Elder. Collection record, 19.164.",
      "url": "https://www.metmuseum.org/art/collection/search/435809"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. “<em>The Toilers of the Sea</em>” (ca. 1880–85), Albert Pinkham Ryder. Collection record, 15.32.",
-     "url": "https://www.metmuseum.org/art/collection/search/11981"
-    },
-    {
      "html": "National Gallery of Art, Washington. “<em>Ginevra de' Benci</em> [obverse]” (c. 1474/1478), Leonardo da Vinci. Collection record, 1967.6.1.a.",
      "url": "https://www.nga.gov/artworks/50724-ginevra-de-benci-obverse"
-    },
-    {
-     "html": "National Gallery of Art, Washington. “<em>Self-Portrait</em>” (1659), Rembrandt van Rijn. Collection record, 1937.1.72.",
-     "url": "https://www.nga.gov/artworks/79-self-portrait"
     },
     {
      "html": "National Gallery of Art, Washington. “<em>Venus with a Mirror</em>” (c. 1555), Titian. Collection record, 1937.1.34.",
      "url": "https://www.nga.gov/artworks/41-venus-mirror"
     },
     {
-     "html": "Rijksmuseum, Amsterdam. “<em>The Milkmaid</em>” (c. 1660), Johannes Vermeer. Collection record, SK-A-2344.",
-     "url": "https://www.rijksmuseum.nl/en/collection/SK-A-2344"
+     "html": "National Gallery of Art, Washington. Rembrandt van Rijn, <em>Lucretia</em>, 1664 (1937.1.76): collection record and systematic catalogue entry (Wheelock, 1995).",
+     "url": "https://www.nga.gov/artworks/83-lucretia"
+    },
+    {
+     "html": "Museo Nacional del Prado. Diego Velázquez, <em>Philip IV</em> (P001182), as described and illustrated in Gallagher 2010, fig. 3."
     }
    ]
   }

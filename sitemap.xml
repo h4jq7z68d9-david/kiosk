@@ -806,177 +806,47 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/a-short-history.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/two-binders.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/theme-five-centuries-of-oil.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/oil-cures.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/theme-plastic-paint.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/acrylic-dries.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/theme-using-both.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/open-time.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/whats-in-the-tube.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/color-shift-as-it-dries.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/theme-two-binders.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/blending.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/the-harvesters.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/impasto.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints/theme-solvent-acrylic-and-water-acrylic.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/painting-over-dry-paint.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/how-they-dry.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-oil-cures.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-acrylic-dries.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/early-still.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-open-time.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/stacks-of-wheat-end-of-summer.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-color-shift-as-it-dries.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/handling-and-layering.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-blending.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/ginevra-de-benci.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-brushwork-and-impasto.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/self-portrait.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-painting-over-dry-paint.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/venus-with-a-mirror.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/the-milkmaid.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/umbrella-reverie.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-fat-over-lean.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-mixing-the-two-in-layers.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-mediums-solvents-and-cleanup.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/surfaces.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/working-with-each/theme-grounds-for-each.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/over-time/aging-and-care.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/over-time/theme-how-oil-ages.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/over-time/moonlight-marine.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/over-time/theme-how-acrylic-ages.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/over-time/theme-varnishing-and-cleaning.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/over-time/theme-choosing-between-them.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/how-oil-ages.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>

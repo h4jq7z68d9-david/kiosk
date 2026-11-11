@@ -4,14 +4,11 @@
   "data.js"
  ],
  "basePath": "/study",
- "themeLabel": "Concept",
- "subjLabel": "",
- "introImg": "oa-binders",
- "intro": "How oil and acrylic paint differ: what is in each, how each dries, how they handle and layer, and how they age. Concept pages explain one idea with a historic plate or an original diagram; example pages show it in a public-domain painting or in David Nicholson's own acrylic work.",
- "imagesNote": "",
+ "introImg": "rand-1841-tube-patent",
+ "imagesNote": "The concept images are diagrams made for this site, apart from John Rand's 1841 paint-tube patent drawing. The example paintings are public domain, except two acrylics by David Nicholson.",
  "ldDescription": "A short course comparing oil and acrylic paint.",
- "homeDescription": "{name}: a short course on how oil and acrylic paint differ, from how each dries to how each ages, with historic plates, original diagrams and example paintings.",
- "creditsIntro": "The diagrams were made for this site, and the acrylic examples are David Nicholson's own paintings. The historic patent drawing and the other artworks are public domain; each entry links to the file's record with its source and license.",
- "creditsDescription": "Sources and licenses for the {count} diagrams and artworks in {name}.",
+ "homeDescription": "{name}: how oil and acrylic paint differ, from their binders and drying to open time, blending, impasto, painting over and aging, shown with diagrams and paintings.",
+ "creditsIntro": "The diagrams were made for this site. The patent drawing and the older paintings are public domain or CC0; the two acrylic paintings are by David Nicholson and remain his copyright. Each entry links to its source.",
+ "creditsDescription": "Sources and licenses for the {count} diagrams and paintings in {name}.",
  "sourcesDescription": "The lectures, courses, museum records and references behind {name}."
 }
