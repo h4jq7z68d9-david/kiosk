@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, late afternoon) — Oil vs Acrylic image redo installed (branch `install-oil-vs-acrylic-images`, pushed to `main` per §9.9)
+
+- **Live check first:** no commits touched `study/oil-vs-acrylic/data.js`, `credits.js` or `sources.js` since 4e41958, and no `edits-oil-vs-acrylic` branch existed.
+- **Installed** with `install-course.js --force` (the script works on `install-oil-vs-acrylic`; the stale local copy of that branch was deleted first so it started from `main`, and the result was renamed `install-oil-vs-acrylic-images`). The upload staging folder still held this morning's six retired images, so the install ran from a clean copy holding only the current bundle files. `wrote 12 pages (9 works, 1 parts, 2 other)`, 19 images, 6.1 MB; same 35 redirect stubs; same URLs (`sitemap.xml` unchanged).
+- **Images:** removed `oa-binders`, `oa-open-time`, `oa-blending`, `oa-impasto`, `oa-oil-ages`, `leonardo-ginevra-de-benci` (+ its thumbnail); added `ostade-painter-studio`, `vermeer-lady-writing-detail`, `ginevra-blending-detail`, `van-gogh-green-wheat-detail`, `chaperon-craquelure`, `rotari-girl-flower` (+ thumbnail). No old key referenced anywhere on the site. Card image now `van-gogh-green-wheat-detail`.
+- check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS. Nothing changed from the handoff.
+
+-----
+
 ## Completed This Session (November 11 2026, later afternoon) — Composition Mode 2 rebuild installed (branch `install-composition`, pushed to `main` per §9.9)
 
 - **Installed** from `School v2/Art Technique Course Builder/Composition/Public Study Site - Mode 2/` with `install-course.js --force`: one `topen` (course home) + 16 `concept` slides, each with an example work. `wrote 19 pages (16 works, 1 parts, 2 other)`, 46 redirect stubs (65 pages; the old `foundations`, `arranging-the-picture` and `putting-it-together` folders hold only stubs), 33 images, 6.9 MB. Registry: new card text; same position and card image. Only this course, `sitemap.xml`, `study.html`, `search-index.js` and the registry changed. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS. All five technique courses are now on the slide model.
