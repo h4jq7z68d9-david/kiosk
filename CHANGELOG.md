@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, early morning) — Technique-slides test fixture made self-contained (branch `fixture-self-contained`, pushed to `main` on David's instruction)
+
+- **Fixture images and credits now live in the fixture:** `tools/study/fixtures/technique-slides/img/` (chevreul-chromatic-circle, chevreul-1890-plate-ii, vangogh-night-cafe; copied from Color Theory) and `credits.js` (same three entries). `test-technique-slides.js` and `test-editor-technique.js` read only from the fixture folder and stop with a clear message if a fixture image is missing. A Color Theory rebuild can no longer break either test.
+- **Repoint check:** the Color Theory Mode 2 install (Nov 10, night) already moved the fixture concept image from `bezold-plate-iii` to `chevreul-1890-plate-ii`; no further repoint is needed.
+- **Never published:** `deploy.yml` already excludes `tools/study/fixtures/*`; the fixture is not in `sitemap.xml`, the registry or any page.
+- **Tests:** `test-technique-slides.js` PASS with Color Theory's `img/` and `credits.js` moved away (proves independence); `test-editor-technique.js` PASS (it still needs Color Theory's registry card image, because the temp copy rebuilds the real registry); all 15 courses rebuilt with zero changes to tracked build output; `check.js` PASS (1043 pages); `smoke.js` PASS.
+
+-----
+
 ## Completed This Session (November 10 2026, night) — Color Theory Mode 2 rebuild installed (branch `install-color-theory`, pushed to `main` per §9.9)
 
 - **Installed** from `School v2/Art Technique Course Builder/Color Theory/Public Study Site - Mode 2/` with `install-course.js --force`: first course on the technique slide model — one `topen` (course home) + 17 `concept` slides, each with an example painting. `wrote 20 pages (17 works, 1 parts, 2 other)`, 63 redirect stubs (83 pages), 35 images, 9.1 MB, 17 example thumbnails. Registry: card image `chevreul-chromatic-circle`, new card text. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS, `test-editor-technique.js` PASS.

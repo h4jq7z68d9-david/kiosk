@@ -1,6 +1,7 @@
 /* TEST FIXTURE ONLY (tools/study/test-technique-slides.js). Never installed, published, linked or in the sitemap;
    the deploy excludes tools/study/fixtures/. Placeholder text to exercise the technique slide model:
-   one topen and one concept with an example painting. Images and credits are copied from the Color Theory course. */
+   one topen and one concept with an example painting. Images (img/) and credits.js live in this fixture folder
+   (copied from Color Theory on Nov 11 2026) so a Color Theory rebuild cannot break the tests. */
 window.SITE = {
   title: 'Technique slide fixture',
   sections: { 1: 'Fixture section' },

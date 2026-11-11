@@ -17,7 +17,7 @@ const { execSync, spawn, spawnSync } = require('child_process');
 
 const REPO = path.resolve(__dirname, '..', '..');
 const FIX = path.join(__dirname, 'fixtures', 'technique-slides');
-const SLUG = 'technique-slide-fixture', FROM = 'study/color-theory', PORT = 8775, BASE = `http://localhost:${PORT}`;
+const SLUG = 'technique-slide-fixture', PORT = 8775, BASE = `http://localhost:${PORT}`;
 const KEEP = process.argv.includes('--keep');
 const fails = [];
 const ok = (c, s) => { if (!c) fails.push(s); };
@@ -33,8 +33,9 @@ fs.copyFileSync(path.join(FIX, 'settings.json'), path.join(TMP, 'tools/study/cou
 const loadData = () => { const c = {}; c.window = c; vm.createContext(c); vm.runInContext(fs.readFileSync(DATA, 'utf8'), c); return JSON.parse(JSON.stringify(c.SITE)); };
 const site0 = loadData(), sl0 = site0.handouts[0].slides;
 const keys = [sl0[0].img, sl0[1].img, sl0[1].ex.key];
-const cc = {}; cc.window = cc; vm.createContext(cc); vm.runInContext(fs.readFileSync(path.join(REPO, FROM, 'credits.js'), 'utf8'), cc);
-const cred = {}; for (const k of keys) { cred[k] = cc.CREDITS[k]; fs.copyFileSync(path.join(REPO, FROM, 'img', k + '.jpg'), path.join(CDIR, 'img', k + '.jpg')); }
+const cc = {}; cc.window = cc; vm.createContext(cc); vm.runInContext(fs.readFileSync(path.join(FIX, 'credits.js'), 'utf8'), cc);
+const cred = {}; for (const k of keys) { if (!fs.existsSync(path.join(FIX, 'img', k + '.jpg'))) { console.error(`fixture image missing: tools/study/fixtures/technique-slides/img/${k}.jpg`); process.exit(1); }
+  cred[k] = cc.CREDITS[k]; fs.copyFileSync(path.join(FIX, 'img', k + '.jpg'), path.join(CDIR, 'img', k + '.jpg')); }
 fs.writeFileSync(path.join(CDIR, 'credits.js'), 'window.CREDITS = ' + JSON.stringify(cred, null, 1) + ';\n');
 const reg = JSON.parse(fs.readFileSync(path.join(TMP, 'tools/study/courses.json'), 'utf8'));
 reg.courses.push({ slug: SLUG, lane: 'technique', name: 'Technique Slide Fixture', label: 'technique slide fixture', card: { img: keys[0], text: 'test fixture' } });

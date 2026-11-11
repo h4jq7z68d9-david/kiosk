@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* tools/study/test-technique-slides.js — test of the technique slide model (topen, concept, ex + lightbox).
    Usage: node tools/study/test-technique-slides.js [--keep]
-   Copies the repo to a temp folder, installs the fixture in tools/study/fixtures/technique-slides/ there (images and
-   credits from the Color Theory course), builds it with the real generator and checks it statically and in headless
+   Copies the repo to a temp folder, installs the fixture in tools/study/fixtures/technique-slides/ there (its own data,
+   credits and img/; nothing is read from a live course), builds it with the real generator and checks it statically and in headless
    Chromium at phone (390), iPad portrait/landscape and desktop (1440). Nothing is written to the repo except
    screenshots in tools/site/out/ (gitignored). The fixture is never installed in the repo, linked or in the sitemap.
    Needs Playwright on NODE_PATH or in ../pw (same as tools/site/smoke.js). Exit 1 on any FAIL. */
@@ -17,7 +17,6 @@ const { execSync, spawnSync } = require('child_process');
 const REPO = path.resolve(__dirname, '..', '..');
 const FIX = path.join(__dirname, 'fixtures', 'technique-slides');
 const SLUG = 'technique-slide-fixture';
-const FROM = 'study/color-theory';
 const OUT = path.join(REPO, 'tools', 'site', 'out');
 const KEEP = process.argv.includes('--keep');
 const fails = [], notes = [];
@@ -34,11 +33,11 @@ fs.copyFileSync(path.join(FIX, 'sources.js'), path.join(CDIR, 'sources.js'));
 fs.copyFileSync(path.join(FIX, 'settings.json'), path.join(TMP, 'tools/study/courses', SLUG + '.json'));
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(CDIR, 'data.js'), 'utf8'), ctx);
-vm.runInContext(fs.readFileSync(path.join(REPO, FROM, 'credits.js'), 'utf8'), ctx);
+vm.runInContext(fs.readFileSync(path.join(FIX, 'credits.js'), 'utf8'), ctx);
 const slides = ctx.SITE.handouts[0].slides, concept = slides.find((s) => s.type === 'concept'), ex = concept.ex;
 const keys = [slides[0].img, concept.img, ex.key];
-const cred = {};
-for (const k of keys) { cred[k] = ctx.CREDITS[k]; fs.copyFileSync(path.join(REPO, FROM, 'img', k + '.jpg'), path.join(CDIR, 'img', k + '.jpg')); }
+const cred = {}; for (const k of keys) { if (!fs.existsSync(path.join(FIX, 'img', k + '.jpg'))) { console.error(`fixture image missing: tools/study/fixtures/technique-slides/img/${k}.jpg`); process.exit(1); }
+  cred[k] = ctx.CREDITS[k]; fs.copyFileSync(path.join(FIX, 'img', k + '.jpg'), path.join(CDIR, 'img', k + '.jpg')); }
 fs.writeFileSync(path.join(CDIR, 'credits.js'), 'window.CREDITS = ' + JSON.stringify(cred, null, 1) + ';\n');
 
 /* ---------- 2. build with the real generator ---------- */
