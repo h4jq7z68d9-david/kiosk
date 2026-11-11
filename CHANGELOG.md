@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, evening) — Study course navigation (branch `study-nav-top`, pushed to `main` on David's word)
+
+- **Phones:** the page dropdown now starts with "study home" (bold class) and a divider, then the course pages (`study/guide.js`; the divider is added with DOM calls because the HTML parser drops `<hr>` inside `<select>`). No breadcrumb row on phones.
+- **iPad/desktop:** the breadcrumb moved from the bottom Prev/Next bar to above the search box (`build-course.js` template, `study/guide.css`); it keeps `flex:none` so short screens can't squeeze it to zero height (caught in testing at 1024×768). Narrow desktops still show only Study › lane.
+- `V.guideCss` 17→18, `V.guideJs` 13→14; all 15 courses rebuilt. check.js PASS, smoke.js PASS, `test-technique-slides.js` PASS, `test-editor-technique.js` PASS. Course-switcher Pending item closed as replaced.
+
+-----
+
 ## Completed This Session (November 11 2026, evening) — Pigments and Materials image redo installed (branch `install-pigments-and-materials-images`, pushed to `main` per §9.9)
 
 - **Live check first:** no commits touched `study/pigments-and-materials/data.js`, `credits.js` or `sources.js` since bcc44f2, and no `edits-pigments-and-materials` branch existed.
