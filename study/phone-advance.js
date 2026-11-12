@@ -1,7 +1,7 @@
 /* Phone swipe past the end (Nov 11 2026; on for courses whose settings have "phoneAdvance": true).
    Phones only (≤600 px, touch). Each slide scrolls up and down as usual. Once the slide is at the bottom, a swipe
-   up goes straight to the next slide; at the top, a swipe down goes to the previous one. No hold, no animation:
-   it works like the left/right swipe in guide.js. Only a swipe that STARTS at the end counts, so the swipe that
+   up goes straight to the next slide (as soon as it passes 50 px, with no bounce); at the top, a swipe down goes to
+   the previous one. No hold, no animation. Only a swipe that STARTS at the end counts, so the swipe that
    scrolls you to the bottom never skips a slide. The Prev/Next bar is unchanged. */
 (function () {
   if (!window.matchMedia || !matchMedia('(max-width:600px)').matches || !matchMedia('(pointer:coarse)').matches) return;
@@ -34,14 +34,24 @@
     y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; t0 = Date.now();
   }, { passive: true });
 
-  sc.addEventListener('touchend', function (e) {
-    if (y0 == null) return;
-    var t = e.changedTouches[0], dy = t.clientY - y0, dx = t.clientX - x0;
-    y0 = null;
-    if (Date.now() - t0 > MAX_MS || Math.abs(dy) < MIN || Math.abs(dy) < Math.abs(dx) * 1.5) return;
-    if (dy < 0 && end && next) location.href = next.href;
-    else if (dy > 0 && top && prev) location.href = prev.href;
-  }, { passive: true });
+  /* Nov 11 2026: a swipe into the end is held still (no iPhone rubber-band bounce) and goes as soon as it passes
+     MIN px, without waiting for the finger to lift. Scrolling back the other way is never touched. */
+  var gone = false;
+  sc.addEventListener('touchmove', function (e) {
+    if (y0 == null || gone) return;
+    var t = e.touches[0], dy = t.clientY - y0, dx = t.clientX - x0;
+    var into = (dy < 0 && end && next) ? 1 : (dy > 0 && top && prev) ? -1 : 0;
+    if (!into) return;                                     // moving away from the end: ordinary scroll
+    if (Math.abs(dx) > Math.abs(dy)) return;               // sideways: guide.js swipe
+    if (e.cancelable) e.preventDefault();                  // no bounce
+    if (Math.abs(dy) >= MIN && Math.abs(dy) >= Math.abs(dx) * 1.5 && Date.now() - t0 <= MAX_MS) {
+      gone = true; y0 = null;
+      location.href = (into > 0 ? next : prev).href;
+    }
+  }, { passive: false });
+
+  sc.addEventListener('touchend', function () { y0 = null; }, { passive: true });
+  window.addEventListener('pageshow', function () { gone = false; });   // back button from the next slide
 
   sc.addEventListener('touchcancel', function () { y0 = null; }, { passive: true });
 })();

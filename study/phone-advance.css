@@ -1,5 +1,6 @@
 /* Phone swipe past the end (phone-advance.js). Loaded only by courses with "phoneAdvance": true. */
 .pa-hint{display:none}
 @media (max-width:600px) and (pointer:coarse){
+  body.guide-page>.app{overscroll-behavior-y:none}   /* no rubber-band bounce at the ends (iOS 16+) */
   .pa-hint{display:block;grid-column:1/-1;margin:18px 0 4px;text-align:center;font-size:.82rem;color:var(--ink3)}
 }
