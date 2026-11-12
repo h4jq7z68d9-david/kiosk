@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026) — Color Theory on phones: push past a slide's end (branch `phone-push-advance`, pushed on David's word)
+
+- New `study/phone-advance.js` + `.css`, loaded only by courses whose settings have `"phoneAdvance": true` (Color Theory only). Phones (≤600 px, touch): at the bottom of a slide, one more push up opens the next slide; at the top, a push down opens the previous one. A pill fills while pulling; a cue line "Push up for next: <title>" ends each slide. Left/right swipe, Prev/Next bar, iPad and desktop unchanged. `V.phoneAdvanceCss/Js`; check.js knows the files. Rebuild changed only Color Theory's 20 slide pages.
+- **Pre-existing, not fixed:** on phones, navigating after scrolling a slide logs "Transition was aborted" (the cross-page fade is cancelled) in Chromium, on every course and with the Next button. Page loads fine. Fix would be in shared guide.css/guide.js.
+
+-----
+
 ## Completed This Session (November 11 2026, evening) — Gallery rows float up
 
 - `wallLeftRows()` in `gallery.html`: bottom-aligned rows replaced by float-up — each card rises to 40px under whatever hangs directly above it, so the first row's tops line up and later rows fill gaps. Order, sizes, 4-per-row and 40px gaps unchanged. David picked it from previews on the live page (option "shift the old cluster left" also previewed, not chosen). Phones unchanged (still Pending).
