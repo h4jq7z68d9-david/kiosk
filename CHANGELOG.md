@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, night) — Study viewer: our own page menu on phones and portrait iPads
+
+- `guide.js` replaces the system picker (`<select id="jump">`, which iOS draws itself: no bold, opens scrolled to the current page) with an owned drop-down at ≤900 px, every course: "Study home" pinned and bold at the top, page list scrolling under it, section headings with dividers, current page marked and scrolled into view. Close by picking, tapping outside (close only, no click-through), or Esc; arrow keys move within it; max 60% of the screen tall. Desktop unchanged (rail). `guideCss` 19, `guideJs` 16; rebuild changed only cache strings.
+- Menu test on Color Theory, Impressionism, Value and Light at 390 and 820 px all pass; check.js, smoke.js (15 courses), fixture test PASS. Only console messages: the pre-existing "Transition was aborted" fade message.
+
+-----
+
 ## Completed This Session (November 11 2026, evening) — Phone swipe past a slide's end, rolled out to every study course
 
 - Iterated on Color Theory with David (phone): the pull-and-release pill was dropped; now at the bottom of a slide a plain swipe up goes straight to the next slide (at the top, swipe down goes back), as soon as it passes 50 px, with no rubber-band bounce (`overscroll-behavior-y:none` + touchmove preventDefault only toward the end). Only a swipe that starts at the end counts. Cue line "Swipe up for next: <title>". Phones only (≤600 px, coarse pointer).
