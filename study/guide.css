@@ -188,7 +188,24 @@ body.guide-page{display:block;padding-top:calc(var(--nav-h) + 16px);font-weight:
 .guide-page .topcrumb{display:block;flex:none;margin:0 0 -2px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .guide-page .topcrumb .sep{margin:0 .35em}
 @media (max-width:900px){.guide-page .topcrumb{display:none}}
-.jump option.home{font-weight:700}
+/* page menu (guide.js, Nov 11 2026): the site's own drop-down on phones and portrait iPads, replacing the system
+   picker. "Study home" pinned and bold at the top; the page list scrolls under it; dividers between sections. */
+.guide-page .jbtn{align-items:center;justify-content:space-between;gap:8px;min-height:40px;text-align:left;cursor:pointer}
+@media (max-width:900px){.guide-page .jbtn{display:flex}}
+.jbtn .jl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jbtn .jc{flex:none;color:var(--ink3);transition:transform .15s ease}
+.jbtn[aria-expanded="true"] .jc{transform:rotate(180deg)}
+.jmenu{position:fixed;z-index:110;display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--border-mid);border-radius:10px;
+  box-shadow:0 8px 28px color-mix(in srgb,var(--ink) 18%,transparent);overflow:hidden}
+.jmenu[hidden]{display:none}
+.jmenu a{display:block;padding:10px 14px;color:var(--ink);text-decoration:none;font:400 .98rem var(--sans);line-height:1.3}
+.jmenu .jhome{flex:none;font-weight:700;border-bottom:1px solid var(--border-mid)}
+.jmenu .jlist{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:4px 0 8px}
+.jmenu .jsec{margin:10px 14px 2px;font:500 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.jmenu hr{border:0;border-top:1px solid var(--border-mid);margin:8px 0 0}
+.jmenu a[aria-current="page"]{color:var(--accent-ink);font-weight:600;background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.jmenu a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media (min-width:901px){.jmenu{display:none !important}}
 /* page changes: cross-fade where the browser supports cross-document view transitions */
 @media (prefers-reduced-motion:no-preference){@view-transition{navigation:auto}}
 @media (max-width:420px){.guide-page .bar .pos{display:none}}

@@ -43,14 +43,56 @@
   if (here) { const r = here.getBoundingClientRect(), rr = rail.getBoundingClientRect(); if (r.top < rr.top || r.bottom > rr.bottom) here.scrollIntoView({ block: 'center' }); }
   out.addEventListener('click', () => { try { sessionStorage.setItem(KR, String(rail.scrollTop)); } catch (e) {} });
 
-  /* jump select (small screens) */
-  const j = $('jump'); let o = '', g = null;
-  items.forEach((it) => { const gt = partTitle(it.h); if (gt !== g) { if (g !== null) o += '</optgroup>'; o += `<optgroup label="${esc(gt)}">`; g = gt; } o += `<option value="${it.url}"${it.id === curId ? ' selected' : ''}>${esc(it.kind === 'overview' && it.label === 'Overview' ? gt : it.label)}</option>`; });
-  j.innerHTML = o + '</optgroup>';
-  /* study home first, then a divider (Nov 11 2026); built with DOM calls because the HTML parser drops <hr> inside <select> */
-  const home = document.createElement('option'); home.value = '/study.html'; home.textContent = 'study home'; home.className = 'home';
-  j.insertBefore(document.createElement('hr'), j.firstChild); j.insertBefore(home, j.firstChild);
-  j.onchange = () => { location.href = j.value; };
+  /* page menu (phones and portrait iPads, Nov 11 2026): the site's own drop-down replaces the system picker, which
+     ignores bold and opens scrolled to the current page. "Study home" stays pinned and bold at the top, the page list
+     scrolls under it, sections are split by dividers, the current page is marked. Close: pick, tap outside, Esc. */
+  (function () {
+    const sel = $('jump'); if (!sel) return;
+    const lab = (it) => (it.kind === 'overview' && it.label === 'Overview' ? partTitle(it.h) : it.label);
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'jump jbtn'; btn.id = 'jump';
+    btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'jmenu');
+    btn.setAttribute('aria-label', 'Pages in this course: ' + lab(cur));
+    btn.innerHTML = `<span class="jl">${esc(lab(cur))}</span><span class="jc" aria-hidden="true">▾</span>`;
+    sel.replaceWith(btn);
+    const menu = document.createElement('nav');
+    menu.id = 'jmenu'; menu.className = 'jmenu'; menu.hidden = true; menu.setAttribute('aria-label', 'Pages in this course');
+    let h = '<a class="jhome" href="/study.html">Study home</a><div class="jlist">', g = null;
+    items.forEach((it) => {
+      const gt = partTitle(it.h);
+      if (gt !== g) { h += (g !== null ? '<hr>' : '') + `<p class="jsec">${esc(gt)}</p>`; g = gt; }
+      h += `<a href="${it.url}"${it.id === curId ? ' aria-current="page"' : ''}>${esc(lab(it))}</a>`;
+    });
+    menu.innerHTML = h + '</div>';
+    document.body.appendChild(menu);
+    const list = menu.querySelector('.jlist'), links = () => [...menu.querySelectorAll('a')];
+    const place = () => {
+      const r = btn.getBoundingClientRect(), top = Math.round(r.bottom + 6);
+      menu.style.top = top + 'px'; menu.style.left = Math.round(r.left) + 'px'; menu.style.width = Math.round(r.width) + 'px';
+      menu.style.maxHeight = Math.max(200, Math.min(window.innerHeight - top - 16, window.innerHeight * 0.6)) + 'px';   // leave room to tap outside
+    };
+    const open = () => {
+      place(); menu.hidden = false; btn.setAttribute('aria-expanded', 'true');
+      const here = list.querySelector('[aria-current="page"]');
+      if (here) { list.scrollTop = here.offsetTop - list.clientHeight / 2 + here.offsetHeight / 2; here.focus({ preventScroll: true }); }
+      else menu.querySelector('.jhome').focus();
+    };
+    const close = (back) => { if (menu.hidden) return; menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); if (back) btn.focus(); };
+    btn.addEventListener('click', () => (menu.hidden ? open() : close(true)));
+    /* a tap outside only closes the menu: it does not also follow a link or press a button underneath */
+    document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)) { e.preventDefault(); e.stopPropagation(); close(false); } }, true);
+    window.addEventListener('resize', () => close(false));
+    menu.addEventListener('keydown', (e) => {
+      e.stopPropagation();   // guide.js page keys (arrows, "/") stay off while the menu is open
+      const ls = links(), i = ls.indexOf(document.activeElement);
+      if (e.key === 'Escape') { e.preventDefault(); close(true); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); (ls[i + 1] || ls[0]).focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); (ls[i - 1] || ls[ls.length - 1]).focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); ls[0].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); ls[ls.length - 1].focus(); }
+    });
+    menu.addEventListener('focusout', (e) => { if (e.relatedTarget && !menu.contains(e.relatedTarget) && e.relatedTarget !== btn) close(false); });
+  })();
 
   /* rail toggle */
   const app = $('app'), tog = $('tog');
