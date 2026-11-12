@@ -14,7 +14,7 @@
 
   var PULL = 90;   // px of extra push needed
   var pill = document.createElement('div');
-  pill.className = 'pa-pill'; pill.setAttribute('aria-hidden', 'true'); pill.hidden = true;
+  pill.className = 'pa-pill'; pill.setAttribute('aria-hidden', 'true');
   pill.innerHTML = '<span class="pa-arrow"></span><span class="pa-text"></span><span class="pa-fill"></span>';
   document.body.appendChild(pill);
   var arrow = pill.querySelector('.pa-arrow'), text = pill.querySelector('.pa-text'), fill = pill.querySelector('.pa-fill');
@@ -27,7 +27,8 @@
     sc.appendChild(hint);
   }
 
-  var y0 = null, x0 = 0, dir = 0, ready = false;
+  var y0 = null, x0 = 0, dir = 0, ready = false, lock = 0, raf = 0, want = null;
+  var DEAD = 18;   // px of travel before anything shows; then the direction is locked for the rest of the touch
   var busy = function (t) {
     return (t && t.closest && t.closest('.results, .dlb, #lb, .ed-panel, input, select, textarea, [contenteditable="true"]'))
       || document.documentElement.classList.contains('dlb-open') || document.body.classList.contains('ed-on');
@@ -36,7 +37,7 @@
   var atTop = function () { return sc.scrollTop <= 1; };
 
   sc.addEventListener('touchstart', function (e) {
-    y0 = null; dir = 0; ready = false;
+    y0 = null; dir = 0; ready = false; lock = 0;
     if (e.touches.length !== 1 || busy(e.target)) return;
     /* only a push that STARTS at the end counts; the push that scrolls you to the end does not */
     var end = atEnd(), top = atTop();
@@ -49,24 +50,31 @@
   sc.addEventListener('touchmove', function (e) {
     if (y0 == null) return;
     var dy = e.touches[0].clientY - y0, dx = e.touches[0].clientX - x0;
-    if (Math.abs(dx) > Math.abs(dy)) { show(0); return; }   // a sideways swipe: guide.js handles it
-    var d = dy < 0 && (dir === 1 || dir === 2) ? 1 : dy > 0 && (dir === -1 || dir === 2) ? -1 : 0;
-    if (!d) { show(0); return; }
-    show(d, Math.min(1, Math.abs(dy) / PULL));
+    if (!lock) {
+      if (Math.abs(dx) < DEAD && Math.abs(dy) < DEAD) return;   // ignore jitter
+      if (Math.abs(dx) > Math.abs(dy)) { y0 = null; return; }    // a sideways swipe: guide.js handles it
+      lock = dy < 0 && (dir === 1 || dir === 2) ? 1 : dy > 0 && (dir === -1 || dir === 2) ? -1 : 0;
+      if (!lock) { y0 = null; return; }                         // pushing away from the end: plain scrolling
+    }
+    var pull = lock > 0 ? -dy : dy;
+    frame(lock, Math.max(0, Math.min(1, (pull - DEAD) / PULL)));
   }, { passive: true });
 
   var end = function () {
     if (y0 == null) return;
     y0 = null;
+    if (raf) { cancelAnimationFrame(raf); raf = 0; show(want[0], want[1]); }   // a fast release: apply the last pull first
     var go = ready && pill.dataset.d;
-    show(0);
+    frame(0);
     if (go) location.href = (go === '1' ? next : prev).href;
   };
   sc.addEventListener('touchend', end, { passive: true });
-  sc.addEventListener('touchcancel', function () { y0 = null; show(0); }, { passive: true });
+  sc.addEventListener('touchcancel', function () { y0 = null; frame(0); }, { passive: true });
+  /* one update per animation frame, so the fill moves smoothly instead of on every touchmove */
+  function frame(d, p) { want = [d, p]; if (!raf) raf = requestAnimationFrame(function () { raf = 0; show(want[0], want[1]); }); }
 
   function show(d, p) {
-    if (!d) { pill.hidden = true; ready = false; delete pill.dataset.d; return; }
+    if (!d) { pill.classList.remove('pa-on'); ready = false; delete pill.dataset.d; return; }
     var a = d > 0 ? next : prev;
     pill.dataset.d = String(d);
     pill.classList.toggle('pa-up', d > 0); pill.classList.toggle('pa-down', d < 0);
@@ -75,6 +83,6 @@
     text.textContent = (ready ? 'Release for ' : (d > 0 ? 'Next: ' : 'Previous: ')) + (a.getAttribute('title') || '');
     fill.style.transform = 'scaleX(' + p.toFixed(3) + ')';
     pill.classList.toggle('pa-ready', ready);
-    pill.hidden = false;
+    pill.classList.add('pa-on');
   }
 })();
