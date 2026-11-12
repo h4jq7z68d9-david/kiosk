@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, evening) — Phone swipe past a slide's end, rolled out to every study course
+
+- Iterated on Color Theory with David (phone): the pull-and-release pill was dropped; now at the bottom of a slide a plain swipe up goes straight to the next slide (at the top, swipe down goes back), as soon as it passes 50 px, with no rubber-band bounce (`overscroll-behavior-y:none` + touchmove preventDefault only toward the end). Only a swipe that starts at the end counts. Cue line "Swipe up for next: <title>". Phones only (≤600 px, coarse pointer).
+- Now the default for every study course (`build-course.js`: on unless a settings file has `"phoneAdvance": false`). Rebuild: 270 pages, each +2 lines (phone-advance.css/js v4); nothing else changed; redirect stubs untouched.
+- check.js PASS, smoke.js PASS (15 courses), both fixture tests PASS; gesture test PASS on Color Theory and Impressionism.
+- **Still open (pre-existing):** Chromium logs "Transition was aborted" when navigating after scrolling a slide on a phone (Next button too). Page loads fine; fix belongs in guide.css/guide.js.
+
+-----
+
 ## Completed This Session (November 11 2026) — Color Theory on phones: push past a slide's end (branch `phone-push-advance`, pushed on David's word)
 
 - New `study/phone-advance.js` + `.css`, loaded only by courses whose settings have `"phoneAdvance": true` (Color Theory only). Phones (≤600 px, touch): at the bottom of a slide, one more push up opens the next slide; at the top, a push down opens the previous one. A pill fills while pulling; a cue line "Push up for next: <title>" ends each slide. Left/right swipe, Prev/Next bar, iPad and desktop unchanged. `V.phoneAdvanceCss/Js`; check.js knows the files. Rebuild changed only Color Theory's 20 slide pages.

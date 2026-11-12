@@ -1,4 +1,4 @@
-/* Phone swipe past the end (Nov 11 2026; on for courses whose settings have "phoneAdvance": true).
+/* Phone swipe past the end (Nov 11 2026; on for every study course; a settings file can set "phoneAdvance": false).
    Phones only (≤600 px, touch). Each slide scrolls up and down as usual. Once the slide is at the bottom, a swipe
    up goes straight to the next slide (as soon as it passes 50 px, with no bounce); at the top, a swipe down goes to
    the previous one. No hold, no animation. Only a swipe that STARTS at the end counts, so the swipe that

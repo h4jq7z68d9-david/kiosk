@@ -1,4 +1,4 @@
-/* Phone swipe past the end (phone-advance.js). Loaded only by courses with "phoneAdvance": true. */
+/* Phone swipe past the end (phone-advance.js). Loaded by every study course page. */
 .pa-hint{display:none}
 @media (max-width:600px) and (pointer:coarse){
   body.guide-page>.app{overscroll-behavior-y:none}   /* no rubber-band bounce at the ends (iOS 16+) */

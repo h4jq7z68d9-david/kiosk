@@ -402,7 +402,7 @@ function crumbHtml(f) {
 function pageHtml(f, i) {
   const [cls, inner] = slideHtml(f), prev = flat[i - 1], next = flat[i + 1], m = meta(f), u = abs(f.url), im = dims(m.image);
   const LB = inner.includes('data-lightbox');
-  const PA = CFG.phoneAdvance === true && f.kind !== 'redirect';   // phones: push past a slide's end for the next one (settings "phoneAdvance")   // example-painting lightbox: only pages that have one load it
+  const PA = CFG.phoneAdvance !== false && f.kind !== 'redirect';   // phones: swipe past a slide's end for the next one; on for every course (Nov 11 2026), "phoneAdvance": false turns it off   // example-painting lightbox: only pages that have one load it
   const ld = { '@context': 'https://schema.org', '@graph': m.ld };
   return `<!DOCTYPE html>
 <html lang="en">

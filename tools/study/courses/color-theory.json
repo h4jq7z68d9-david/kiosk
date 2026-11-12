@@ -1,6 +1,5 @@
 {
  "name": "Color Theory",
- "phoneAdvance": true,
  "dataFiles": ["data.js"],
  "basePath": "/study",
  "introImg": "chevreul-chromatic-circle",
