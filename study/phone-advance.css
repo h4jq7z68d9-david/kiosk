@@ -1,17 +1,5 @@
-/* Phone "push past the end" navigation (phone-advance.js). Loaded only by courses with "phoneAdvance": true. */
+/* Phone swipe past the end (phone-advance.js). Loaded only by courses with "phoneAdvance": true. */
 .pa-hint{display:none}
 @media (max-width:600px) and (pointer:coarse){
   .pa-hint{display:block;grid-column:1/-1;margin:18px 0 4px;text-align:center;font-size:.82rem;color:var(--ink3)}
-  .pa-pill{position:fixed;left:50%;z-index:90;transform:translateX(-50%);max-width:calc(100vw - 48px);
-    display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:22px;overflow:hidden;
-    background:var(--panel);border:1px solid var(--border-mid);box-shadow:0 2px 12px color-mix(in srgb,var(--ink) 14%,transparent);
-    font:500 .9rem var(--font);color:var(--ink);pointer-events:none;white-space:nowrap}
-  .pa-pill{opacity:0;transition:opacity .15s ease,border-color .15s ease}
-  .pa-pill.pa-on{opacity:1}
-  .pa-pill.pa-up{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
-  .pa-pill.pa-down{top:calc(var(--nav-h) + 12px)}
-  .pa-text{overflow:hidden;text-overflow:ellipsis;position:relative;z-index:1}
-  .pa-arrow{position:relative;z-index:1;color:var(--accent-ink)}
-  .pa-fill{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);transition:transform .08s linear;background:var(--accent-soft, color-mix(in srgb,var(--accent) 16%,transparent))}
-  .pa-pill.pa-ready{border-color:var(--accent)}
 }

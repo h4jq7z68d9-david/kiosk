@@ -1,88 +1,47 @@
-/* Phone "push past the end" navigation (Nov 11 2026; on for courses whose settings have "phoneAdvance": true).
-   Phones only (≤600 px, touch). Each slide still scrolls up and down as usual. Once the slide is scrolled to the
-   bottom, one more push up goes to the next slide; at the top, one more push down goes to the previous one.
-   A pill shows where you are going while you pull; let go before it fills and nothing happens.
-   Left/right swipes stay as they are (guide.js). The Prev/Next bar is unchanged. */
+/* Phone swipe past the end (Nov 11 2026; on for courses whose settings have "phoneAdvance": true).
+   Phones only (≤600 px, touch). Each slide scrolls up and down as usual. Once the slide is at the bottom, a swipe
+   up goes straight to the next slide; at the top, a swipe down goes to the previous one. No hold, no animation:
+   it works like the left/right swipe in guide.js. Only a swipe that STARTS at the end counts, so the swipe that
+   scrolls you to the bottom never skips a slide. The Prev/Next bar is unchanged. */
 (function () {
   if (!window.matchMedia || !matchMedia('(max-width:600px)').matches || !matchMedia('(pointer:coarse)').matches) return;
   var sc = document.querySelector('body.guide-page > .app');
-  var next = document.getElementById('next'), prev = document.getElementById('prev');
-  if (!sc) return;
   var link = function (a) { return a && a.getAttribute('href') ? a : null; };
-  next = link(next); prev = link(prev);
-  if (!next && !prev) return;
-
-  var PULL = 90;   // px of extra push needed
-  var pill = document.createElement('div');
-  pill.className = 'pa-pill'; pill.setAttribute('aria-hidden', 'true');
-  pill.innerHTML = '<span class="pa-arrow"></span><span class="pa-text"></span><span class="pa-fill"></span>';
-  document.body.appendChild(pill);
-  var arrow = pill.querySelector('.pa-arrow'), text = pill.querySelector('.pa-text'), fill = pill.querySelector('.pa-fill');
+  var next = link(document.getElementById('next')), prev = link(document.getElementById('prev'));
+  if (!sc || (!next && !prev)) return;
 
   /* a quiet cue at the end of the slide */
   if (next) {
     var hint = document.createElement('p');
     hint.className = 'pa-hint';
-    hint.textContent = 'Push up for next: ' + (next.getAttribute('title') || 'next slide');
+    hint.textContent = 'Swipe up for next: ' + (next.getAttribute('title') || 'next slide');
     sc.appendChild(hint);
   }
 
-  var y0 = null, x0 = 0, dir = 0, ready = false, lock = 0, raf = 0, want = null;
-  var DEAD = 18;   // px of travel before anything shows; then the direction is locked for the rest of the touch
+  var MIN = 50, MAX_MS = 800;   // same feel as the sideways swipe: a clear, quick swipe
+  var y0 = null, x0 = 0, t0 = 0, end = false, top = false;
   var busy = function (t) {
     return (t && t.closest && t.closest('.results, .dlb, #lb, .ed-panel, input, select, textarea, [contenteditable="true"]'))
       || document.documentElement.classList.contains('dlb-open') || document.body.classList.contains('ed-on');
   };
-  var atEnd = function () { return sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 2; };
-  var atTop = function () { return sc.scrollTop <= 1; };
 
   sc.addEventListener('touchstart', function (e) {
-    y0 = null; dir = 0; ready = false; lock = 0;
-    if (e.touches.length !== 1 || busy(e.target)) return;
-    /* only a push that STARTS at the end counts; the push that scrolls you to the end does not */
-    var end = atEnd(), top = atTop();
-    if (!end && !top) return;
-    y0 = e.touches[0].clientY; x0 = e.touches[0].clientX;
-    dir = end && next ? 1 : 0;
-    if (top && prev) dir = dir ? 2 : -1;   // 2: a short slide that fits the screen, either way
-  }, { passive: true });
-
-  sc.addEventListener('touchmove', function (e) {
-    if (y0 == null) return;
-    var dy = e.touches[0].clientY - y0, dx = e.touches[0].clientX - x0;
-    if (!lock) {
-      if (Math.abs(dx) < DEAD && Math.abs(dy) < DEAD) return;   // ignore jitter
-      if (Math.abs(dx) > Math.abs(dy)) { y0 = null; return; }    // a sideways swipe: guide.js handles it
-      lock = dy < 0 && (dir === 1 || dir === 2) ? 1 : dy > 0 && (dir === -1 || dir === 2) ? -1 : 0;
-      if (!lock) { y0 = null; return; }                         // pushing away from the end: plain scrolling
-    }
-    var pull = lock > 0 ? -dy : dy;
-    frame(lock, Math.max(0, Math.min(1, (pull - DEAD) / PULL)));
-  }, { passive: true });
-
-  var end = function () {
-    if (y0 == null) return;
     y0 = null;
-    if (raf) { cancelAnimationFrame(raf); raf = 0; show(want[0], want[1]); }   // a fast release: apply the last pull first
-    var go = ready && pill.dataset.d;
-    frame(0);
-    if (go) location.href = (go === '1' ? next : prev).href;
-  };
-  sc.addEventListener('touchend', end, { passive: true });
-  sc.addEventListener('touchcancel', function () { y0 = null; frame(0); }, { passive: true });
-  /* one update per animation frame, so the fill moves smoothly instead of on every touchmove */
-  function frame(d, p) { want = [d, p]; if (!raf) raf = requestAnimationFrame(function () { raf = 0; show(want[0], want[1]); }); }
+    if (e.touches.length !== 1 || busy(e.target)) return;
+    end = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 2;
+    top = sc.scrollTop <= 1;
+    if (!end && !top) return;
+    y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; t0 = Date.now();
+  }, { passive: true });
 
-  function show(d, p) {
-    if (!d) { pill.classList.remove('pa-on'); ready = false; delete pill.dataset.d; return; }
-    var a = d > 0 ? next : prev;
-    pill.dataset.d = String(d);
-    pill.classList.toggle('pa-up', d > 0); pill.classList.toggle('pa-down', d < 0);
-    arrow.textContent = d > 0 ? '↑' : '↓';
-    ready = p >= 1;
-    text.textContent = (ready ? 'Release for ' : (d > 0 ? 'Next: ' : 'Previous: ')) + (a.getAttribute('title') || '');
-    fill.style.transform = 'scaleX(' + p.toFixed(3) + ')';
-    pill.classList.toggle('pa-ready', ready);
-    pill.classList.add('pa-on');
-  }
+  sc.addEventListener('touchend', function (e) {
+    if (y0 == null) return;
+    var t = e.changedTouches[0], dy = t.clientY - y0, dx = t.clientX - x0;
+    y0 = null;
+    if (Date.now() - t0 > MAX_MS || Math.abs(dy) < MIN || Math.abs(dy) < Math.abs(dx) * 1.5) return;
+    if (dy < 0 && end && next) location.href = next.href;
+    else if (dy > 0 && top && prev) location.href = prev.href;
+  }, { passive: true });
+
+  sc.addEventListener('touchcancel', function () { y0 = null; }, { passive: true });
 })();
