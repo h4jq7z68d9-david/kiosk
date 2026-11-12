@@ -74,7 +74,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 18, guideJs: 14, search: 3, lightboxCss: 1, lightboxJs: 1 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 18, guideJs: 14, search: 3, lightboxCss: 1, lightboxJs: 1, phoneAdvanceCss: 1, phoneAdvanceJs: 1 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -401,7 +401,8 @@ function crumbHtml(f) {
 
 function pageHtml(f, i) {
   const [cls, inner] = slideHtml(f), prev = flat[i - 1], next = flat[i + 1], m = meta(f), u = abs(f.url), im = dims(m.image);
-  const LB = inner.includes('data-lightbox');   // example-painting lightbox: only pages that have one load it
+  const LB = inner.includes('data-lightbox');
+  const PA = CFG.phoneAdvance === true && f.kind !== 'redirect';   // phones: push past a slide's end for the next one (settings "phoneAdvance")   // example-painting lightbox: only pages that have one load it
   const ld = { '@context': 'https://schema.org', '@graph': m.ld };
   return `<!DOCTYPE html>
 <html lang="en">
@@ -434,7 +435,7 @@ ${FONTS}
 <link rel="stylesheet" href="/site-chrome.css?v=${V.chrome}">
 <link rel="stylesheet" href="/site-bar.css?v=${V.bar}">
 <link rel="stylesheet" href="/study/guide.css?v=${V.guideCss}">
-${LB ? `<link rel="stylesheet" href="/study/lightbox.css?v=${V.lightboxCss}">\n` : ''}${prev ? `<link rel="prev" href="${prev.url}">\n` : ''}${next ? `<link rel="next" href="${next.url}">\n` : ''}<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
+${LB ? `<link rel="stylesheet" href="/study/lightbox.css?v=${V.lightboxCss}">\n` : ''}${PA ? `<link rel="stylesheet" href="/study/phone-advance.css?v=${V.phoneAdvanceCss}">\n` : ''}${prev ? `<link rel="prev" href="${prev.url}">\n` : ''}${next ? `<link rel="next" href="${next.url}">\n` : ''}<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
 </head>
 <body class="guide-page${CFG.greekKey === true ? ' greek-key' : ''}" data-id="${esc(f.id)}">
 ${NAV}
@@ -470,7 +471,7 @@ ${NAV}
 <script src="${COURSE}/index.js?v=${INDEX_V}"></script>
 <script src="/study/search.js?v=${V.search}"></script>
 <script src="/study/guide.js?v=${V.guideJs}"></script>
-${LB ? `<script src="/study/lightbox.js?v=${V.lightboxJs}"></script>\n` : ''}<script src="/site-chrome.js?v=${V.chrome}"></script>
+${LB ? `<script src="/study/lightbox.js?v=${V.lightboxJs}"></script>\n` : ''}${PA ? `<script src="/study/phone-advance.js?v=${V.phoneAdvanceJs}"></script>\n` : ''}<script src="/site-chrome.js?v=${V.chrome}"></script>
 </body>
 </html>
 `;

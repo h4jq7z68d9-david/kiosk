@@ -16,7 +16,7 @@ const FOCUS = process.argv[2] || null;
 /* Pages that are tools or legacy and are not held to the public-page rules. */
 const SKIP_PAGES = new Set(['admin.html', 'kiosk.html', 'booth.html', 'expenses-jill-nicholson.html', 'shop.html']);
 /* Shared assets whose ?v= must match the generator's V object. */
-const VERSIONED = { 'site-tokens.css': 'tokens', 'site-chrome.js': 'chrome', 'site-chrome.css': 'chrome', 'site-bar.js': 'bar', 'site-bar.css': 'bar', 'guide.css': 'guideCss', 'guide.js': 'guideJs', 'search.js': 'search', 'lightbox.css': 'lightboxCss', 'lightbox.js': 'lightboxJs' };
+const VERSIONED = { 'site-tokens.css': 'tokens', 'site-chrome.js': 'chrome', 'site-chrome.css': 'chrome', 'site-bar.js': 'bar', 'site-bar.css': 'bar', 'guide.css': 'guideCss', 'guide.js': 'guideJs', 'search.js': 'search', 'lightbox.css': 'lightboxCss', 'lightbox.js': 'lightboxJs', 'phone-advance.css': 'phoneAdvanceCss', 'phone-advance.js': 'phoneAdvanceJs' };
 const BANNED = [/\bweek \d+\b/i, /free study guide/i, /\bwritten by\b/i, /\bcomprised\b/i];
 const BANNED_BODY = [/\bART ?\d{3}\b/];   // course codes: banned on pages, allowed in the sources bibliography
 /* Files written by the deploy workflow (generate-prints.js), not in the repo. */
