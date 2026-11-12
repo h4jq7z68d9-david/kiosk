@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 11 2026, evening) — Gallery rows float up
+
+- `wallLeftRows()` in `gallery.html`: bottom-aligned rows replaced by float-up — each card rises to 40px under whatever hangs directly above it, so the first row's tops line up and later rows fill gaps. Order, sizes, 4-per-row and 40px gaps unchanged. David picked it from previews on the live page (option "shift the old cluster left" also previewed, not chosen). Phones unchanged (still Pending).
+- check.js PASS; verified on the live page in David's Chrome at 1440px (2026).
+
+-----
+
 ## Completed This Session (November 11 2026, evening) — Gallery left-justified rows (branch `gallery-left-rows`, pushed to `main` on David's word)
 
 - `gallery.html`: new `wallLeftRows()` for wide screens (>600px). It runs `wallCluster()` only for the order (read row by row, left to right), then hangs cards from the left edge, up to 4 per row, 40px gaps, bottom-aligned. `wallDims` / `wallParams` / `wallSizes` unchanged, so true-scale sizes stay. Phones still use centred `wallRows()` — flagged to David, not yet decided.
