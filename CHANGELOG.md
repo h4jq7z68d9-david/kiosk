@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 15 2026) — Admin: typed dates and a calendar button on every date filter
+
+- Bug: an October online sale didn't show when David filtered Reports to October. The Revenue/Expense chart ranges were `type=month`, which Mac Safari draws as a plain text box; typed dates ("10.1.26", "10/01/2026") were compared as text against `YYYY-MM` and excluded everything.
+- Fix (`admin.html`): `enhanceDateFields()` turns every From/To filter into a text box that parses `10.1.26`, `10/01/2026`, `2026-10-01`, `10.26`, `10.2026`, with a calendar button (native picker) beside it; unreadable dates get a red border. ISO stored in `data-iso`, read via `dv()` / `setDv()`. Charts now filter by exact day. Sale/expense/mileage entry forms unchanged.
+- Headless test with mock data at 1440 and 390: typed and picked ranges, Sales Log filter and report download all return the Oct 14 online sale only; check.js and smoke.js PASS. Not verified on a real Mac/iPhone; real `dna-sales` row not checked (AWS connector needed re-sign-in).
+
 ## Completed This Session (November 11 2026, night) — Study viewer: our own page menu on phones and portrait iPads
 
 - `guide.js` replaces the system picker (`<select id="jump">`, which iOS draws itself: no bold, opens scrolled to the current page) with an owned drop-down at ≤900 px, every course: "Study home" pinned and bold at the top, page list scrolling under it, section headings with dividers, current page marked and scrolled into view. Close by picking, tapping outside (close only, no click-through), or Esc; arrow keys move within it; max 60% of the screen tall. Desktop unchanged (rail). `guideCss` 19, `guideJs` 16; rebuild changed only cache strings.
