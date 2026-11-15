@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+// The admin only works on the apex domain: receipt uploads go straight to S3, whose CORS rule allows
+// only https://davidnicholsonart.com, and every other host turns API calls into cross-origin requests.
+// Opened from www or the old kiosk.davidnicholsonllc.com address, send it to the apex (Nov 15 2026).
+if (location.hostname === 'www.davidnicholsonart.com' || location.hostname === 'kiosk.davidnicholsonllc.com')
+  location.replace('https://davidnicholsonart.com' + location.pathname + location.search + location.hash);
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Admin — David Nicholson Art</title>
 <meta name="robots" content="noindex, nofollow">
@@ -2855,14 +2862,16 @@ function renderExpenses() {
   renderAdvReminder();
 }
 
-// Remind to log advertising spend for the current month if none exists yet.
+// Remind to log LAST month's advertising spend (the bill arrives after the month ends) if none
+// exists yet — November's reminder starts December 1. Local time, not UTC (Nov 15 2026).
 // Shown on both the Expenses and Reports tabs (every .adv-reminder element).
 function renderAdvReminder() {
   const els = document.querySelectorAll('.adv-reminder');
   if (!els.length) return;
-  const month = new Date().toISOString().slice(0,7);
+  const now = new Date(), last = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const month = last.getFullYear() + '-' + String(last.getMonth() + 1).padStart(2, '0');
   const has = expState.expenses.some(e => e.category === 'Advertising' && (e.date||'').startsWith(month));
-  const label = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const label = last.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   els.forEach(el => {
     if (has) { el.style.display = 'none'; return; }
     el.querySelector('.adv-reminder-text').textContent = `No Advertising expense logged for ${label} yet.`;
