@@ -441,6 +441,7 @@ All are currently single-file with no framework. **This is how they were first b
 
 - Password gate: PIN verified server-side via `POST /admin/verify-password` (PIN lives only in Lambda env var `PASSWORD`; on success Lambda returns `ADMIN_TOKEN`, which the page sends as `?token=` on all `/admin/*` calls)
 - **All admin API calls must go through the `api()` helper**, which appends `?token=` and prefixes `API_BASE` (= `https://davidnicholsonart.com/admin`). Pass the path WITHOUT the `/admin` prefix (e.g. `api('GET','/gallery-stock')`, `api('GET','/paintings')`) — `API_BASE` already supplies it. Never use a raw relative `fetch('/admin/…')`: it skips the token and 401s.
+- **Apex only (Nov 15 2026):** a head script redirects `www.davidnicholsonart.com` and `kiosk.davidnicholsonllc.com` to `https://davidnicholsonart.com/admin.html` — receipt uploads PUT straight to S3, whose CORS allows only the apex. Advertising reminder asks for the previous month (local time); November's starts Dec 1.
 - **Date filters (Nov 15 2026):** every From/To filter (Reports revenue/expense charts, Taxes Collected, Sales Log, Expenses, Mileage, report download) is a text box that takes typed dates (`10.1.26`, `10/01/2026`, `2026-10-01`; `10.26` = Oct 26 this year; `10.2026` = whole month) plus a calendar button. Shows m.d.yy; the ISO date is in `data-iso` — read with `dv(id)`, set with `setDv(id, iso)`, never `.value`. Charts filter by exact day. Entry-form dates (sale, expense, mileage) stay native. Reason: Mac Safari has no month picker, so the old `type=month` chart fields took free text that matched nothing.
 - **Always open at `https://davidnicholsonart.com/admin.html`** (apex, no www) — Safari CORS redirect cache issue
 - **PWA:** installable as home screen app on iPhone/iPad via Safari → Share → Add to Home Screen
@@ -652,7 +653,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ## Pending — In Order of Priority
 
 - [ ] **Admin date filters on phones:** "To" wraps away from its box in the Reports chart rows at 390px — keep each label with its field if David wants.
-- [ ] **Verify the October online sale is in `dna-sales`** once the AWS connector is signed in again (the 0-results bug is fixed; this rules out a second problem).
+- [ ] **David:** re-add the admin home-screen icon from `davidnicholsonart.com/admin.html`, then re-attach the receipt to the Oct 31 $60.79 Google advertising expense (saved without one). If the upload still fails on the apex, investigate the failed `PUT /admin/expenses/{id}` (preflight reached Lambda, the PUT never did).
 - [ ] **Gallery on phones (≤600px):** wide screens hang left-justified rows since Nov 11 2026; phones still use centred `wallRows()`. David to decide whether phones go left-justified too.
 
 ### Process and tooling backlog (David, Nov 6 2026) — not started

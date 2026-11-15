@@ -4,6 +4,16 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 15 2026, later) — Admin: advertising reminder month, apex-only redirect
+
+- Advertising reminder asked for the current month (and used UTC); now asks for last month in local time, so November's starts Dec 1.
+- Receipt upload failed with "FetchEvent.respondWith received an error: TypeError: Load failed". Lambda logs showed CORS preflights from David's device, so the admin was open off-apex (www or kiosk.davidnicholsonllc.com); S3 bucket CORS allows only `https://davidnicholsonart.com`. Added a head redirect to the apex for those two hosts. The Oct 31 $60.79 advertising expense saved without a receipt; David to re-attach.
+- Verified in `dna-sales`: October online sales on Oct 21 ($40) and Oct 30 ($200) are recorded.
+- Incident: the earlier headless admin test let the admin service worker send 10 expense + 2 mileage seed POSTs to the live API with a fake token; all rejected, no rows written (scan confirmed). Future admin tests must use `serviceWorkers: 'block'` and route every `/admin/` request.
+- check.js, smoke.js PASS; reminder and redirect tested headless.
+
+-----
+
 ## Completed This Session (November 15 2026) — Admin: typed dates and a calendar button on every date filter
 
 - Bug: an October online sale didn't show when David filtered Reports to October. The Revenue/Expense chart ranges were `type=month`, which Mac Safari draws as a plain text box; typed dates ("10.1.26", "10/01/2026") were compared as text against `YYYY-MM` and excluded everything.
