@@ -592,7 +592,17 @@
   .rep-sec { margin-top: 28px; padding: 18px 22px; border: 1.5px solid var(--border-mid); border-radius: var(--radius); }
   .rep-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .rep-row label { font-size: 12px; color: var(--ink2); font-weight: 500; }
-  .rep-row input[type=date] { font-family: var(--mono); font-size: 12px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 4px 8px; background: var(--bg); color: var(--ink); outline: none; }
+  .dfield { display: inline-flex; align-items: center; gap: 4px; position: relative; }
+  .dfield .dtext { width: 8.2em; }
+  .dfield .dtext[aria-invalid=true] { border-color: var(--red) !important; }
+  .dfield .dbtn { position: relative; width: 28px; height: 28px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border: 1.5px solid var(--border-mid); border-radius: 6px; background: var(--bg); color: var(--ink2); cursor: pointer; }
+  .dfield .dbtn:hover { border-color: var(--accent); color: var(--accent); }
+  .dfield .dpick { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; }
+  .dfield .dpick::-webkit-calendar-picker-indicator { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; cursor: pointer; }
+  .field .dfield { display: flex; }
+  .field .dfield .dtext { flex: 1; width: auto; min-width: 0; }
+  .field .dfield .dbtn { width: 40px; height: 40px; }
+  .rep-row .dtext, .rep-row input[type=date] { font-family: var(--mono); font-size: 12px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 4px 8px; background: var(--bg); color: var(--ink); outline: none; }
   .rep-row select { font-family: var(--font); font-size: 13px; border: 1.5px solid var(--border-mid); border-radius: 6px; padding: 5px 8px; background: var(--bg); color: var(--ink); outline: none; }
   @media (max-width: 600px) { .rep-sec { padding: 14px 14px; } }
   /* New online sale alert — rows logged by the server-side Square sync since this device last dismissed */
@@ -682,9 +692,9 @@
                 <div class="section-title" style="margin:0">Expenses by Month</div>
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <label style="font-size:12px;color:var(--ink2);font-weight:500">From</label>
-                  <input type="month" id="exp-chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderExpChart()">
+                  <input type="date" id="exp-chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderExpChart()">
                   <label style="font-size:12px;color:var(--ink2);font-weight:500">To</label>
-                  <input type="month" id="exp-chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderExpChart()">
+                  <input type="date" data-end="1" id="exp-chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderExpChart()">
                   <button onclick="clearExpChartRange()" style="font-family:var(--font);font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0">clear</button>
                 </div>
               </div>
@@ -706,9 +716,9 @@
                 <div class="section-title" style="margin:0">Revenue by Month</div>
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <label style="font-size:12px;color:var(--ink2);font-weight:500">From</label>
-                  <input type="month" id="chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
+                  <input type="date" id="chart-from" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
                   <label style="font-size:12px;color:var(--ink2);font-weight:500">To</label>
-                  <input type="month" id="chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
+                  <input type="date" data-end="1" id="chart-to" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none" oninput="renderChart()">
                   <button onclick="clearChartRange()" style="font-family:var(--font);font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0">clear</button>
                 </div>
               </div>
@@ -726,8 +736,8 @@
               <div style="font-size:12px;color:var(--ink3);margin-top:2px">Sales tax charged through + Sale checkout. Online orders collect none.</div>
             </div>
             <div class="rep-row">
-              <label for="tax-from">From</label><input type="date" id="tax-from" value="2026-10-01" onchange="renderTaxCollected()">
-              <label for="tax-to">To</label><input type="date" id="tax-to" onchange="renderTaxCollected()">
+              <label for="tax-from">From</label><input type="date" id="tax-from" data-iso="2026-10-01" onchange="renderTaxCollected()">
+              <label for="tax-to">To</label><input type="date" id="tax-to" data-end="1" onchange="renderTaxCollected()">
             </div>
           </div>
           <div style="margin-top:14px">
@@ -800,7 +810,7 @@
               <div class="fb-date-range">
                 <input type="date" id="inv-date-from" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
                 <span class="fb-date-sep" style="font-size:11px;color:var(--ink3)">–</span>
-                <input type="date" id="inv-date-to" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
+                <input type="date" id="inv-date-to" data-end="1" onchange="renderTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none">
               </div>
             </div>
             <div class="fb-group">
@@ -936,7 +946,7 @@
             <div class="section-title" style="margin:0">Expenses</div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               <input type="text" id="exp-search" placeholder="Search…" oninput="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;width:150px;max-width:100%">
-              <span style="display:inline-flex;align-items:center;gap:6px"><input type="date" id="exp-from" aria-label="From date" onchange="renderExpenses()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"><span style="font-size:11px;color:var(--ink3)">–</span><input type="date" id="exp-to" aria-label="To date" onchange="renderExpenses()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"></span>
+              <span style="display:inline-flex;align-items:center;gap:6px"><input type="date" id="exp-from" aria-label="From date" onchange="renderExpenses()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"><span style="font-size:11px;color:var(--ink3)">–</span><input type="date" id="exp-to" data-end="1" aria-label="To date" onchange="renderExpenses()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"></span>
               <select id="exp-cat-filter" onchange="renderExpenses()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;appearance:none;cursor:pointer;width:140px;max-width:100%">
                 <option value="">All categories</option>
                 <option>Printing</option>
@@ -1016,7 +1026,7 @@
             </div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               <input type="text" id="mile-search" placeholder="Search…" oninput="renderMileTable()" style="font-family:var(--font);font-size:13px;border:1.5px solid var(--border-mid);border-radius:6px;padding:6px 10px;background:var(--bg);color:var(--ink);outline:none;width:150px;max-width:100%">
-              <span style="display:inline-flex;align-items:center;gap:6px"><input type="date" id="mile-from" aria-label="From date" onchange="renderMileTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"><span style="font-size:11px;color:var(--ink3)">–</span><input type="date" id="mile-to" aria-label="To date" onchange="renderMileTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"></span>
+              <span style="display:inline-flex;align-items:center;gap:6px"><input type="date" id="mile-from" aria-label="From date" onchange="renderMileTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"><span style="font-size:11px;color:var(--ink3)">–</span><input type="date" id="mile-to" data-end="1" aria-label="To date" onchange="renderMileTable()" style="font-family:var(--mono);font-size:12px;border:1.5px solid var(--border-mid);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--ink);outline:none"></span>
               <button class="btn-primary" onclick="openMileModal()">+ Log Mileage</button>
             </div>
           </div>
@@ -1987,15 +1997,15 @@ function applyFilter(list) {
 // ═══════════════════════════════════════════
 function hasActiveSaleFilter() {
   return !!(
-    document.getElementById('inv-date-from')?.value ||
-    document.getElementById('inv-date-to')?.value ||
+    dv('inv-date-from') ||
+    dv('inv-date-to') ||
     document.getElementById('inv-channel')?.value ||
     document.getElementById('inv-sale-state')?.value
   );
 }
 function salesInFilterFor(p) {
-  const from    = document.getElementById('inv-date-from')?.value || '';
-  const to      = document.getElementById('inv-date-to')?.value || '';
+  const from    = dv('inv-date-from');
+  const to      = dv('inv-date-to');
   const chanFil = document.getElementById('inv-channel')?.value || '';
   const stateFil= document.getElementById('inv-sale-state')?.value || '';
   return (p.sales || []).filter(s => {
@@ -2058,8 +2068,8 @@ function updateInvFilterBadge() {
   if (zeroLargeFilterOn) n++;
   if (zeroSmallFilterOn) n++;
   if (dimFilter) n++;
-  if (document.getElementById('inv-date-from')?.value) n++;
-  if (document.getElementById('inv-date-to')?.value) n++;
+  if (dv('inv-date-from')) n++;
+  if (dv('inv-date-to')) n++;
   if (document.getElementById('inv-channel')?.value) n++;
   if (document.getElementById('inv-sale-state')?.value) n++;
   badge.textContent = n;
@@ -2072,7 +2082,8 @@ function clearAllInvFilters() {
   zeroLargeFilterOn = 0; zeroSmallFilterOn = 0;
   dimFilter = '';
   const dimSel = document.getElementById('dim-filter'); if (dimSel) dimSel.value = '';
-  ['inv-date-from','inv-date-to','inv-channel','inv-sale-state'].forEach(id => {
+  setDv('inv-date-from', ''); setDv('inv-date-to', '');
+  ['inv-channel','inv-sale-state'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   updateFilterChips();
@@ -2143,6 +2154,7 @@ document.addEventListener('click', function(e) {
 //  INIT & RENDER
 // ═══════════════════════════════════════════
 async function init() {
+  enhanceDateFields(document);
   populateExpYearFilter();
 
   setLoading(true);
@@ -2298,7 +2310,7 @@ async function ppApply(size, cents) {
 // ═══════════════════════════════════════════
 function renderTaxCollected() {
   const val = document.getElementById('tax-collected-value'); if (!val) return;
-  const from = document.getElementById('tax-from').value, to = document.getElementById('tax-to').value;
+  const from = dv('tax-from'), to = dv('tax-to');
   let total = 0, n = 0; const byState = {};
   for (const p of (db.paintings || [])) for (const s of (p.sales || [])) {
     if (s.tax == null) continue;
@@ -2321,9 +2333,11 @@ function defaultReportYear() { const d = new Date(); return d.getMonth() <= 3 ? 
 const REPORT_PARAMS = {
   range: {
     html: () => { const y = defaultReportYear(); return `<div class="field-row">
-      <div class="field"><label for="rp-from">From</label><input type="date" id="rp-from" value="${y}-01-01"></div>
-      <div class="field"><label for="rp-to">To</label><input type="date" id="rp-to" value="${y}-12-31"></div></div>`; },
-    read: () => { const from = document.getElementById('rp-from').value, to = document.getElementById('rp-to').value;
+      <div class="field"><label for="rp-from">From</label><input type="date" id="rp-from" data-iso="${y}-01-01"></div>
+      <div class="field"><label for="rp-to">To</label><input type="date" id="rp-to" data-iso="${y}-12-31" data-end="1"></div></div>`; },
+    read: () => { for (const id of ['rp-from', 'rp-to']) commitDate(id, true);
+      if (document.querySelector('#report-fields .dtext[aria-invalid=true]')) throw new Error('A date could not be read. Use m.d.yy, e.g. 10.1.26.');
+      const from = dv('rp-from'), to = dv('rp-to');
       if (from && to && from > to) throw new Error('The From date is after the To date.');
       return { from, to }; },
   },
@@ -2343,6 +2357,7 @@ function openReport(key) {
   document.getElementById('report-title').textContent = r.title + ' report';
   document.getElementById('report-hint').textContent = r.hint;
   document.getElementById('report-fields').innerHTML = r.params.map(k => REPORT_PARAMS[k].html()).join('');
+  enhanceDateFields(document.getElementById('report-fields'));
   document.getElementById('report-modal').style.display = 'flex';
 }
 async function runReport() {
@@ -2467,25 +2482,23 @@ function applyMobileChartDefault() {
   if (!isMobileWidth()) return;
   const chartFrom = document.getElementById('chart-from');
   const expFrom = document.getElementById('exp-chart-from');
-  if (chartFrom && !chartFrom.value) chartFrom.value = monthsAgoStr(5);
-  if (expFrom && !expFrom.value) expFrom.value = monthsAgoStr(5);
+  if (chartFrom && !dv('chart-from')) setDv('chart-from', monthsAgoStr(5) + '-01');
+  if (expFrom && !dv('exp-chart-from')) setDv('exp-chart-from', monthsAgoStr(5) + '-01');
 }
 
 function clearChartRange() {
-  document.getElementById('chart-from').value = '';
-  document.getElementById('chart-to').value = '';
+  setDv('chart-from', ''); setDv('chart-to', '');
   renderChart();
 }
 
 function clearExpChartRange() {
-  document.getElementById('exp-chart-from').value = '';
-  document.getElementById('exp-chart-to').value = '';
+  setDv('exp-chart-from', ''); setDv('exp-chart-to', '');
   renderExpChart();
 }
 
 function renderExpChart() {
-  const fromVal = document.getElementById('exp-chart-from').value;
-  const toVal   = document.getElementById('exp-chart-to').value;
+  const fromVal = dv('exp-chart-from');
+  const toVal   = dv('exp-chart-to');
   const buckets = {};
   let filteredTotal = 0, filteredCount = 0, allTotal = 0, allCount = 0;
 
@@ -2494,8 +2507,8 @@ function renderExpChart() {
     allTotal += amt; allCount++;
     if (!e.date) return;
     const key = e.date.slice(0,7);
-    if (fromVal && key < fromVal) return;
-    if (toVal   && key > toVal)   return;
+    if (fromVal && e.date < fromVal) return;
+    if (toVal   && e.date > toVal)   return;
     buckets[key] = (buckets[key] || 0) + amt;
     filteredTotal += amt; filteredCount++;
   });
@@ -2525,8 +2538,8 @@ function renderExpChart() {
 }
 
 function renderChart() {
-  const fromVal = document.getElementById('chart-from').value;
-  const toVal   = document.getElementById('chart-to').value;
+  const fromVal = dv('chart-from');
+  const toVal   = dv('chart-to');
   const buckets = {};
   let filteredRev = 0, filteredCount = 0, allRev = 0, allCount = 0;
   let revFair = 0, revOnline = 0, revGallery = 0;
@@ -2536,8 +2549,8 @@ function renderChart() {
       allRev += net; allCount++;
       if (!s.date) return;
       const key = s.date.slice(0,7);
-      if (fromVal && key < fromVal) return;
-      if (toVal   && key > toVal)   return;
+      if (fromVal && s.date < fromVal) return;
+      if (toVal   && s.date > toVal)   return;
       buckets[key] = (buckets[key] || 0) + net;
       filteredRev += net; filteredCount++;
       if (s.channel === 'fair')    revFair    += net;
@@ -2740,10 +2753,96 @@ function renderTable() {
 // Expenses & Mileage list filters default to this year so far (From = Jan 1, To open); clear either date to widen.
 function populateExpYearFilter() {
   const jan1 = new Date().getFullYear() + '-01-01';
-  for (const id of ['exp-from', 'mile-from']) { const el = document.getElementById(id); if (el && !el.value) el.value = jan1; }
+  for (const id of ['exp-from', 'mile-from']) if (document.getElementById(id) && !dv(id)) setDv(id, jan1);
 }
+// ═══════════════════════════════════════════
+//  DATE FIELDS — every From/To filter takes typed dates (10.1.26, 10/01/2026,
+//  2026-10-01, 10.26 = Oct 26 this year, 10.2026 = whole month) or the calendar
+//  button. The text box shows m.d.yy; the ISO date lives in data-iso — read it
+//  with dv(id), set it with setDv(id, iso). Never read .value on these fields.
+//  (Nov 15 2026: Mac Safari has no month picker, so the old type=month fields
+//  were plain text and typed dates silently matched nothing.)
+// ═══════════════════════════════════════════
+function isoOf(y, m, d) {
+  const dt = new Date(y, m - 1, d);
+  if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return null;
+  return y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+}
+// Returns 'YYYY-MM-DD', '' for blank, or null if it can't be read. isEnd: a month-only
+// entry means the last day of that month (for To fields) instead of the first.
+function parseTypedDate(str, isEnd) {
+  const t = String(str || '').trim();
+  if (!t) return '';
+  const yr = y => y.length <= 2 ? 2000 + Number(y) : Number(y);
+  const lastDay = (y, m) => new Date(y, m, 0).getDate();
+  let m = t.match(/^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?$/);
+  if (m) { const y = +m[1], mo = +m[2]; return isoOf(y, mo, m[3] ? +m[3] : (isEnd ? lastDay(y, mo) : 1)); }
+  m = t.match(/^(\d{1,2})[.\/\-\s]+(\d{4})$/);                       // month + 4-digit year
+  if (m) { const y = +m[2], mo = +m[1]; return isoOf(y, mo, isEnd ? lastDay(y, mo) : 1); }
+  m = t.match(/^(\d{1,2})[.\/\-\s]+(\d{1,2})(?:[.\/\-\s]+(\d{2}|\d{4}))?$/);
+  if (m) return isoOf(m[3] ? yr(m[3]) : new Date().getFullYear(), +m[1], +m[2]);
+  return null;
+}
+function fmtTypedDate(iso) {
+  const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${+m[2]}.${+m[3]}.${m[1].slice(2)}` : '';
+}
+function dv(id) { return document.getElementById(id)?.dataset.iso || ''; }
+function setDv(id, iso) {
+  const el = document.getElementById(id); if (!el) return;
+  el.dataset.iso = iso || '';
+  el.value = fmtTypedDate(iso);
+  el.removeAttribute('aria-invalid');
+  el.dataset.typed = el.value;
+}
+// Reads what was typed; returns true if the stored date changed.
+function commitDate(id, quiet) {
+  const el = document.getElementById(id); if (!el) return false;
+  if (el.value === el.dataset.typed) return false;
+  const iso = parseTypedDate(el.value, el.dataset.end === '1');
+  if (iso === null) { el.setAttribute('aria-invalid', 'true'); el.dataset.typed = el.value; return false; }
+  const changed = iso !== (el.dataset.iso || '');
+  setDv(id, iso);
+  return changed && !quiet;
+}
+const CAL_SVG = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3"/></svg>';
+function enhanceDateFields(root) {
+  root.querySelectorAll('input[type=date]:not(.dpick), input[type=month]').forEach(el => {
+    if (el.closest('.modal') && !el.closest('#report-fields')) return;   // entry forms (sale/expense dates) keep the native field
+    const handler = el.onchange || el.oninput;
+    el.onchange = el.oninput = null;
+    el.removeAttribute('onchange'); el.removeAttribute('oninput');
+    const iso = el.dataset.iso || (/^\d{4}-\d{2}-\d{2}$/.test(el.value) ? el.value : '');
+    el.type = 'text';
+    el.classList.add('dtext');
+    el.placeholder = 'm.d.yy';
+    el.setAttribute('inputmode', 'decimal');
+    el.autocomplete = 'off';
+    const wrap = document.createElement('span');
+    wrap.className = 'dfield';
+    el.replaceWith(wrap);
+    const btn = document.createElement('span');
+    btn.className = 'dbtn';
+    btn.innerHTML = CAL_SVG + '<input type="date" class="dpick" tabindex="-1" aria-label="Pick a date">';
+    wrap.append(el, btn);
+    setDv(el.id, iso);
+    const fire = () => { if (handler) handler.call(el); };
+    el.addEventListener('change', () => { if (commitDate(el.id)) fire(); });
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (commitDate(el.id)) fire(); } });
+    const pick = btn.querySelector('.dpick');
+    pick.addEventListener('click', e => {
+      pick.value = dv(el.id);
+      try { pick.showPicker(); e.preventDefault(); } catch {}
+    });
+    pick.addEventListener('change', () => {
+      if (pick.value === dv(el.id)) return;
+      setDv(el.id, pick.value); fire();
+    });
+  });
+}
+
 function inDateRange(d, fromId, toId) {
-  const from = document.getElementById(fromId)?.value || '', to = document.getElementById(toId)?.value || '';
+  const from = dv(fromId), to = dv(toId);
   d = d || '';
   return !((from && d < from) || (to && d > to));
 }
@@ -2779,10 +2878,10 @@ function openExpModalAdv() {
 function renderDashExpCards() {
   const el = document.getElementById('chart-exp-breakdown');
   if (!el) return;
-  const fromVal = document.getElementById('exp-chart-from')?.value || '';
-  const toVal   = document.getElementById('exp-chart-to')?.value || '';
+  const fromVal = dv('exp-chart-from');
+  const toVal   = dv('exp-chart-to');
   const isFiltered = fromVal || toVal;
-  const inRange = d => { const k = (d||'').slice(0,7); return (!fromVal || k >= fromVal) && (!toVal || k <= toVal); };
+  const inRange = d => { d = d || ''; return (!fromVal || d >= fromVal) && (!toVal || d <= toVal); };
 
   const filteredExpenses = expState.expenses.filter(e => inRange(e.date));
   const filteredMileage  = expState.mileage.filter(m => inRange(m.date));
