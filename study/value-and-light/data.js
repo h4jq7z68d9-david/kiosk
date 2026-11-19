@@ -21,10 +21,10 @@ window.SITE = {
      "title": "The Value Scale",
      "img": "merrifield-pl02-scale",
      "alt": "A horizontal strip of ten bands stepping from white at the left through grays to black at the right",
-     "stmt": "Value means how light or dark something is, whatever its color, and a value scale lays it out in steps from white to black.",
+     "stmt": "Value is how light or dark something is, whatever its color. A value scale lays it out in steps from white to black, so any tone can be matched to a step.",
      "look": [
-      "Ten bands step from paper white at the left to solid black at the right, each a shade darker than the last.",
-      "Merrifield pointed out that each flat band looks darker along the edge where it meets a lighter one."
+      "Ten bands step from paper white at the left to solid black at the right; every tone in a picture falls between them.",
+      "Each flat band looks darker along the edge beside a lighter one: the eye judges a value against its neighbor."
      ],
      "ex": {
       "key": "ingres-odalisque-grisaille",
@@ -33,9 +33,9 @@ window.SITE = {
       "date": "about 1824–34",
       "det": "Oil on canvas, 32 3/4 × 43 in. The Metropolitan Museum of Art, New York",
       "alt": "A reclining nude seen from behind, turning her head over her shoulder, painted almost entirely in grays beside a gray curtain, on a pale cream cushion",
-      "line": "Ingres modeled this unfinished, smaller repeat of his 1814 Grande Odalisque almost entirely in grays, so value does nearly all the work of building the body."
+      "line": "Ingres painted this unfinished, smaller repeat of his 1814 Grande Odalisque almost entirely in grays, so value does nearly all the work of building the body."
      },
-     "bul": "Merrifield noticed that on a lit object most of the surface sits in the middle values, with only small patches at either extreme."
+     "bul": "Merrifield noticed that most of a lit object sits in the middle values, with only small patches at either extreme."
     },
     {
      "type": "concept",
@@ -44,8 +44,8 @@ window.SITE = {
      "alt": "Photograph of a white ball and a darker ball side by side under the same light, each with a lit side and a shadow side",
      "stmt": "Every surface has its own lightness, its local value; the light falling on it then adds lights and shadows on top.",
      "look": [
-      "The two balls share one light, and each turns from a lit side to a shadow side in the same places.",
-      "On the darker ball the whole pattern is shifted down and squeezed into a narrower range, so its shine stands out more."
+      "Under one light, both balls turn from lit side to shadow side in the same places: that pattern comes from the light, not the surface.",
+      "On the darker ball the whole pattern shifts down into a narrower range, so its shine stands out more."
      ],
      "ex": {
       "key": "zurbaran-still-life-lemons",
@@ -54,7 +54,7 @@ window.SITE = {
       "date": "1633",
       "det": "Oil on canvas, 24 1/2 × 43 in. Norton Simon Museum, Pasadena",
       "alt": "Pale lemons on a plate, a basket of oranges and a cup with a rose, lit from the left on a dark table",
-      "line": "Light from the left strikes pale lemons, darker oranges and a white cup, and each holds on to its own lightness whether lit or shaded."
+      "line": "Light from the left strikes pale lemons, darker oranges and a white cup, and each keeps its own lightness whether lit or shaded."
      },
      "bul": "Cross noted that the lit side of a dark object can look lighter than the shaded side of a light one."
     },
@@ -63,10 +63,10 @@ window.SITE = {
      "title": "High and Low Key",
      "img": "morisot-summers-day",
      "alt": "Two women in a rowboat on bright, rippling water, one in a dark blue coat, the other in pale gray",
-     "stmt": "Key describes where a picture's values mostly fall: a picture built mainly from lights is high key, one built mainly from darks is low key.",
+     "stmt": "Key is where a picture's values mostly fall. A high-key picture, mostly lights, looks flooded with light; a low-key one, mostly darks, makes its few lights stand out strongly.",
      "look": [
       "Almost all the values sit at the light end, so the whole scene reads as bright air over water.",
-      "The deep blue coat on the left-hand woman is the biggest dark area anywhere in it."
+      "The biggest dark, the left-hand woman's deep blue coat, covers little of the canvas, so the picture stays high key."
      ],
      "ex": {
       "key": "rembrandt-philosopher-in-meditation",
@@ -75,7 +75,7 @@ window.SITE = {
       "date": "1632",
       "det": "Oil on wood, 11 × 13 1/2 in. Musée du Louvre, Paris",
       "alt": "An old man seated by a bright window in a dark room with a spiral staircase, a small fire glowing at the right",
-      "line": "Darkness fills most of the panel; daylight from the window reaches the old man, and a fire at the right adds one small, separate glow."
+      "line": "Rembrandt gave most of the panel to darkness, so the window daylight reaching the old man and one small fire at the right glow against it."
      },
      "bul": "Key and contrast are separate: a bright picture may still hold some deep darks, and a dark one some brilliant lights."
     },
@@ -84,10 +84,10 @@ window.SITE = {
      "title": "The Light and Shadow Sequence",
      "img": "merrifield-pl09",
      "alt": "Plate of four spheres: an outline with a line drawn through its highlight and center, a sphere shaded below, a sphere lit as a crescent with a long shadow, and a shaded sphere with a shine and a cast shadow",
-     "stmt": "When one light falls on a rounded form, the values run in a set order: a highlight, the light side, a halftone, the darkest band of shadow, reflected light, then the shadow thrown on the ground.",
+     "stmt": "A rounded form turns away from a single light bit by bit, so its values run in a set order: highlight, light side, halftone (a middle tone), darkest shadow band, reflected light bounced into the shadow, then the shadow on the ground.",
      "look": [
-      "The lower-right sphere is lit from the upper left: a small shine, then darker tones as the surface turns away, and a shadow on the table.",
-      "In the upper-right diagram a line runs from the highlight through the center; Merrifield noted that it crosses the middle of the darkest band."
+      "The lower-right sphere, lit from the upper left, goes from a small shine to darker tones as its surface turns away.",
+      "In the upper-right diagram a line from the highlight through the center crosses the middle of the darkest band, so the highlight's position tells where the shadow falls."
      ],
      "ex": {
       "key": "sanchez-cotan-quince-cabbage",
@@ -96,19 +96,18 @@ window.SITE = {
       "date": "about 1602",
       "det": "Oil on canvas, 27 1/4 × 33 1/4 in. The San Diego Museum of Art",
       "alt": "A quince and a cabbage hanging on strings, a cut melon and a cucumber on a stone ledge, in a dark opening",
-      "line": "In the dark opening, the lit fronts of the quince and the cabbage give way to deep shadow on the sides farthest from the light."
-     },
-     "bul": "The darkest band sits a little in from the edge, and light bounced back from nearby surfaces lightens the shadow near the rim."
+      "line": "Sánchez Cotán let the lit fronts of the quince and cabbage give way to deep shadow on the sides away from the light, so each looks round against the dark opening."
+     }
     },
     {
      "type": "concept",
      "title": "Highlights",
      "img": "cross-fig16",
      "alt": "Photograph of a dark, round, glazed bottle on a pale block, with small bright reflections on its shoulder",
-     "stmt": "On a polished surface, a highlight is a small reflected image of the light source.",
+     "stmt": "On a polished surface, a highlight is a small reflected image of the light source, so it takes the shape of the source and shifts when the viewer moves.",
      "look": [
       "The dark bottle shows two small highlights, one for each half of the divided window it faced.",
-      "The pale top of the block shows in the bottle's glaze as a curved reflected shape."
+      "The block's pale top shows in the bottle's glaze as a curved shape: a polished surface mirrors any bright thing nearby, and a highlight is the brightest such reflection."
      ],
      "ex": {
       "key": "heda-still-life-oysters",
@@ -117,9 +116,8 @@ window.SITE = {
       "date": "1635",
       "det": "Oil on wood, 19 1/2 × 31 3/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Oysters on pewter plates, a tall glass of beer and an overturned silver cup on a table with a dark cloth",
-      "line": "Tiny, crisp highlights tell us the tall glass and the tipped silver cup are polished; the oysters' wet shine is broader and softer."
-     },
-     "bul": "The Met points to a gleaming spoon that leads the eye on to a shard of glass and other curving forms."
+      "line": "Heda put tiny, crisp highlights on the tall glass and the tipped silver cup, so they read as polished, and gave the wet oysters a broader, softer shine."
+     }
     },
     {
      "type": "concept",
@@ -129,7 +127,7 @@ window.SITE = {
      "stmt": "When an object stands in the light's path, it throws its shape onto nearby surfaces as a cast shadow.",
      "look": [
       "Each cube throws a band of shadow across the table on the side away from the light.",
-      "Each cast shadow is darker than the shaded side of the cube that throws it."
+      "Each cast shadow is darker than its cube's shaded side: that side still catches some light bounced off the table, and the shadowed table gets less."
      ],
      "ex": {
       "key": "hammershoi-dust-motes",
@@ -140,16 +138,16 @@ window.SITE = {
       "alt": "An empty gray room with a tall window and a closed door, sunbeams slanting through the air onto the floor",
       "line": "The window bars block parts of the sunbeams, so the patches of sun on the floor carry the window's grid of shadow."
      },
-     "bul": "Cast shadows are usually darkest and crispest next to the object, and which way they point and how far they stretch reveal where the light sits."
+     "bul": "Cast shadows are usually darkest and crispest next to the object, and their direction and length reveal where the light sits."
     },
     {
      "type": "concept",
      "title": "Direction of Light",
      "img": "cross-figs-08-10-11",
      "alt": "Three photographs of the same white cone, sphere, block and cylinder: lit from the side, lit from behind the camera, and lit from behind the group",
-     "stmt": "The direction of the light sets how a subject divides between lit and shaded areas.",
+     "stmt": "Light reaches only the surfaces turned toward it, so its direction sets how a subject divides into lit and shaded areas, and with that how solid it looks.",
      "look": [
-      "Top: light from the side splits each white form into a lit half and a shadow half, so the shapes read clearly.",
+      "Top: side light splits each white form into a lit half and a shadow half, so the shapes read clearly.",
       "Middle: light from behind the viewer reaches almost every face, and the forms flatten out.",
       "Bottom: light from behind the group leaves most surfaces in shadow, with bright tops and outlines."
      ],
@@ -160,18 +158,17 @@ window.SITE = {
       "date": "about 1813",
       "det": "Black and white chalk with stumping on blue paper, 10 × 10 1/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Drawing of cloth falling in heavy folds, in black and white chalk on blue paper",
-      "line": "Light from one side catches the ridges of the cloth in white chalk, the deepest folds go to black, and the blue paper serves as the middle value."
-     },
-     "bul": "Cross wrote that with the light behind the viewer, what contrast remains comes mostly from local color."
+      "line": "Light from one side catches the cloth's ridges in white chalk, the deepest folds go to black and the blue paper is the middle value, so each fold reads as rounded."
+     }
     },
     {
      "type": "concept",
      "title": "Hard and Soft Light",
      "img": "cross-figs-09-12",
      "alt": "Two photographs of the same white group: in direct sunlight with sharp dark shadows, and in weak, spread-out studio light with faint shadows",
-     "stmt": "The smaller a light looks from where the subject stands, the harder it is: the distant sun gives hard light, a cloudy sky or a big nearby window soft light.",
+     "stmt": "Hard light makes sharp-edged shadows; soft light makes blurred ones. The smaller a light looks from the subject, the harder it is: the distant sun is hard, a cloudy sky or a big nearby window soft.",
      "look": [
-      "Top: in direct sun the shadows have crisp edges.",
+      "Top: the far-off sun acts as a small source, so each spot is either fully lit or fully blocked, and the dark shadows have crisp edges.",
       "Bottom: weak light arriving from several sides wraps around the forms, and the faint shadows fade at their edges."
      ],
      "ex": {
@@ -211,10 +208,10 @@ window.SITE = {
      "title": "Edges",
      "img": "cross-fig13",
      "alt": "Photograph of a white cone, sphere, block and a cylinder lying on its side under strong light, with a curved shadow across the cylinder and dark cast shadows behind",
-     "stmt": "An edge is where one value meets another: hard when the change is sharp, soft when it blends, lost when the two values match.",
+     "stmt": "An edge is where one value meets another: hard when the change is sharp, soft when it blends, lost when the values match. Hard edges catch the eye; soft and lost ones let a form sink into its surroundings.",
      "look": [
-      "Inside the block's dark shadow, the cylinder's outline disappears for a short stretch.",
-      "Where the white forms meet the darker backdrop, the edges are hard and clear."
+      "At the right, the cylinder's shaded end nearly matches the dark shadow beside it, so the outline between them disappears: a lost edge.",
+      "Where the cone's lit side meets the darker backdrop, the value jumps suddenly, so the edge is hard."
      ],
      "ex": {
       "key": "velazquez-juan-de-pareja",
@@ -223,19 +220,18 @@ window.SITE = {
       "date": "1650",
       "det": "Oil on canvas, 32 × 27 1/2 in. The Metropolitan Museum of Art, New York",
       "alt": "Portrait of a man with dark curly hair and a beard, wearing a lace collar and a dark coat against a dark background",
-      "line": "The white collar has crisp edges, while the beard melts into the hair and the dark coat into the dark background."
-     },
-     "bul": "Cross taught that where an outline can't be seen, it shouldn't be drawn."
+      "line": "Velázquez kept the white collar crisp and let the beard melt into the hair and the dark coat into the dark background, so the collar and lit face stand forward."
+     }
     },
     {
      "type": "concept",
      "title": "Chiaroscuro",
      "img": "rembrandt-aristotle-detail",
      "alt": "Detail of a bearded man in a broad black hat, his face half in shadow, his hand resting on a marble bust",
-     "stmt": "Chiaroscuro (Italian for \"light-dark\") is the balance and pattern of light and shade across a whole picture, arranged as one design.",
+     "stmt": "Chiaroscuro (Italian for \"light-dark\") is the balance and pattern of light and shade across a whole picture, arranged as one design. The shading makes forms look solid, and lights set against darks make each other stand out.",
      "look": [
-      "Only a few things catch the light: the face, the pale sleeve, the hand and the bust it rests on, while everything else drops into brown gloom.",
-      "A band of shadow runs over the upper face and keeps the eyes partly veiled."
+      "The few things that catch the light, the face, pale sleeve, hand and bust, link into one path of light across the brown gloom.",
+      "The hat brim shadows the upper face, so the strongest light falls on the cheek and nose and the eyes stay partly veiled."
      ],
      "ex": {
       "key": "leonardo-virgin-of-the-rocks",
@@ -245,18 +241,17 @@ window.SITE = {
       "det": "Oil on wood, 74 1/2 × 47 1/4 in. The National Gallery, London",
       "alt": "The Virgin with the infant John the Baptist, the Christ Child and an angel in a dark, rocky grotto",
       "line": "The figures come out of the dark grotto by soft degrees, with no hard outline at the Virgin's temples or nose, an effect later called sfumato, from the Italian for \"to turn to smoke\"."
-     },
-     "bul": "Leonardo built these figures over an underpainting in black and white, so their values were set before color went on."
+     }
     },
     {
      "type": "concept",
      "title": "Tenebrism",
      "img": "caravaggio-calling-of-saint-matthew-detail",
      "alt": "Detail of a dark room with a shuttered window, a beam of light slanting across the wall onto a group of seated men",
-     "stmt": "Tenebrism, from the Latin tenebrae, \"darkness\", is chiaroscuro at its most extreme: brightly lit figures set against near-total darkness, with little in between.",
+     "stmt": "Tenebrism, from the Latin tenebrae, \"darkness\", is chiaroscuro at its most extreme: brightly lit figures against near-total darkness, with little in between, so the lit parts stand out sharply and the rest drops away.",
      "look": [
-      "A single beam enters high at the right, from beyond the frame, and slants down across the seated men.",
-      "The painted window above lets in only a dim, diffused glow; the beam is what picks out the figures."
+      "A single beam enters high at the right and slants down the wall: faces and hands in its path are bright, and what it misses stays near black.",
+      "The window above gives only a dim glow, too weak to fill the shadows, so the beam alone picks out the figures."
      ],
      "ex": {
       "key": "gentileschi-judith-detroit",
@@ -265,9 +260,9 @@ window.SITE = {
       "date": "about 1623–25",
       "det": "Oil on canvas, 73 3/4 × 56 in. Detroit Institute of Arts",
       "alt": "Judith in a gold gown raising a hand beside a candle while her maid kneels below with a sack",
-      "line": "A lone candle lights the room; Judith lifts a hand near it as though shading it, and the maid kneeling below catches the same light."
+      "line": "Gentileschi lit the scene with one candle, which Judith's raised hand seems to shade, so the two women stand out brightly while the table and floor sink into near-black."
      },
-     "bul": "The Detroit Institute of Arts links this painting's theatrical lighting to Caravaggio."
+     "bul": "The first public works of the painter Caravaggio, about 1600, caused a sensation, and visiting artists took the style home."
     }
    ]
   }

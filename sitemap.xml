@@ -316,12 +316,12 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/neutrals.html</loc>
+    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/complementary-colors.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/complementary-colors.html</loc>
+    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/neutrals.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -739,6 +739,21 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/wood-panels.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/canvas.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/grounds.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/egg-tempera.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
@@ -765,21 +780,6 @@
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/encaustic.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/wood-panels.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/canvas.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/grounds.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -826,12 +826,12 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/color-shift-as-it-dries.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/blending.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/blending.html</loc>
+    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/color-shift-as-it-dries.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>

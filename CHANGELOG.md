@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 18 2026, later) — Slide rewrite, all five technique courses
+
+- Installed the course-builder handoff "Slide rewrite (Nov 18)" (second-pass text) on branch `edits-technique-slides`: new `data.js` for color-theory, value-and-light, oil-vs-acrylic, pigments-and-materials, composition. Base check: all five matched the handoff sha256/bytes (main `5af204a`), none skipped. No generator change.
+- Slide order changed per the handoff in Color Theory, Pigments and Materials and Oil vs Acrylic. No pages added or removed, no URL changes; art history courses unchanged.
+- All 15 courses rebuilt (1097 pages); check.js PASS; smoke.js PASS.
+
+-----
+
 ## Completed This Session (November 18 2026) — Slide-pattern rewrite, all ten art history courses
 
 - Installed the course-builder handoff "Slide pattern rewrite (Nov 18)" (second-pass text) on branch `edits-slide-pattern`: new `data.js` for impressionism, classical-myth, post-impressionism, fauvism-and-expressionism, rococo, neoclassicism, romanticism, realism, japanese-woodblock-prints, japonisme. Base check: all ten repo files matched the handoff sha256/bytes (main `5af204a`), none skipped.
