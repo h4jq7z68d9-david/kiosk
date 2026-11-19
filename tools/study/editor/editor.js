@@ -107,7 +107,7 @@
       if (data.format === 'lead') {
         s.lead = sums[0];
         let look = child('ul.look');
-        if (!look) { const lab = after(s.lead, el('p', 'lab ed-new', 'Look at')); look = after(lab, el('ul', 'b look ed-new')); after(look, el('hr', 'rule ed-new')); }
+        if (!look) { look = after(s.lead, el('ul', 'b look ed-new')); after(look, el('hr', 'rule ed-new')); }
         s.look = look;
         const lr = look.nextElementSibling && look.nextElementSibling.matches('hr.rule') ? look.nextElementSibling : look;
         s.bul = child('ul.b:not(.look)') || after(lr, el('ul', 'b ed-new'));

@@ -3,9 +3,8 @@
  "dataFiles": [
   "data.js"
  ],
- "intro": "Eighteen pictures, from Manet’s Olympia to Monet’s water lilies, each with one thing to look for.",
- "homeDescription": "Eighteen works show how to recognize Impressionism, from Manet and Monet to Morisot, Degas, Renoir, Caillebotte and Cassatt.",
- "ldDescription": "A short guide to recognizing French Impressionism, 1863–1906, in eighteen works, compiled from museum collection records.",
+ "homeDescription": "A short illustrated guide to French Impressionism, 1863 to 1906.",
+ "ldDescription": "A short guide to recognizing French Impressionism, 1863 to 1906, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
  "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",

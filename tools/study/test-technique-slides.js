@@ -59,7 +59,7 @@ const read = (u) => fs.readFileSync(path.join(TMP, u), 'utf8');
   ok(/<img src="[^"]*\/img\/thumb\/vangogh-night-cafe\.jpg"[^>]*loading="lazy"/.test(con), 'thumbnail is lazy and from img/thumb/');
   const eyebrow = (con.match(/<p class="eyebrow">([^<]*)<\/p>/) || [])[1] || '';
   ok(!/theme|concept/i.test(eyebrow), `concept eyebrow must not say Theme/Concept (got "${eyebrow}")`);
-  ok(!/>\s*(Theme|Concept|Statement|Example|Definition)\s*</.test(con.replace(/<script[\s\S]*?<\/script>/g, '')), 'no visible field labels besides "Look at"');
+  ok(!/>\s*(Theme|Concept|Statement|Example|Definition|Look at)\s*</.test(con.replace(/<script[\s\S]*?<\/script>/g, '')), 'no visible field labels');
   for (const k of keys) ok(cr.includes(cred[k].file), `credits page lists ${k}`);
   ok(fs.existsSync(path.join(CDIR, 'img/thumb', ex.key + '.jpg')), 'thumbnail file written');
   const si = read('/study/search-index.js');

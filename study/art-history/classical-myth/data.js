@@ -16,7 +16,7 @@ window.SITE = {
      "The Birth of Venus",
      "about 1485"
     ],
-    "sum": "The gods and heroes of Greece and Rome have been painted and carved for some 2,400 years. These works run from an Athenian wine cup of about 530 BCE to a Paris studio picture of about 1890, and each shows one way to recognize the myth, and the maker, from what is on the surface.",
+    "sum": "The gods and heroes of Greece and Rome have been painted and carved for some 2,400 years. The works here date from about 530 BCE to about 1890.",
     "bul": []
    },
    "slides": [

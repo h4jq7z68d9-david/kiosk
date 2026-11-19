@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 18 2026, evening) — Plain labels: no "Look at", no outline sub-line, new search descriptions
+
+- `build-course.js`: removed the "Look at" label from work slides and concept slides (bullets and divider kept; comments updated); removed the `brandsub` line under the course name in the outline (`ldDescription` stays in JSON-LD). `.brandsub` rule removed from `study/guide.css`; `guideCss` 19 → 20. `test-technique-slides.js` now also forbids a "Look at" label; the slide editor no longer inserts one when a look list is added.
+- Settings: new `homeDescription` in all 15 course files (David's wording, Nov 18 2026); Impressionism `ldDescription` without the count; unused `intro` removed from the ten art history files and unused `card.text` from all 15 registry entries (neither build script reads them).
+- Classical Myth overview `sum` replaced with David's wording (study/art-history/classical-myth/data.js, the only course-text change).
+- All 15 courses rebuilt (1097 pages, none added or removed); build-registry: outputs unchanged; check.js, smoke.js, test-technique-slides.js PASS.
+
+-----
+
 ## Completed This Session (November 18 2026, later) — Slide rewrite, all five technique courses
 
 - Installed the course-builder handoff "Slide rewrite (Nov 18)" (second-pass text) on branch `edits-technique-slides`: new `data.js` for color-theory, value-and-light, oil-vs-acrylic, pigments-and-materials, composition. Base check: all five matched the handoff sha256/bytes (main `5af204a`), none skipped. No generator change.

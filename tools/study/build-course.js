@@ -20,7 +20,7 @@
      imagesNote      no longer shown (Nov 7 2026: the course home has no how-to or image-rights lines; the credits page covers rights)
    Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
    (this page's own label in place of themeLabel, e.g. History).
-   Work slides may carry "look" (2 to 5 "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list → divider → "bul".
+   Work slides may carry "look" (2 to 5 bullets, Nov 5 2026 page model): lead → look list → divider → "bul". No "Look at" label since Nov 18 2026.
 
    Technique slide model (Nov 10 2026; technique courses only, basePath /study). The old theme/work technique pages
    keep working until each course is rebuilt.
@@ -74,7 +74,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 19, guideJs: 16, search: 3, lightboxCss: 1, lightboxJs: 1, phoneAdvanceCss: 4, phoneAdvanceJs: 4 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 23, bar: 5, guideCss: 20, guideJs: 16, search: 3, lightboxCss: 1, lightboxJs: 1, phoneAdvanceCss: 4, phoneAdvanceJs: 4 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -202,9 +202,9 @@ const quote = (q) => (q ? `<blockquote><p>“${esc(q.q)}”</p><cite>${esc(q.by)
 const RULE = '<hr class="rule">';
 const crl = (k) => { const c = C[k]; return c ? `<p class="crl">Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(srcOf(c))}</a> · ${esc(c.license)}</p>` : ''; };
 const pic = (k, alt, capHtml) => { const d = dims(k); return `<div class="pic"><img src="${img(k)}" width="${d.w}" height="${d.h}" alt="${esc(alt)}" data-cap="${esc(capHtml)}" tabindex="0" fetchpriority="high"></div>`; };
-/* "Look at" list (work slides with `look`, page model of Nov 5 2026): small label, the three bullets, then a divider
-   before the history bullets in `bul`. Slides without `look` render exactly as before. */
-const look = (s) => (s.look && s.look.length ? `<p class="lab">Look at</p><ul class="b look">${s.look.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>${RULE}` : '');
+/* Look list (work slides with `look`, page model of Nov 5 2026): the bullets, then a divider before the history
+   bullets in `bul`; no label since Nov 18 2026. Slides without `look` render exactly as before. */
+const look = (s) => (s.look && s.look.length ? `<ul class="b look">${s.look.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>${RULE}` : '');
 const wl = (keys) => `<ul class="wl">${keys.filter((k) => byKey[k] != null).map((k) => `<li><a class="wlink" href="${flat[byKey[k]].url}">${esc(flat[byKey[k]].d.title)}</a></li>`).join('')}</ul>`;
 const partLink = (f) => `<a href="${f.part.url}">${esc(f.hd.title)}</a>`;
 const themesOf = (key) => flat.filter((t) => t.kind === 'theme' && (t.d.works || []).includes(key));
@@ -257,9 +257,9 @@ ${d.works && d.works.length ? `<p class="lab">See</p>${wl(d.works)}` : ''}${quot
     const body = `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="htitle">${esc(d.title)}</h1><p class="sum">${esc(d.para)}</p>${d.img ? crx(d.img, d.credit) : ''}</div>`;
     return d.img ? ['slide', pic(d.img, d.alt || d.title, C[d.img] ? esc(C[d.img].work) : esc(d.title)) + body] : ['slide text', body];
   }
-  if (f.kind === 'concept') {   // concept: plate left; statement, Look at, example painting, one line; no "Theme"/"Concept" label
+  if (f.kind === 'concept') {   // concept: plate left; statement, look bullets, example painting, one line; no field labels ("Look at" removed Nov 18 2026)
     const b = oneLine(d.bul);
-    return ['slide', pic(d.img, d.alt, C[d.img] ? esc(C[d.img].work) : esc(d.title)) + `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="lab">Look at</p><ul class="b look">${d.look.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    return ['slide', pic(d.img, d.alt, C[d.img] ? esc(C[d.img].work) : esc(d.title)) + `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><ul class="b look">${d.look.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
 ${exHtml(d.ex)}${b ? RULE + `<p class="sum">${esc(b)}</p>` : ''}${crx(d.img, d.credit)}</div>`];
   }
   if (f.kind === 'text') {
@@ -442,7 +442,6 @@ ${NAV}
 <div class="app" id="app">
   <nav class="rail" aria-label="Outline" id="rail">
     <p class="brand"><a href="${HOME}">${esc(NAME)}</a></p>
-    <p class="brandsub">${esc(CFG.ldDescription || '')}</p>
     <div id="outline">${OUTLINE}</div>
   </nav>
   <main class="main" id="main">

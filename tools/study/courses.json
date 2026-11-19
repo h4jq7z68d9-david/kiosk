@@ -20,8 +20,7 @@
    "label": "classical myth in art",
    "dates": "c. 530 bce–1890",
    "card": {
-    "img": "h1_aphrodite",
-    "text": "how to recognize the greek and roman myths in art, from an athenian wine cup to titian, rubens, ingres and turner."
+    "img": "h1_aphrodite"
    }
   },
   {
@@ -31,8 +30,7 @@
    "label": "japanese woodblock prints",
    "dates": "1680s–1880s",
    "card": {
-    "img": "hokusai-red-fuji",
-    "text": "how to recognize a japanese woodblock print, from moronobu and harunobu to utamaro, sharaku, hokusai, hiroshige and yoshitoshi."
+    "img": "hokusai-red-fuji"
    }
   },
   {
@@ -42,8 +40,7 @@
    "label": "rococo",
    "dates": "1710s–1770s",
    "card": {
-    "img": "fragonard-swing",
-    "text": "how to recognize rococo, from watteau, boucher and fragonard to tiepolo, carriera and the wieskirche."
+    "img": "fragonard-swing"
    }
   },
   {
@@ -53,8 +50,7 @@
    "label": "neoclassicism",
    "dates": "1760s–1800s",
    "card": {
-    "img": "david-horatii",
-    "text": "how to recognize neoclassicism, from hamilton, west and mengs to david, canova and girodet."
+    "img": "david-horatii"
    }
   },
   {
@@ -64,8 +60,7 @@
    "label": "romanticism",
    "dates": "1781–1863",
    "card": {
-    "img": "friedrich-wanderer",
-    "text": "how to recognize romantic painting, from fuseli, blake and goya to friedrich, géricault, delacroix, constable, turner and the american landscape painters."
+    "img": "friedrich-wanderer"
    }
   },
   {
@@ -75,8 +70,7 @@
    "label": "realism",
    "dates": "1834–1899",
    "card": {
-    "img": "millet-gleaners",
-    "text": "how to recognize realist painting, from daumier, courbet, millet and manet to menzel, repin, homer and eakins."
+    "img": "millet-gleaners"
    }
   },
   {
@@ -86,8 +80,7 @@
    "label": "impressionism",
    "dates": "1860s–1900s",
    "card": {
-    "img": "monet-impression",
-    "text": "how to recognize impressionism, from manet and monet to morisot, degas and cassatt."
+    "img": "monet-impression"
    }
   },
   {
@@ -97,8 +90,7 @@
    "label": "japonisme",
    "dates": "1864–1900",
    "card": {
-    "img": "vangogh-flowering-plum-orchard",
-    "text": "how japanese prints changed western art, from whistler, manet, monet and degas to van gogh, cassatt, lautrec, bonnard and dow."
+    "img": "vangogh-flowering-plum-orchard"
    }
   },
   {
@@ -108,8 +100,7 @@
    "label": "post-impressionism",
    "dates": "1880s–1900s",
    "card": {
-    "img": "vangogh-starry-night",
-    "text": "how to recognize post-impressionism, from seurat and cézanne to van gogh, gauguin, toulouse-lautrec and rousseau."
+    "img": "vangogh-starry-night"
    }
   },
   {
@@ -119,8 +110,7 @@
    "label": "fauvism and early expressionism",
    "dates": "1905–1915",
    "card": {
-    "img": "matisse-woman-with-a-hat",
-    "text": "how to recognize fauvism and early expressionism, from matisse and derain to kirchner, kandinsky, marc and schiele."
+    "img": "matisse-woman-with-a-hat"
    }
   },
   {
@@ -129,8 +119,7 @@
    "name": "Color Theory",
    "label": "color theory",
    "card": {
-    "img": "chevreul-chromatic-circle",
-    "text": "how color works for painters, from light and the color wheel to contrast, mixing and mood, shown with historic color plates and public-domain paintings."
+    "img": "chevreul-chromatic-circle"
    }
   },
   {
@@ -139,8 +128,7 @@
    "name": "Value and Light",
    "label": "value and light",
    "card": {
-    "img": "cross-fig21",
-    "text": "how light and dark build form, from the value scale and the order of light and shadow to kinds of light, edges, chiaroscuro and tenebrism."
+    "img": "cross-fig21"
    }
   },
   {
@@ -149,8 +137,7 @@
    "name": "Composition",
    "label": "composition",
    "card": {
-    "img": "poore-fundamental-forms",
-    "text": "how painters arrange a picture, from format and cropping to value massing, balance, line, rhythm, depth and unity."
+    "img": "poore-fundamental-forms"
    }
   },
   {
@@ -159,8 +146,7 @@
    "name": "Pigments and Materials",
    "label": "pigments and materials",
    "card": {
-    "img": "amenhotep-palette",
-    "text": "what paintings are made of, from pigments and binders to panels, canvas and grounds, and how colors change with time."
+    "img": "amenhotep-palette"
    }
   },
   {
@@ -169,8 +155,7 @@
    "name": "Oil vs Acrylic",
    "label": "oil vs acrylic",
    "card": {
-    "img": "van-gogh-green-wheat-detail",
-    "text": "how oil and acrylic paint differ, from binders and drying to open time, blending, impasto, painting over and aging."
+    "img": "van-gogh-green-wheat-detail"
    }
   }
  ]

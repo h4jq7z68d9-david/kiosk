@@ -652,8 +652,6 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Pending — In Order of Priority
 
-- [ ] **Art history work slides (David, open flag from the Nov 18 slide-pattern handoff):** the page still prints "Look at" above the two bullets; some bullets now explain rather than point. Drop or rename the label? (Generator change, separate branch.) Other content flags from that handoff go back to the course-builder project.
-- [ ] **Impressionism settings `intro`** still says "in eighteen works" (a count framing line, against the Nov 7 2026 rule); course-builder project to supply new wording for `tools/study/courses/impressionism.json`.
 - [ ] **Admin date filters on phones:** "To" wraps away from its box in the Reports chart rows at 390px — keep each label with its field if David wants.
 - [ ] **David:** re-add the admin home-screen icon from `davidnicholsonart.com/admin.html`, then re-attach the receipt to the Oct 31 $60.79 Google advertising expense (saved without one). If the upload still fails on the apex, investigate the failed `PUT /admin/expenses/{id}` (preflight reached Lambda, the PUT never did).
 - [ ] **Gallery on phones (≤600px):** wide screens hang left-justified rows since Nov 11 2026; phones still use centred `wallRows()`. David to decide whether phones go left-justified too.

@@ -3,8 +3,7 @@
  "dataFiles": [
   "data.js"
  ],
- "intro": "Rococo is the light, curving, pastel style of Paris, Venice and Bavaria in the decades after 1715. Each picture here shows one thing to look for.",
- "homeDescription": "How to recognize Rococo, from Watteau, Boucher and Fragonard to Tiepolo, Carriera and the Wieskirche, in a short illustrated guide.",
+ "homeDescription": "A short illustrated guide to Rococo art in France, Venice and Bavaria, about 1717 to 1772.",
  "ldDescription": "A short guide to recognizing Rococo art in France, Venice and Bavaria, about 1717 to 1772, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
