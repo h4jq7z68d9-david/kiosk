@@ -171,4 +171,4 @@ console.log(`\n== done: ${slug} installed on branch ${want} (not pushed)
   ${report.built}
   ${report.images}
   screenshots: ${report.shots.join(', ') || '(none written)'}
-  next: show David the screenshots, bad news first; §9.9 report; push to main only on his word.`);
+  next: merge to main and push (§9.9: no pre-review), then report to David with the screenshots, bad news first.`);
