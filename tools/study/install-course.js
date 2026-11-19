@@ -2,7 +2,7 @@
 /* tools/study/install-course.js — study-site-builder §9.1–9.8 as one command. Stops at the first failed step.
    Usage:
      node tools/study/install-course.js <slug> --bundle <folder> --lane art-history|technique \
-          --name "Course Name" --label "course name" --card-img <imgKey> --card-text "lowercase card text" \
+          --name "Course Name" --label "course name" --card-img <imgKey> \
           [--dates "1830s–1890s"] [--after <slug> | --first] [--force] [--trailer "Co-Authored-By: …"]...
    Placement in its lane: after the last course of the lane by default; --after <slug> puts it right after that
    course (art history is in date order, so name the course that comes before it); --first puts it at the top.
@@ -99,11 +99,11 @@ step('9.5', 'register the course');
 const regFile = path.join(ROOT, 'tools/study/courses.json');
 const reg = JSON.parse(fs.readFileSync(regFile, 'utf8'));
 if (!reg.courses.some((c) => c.slug === slug)) {
-  const need = ['name', 'label', 'card-img', 'card-text'].concat(lane === 'art-history' ? ['dates'] : []).filter((k) => !opt(k));
+  const need = ['name', 'label', 'card-img'].concat(lane === 'art-history' ? ['dates'] : []).filter((k) => !opt(k));
   if (need.length) die(`${slug} is not in tools/study/courses.json yet; pass --${need.join(' --')} (or add the entry by hand and re-run with --force)`);
   const entry = { slug, lane, name: opt('name'), label: opt('label') };
   if (lane === 'art-history') entry.dates = opt('dates');
-  entry.card = { img: opt('card-img'), text: opt('card-text') };
+  entry.card = { img: opt('card-img') };   // no card text since Nov 18 2026: study.html prints only label + image
   const laneIdx = reg.courses.map((c, i) => c.lane === lane ? i : -1).filter((i) => i >= 0);
   let at, where;
   if (opt('after')) {
@@ -116,12 +116,12 @@ if (!reg.courses.some((c) => c.slug === slug)) {
   fs.writeFileSync(regFile, JSON.stringify(reg, null, 1) + '\n');
   console.log(`added to the registry ${where}${lane === 'art-history' && !opt('after') && !flag('first') ? ' — art history is in date order; use --after <slug> if this is not its place' : ''}`);
 } else {
-  /* re-install: update the existing entry from any registry flags passed (card text, label, dates…); move it only if --after/--first is given */
+  /* re-install: update the existing entry from any registry flags passed (card image, label, dates…); move it only if --after/--first is given */
   const i = reg.courses.findIndex((c) => c.slug === slug); const e = reg.courses[i]; const changed = [];
   const set = (obj, k, v, name) => { if (v !== undefined && obj[k] !== v) { obj[k] = v; changed.push(name); } };
   set(e, 'name', opt('name'), 'name'); set(e, 'label', opt('label'), 'label');
   if (lane === 'art-history') set(e, 'dates', opt('dates'), 'dates');
-  e.card = e.card || {}; set(e.card, 'img', opt('card-img'), 'card image'); set(e.card, 'text', opt('card-text'), 'card text');
+  e.card = e.card || {}; set(e.card, 'img', opt('card-img'), 'card image');
   if (e.lane !== lane) die(`${slug} is in the ${e.lane} lane in the registry; --lane ${lane} does not match`);
   if (opt('after') || flag('first')) {
     reg.courses.splice(i, 1);
