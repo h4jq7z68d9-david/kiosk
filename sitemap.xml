@@ -1450,6 +1450,11 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/la-japonaise-camille-monet-in-japanese-costume.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/variations-in-flesh-colour-and-green-the-balcony.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
@@ -1461,11 +1466,6 @@
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/boating.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/la-japonaise-camille-monet-in-japanese-costume.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -1485,12 +1485,12 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/volpini-suite-laundresses-les-laveuses.html</loc>
+    <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/almond-blossom.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/almond-blossom.html</loc>
+    <loc>https://davidnicholsonart.com/study/art-history/japonisme/europe-and-the-united-states-1864-1900/volpini-suite-laundresses-les-laveuses.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>

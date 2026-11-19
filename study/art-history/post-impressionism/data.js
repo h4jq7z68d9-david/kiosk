@@ -8,7 +8,7 @@ window.SITE = {
    "n": 1,
    "wk": 1,
    "title": "What to Look For",
-   "sub": "Structure, feeling, flat colour and pattern after Impressionism",
+   "sub": "Structure, feeling, flat color and pattern after Impressionism",
    "overview": {
     "img": "vangogh-starry-night",
     "cap": [
@@ -16,7 +16,7 @@ window.SITE = {
      "The Starry Night",
      "1889"
     ],
-    "sum": "Post-Impressionism is the label given, after the fact, to painters working in France from about 1884 to 1906 who started from Impressionism and went past it. They kept its bright colour and visible brushwork, and used them for something other than recording light: solid structure, strong feeling, flat colour, or pattern.",
+    "sum": "Post-Impressionism is the label given, after the fact, to painters working in France from about 1884 to 1906 who started from Impressionism and went past it. They kept its bright color and visible brushwork, and used them for something other than recording light: solid structure, strong feeling, flat color, or pattern.",
     "bul": []
    },
    "slides": [
@@ -26,15 +26,14 @@ window.SITE = {
      "artist": "Georges Seurat",
      "title": "Bathers at Asnières",
      "date": "1884",
-     "det": "Oil on canvas, 79 1/4 × 118 in. The National Gallery, London",
-     "lead": "Georges Seurat (French, 1859–1891). The whole surface is made of small separate touches of paint, and the figures hold as still as statues.",
+     "det": "French, 1859–1891. Oil on canvas, 79 1/4 × 118 in. The National Gallery, London",
+     "lead": "Seurat built the whole surface from small separate touches of paint and held every figure as still as a statue.",
      "look": [
-      "Short crisscross strokes cover the grass, water and sky, so nothing is blended smooth.",
-      "Every figure is seen in profile or straight from behind, and the group is spaced along the bank from the lower left corner up to the far right.",
-      "The light is hazy and even, with no hard shadows anywhere."
+      "Unblended crisscross strokes of green and yellow cover the grass, so the bank looks sunlit and textured, not one flat green.",
+      "The large figures are in strict profile inside firm, unbroken outlines, so each reads as a fixed shape, like a carved relief, with no sign of movement."
      ],
      "bul": [
-      "Rejected by the official Salon and shown instead at the first Salon des Indépendants, a jury-free exhibition, in 1884. Seurat later reworked the orange hat in the dot technique."
+      "Rejected by the official Salon and shown instead at the first Salon des Indépendants, a jury-free exhibition, in 1884. Seurat later reworked the orange hat in dots of yellow and blue."
      ]
     },
     {
@@ -44,15 +43,13 @@ window.SITE = {
      "title": "The Circus",
      "date": "1891",
      "det": "Oil on canvas, 73 1/4 × 59 3/4 in. Musée d'Orsay, Paris",
-     "lead": "The colour is built entirely from small dots, and the rising curves of the ring are set against the straight rows of the stands.",
+     "lead": "Seurat set dots of red, yellow and blue side by side on a white ground; the eye mixes them at a distance.",
      "look": [
-      "Dots of red, yellow and blue sit side by side on a white ground, and the eye mixes them at a distance.",
-      "The horse, rider and clowns are all arcs and spirals; the seats and audience behind are a grid of straight lines.",
-      "White dominates, so the three colours read as bright accents.",
-      "A dark blue border is painted on the canvas itself, part of the picture rather than a frame."
+      "The horse and the seating bands are left almost white, so the orange and yellow dots beside them look richer.",
+      "Blue dots sit among the orange and yellow in the ring's shadowed band, so from a distance it looks a grayer tan."
      ],
      "bul": [
-      "Shown unfinished at the Salon des Indépendants in March 1891; Seurat died days after the opening."
+      "Shown unfinished at the Salon des Indépendants in March 1891; Seurat died days after the opening. The dark blue border is painted on the canvas itself."
      ]
     },
     {
@@ -61,13 +58,11 @@ window.SITE = {
      "artist": "Paul Cézanne",
      "title": "The Basket of Apples",
      "date": "about 1893",
-     "det": "Oil on canvas, 25 1/2 × 31 1/2 in. The Art Institute of Chicago",
-     "lead": "Paul Cézanne (French, 1839–1906). The table does not line up: its front edge sits lower on the left of the cloth than on the right, as if seen from two places at once.",
+     "det": "French, 1839–1906. Oil on canvas, 25 1/2 × 31 1/2 in. The Art Institute of Chicago",
+     "lead": "Cézanne painted the table as if from two places at once: its front edge sits lower on the left of the cloth than on the right.",
      "look": [
-      "The tabletop rises steeply toward the viewer, so the fruit seems about to roll forward.",
-      "The basket tilts and the bottle leans, and neither is corrected.",
-      "Each apple is a solid ball of colour, shaded from green through orange to red in broad flat strokes.",
-      "Dark blue outlines run around the bottle, the cloth folds and the plate."
+      "The tabletop tilts up steeply, so the fruit seems about to roll forward.",
+      "The basket tips forward and the bottle leans left, so each object looks as if seen from a slightly different spot."
      ],
      "bul": [
       "Shown at Cézanne's first one-man exhibition, at the Vollard gallery in Paris, 1895."
@@ -80,15 +75,13 @@ window.SITE = {
      "title": "The Card Players",
      "date": "1890–92",
      "det": "Oil on canvas, 25 3/4 × 32 1/4 in. The Metropolitan Museum of Art, New York",
-     "lead": "The men are built like solid blocks, with cylinders for arms and bodies and the hats as plain dark shapes on top.",
+     "lead": "Cézanne built the men like solid blocks: cylinders for arms and bodies, hats as plain dark shapes on top.",
      "look": [
-      "The three seated players form a stable, balanced group around the table, and nobody moves.",
-      "Coats and sleeves are shaded in broad planes of blue, brown and cream, not in soft gradations.",
-      "The wall behind is loosely scrubbed in pale blue and lilac, so the figures stand out as the solid parts.",
-      "The four pipes on the wall are each a few dark strokes with a touch of white on the bowl, set straight onto the scrubbed blue."
+      "Coats and sleeves are shaded in broad patches with abrupt breaks between them, so the arms look thick and solid.",
+      "The wall behind is loosely scrubbed in pale blue and lilac, so the figures stand out as the solid parts."
      ],
      "bul": [
-      "The earliest of five pictures of card players; each sitter, a local farm worker, posed alone for studies that were then combined."
+      "The first of five pictures of card players. Each sitter, a local farm worker, posed alone for studies that were then combined."
      ]
     },
     {
@@ -98,15 +91,13 @@ window.SITE = {
      "title": "Mont Sainte-Victoire",
      "date": "1902–04",
      "det": "Oil on canvas, 28 3/4 × 36 1/4 in. Philadelphia Museum of Art",
-     "lead": "The valley and the sky are both made of patches of parallel brushstrokes, and colour alone tells which is near and which is far.",
+     "lead": "Cézanne made the valley and the sky from the same patches of parallel brushstrokes, and color alone tells near from far.",
      "look": [
-      "Green and ochre patches in the lower half are each a cluster of short strokes running the same way.",
-      "The mountain and the sky share the same violets and blues, so the peak almost dissolves into the air.",
-      "The darkest greens and browns gather along the bottom edge, and the picture lightens step by step up to the pale peak.",
-      "A broken dark line marks the mountain's outer edge and a few roofs; most other shapes have no drawn edge at all."
+      "Valley and sky patches are both clusters of short parallel strokes, so land and sky read as one woven surface.",
+      "Warm ochres and yellows fill the plain while mountain and sky are blue and violet; that alone sets the distance."
      ],
      "bul": [
-      "The mountain stands near Aix-en-Provence, Cézanne's home town, and he painted it again and again in his last years."
+      "The mountain stands near Aix-en-Provence, Cézanne's hometown, and he painted it again and again in his last years."
      ]
     },
     {
@@ -116,15 +107,13 @@ window.SITE = {
      "title": "The Large Bathers",
      "date": "1900–06",
      "det": "Oil on canvas, 82 3/4 × 98 3/4 in. Philadelphia Museum of Art",
-     "lead": "The bending tree trunks form a huge arch over the figures, and the two groups of bathers fit inside as a triangle.",
+     "lead": "Cézanne locked the picture into a triangle: tree trunks lean in from both sides and two groups of bathers fit inside.",
      "look": [
-      "The trunks lean in from both sides and meet near the top, locking the composition into a pointed arch.",
-      "The bathers are simplified to a few planes each, with faces barely marked.",
-      "Patches of bare canvas show through across the sky and the bodies.",
-      "The same blues run through the sky, the water and the shadows on the bodies."
+      "The bathers are a few broad patches each, faces barely marked, so each group reads as one shape inside the triangle.",
+      "The standing bather at the left leans at the angle of the trunks behind her, so the slant continues down to the ground."
      ],
      "bul": [
-      "The largest and last of Cézanne's bathers pictures, left unfinished."
+      "The largest and last of Cézanne's bathers pictures, left unfinished; patches of bare canvas still show."
      ]
     },
     {
@@ -133,16 +122,14 @@ window.SITE = {
      "artist": "Vincent van Gogh",
      "title": "The Potato Eaters",
      "date": "1885",
-     "det": "Oil on canvas, 32 1/4 × 45 in. Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation)",
-     "lead": "Vincent van Gogh (Dutch, 1853–1890). Before the bright colour came the opposite: a dark room lit by one lamp, painted in earth colours.",
+     "det": "Dutch, 1853–1890. Oil on canvas, 32 1/4 × 45 in. Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation)",
+     "lead": "Van Gogh painted this dark room, lit by a single lamp, in earth colors, before he took up bright color.",
      "look": [
-      "The single oil lamp is the only light source, and every face and hand is modelled by its glow.",
-      "The palette is browns, greys and muddy greens, with hardly a touch of clear blue or red.",
-      "Faces and hands are deliberately coarse and knobbly, drawn with dark contours.",
-      "The paint is thick and the brushwork rough, with the strokes left visible in the dark."
+      "Browns, grays and muddy greens fill the room, so the lamp, the white caps and the potatoes stand out as light spots.",
+      "Faces and hands catch the lamplight only on their ridges, so they look bony and seem to push out of the dark."
      ],
      "bul": [
-      "Painted at Nuenen, in the Dutch countryside, as a showpiece; Van Gogh compared the earth colours to a dusty, unpeeled potato."
+      "Painted at Nuenen, in the Dutch countryside, as a showpiece; Van Gogh compared the earth colors to a dusty, unpeeled potato."
      ]
     },
     {
@@ -152,15 +139,13 @@ window.SITE = {
      "title": "The Night Café",
      "date": "1888",
      "det": "Oil on canvas, 28 1/2 × 36 1/4 in. Yale University Art Gallery, New Haven",
-     "lead": "Red walls clash against a green ceiling and billiard table, and the floorboards rush away in steep diagonals.",
+     "lead": "Van Gogh set blood-red walls against a green ceiling and a green billiard table so that the colors clash.",
      "look": [
-      "Blood red walls and a green ceiling and table, opposites on the colour wheel, fight each other across the room.",
-      "The floor is the largest area, a field of yellow strokes that makes the room feel tilted.",
-      "Each gaslamp is ringed with concentric strokes of yellow and orange, painting the glare itself.",
-      "The owner's white suit turns pale green and lemon yellow under the lamps."
+      "Red wall meets green ceiling along the top of the room; as opposites on the color wheel, each looks stronger there.",
+      "Short yellow and orange strokes ring each gas lamp, so its halo reads as glare and adds a third strong color."
      ],
      "bul": [
-      "Shows a café in Arles, the Alcazar, where Van Gogh took his meals; he wrote that the clashing colours express 'the terrible passions of humanity'."
+      "Shows the Café de l'Alcazar in Arles, where Van Gogh took his meals; he wrote that the clashing colors express 'the terrible passions of humanity'."
      ]
     },
     {
@@ -170,12 +155,10 @@ window.SITE = {
      "title": "Sunflowers",
      "date": "1888",
      "det": "Oil on canvas, 36 1/4 × 28 3/4 in. The National Gallery, London",
-     "lead": "Almost the whole picture is one colour: yellow flowers in a yellow vase on a yellow table against a yellow wall.",
+     "lead": "Van Gogh painted almost the whole picture in one color: yellow flowers, yellow vase, yellow table, yellow wall.",
      "look": [
-      "The yellows run from pale lemon in the background through gold to deep ochre in the seed heads.",
-      "The seed heads are built up in thick ridges of paint, so they stand off the canvas.",
-      "A thin blue line marks the table edge and a band around the vase; apart from the green stems and leaves, nothing else breaks the yellows.",
-      "The background is pale yellow, brushed thin in short crossing strokes, against the heavy paint of the heads."
+      "The yellows run from pale lemon in the wall to deep ochre in the seed heads, so light and dark, not color, separate the shapes.",
+      "The seed heads stand off the canvas in thick ridges, so rough texture sets them apart from the flatter wall."
      ],
      "bul": [
       "Painted to decorate the house at Arles before Gauguin's visit, one of a series; the flowers run from fresh bud to withered head."
@@ -188,15 +171,13 @@ window.SITE = {
      "title": "The Starry Night",
      "date": "1889",
      "det": "Oil on canvas, 29 × 36 1/4 in. The Museum of Modern Art, New York",
-     "lead": "The sky is made of long curling strokes that spiral and roll across the canvas, each one visible.",
+     "lead": "Van Gogh made the sky from short visible strokes laid end to end in long curling lines that roll across the canvas.",
      "look": [
-      "Two great spirals turn in the centre of the sky, built from short strokes laid end to end.",
-      "Each star and the moon sits inside a ring of pale strokes.",
-      "The cypress rises as a dark flame, painted in strokes that lick upward.",
-      "The village below is small and still, with straight little houses that set off the churning sky."
+      "Two spirals turn in the center of the sky and the strokes inside bend with them, so the paint itself shows the motion.",
+      "The village houses and steeple are drawn with straight lines, so against them the sky's curling strokes look even more in motion."
      ],
      "bul": [
-      "Based on the view from Van Gogh's window at the asylum of Saint-Rémy, painted in daytime sessions; the village was added from other views."
+      "Based on the view from Van Gogh's window at the asylum of Saint-Rémy and painted in daytime sessions; the village was added from other views."
      ]
     },
     {
@@ -206,12 +187,10 @@ window.SITE = {
      "title": "Self-Portrait",
      "date": "1889",
      "det": "Oil on canvas, 25 1/2 × 21 1/4 in. Musée d'Orsay, Paris",
-     "lead": "The same short curved strokes cover the face, the jacket and the background, so the man and the wall behind him move together.",
+     "lead": "Van Gogh covered jacket and background with the same curved strokes, so the man and the wall move together.",
      "look": [
-      "The background is a field of swirling curls in pale green and blue, with no flat area anywhere.",
-      "The strokes in the hair and beard run in the same curling rhythm as the background.",
-      "Cool greens and turquoise fill the picture, and the orange hair and beard are the main warm note.",
-      "The eyes are the only still point, painted in sharp focus."
+      "The jacket has the same wavy strokes as the wall, so only its dark blue outline keeps the shoulders from merging with the background.",
+      "One cool blue-green covers both jacket and wall, so the orange beard, the strongest warm color, pulls the eye to the face."
      ],
      "bul": [
       "One of more than forty self-portraits Van Gogh made in about ten years; here he is dressed in a suit instead of the work clothes he usually painted himself in."
@@ -223,16 +202,14 @@ window.SITE = {
      "artist": "Paul Gauguin",
      "title": "Vision of the Sermon (Jacob Wrestling with the Angel)",
      "date": "1888",
-     "det": "Oil on canvas, 28 1/2 × 35 3/4 in. Scottish National Gallery, Edinburgh",
-     "lead": "Paul Gauguin (French, 1848–1903). The ground is a flat field of pure red, and every shape sits on it inside a dark outline.",
+     "det": "French, 1848–1903. Oil on canvas, 28 1/2 × 35 3/4 in. Scottish National Gallery, Edinburgh",
+     "lead": "Gauguin painted the ground as a flat field of pure red and set every shape on it inside a dark outline.",
      "look": [
-      "The red runs almost unbroken from edge to edge, with no shading and no grass.",
-      "The white Breton bonnets are flat shapes with hard edges, outlined in dark blue.",
-      "A tree trunk cuts the picture on a diagonal, separating the praying women from the small wrestlers.",
-      "The cow and the wrestlers are small, as if far away, but the flat red gives them no distance from the large heads in front."
+      "The unshaded red is equally strong on both sides of the trunk, so it reads as a flat upright sheet, not ground stretching back.",
+      "The cow and wrestlers are small, as if far away, but the flat red gives them no distance from the large heads in front."
      ],
      "bul": [
-      "Breton women are praying after a sermon about Jacob wrestling the angel; Gauguin wrote that the fight exists only in their imagination."
+      "Painted at Pont-Aven in Brittany. Breton women are praying after a sermon about Jacob wrestling the angel; Gauguin wrote that the fight exists only in their imagination."
      ]
     },
     {
@@ -241,13 +218,11 @@ window.SITE = {
      "artist": "Paul Sérusier",
      "title": "The Talisman",
      "date": "1888",
-     "det": "Oil on wood, 10 3/4 × 8 1/2 in. Musée d'Orsay, Paris",
-     "lead": "Paul Sérusier (French, 1864–1927). The landscape is reduced to patches of pure colour, with almost no drawing left.",
+     "det": "French, 1864–1927. Oil on wood, 10 3/4 × 8 1/2 in. Musée d'Orsay, Paris",
+     "lead": "Sérusier reduced the landscape to patches of pure color, with almost no drawing left.",
      "look": [
-      "Yellow, orange, blue, violet and green sit as separate blocks, each a single unmixed tone.",
-      "The trees at upper left, a red path and a blue mill at right can still be read, but only just.",
-      "Reflections in the water below are the same flat patches as the trees above them, with no ripple or blur.",
-      "Dark brown and violet masses at the right balance the bright yellow, and nothing is shaded."
+      "Yellow, blue and violet sit side by side as separate unshaded blocks, so the picture reads as flat pattern before landscape.",
+      "Reflections in the lower half are the same flat patches as the trees above, so water and bank are hard to tell apart."
      ],
      "bul": [
       "Painted at Pont-Aven in October 1888 under Gauguin's direction; shown in Paris to the painters who formed the Nabis, for whom the panel became a talisman."
@@ -260,15 +235,13 @@ window.SITE = {
      "title": "Where Do We Come From? What Are We? Where Are We Going?",
      "date": "1897–98",
      "det": "Oil on canvas, 54 3/4 × 147 1/2 in. Museum of Fine Arts, Boston",
-     "lead": "The picture is a long band that reads from right to left, a sleeping baby at one end and an old woman at the other, in muted blue-green.",
+     "lead": "Gauguin gave this long canvas the look of a mural: muted blue-green, read right to left from sleeping baby to old woman.",
      "look": [
-      "Figures stand or sit in a row across the front, with the landscape behind them.",
-      "Deep blue and green fill most of the ground, and the bodies are ochre and brown with little shading.",
-      "The two upper corners are yellow, like the worn edges of an old wall painting.",
-      "A blue idol at the left stands stiff and symmetrical, in a different pose from everyone else."
+      "Deep blue and green fill most of the background, so the ochre and yellow bodies, barely shaded, stand out as flat light shapes.",
+      "Flat yellow patches break off the scene at both upper corners, so the canvas looks like an old wall painting with worn corners."
      ],
      "bul": [
-      "Painted in Tahiti; Gauguin wanted the effect of a wall painting, and first showed it at Vollard's Paris gallery in 1898."
+      "Painted in Tahiti and first shown at Vollard's Paris gallery in 1898."
      ]
     },
     {
@@ -277,16 +250,14 @@ window.SITE = {
      "artist": "Henri de Toulouse-Lautrec",
      "title": "At the Moulin Rouge",
      "date": "1892–95",
-     "det": "Oil on canvas, 48 1/2 × 55 1/2 in. The Art Institute of Chicago",
-     "lead": "Henri de Toulouse-Lautrec (French, 1864–1901). A railing slices across the lower left, and the face cut off by the right edge is turned green by electric light.",
+     "det": "French, 1864–1901. Oil on canvas, 48 1/2 × 55 1/2 in. The Art Institute of Chicago",
+     "lead": "Toulouse-Lautrec cut the scene off at its edges: a railing slices the lower left and the right edge crops a face turned green by electric light.",
      "look": [
-      "The woman at the right is lit from below in acid green, with her hair bright yellow.",
       "The orange railing runs diagonally through the foreground, blocking the viewer's way in.",
-      "The paint is thin and streaky, with the brown of the canvas showing through the figures and floor.",
-      "Black top hats and dark coats make flat silhouettes against the green wall behind."
+      "The pale green face at the right edge, beside yellow hair and red lips, is the brightest spot, so it pulls the eye to that cropped edge."
      ],
      "bul": [
-      "Lautrec's own friends fill the table at the Moulin Rouge; he is in the centre background beside his cousin."
+      "Lautrec's own friends fill the table at the Moulin Rouge, which was built for electric light; he is in the center background beside his cousin."
      ]
     },
     {
@@ -295,16 +266,14 @@ window.SITE = {
      "artist": "Henri de Toulouse-Lautrec",
      "title": "Divan Japonais",
      "date": "1892–93",
-     "det": "Lithograph printed in four colours, 31 3/4 × 24 in. The Metropolitan Museum of Art, New York",
-     "lead": "The seated woman is a single flat black shape, and the singer on stage is cut off at the neck by the top edge.",
+     "det": "Lithograph printed in four colors, 31 3/4 × 24 in. The Metropolitan Museum of Art, New York",
+     "lead": "Toulouse-Lautrec made the seated woman a flat black shape and let the top edge cut the singer off at the neck.",
      "look": [
-      "The black dress and hat are one unshaded silhouette; only the orange hair and a sliver of face are picked out.",
-      "The stage, the orchestra and the audience are flat planes of yellow, grey and olive with thick outlines.",
-      "The performer at upper left is known only from her long black gloves, with her head outside the picture.",
-      "The lettering is drawn by hand and sits inside the design rather than in a separate band."
+      "Dress and hat are unshaded black, so the woman reads as a flat cutout and the orange hair between them is the sharpest accent.",
+      "Stage, orchestra and the man behind are flat yellow, gray and olive, so nothing looks farther back than anything else."
      ],
      "bul": [
-      "An advertisement for a Montmartre café-concert; the spectator is Jane Avril, the performer on stage Yvette Guilbert, two stars of the district."
+      "A color lithograph advertising a Montmartre café-concert; the spectator is Jane Avril and the performer on stage Yvette Guilbert, two stars of the district."
      ]
     },
     {
@@ -313,13 +282,11 @@ window.SITE = {
      "artist": "Édouard Vuillard",
      "title": "Woman in a Striped Dress",
      "date": "1895",
-     "det": "Oil on canvas, 25 3/4 × 23 in. National Gallery of Art, Washington",
-     "lead": "Édouard Vuillard (French, 1868–1940). The woman's dress, the flowers and the wall are all pattern, so the figure nearly disappears into the room.",
+     "det": "French, 1868–1940. Oil on canvas, 25 3/4 × 23 in. National Gallery of Art, Washington",
+     "lead": "Vuillard painted the dress, the flowers and the wall all as pattern, so the figure reads as part of the room's surface.",
      "look": [
-      "Red and white stripes on the sleeves are painted in loose dabs that match the dabs of the flowers beside them.",
-      "The background is dark red and mottled, the same red as the stripes, so there is no clear edge between dress and wall.",
-      "Faces are blurred to a few strokes while the patterns are sharp.",
-      "The palette is held to reds, whites, greens and yellows across the whole canvas."
+      "The sleeve's red and white stripes break into loose dabs like the flowers beside them, so the sleeve reads as pattern, not as cloth over an arm.",
+      "The hair is close to the wall's red-brown, with no hard edge between, so the heads sink into the wall and the eye goes to the bold stripes."
      ],
      "bul": [
       "Made in 1895 for Thadée Natanson, who published the magazine La Revue blanche, as one of five decorations for his home; the red-haired woman may be his wife Misia."
@@ -331,13 +298,11 @@ window.SITE = {
      "artist": "Henri Rousseau",
      "title": "The Sleeping Gypsy",
      "date": "1897",
-     "det": "Oil on canvas, 51 × 79 in. The Museum of Modern Art, New York",
-     "lead": "Henri Rousseau (French, 1844–1910). Every edge is hard and every surface smooth, with no visible brushwork and no haze in the distance.",
+     "det": "French, 1844–1910. Oil on canvas, 51 × 79 in. The Museum of Modern Art, New York",
+     "lead": "Rousseau made every edge hard and every surface smooth, with no visible brushwork and no haze in the distance.",
      "look": [
-      "The lion, the sleeper and the mandolin are outlined cleanly, like cut-outs placed on the sand.",
-      "The far mountains are as crisp as the foreground, so the distance does not soften.",
-      "The stripes of the robe are painted one by one in flat, even bands.",
-      "The sky is a smooth gradient from dark blue to pale, with the moon a plain white disc."
+      "Lion, sleeper and mandolin have clean, unbroken edges against sand and sky, so each stands apart as its own crisp shape.",
+      "The far mountains are as sharp-edged as the lion in front, so the distance looks shallow, like a painted backdrop."
      ],
      "bul": [
       "Shown in Paris at the 1897 Salon des Indépendants."

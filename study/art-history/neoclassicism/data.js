@@ -8,7 +8,7 @@ window.SITE = {
    "n": 1,
    "wk": 1,
    "title": "What to Look For",
-   "sub": "Rome, Paris and London, from the 1760s to the first years of Napoleon",
+   "sub": "",
    "overview": {
     "img": "david-horatii",
     "cap": [
@@ -26,16 +26,14 @@ window.SITE = {
      "artist": "Gavin Hamilton",
      "title": "The Death of Lucretia",
      "date": "1763–67",
-     "det": "Oil on canvas, 84 × 104 in. Yale Center for British Art, New Haven",
-     "lead": "Gavin Hamilton (Scottish, 1723–1798). The figures stand in a row across the front like a carved relief, with big, readable gestures.",
+     "det": "Scottish, 1723–1798. Oil on canvas, 84 × 104 in. Yale Center for British Art, New Haven",
+     "lead": "Hamilton lined the figures up across the front like a carved relief and gave them big, readable gestures.",
      "look": [
       "A dark curtain closes off the space behind the figures, so nothing opens up beyond them.",
-      "The raised dagger sits just right of centre, where the outstretched arm meets the old man's grip, and the arms on both sides lead toward it.",
-      "The colours come in broad blocks: a red cloak, a blue mantle, yellow and violet drapery, against a dark ground.",
-      "The outlines are firm and the flesh is evenly modelled, with no loose touch."
+      "Firm outlines and even modeling set each figure apart from the dark like a carved shape, so its gesture reads at once."
      ],
      "bul": [
-      "Roman men swearing revenge over the body of Lucretia, painted in Rome about twenty years before David's Horatii."
+      "Roman men swearing revenge over the body of Lucretia, painted in Rome about twenty years before David's Oath of the Horatii."
      ]
     },
     {
@@ -44,13 +42,11 @@ window.SITE = {
      "artist": "Pompeo Batoni",
      "title": "Portrait of a Young Man",
      "date": "c. 1760–65",
-     "det": "Oil on canvas, 97 1/4 × 69 1/4 in. The Metropolitan Museum of Art, New York",
-     "lead": "Pompeo Batoni (Italian, 1708–1787). The props tell the story: an antique statue and relief beside the sitter.",
+     "det": "Italian, 1708–1787. Oil on canvas, 97 1/4 × 69 1/4 in. The Metropolitan Museum of Art, New York",
+     "lead": "Batoni let the props tell the story: the sitter's open hand points to the antique statue and relief beside him.",
      "look": [
-      "An antique statue on a plinth, a marble relief, an armillary sphere and a pile of books fill the left side, and the sitter's open hand points to them.",
-      "The red suit with gold embroidery is the strongest colour, set at the centre between the gilt table and the green chair.",
-      "A window at the right opens on blue sky and a green landscape with distant hills.",
-      "The surfaces are rendered with the same even polish, from the velvet to the marble floor."
+      "The red sleeve runs out to the open hand, so the strongest color leads the eye to the pale stone relief.",
+      "Velvet, gilt wood and carved stone share one smooth finish, so the relief on the table looks as solid as the sitter."
      ],
      "bul": [
       "A Grand Tour portrait: a young visitor to Rome shown with a statue of Minerva, a relief of Antinous, a sphere and books."
@@ -62,16 +58,14 @@ window.SITE = {
      "artist": "Benjamin West",
      "title": "The Death of General Wolfe",
      "date": "1770",
-     "det": "Oil on canvas, 60 × 84 1/2 in. National Gallery of Canada, Ottawa",
-     "lead": "Benjamin West (American, 1738–1820). The pose is that of a mourning group around a fallen hero, but the mourners wear the dress of 1759, not togas.",
+     "det": "American, 1738–1820. Oil on canvas, 60 × 84 1/2 in. National Gallery of Canada, Ottawa",
+     "lead": "West arranged a modern death as a mourning group around a fallen hero, but in the clothes of 1759, not togas.",
      "look": [
-      "The dying general lies in a lit triangle at the centre, held by officers who lean in from both sides.",
-      "A dark storm cloud and the raised flag frame the group from above.",
-      "Red coats repeat across the canvas, set off by the green coat at the left and the blue coat beside the general.",
+      "Officers lean in from both sides under the furled flag, so a lit triangle leads the eye down to the dying general.",
       "The battle is pushed back into a smoky strip on the horizon, so the foreground reads as a mourning scene."
      ],
      "bul": [
-      "A general dying at Quebec in 1759."
+      "A general dying at the battle of Quebec in 1759; shown at the Royal Academy in London in 1771."
      ]
     },
     {
@@ -80,16 +74,14 @@ window.SITE = {
      "artist": "Anton Raphael Mengs",
      "title": "Johann Joachim Winckelmann",
      "date": "c. 1777",
-     "det": "Oil on canvas, 25 × 19 1/4 in. The Metropolitan Museum of Art, New York",
-     "lead": "Anton Raphael Mengs (German, 1728–1779). The finish is smooth and brushless, on a plain, sober ground.",
+     "det": "German, 1728–1779. Oil on canvas, 25 × 19 1/4 in. The Metropolitan Museum of Art, New York",
+     "lead": "Mengs kept the face smooth and left out any setting: only the head, the hand and the book.",
      "look": [
-      "The face and the open white shirt catch light from the left against a flat olive-brown background.",
-      "The colour is a narrow range of browns, white and the pale yellow of the book, with one note of green cloth at the lower left.",
-      "The skin is blended to a porcelain smoothness, with no stroke showing; the brown robe is painted more broadly.",
-      "The picture holds only the head, the hand and the book: no wig, no setting, no ornament."
+      "The skin is blended smooth and the brown robe is brushed broadly, so the face looks sharper and holds the eye.",
+      "Browns, white, the book's pale yellow and a sliver of green sleeve are the only colors, so the lit face and hand stand out."
      ],
      "bul": [
-      "The scholar whose history of ancient art shaped the movement, shown holding a copy of Homer's Iliad."
+      "The scholar whose history of ancient art shaped the movement, shown holding a copy of Homer's Iliad. The portrait was painted after his death."
      ]
     },
     {
@@ -98,16 +90,14 @@ window.SITE = {
      "artist": "Jean-Antoine Houdon",
      "title": "Voltaire",
      "date": "1778",
-     "det": "Marble, 20 3/4 × 18 × 13 in. National Gallery of Art, Washington",
-     "lead": "Jean-Antoine Houdon (French, 1741–1828). A lifelike bust: an old, lined, smiling face in the format of an ancient portrait.",
+     "det": "French, 1741–1828. Marble, 20 3/4 × 18 × 13 in. National Gallery of Art, Washington",
+     "lead": "Houdon carved a lifelike face, old, lined and smiling, and set it in the format of an ancient portrait bust.",
      "look": [
-      "The wig is a mass of deep-drilled curls that catch dark shadows, against the smooth skin of the face.",
-      "The thin lips pull up into a slight smile and the eyes are cut so a bright spot of marble catches the light.",
-      "The coat and waistcoat fall in broad, plain planes, which keeps attention on the head.",
-      "The bust is cut off below the chest and set on a round turned socle, the shape of a Roman portrait bust."
+      "Deep curls and drilled holes in the wig hold small shadows, so its busy surface makes the smooth, lined face stand out.",
+      "Small hollows cut for pupils hold a little shadow, so the blank marble eyes get a darker center and seem to look out."
      ],
      "bul": [
-      "The philosopher in his last year, in his own coat and wig."
+      "The philosopher in the last year of his life, in his own coat and wig."
      ]
     },
     {
@@ -116,14 +106,11 @@ window.SITE = {
      "artist": "Étienne-Louis Boullée",
      "title": "Cenotaph for Newton",
      "date": "1784",
-     "det": "Ink and wash, sheet 17 1/4 × 26 in. Bibliothèque nationale de France, Paris",
-     "lead": "Étienne-Louis Boullée (French, 1728–1799). Geometry as architecture: one pure sphere on a ring of plain bases.",
+     "det": "French, 1728–1799. Ink and wash, sheet 17 1/4 × 26 in. Bibliothèque nationale de France, Paris",
+     "lead": "Boullée made architecture out of pure geometry: one sphere on a ring of plain bases, with no columns and no windows.",
      "look": [
-      "A single sphere fills the upper half of the sheet, set on two stepped circular bases.",
-      "Rings of cypress trees run around each base, drawn as even rows of small dark spikes.",
-      "Grey wash shades the sphere from light at the lower left to dark at the top, so the flat drawing reads as a solid globe.",
-      "The people on the steps are specks, which makes the building seem immense.",
-      "The surfaces are bare: no columns, no windows, only the plain curves of cylinder and sphere."
+      "Gray wash shades the sphere from light at lower left to dark at top, so the flat drawing reads as a solid globe.",
+      "The people on the steps are specks, which makes the building seem immense."
      ],
      "bul": [
       "An unbuilt monument to Isaac Newton, signed by the architect."
@@ -135,17 +122,14 @@ window.SITE = {
      "artist": "Angelica Kauffman",
      "title": "Cornelia, Mother of the Gracchi, Pointing to Her Children as Her Treasures",
      "date": "c. 1785",
-     "det": "Oil on canvas, 40 × 50 in. Virginia Museum of Fine Arts, Richmond",
-     "lead": "Angelica Kauffman (Swiss, 1741–1807). The colour is calm and even, and the figures stand before plain columns.",
+     "det": "Swiss, 1741–1807. Oil on canvas, 40 × 50 in. Virginia Museum of Fine Arts, Richmond",
+     "lead": "Kauffman kept the color calm and even and stood the figures before plain columns.",
      "look": [
-      "Cornelia stands in white at the centre, the brightest shape, between her sons at the left and the seated visitor at the right.",
-      "The colours are white, cream, two clear reds and ochre, each kept to its own flat area, with one blue cloth on the stool.",
-      "Two heavy columns and a plain wall stand behind the figures, with open sky between them.",
-      "The gestures are slow and clear: Cornelia's open hand toward the boys, the visitor's hand holding up a chain of jewels.",
-      "The figures are evenly lit, with soft edges and no deep shadow."
+      "Each color, like the two clear reds, keeps to its own area, so the figures stay separate shapes against the tan wall.",
+      "Even light, soft edges and no deep shadow keep any part from jumping forward, so the whole row of figures looks still."
      ],
      "bul": [
-      "A Roman mother and a visitor who has come to show off her jewellery."
+      "A visitor shows off her jewelry, and the Roman mother answers by pointing to her sons as her treasures."
      ]
     },
     {
@@ -154,13 +138,11 @@ window.SITE = {
      "artist": "Jacques-Louis David",
      "title": "The Oath of the Horatii",
      "date": "1784–85",
-     "det": "Oil on canvas, 130 × 167 1/4 in. Musée du Louvre, Paris",
-     "lead": "Jacques-Louis David (French, 1748–1825). Hard outlines and straight limbs, in a space no deeper than a stage.",
+     "det": "French, 1748–1825. Oil on canvas, 130 × 167 1/4 in. Musée du Louvre, Paris",
+     "lead": "David drew hard outlines and straight limbs and set the figures in a space no deeper than a stage.",
      "look": [
-      "Three arches behind the figures divide the scene into three groups: the sons, the father with the swords, the women.",
-      "The men are built from straight lines and sharp angles, legs braced and arms thrust out; the women collapse in soft curves.",
-      "The floor runs in a flat grid to a plain grey wall, which closes the space a few steps behind the figures.",
-      "Light falls from the left onto the swords and the father's raised hand, and the three blades meet at the centre."
+      "The men are straight lines and sharp angles, the women soft sinking curves, so the men's side looks rigid by contrast.",
+      "The floor grid runs back to three plain arches, dark behind, so the space stops a few steps behind the figures."
      ],
      "bul": [
       "Three Roman brothers swear to fight for their city; shown at the Paris Salon of 1785."
@@ -172,14 +154,11 @@ window.SITE = {
      "artist": "Adélaïde Labille-Guiard",
      "title": "Self-Portrait with Two Pupils",
      "date": "1785",
-     "det": "Oil on canvas, 83 × 59 1/2 in. The Metropolitan Museum of Art, New York",
-     "lead": "Adélaïde Labille-Guiard (French, 1749–1803). The rendering is the point: satin, lace, straw and skin, all at full sharpness.",
+     "det": "French, 1749–1803. Oil on canvas, 83 × 59 1/2 in. The Metropolitan Museum of Art, New York",
+     "lead": "Labille-Guiard painted satin, lace, straw and skin each at full sharpness.",
      "look": [
-      "The silver-blue silk dress is the largest and brightest shape, its highlights laid on in crisp strokes.",
-      "The lace at the neckline, the straw hat and the feathers are each painted with their own texture.",
-      "The two pupils lean together at the right in grey and olive-brown, a muted vertical group against a dark wall.",
-      "The easel cuts in from the left, seen from behind, so the painter's own canvas is hidden.",
-      "A plaster bust and a statue stand in the shadow behind, pale against the dark."
+      "The highlights on the silver-blue silk are crisp, hard-edged strokes of near-white, so the dress reads as stiff, shiny satin.",
+      "Lace, straw hat and feathers each get a different touch, so each material can be told apart at a glance."
      ],
      "bul": [
       "A painter at her easel with her two students, shown at the Salon of 1785."
@@ -192,12 +171,10 @@ window.SITE = {
      "title": "The Death of Socrates",
      "date": "1787",
      "det": "Oil on canvas, 51 × 77 1/4 in. The Metropolitan Museum of Art, New York",
-     "lead": "Line and gesture carry the picture: one raised finger, one hand reaching for the cup.",
+     "lead": "David let line and gesture carry the picture: one raised finger, one hand reaching for the cup.",
      "look": [
-      "Socrates sits upright just right of centre, the most brightly lit figure, with one arm raised and the other stretched out to the side.",
-      "The grieving followers on both sides bend and turn away, and their curved backs frame the straight body in the middle.",
-      "The stone wall runs flat across the picture, broken only by an arched passage at the left.",
-      "Every fold and limb has a clean edge; the colours are flat blocks of red, white, ochre, blue and grey."
+      "The followers on both sides bend and turn away, so their curved backs set off the upright body and raised arm.",
+      "Folds and limbs have clean edges against the dark gray wall, so each pose reads in outline, the raised finger most of all."
      ],
      "bul": [
       "The philosopher drinks the poison rather than renounce his teaching; the old man at the foot of the bed is Plato."
@@ -210,12 +187,10 @@ window.SITE = {
      "title": "Antoine Laurent Lavoisier and Marie Anne Lavoisier",
      "date": "1788",
      "det": "Oil on canvas, 102 1/4 × 76 1/2 in. The Metropolitan Museum of Art, New York",
-     "lead": "Clarity: every glass instrument is described exactly, down to the reflections.",
+     "lead": "David described every glass instrument exactly, down to the reflections.",
      "look": [
-      "The glass vessels on the table and the globe on the floor are painted with sharp highlights and exact reflections, more precise than anything else on the canvas.",
-      "The white dress forms one large pale shape at the left, balanced by the red velvet tablecloth at the right.",
-      "Her standing figure leans down and his seated figure looks up, so the two make one connected diagonal.",
-      "The background is a grey wall with flat pilasters, plain and unornamented."
+      "Two sharp window-pane highlights sit on the floor globe, so the glass looks hollow and clear, the red cloth showing through.",
+      "The wall behind is plain dark gray, so the tall glass cylinder on the table shows up clearly against it."
      ],
      "bul": [
       "A chemist and his wife at a table of laboratory glassware."
@@ -227,13 +202,11 @@ window.SITE = {
      "artist": "Antonio Canova",
      "title": "Psyche Revived by Cupid's Kiss",
      "date": "1787–93",
-     "det": "Marble and metal, 61 × 66 1/4 × 39 3/4 in. Musée du Louvre, Paris",
-     "lead": "Antonio Canova (Italian, 1757–1822). Polished marble made to look like soft skin, in two crossing diagonals.",
+     "det": "Italian, 1757–1822. Marble and metal, 61 × 66 1/4 × 39 3/4 in. Musée du Louvre, Paris",
+     "lead": "Canova polished the marble until it looks like soft skin and built the group on two crossing diagonals.",
      "look": [
-      "Cupid's legs and wings make one long diagonal from the lower left to the upper right; Psyche's body and raised arms make the other, and the two faces sit where they cross.",
-      "The arms form a ring around the two heads, so the eye circles back to the centre.",
-      "The hair and the drapery are cut in finer, rougher detail than the bodies.",
-      "Thin folds of cloth slip from Psyche's hips and spill over the rock below."
+      "Cupid's leg and wing rise to upper right and Psyche's body crosses them, so the eye lands on the faces at the crossing.",
+      "The hair and drapery are cut in fine, close detail, so the broad polished bodies beside them look even smoother."
      ],
      "bul": [
       "Cupid waking Psyche with a kiss, from the ancient tale of the two lovers."
@@ -245,13 +218,11 @@ window.SITE = {
      "artist": "Anne-Louis Girodet",
      "title": "The Sleep of Endymion",
      "date": "1791",
-     "det": "Oil on canvas, 78 × 102 3/4 in. Musée du Louvre, Paris",
-     "lead": "Anne-Louis Girodet (French, 1767–1824). A single moonbeam falls on an idealised body in deep shadow.",
+     "det": "French, 1767–1824. Oil on canvas, 78 × 102 3/4 in. Musée du Louvre, Paris",
+     "lead": "Girodet lit an idealized body with a single moonbeam and gave it soft edges in place of David's hard outline.",
      "look": [
-      "A shaft of pale light enters from the upper left through the leaves and falls diagonally across the sleeping figure.",
-      "The body is smooth and soft-edged, lit from above, with the hard outline of David's figures softened away.",
-      "Apart from one muted rose cloth and the spotted leopard skin, the colour is held to silvery flesh, browns and dark greens, so the picture reads as night.",
-      "The leaves at the top are painted in sharp detail against the glow of the sky."
+      "Pale light falls through the leaves from upper left, so the chest and face glow while the legs fade into dark.",
+      "Only a muted rose cloth and the leopard skin break the silvery flesh, browns and dark greens, so the picture reads as night."
      ],
      "bul": [
       "Endymion asleep on a leopard skin while the boy Zephyr parts the branches; painted in Rome and shown at the Salon of 1793."
@@ -264,13 +235,10 @@ window.SITE = {
      "title": "The Death of Marat",
      "date": "1793",
      "det": "Oil on canvas, 65 × 50 1/2 in. Royal Museums of Fine Arts of Belgium, Brussels",
-     "lead": "Empty space: the upper half of the canvas is left as bare, brushed brown wall.",
+     "lead": "David left the upper half as bare, brushed brown wall and set everything else in a band across the bottom.",
      "look": [
-      "All the figures and objects sit in a band across the bottom; the wall above carries nothing at all.",
-      "Light from the upper left picks out the head, the shoulder and the hanging arm against the dark.",
-      "The wooden crate at the front is flat and plain, lettered with a dedication like an inscribed tomb slab.",
-      "The colours are few: white sheet, green cloth, yellow wood and the pale body.",
-      "The arm hangs straight down and the head rests on the shoulder, like a figure from a Deposition."
+      "The wall is darkest behind the lit head and lightens toward the right, so head and shoulder stand out sharply.",
+      "The few colors, white sheet, green cloth and yellow wood, all sit in the lower band, so the brown wall above looks even emptier."
      ],
      "bul": [
       "A murdered revolutionary journalist; the crate carries the painter's dedication, dated to year two of the Republic."
@@ -283,12 +251,10 @@ window.SITE = {
      "title": "The Intervention of the Sabine Women",
      "date": "1799",
      "det": "Oil on canvas, 151 1/2 × 205 1/2 in. Musée du Louvre, Paris",
-     "lead": "Nude warriors with the outlines of statues, held mid-action.",
+     "lead": "David gave the nude warriors the outlines of statues and held them mid-action.",
      "look": [
-      "The two main warriors are nude, each outlined cleanly against the crowd, with their bodies modelled as smoothly as marble.",
-      "The woman in white stands between the two warriors with arms flung wide, a shield raised at her on either side.",
-      "The front figures are lit evenly and sharply; the fortress behind softens in haze and smoke.",
-      "A forest of spears runs across the middle of the canvas in thin straight lines."
+      "Against the busy crowd the two main warriors keep clean outlines and smooth modeling, so their pale bodies look like marble statues.",
+      "The fortress behind softens in haze while the front figures stay sharp, so the warriors look close and solid."
      ],
      "bul": [
       "Women throw themselves between their Roman husbands and their Sabine fathers to end a battle."
@@ -301,12 +267,10 @@ window.SITE = {
      "title": "Madame Récamier",
      "date": "1800",
      "det": "Oil on canvas, 68 1/2 × 96 in. Musée du Louvre, Paris",
-     "lead": "Sparseness: a bare room, one piece of furniture and a great deal of empty wall.",
+     "lead": "David kept the picture sparse: a bare room, a daybed, a lamp, a footstool and a great deal of empty wall.",
      "look": [
-      "The low daybed and the reclining figure run almost the full width of the canvas.",
-      "The white dress is the lightest shape, set off by the yellow daybed and the grey-brown wall.",
-      "The background is loosely brushed and thin, while the face and the dress are carried further.",
-      "The furniture is plain and antique in shape: a lamp on a tall stand, a daybed with scrolled ends, a footstool."
+      "The white dress is the lightest shape against the gray-brown wall and floor, so the eye goes straight to the figure.",
+      "Thin, loose brushing leaves the wall with nothing on it, so the room looks empty and the smoothly finished face looks sharper."
      ],
      "bul": [
       "Juliette Récamier in a white dress; the painter left the picture a sketch."
@@ -319,12 +283,10 @@ window.SITE = {
      "title": "Napoleon Crossing the Alps",
      "date": "1800",
      "det": "Oil on canvas, 102 × 87 in. Musée national du château de Malmaison, Rueil-Malmaison",
-     "lead": "One strong diagonal: a rearing horse against the slope.",
+     "lead": "David built the picture on one strong diagonal: a rearing horse against the slope.",
      "look": [
-      "The horse and rider form a single diagonal from the hind legs at the lower right to the horse's head and the flying cloak at the upper left.",
-      "The yellow cloak and the horse's mane and tail blow in the same direction, so the whole figure seems pushed by wind.",
-      "The soldiers and cannon on the slope behind are tiny, so the rider fills most of the canvas.",
-      "The surface is glassy and even, with the uniform, bridle and saddle picked out in sharp detail."
+      "One diagonal runs from the hind legs at lower right to the cloak at upper left, so horse and rider seem to climb.",
+      "The white horse and yellow cloak are sharp-edged against gray sky and rock, so the diagonal reads as one bright shape."
      ],
      "bul": [
       "The First Consul crossing the Alps in 1800; the rocks below carry the names of Bonaparte, Hannibal and Charlemagne."
@@ -337,15 +299,13 @@ window.SITE = {
      "title": "Perseus with the Head of Medusa",
      "date": "1804–6",
      "det": "Marble, 95 1/2 × 75 1/2 × 40 1/2 in. The Metropolitan Museum of Art, New York",
-     "lead": "Contrapposto, the stance of the ancient statues, with every limb kept clear of the body.",
+     "lead": "Canova used contrapposto, the stance of the ancient statues, and kept every limb clear of the body.",
      "look": [
-      "The figure stands frontal with the weight on the right leg, the left leg trailing back, and the hips and shoulders tilted against each other.",
-      "The arm holding the head rises above the shoulder, a strong line thrust out from the upright body.",
-      "The cloak over the arm is cut in deep folds, and the hair and the winged cap in fine detail, against the plain surface of the body.",
-      "The cloak hangs behind the figure rather than across it, so the silhouette stays open."
+      "The weight is on one leg and the other trails back, tilting hips against shoulders, so the body looks balanced, not stiff.",
+      "The cloak hangs from the outstretched arm and falls behind the legs, not across them, so nothing hides the body."
      ],
      "bul": [
-      "A modern marble modelled on the Apollo Belvedere, made after Napoleon's troops took the ancient statue to Paris."
+      "A modern marble modeled on the Apollo Belvedere, made after Napoleon's troops took the ancient statue to Paris."
      ]
     }
    ]

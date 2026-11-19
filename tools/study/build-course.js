@@ -20,7 +20,7 @@
      imagesNote      no longer shown (Nov 7 2026: the course home has no how-to or image-rights lines; the credits page covers rights)
    Theme slides may carry "alt" (alt text for a diagram; otherwise the title is used) and "label"
    (this page's own label in place of themeLabel, e.g. History).
-   Work slides may carry "look" (3 to 5 "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list → divider → "bul".
+   Work slides may carry "look" (2 to 5 "Look at" bullets, Nov 5 2026 page model): lead → "Look at" list → divider → "bul".
 
    Technique slide model (Nov 10 2026; technique courses only, basePath /study). The old theme/work technique pages
    keep working until each course is rebuilt.

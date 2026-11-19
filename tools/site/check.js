@@ -162,7 +162,7 @@ for (const slug of courses) {
   for (const p of S.handouts) {
     if (p.overview && p.overview.img) keys.add(p.overview.img);
     for (const s of p.slides || []) {
-      if (s.type === 'work') { works++; keys.add(s.key); if (s.look) { looks++; if (s.look.length < 3 || s.look.length > 5) err(`${tag}: "${s.title}" has ${s.look.length} Look-at bullets, needs 3 to 5`); } if (!s.lead && !s.sum) warn(`${tag}: "${s.title}" has no lead`); }
+      if (s.type === 'work') { works++; keys.add(s.key); if (s.look) { looks++; if (s.look.length < 2 || s.look.length > 5) err(`${tag}: "${s.title}" has ${s.look.length} Look-at bullets, needs 2 to 5`); } if (!s.lead && !s.sum) warn(`${tag}: "${s.title}" has no lead`); }
       if (s.type === 'theme' && s.img) keys.add(s.img);
       /* technique slide model (Nov 10 2026) */
       if (s.type === 'topen' && s.img) keys.add(s.img);

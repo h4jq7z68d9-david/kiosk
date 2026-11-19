@@ -4,6 +4,15 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 18 2026) — Slide-pattern rewrite, all ten art history courses
+
+- Installed the course-builder handoff "Slide pattern rewrite (Nov 18)" (second-pass text) on branch `edits-slide-pattern`: new `data.js` for impressionism, classical-myth, post-impressionism, fauvism-and-expressionism, rococo, neoclassicism, romanticism, realism, japanese-woodblock-prints, japonisme. Base check: all ten repo files matched the handoff sha256/bytes (main `5af204a`), none skipped.
+- Generator: `tools/site/check.js` now allows 2 to 5 Look-at bullets on work slides (was 3 to 5); comment in `build-course.js` updated to match.
+- Japonisme slide order changed per the handoff (La Japonaise after The Golden Screen; Almond Blossom after the two Hiroshige copies); sitemap order follows. No pages added or removed, no URL changes, no new redirects; technique courses unchanged.
+- All 15 courses rebuilt (1097 pages); check.js PASS; smoke.js PASS.
+
+-----
+
 ## Completed This Session (November 15 2026, later) — Admin: advertising reminder month, apex-only redirect
 
 - Advertising reminder asked for the current month (and used UTC); now asks for last month in local time, so November's starts Dec 1.
