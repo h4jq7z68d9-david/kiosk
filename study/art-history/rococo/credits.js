@@ -5,7 +5,9 @@ window.CREDITS = {
   "file": "L'Embarquement pour Cythere, by Antoine Watteau, from C2RMF.jpg",
   "license": "Public domain",
   "source": "Wikimedia Commons",
-  "author": "C2RMF: Galerie de tableaux en très haute définition: image page"
+  "author": "Jean-Antoine Watteau",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "watteau-pierrot": {
   "work": "Antoine Watteau, Pierrot, c. 1718–19",
@@ -13,7 +15,9 @@ window.CREDITS = {
   "file": "Pierrot - Antoine Watteau - Musée du Louvre Peintures MI 1121 - après restauration 2024.jpg",
   "license": "Public domain",
   "source": "Wikimedia Commons",
-  "author": "photo Shonagon 2026-01-02"
+  "author": "Jean-Antoine Watteau",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "watteau-mezzetin": {
   "work": "Antoine Watteau, Mezzetin, c. 1718–20",
@@ -21,7 +25,9 @@ window.CREDITS = {
   "file": "Jean-Antoine Watteau - Mezzetin.JPG",
   "license": "Public domain",
   "source": "Wikimedia Commons",
-  "author": "Metropolitan Museum of Art, online collection (accession number 34.138)"
+  "author": "Jean-Antoine Watteau",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "watteau-gersaint": {
   "work": "Antoine Watteau, Gersaint's Shopsign, 1720",
@@ -29,21 +35,29 @@ window.CREDITS = {
   "file": "L'enseigne de Gersaint.jpg",
   "license": "Public domain",
   "source": "Wikimedia Commons",
-  "author": "Château de Charlottenburg"
+  "author": "Jean-Antoine Watteau",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "boucher-triumph-venus": {
   "work": "François Boucher, The Triumph of Venus, 1740",
   "page": "https://collection.nationalmuseum.se/en/collection/item/17773/",
   "file": "The Triumph of Venus (François Boucher) - Nationalmuseum - 17773.tif",
   "license": "Public domain (Nationalmuseum open access)",
-  "source": "Nationalmuseum, Stockholm, via Wikimedia Commons"
+  "author": "François Boucher",
+  "source": "Nationalmuseum, Stockholm, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Foto: Bodil Beckman / Nationalmuseum, Public Domain"
  },
  "boucher-dejeuner": {
   "work": "François Boucher, Le Déjeuner, 1739",
   "page": "https://collections.louvre.fr/ark:/53355/cl010059924",
   "file": "Louvre collections image 0000355129",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
-  "source": "Musée du Louvre"
+  "author": "Boucher, François",
+  "source": "Musée du Louvre",
+  "licenseUrl": null,
+  "copyrightNotice": "© 2015 GrandPalaisRmn (musée du Louvre) / Franck Raux"
  },
  "boucher-pompadour": {
   "work": "François Boucher, Madame de Pompadour, 1756",
@@ -51,14 +65,19 @@ window.CREDITS = {
   "file": "Madame de Pompadour.jpg",
   "license": "Public domain",
   "source": "Wikimedia Commons",
-  "author": "Google Arts &amp; Culture"
+  "author": "François Boucher",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "fragonard-swing": {
   "work": "Jean-Honoré Fragonard, The Swing, c. 1767–68",
   "page": "https://commons.wikimedia.org/wiki/File:The_Swing_(P430).jpg",
   "file": "The Swing (P430).jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
-  "source": "Wikimedia Commons (image of the painting after its 2021 conservation, The Wallace Collection)"
+  "author": "Jean-Honoré Fragonard",
+  "source": "Wikimedia Commons (image of the painting after its 2021 conservation, The Wallace Collection)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "fragonard-meeting": {
   "work": "Jean-Honoré Fragonard, The Progress of Love: The Meeting, 1771–72",
@@ -66,7 +85,9 @@ window.CREDITS = {
   "file": "Jean-Honoré Fragonard - Les Progrès de l'amour - Le rendez-vous - Google Art Project.jpg",
   "license": "Public domain",
   "source": "Wikimedia Commons",
-  "author": "Google Arts &amp; Culture  — PwH8sj_E5QhPDQ"
+  "author": "Jean-Honoré Fragonard",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "fragonard-girl-reading": {
   "work": "Jean-Honoré Fragonard, Young Girl Reading, c. 1769",
@@ -74,27 +95,38 @@ window.CREDITS = {
   "file": "Jean Honoré Fragonard, Young Girl Reading, c. 1769, NGA 46303.jpg",
   "license": "CC0",
   "source": "Wikimedia Commons",
-  "author": "This file was donated to Wikimedia Commons as part of a project by the National Gallery of Art. Please see the Gallery's Open Access Policy."
+  "author": "Jean Honoré Fragonard",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "tiepolo-planets": {
   "work": "Giovanni Battista Tiepolo, Allegory of the Planets and Continents, 1752",
   "page": "https://www.metmuseum.org/art/collection/search/437790",
   "file": "DP-14286-007.jpg",
   "license": "CC0 (Met Open Access)",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "author": "Giovanni Battista Tiepolo",
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "carriera-boyne": {
   "work": "Rosalba Carriera, Gustavus Hamilton, Second Viscount Boyne, in Masquerade Costume, 1730–31",
   "page": "https://www.metmuseum.org/art/collection/search/438544",
   "file": "DP161652.jpg",
   "license": "CC0 (Met Open Access)",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "author": "Rosalba Carriera",
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "zimmermann-wieskirche": {
   "work": "Dominikus and Johann Baptist Zimmermann, Pilgrimage Church of Wies, interior, 1745–54",
   "page": "https://commons.wikimedia.org/wiki/File:Bavaria_The_Wies,_Pilgrimage_Church_of_the_Scourged_Saviour_(9812973145).jpg",
   "file": "Bavaria The Wies, Pilgrimage Church of the Scourged Saviour (9812973145).jpg",
   "license": "CC0 (photographer’s public-domain dedication)",
-  "source": "Wikimedia Commons, from Flickr"
+  "author": null,
+  "source": "Wikimedia Commons, from Flickr",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  }
 };

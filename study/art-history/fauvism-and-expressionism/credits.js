@@ -5,7 +5,9 @@ window.CREDITS = {
   "file": "File:Matisse-Woman-with-a-Hat.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Henri Matisse",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain; PD-1923"
  },
  "matisse-the-green-line": {
   "work": "Henri Matisse, Portrait of Madame Matisse. The Green Line (1905)",
@@ -13,7 +15,9 @@ window.CREDITS = {
   "file": "KMSr171 native download",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Henri Matisse",
-  "source": "Statens Museum for Kunst, Copenhagen (open API, Public Domain Mark)"
+  "source": "Statens Museum for Kunst, Copenhagen (open API, Public Domain Mark)",
+  "licenseUrl": "https://www.smk.dk/section/brug-af-museets-materiale/",
+  "copyrightNotice": "Værket er udenfor ophavsret, og du må derfor bruge materialet helt som du har lyst."
  },
  "matisse-open-window-collioure": {
   "work": "Henri Matisse, Open Window, Collioure (1905)",
@@ -21,7 +25,9 @@ window.CREDITS = {
   "file": "File:Fenêtre ouverte, Collioure, par Henri Matisse.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Henri Matisse",
-  "source": "Wikimedia Commons (from National Gallery of Art IIIF)"
+  "source": "Wikimedia Commons (from National Gallery of Art IIIF)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "derain-mountains-at-collioure": {
   "work": "André Derain, Mountains at Collioure (1905)",
@@ -29,7 +35,9 @@ window.CREDITS = {
   "file": "File:Montagnes à Collioure, par André Derain.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "André Derain",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "matisse-joy-of-life": {
   "work": "Henri Matisse, Le Bonheur de vivre (1905–06)",
@@ -37,7 +45,9 @@ window.CREDITS = {
   "file": "File:La Joie de vivre, par Henri Matisse.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Henri Matisse",
-  "source": "Barnes Foundation, via Wikimedia Commons"
+  "source": "Barnes Foundation, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "kirchner-street-dresden": {
   "work": "Ernst Ludwig Kirchner, Street, Dresden (1908, reworked 1919)",
@@ -45,7 +55,9 @@ window.CREDITS = {
   "file": "File:Kirchner - Street, Dresden, 1908, 12.1951.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Ernst Ludwig Kirchner",
-  "source": "The Museum of Modern Art scan, via Wikimedia Commons"
+  "source": "The Museum of Modern Art scan, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "kirchner-franzi-carved-chair": {
   "work": "Ernst Ludwig Kirchner, Fränzi in Front of Carved Chair (1910)",
@@ -53,7 +65,9 @@ window.CREDITS = {
   "file": "File:Ernst Ludwig Kirchner - Fränzi vor geschnitztem Stuhl - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Ernst Ludwig Kirchner",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "kirchner-english-step-dancers": {
   "work": "Ernst Ludwig Kirchner, English Step Dancers (1911)",
@@ -61,7 +75,9 @@ window.CREDITS = {
   "file": "IIIF image bed2c3ae-db41-428a-925d-3d75c6ba2d04",
   "license": "CC0",
   "author": "Ernst Ludwig Kirchner",
-  "source": "National Gallery of Art, Washington"
+  "source": "National Gallery of Art, Washington",
+  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
+  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "kirchner-self-portrait-as-soldier": {
   "work": "Ernst Ludwig Kirchner, Self-Portrait as a Soldier (1915)",
@@ -69,7 +85,9 @@ window.CREDITS = {
   "file": "File:Kirchner - Self Portrait as a Soldier (1915).jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Ernst Ludwig Kirchner",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "kandinsky-murnau-griesbraeu": {
   "work": "Wassily Kandinsky, Murnau – View from the Window of the Griesbräu (1908)",
@@ -77,7 +95,9 @@ window.CREDITS = {
   "file": "File:Wassily Kandinsky - Murnau – Blick aus dem Fenster des Griesbräu - GMS 34 - Lenbachhaus.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Wassily Kandinsky",
-  "source": "Städtische Galerie im Lenbachhaus, Munich (CC0), via Wikimedia Commons"
+  "source": "Städtische Galerie im Lenbachhaus, Munich (CC0), via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "jawlensky-alexander-sakharoff": {
   "work": "Alexej von Jawlensky, Portrait of the Dancer Alexander Sakharoff (1909)",
@@ -85,7 +105,9 @@ window.CREDITS = {
   "file": "File:Alexej von Jawlensky - Bildnis des Tänzers Alexander Sacharoff - G 13388 - Lenbachhaus.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Alexej von Jawlensky",
-  "source": "Städtische Galerie im Lenbachhaus, Munich (CC0), via Wikimedia Commons"
+  "source": "Städtische Galerie im Lenbachhaus, Munich (CC0), via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "marc-blue-horse-i": {
   "work": "Franz Marc, Blue Horse I (1911)",
@@ -93,7 +115,9 @@ window.CREDITS = {
   "file": "File:Franz Marc - Blaues Pferd I - G 13324 - Lenbachhaus.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Franz Marc",
-  "source": "Städtische Galerie im Lenbachhaus, Munich (CC0), via Wikimedia Commons"
+  "source": "Städtische Galerie im Lenbachhaus, Munich (CC0), via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "macke-lady-green-jacket": {
   "work": "August Macke, Lady in a Green Jacket (1913)",
@@ -101,15 +125,19 @@ window.CREDITS = {
   "file": "File:Dame in grüner Jacke - August Macke - Museum Ludwig-7004 (cropped).jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "August Macke",
-  "source": "Museum Ludwig scan, via Wikimedia Commons"
+  "source": "Museum Ludwig scan, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "kandinsky-improvisation-30-cannons": {
   "work": "Wassily Kandinsky, Improvisation No. 30 (Cannons) (1913)",
   "page": "https://www.artic.edu/artworks/8991/improvisation-no-30-cannons",
   "file": "IIIF image b5bc6b66-9e6e-fe57-dcec-fc49e820e904",
   "license": "CC0",
-  "author": "Wassily Kandinsky",
-  "source": "Art Institute of Chicago"
+  "author": "Vasily Kandinsky",
+  "source": "Art Institute of Chicago",
+  "licenseUrl": null,
+  "copyrightNotice": "CC0 Public Domain Designation"
  },
  "kandinsky-composition-vii": {
   "work": "Wassily Kandinsky, Composition VII (1913)",
@@ -117,7 +145,9 @@ window.CREDITS = {
   "file": "File:Composition VII - Wassily Kandinsky, GAC.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Wassily Kandinsky",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "gerstl-laughing-self-portrait": {
   "work": "Richard Gerstl, Self-Portrait, Laughing (1908)",
@@ -125,7 +155,9 @@ window.CREDITS = {
   "file": "File:Richard Gerstl - Selbstbildnis, lachend - 4035 - Österreichische Galerie Belvedere.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Richard Gerstl",
-  "source": "Belvedere scan, via Wikimedia Commons"
+  "source": "Belvedere scan, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "schiele-self-portrait-physalis": {
   "work": "Egon Schiele, Self-Portrait with Chinese Lantern Plant (1912)",
@@ -133,7 +165,9 @@ window.CREDITS = {
   "file": "File:Egon Schiele - Self-Portrait with Physalis - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Egon Schiele",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "schiele-death-and-maiden": {
   "work": "Egon Schiele, Death and Maiden (1915)",
@@ -141,6 +175,8 @@ window.CREDITS = {
   "file": "File:Egon Schiele - Tod und Mädchen - 3171 - Österreichische Galerie Belvedere.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Egon Schiele",
-  "source": "Belvedere scan, via Wikimedia Commons"
+  "source": "Belvedere scan, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  }
 };

@@ -5,7 +5,9 @@ window.CREDITS = {
   "file": "https://patentimages.storage.googleapis.com/34/bd/5c/b1ff3f79537751/US2252-drawings-page-1.png",
   "license": "Public domain",
   "author": "John Rand",
-  "source": "US Patent and Trademark Office (via Google Patents)"
+  "source": "US Patent and Trademark Office (via Google Patents)",
+  "licenseUrl": null,
+  "copyrightNotice": null
  },
  "ostade-painter-studio": {
   "work": "Adriaen van Ostade, The Painter in His Studio (ca. 1667), etching (detail)",
@@ -13,7 +15,9 @@ window.CREDITS = {
   "file": "https://images.metmuseum.org/CRDImages/dp/original/DP821918.jpg",
   "license": "Public Domain (Met Open Access)",
   "author": "Adriaen van Ostade",
-  "source": "The Metropolitan Museum of Art, New York"
+  "source": "The Metropolitan Museum of Art, New York",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "bruegel-harvesters": {
   "work": "Pieter Bruegel the Elder, The Harvesters (1565)",
@@ -21,7 +25,9 @@ window.CREDITS = {
   "file": "The Metropolitan Museum of Art, 19.164",
   "license": "Public domain (Met Open Access)",
   "author": "Pieter Bruegel the Elder",
-  "source": "The Met Open Access"
+  "source": "The Met Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "oa-oil-cures": {
   "work": "Oil Cures",
@@ -29,7 +35,9 @@ window.CREDITS = {
   "file": "Original diagram",
   "license": "Original work",
   "author": "David Nicholson Art",
-  "source": "Made for this site"
+  "source": "Made for this site",
+  "licenseUrl": null,
+  "copyrightNotice": null
  },
  "ryder-moonlight-marine": {
   "work": "Albert Pinkham Ryder, Moonlight Marine (1870–90)",
@@ -37,7 +45,9 @@ window.CREDITS = {
   "file": "The Metropolitan Museum of Art, 34.55",
   "license": "Public domain (Met Open Access)",
   "author": "Albert Pinkham Ryder",
-  "source": "The Met Open Access"
+  "source": "The Met Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "oa-acrylic-dries": {
   "work": "Acrylic Dries",
@@ -45,7 +55,9 @@ window.CREDITS = {
   "file": "Original diagram",
   "license": "Original work",
   "author": "David Nicholson Art",
-  "source": "Made for this site"
+  "source": "Made for this site",
+  "licenseUrl": null,
+  "copyrightNotice": null
  },
  "dn-early-still": {
   "work": "David Nicholson, Early, Still (2025)",
@@ -53,7 +65,9 @@ window.CREDITS = {
   "file": "David Nicholson",
   "license": "© David Nicholson",
   "author": "David Nicholson",
-  "source": "David Nicholson Art"
+  "source": "David Nicholson Art",
+  "licenseUrl": null,
+  "copyrightNotice": "© David Nicholson"
  },
  "vermeer-lady-writing-detail": {
   "work": "Johannes Vermeer, A Lady Writing (c. 1665) (detail)",
@@ -61,7 +75,9 @@ window.CREDITS = {
   "file": "https://api.nga.gov/iiif/ea55879e-57f1-494d-9043-6dedb384bdc8/full/max/0/default.jpg",
   "license": "Public domain (NGA Open Access, CC0)",
   "author": "Johannes Vermeer",
-  "source": "National Gallery of Art, Washington"
+  "source": "National Gallery of Art, Washington",
+  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
+  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "monet-stacks-of-wheat-end-of-summer": {
   "work": "Claude Monet, Stacks of Wheat (End of Summer) (1890–91)",
@@ -69,7 +85,9 @@ window.CREDITS = {
   "file": "Art Institute of Chicago, 1985.1103",
   "license": "CC0",
   "author": "Claude Monet",
-  "source": "Art Institute of Chicago open access"
+  "source": "Art Institute of Chicago open access",
+  "licenseUrl": null,
+  "copyrightNotice": "CC0 Public Domain Designation"
  },
  "oa-color-shift": {
   "work": "Color Shift as It Dries",
@@ -77,7 +95,9 @@ window.CREDITS = {
   "file": "Original diagram",
   "license": "Original work",
   "author": "David Nicholson Art",
-  "source": "Made for this site"
+  "source": "Made for this site",
+  "licenseUrl": null,
+  "copyrightNotice": null
  },
  "dn-umbrella-reverie": {
   "work": "David Nicholson, Umbrella, Reverie (2024)",
@@ -85,7 +105,9 @@ window.CREDITS = {
   "file": "David Nicholson",
   "license": "© David Nicholson",
   "author": "David Nicholson",
-  "source": "David Nicholson Art"
+  "source": "David Nicholson Art",
+  "licenseUrl": null,
+  "copyrightNotice": "© David Nicholson"
  },
  "ginevra-blending-detail": {
   "work": "Leonardo da Vinci, Ginevra de' Benci (c. 1474/1478) (detail)",
@@ -93,7 +115,9 @@ window.CREDITS = {
   "file": "https://api.nga.gov/iiif/8f29e3c9-a289-4d53-abf0-31a66e9e98fa/full/max/0/default.jpg",
   "license": "Public domain (NGA Open Access, CC0)",
   "author": "Leonardo da Vinci",
-  "source": "National Gallery of Art, Washington"
+  "source": "National Gallery of Art, Washington",
+  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
+  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "rotari-girl-flower": {
   "work": "Pietro Rotari, A Girl with a Flower in Her Hair (1760/1762)",
@@ -101,7 +125,9 @@ window.CREDITS = {
   "file": "https://api.nga.gov/iiif/9d1455d3-8732-45af-9511-b0299968ad29/full/max/0/default.jpg",
   "license": "Public domain (NGA Open Access, CC0)",
   "author": "Pietro Rotari",
-  "source": "National Gallery of Art, Washington"
+  "source": "National Gallery of Art, Washington",
+  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
+  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "van-gogh-green-wheat-detail": {
   "work": "Vincent van Gogh, Green Wheat Fields, Auvers (1890) (detail)",
@@ -109,7 +135,9 @@ window.CREDITS = {
   "file": "https://api.nga.gov/iiif/b479275a-4f8a-4702-83c2-9dcc4cbe60ce/full/max/0/default.jpg",
   "license": "Public domain (NGA Open Access, CC0)",
   "author": "Vincent van Gogh",
-  "source": "National Gallery of Art, Washington"
+  "source": "National Gallery of Art, Washington",
+  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
+  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "rembrandt-lucretia": {
   "work": "Rembrandt van Rijn, Lucretia (1664)",
@@ -117,7 +145,9 @@ window.CREDITS = {
   "file": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Rembrandt_van_Rijn%2C_Lucretia%2C_1664%2C_NGA_83.jpg",
   "license": "Public domain (NGA Open Access, CC0)",
   "author": "Rembrandt van Rijn",
-  "source": "National Gallery of Art, Washington"
+  "source": "National Gallery of Art, Washington",
+  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
+  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "oa-painting-over": {
   "work": "Painting Over Dry Paint",
@@ -125,7 +155,9 @@ window.CREDITS = {
   "file": "Original diagram",
   "license": "Original work",
   "author": "David Nicholson Art",
-  "source": "Made for this site"
+  "source": "Made for this site",
+  "licenseUrl": null,
+  "copyrightNotice": null
  },
  "titian-venus-with-a-mirror": {
   "work": "Titian, Venus with a Mirror (c. 1555)",
@@ -133,7 +165,9 @@ window.CREDITS = {
   "file": "National Gallery of Art, 1937.1.34",
   "license": "Public domain (NGA Open Access)",
   "author": "Titian",
-  "source": "National Gallery of Art open access"
+  "source": "National Gallery of Art open access",
+  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
+  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "chaperon-craquelure": {
   "work": "Netherlandish Painter, Portrait of a Man in a Chaperon (1440s) (detail)",
@@ -141,7 +175,9 @@ window.CREDITS = {
   "file": "https://images.metmuseum.org/CRDImages/ep/original/DT200207.jpg",
   "license": "Public Domain (Met Open Access)",
   "author": "Netherlandish Painter",
-  "source": "The Metropolitan Museum of Art, New York"
+  "source": "The Metropolitan Museum of Art, New York",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "velazquez-philip-iv": {
   "work": "Diego Velázquez, Philip IV (about 1628)",
@@ -149,6 +185,8 @@ window.CREDITS = {
   "file": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Diego_Rodr%C3%ADguez_Vel%C3%A1zquez_-_Felipe_IV_Rey_de_Espa%C3%B1a_%28Prado%2C_Madrid%29.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Diego Velázquez",
-  "source": "Museo Nacional del Prado, via Wikimedia Commons"
+  "source": "Museo Nacional del Prado, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  }
 };

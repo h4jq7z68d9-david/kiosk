@@ -4,31 +4,40 @@ window.CREDITS = {
   "page": "https://www.metmuseum.org/art/collection/search/544518",
   "file": "https://images.metmuseum.org/CRDImages/eg/original/DP-17704-001.jpg",
   "license": "CC0 (Met Open Access)",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "author": null,
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "rickard-white-lead-pot": {
   "work": "T. A. Rickard, White Lead from Mine to Battleship (San Francisco, [1908]), p. 37, Fig. 4 (a perforated lead \"buckle\") and Fig. 5 (corroding pot); line drawings, shown side by side and cropped",
   "page": "https://archive.org/details/whiteleadfrommin00rickrich/page/n40/",
   "file": "https://archive.org/download/whiteleadfrommin00rickrich/page/n40.jpg",
   "license": "Public domain",
-  "author": "T. A. Rickard",
-  "source": "University of California Libraries via Internet Archive"
+  "author": "Rickard, T. A. (Thomas Arthur)",
+  "source": "University of California Libraries via Internet Archive",
+  "licenseUrl": null,
+  "copyrightNotice": "NOT_IN_COPYRIGHT"
  },
  "rembrandt-self-portrait-63": {
   "work": "Rembrandt van Rijn, Self Portrait at the Age of 63 (1669)",
   "page": "https://commons.wikimedia.org/wiki/File:Rembrandt,_Self_Portrait_at_the_Age_of_63.jpg",
   "file": "File:Rembrandt, Self Portrait at the Age of 63.jpg",
   "license": "Public domain (PD-Art)",
-  "author": "Rembrandt van Rijn",
-  "source": "Wikimedia Commons"
+  "author": "Rembrandt",
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "lampblack-chamber-1906": {
   "work": "\"Fabrication du noir de fumée\" (Fig. 33), wood engraving signed Perot, from B. Bussard and H. Dubois, Leçons élémentaires de chimie (1906), p. 39; caption cropped",
   "page": "https://commons.wikimedia.org/wiki/File:Noir_de_fumee.jpg",
   "file": "File:Noir de fumee.jpg",
   "license": "Public domain",
-  "author": "Perot (engraver)",
-  "source": "Wikimedia Commons"
+  "author": null,
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "manet-music-tuileries": {
   "work": "Édouard Manet, Music in the Tuileries Gardens (1862)",
@@ -36,30 +45,39 @@ window.CREDITS = {
   "file": "File:Édouard Manet - Music in the Tuileries Gardens.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Édouard Manet",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "sowerby-ochres": {
   "work": "James Sowerby, British Mineralogy, vol. 3 (London, 1809): Tab. CCLIV, yellow ochres, and Tab. CCLV, red ochres (both plates dated Feb. 1, 1808); hand-colored engravings, shown side by side and cropped",
   "page": "https://archive.org/details/britishmineralog03sowe/page/n213/",
   "file": "https://archive.org/download/britishmineralog03sowe/page/n213.jpg ; https://archive.org/download/britishmineralog03sowe/page/n217.jpg",
   "license": "Public domain",
-  "author": "James Sowerby",
-  "source": "Smithsonian Libraries via Internet Archive"
+  "author": "Sowerby, James",
+  "source": "Smithsonian Libraries via Internet Archive",
+  "licenseUrl": null,
+  "copyrightNotice": "NOT_IN_COPYRIGHT"
  },
  "rembrandt-self-portrait-1659": {
   "work": "Rembrandt van Rijn, Self-Portrait (1659)",
   "page": "https://commons.wikimedia.org/wiki/File:Rembrandt_van_Rijn,_Self-Portrait,_1659,_NGA_79.jpg",
   "file": "File:Rembrandt van Rijn, Self-Portrait, 1659, NGA 79.jpg",
   "license": "CC0",
-  "author": "Rembrandt van Rijn",
-  "source": "NGA Open Access (via Wikimedia Commons)"
+  "author": "Rembrandt",
+  "source": "NGA Open Access (via Wikimedia Commons)",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "cochineal-plantation": {
   "work": "\"The manner of propagating, gathering, and curing the Grana or Cochineel,\" engraving made for The Christian's Magazine, Wellcome Collection 25317i",
   "page": "https://wellcomecollection.org/works/q26yjrny",
   "file": "https://iiif.wellcomecollection.org/image/V0044256/full/full/0/default.jpg",
   "license": "Public domain (Public Domain Mark)",
-  "source": "Wellcome Collection"
+  "author": null,
+  "source": "Wellcome Collection",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0",
+  "copyrightNotice": "Public Domain Mark"
  },
  "titian-venus-adonis": {
   "work": "Titian, Venus and Adonis (about 1555–60)",
@@ -67,15 +85,19 @@ window.CREDITS = {
   "file": "File:TizianoVenereAdoneMalibu.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Titian",
-  "source": "Getty Open Content (via Wikimedia Commons)"
+  "source": "Getty Open Content (via Wikimedia Commons)",
+  "licenseUrl": "http://www.getty.edu/about/opencontent.html",
+  "copyrightNotice": "No restrictions; Public domain"
  },
  "sowerby-lapis-azurite": {
   "work": "James Sowerby, Exotic Mineralogy (London, 1811–17): vol. 1, Tab. XV, Lapis Lazuli (plate dated Aug. 1, 1811), and vol. 2, Tab. CIV, blue copper ore (azurite); hand-colored engravings, shown side by side and cropped",
   "page": "https://archive.org/details/Exoticmineralog1Sowe/page/n62/",
   "file": "https://archive.org/download/Exoticmineralog1Sowe/page/n62.jpg ; https://archive.org/download/Exoticmineralog2Sowe/page/n122.jpg",
   "license": "Public domain",
-  "author": "James Sowerby",
-  "source": "Smithsonian Libraries via Internet Archive"
+  "author": "Sowerby, James",
+  "source": "Smithsonian Libraries via Internet Archive",
+  "licenseUrl": null,
+  "copyrightNotice": "NOT_IN_COPYRIGHT"
  },
  "vermeer-girl-pearl-earring": {
   "work": "Johannes Vermeer, Girl with a Pearl Earring (about 1665)",
@@ -83,15 +105,19 @@ window.CREDITS = {
   "file": "File:1665 Girl with a Pearl Earring.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Johannes Vermeer",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "sowerby-malachite": {
   "work": "James Sowerby, British Mineralogy, vol. 1 (London, 1804): Tab. XLVII, carbonate of copper (malachite); hand-colored engraving, cropped",
   "page": "https://archive.org/details/britishmineralog01sowe/page/n207/",
   "file": "https://archive.org/download/britishmineralog01sowe/page/n207.jpg",
   "license": "Public domain",
-  "author": "James Sowerby",
-  "source": "Smithsonian Libraries via Internet Archive"
+  "author": "Sowerby, James",
+  "source": "Smithsonian Libraries via Internet Archive",
+  "licenseUrl": null,
+  "copyrightNotice": "NOT_IN_COPYRIGHT"
  },
  "uccello-battle-san-romano": {
   "work": "Paolo Uccello, The Battle of San Romano (probably about 1438–40)",
@@ -99,15 +125,19 @@ window.CREDITS = {
   "file": "File:San Romano Battle (Paolo Uccello, London) 01.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Paolo Uccello",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "sowerby-orpiment-crocoite": {
   "work": "James Sowerby, Exotic Mineralogy, vol. 1 (London, 1811–13): Tab. LXXI, Orpiment (plate dated Nov. 1, 1812), and Tab. IV, Chromate of Lead (crocoite); hand-colored engravings, shown side by side and cropped",
   "page": "https://archive.org/details/Exoticmineralog1Sowe/page/n286/",
   "file": "https://archive.org/download/Exoticmineralog1Sowe/page/n286.jpg ; https://archive.org/download/Exoticmineralog1Sowe/page/n19.jpg",
   "license": "Public domain",
-  "author": "James Sowerby",
-  "source": "Smithsonian Libraries via Internet Archive"
+  "author": "Sowerby, James",
+  "source": "Smithsonian Libraries via Internet Archive",
+  "licenseUrl": null,
+  "copyrightNotice": "NOT_IN_COPYRIGHT"
  },
  "vangogh-sunflowers": {
   "work": "Vincent van Gogh, Sunflowers (1888)",
@@ -115,7 +145,9 @@ window.CREDITS = {
   "file": "File:Vincent van Gogh - Sunflowers (1888, National Gallery London).jpg",
   "license": "Public domain (PD-Art)",
   "author": "Vincent van Gogh",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "fei-madonna-detail": {
   "work": "Paolo di Giovanni Fei, Madonna and Child (1370s), tempera on wood, gold ground, The Metropolitan Museum of Art, 41.190.13 (detail)",
@@ -123,7 +155,9 @@ window.CREDITS = {
   "file": "https://images.metmuseum.org/CRDImages/ep/original/DP293270.jpg",
   "license": "CC0 (Met Open Access)",
   "author": "Paolo di Giovanni Fei",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "giotto-madonna-child": {
   "work": "Giotto, Madonna and Child (c. 1310/1315)",
@@ -131,31 +165,39 @@ window.CREDITS = {
   "file": "File:Giotto, Madonna and Child, c. 1310-1315, NGA 397.jpg",
   "license": "CC0",
   "author": "Giotto",
-  "source": "NGA Open Access (via Wikimedia Commons)"
+  "source": "NGA Open Access (via Wikimedia Commons)",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "boscoreale-fragment": {
   "work": "Wall painting fragment from the north wall of Room H of the Villa of P. Fannius Synistor at Boscoreale (ca. 50–40 BCE), fresco, The Metropolitan Museum of Art, 03.14.8 (cropped)",
   "page": "https://www.metmuseum.org/art/collection/search/247012",
   "file": "https://images.metmuseum.org/CRDImages/gr/original/DP165185.jpg",
   "license": "CC0 (Met Open Access)",
-  "author": "Roman",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "author": null,
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "arlanza-lion": {
   "work": "Spanish (Castile), Lion, from the Chapter House of San Pedro de Arlanza (after 1200)",
   "page": "https://commons.wikimedia.org/wiki/File:Lion_MET_DP102890.jpg",
   "file": "File:Lion MET DP102890.jpg",
   "license": "CC0",
-  "author": "Spanish (Castile)",
-  "source": "The Met Open Access (via Wikimedia Commons)"
+  "author": null,
+  "source": "The Met Open Access (via Wikimedia Commons)",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "stradanus-color-olivi": {
   "work": "Jan van der Straet (Stradanus), designer; Jan Collaert I, engraver; Philips Galle, publisher, Nova Reperta (about 1600): plate 14, The Invention of Oil Painting (Color Olivi)",
   "page": "https://www.metmuseum.org/art/collection/search/659725",
   "file": "https://images.metmuseum.org/CRDImages/dp/original/DP841119.jpg",
   "license": "Public domain (CC0)",
-  "author": "Jan Collaert I after Jan van der Straet (Stradanus)",
-  "source": "The Met Open Access"
+  "author": "Jan Collaert I",
+  "source": "The Met Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "vanderweyden-magdalen-reading": {
   "work": "Rogier van der Weyden, The Magdalen Reading (about 1435)",
@@ -163,7 +205,9 @@ window.CREDITS = {
   "file": "File:The Magdalen Reading - Rogier van der Weyden.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Rogier van der Weyden",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "sargent-red-drapery-detail": {
   "work": "John Singer Sargent, Man with Red Drapery (after 1900), watercolor and graphite on white wove paper, The Metropolitan Museum of Art, 50.130.73 (detail)",
@@ -171,7 +215,9 @@ window.CREDITS = {
   "file": "https://images.metmuseum.org/CRDImages/ad/original/DT11905.jpg",
   "license": "CC0 (Met Open Access)",
   "author": "John Singer Sargent",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "homer-return-tynemouth": {
   "work": "Winslow Homer, The Return, Tynemouth (recto) (1881)",
@@ -179,7 +225,9 @@ window.CREDITS = {
   "file": "680ed8b4-795a-4cab-a0c0-d27d5a235895",
   "license": "CC0",
   "author": "Winslow Homer",
-  "source": "Art Institute of Chicago"
+  "source": "Art Institute of Chicago",
+  "licenseUrl": null,
+  "copyrightNotice": "CC0 Public Domain Designation"
  },
  "degas-hair-combed-detail": {
   "work": "Edgar Degas, Woman Having Her Hair Combed (ca. 1886–88), pastel on light green wove paper, now discolored to warm gray, The Metropolitan Museum of Art, 29.100.35 (detail of the lower right)",
@@ -187,7 +235,9 @@ window.CREDITS = {
   "file": "https://images.metmuseum.org/CRDImages/ep/original/DP253480.jpg",
   "license": "CC0 (Met Open Access)",
   "author": "Edgar Degas",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "liotard-maria-frederike": {
   "work": "Jean-Étienne Liotard, Portrait of Maria Frederike van Reede-Athlone at Seven Years of Age (1755–56)",
@@ -195,23 +245,29 @@ window.CREDITS = {
   "file": "File:Jean-Étienne Liotard - Portrait of Maria Frederike van Reede-Athlone at Seven Years of Age.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Jean-Étienne Liotard",
-  "source": "Getty Open Content (via Wikimedia Commons)"
+  "source": "Getty Open Content (via Wikimedia Commons)",
+  "licenseUrl": "http://www.getty.edu/about/opencontent.html",
+  "copyrightNotice": "No restrictions; Public domain"
  },
  "eutyches-portrait": {
   "work": "Portrait of the Boy Eutyches (100–150 CE), Roman Egypt, encaustic on wood, The Metropolitan Museum of Art, 18.9.2 (cropped)",
   "page": "https://www.metmuseum.org/art/collection/search/547951",
   "file": "https://images.metmuseum.org/CRDImages/eg/original/DP-25887-001.jpg",
   "license": "CC0 (Met Open Access)",
-  "author": "Roman Egypt",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "author": null,
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "fayum-young-woman-red": {
   "work": "Roman Egypt, Portrait of a young woman in red (A.D. 90–120)",
   "page": "https://commons.wikimedia.org/wiki/File:Portrait_of_a_young_woman_in_red_MET_29I_E15R6.jpg",
   "file": "File:Portrait of a young woman in red MET 29I E15R6.jpg",
   "license": "CC0",
-  "author": "Roman Egypt",
-  "source": "The Met Open Access (via Wikimedia Commons)"
+  "author": null,
+  "source": "The Met Open Access (via Wikimedia Commons)",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "pm-panel": {
   "work": "Diagram: wood panels",
@@ -219,7 +275,9 @@ window.CREDITS = {
   "file": "Original diagram",
   "license": "Original work",
   "author": "David Nicholson Art",
-  "source": "Made for this site"
+  "source": "Made for this site",
+  "licenseUrl": null,
+  "copyrightNotice": null
  },
  "vanderweyden-portrait-lady": {
   "work": "Rogier van der Weyden, Portrait of a Lady (c. 1460)",
@@ -227,23 +285,29 @@ window.CREDITS = {
   "file": "File:Rogier van der Weyden, Portrait of a Lady, c. 1460, NGA 51.jpg",
   "license": "CC0",
   "author": "Rogier van der Weyden",
-  "source": "NGA Open Access (via Wikimedia Commons)"
+  "source": "NGA Open Access (via Wikimedia Commons)",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "encyclopedie-peinture-pl4-chassis": {
   "work": "Diderot and d'Alembert, eds., Encyclopédie, Recueil de planches, vol. 8 (1771): Peinture, Pl. IV (Grand Chevalet, Châssis &c.), fig. 2, canvas stretched on a common stretcher; detail",
   "page": "https://archive.org/details/Recueildeplanch8Dide/page/n340/mode/1up",
   "file": "https://archive.org/download/Recueildeplanch8Dide/page/n340.jpg",
   "license": "Public domain",
-  "author": "Bourgeois (drawing) and Robert Bénard (engraving)",
-  "source": "Internet Archive (Smithsonian Libraries, Biodiversity Heritage Library)"
+  "author": "Bénard, Robert",
+  "source": "Internet Archive (Smithsonian Libraries, Biodiversity Heritage Library)",
+  "licenseUrl": null,
+  "copyrightNotice": "Public domain. The BHL considers that this work is no longer under copyright protection."
  },
  "titian-vendramin-family": {
   "work": "Titian, The Vendramin Family, venerating a Relic of the True Cross (about 1540–45)",
   "page": "https://commons.wikimedia.org/wiki/File:Titian_and_workshop_-_The_Vendramin_Family,_venerating_a_Relic_of_the_True_Cross_-_Google_Art_Project.jpg",
   "file": "File:Titian and workshop - The Vendramin Family, venerating a Relic of the True Cross - Google Art Project.jpg",
   "license": "Public domain (PD-Art)",
-  "author": "Titian",
-  "source": "Wikimedia Commons"
+  "author": "Titian and workshop",
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "pm-layers": {
   "work": "Diagram: layers of a panel painting",
@@ -251,7 +315,9 @@ window.CREDITS = {
   "file": "Original diagram",
   "license": "Original work",
   "author": "David Nicholson Art",
-  "source": "Made for this site"
+  "source": "Made for this site",
+  "licenseUrl": null,
+  "copyrightNotice": null
  },
  "rubens-samson-delilah": {
   "work": "Peter Paul Rubens, Samson and Delilah (about 1609–10)",
@@ -259,7 +325,9 @@ window.CREDITS = {
   "file": "File:Samson and Delilah by Rubens.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Peter Paul Rubens",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "vangogh-roses": {
   "work": "Vincent van Gogh, Roses (1890), oil on canvas, The Metropolitan Museum of Art, 1993.400.5",
@@ -267,7 +335,9 @@ window.CREDITS = {
   "file": "https://images.metmuseum.org/CRDImages/ep/original/DP346475.jpg",
   "license": "CC0 (Met Open Access)",
   "author": "Vincent van Gogh",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "vangogh-bedroom": {
   "work": "Vincent van Gogh, The Bedroom (1889)",
@@ -275,6 +345,8 @@ window.CREDITS = {
   "file": "6644829f-f292-c5c4-a73c-0356a6fdbf0d",
   "license": "CC0",
   "author": "Vincent van Gogh",
-  "source": "Art Institute of Chicago"
+  "source": "Art Institute of Chicago",
+  "licenseUrl": null,
+  "copyrightNotice": "CC0 Public Domain Designation"
  }
 };

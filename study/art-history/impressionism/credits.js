@@ -4,7 +4,9 @@ window.CREDITS = {
   "page": "https://commons.wikimedia.org/wiki/File%3AEdouard_Manet_-_Olympia_-_Google_Art_Project.jpg",
   "file": "File:Edouard Manet - Olympia - Google Art Project.jpg",
   "license": "Public domain",
-  "author": "Édouard Manet"
+  "author": "Édouard Manet",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "monet-grenouillere": {
   "work": "Claude Monet, La Grenouillère (1869)",
@@ -12,14 +14,18 @@ window.CREDITS = {
   "file": "File:La Grenouillère MET DT833.jpg",
   "license": "CC0",
   "author": "Claude Monet",
-  "source": "Wikimedia Commons (CC0 file from The Met's Open Access release)"
+  "source": "Wikimedia Commons (CC0 file from The Met's Open Access release)",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "monet-impression": {
   "work": "Claude Monet, Impression, Sunrise (1872)",
   "page": "https://commons.wikimedia.org/wiki/File:Monet_-_Impression,_Sunrise.jpg",
   "file": "File:Monet - Impression, Sunrise.jpg",
   "license": "Public domain",
-  "author": "Claude Monet"
+  "author": "Claude Monet",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "morisot-cradle": {
   "work": "Berthe Morisot, The Cradle (1872)",
@@ -27,14 +33,18 @@ window.CREDITS = {
   "file": "File:Berthe Morisot - The Cradle - Google Art Project.jpg",
   "license": "Public domain",
   "author": "Berthe Morisot",
-  "source": "Google Art Project"
+  "source": "Google Art Project",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "pissarro-hoarfrost": {
   "work": "Camille Pissarro, White Frost (1873)",
   "page": "https://commons.wikimedia.org/wiki/File:Camille_Pissarro_-_Gelée_blanche,_ancienne_route_d´Ennery,_Pontoise_-_1873.jpg",
   "file": "File:Camille Pissarro - Gelée blanche, ancienne route d´Ennery, Pontoise - 1873.jpg",
   "license": "Public domain",
-  "author": "Camille Pissarro"
+  "author": "Camille Pissarro",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "monet-capucines": {
   "work": "Claude Monet, Boulevard des Capucines (1873–74)",
@@ -42,7 +52,9 @@ window.CREDITS = {
   "file": "File:Claude Monet - Boulevard des Capucines - Google Art Project.jpg",
   "license": "Public domain",
   "author": "Claude Monet",
-  "source": "Google Art Project"
+  "source": "Google Art Project",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "renoir-loge": {
   "work": "Pierre-Auguste Renoir, La Loge (1874)",
@@ -50,7 +62,9 @@ window.CREDITS = {
   "file": "File:La Loge Pierre-Auguste Renoir 1874.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Pierre-Auguste Renoir",
-  "source": "Wikimedia Commons (colour matched to the Courtauld Gallery image)"
+  "source": "Wikimedia Commons (colour matched to the Courtauld Gallery image)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "degas-dance-class": {
   "work": "Edgar Degas, The Dance Class (1874)",
@@ -58,14 +72,18 @@ window.CREDITS = {
   "file": "File:The Dance Class MET DT46.jpg",
   "license": "CC0",
   "author": "Edgar Degas",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "renoir-galette": {
   "work": "Pierre-Auguste Renoir, Bal du moulin de la Galette (1876)",
   "page": "https://commons.wikimedia.org/wiki/File:Auguste_Renoir_-_Dance_at_Le_Moulin_de_la_Galette_-_Google_Art_Project.jpg",
   "file": "File:Auguste Renoir - Dance at Le Moulin de la Galette - Google Art Project.jpg",
   "license": "Public domain",
-  "author": "Pierre-Auguste Renoir"
+  "author": "Pierre-Auguste Renoir",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "caillebotte-rainy-day": {
   "work": "Gustave Caillebotte, Paris Street; Rainy Day (1877)",
@@ -73,7 +91,9 @@ window.CREDITS = {
   "file": "File:Gustave Caillebotte - Paris Street, Rainy Day - 1964.336 - Art Institute of Chicago.jpg",
   "license": "Public domain",
   "author": "Gustave Caillebotte",
-  "source": "Art Institute of Chicago Open Access (CC0)"
+  "source": "Art Institute of Chicago Open Access (CC0)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain; CC0"
  },
  "cassatt-blue-armchair": {
   "work": "Mary Cassatt, Little Girl in a Blue Armchair (1878)",
@@ -81,14 +101,18 @@ window.CREDITS = {
   "file": "File:Mary Cassatt, Little Girl in a Blue Armchair, 1878, NGA 61368.jpg",
   "license": "CC0",
   "author": "Mary Cassatt",
-  "source": "National Gallery of Art Open Access"
+  "source": "National Gallery of Art Open Access",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "morisot-summers-day": {
   "work": "Berthe Morisot, Summer's Day (c. 1879)",
   "page": "https://commons.wikimedia.org/wiki/File%3AMorisot_-_a-summer-s-day.jpg",
   "file": "File:Morisot - a-summer-s-day.jpg",
   "license": "Public domain",
-  "author": "Berthe Morisot"
+  "author": "Berthe Morisot",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "manet-folies-bergere": {
   "work": "Édouard Manet, A Bar at the Folies-Bergère (1882)",
@@ -96,7 +120,9 @@ window.CREDITS = {
   "file": "File:\"Un Bar aux Folies-Bergère\" by Édouard Manet (1882).jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Édouard Manet",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "degas-shallow-tub": {
   "work": "Edgar Degas, Woman Bathing in a Shallow Tub (1885)",
@@ -104,7 +130,9 @@ window.CREDITS = {
   "file": "File:Woman Bathing in a Shallow Tub MET DT1047.jpg",
   "license": "CC0",
   "author": "Edgar Degas",
-  "source": "The Metropolitan Museum of Art Open Access"
+  "source": "The Metropolitan Museum of Art Open Access",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "monet-wheat-stacks": {
   "work": "Claude Monet, Stacks of Wheat (End of Summer) (1890–91)",
@@ -112,7 +140,9 @@ window.CREDITS = {
   "file": "File:Claude Monet - Stacks of Wheat (End of Summer) - 1985.1103 - Art Institute of Chicago.jpg",
   "license": "Public domain",
   "author": "Claude Monet",
-  "source": "Art Institute of Chicago Open Access"
+  "source": "Art Institute of Chicago Open Access",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain; CC0"
  },
  "cassatt-childs-bath": {
   "work": "Mary Cassatt, The Child's Bath (1893)",
@@ -120,7 +150,9 @@ window.CREDITS = {
   "file": "File:Mary Cassatt - The Child's Bath - 1910.2 - Art Institute of Chicago.jpg",
   "license": "CC0",
   "author": "Mary Cassatt",
-  "source": "Art Institute of Chicago Open Access (CC0)"
+  "source": "Art Institute of Chicago Open Access (CC0)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain; CC0"
  },
  "monet-rouen-sunlight": {
   "work": "Claude Monet, Rouen Cathedral, West Façade, Sunlight (1894)",
@@ -128,7 +160,9 @@ window.CREDITS = {
   "file": "File:Claude Monet, Rouen Cathedral, West Façade, Sunlight, 1894, NGA 46654.jpg",
   "license": "Public domain",
   "author": "Claude Monet",
-  "source": "National Gallery of Art Open Access"
+  "source": "National Gallery of Art Open Access",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0; Public domain"
  },
  "monet-water-lilies-1906": {
   "work": "Claude Monet, Water Lilies (1906)",
@@ -136,6 +170,8 @@ window.CREDITS = {
   "file": "File:Claude Monet - Water Lilies - 1933.1157 - Art Institute of Chicago.jpg",
   "license": "Public domain",
   "author": "Claude Monet",
-  "source": "Art Institute of Chicago Open Access"
+  "source": "Art Institute of Chicago Open Access",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain; CC0"
  }
 };

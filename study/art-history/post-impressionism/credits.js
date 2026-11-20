@@ -5,7 +5,9 @@ window.CREDITS = {
   "file": "File:Baigneurs a Asnieres.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Georges Seurat",
-  "source": "The National Gallery, London, via Wikimedia Commons"
+  "source": "The National Gallery, London, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "seurat-circus": {
   "work": "Georges Seurat, The Circus (1891)",
@@ -13,15 +15,19 @@ window.CREDITS = {
   "file": "File:Georges Seurat - The Circus - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Georges Seurat",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "cezanne-basket": {
   "work": "Paul Cézanne, The Basket of Apples (about 1893)",
   "page": "https://www.artic.edu/artworks/111436/the-basket-of-apples",
   "file": "IIIF image 52ac8996-3460-cf71-cb42-5c4d0aa29b74",
   "license": "CC0",
-  "author": "Paul Cézanne",
-  "source": "Art Institute of Chicago"
+  "author": "Paul Cezanne",
+  "source": "Art Institute of Chicago",
+  "licenseUrl": null,
+  "copyrightNotice": "CC0 Public Domain Designation"
  },
  "cezanne-card-players": {
   "work": "Paul Cézanne, The Card Players (1890–92)",
@@ -29,7 +35,9 @@ window.CREDITS = {
   "file": "DP231550.jpg",
   "license": "CC0",
   "author": "Paul Cézanne",
-  "source": "The Metropolitan Museum of Art"
+  "source": "The Metropolitan Museum of Art",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "cezanne-sainte-victoire": {
   "work": "Paul Cézanne, Mont Sainte-Victoire (1902–04)",
@@ -37,7 +45,9 @@ window.CREDITS = {
   "file": "File:Paul Cézanne, Mont Sainte-Victoire.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Paul Cézanne",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "cezanne-bathers": {
   "work": "Paul Cézanne, The Large Bathers (1900–06)",
@@ -45,7 +55,9 @@ window.CREDITS = {
   "file": "File:Paul Cézanne, French - The Large Bathers - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Paul Cézanne",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "vangogh-potato-eaters": {
   "work": "Vincent van Gogh, The Potato Eaters (1885)",
@@ -53,7 +65,9 @@ window.CREDITS = {
   "file": "File:De aardappeleters - s0005V1962 - Van Gogh Museum.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Vincent van Gogh",
-  "source": "Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation), via Wikimedia Commons"
+  "source": "Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation), via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "vangogh-night-cafe": {
   "work": "Vincent van Gogh, The Night Café (1888)",
@@ -61,7 +75,9 @@ window.CREDITS = {
   "file": "IIIF image yuag:3b072179-2fc7-42bc-87cc-9ee4d782b270",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Vincent van Gogh",
-  "source": "Yale University Art Gallery"
+  "source": "Yale University Art Gallery",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "copyrightNotice": "No Copyright - United States"
  },
  "vangogh-sunflowers": {
   "work": "Vincent van Gogh, Sunflowers (1888)",
@@ -69,7 +85,9 @@ window.CREDITS = {
   "file": "File:Vincent van Gogh - Sunflowers (1888, National Gallery London).jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Vincent van Gogh",
-  "source": "The National Gallery, London, via Wikimedia Commons"
+  "source": "The National Gallery, London, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "vangogh-starry-night": {
   "work": "Vincent van Gogh, The Starry Night (1889)",
@@ -77,7 +95,9 @@ window.CREDITS = {
   "file": "File:Van Gogh - Starry Night - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Vincent van Gogh",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "vangogh-self-portrait-1889": {
   "work": "Vincent van Gogh, Self-Portrait (1889)",
@@ -85,7 +105,9 @@ window.CREDITS = {
   "file": "File:Vincent van Gogh - Self-Portrait - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Vincent van Gogh",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "gauguin-vision": {
   "work": "Paul Gauguin, Vision of the Sermon (Jacob Wrestling with the Angel) (1888)",
@@ -93,7 +115,9 @@ window.CREDITS = {
   "file": "File:La vision après le sermon (Paul Gauguin).jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Paul Gauguin",
-  "source": "National Galleries of Scotland, via Wikimedia Commons"
+  "source": "National Galleries of Scotland, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "serusier-talisman": {
   "work": "Paul Sérusier, The Talisman (1888)",
@@ -101,7 +125,9 @@ window.CREDITS = {
   "file": "File:Paul Sérusier - The Talisman - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Paul Sérusier",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "gauguin-where": {
   "work": "Paul Gauguin, Where Do We Come From? What Are We? Where Are We Going? (1897–98)",
@@ -109,7 +135,9 @@ window.CREDITS = {
   "file": "File:Gauguin - Where Do We Come From? What Are We? Where Are We Going? (1897-98).jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Paul Gauguin",
-  "source": "Wikimedia Commons"
+  "source": "Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  },
  "lautrec-moulin-rouge": {
   "work": "Henri de Toulouse-Lautrec, At the Moulin Rouge (1892–95)",
@@ -117,7 +145,9 @@ window.CREDITS = {
   "file": "IIIF image defb4004-b500-218d-3d9b-9a02423f097d",
   "license": "CC0",
   "author": "Henri de Toulouse-Lautrec",
-  "source": "Art Institute of Chicago"
+  "source": "Art Institute of Chicago",
+  "licenseUrl": null,
+  "copyrightNotice": "CC0 Public Domain Designation"
  },
  "lautrec-divan": {
   "work": "Henri de Toulouse-Lautrec, Divan Japonais (1892–93)",
@@ -125,15 +155,19 @@ window.CREDITS = {
   "file": "DT224360.jpg",
   "license": "CC0",
   "author": "Henri de Toulouse-Lautrec",
-  "source": "The Metropolitan Museum of Art"
+  "source": "The Metropolitan Museum of Art",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  },
  "vuillard-striped": {
   "work": "Édouard Vuillard, Woman in a Striped Dress (1895)",
   "page": "https://commons.wikimedia.org/wiki/File:Edouard_Vuillard,_Woman_in_a_Striped_Dress,_1895,_NGA_61388.jpg",
   "file": "File:Edouard Vuillard, Woman in a Striped Dress, 1895, NGA 61388.jpg",
   "license": "CC0",
-  "author": "Édouard Vuillard",
-  "source": "National Gallery of Art, Washington (open access), via Wikimedia Commons"
+  "author": "Edouard Vuillard",
+  "source": "National Gallery of Art, Washington (open access), via Wikimedia Commons",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "copyrightNotice": "CC0"
  },
  "rousseau-sleeping-gypsy": {
   "work": "Henri Rousseau, The Sleeping Gypsy (1897)",
@@ -141,6 +175,8 @@ window.CREDITS = {
   "file": "File:Henri Rousseau - La Bohémienne endormie - Google Art Project.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Henri Rousseau",
-  "source": "Wikimedia Commons (Google Arts & Culture scan)"
+  "source": "Wikimedia Commons (Google Arts & Culture scan)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "copyrightNotice": "Public domain"
  }
 };
