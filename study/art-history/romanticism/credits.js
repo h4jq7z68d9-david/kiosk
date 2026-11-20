@@ -67,7 +67,7 @@ window.CREDITS = {
   "author": "Géricault, Théodore",
   "source": "Musée du Louvre, Paris",
   "licenseUrl": null,
-  "copyrightNotice": "© 2015 GrandPalaisRmn (musée du Louvre) / Michel Urtado"
+  "copyrightNotice": null
  },
  "goya-saturn": {
   "work": "Francisco de Goya, Saturn Devouring His Son (1820–23)",
@@ -97,7 +97,7 @@ window.CREDITS = {
   "author": "Delacroix, Eugène",
   "source": "Musée du Louvre, Paris",
   "licenseUrl": null,
-  "copyrightNotice": "© 2023 GrandPalaisRmn (musée du Louvre) / Michel Urtado"
+  "copyrightNotice": null
  },
  "delacroix-liberty-leading": {
   "work": "Eugène Delacroix, Liberty Leading the People (1830)",
@@ -107,7 +107,7 @@ window.CREDITS = {
   "author": "Delacroix, Eugène",
   "source": "Musée du Louvre, Paris",
   "licenseUrl": null,
-  "copyrightNotice": "© 2024 GrandPalaisRmn (musée du Louvre) / Rabeau/Didierjean"
+  "copyrightNotice": null
  },
  "delacroix-women-algiers": {
   "work": "Eugène Delacroix, Women of Algiers in Their Apartment (1834)",

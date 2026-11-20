@@ -187,7 +187,7 @@ window.CREDITS = {
   "author": "Georges de La Tour",
   "source": "Los Angeles County Museum of Art",
   "licenseUrl": null,
-  "copyrightNotice": "Georges de La Tour, The Magdalen with the Smoking Flame, circa 1635-37, Los Angeles County Museum of Art, Gift of The Ahmanson Foundation, photo © Museum Associates/LACMA"
+  "copyrightNotice": null
  },
  "cross-fig13": {
   "work": "Anson K. Cross, Light and Shade, with Chapters on Charcoal, Pencil, and Brush Drawing (Boston: Ginn, 1897), Fig. 13",

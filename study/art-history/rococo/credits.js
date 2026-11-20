@@ -57,7 +57,7 @@ window.CREDITS = {
   "author": "Boucher, François",
   "source": "Musée du Louvre",
   "licenseUrl": null,
-  "copyrightNotice": "© 2015 GrandPalaisRmn (musée du Louvre) / Franck Raux"
+  "copyrightNotice": null
  },
  "boucher-pompadour": {
   "work": "François Boucher, Madame de Pompadour, 1756",
