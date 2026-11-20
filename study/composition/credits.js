@@ -61,13 +61,13 @@ window.CREDITS = {
  },
  "vallotton-laziness": {
   "work": "Félix Vallotton, Laziness (La Paresse) (1896)",
-  "page": "https://api.artic.edu/api/v1/artworks/60694",
+  "page": "https://www.artic.edu/artworks/60694/laziness",
   "file": "The Art Institute of Chicago, 1947.454",
   "license": "Public domain (AIC API is_public_domain: true)",
   "author": "Félix Edouard Vallotton",
   "source": "The Art Institute of Chicago",
-  "licenseUrl": null,
-  "copyrightNotice": null
+  "licenseUrl": "https://www.artic.edu/image-licensing",
+  "copyrightNotice": "CC0 Public Domain Designation"
  },
  "dow-notan-spotting": {
   "work": "Dow, Composition (1899; 9th ed. 1914): NOTAN X. Compositions by various masters, reduced to two tones. “Spotting.” (after Manet, Tiepolo, Millet, Corot, Mauve, Fortuny, Giotto, Seymour Haden)",
@@ -261,7 +261,7 @@ window.CREDITS = {
  },
  "hiroshige-plum-estate-kameido": {
   "work": "Utagawa Hiroshige, Plum Estate, Kameido, from One Hundred Famous Views of Edo (1857)",
-  "page": "https://opencollection.brooklynmuseum.org/objects/4202",
+  "page": "https://www.brooklynmuseum.org/objects/4202",
   "file": "Brooklyn Museum, Gift of Anna Ferris, 30.1478.30",
   "license": "No known copyright restrictions (Brooklyn Museum); caption and credit required: Brooklyn Museum, Gift of Anna Ferris, 30.1478.30",
   "author": "Utagawa Hiroshige",
@@ -321,12 +321,12 @@ window.CREDITS = {
  },
  "seurat-oil-sketch-grande-jatte": {
   "work": "Georges Seurat, Oil Sketch for \"A Sunday on La Grande Jatte — 1884\" (1884)",
-  "page": "https://api.artic.edu/api/v1/artworks/61616",
+  "page": "https://www.artic.edu/artworks/61616/oil-sketch-for-a-sunday-on-la-grande-jatte-1884",
   "file": "The Art Institute of Chicago, 1981.15",
   "license": "Public domain (AIC API is_public_domain: true)",
   "author": "Georges Seurat",
   "source": "The Art Institute of Chicago",
   "licenseUrl": null,
-  "copyrightNotice": null
+  "copyrightNotice": "CC0 Public Domain Designation"
  }
 };
