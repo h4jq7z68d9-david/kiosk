@@ -139,7 +139,6 @@ function describe(text) {
   const cut = t.slice(0, 156);
   return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:–—-]$/, '') + '…';
 }
-const LICENSE_URL = { 'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/', 'Public domain': 'https://creativecommons.org/publicdomain/mark/1.0/' };
 
 /* ---------- flatten the course into one ordered list of pages ---------- */
 const flat = [];
@@ -309,7 +308,9 @@ const COURSE_LD = { '@type': ['LearningResource', 'CollectionPage'], '@id': abs(
 const PUBLISHER = { '@type': 'Person', name: 'David Nicholson', url: ORIGIN + '/' };
 const imageLd = (k) => {
   const c = C[k] || {}; const d = dims(k);
-  return { '@type': 'ImageObject', contentUrl: abs(img(k)), width: d.w, height: d.h, license: LICENSE_URL[c.license] || undefined, acquireLicensePage: c.page, creditText: c.page ? srcOf(c) : undefined };
+  return { '@type': 'ImageObject', contentUrl: abs(img(k)), width: d.w, height: d.h, license: c.licenseUrl || undefined, acquireLicensePage: c.page, creditText: c.page ? srcOf(c) : undefined,
+    creator: c.author ? { '@type': c.author === 'David Nicholson Art' ? 'Organization' : 'Person', name: c.author } : undefined,   // rights fields come only from credits.js, never inferred (Nov 19 2026)
+    copyrightNotice: c.copyrightNotice || undefined };
 };
 const crumbLd = (list) => ({ '@type': 'BreadcrumbList', itemListElement: list.map(([name, href], i) => ({ '@type': 'ListItem', position: i + 1, name, item: abs(href) })) });
 const FIRST_IMG = partImg(S.handouts[0]), FIRST_ALT = partAlt(S.handouts[0]);
