@@ -4,6 +4,17 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 19 2026) — Image rights fields; public courses move to this project
+
+- Search Console flagged missing `creator`, `copyrightNotice` and `license` on study images. Course-builder bundle installed (`5d61828`): all 15 `credits.js` gain `licenseUrl` and `copyrightNotice`; `author` added or corrected on 120 entries (handoff counted 101 replacements; 19 were additions); only credits.html Author/source lines changed.
+- Generator (`eb6e35f`): `imageLd` in `build-course.js` takes `license` from `licenseUrl`, `creator` from `author` (Organization for "David Nicholson Art", else Person) and `copyrightNotice` as stored; nulls omitted; `LICENSE_URL` map removed. 245 pages changed, JSON-LD only. Coverage after all Nov 19 changes: license 222/316 (was 160; 52 lost the old fallback), creator 307, copyrightNotice 272.
+- David's decisions: five museum "©" photo credits (Louvre ×4, LACMA ×1) → `copyrightNotice` null (`6606c92`); Signac *Evening Calm* and Eakins *Gross Clinic* stay; diagrams have no notice, David's paintings "© David Nicholson".
+- Composition (`a60d424`): Brooklyn Hiroshige `page` → current record; Vallotton and Seurat sketch `page` → artic.edu artwork pages; rights fields filled from those pages; sources logged in the Image Rights Update review notes.
+- Public study courses now run end to end in this project (handoff Nov 19); Start here and the content rule updated.
+- All 15 courses rebuilt; check.js PASS on all 15; deploys green.
+
+-----
+
 ## Completed This Session (November 18 2026, evening) — Plain labels: no "Look at", no outline sub-line, new search descriptions
 
 - `build-course.js`: removed the "Look at" label from work slides and concept slides (bullets and divider kept; comments updated); removed the `brandsub` line under the course name in the outline (`ldDescription` stays in JSON-LD). `.brandsub` rule removed from `study/guide.css`; `guideCss` 19 → 20. `test-technique-slides.js` now also forbids a "Look at" label; the slide editor no longer inserts one when a look list is added.

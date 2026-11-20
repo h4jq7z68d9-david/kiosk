@@ -8,13 +8,13 @@ Follow this in order. It overrides any older workflow note further down in this 
 2. **Read:** this section, "What's Live", and "Pending". Session history is in `CHANGELOG.md` (newest first); read a block there only when the task touches that feature. Do not read every file in the repo.
 3. **Load the skill that governs the task** (they live in Claude's skill library, not in the repo):
    - any file in this repo, any bash, any AWS or Square call → `dna-kiosk-conventions` (the footgun list; always)
-   - installing or changing a study course → `study-site-builder` §9 (the install runbook); the course-builder skills are not used here
+   - any public study course work (research, writing, images, fact review, install) → `study-site-builder`, plus `art-history-course-builder` or `art-technique-course-builder`; installs follow §9. Since Nov 19 2026 this project does the whole job; read the skills' "hand off to the art business project" steps as "install it yourself" until the skill text is updated
    - the AWS MCP connector is read-only plus DynamoDB item writes; Lambda config, IAM, tables, CloudFront stay with David in the console
 4. **Work on a branch.** Nothing from a throwaway test fixture is committed. Validate JS with `node --check` (extract inline `<script>` blocks first). Before showing any site change: `node tools/site/check.js` (static: links, SEO fields, sitemap, cache versions, course data, image sizes, Lambda route tests) and `NODE_PATH=../pw/node_modules node tools/site/smoke.js [slug]` (headless 1440/390 over the main pages and every course; screenshots in `tools/site/out/`). Both exit 1 on a failure; neither is skipped because the last run passed. Show David the screenshots, bad news first, unverified items listed. (`smoke.js` needs Playwright once per session: `mkdir -p ../pw && cd ../pw && npm i playwright` — outside the repo — and a Chromium/Chrome; it falls back to `/usr/bin/google-chrome`.)
 5. **Push to `main` only when David says so.** A push to `main` deploys (GitHub Actions → S3 `--delete` sync → CloudFront invalidation). Never upload to S3 by hand. No pull requests.
 6. **Before the session ends:** add a "Completed This Session (date)" block at the top of `CHANGELOG.md`, update "What's Live" and "Pending" here, and push it with the batch (David expects this without being asked).
 
-Content rule: this project installs course bundles and owns the generator, tests and deploy. It never writes or edits course text; corrections go back to the course-builder project that produced the bundle.
+Content rule (David, Nov 19 2026; replaces the Nov 6 rule): this project runs every public study course end to end: research, writing, image sourcing, fact review, build, install and publish, plus the generator, tests and deploy. The Art History Course Builder project keeps only Mode 1 school study packs (`course-study-pack`). Handoff: `iCloud Drive/School v2/Art History Course Builder/HANDOFF - Public courses move to Art Business (Nov 19).md`.
 
 Style rules that apply to every visible change (David, Oct 2026): left-aligned by default, never centered unless asked; fewer words in the UI; menus and pop-ups are floating cards with visible edges, not full-width sheets; a style change made at one screen size is made at all sizes or flagged; no dark mode anywhere. For layout decisions, show options as mockups before writing code; it is fine to look at other artists' and museums' sites for ideas (screenshots as references, never a copy of a specific site).
 ## What’s Live
@@ -32,6 +32,7 @@ Style rules that apply to every visible change (David, Oct 2026): left-aligned b
 |<https://davidnicholsonart.com/varied-readings.html>|Varied Readings show page — static blog-style recap (June 2026)                              |
 |<https://davidnicholsonart.com/study.html>          |Study landing page — two tabs (Oct 30 2026): art history (timeline in date order of small square cards alternating either side of a centre line, Nov 10 2026; opens first) and technique (`#technique`; grid of the same square cards, three across, two on phones, Nov 10 2026); search across all study courses (Oct 31 2026; the color wheel button was removed the same day); menu item "study"|
 |Study pages, all courses (Nov 18 2026)|No "Look at" label and no sub-line under the course name in the outline; search descriptions ("A short illustrated guide to …") per course; registry cards are image + label only|
+|Study pages, all courses (Nov 19 2026)|Image JSON-LD (`ImageObject`): `creator`, `license` and `copyrightNotice` come only from each course's `credits.js` (`author`, `licenseUrl`, `copyrightNotice`); null fields are left out; no label-to-URL fallback. `credits.js` carries both new fields for every entry|
 |<https://davidnicholsonart.com/study/color-wheel.html>|Color wheel quick tool (Oct 31 2026: unlisted, `noindex`; opened as a pop-up from the "color wheel" bubble at the bottom of the site menu). Home-screen web app `start_url`|
 |<https://davidnicholsonart.com/study/color-theory.html>|Color Theory course (Oct 28 2026: 8 parts, 66 pages under /study/color-theory/; concept, history and painting-example pages). Replaced the flashcards; text rewritten Nov 18 2026 (statement, 2–3 plate bullets, example line)|
 |<https://davidnicholsonart.com/study/pigments-and-materials.html>|Pigments and Materials technique course — Mode 2 rebuild on the technique slide model (Nov 11 2026): one `topen` home + 17 `concept` slides with example paintings, 20 pages + 47 redirect stubs from the Oct 30 pages, 35 images (11.7 MB); image redo Nov 11 afternoon — ten diagrams replaced by public-domain plates, prints and painting details (only `pm-panel` and `pm-layers` kept); text rewritten Nov 18 2026 (statement, 2–3 plate bullets, example line)|
@@ -657,6 +658,14 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - [ ] **David:** re-add the admin home-screen icon from `davidnicholsonart.com/admin.html`, then re-attach the receipt to the Oct 31 $60.79 Google advertising expense (saved without one). If the upload still fails on the apex, investigate the failed `PUT /admin/expenses/{id}` (preflight reached Lambda, the PUT never did).
 - [ ] **Gallery on phones (≤600px):** wide screens hang left-justified rows since Nov 11 2026; phones still use centred `wallRows()`. David to decide whether phones go left-justified too.
 
+### From November 19 2026 (image rights; public courses move here)
+
+- [ ] **David: Search Console → Image Metadata → Validate fix** (creator/copyrightNotice/license warnings on high-and-low-key and theme-local pages; fix live Nov 19).
+- [ ] **Gutenberg re-check, 17 Composition plates** (rights fields null since Gutenberg was down Nov 19). A scheduled task in the Art History Course Builder chat checks Mon Nov 23 and writes its result into `School v2/Art History Course Builder/Image Rights Update (Nov 19)/`; install it here.
+- [ ] **Skill text for the ownership move**: `study-site-builder` (intro, §7 credits fields, §8), `art-history-course-builder` §0/§6, `art-technique-course-builder` handoff steps, `dna-kiosk-conventions` (rights fields) — proposed to David Nov 19.
+- [ ] **Project instructions** still describe the old split (course content arrives from course-builder projects); David to replace them in the project settings.
+- 52 images have null `licenseUrl` because their source pages do not link a rights statement; David decided Nov 19 not to restore a fallback. Not a task.
+
 ### Process and tooling backlog (David, Nov 6 2026) — not started
 
 Agreed in a process review. Quality gates (fact review, paraphrase check, best-of-three images, David's approval before `main`) are not to be automated or shortened. Order below is the agreed sequence.
@@ -677,7 +686,7 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 - [ ] **Composition open flags (David):** *The Harvesters* repeat cleared (now only in Oil vs Acrylic); Armatures uses Andrea del Sarto, *Holy Family with the Young Saint John* (Met 22.75); allowed single repeats with art history courses (Great Wave and Plum Estate — Japanese Woodblock Prints; Cassatt — Impressionism; *Death of Socrates* — Neoclassicism; *The Oxbow* — Romanticism); every concept image is a Dow (1914) or Poore (c. 1915) plate at Gutenberg size, six under 500 px, not upscaled; Radial Balance and the second examples (*Alba Madonna*, *Paris Street*, *Night Watch*) cut; inches rounded to the nearest quarter; symmetry (Colonna Altarpiece), balance (Cassatt) and rhythm (*Sudden Shower*) are readings of the images, not museum text. Not yet reviewed in the slide editor (`edit-course composition`).
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Composition's URLs changed (19 pages; 46 old URLs redirect, noindex).
 - [x] **Course switcher** — replaced (Nov 11 2026, evening) by "study home" + divider at the top of the phone page dropdown and the breadcrumb moved above the search box on iPad/desktop. Check on a real iPhone: iOS may show "study home" in normal weight, and the divider needs iOS 17+.
-- [ ] **Impressionism course description says "in eighteen works"** (outline rail subtitle) — a count phrase banned Nov 7 2026; course text, so the fix goes back to the course-builder project.
+- [ ] **Impressionism course description says "in eighteen works"** (outline rail subtitle) — a count phrase banned Nov 7 2026; course text; fixed in this project since Nov 19 2026.
 
 ### From November 11 2026, afternoon (Oil vs Acrylic Mode 2)
 
