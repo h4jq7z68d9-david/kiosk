@@ -4,6 +4,26 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 20 2026) — Early Renaissance in Italy installed
+
+- New art history course `early-renaissance` (Mode 2): 15 works, 1 section "Italy, 1423–1490", 1 part; 18 pages, 15 images (6.3 MB). Registry: after Classical Myth, before Japanese Woodblock Prints; card image `botticelli-primavera`. Painting only.
+- Text compiled from museum records and reference glossaries (fact ledgers Records A/B, two fact-review rounds, paraphrase check); coverage from David's Lindenwood Renaissance Art lectures, two museum lecture videos (Campbell, National Gallery; NGA "Empire of the Eye") and four curricula (UGA, Pearson Edexcel, MIT OCW, NGA/Grove).
+- First install stopped on a duplicate page address (two slides titled "Adoration of the Magi"); Gentile's slide retitled "Adoration of the Magi (Strozzi Altarpiece)" in the main chat; re-run with --force.
+- Open flags:
+  - Masaccio's two frescoes have no owning-museum record (David approved as an exception); sizes left off.
+  - Fra Angelico's Prado record read from archived copies (live site blocked); size left off.
+  - `masaccio-trinity` image low-res (795 × 1600).
+  - `gentile-adoration` shows part of the gilded frame along the top.
+  - Ghirlandaio's Louvre record is fields only.
+  - "Italian" in each details line rests on birthplace.
+  - Gold-leaf definition rests on the Getty glossary.
+  - Sources page names David's Lindenwood course as a lecture source; he may want it removed.
+  - Gentile's title suffix "(Strozzi Altarpiece)" is not the Uffizi's title; added after fact review, for David to confirm.
+- Steering doc: model-split line in Start here step 3; What's Live and Pending updated.
+- build-registry --check: outputs current; check.js and smoke.js PASS; other courses changed only in cache strings.
+
+-----
+
 ## Completed This Session (November 19 2026) — Image rights fields; public courses move to this project
 
 - Search Console flagged missing `creator`, `copyrightNotice` and `license` on study images. Course-builder bundle installed (`5d61828`): all 15 `credits.js` gain `licenseUrl` and `copyrightNotice`; `author` added or corrected on 120 entries (handoff counted 101 replacements; 19 were additions); only credits.html Author/source lines changed.
