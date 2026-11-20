@@ -24,6 +24,16 @@
    }
   },
   {
+   "slug": "early-renaissance",
+   "lane": "art-history",
+   "name": "Early Renaissance in Italy",
+   "label": "early renaissance in italy",
+   "dates": "1423–1490",
+   "card": {
+    "img": "botticelli-primavera"
+   }
+  },
+  {
    "slug": "japanese-woodblock-prints",
    "lane": "art-history",
    "name": "Japanese Woodblock Prints",
