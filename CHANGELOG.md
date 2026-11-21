@@ -4,6 +4,26 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 21 2026) — Northern Renaissance installed
+
+- New art history course `northern-renaissance` (Mode 2): 23 works, 1 section "Northern Europe, 1427–1568", 1 part; 26 pages, 23 images (9.6 MB). 24 slides, over the 20-slide cap, on David's instruction for this course only. Registry: after High Renaissance, before Japanese Woodblock Prints; card image `eyck-arnolfini`. Painting and printmaking in the Netherlands and Germany.
+- Text compiled from museum records, managing-institution pages and signed essays (fact ledgers Records A/B, two fact-review rounds: Round 2 failed two lines and flagged two for rewording, all four rewritten in the main chat and re-checked); coverage from David's Lindenwood Renaissance Art lectures. No curricula check, so the Sources page has no Curricula group. The Prado Descent record was read on a mirror; its Sources item has no link.
+- Open flags:
+  - 24 slides (23 works), over the 20-slide cap, on David's instruction.
+  - Ghent Altarpiece image likely pre-2016–19 restoration; size from a Smarthistory caption; no nationality on the artist line.
+  - Isenheim Altarpiece: no dimensions or inventory number; two slides for one work.
+  - Medium not stated by the museum for the two Munich Dürers and the three Bruegels.
+  - Approximate color corrections (`weyden-st-luke`, `weyden-descent`, `durer-hare`; `bruegel-wedding` to the KHM image); color unchecked for `bosch-st-anthony` and both Grünewald panels.
+  - Titles "The Ambassadors" and "Young Hare (Feldhase)" are not the museums' exact titles.
+  - Records read from mirrors or summaries: Prado Descent, Lisbon (HTTP only), von Einem, the Unterlinden press dossier.
+  - Date conflicts hedged or chosen: Portinari, Descent ("before 1443"), Peasant Wedding 1568.
+  - "Northern Renaissance" as a label is unsourced and undefined on the page; "glaze" is defined in the overview and used on no slide.
+  - Four Apostles image is a composite with a white gap; black corners beside stepped tops (Descent, both Grünewald plates); Man in a Red Turban's inscribed frame cropped off.
+  - Holbein added from outside the school course; Melencolia I is only a supplemental video there.
+- build-registry --check: outputs current; check.js and smoke.js PASS; other courses changed only in cache strings (High Renaissance credits Next now points here through the STUDY array).
+
+-----
+
 ## Completed This Session (November 20 2026) — High Renaissance installed
 
 - New art history course `high-renaissance` (Mode 2): 16 works, 1 section "Italy, 1481–1538", 1 part; 19 pages, 16 images (5.6 MB). Registry: after Early Renaissance in Italy, before Japanese Woodblock Prints; card image `raphael-school-of-athens`. Painting only.
