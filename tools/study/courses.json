@@ -44,6 +44,16 @@
    }
   },
   {
+   "slug": "northern-renaissance",
+   "lane": "art-history",
+   "name": "Northern Renaissance",
+   "label": "northern renaissance",
+   "dates": "1427–1568",
+   "card": {
+    "img": "eyck-arnolfini"
+   }
+  },
+  {
    "slug": "japanese-woodblock-prints",
    "lane": "art-history",
    "name": "Japanese Woodblock Prints",
