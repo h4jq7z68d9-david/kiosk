@@ -661,6 +661,17 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - [ ] **David:** re-add the admin home-screen icon from `davidnicholsonart.com/admin.html`, then re-attach the receipt to the Oct 31 $60.79 Google advertising expense (saved without one). If the upload still fails on the apex, investigate the failed `PUT /admin/expenses/{id}` (preflight reached Lambda, the PUT never did).
 - [ ] **Gallery on phones (≤600px):** wide screens hang left-justified rows since Nov 11 2026; phones still use centred `wallRows()`. David to decide whether phones go left-justified too.
 
+### From November 21 2026 (art history course direction) — future, not started
+
+David's ideas for reworking the public art history courses. Not to be started unasked; Northern Renaissance, then Mannerism and Baroque, are built first.
+
+- [ ] **A TL;DR for most courses:** one slide (course introduction or closing summary) that says what made the period the period, modelled on the "overall idea" slide in the school courses. Example theme, from the Renaissance lecture: ideal beauty and graceful ease (Raphael's Roman works make beauty and calm look effortless, in mythology and in portraits).
+- [ ] **Shorter text, not just broader:** fewer individual works treated in detail; some works in detail, the rest carried by the period's general ideas. David's view is that people read less now.
+- [ ] **Artists answering each other:** works painted in response to earlier works (the several Galateas; pictures made in response to the *Mona Lisa*). To check whether this runs through every period, and whether it can link courses.
+- [ ] **Overview course, or history courses built more like the technique courses:** one course across all the others showing the general ideas through history, one or at most two slides per course. Could be assembled from the TL;DR slides once they exist.
+- [ ] **Image first, text on demand (viewer layout):** David thinks the lightbox may be the wrong idea: show the artwork big by default and click it to see more, instead of text beside a smaller image that opens a lightbox. Layout decision: mockups before code. Constraints to design around: small plates are never upscaled (six Composition plates are under 500 px), and the slide text must stay in the page HTML for Google.
+- [ ] **Course list after Baroque:** David expects copyright to limit what follows; to be checked period by period (public domain or CC0 only) before a course is scoped.
+
 ### From November 19 2026 (image rights; public courses move here)
 
 - [ ] **David: Search Console → Image Metadata → Validate fix** (creator/copyrightNotice/license warnings on high-and-low-key and theme-local pages; fix live Nov 19).
