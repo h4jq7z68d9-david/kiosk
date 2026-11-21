@@ -4,6 +4,21 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 20 2026) — High Renaissance installed
+
+- New art history course `high-renaissance` (Mode 2): 16 works, 1 section "Italy, 1481–1538", 1 part; 19 pages, 16 images (5.6 MB). Registry: after Early Renaissance in Italy, before Japanese Woodblock Prints; card image `raphael-school-of-athens`. Painting only.
+- Text compiled from museum records, state catalogue cards and signed essays (fact ledgers Records A/B, two fact-review rounds: Round 2 failed six lines, rewritten in the main chat and re-checked; paraphrase check); coverage from David's Lindenwood Renaissance Art lectures. No curricula check for this course, so the Sources page has no Curricula group. Opening line sourced to the National Gallery glossary "High Renaissance".
+- Open flags:
+  - `titian-assumption` image soft (WGA scan) and its red disputed between Commons scans; chosen file matches the Frari's own image.
+  - Three approximate color corrections (`raphael-sistine-madonna`, `perugino-keys`, `michelangelo-adam`).
+  - `raphael-school-of-athens` credited as public domain with `licenseUrl` null.
+  - Giorgione date "about 1505–8" from Smarthistory only; Last Supper size hedged (ICCD prints no unit).
+  - Six works have no owning-museum collection record (wall paintings and the Frari altarpiece); Adam and Libyan Sibyl "about 1511–12" inferred from the ceiling campaigns.
+  - "Italian" in artist lines rests on birthplace; Sources page names David's Lindenwood course as a lecture source.
+- build-registry --check: outputs current; check.js and smoke.js PASS; other courses changed only in cache strings.
+
+-----
+
 ## Completed This Session (November 20 2026) — Early Renaissance in Italy installed
 
 - New art history course `early-renaissance` (Mode 2): 15 works, 1 section "Italy, 1423–1490", 1 part; 18 pages, 15 images (6.3 MB). Registry: after Classical Myth, before Japanese Woodblock Prints; card image `botticelli-primavera`. Painting only.
