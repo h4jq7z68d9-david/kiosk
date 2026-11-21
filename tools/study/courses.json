@@ -34,6 +34,16 @@
    }
   },
   {
+   "slug": "high-renaissance",
+   "lane": "art-history",
+   "name": "High Renaissance",
+   "label": "high renaissance",
+   "dates": "1481–1538",
+   "card": {
+    "img": "raphael-school-of-athens"
+   }
+  },
+  {
    "slug": "japanese-woodblock-prints",
    "lane": "art-history",
    "name": "Japanese Woodblock Prints",
