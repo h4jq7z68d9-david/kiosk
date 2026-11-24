@@ -10,6 +10,7 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 - Sizes sourced: Last Supper 460 × 880 cm (Museo del Cenacolo Vinciano; page had 480 × 880 in error, corrected to 181 × 346 1/2 in.); Libyan Sibyl section 4.54 × 3.80 m (Met essay on the preparatory studies); School of Athens 500 × 770 cm from agreeing reference sources. Raphael "Italian": Met biography pages.
 - Two fact-review rounds by independent agents; wording fixes applied. Assumption image (soft, red disputed) accepted as settled by David: it is the only public-domain scan found.
 - New plate viewer (`study/plate.css`, `study/plate.js`, `"viewer": "plate"` in the course settings, plate branches in `build-course.js`): painting left, ruled label at lower right, scale-box opening a card with a 5 ft 8 in person (SVG built from the size line), bottom bar of icon buttons, floating outline and search. `check.js` knows the two new versioned files; `smoke.js` opens the search button before typing when the field is hidden.
+- Fact review round 3 (68 pass, 9 fix, 1 fail): six wording fixes applied (Last Supper claim credited to UNESCO; Doni, School of Athens, Assumption, Libyan Sibyl, Sistine Madonna lines); three references added to the Sources page. David loosened the fact standard (legitimate source or agreeing sites, museum wins conflicts), which settles the School of Athens size and the intro's three cities.
 - check.js and smoke.js PASS (18 courses). Commits on `thinning-pilot-high-renaissance`; not pushed.
 
 -----

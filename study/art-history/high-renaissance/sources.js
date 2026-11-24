@@ -110,6 +110,14 @@ window.SOURCES = {
      "url": "https://nationalgallery.org.uk/paintings/catalogues/plazzotta-and-henry-2022/raphael"
     },
     {
+     "html": "Columbia University, Media Center for Art History. “School of Athens.” Art Atlas record. Accessed November 24, 2026.",
+     "url": "https://mcid.mcah.columbia.edu/node/233431"
+    },
+    {
+     "html": "The Metropolitan Museum of Art, New York. “Raphael: A Life in Nine Objects.” Perspectives. Accessed November 24, 2026.",
+     "url": "https://www.metmuseum.org/perspectives/raphael-a-life-in-nine-objects"
+    },
+    {
      "html": "National Gallery, London. “High Renaissance.” Glossary. Accessed November 20, 2026.",
      "url": "https://www.nationalgallery.org.uk/paintings/glossary/high-renaissance"
     },
@@ -124,6 +132,10 @@ window.SOURCES = {
     {
      "html": "National Gallery, London. “Pietro Perugino.” Artist page. Accessed November 20, 2026.",
      "url": "https://www.nationalgallery.org.uk/artists/pietro-perugino"
+    },
+    {
+     "html": "Oakley, Howard. “Raphael and Painting: 4 First Frescoes in Rome.” <em>The Eclectic Light Company</em>, February 19, 2020.",
+     "url": "https://eclecticlight.co/2020/02/19/raphael-and-painting-4-first-frescoes-in-rome/"
     }
    ]
   }

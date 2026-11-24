@@ -26,7 +26,7 @@ window.SITE = {
      "title": "The Last Supper",
      "date": "about 1494–98",
      "det": "Italian, 1452–1519. Tempera and oil on plaster, about 181 × 346 1/2 in. Refectory of Santa Maria delle Grazie, Milan",
-     "lead": "The museum that keeps it says this painting began a new era in art. The receding lines of the painted room run toward Christ's head, so the architecture itself points at him.",
+     "lead": "UNESCO, quoted on the museum's page, says this painting began a new era in art. The receding lines of the painted room run toward Christ's head, so the architecture itself points at him.",
      "bul": [
       "Leonardo painted on dry plaster instead of wet, which let him work slowly and change what he had done. The paint began to flake within a few years; a restoration finished in 1999 removed later repainting."
      ]
@@ -50,7 +50,7 @@ window.SITE = {
      "title": "Holy Family (Doni Tondo)",
      "date": "1505–6",
      "det": "Italian, 1475–1564. Tempera grassa (tempera with added oil) on wood, 47 1/4 in. across. The Uffizi, Florence",
-     "lead": "The hard, bright folds of cloth make the figures look carved, as if the group were sculpture.",
+     "lead": "The hard, bright folds of cloth make the figures look carved from stone.",
      "bul": [
       "Made for the Florentine merchant Agnolo Doni, who married Maddalena Strozzi in 1504. No other panel painting is certainly by Michelangelo."
      ]
@@ -64,7 +64,7 @@ window.SITE = {
      "det": "Italian, 1483–1520. Fresco, about 196 3/4 × 303 1/4 in. Stanza della Segnatura, Vatican",
      "lead": "The Vatican Museums date the start of the High Renaissance to the frescoes in this room. The arches shrink, one inside the next, toward two men at the center.",
      "bul": [
-      "Painted for Pope Julius II in a room he used as his library. The hall was inspired by Bramante's design for rebuilding St. Peter's. Raphael's cartoon for the figures survives in Milan."
+      "Painted for Pope Julius II in a room he used as his library. The painted hall was inspired by Bramante's design for rebuilding St. Peter's. Raphael's cartoon for the figures survives in Milan."
      ]
     },
     {
@@ -76,7 +76,7 @@ window.SITE = {
      "det": "Fresco, about 178 3/4 × 149 1/2 in. (her section of the ceiling). Sistine Chapel ceiling, Vatican",
      "lead": "The shoulders turn away while the knees face front, so the seated figure looks caught in the middle of a turn. Michelangelo's color in the second half of the ceiling influenced many of the painters later called Mannerists.",
      "bul": [
-      "Painted in about twenty daily sections of plaster. A red chalk study for the pose, drawn from a male model, is in the Metropolitan Museum of Art, New York."
+      "Michelangelo painted her in about twenty daily sections of plaster. A red chalk study for the pose, drawn from a male model, is in the Metropolitan Museum of Art, New York."
      ]
     },
     {
@@ -88,7 +88,7 @@ window.SITE = {
      "det": "Oil on canvas, 106 × 79 1/4 in. Gemäldegalerie Alte Meister, Dresden",
      "lead": "Curtains drawn back at the top and a ledge at the bottom make the scene look like a vision. Since about 1800, the two small angels on the ledge have been copied on their own.",
      "bul": [
-      "Painted for the high altar of the convent church of San Sisto in Piacenza, most likely on the order of Pope Julius II. Raphael added the two angels last."
+      "Raphael made it for the high altar of the convent church of San Sisto in Piacenza, most likely on the order of Pope Julius II. Raphael added the two angels last."
      ]
     },
     {
@@ -100,7 +100,7 @@ window.SITE = {
      "det": "Italian, about 1488/90–1576. Oil on panel, 263 × 135 1/2 in. Santa Maria Gloriosa dei Frari, Venice",
      "lead": "Raised arms link its three tiers of figures, so the eye climbs from the apostles on the ground to the top.",
      "bul": [
-      "Unveiled on the high altar of the Frari, a Franciscan church, on May 19, 1518. The figure of God at the top, far above the viewer, is painted boldly with thick, unblended highlights."
+      "Unveiled on the high altar of the Frari, a Franciscan church, on May 19, 1518. The figure of God, far above the viewer, is painted boldly with thick, unblended highlights."
      ]
     }
    ]
