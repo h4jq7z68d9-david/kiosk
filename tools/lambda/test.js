@@ -86,7 +86,7 @@ const JILL_ROUTES = [
   ['GET', '/admin/jill/nothing-here'],
 ];
 // Every token-gated route in seanRoute: Jill's set under /admin/sean plus the job rename.
-const SEAN_ROUTES = [...JILL_ROUTES.map(([m, p]) => [m, p.replace('/admin/jill/', '/admin/sean/')]), ['POST', '/admin/sean/jobs/rename']];
+const SEAN_ROUTES = [...JILL_ROUTES.map(([m, p]) => [m, p.replace('/admin/jill/', '/admin/sean/')]), ['POST', '/admin/sean/jobs/rename'], ['POST', '/admin/sean/jobs/delete']];
 
 (async () => {
   register('./hooks.mjs', pathToFileURL(__filename));
@@ -260,6 +260,11 @@ const SEAN_ROUTES = [...JILL_ROUTES.map(([m, p]) => [m, p.replace('/admin/jill/'
     const d1 = J(await call('GET', '/admin/sean/data', T));
     check(rn.renamed === 3 && [...d1.expenses, ...d1.revenue, ...d1.mileage].filter((x) => x.job === 'Henderson crown').length === 3 && !JSON.stringify(d1).includes('"job":"Henderson"'), `sean job rename: renamed ${rn.renamed}`);
     check(d1.config.jobs.some((j) => j.name === 'Henderson crown' && j.done && j.address === '12 Sample St' && j.email === 'pat@example.invalid') && !d1.config.jobs.some((j) => j.name === 'Henderson') && d1.config.threshold1099 === 2100, `sean job rename config: ${JSON.stringify(d1.config.jobs)}`);
+    // Deleting a job keeps its entries (they become overhead) and drops it from the list.
+    const before = stubs.table('sean-expenses').size;
+    const dj = J(await call('POST', '/admin/sean/jobs/delete', { ...T, body: { name: 'Henderson crown' } }));
+    const d1b = J(await call('GET', '/admin/sean/data', T));
+    check(dj.cleared === 3 && stubs.table('sean-expenses').size === before && [...d1b.expenses, ...d1b.revenue, ...d1b.mileage].every((x) => x.job === '') && !d1b.config.jobs.some((j) => j.name === 'Henderson crown') && d1b.config.jobs.length === 1 && d1b.config.threshold1099 === 2100, `sean job delete: ${JSON.stringify(dj).slice(0, 200)}`);
     const im = J(await call('POST', '/admin/sean/import', { ...T, body: { kind: 'expense', rows: [{ date: '2026-10-01', amount: -20, tax: 1.5, vendor: 'Ace', job: 'Morales', category: 'Job Supplies' }] } }));
     check(im.imported === 1 && im.items[0].amount === 20 && im.items[0].tax === 1.5 && im.items[0].job === 'Morales' && im.items[0].vendor === 'Ace', `sean import: ${JSON.stringify(im.items)}`);
     const del = await call('DELETE', '/admin/sean/revenue/' + e1.id, T);
@@ -277,7 +282,7 @@ const SEAN_ROUTES = [...JILL_ROUTES.map(([m, p]) => [m, p.replace('/admin/jill/'
     const v3 = await call('POST', '/admin/sean/verify-password', { body: { password: ENV.SEAN_PASSWORD } });
     check(pc.statusCode === 200 && v2.statusCode === 200 && v3.statusCode === 401, `sean password change: ${pc.statusCode}/${v2.statusCode}/${v3.statusCode}`);
     const d2 = J(await call('GET', '/admin/sean/data', T));
-    check(!JSON.stringify(d2).includes('scrypt') && d2.config.jobs.length === 2, 'sean /data must not expose the password hash, and a password change must keep the config');
+    check(!JSON.stringify(d2).includes('scrypt') && d2.config.jobs.length === 1, 'sean /data must not expose the password hash, and a password change must keep the config');
     // Scheduled run covers Sean's table too.
     stubs.reset();
     stubs.table('sean-expenses').set('r1', { id: 'r1', type: 'recurring', active: true, amount: 148, category: 'Insurance', desc: 'GL', dayOfMonth: 12, startMonth: new Date().toISOString().slice(0, 7) });

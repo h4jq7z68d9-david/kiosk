@@ -221,6 +221,8 @@
   .rep-table tr.sub td { color: var(--ink2); }
   .jobs-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
   .jobs-head .section-title { margin: 0; }
+  #jobs-range-note { margin: -6px 0 14px; }
+  #jobs-range-note:empty { display: none; }
   .jobs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
   .jobcard { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px 14px; cursor: pointer; text-align: left; font: inherit; color: inherit; width: 100%; display: block; }
   .jobcard:hover { border-color: var(--accent); }
@@ -425,8 +427,26 @@
       <div id="jobs-list">
         <div class="jobs-head">
           <div class="section-title">Jobs</div>
-          <button class="btn-primary" id="add-job-btn" onclick="openJobModal()">+ New Job</button>
+          <div class="table-tools">
+            <span class="range"><input type="date" class="inp date" id="jobs-from" aria-label="From date" onchange="renderJobs()"><span>–</span><input type="date" class="inp date" id="jobs-to" aria-label="To date" onchange="renderJobs()"></span>
+            <select class="inp" id="jobs-preset" aria-label="Quick range" onchange="jobsPreset(this.value)">
+              <option value="">Quick range…</option>
+              <option value="ytd">This year</option>
+              <option value="last">Last year</option>
+              <option value="q">This quarter</option>
+              <option value="m">This month</option>
+              <option value="all">All time</option>
+            </select>
+            <select class="inp" id="jobs-sort" aria-label="Sort jobs" onchange="renderJobs()">
+              <option value="new">Newest activity</option>
+              <option value="old">Oldest activity</option>
+              <option value="name">Name</option>
+              <option value="profit">Highest profit</option>
+            </select>
+            <button class="btn-primary" id="add-job-btn" onclick="openJobModal()">+ New Job</button>
+          </div>
         </div>
+        <div class="section-note" id="jobs-range-note"></div>
         <div class="jobs-grid" id="jobs-grid"></div>
       </div>
       <div id="job-detail" style="display:none"></div>
@@ -1175,38 +1195,66 @@ async function saveMileage() {
 // ═══════════════════════════════════════════
 //  JOBS TAB
 // ═══════════════════════════════════════════
-// Card and detail totals are all-time (not tied to a date range): a job is judged as a whole.
+// Cards and the job detail show all dates until a range is set on the Jobs tab; then both count only entries
+// in the range, and the list shows only jobs with an entry in it.
 let jobOpen = null, editJob = null;
+function jobsRange() { return { from: val('jobs-from'), to: val('jobs-to') }; }
+function jobsRangeText() {
+  const { from, to } = jobsRange();
+  return from || to ? `${from ? fmtDate(from) : 'start'} to ${to ? fmtDate(to) : 'today'}` : '';
+}
+function jobsPreset(p) {
+  const now = new Date(), y = now.getFullYear(), pad = n => String(n).padStart(2, '0');
+  let from = '', to = '';
+  if (p === 'ytd') from = `${y}-01-01`;
+  else if (p === 'last') { from = `${y - 1}-01-01`; to = `${y - 1}-12-31`; }
+  else if (p === 'q') from = `${y}-${pad(Math.floor(now.getMonth() / 3) * 3 + 1)}-01`;
+  else if (p === 'm') from = `${y}-${pad(now.getMonth() + 1)}-01`;
+  else if (p !== 'all') return;
+  document.getElementById('jobs-from').value = from; document.getElementById('jobs-to').value = to;
+  document.getElementById('jobs-preset').value = '';
+  renderJobs();
+}
 function jobEntries(name) {
-  return { exp: st.expenses.filter(x => x.job === name), rev: st.revenue.filter(x => x.job === name), mile: st.mileage.filter(x => x.job === name) };
+  const { from, to } = jobsRange(), f = x => x.job === name && inRange(x.date || '', from, to);
+  return { exp: st.expenses.filter(f), rev: st.revenue.filter(f), mile: st.mileage.filter(f) };
 }
 function jobTotals(name) {
   const { exp, rev, mile } = jobEntries(name);
   const costs = exp.reduce((s, e) => s + Number(e.amount || 0), 0) + mile.reduce((s, m) => s + mileDeduction(m), 0);
   const revenue = rev.reduce((s, r) => s + Number(r.amount || 0), 0);
-  return { costs, revenue, profit: revenue - costs, miles: mile.reduce((s, m) => s + Number(m.miles || 0), 0), n: exp.length + rev.length + mile.length };
+  const last = [...exp, ...rev, ...mile].reduce((d, x) => (x.date > d ? x.date : d), '');
+  return { costs, revenue, profit: revenue - costs, miles: mile.reduce((s, m) => s + Number(m.miles || 0), 0), n: exp.length + rev.length + mile.length, last };
 }
 function jobArg(name) { return esc(JSON.stringify(name)); }   // safe inside an onclick="…" attribute
 function renderJobs() {
-  const jobs = jobList().sort((a, b) => (a.done - b.done) || a.name.localeCompare(b.name));
-  const job = jobOpen != null ? jobs.find(j => j.name === jobOpen) : null;
+  const ranged = !!jobsRangeText(), sort = val('jobs-sort');
+  const all = jobList().map(j => ({ ...j, t: jobTotals(j.name) }));
+  const job = jobOpen != null ? all.find(j => j.name === jobOpen) : null;
+  // Open jobs first, then the chosen order. A job with no entries has no date: it leads "newest" and trails "oldest".
+  const order = { name: (a, b) => a.name.localeCompare(b.name), profit: (a, b) => b.t.profit - a.t.profit,
+    new: (a, b) => (!a.t.last - !b.t.last) * -1 || (a.t.last < b.t.last ? 1 : a.t.last > b.t.last ? -1 : 0),
+    old: (a, b) => (!a.t.last - !b.t.last) || (a.t.last < b.t.last ? -1 : a.t.last > b.t.last ? 1 : 0) }[sort] || (() => 0);
+  const jobs = all.filter(j => !ranged || j.t.n).sort((a, b) => (a.done - b.done) || order(a, b) || a.name.localeCompare(b.name));
+  document.getElementById('jobs-range-note').textContent = ranged ? `Showing jobs with entries from ${jobsRangeText()}. Totals count only that range.` : '';
   if (!job) jobOpen = null;
   document.getElementById('jobs-list').style.display = job ? 'none' : '';
   document.getElementById('job-detail').style.display = job ? '' : 'none';
   if (job) return renderJobDetail(job);
   document.getElementById('jobs-grid').innerHTML = jobs.length ? jobs.map(j => {
-    const t = jobTotals(j.name);
+    const t = j.t;
     return `<button class="jobcard ${j.done ? 'done' : ''}" onclick="openJob(${jobArg(j.name)})">
       <h3>${esc(j.name)}${j.done ? '<span class="job-done">Done</span>' : ''}</h3>
       <div class="sub">${esc(j.address || j.contact || '')}</div>
       <div class="kv"><span>Costs</span><b>${money(t.costs)}</b></div>
       <div class="kv"><span>Revenue</span><b>${money(t.revenue)}</b></div>
       <div class="kv"><span>Profit</span><b class="${t.profit < 0 ? 'neg' : ''}">${signed(t.profit)}</b></div></button>`;
-  }).join('') : '<div class="empty-state" style="grid-column:1/-1">No jobs yet.<br><button class="btn-sm" onclick="openJobModal()">Add your first job</button></div>';
+  }).join('') : all.length ? `<div class="empty-state" style="grid-column:1/-1">No jobs have entries in this date range.<br><button class="btn-sm" onclick="jobsPreset('all')">Show all dates</button></div>`
+    : '<div class="empty-state" style="grid-column:1/-1">No jobs yet.<br><button class="btn-sm" onclick="openJobModal()">Add your first job</button></div>';
 }
 function openJob(name) { jobOpen = name; renderJobs(); window.scrollTo(0, 0); }
 function renderJobDetail(j) {
-  const t = jobTotals(j.name), { exp, rev, mile } = jobEntries(j.name), a = jobArg(j.name);
+  const t = j.t || jobTotals(j.name), { exp, rev, mile } = jobEntries(j.name), a = jobArg(j.name);
   const rows = [
     ...exp.map(e => ({ date: e.date, type: 'Expense', label: badge(e.category, st.config.categories), desc: [e.desc, e.vendor].filter(Boolean).join(' · '), amt: money(e.amount), open: `openExpModal('${e.id}')` })),
     ...mile.map(m => ({ date: m.date, type: 'Trip', label: esc(m.purpose), desc: `${Number(m.miles).toLocaleString('en-US')} mi`, amt: money(mileDeduction(m)), open: `openMileModal('${m.id}')` })),
@@ -1229,7 +1277,7 @@ function renderJobDetail(j) {
       <div class="card"><div class="card-label">Miles</div><div class="card-value">${t.miles.toLocaleString('en-US')}</div></div>
     </div>
     <div class="table-section">
-      <div class="table-header"><div class="section-title">Entries</div>
+      <div class="table-header"><div><div class="section-title">Entries</div>${jobsRangeText() ? `<div class="section-note">${jobsRangeText()} only. <a href="#" onclick="jobsPreset('all');return false" style="color:var(--accent-ink)">Show all dates</a></div>` : ''}</div>
         <div class="job-actions"><button class="btn-sm" onclick="addToJob('mile', ${a})">+ Trip</button><button class="btn-sm" onclick="addToJob('rev', ${a})">+ Revenue</button><button class="btn-primary" id="job-add-exp-btn" onclick="addToJob('exp', ${a})">+ Expense</button></div></div>
       <div class="table-scroll"><table><thead><tr><th>Date</th><th class="mobile-hide">Type</th><th>Item</th><th class="mobile-hide">Description</th><th class="num">Amount</th></tr></thead>
         <tbody>${rows.length ? rows.map(r => `<tr class="row" onclick="${r.open}"><td class="mono">${fmtDate(r.date)}</td><td class="dim mobile-hide">${r.type}</td>
@@ -1281,13 +1329,19 @@ async function saveJob() {
 }
 async function deleteJob() {
   const name = editJob, n = jobUse(name);
-  if (n) return alert(`${n} entr${n === 1 ? 'y is' : 'ies are'} on this job, so it can't be deleted. Set its status to Done to take it out of the pick lists, or move those entries to another job first.`);
-  if (!confirm(`Delete the job “${name}”?`)) return;
+  // Entries are money records and are never deleted with the job: they stay and become overhead.
+  if (!confirm(n ? `Delete the job “${name}”?
+
+Its ${n} entr${n === 1 ? 'y stays' : 'ies stay'} in your records and move${n === 1 ? 's' : ''} to “No job (overhead)”. The job's address and contact details are removed. This can't be undone.` : `Delete the job “${name}”?`)) return;
   try {
-    const d = await api('PUT', '/config', { jobs: jobList().filter(j => j.name !== name) });
+    // Save the list first so jobs that only exist as a name on an entry aren't lost, then delete on the server.
+    await api('PUT', '/config', { jobs: jobList() });
+    const d = await api('POST', '/jobs/delete', { name });
+    [...st.expenses, ...st.revenue, ...st.mileage].forEach(x => { if (x.job === name) x.job = ''; });
     st.config = d.config;
     if (jobOpen === name) jobOpen = null;
     closeModal('job-modal'); afterJobChange(); renderAll();
+    toast(n ? `Job deleted · ${n} entr${n === 1 ? 'y' : 'ies'} moved to overhead` : 'Job deleted');
   } catch (e) { alert('Could not delete the job: ' + e.message); }
 }
 

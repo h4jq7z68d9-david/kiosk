@@ -2125,6 +2125,19 @@ async function seanRenameJob(body, cors) {
   return ok({ renamed: hits.length, config: seanConfigOut(item) }, cors);
 }
 
+// Deleting a job never deletes money records: its entries are kept and become overhead (job cleared).
+async function seanDeleteJob(body, cors) {
+  const name = seanStr(body.name, 80);
+  if (!name) return err('Job name is required', 400, cors);
+  const items = await scanAll(SEAN_TABLE);
+  const hits = items.filter(x => ['expense', 'revenue', 'mileage'].includes(x.type) && x.job === name);
+  for (let i = 0; i < hits.length; i += 10) await Promise.all(hits.slice(i, i + 10).map(x => seanPut({ ...x, job: '' })));
+  const prev = items.find(x => x.id === '__config__');
+  const item = { ...(prev || {}), id: '__config__', type: 'config', jobs: seanConfigOut(prev).jobs.filter(j => j.name !== name) };
+  await seanPut(item);
+  return ok({ cleared: hits.length, config: seanConfigOut(item) }, cors);
+}
+
 async function seanReceiptUploadUrl(body, cors) {
   const { filename, contentType, date, amount, category } = body;
   if (!filename || !contentType) return err('Missing filename or contentType', 400, cors);
@@ -2203,6 +2216,7 @@ async function seanRoute(method, path, event, cors) {
   if (method === 'POST' && path === '/admin/sean/import') return await seanImport(b(), cors);
   if (method === 'PUT'  && path === '/admin/sean/password') return await seanChangePassword(b(), cors);
   if (method === 'POST' && path === '/admin/sean/jobs/rename') return await seanRenameJob(b(), cors);
+  if (method === 'POST' && path === '/admin/sean/jobs/delete') return await seanDeleteJob(b(), cors);
   if (method === 'POST' && path === '/admin/sean/expenses/receipt-url') return await seanReceiptUploadUrl(b(), cors);
   if (method === 'POST' && path === '/admin/sean/recurring/run') {
     const created = await generateAllRecurring(SEAN_TABLE);
