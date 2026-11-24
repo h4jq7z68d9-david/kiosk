@@ -8,8 +8,9 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 - New page `expenses-sean-pringle.html`, a separate copy of Jill's page for Sean Pringle (trim carpenter, Colorado), with its own `/admin/sean/*` routes, table `sean-expenses`, env `SEAN_PASSWORD` / `SEAN_TOKEN` and receipts prefix `receipts/sean/`. David created the table, the role's inline policy `sean-expenses-access` and both environment variables in the console the same day.
 - Added over Jill's page: an optional job on every entry (direction A: job column and filter; David wants direction B, a Jobs tab, later), vendor and sales tax on expenses, and three reports with CSVs: Profit by job, 1099 contractor totals ($2,000 threshold for 2026 payments, editable) and Sales tax paid.
-- `tools/lambda/test.js`: Sean's routes added to the no-token and wrong-token walls in all three directions, plus field, rename, import, password and scheduled-recurring cases (516 assertions). `check.js` skips the page like the other gated pages; `smoke.js` loads it logged-out at 1440/390; `deploy.yml` uploads it with `no-cache`.
-- Headless run of the page against the real handler with the in-memory stubs: 72 checks (kept outside the repo).
+- `tools/lambda/test.js`: Sean's routes added to the no-token and wrong-token walls in all three directions, plus field, rename, import, password and scheduled-recurring cases. `check.js` skips the page like the other gated pages; `smoke.js` loads it logged-out at 1440/390; `deploy.yml` uploads it with `no-cache`.
+- Same day, second push: Jobs tab (job cards, job detail, optional address / contact / phone / email, date range and sort), job management moved out of Settings, and job delete (`/admin/sean/jobs/delete`: entries are kept and become overhead). Route tests now 524 assertions.
+- Headless run of the page against the real handler with the in-memory stubs: 98 checks (kept outside the repo).
 - Jill's page and her backend code were not changed.
 
 ## Completed This Session (November 24 2026) — High Renaissance thinning pilot and plate viewer
