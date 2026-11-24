@@ -253,12 +253,13 @@ const SEAN_ROUTES = [...JILL_ROUTES.map(([m, p]) => [m, p.replace('/admin/jill/'
     const rv = J(await call('POST', '/admin/sean/revenue', { ...T, body: { date: '2026-11-22', stream: 'Deposits', amount: 2600, job: 'Henderson' } })).revenue;
     const mi = J(await call('POST', '/admin/sean/mileage', { ...T, body: { date: '2026-11-22', miles: 40, purpose: 'Site visit', job: 'Henderson' } })).entry;
     check(rv.job === 'Henderson' && mi.job === 'Henderson' && mi.rate === 0.7, `sean revenue/mileage job: ${JSON.stringify([rv, mi])}`);
-    const cfg = J(await call('PUT', '/admin/sean/config', { ...T, body: { jobs: [{ name: 'Henderson', done: true }, 'henderson', { name: ' Morales ' }, { name: '' }], threshold1099: 2100 } })).config;
+    const cfg = J(await call('PUT', '/admin/sean/config', { ...T, body: { jobs: [{ name: 'Henderson', done: true, address: ' 12 Sample St ', contact: 'Pat', phone: '555-0100', email: 'pat@example.invalid', extra: 'x' }, 'henderson', { name: ' Morales ' }, { name: '' }], threshold1099: 2100 } })).config;
+    check(JSON.stringify(cfg.jobs[0]) === JSON.stringify({ name: 'Henderson', done: true, address: '12 Sample St', contact: 'Pat', phone: '555-0100', email: 'pat@example.invalid' }) && cfg.jobs[1].address === '', `sean job details: ${JSON.stringify(cfg.jobs)}`);
     check(cfg.jobs.length === 2 && cfg.jobs[0].done === true && cfg.jobs[1].name === 'Morales' && cfg.threshold1099 === 2100, `sean config jobs: ${JSON.stringify(cfg.jobs)}`);
     const rn = J(await call('POST', '/admin/sean/jobs/rename', { ...T, body: { from: 'Henderson', to: 'Henderson crown' } }));
     const d1 = J(await call('GET', '/admin/sean/data', T));
     check(rn.renamed === 3 && [...d1.expenses, ...d1.revenue, ...d1.mileage].filter((x) => x.job === 'Henderson crown').length === 3 && !JSON.stringify(d1).includes('"job":"Henderson"'), `sean job rename: renamed ${rn.renamed}`);
-    check(d1.config.jobs.some((j) => j.name === 'Henderson crown' && j.done) && !d1.config.jobs.some((j) => j.name === 'Henderson') && d1.config.threshold1099 === 2100, `sean job rename config: ${JSON.stringify(d1.config.jobs)}`);
+    check(d1.config.jobs.some((j) => j.name === 'Henderson crown' && j.done && j.address === '12 Sample St' && j.email === 'pat@example.invalid') && !d1.config.jobs.some((j) => j.name === 'Henderson') && d1.config.threshold1099 === 2100, `sean job rename config: ${JSON.stringify(d1.config.jobs)}`);
     const im = J(await call('POST', '/admin/sean/import', { ...T, body: { kind: 'expense', rows: [{ date: '2026-10-01', amount: -20, tax: 1.5, vendor: 'Ace', job: 'Morales', category: 'Job Supplies' }] } }));
     check(im.imported === 1 && im.items[0].amount === 20 && im.items[0].tax === 1.5 && im.items[0].job === 'Morales' && im.items[0].vendor === 'Ace', `sean import: ${JSON.stringify(im.items)}`);
     const del = await call('DELETE', '/admin/sean/revenue/' + e1.id, T);

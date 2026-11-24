@@ -1946,7 +1946,7 @@ async function jillRoute(method, path, event, cors) {
 // receipts prefix (receipts/sean/). SEAN_TOKEN works only on /admin/sean/*; ADMIN_TOKEN and JILL_TOKEN do not work here.
 // Differences from Jill's: every expense, revenue and mileage entry can carry an optional `job` (a name; blank =
 // overhead), expenses carry `vendor` and `tax` (sales tax paid, part of amount), and the __config__ row also holds
-// `jobs` ([{ name, done }]) and `threshold1099`. Jill's code is left as it is (her page: big bugs only).
+// `jobs` ([{ name, done, address, contact, phone, email }]; only the name is required) and `threshold1099`. Jill's code is left as it is (her page: big bugs only).
 
 const SEAN_DEFAULT_CONFIG = {
   categories: [
@@ -1982,7 +1982,8 @@ function seanJobs(v) {
     const name = seanStr(typeof j === 'string' ? j : j?.name, 80);
     if (!name || seen.has(name.toLowerCase())) continue;
     seen.add(name.toLowerCase());
-    out.push({ name, done: !!(j && j.done) });
+    const d = j && typeof j === 'object' ? j : {};
+    out.push({ name, done: !!d.done, address: seanStr(d.address, 200), contact: seanStr(d.contact, 80), phone: seanStr(d.phone, 40), email: seanStr(d.email, 120) });
   }
   return out.slice(0, 500);
 }
@@ -2108,7 +2109,7 @@ async function seanDelete(id, type, cors) {
   return ok({ deleted: true }, cors);
 }
 
-// Renaming a job relabels every entry that carries it and the job list, in one request.
+// Renaming a job relabels every entry that carries it and the job list, in one request. The job keeps its details.
 async function seanRenameJob(body, cors) {
   const from = seanStr(body.from, 80), to = seanStr(body.to, 80);
   if (!from || !to) return err('Both job names are required', 400, cors);
@@ -2117,8 +2118,8 @@ async function seanRenameJob(body, cors) {
   for (let i = 0; i < hits.length; i += 10) await Promise.all(hits.slice(i, i + 10).map(x => seanPut({ ...x, job: to })));
   const prev = items.find(x => x.id === '__config__');
   const cur = seanConfigOut(prev);
-  const old = cur.jobs.find(j => j.name === from);
-  const jobs = seanJobs([...cur.jobs.filter(j => j.name !== from), { name: to, done: !!old?.done || !!cur.jobs.find(j => j.name === to)?.done }]);
+  const old = cur.jobs.find(j => j.name === from), dest = cur.jobs.find(j => j.name === to);
+  const jobs = seanJobs([...cur.jobs.filter(j => j.name !== from && j.name !== to), { ...(dest || {}), ...(old || {}), name: to, done: !!old?.done || !!dest?.done }]);
   const item = { ...(prev || {}), id: '__config__', type: 'config', jobs };
   await seanPut(item);
   return ok({ renamed: hits.length, config: seanConfigOut(item) }, cors);
