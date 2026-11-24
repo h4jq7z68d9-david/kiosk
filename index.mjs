@@ -24,6 +24,9 @@ const RECEIPTS_PREFIX = 'receipts/';
 const JILL_TABLE      = 'jill-expenses';       // expenses-jill-nicholson.html — fully separate from dna-* data
 const JILL_RECEIPTS   = 'receipts/jill/';
 const JILL_TOKEN      = process.env.JILL_TOKEN;
+const SEAN_TABLE      = 'sean-expenses';       // expenses-sean-pringle.html — fully separate from dna-* and jill-* data
+const SEAN_RECEIPTS   = 'receipts/sean/';
+const SEAN_TOKEN      = process.env.SEAN_TOKEN;
 
 const ALLOWED_ORIGINS = new Set([
   'https://davidnicholsonart.com',
@@ -1937,6 +1940,288 @@ async function jillRoute(method, path, event, cors) {
   return err('Not found', 404, cors);
 }
 
+// ── Sean Pringle expenses (expenses-sean-pringle.html) ──
+// Separate bookkeeping page for Sean (trim carpentry, Colorado). Same shape as Jill's section and walled off
+// the same way: own table (SEAN_TABLE), own password (env SEAN_PASSWORD), own token (env SEAN_TOKEN), own
+// receipts prefix (receipts/sean/). SEAN_TOKEN works only on /admin/sean/*; ADMIN_TOKEN and JILL_TOKEN do not work here.
+// Differences from Jill's: every expense, revenue and mileage entry can carry an optional `job` (a name; blank =
+// overhead), expenses carry `vendor` and `tax` (sales tax paid, part of amount), and the __config__ row also holds
+// `jobs` ([{ name, done }]) and `threshold1099`. Jill's code is left as it is (her page: big bugs only).
+
+const SEAN_DEFAULT_CONFIG = {
+  categories: [
+    'Lumber & Trim Stock', 'Fasteners & Adhesives', 'Finishing Supplies', 'Tools & Blades', 'Equipment Repair',
+    'Subcontractors', 'Job Supplies', 'Dump & Disposal', 'Permits & Licenses', 'Insurance',
+    'Shop & Storage Rent', 'Phone & Software', 'Advertising', 'Accounting & Legal', 'Other',
+  ],
+  streams: ['Trim & finish carpentry', 'Deposits', 'Change orders', 'Materials reimbursed', 'Other income'],
+  mileageRate: 0.70,
+  threshold1099: 2000,   // 1099-NEC reporting threshold for payments made in 2026; editable in Settings
+  cat1099: 'Subcontractors',   // the expense category the 1099 report totals by vendor; follows a rename in Settings
+};
+
+function checkSeanAuth(event) {
+  const token = event.queryStringParameters?.token
+    || event.headers?.['x-admin-token']
+    || event.headers?.['X-Admin-Token']
+    || '';
+  if (!SEAN_TOKEN || !token) return false;
+  return safeEqual(token, SEAN_TOKEN);
+}
+
+const seanId  = (p) => p + Date.now() + Math.random().toString(36).slice(2, 5);
+const seanPut = (Item) => dynamo.send(new PutCommand({ TableName: SEAN_TABLE, Item }));
+const seanGet = async (id) => (await dynamo.send(new GetCommand({ TableName: SEAN_TABLE, Key: { id } }))).Item;
+const seanStr = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
+const seanAmt = (v) => v != null && v !== '' && !isNaN(v) && Number(v) >= 0;
+// Sales tax paid: part of the amount, never more than it. Anything else is stored as 0.
+const seanTax = (tax, amount) => { const t = Number(tax); return t > 0 && t <= Number(amount) ? Math.round(t * 100) / 100 : 0; };
+function seanJobs(v) {
+  const out = [], seen = new Set();
+  for (const j of Array.isArray(v) ? v : []) {
+    const name = seanStr(typeof j === 'string' ? j : j?.name, 80);
+    if (!name || seen.has(name.toLowerCase())) continue;
+    seen.add(name.toLowerCase());
+    out.push({ name, done: !!(j && j.done) });
+  }
+  return out.slice(0, 500);
+}
+const validThreshold = (v) => { const n = Number(v); return n > 0 && n <= 100000 ? Math.round(n) : null; };
+
+function seanConfigOut(item) {
+  const c = item || {};
+  return {
+    categories: Array.isArray(c.categories) && c.categories.length ? c.categories : SEAN_DEFAULT_CONFIG.categories,
+    streams:    Array.isArray(c.streams)    && c.streams.length    ? c.streams    : SEAN_DEFAULT_CONFIG.streams,
+    mileageRate: validMileRate(c.mileageRate) || SEAN_DEFAULT_CONFIG.mileageRate,
+    threshold1099: validThreshold(c.threshold1099) || SEAN_DEFAULT_CONFIG.threshold1099,
+    cat1099: seanStr(c.cat1099, 60) || SEAN_DEFAULT_CONFIG.cat1099,
+    jobs: seanJobs(c.jobs),
+    onboarded: !!c.onboarded,
+  };
+}
+
+async function seanGetData(cors) {
+  const items = await scanAll(SEAN_TABLE);
+  return ok({
+    expenses:  items.filter(x => x.type === 'expense'),
+    revenue:   items.filter(x => x.type === 'revenue'),
+    mileage:   items.filter(x => x.type === 'mileage'),
+    recurring: items.filter(x => x.type === 'recurring'),
+    config:    seanConfigOut(items.find(x => x.id === '__config__')),
+  }, cors);
+}
+
+async function seanUpdateConfig(body, cors) {
+  const prev = await seanGet('__config__');
+  const cur = seanConfigOut(prev);
+  const categories = body.categories != null ? cleanList(body.categories) : cur.categories;
+  const streams    = body.streams    != null ? cleanList(body.streams)    : cur.streams;
+  if (!categories.length) return err('At least one category is required', 400, cors);
+  if (!streams.length)    return err('At least one revenue stream is required', 400, cors);
+  const mileageRate = body.mileageRate != null ? validMileRate(body.mileageRate) : cur.mileageRate;
+  if (!mileageRate) return err('Invalid mileage rate', 400, cors);
+  const threshold1099 = body.threshold1099 != null ? validThreshold(body.threshold1099) : cur.threshold1099;
+  if (!threshold1099) return err('Invalid 1099 threshold', 400, cors);
+  const jobs = body.jobs != null ? seanJobs(body.jobs) : cur.jobs;
+  const cat1099 = body.cat1099 != null ? (seanStr(body.cat1099, 60) || cur.cat1099) : cur.cat1099;
+  const onboarded = body.onboarded != null ? !!body.onboarded : cur.onboarded;
+  const item = { ...(prev || {}), id: '__config__', type: 'config', categories, streams, mileageRate, threshold1099, cat1099, jobs, onboarded };
+  await seanPut(item);
+  return ok({ config: seanConfigOut(item) }, cors);
+}
+
+async function seanSaveExpense(id, body, cors) {
+  const { date, category, desc, amount, receiptUrl } = body;
+  if (!validDate(date) || !seanAmt(amount)) return err('Missing required fields', 400, cors);
+  const prev = id ? await seanGet(id) : null;
+  if (id && (!prev || prev.type !== 'expense')) return err('Not found', 404, cors);
+  const item = {
+    ...(prev || {}),
+    id: id || seanId('e'), type: 'expense', date,
+    category: seanStr(category, 60) || 'Other', desc: seanStr(desc, 300), amount: Number(amount),
+    vendor: body.vendor !== undefined ? seanStr(body.vendor, 80) : (prev?.vendor || ''),
+    job:    body.job    !== undefined ? seanStr(body.job, 80)    : (prev?.job || ''),
+    tax:    seanTax(body.tax !== undefined ? body.tax : prev?.tax, amount),
+    receiptUrl: receiptUrl !== undefined ? (receiptUrl || '') : (prev?.receiptUrl || ''),
+  };
+  await seanPut(item);
+  return ok({ expense: item }, cors);
+}
+
+async function seanSaveRevenue(id, body, cors) {
+  const { date, stream, desc, amount } = body;
+  if (!validDate(date) || !seanAmt(amount)) return err('Missing required fields', 400, cors);
+  const prev = id ? await seanGet(id) : null;
+  if (id && (!prev || prev.type !== 'revenue')) return err('Not found', 404, cors);
+  const item = {
+    ...(prev || {}),
+    id: id || seanId('v'), type: 'revenue', date, stream: seanStr(stream, 60) || 'Other income', desc: seanStr(desc, 300), amount: Number(amount),
+    job: body.job !== undefined ? seanStr(body.job, 80) : (prev?.job || ''),
+  };
+  await seanPut(item);
+  return ok({ revenue: item }, cors);
+}
+
+async function seanSaveMileage(id, body, cors) {
+  const { date, miles, purpose, notes } = body;
+  if (!validDate(date) || !(Number(miles) > 0) || !seanStr(purpose, 200)) return err('Missing required fields', 400, cors);
+  const prev = id ? await seanGet(id) : null;
+  if (id && (!prev || prev.type !== 'mileage')) return err('Not found', 404, cors);
+  // Rate is locked when the entry is first logged; edits never re-rate it.
+  const rate = validMileRate(prev?.rate) || validMileRate(body.rate) || seanConfigOut(await seanGet('__config__')).mileageRate;
+  const item = {
+    ...(prev || {}),
+    id: id || seanId('m'), type: 'mileage', date, miles: Number(miles), purpose: seanStr(purpose, 200), notes: seanStr(notes, 300), rate,
+    job: body.job !== undefined ? seanStr(body.job, 80) : (prev?.job || ''),
+  };
+  await seanPut(item);
+  return ok({ entry: item }, cors);
+}
+
+async function seanSaveRecurring(id, body, cors) {
+  const prev = id ? await seanGet(id) : null;
+  if (id && (!prev || prev.type !== 'recurring')) return err('Not found', 404, cors);
+  const { category, desc, amount, dayOfMonth, active, startMonth } = body;
+  if (!id && !seanAmt(amount)) return err('Missing required fields', 400, cors);
+  if (amount != null && !seanAmt(amount)) return err('Invalid amount', 400, cors);
+  const p = prev || {};
+  const item = {
+    ...p,
+    id: id || seanId('r'), type: 'recurring',
+    category:   category   != null ? (seanStr(category, 60) || 'Other') : (p.category || 'Other'),
+    desc:       desc       != null ? seanStr(desc, 300)    : (p.desc || ''),
+    amount:     amount     != null ? Number(amount)        : p.amount,
+    dayOfMonth: dayOfMonth != null ? clampDay(dayOfMonth)  : clampDay(p.dayOfMonth),
+    startMonth: /^\d{4}-\d{2}$/.test(startMonth || '') ? startMonth : (p.startMonth || currentMonth()),
+    active:     active     != null ? !!active              : (prev ? p.active : true),
+    lastRun:    p.lastRun || '',
+  };
+  await seanPut(item);
+  return ok({ recurring: item }, cors);
+}
+
+async function seanDelete(id, type, cors) {
+  const prev = await seanGet(id);
+  if (!prev || prev.type !== type) return err('Not found', 404, cors);
+  await dynamo.send(new DeleteCommand({ TableName: SEAN_TABLE, Key: { id } }));
+  return ok({ deleted: true }, cors);
+}
+
+// Renaming a job relabels every entry that carries it and the job list, in one request.
+async function seanRenameJob(body, cors) {
+  const from = seanStr(body.from, 80), to = seanStr(body.to, 80);
+  if (!from || !to) return err('Both job names are required', 400, cors);
+  const items = await scanAll(SEAN_TABLE);
+  const hits = items.filter(x => ['expense', 'revenue', 'mileage'].includes(x.type) && x.job === from);
+  for (let i = 0; i < hits.length; i += 10) await Promise.all(hits.slice(i, i + 10).map(x => seanPut({ ...x, job: to })));
+  const prev = items.find(x => x.id === '__config__');
+  const cur = seanConfigOut(prev);
+  const old = cur.jobs.find(j => j.name === from);
+  const jobs = seanJobs([...cur.jobs.filter(j => j.name !== from), { name: to, done: !!old?.done || !!cur.jobs.find(j => j.name === to)?.done }]);
+  const item = { ...(prev || {}), id: '__config__', type: 'config', jobs };
+  await seanPut(item);
+  return ok({ renamed: hits.length, config: seanConfigOut(item) }, cors);
+}
+
+async function seanReceiptUploadUrl(body, cors) {
+  const { filename, contentType, date, amount, category } = body;
+  if (!filename || !contentType) return err('Missing filename or contentType', 400, cors);
+  const ext = filename.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  const safeCat  = (category || 'other').replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').toLowerCase();
+  const safeDate = validDate(date) ? date : new Date().toISOString().slice(0, 10);
+  const safeAmt  = amount != null && !isNaN(amount) ? Number(amount).toFixed(2) : '0.00';
+  // Random suffix: two receipts with the same date/amount/category must never overwrite each other.
+  const key = `${SEAN_RECEIPTS}${safeDate}_${safeAmt}_${safeCat}_${Math.random().toString(36).slice(2, 7)}.${ext}`;
+  const uploadUrl = await getSignedUrl(s3, new PutObjectCommand({ Bucket: RECEIPTS_BUCKET, Key: key, ContentType: contentType }), { expiresIn: 300 });
+  return ok({ uploadUrl, fileUrl: `https://davidnicholsonart.com/${key}` }, cors);
+}
+
+// Bulk import from the page's CSV importer. Rows are parsed and mapped client-side and validated again here.
+async function seanImport(body, cors) {
+  const kind = ['expense', 'revenue', 'mileage'].includes(body.kind) ? body.kind : 'expense';
+  const rows = Array.isArray(body.rows) ? body.rows : [];
+  if (!rows.length) return err('No rows', 400, cors);
+  if (rows.length > 2000) return err('Import at most 2000 rows at a time', 400, cors);
+  const url = (v) => /^https?:\/\//i.test(String(v || '').trim()) ? String(v).trim().slice(0, 1000) : '';
+  const items = [];
+  for (const r of rows) {
+    const bad = () => err(`Invalid row: ${JSON.stringify(r).slice(0, 120)}`, 400, cors);
+    if (!r || !validDate(r.date)) return bad();
+    const job = seanStr(r.job, 80);
+    if (kind === 'mileage') {
+      if (!(Number(r.miles) > 0) || !seanStr(r.purpose, 200)) return bad();
+      const rate = validMileRate(r.rate);
+      items.push({ id: seanId('m'), type: 'mileage', date: r.date, miles: Number(r.miles), purpose: seanStr(r.purpose, 200), notes: seanStr(r.notes, 300), ...(rate ? { rate } : {}), job, imported: true });
+      continue;
+    }
+    if (r.amount == null || r.amount === '' || isNaN(r.amount)) return bad();
+    const amount = Math.abs(Number(r.amount));
+    items.push(kind === 'expense'
+      ? { id: seanId('e'), type: 'expense', date: r.date, category: seanStr(r.category, 60) || 'Other', vendor: seanStr(r.vendor, 80), desc: seanStr(r.desc, 300), amount, tax: seanTax(r.tax, amount), job, receiptUrl: url(r.receiptUrl), imported: true }
+      : { id: seanId('v'), type: 'revenue', date: r.date, stream: seanStr(r.stream, 60) || 'Other income', desc: seanStr(r.desc, 300), amount, job, imported: true });
+  }
+  for (let i = 0; i < items.length; i += 10) await Promise.all(items.slice(i, i + 10).map(seanPut));
+  return ok({ imported: items.length, items }, cors);
+}
+
+// Password change: same scheme as Jill's (scrypt hash on the __config__ row replaces env SEAN_PASSWORD once set).
+// Forgotten password → David deletes the passwordHash attribute in DynamoDB and SEAN_PASSWORD works again.
+async function seanCheckPassword(pw) {
+  if (!pw) return false;
+  const stored = (await seanGet('__config__'))?.passwordHash;
+  if (stored && stored.startsWith('scrypt$')) return safeEqual(jillHash(pw, stored.split('$')[1]), stored);
+  const envPassword = process.env.SEAN_PASSWORD;
+  return !!envPassword && safeEqual(pw, envPassword);
+}
+async function seanChangePassword(body, cors) {
+  const { current, next } = body || {};
+  if (!(await seanCheckPassword(current))) return err('Current password is incorrect', 401, cors);
+  if (typeof next !== 'string' || next.length < 8) return err('New password must be at least 8 characters', 400, cors);
+  const prev = await seanGet('__config__');
+  await seanPut({ ...(prev || {}), id: '__config__', type: 'config', passwordHash: jillHash(next) });
+  return ok({ changed: true }, cors);
+}
+
+async function seanRoute(method, path, event, cors) {
+  const b = () => JSON.parse(event.body || '{}');
+
+  // Public: password check returns SEAN_TOKEN
+  if (method === 'POST' && path === '/admin/sean/verify-password') {
+    const password = b().password;
+    if (!process.env.SEAN_PASSWORD || !SEAN_TOKEN) return err('Server not configured', 500, cors);
+    if (!password) return err('Password required', 400, cors);
+    if (await seanCheckPassword(password)) return ok({ verified: true, token: SEAN_TOKEN }, cors);
+    return err('Incorrect password', 401, cors);
+  }
+
+  if (!checkSeanAuth(event)) return err('Unauthorized', 401, cors);
+
+  if (method === 'GET' && path === '/admin/sean/data')   return await seanGetData(cors);
+  if (method === 'PUT' && path === '/admin/sean/config') return await seanUpdateConfig(b(), cors);
+  if (method === 'POST' && path === '/admin/sean/import') return await seanImport(b(), cors);
+  if (method === 'PUT'  && path === '/admin/sean/password') return await seanChangePassword(b(), cors);
+  if (method === 'POST' && path === '/admin/sean/jobs/rename') return await seanRenameJob(b(), cors);
+  if (method === 'POST' && path === '/admin/sean/expenses/receipt-url') return await seanReceiptUploadUrl(b(), cors);
+  if (method === 'POST' && path === '/admin/sean/recurring/run') {
+    const created = await generateAllRecurring(SEAN_TABLE);
+    return ok({ generated: created.length, expenses: created }, cors);
+  }
+
+  const savers = { expenses: [seanSaveExpense, 'expense'], revenue: [seanSaveRevenue, 'revenue'], mileage: [seanSaveMileage, 'mileage'], recurring: [seanSaveRecurring, 'recurring'] };
+  const m = path.match(/^\/admin\/sean\/(expenses|revenue|mileage|recurring)(?:\/([^/]+))?$/);
+  if (m) {
+    const [save, type] = savers[m[1]];
+    const id = m[2];
+    if (!id && method === 'POST')  return await save(null, b(), cors);
+    if (id && id !== '__config__') {
+      if (method === 'PUT')    return await save(id, b(), cors);
+      if (method === 'DELETE') return await seanDelete(id, type, cors);
+    }
+  }
+  return err('Not found', 404, cors);
+}
+
 // ── Router ──
 export const handler = async (event) => {
   // EventBridge scheduled trigger → generate this month's recurring expenses
@@ -1946,9 +2231,12 @@ export const handler = async (event) => {
     let jillCreated = 0;
     try { jillCreated = (await generateAllRecurring(JILL_TABLE)).length; } catch (e) { console.error('Jill recurring failed:', e.message); }
     console.log('Jill recurring generated:', jillCreated);
+    let seanCreated = 0;
+    try { seanCreated = (await generateAllRecurring(SEAN_TABLE)).length; } catch (e) { console.error('Sean recurring failed:', e.message); }
+    console.log('Sean recurring generated:', seanCreated);
     let online = 0;
     try { online = await syncOnlineOrders(); } catch (e) { console.error('Online order sync failed:', e.message); }
-    return { generated: created.length, jillGenerated: jillCreated, onlineLogged: online };
+    return { generated: created.length, jillGenerated: jillCreated, seanGenerated: seanCreated, onlineLogged: online };
   }
   const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
   const path   = event.requestContext?.http?.path   || event.path       || '/';
@@ -1981,6 +2269,7 @@ export const handler = async (event) => {
     // Jill Nicholson expenses (expenses-jill-nicholson.html) — own password/token/table; must come before
     // the /admin gate. Lives under /admin/ so it rides the existing CloudFront /admin/* behavior.
     if (path.startsWith('/admin/jill/')) return await jillRoute(method, path, event, cors);
+    if (path.startsWith('/admin/sean/')) return await seanRoute(method, path, event, cors);
 
     // Admin password verification — public (no token); must come before the auth-gated /admin block
     if (method === 'POST' && path === '/admin/verify-password') return await adminVerifyPassword(JSON.parse(event.body || '{}'), cors);

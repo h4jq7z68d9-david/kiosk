@@ -15,7 +15,7 @@ const FOCUS = process.argv[2] || null;
 const PORT = 8731;
 const BLOCK = /googletagmanager|google-analytics|facebook\.(com|net)|pinimg|pinterest|doubleclick|googleads/;
 /* Gated or tool pages: logged-out render only — load, no errors, no sideways scroll, gate or UI present. */
-const GATED = [['/admin.html', '#gate', [1440, 390]], ['/expenses-jill-nicholson.html', '#gate', [1440, 390]], ['/kiosk.html', 'body', [1024, 820]], ['/booth.html', 'body', [1440, 820]]];   // kiosk and booth are iPad tools, not phone pages
+const GATED = [['/admin.html', '#gate', [1440, 390]], ['/expenses-jill-nicholson.html', '#gate', [1440, 390]], ['/expenses-sean-pringle.html', '#gate', [1440, 390]], ['/kiosk.html', 'body', [1024, 820]], ['/booth.html', 'body', [1440, 820]]];   // kiosk and booth are iPad tools, not phone pages
 const MAIN_PAGES = ['/', '/gallery.html', '/originals.html', '/shipping.html', '/varied-readings.html', '/study.html',
   '/art-westport-2026.html', '/lawrence-art-in-the-park-2026.html', '/overland-park-2026.html'];
 

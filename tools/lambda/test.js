@@ -6,6 +6,7 @@
 // Invariants (Kiosk-Project-Summary.md → Pending → Lambda route tests):
 //   1. no token → 401 on every /admin/* route, and nothing is read or written
 //   2. JILL_TOKEN is rejected on every /admin/* route; ADMIN_TOKEN is rejected on every /admin/jill/* route
+//   2b. SEAN_TOKEN works only on /admin/sean/*; ADMIN_TOKEN and JILL_TOKEN are rejected there; Sean's data lands only in sean-expenses
 //   3. online checkout (/checkout and /cart) sends exactly SQUARE_LOC and never the Missouri location
 //   4. a gallery print sale decrements dna-gallery-stock, never dna-paintings (a fair sale does the reverse)
 'use strict';
@@ -19,6 +20,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const MISSOURI = 'LHXVQB0QCW9R1';
 const ENV = {
   ADMIN_TOKEN: 'admin-token-test', JILL_TOKEN: 'jill-token-test', PASSWORD: 'admin-pin', JILL_PASSWORD: 'jill-pin-test',
+  SEAN_TOKEN: 'sean-token-test', SEAN_PASSWORD: 'sean-pin-test',
   SQUARE_TOKEN: 'sq-test', SQUARE_LOC: 'TESTLOC00000', SES_FROM: 'test@example.invalid', NOTIFY_EMAIL: 'test@example.invalid',
   API_URL: 'https://davidnicholsonart.com',
 };
@@ -83,6 +85,8 @@ const JILL_ROUTES = [
   ['POST', '/admin/jill/recurring'], ['PUT', '/admin/jill/recurring/x1'], ['DELETE', '/admin/jill/recurring/x1'],
   ['GET', '/admin/jill/nothing-here'],
 ];
+// Every token-gated route in seanRoute: Jill's set under /admin/sean plus the job rename.
+const SEAN_ROUTES = [...JILL_ROUTES.map(([m, p]) => [m, p.replace('/admin/jill/', '/admin/sean/')]), ['POST', '/admin/sean/jobs/rename']];
 
 (async () => {
   register('./hooks.mjs', pathToFileURL(__filename));
@@ -99,14 +103,14 @@ const JILL_ROUTES = [
   check(!src.includes(MISSOURI), `index.mjs: contains the Missouri location id ${MISSOURI} — it must only ever come from Square-side config, never code`);
 
   // ── 1. no token → 401, and no table is touched ──
-  for (const [m, p] of [...ADMIN_ROUTES, ...JILL_ROUTES]) {
+  for (const [m, p] of [...ADMIN_ROUTES, ...JILL_ROUTES, ...SEAN_ROUTES]) {
     stubs.reset();
     const r = await call(m, p, { body: {} });
     check(r.statusCode === 401, `no token: ${m} ${p} → ${r.statusCode}, expected 401`);
     check(stubs.log.length === 0, `no token: ${m} ${p} touched AWS (${stubs.log.map((s) => s.name).join(',')})`);
   }
   // Public /admin/* routes stay public (they sit in front of the gate on purpose).
-  for (const [m, p, body] of [['POST', '/admin/verify-password', { password: 'wrong' }], ['POST', '/admin/jill/verify-password', { password: 'wrong' }]]) {
+  for (const [m, p, body] of [['POST', '/admin/verify-password', { password: 'wrong' }], ['POST', '/admin/jill/verify-password', { password: 'wrong' }], ['POST', '/admin/sean/verify-password', { password: 'wrong' }]]) {
     const r = await call(m, p, { body });
     check(r.statusCode === 401 && JSON.parse(r.body).error === 'Incorrect password', `${p}: wrong PIN should be 401 "Incorrect password", got ${r.statusCode} ${r.body}`);
   }
@@ -204,6 +208,80 @@ const JILL_ROUTES = [
     stubs.reset();
     await call('POST', '/admin/paintings/p1/sales', { token: ENV.ADMIN_TOKEN, body: { type: 'large', channel: 'gallery', price: 100, pct: 50 } });
     check(touched('dna-gallery-stock').length === 0 && touched('dna-paintings').length === 0, 'sale without decrementStock: stock tables were touched');
+  }
+
+  // ── 2b. Sean's page: three-way token wall, own table, job / vendor / tax fields ──
+  {
+    const others = [ENV.ADMIN_TOKEN, ENV.JILL_TOKEN];
+    for (const [m, p] of SEAN_ROUTES) for (const tok of others) {
+      stubs.reset();
+      const r = await call(m, p, { token: tok, body: {} });
+      check(r.statusCode === 401, `${tok} on ${m} ${p} → ${r.statusCode}, expected 401`);
+      check(stubs.log.length === 0, `${tok} on ${m} ${p} touched AWS`);
+    }
+    for (const [m, p] of [...ADMIN_ROUTES, ...JILL_ROUTES]) {
+      stubs.reset();
+      const r = await call(m, p, { token: ENV.SEAN_TOKEN, body: {} });
+      check(r.statusCode === 401, `SEAN_TOKEN on ${m} ${p} → ${r.statusCode}, expected 401`);
+      check(stubs.log.length === 0, `SEAN_TOKEN on ${m} ${p} touched AWS`);
+    }
+    stubs.reset();
+    const v = await call('POST', '/admin/sean/verify-password', { body: { password: ENV.SEAN_PASSWORD } });
+    check(v.statusCode === 200 && JSON.parse(v.body).token === ENV.SEAN_TOKEN, 'sean verify-password: correct password should return SEAN_TOKEN');
+    for (const pw of [ENV.PASSWORD, ENV.JILL_PASSWORD]) {
+      const w = await call('POST', '/admin/sean/verify-password', { body: { password: pw } });
+      check(w.statusCode === 401, `sean verify-password accepted another page's password (${pw})`);
+    }
+    const jp = await call('POST', '/admin/jill/verify-password', { body: { password: ENV.SEAN_PASSWORD } });
+    check(jp.statusCode === 401, "jill verify-password accepted Sean's password");
+
+    const T = { token: ENV.SEAN_TOKEN };
+    const J = (r) => JSON.parse(r.body);
+    stubs.reset();
+    const d0 = J(await call('GET', '/admin/sean/data', T));
+    check(d0.config.threshold1099 === 2000 && d0.config.categories.includes('Subcontractors') && Array.isArray(d0.config.jobs) && d0.config.jobs.length === 0, `sean defaults: ${JSON.stringify(d0.config).slice(0, 200)}`);
+
+    const e1 = J(await call('POST', '/admin/sean/expenses', { ...T, body: { date: '2026-11-20', category: 'Lumber & Trim Stock', vendor: ' Mill Co ', desc: 'casing', amount: 108.5, tax: 8.5, job: ' Henderson ' } })).expense;
+    check(e1 && e1.job === 'Henderson' && e1.vendor === 'Mill Co' && e1.tax === 8.5 && e1.amount === 108.5 && e1.type === 'expense', `sean expense save: ${JSON.stringify(e1)}`);
+    const e2 = J(await call('POST', '/admin/sean/expenses', { ...T, body: { date: '2026-11-21', category: 'Insurance', amount: 50, tax: 80 } })).expense;
+    check(e2.tax === 0 && e2.job === '' && e2.vendor === '', `sean expense: tax above amount must store 0, no job = overhead: ${JSON.stringify(e2)}`);
+    const neg = await call('POST', '/admin/sean/expenses', { ...T, body: { date: '2026-11-21', amount: -5 } });
+    check(neg.statusCode === 400, `sean expense: negative amount → ${neg.statusCode}, expected 400`);
+    // An edit that omits job/vendor/tax keeps them; an edit that sends job '' clears it.
+    const e1b = J(await call('PUT', '/admin/sean/expenses/' + e1.id, { ...T, body: { date: '2026-11-20', category: 'Lumber & Trim Stock', amount: 108.5 } })).expense;
+    check(e1b.job === 'Henderson' && e1b.vendor === 'Mill Co' && e1b.tax === 8.5, `sean expense edit dropped fields: ${JSON.stringify(e1b)}`);
+    const rv = J(await call('POST', '/admin/sean/revenue', { ...T, body: { date: '2026-11-22', stream: 'Deposits', amount: 2600, job: 'Henderson' } })).revenue;
+    const mi = J(await call('POST', '/admin/sean/mileage', { ...T, body: { date: '2026-11-22', miles: 40, purpose: 'Site visit', job: 'Henderson' } })).entry;
+    check(rv.job === 'Henderson' && mi.job === 'Henderson' && mi.rate === 0.7, `sean revenue/mileage job: ${JSON.stringify([rv, mi])}`);
+    const cfg = J(await call('PUT', '/admin/sean/config', { ...T, body: { jobs: [{ name: 'Henderson', done: true }, 'henderson', { name: ' Morales ' }, { name: '' }], threshold1099: 2100 } })).config;
+    check(cfg.jobs.length === 2 && cfg.jobs[0].done === true && cfg.jobs[1].name === 'Morales' && cfg.threshold1099 === 2100, `sean config jobs: ${JSON.stringify(cfg.jobs)}`);
+    const rn = J(await call('POST', '/admin/sean/jobs/rename', { ...T, body: { from: 'Henderson', to: 'Henderson crown' } }));
+    const d1 = J(await call('GET', '/admin/sean/data', T));
+    check(rn.renamed === 3 && [...d1.expenses, ...d1.revenue, ...d1.mileage].filter((x) => x.job === 'Henderson crown').length === 3 && !JSON.stringify(d1).includes('"job":"Henderson"'), `sean job rename: renamed ${rn.renamed}`);
+    check(d1.config.jobs.some((j) => j.name === 'Henderson crown' && j.done) && !d1.config.jobs.some((j) => j.name === 'Henderson') && d1.config.threshold1099 === 2100, `sean job rename config: ${JSON.stringify(d1.config.jobs)}`);
+    const im = J(await call('POST', '/admin/sean/import', { ...T, body: { kind: 'expense', rows: [{ date: '2026-10-01', amount: -20, tax: 1.5, vendor: 'Ace', job: 'Morales', category: 'Job Supplies' }] } }));
+    check(im.imported === 1 && im.items[0].amount === 20 && im.items[0].tax === 1.5 && im.items[0].job === 'Morales' && im.items[0].vendor === 'Ace', `sean import: ${JSON.stringify(im.items)}`);
+    const del = await call('DELETE', '/admin/sean/revenue/' + e1.id, T);
+    check(del.statusCode === 404, 'sean delete: an expense id on the revenue route must be 404');
+    const delCfg = await call('DELETE', '/admin/sean/expenses/__config__', T);
+    check(delCfg.statusCode === 404 && stubs.table('sean-expenses').has('__config__'), 'sean delete: __config__ must not be deletable');
+    await call('POST', '/admin/sean/expenses/receipt-url', { ...T, body: { filename: 'r.jpg', contentType: 'image/jpeg', date: '2026-11-20', amount: 5, category: 'Other' } });
+    const s3put = sends((s) => s.name === 'PutObjectCommand');
+    check(s3put.length === 0 || s3put.every((s) => s.input.Key.startsWith('receipts/sean/')), 'sean receipt key must sit under receipts/sean/');
+    const tablesHit = new Set(sends((s) => s.input?.TableName).map((s) => s.input.TableName));
+    check(tablesHit.size === 1 && tablesHit.has('sean-expenses'), `sean routes touched tables other than sean-expenses: ${[...tablesHit].join(',')}`);
+    // Password change: hash on Sean's own row; Jill's password still does not work here.
+    const pc = await call('PUT', '/admin/sean/password', { ...T, body: { current: ENV.SEAN_PASSWORD, next: 'new-sean-password' } });
+    const v2 = await call('POST', '/admin/sean/verify-password', { body: { password: 'new-sean-password' } });
+    const v3 = await call('POST', '/admin/sean/verify-password', { body: { password: ENV.SEAN_PASSWORD } });
+    check(pc.statusCode === 200 && v2.statusCode === 200 && v3.statusCode === 401, `sean password change: ${pc.statusCode}/${v2.statusCode}/${v3.statusCode}`);
+    const d2 = J(await call('GET', '/admin/sean/data', T));
+    check(!JSON.stringify(d2).includes('scrypt') && d2.config.jobs.length === 2, 'sean /data must not expose the password hash, and a password change must keep the config');
+    // Scheduled run covers Sean's table too.
+    stubs.reset();
+    stubs.table('sean-expenses').set('r1', { id: 'r1', type: 'recurring', active: true, amount: 148, category: 'Insurance', desc: 'GL', dayOfMonth: 12, startMonth: new Date().toISOString().slice(0, 7) });
+    const sched = await handler({ task: 'recurring' });
+    check(sched.seanGenerated === 1 && [...stubs.table('sean-expenses').values()].some((x) => x.type === 'expense' && x.recurringId === 'r1'), `scheduled recurring for Sean: ${JSON.stringify(sched)}`);
   }
 
   // ── report ──
