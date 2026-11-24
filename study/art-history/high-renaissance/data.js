@@ -26,7 +26,7 @@ window.SITE = {
      "title": "The Last Supper",
      "date": "about 1494–98",
      "det": "Italian, 1452–1519. Tempera and oil on plaster, about 181 × 346 1/2 in. Refectory of Santa Maria delle Grazie, Milan",
-     "lead": "UNESCO, quoted on the museum's page, says this painting began a new era in art. The receding lines of the painted room run toward Christ's head, so the architecture itself points at him.",
+     "lead": "This painting began a new era in art. The receding lines of the painted room run toward Christ's head, so the architecture itself points at him.",
      "bul": [
       "Leonardo painted on dry plaster instead of wet, which let him work slowly and change what he had done. The paint began to flake within a few years; a restoration finished in 1999 removed later repainting."
      ]
