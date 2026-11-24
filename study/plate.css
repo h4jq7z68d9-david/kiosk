@@ -41,7 +41,6 @@
 .plate .scalerow{margin-top:12px;position:relative}
 .plate .scalebtn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--accent);border-radius:0;color:var(--accent);padding:0;cursor:pointer}
 .plate .scalebtn svg{width:18px;height:18px}
-.plate .scalebtn[aria-expanded="true"]{background:var(--accent);color:#fff}
 .plate .scalecard{position:absolute;left:0;top:calc(100% + 10px);width:100%;z-index:5;background:#fff;border:1px solid var(--border-mid);border-radius:0;box-shadow:none;padding:18px 34px 14px 18px}
 .plate .scalecard[hidden]{display:none}
 .plate .scalecard .scale{display:block}
