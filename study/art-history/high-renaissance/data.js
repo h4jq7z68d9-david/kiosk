@@ -1,7 +1,7 @@
 window.SITE = {
  "title": "High Renaissance",
  "sections": {
-  "1": "Italy, 1481–1538"
+  "1": "Italy, 1481–1518"
  },
  "handouts": [
   {
@@ -25,8 +25,8 @@ window.SITE = {
      "artist": "Leonardo da Vinci",
      "title": "The Last Supper",
      "date": "about 1494–98",
-     "det": "Italian, 1452–1519. Tempera and oil on dry plaster, about 189 × 346 1/2 in. Refectory of Santa Maria delle Grazie, Milan",
-     "lead": "The museum that keeps it says this painting began a new era in art. Every line of the painted room runs toward Christ's head, so the architecture itself points at him.",
+     "det": "Italian, 1452–1519. Tempera and oil on plaster, about 189 × 346 1/2 in. Refectory of Santa Maria delle Grazie, Milan",
+     "lead": "The museum that keeps it says this painting began a new era in art. The receding lines of the painted room run toward Christ's head, so the architecture itself points at him.",
      "bul": [
       "Leonardo painted on dry plaster instead of wet, which let him work slowly and change what he had done. The paint began to flake within a few years; a restoration finished in 1999 removed later repainting."
      ]
@@ -38,9 +38,9 @@ window.SITE = {
      "title": "Mona Lisa",
      "date": "1503–19",
      "det": "Oil on poplar panel, 31 1/4 × 21 in. Musée du Louvre, Paris",
-     "lead": "The edges of the face fade into shadow with no drawn line, a method called sfumato. Painters of the time, the young Raphael among them, drew on it for their own portraits.",
+     "lead": "The edges of the face fade into shadow with no drawn line, a method called sfumato. Painters of the time, the young Raphael among them, drew on this portrait for their own.",
      "bul": [
-      "Begun by October 1503 and still unfinished when Leonardo died. Old, yellowed varnish now turns the blue of the sky toward green and darkens the lower half."
+      "Leonardo began it by October 1503 and had not finished it when he died. Old, yellowed varnish now turns the blue of the sky toward green and darkens the lower part."
      ]
     },
     {
@@ -61,8 +61,8 @@ window.SITE = {
      "artist": "Raphael",
      "title": "The School of Athens",
      "date": "about 1509–11",
-     "det": "Fresco, about 196 3/4 × 303 1/4 in. Stanza della Segnatura, Vatican",
-     "lead": "The Vatican Museums date the start of the High Renaissance to the frescoes in this room. The arches shrink, one inside the next, toward two men at the center, so a large crowd stays easy to read.",
+     "det": "Italian, 1483–1520. Fresco, about 196 3/4 × 303 1/4 in. Stanza della Segnatura, Vatican",
+     "lead": "The Vatican Museums date the start of the High Renaissance to the frescoes in this room. The arches shrink, one inside the next, toward two men at the center.",
      "bul": [
       "Painted for Pope Julius II in a room he used as his library. The hall was inspired by Bramante's design for rebuilding St. Peter's. Raphael's cartoon for the figures survives in Milan."
      ]
@@ -74,7 +74,7 @@ window.SITE = {
      "title": "The Libyan Sibyl",
      "date": "about 1511–12",
      "det": "Fresco, about 178 3/4 × 149 1/2 in. (her section of the ceiling). Sistine Chapel ceiling, Vatican",
-     "lead": "The shoulders turn away while the knees face front, so the seated figure looks caught in the middle of a turn. The bright color of this part of the ceiling influenced the next generation of painters.",
+     "lead": "The shoulders turn away while the knees face front, so the seated figure looks caught in the middle of a turn. Michelangelo's color in this half of the ceiling influenced many of the painters later called Mannerists.",
      "bul": [
       "Painted in about twenty daily sections of plaster. A red chalk study for the pose, drawn from a male model, is in the Metropolitan Museum of Art, New York."
      ]
@@ -86,7 +86,7 @@ window.SITE = {
      "title": "The Sistine Madonna",
      "date": "1512–13",
      "det": "Oil on canvas, 106 × 79 1/4 in. Gemäldegalerie Alte Meister, Dresden",
-     "lead": "Curtains at the top and a ledge at the bottom make the scene look like a view through a window. Since about 1800, the two small angels on the ledge have been copied on their own, apart from the painting.",
+     "lead": "Curtains at the top and a ledge at the bottom make the scene look like a vision seen past a drawn curtain. Since about 1800, the two small angels on the ledge have been copied on their own.",
      "bul": [
       "Painted for the high altar of the convent church of San Sisto in Piacenza, most likely on the order of Pope Julius II. Raphael added the two angels last."
      ]

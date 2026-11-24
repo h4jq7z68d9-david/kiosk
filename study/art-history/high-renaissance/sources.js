@@ -69,8 +69,8 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/337497"
     },
     {
-     "html": "Vatican Museums. “Ceiling.” Sistine Chapel.",
-     "url": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta.html"
+     "html": "Vatican Museums. “Handing over of the Keys.” Sistine Chapel, north wall.",
+     "url": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/parete-nord/storie-di-cristo/consegna-delle-chiavi.html"
     },
     {
      "html": "Vatican Museums. “History of the Sistine Chapel.”",
@@ -120,6 +120,10 @@ window.SOURCES = {
     {
      "html": "National Gallery, London. “Michelangelo.” Artist page. Accessed November 20, 2026.",
      "url": "https://www.nationalgallery.org.uk/artists/Michelangelo"
+    },
+    {
+     "html": "National Gallery, London. “Pietro Perugino.” Artist page. Accessed November 20, 2026.",
+     "url": "https://www.nationalgallery.org.uk/artists/pietro-perugino"
     }
    ]
   }
