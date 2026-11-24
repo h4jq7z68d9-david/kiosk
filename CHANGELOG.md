@@ -4,6 +4,16 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 24 2026) — High Renaissance thinning pilot and plate viewer (branch, not pushed)
+
+- High Renaissance cut from 16 works to 7 (Last Supper, Mona Lisa, Doni Tondo, School of Athens, Libyan Sibyl, Sistine Madonna, Assumption) plus an intro on Perugino's *Christ Giving the Keys*, sources and credits. Main texts one to two sentences, no `look` bullets, history line kept, sizes in inches. Section label and dates now "Italy, 1481–1518"; nine dropped pages and the moved kept pages redirect through `retired-urls.tsv` (16 stubs).
+- Sizes sourced: Last Supper 460 × 880 cm (Museo del Cenacolo Vinciano; page had 480 × 880 in error, corrected to 181 × 346 1/2 in.); Libyan Sibyl section 4.54 × 3.80 m (Met essay on the preparatory studies); School of Athens 500 × 770 cm from agreeing reference sources. Raphael "Italian": Met biography pages.
+- Two fact-review rounds by independent agents; wording fixes applied.
+- New plate viewer (`study/plate.css`, `study/plate.js`, `"viewer": "plate"` in the course settings, plate branches in `build-course.js`): painting left, ruled label at lower right, scale-box opening a card with a 5 ft 8 in person (SVG built from the size line), bottom bar of icon buttons, floating outline and search. `check.js` knows the two new versioned files; `smoke.js` opens the search button before typing when the field is hidden.
+- check.js and smoke.js PASS (18 courses). Commits on `thinning-pilot-high-renaissance`; not pushed.
+
+-----
+
 ## Completed This Session (November 21 2026) — Northern Renaissance installed
 
 - New art history course `northern-renaissance` (Mode 2): 23 works, 1 section "Northern Europe, 1427–1568", 1 part; 26 pages, 23 images (9.6 MB). 24 slides, over the 20-slide cap, on David's instruction for this course only. Registry: after High Renaissance, before Japanese Woodblock Prints; card image `eyck-arnolfini`. Painting and printmaking in the Netherlands and Germany.
