@@ -94,6 +94,10 @@ window.SOURCES = {
    "title": "References",
    "items": [
     {
+     "html": "<em>Encyclopaedia Britannica</em>. “Perugino.” Accessed November 24, 2026.",
+     "url": "https://www.britannica.com/biography/Perugino"
+    },
+    {
      "html": "Cecchini, Isabella. “I Frari senza l'Assunta: Le vicende del trasferimento della pala di Tiziano alle Gallerie dell'Accademia nel 1816–1817.” In <em>Canova, Tiziano e la Basilica dei Frari a Venezia nell'Ottocento</em>, 80–97. Treviso: Edizioni Ca' Foscari / ZeL, 2017.",
      "url": "https://arca.unive.it/retrieve/e4239ddc-ab00-7180-e053-3705fe0a3322/2017_L%27Assunta%20e%20i%20Frari_Cecchini.pdf"
     },

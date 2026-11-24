@@ -15,7 +15,7 @@ window.SITE = {
      "Christ Giving the Keys to Saint Peter",
      "1481–82"
     ],
-    "sum": "High Renaissance is the name for Italian painting of the early 1500s, made mainly in Florence, Rome, and Venice.",
+    "sum": "High Renaissance is the name for Italian painting of the early 1500s, made mainly in Florence, Rome, and Venice. Perugino, Raphael's teacher, painted this fresco in the Sistine Chapel a generation before the works that follow.",
     "bul": []
    },
    "slides": [
