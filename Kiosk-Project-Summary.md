@@ -552,6 +552,19 @@ Standalone expenses/revenue page for David's sister Jill (counseling practice, s
 - **Session:** token kept in `sessionStorage` (survives reload, cleared on tab close/sign-out)
 - **Privacy copy:** receipt and revenue forms tell her not to enter client names/session details — receipts are readable by anyone with the CloudFront URL, same as DNA receipts.
 
+### expenses-sean-pringle.html (Sean's expenses — added November 24 2026)
+
+Standalone expenses/revenue page for Sean Pringle (trim carpenter, Colorado; LLC or S-corp, so no Schedule C mapping). A copy of Jill's page with the same structure and self-serve features (welcome, 20-step tour, Settings, import, password change, `?preview`, no-cache upload in `deploy.yml`). **Fully separate:** routes `/admin/sean/*` (`seanRoute()`, dispatched before the `/admin` gate), env `SEAN_PASSWORD` + `SEAN_TOKEN`, table `sean-expenses` (PK `id`, String), receipts under `receipts/sean/`. `SEAN_TOKEN` works only on `/admin/sean/*`; `ADMIN_TOKEN` and `JILL_TOKEN` are refused there (route tests assert all three directions). Jill's page and `jill*` code were not changed; Sean's backend is its own section, not a shared module.
+
+- **URL:** `https://davidnicholsonart.com/expenses-sean-pringle.html` (noindex; not linked from the site). Badge reads "Expenses".
+- **Jobs (direction A, David, Nov 24 2026):** every expense, revenue entry and trip has an optional `job` (a name; blank = overhead). Job column + job filter on Expenses and Revenue; entry forms offer open jobs and "+ New job…". Job list = `__config__.jobs` (`[{ name, done }]`) plus any name found on an entry; Done only hides a job from the pick lists. Rename goes through `POST /admin/sean/jobs/rename` (relabels entries and the list). A job with entries cannot be removed.
+- **Expense fields added:** `vendor`, `tax` (sales tax paid, part of `amount`; stored 0 if above the amount).
+- **Reports added:** Profit by job (expenses, mileage, revenue, profit, margin; an Overhead row; Total equals the Net income card), 1099 contractor totals (one category, `__config__.cat1099`, default "Subcontractors", by calendar year and vendor; vendors at or over `threshold1099`, default 2000 for 2026 payments, are marked), Sales tax paid by month (labelled a rough summary, not a filing record). Each has a CSV; the detail CSVs gained Job, Vendor and Sales tax columns.
+- **Import:** adds Job and Sales tax columns; vendor is stored in its own field. No Hurdlr-specific wording.
+- **Recurring:** generated expenses carry no job or vendor (overhead).
+- **Later (David):** direction B, a Jobs tab with one card per job, "at some point".
+- **Not verified as of Nov 24 2026:** real S3 receipt upload under `receipts/sean/`, a real iPhone, and whether the draft categories fit Sean.
+
 ### varied-readings.html (show page)
 
 - Standalone retrospective page for the Varied Readings show (Phoenix Gallery, Lawrence KS, April 2026)
@@ -619,6 +632,7 @@ An earlier "always draw from the largest remaining group" greedy was tried and *
 |`dna-expenses`     |Expenses and mileage — single table, `type` field = `expense` or `mileage`  |
 |`dna-booth-layouts`|Art fair wall layout plans — `id` (PK), `title`, `wallsJson`, `updatedAt`   |
 |`jill-expenses`    |Jill's practice books (expenses-jill-nicholson.html) — single table, `type` = `expense` / `revenue` / `mileage` / `recurring`, plus `__config__` (`categories`, `streams`, `mileageRate`, `onboarded`). PK `id` (String). Never mixed with `dna-*`.|
+|`sean-expenses`    |Sean's expenses (expenses-sean-pringle.html) — single table, `type` = `expense` / `revenue` / `mileage` / `recurring`, plus `__config__` (`categories`, `streams`, `mileageRate`, `threshold1099`, `cat1099`, `jobs`, `onboarded`). PK `id` (String). Never mixed with DNA or Jill data.|
 
 All tables: PAY_PER_REQUEST, us-east-1.
 

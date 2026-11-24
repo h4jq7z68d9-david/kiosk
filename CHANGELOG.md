@@ -4,6 +4,14 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 24 2026) — Sean Pringle expenses page
+
+- New page `expenses-sean-pringle.html`, a separate copy of Jill's page for Sean Pringle (trim carpenter, Colorado), with its own `/admin/sean/*` routes, table `sean-expenses`, env `SEAN_PASSWORD` / `SEAN_TOKEN` and receipts prefix `receipts/sean/`. David created the table, the role's inline policy `sean-expenses-access` and both environment variables in the console the same day.
+- Added over Jill's page: an optional job on every entry (direction A: job column and filter; David wants direction B, a Jobs tab, later), vendor and sales tax on expenses, and three reports with CSVs: Profit by job, 1099 contractor totals ($2,000 threshold for 2026 payments, editable) and Sales tax paid.
+- `tools/lambda/test.js`: Sean's routes added to the no-token and wrong-token walls in all three directions, plus field, rename, import, password and scheduled-recurring cases (516 assertions). `check.js` skips the page like the other gated pages; `smoke.js` loads it logged-out at 1440/390; `deploy.yml` uploads it with `no-cache`.
+- Headless run of the page against the real handler with the in-memory stubs: 72 checks (kept outside the repo).
+- Jill's page and her backend code were not changed.
+
 ## Completed This Session (November 24 2026) — High Renaissance thinning pilot and plate viewer
 
 - High Renaissance cut from 16 works to 7 (Last Supper, Mona Lisa, Doni Tondo, School of Athens, Libyan Sibyl, Sistine Madonna, Assumption) plus an intro on Perugino's *Christ Giving the Keys*, sources and credits. Main texts one to two sentences, no `look` bullets, history line kept, sizes in inches. Section label and dates now "Italy, 1481–1518"; nine dropped pages and the moved kept pages redirect through `retired-urls.tsv` (16 stubs).
