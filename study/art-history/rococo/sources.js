@@ -5,10 +5,6 @@ window.SOURCES = {
    "title": "Lectures",
    "items": [
     {
-     "html": "Hutson, James. &ldquo;1 Rococo in France.&rdquo; Lecture series. YouTube video, 2024.",
-     "url": "https://www.youtube.com/watch?v=mqD4XEQlY4M"
-    },
-    {
      "html": "Ilchman, Frederick. &ldquo;Casanova&rsquo;s Europe: Venice.&rdquo; Lecture, Museum of Fine Arts, Boston, June 19, 2018. YouTube video.",
      "url": "https://www.youtube.com/watch?v=ocj71ANJo-g"
     },

@@ -9,9 +9,6 @@ window.SOURCES = {
      "url": "https://www.youtube.com/watch?v=zR24Coi1ZGA"
     },
     {
-     "html": "Hutson, James. “Renaissance Art.” Course lectures, Lindenwood University, 2026."
-    },
-    {
      "html": "National Gallery of Art. “Empire of the Eye: The Magic of Illusion: The Trinity—Masaccio, Part 2.” 2014. YouTube video.",
      "url": "https://www.youtube.com/watch?v=G6A9Mg3yAu0"
     }

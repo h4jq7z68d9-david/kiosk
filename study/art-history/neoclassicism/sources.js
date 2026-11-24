@@ -17,10 +17,6 @@ window.SOURCES = {
      "url": "https://www.youtube.com/watch?v=tNXonLqnZOY"
     },
     {
-     "html": "Hutson, James. &ldquo;4 Neoclassicism &ndash; David.&rdquo; Lecture series. YouTube video, 2024.",
-     "url": "https://www.youtube.com/watch?v=OrLZLYeXlWU"
-    },
-    {
      "html": "Rosenblum, Robert. &ldquo;Reinterpreting David.&rdquo; Lecture, New York Studio School, December 15, 1993. YouTube video.",
      "url": "https://www.youtube.com/watch?v=J1zRq8slJZ0"
     },

@@ -105,3 +105,10 @@
 @media (max-width:700px){.plate .bar .tog span{display:none}.plate .bar .pos{display:block}}
 
 .plate .scalecard{scroll-margin-bottom:calc(var(--bar-h) + 16px)}
+
+/* scale box at the upper right corner of the label (David, Nov 24 2026); the card still opens under the details line */
+.plate .slide:not(.text) .scalerow{position:static;margin-top:0;height:0}
+.plate .slide:not(.text) .scalebtn{position:absolute;top:0;right:0}
+.plate .slide:not(.text) .scalecard{top:auto;margin-top:10px}
+.plate .slide:not(.text) .artist,.plate .slide:not(.text) .title{padding-right:42px}
+@media (max-width:900px){.plate .slide:not(.text) .scalerow{height:auto}.plate .slide:not(.text) .scalebtn{top:22px;right:var(--pad)}}

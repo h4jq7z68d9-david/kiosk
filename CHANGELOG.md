@@ -13,6 +13,8 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 - Fact review round 3 (68 pass, 9 fix, 1 fail): six wording fixes applied (Last Supper claim credited to UNESCO; Doni, School of Athens, Assumption, Libyan Sibyl, Sistine Madonna lines); three references added to the Sources page. David loosened the fact standard (legitimate source or agreeing sites, museum wins conflicts), which settles the School of Athens size and the intro's three cities.
 - check.js and smoke.js PASS (18 courses). Pushed to main Nov 24 (a6946f5), deploy green. Intro gained a Perugino line; Last Supper lead states its claim plainly.
 
+- Later the same day: scale box moved to the upper right corner of the label (`plate.css`). James Hutson's lecture entries removed from the Sources pages of five courses (Early, High and Northern Renaissance, Neoclassicism, Rococo) on David's instruction: he is not to be cited as a source anywhere.
+
 -----
 
 ## Completed This Session (November 21 2026) — Northern Renaissance installed

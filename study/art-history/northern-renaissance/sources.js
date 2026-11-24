@@ -1,14 +1,6 @@
 window.SOURCES = {
- "intro": "The text of this course was compiled for general readers from the sources below. The facts come from the museums' own records and the reference entries; the lectures shaped what was included; the wording is new.",
+ "intro": "The text of this course was compiled for general readers from the sources below. The facts come from the museums' own records and the reference entries; the wording is new.",
  "groups": [
-  {
-   "title": "Lectures",
-   "items": [
-    {
-     "html": "Hutson, James. “Renaissance Art.” Course lectures, Lindenwood University, 2026."
-    }
-   ]
-  },
   {
    "title": "Museum records",
    "items": [
