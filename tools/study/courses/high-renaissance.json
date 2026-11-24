@@ -8,5 +8,6 @@
  "sourcesDescription": "Lectures, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
  "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
- "introImg": "perugino-keys"
+ "introImg": "perugino-keys",
+ "viewer": "plate"
 }

@@ -1,0 +1,107 @@
+/* Plate viewer (settings "viewer": "plate"; High Renaissance pilot, Nov 24 2026). Loaded after guide.css, only on courses that ask for it.
+   Painting large at left; the label (artist, italic title, date, details) at its lower right; a small box with a figure-and-frame icon
+   in place of the first short rule opens the scale card; then the main text, a short rule, the history line, the image credit.
+   Bottom bar: outline button (opens a floating list), count, search, bookmark, previous and next as square icon buttons.
+   No box, no shadow, no rounded cards, no grey slab behind the image, no small capitals, no progress ticks. */
+.plate{--pad:60px;--bar-h:56px}
+.plate .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.plate.guide-page{padding-left:0;padding-right:0;padding-bottom:calc(var(--bar-h) + 16px)}
+.plate.guide-page .app{display:block;max-width:none;margin:0;padding:0 var(--pad)}
+.plate .rail,.plate .topcrumb,.plate .jump,.plate .jbtn{display:none}
+.plate.guide-page .main{height:auto;display:block}
+.plate .slide,.plate .slide.text{display:grid;background:none;border:0;border-radius:0;min-height:0;flex:none;overflow:visible;-webkit-mask-image:none;animation:none;grid-template-columns:auto minmax(260px,340px);justify-content:start;align-items:end;gap:44px;padding-top:12px}
+.plate.guide-page .slide:not(.text){grid-template-columns:auto minmax(260px,340px)}
+.plate .slide.text{display:block;padding-top:12px}
+.plate .slide>.pic,.plate .slide>.notes{border-radius:0}
+.plate .pic{background:none;padding:0;min-height:0;display:block;align-self:start}
+.plate .pic img{display:block;width:auto;height:auto;box-shadow:none;cursor:zoom-in;
+  max-height:calc(100vh - var(--nav-h) - var(--bar-h) - 56px);max-height:calc(100dvh - var(--nav-h) - var(--bar-h) - 56px);
+  max-width:calc(100vw - var(--pad)*2 - 44px - 340px)}
+.plate .notes{padding:0;gap:0;overflow:visible;min-height:0;position:relative;font-family:var(--font)}
+.plate .slide.text .notes{max-width:900px;padding-bottom:30px}
+.plate .artist{font-weight:500;font-size:15px;color:var(--ink)}
+.plate .title,.plate .title.plain{font-family:var(--font);font-style:italic;font-weight:500;font-size:23px;line-height:1.2;margin:2px 0 4px;color:var(--ink)}
+.plate .htitle{font-family:var(--font);font-weight:500;font-size:27px;line-height:1.2;color:var(--ink)}
+.plate .date{font-family:var(--font);font-size:15px;color:var(--ink2)}
+.plate .det{font-size:13px;color:var(--ink3);margin-top:6px;line-height:1.45}
+.plate .sum{font-family:var(--font);font-size:15.5px;line-height:1.5;margin-top:14px;max-width:none}
+.plate .htitle+.sum{margin-top:14px}
+.plate .slide.text .sum{max-width:640px;color:var(--ink2)}
+.plate .rule{width:48px;max-width:48px;height:0;border:0;border-top:1px solid var(--ink3);background:none;margin:16px 0 0;opacity:1}
+.plate ul.b{list-style:none;padding:0;margin-top:14px;font-size:14.5px;gap:8px}
+.plate .rule+ul.b{margin-top:12px}
+.plate .det a,.plate .cred a{color:var(--accent)}
+.plate .crl{margin:16px 0 0;padding:0;font-size:12px;color:var(--ink3)}
+.plate .crl a{color:var(--ink3)}
+.plate .lab{font-size:15px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink);margin-top:26px}
+.plate .cred{font-size:14px;color:var(--ink2);gap:8px}
+.plate .cred div{border-top:0;padding-top:0}
+.plate .cred b{font-weight:500;color:var(--ink)}
+/* scale box and card */
+.plate .scalerow{margin-top:12px;position:relative}
+.plate .scalebtn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--accent);border-radius:0;color:var(--accent);padding:0;cursor:pointer}
+.plate .scalebtn svg{width:18px;height:18px}
+.plate .scalebtn[aria-expanded="true"]{background:var(--accent);color:#fff}
+.plate .scalecard{position:absolute;left:0;top:calc(100% + 10px);width:100%;z-index:5;background:#fff;border:1px solid var(--border-mid);border-radius:0;box-shadow:none;padding:18px 34px 14px 18px}
+.plate .scalecard[hidden]{display:none}
+.plate .scalecard .scale{display:block}
+.plate .scalecard .scale .fig{fill:var(--ink3);opacity:.6}
+.plate .scalecard .scale line{stroke:var(--ink3);stroke-width:1}
+.plate .scalecard .scale .o{fill:none;stroke:var(--ink);stroke-width:.75}
+.plate .scalecard p{font-size:13px;color:var(--ink3);margin-top:10px}
+.plate .scalecard .x{position:absolute;top:6px;right:6px;background:none;border:0;padding:6px;color:var(--ink2);cursor:pointer;line-height:0}
+.plate .scalecard .x svg{width:16px;height:16px}
+/* bottom bar */
+.plate .bar,.plate.guide-page>.bar{position:fixed;left:0;right:0;bottom:0;z-index:70;height:var(--bar-h);margin:0;display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:20px;
+  background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border-top:1px solid var(--border);padding:0 var(--pad)}
+.plate .bar .btn{display:flex;align-items:center;justify-content:center;gap:10px;background:none;border:0;border-radius:0;color:var(--ink);font:inherit;font-weight:400;padding:8px 0;height:auto}
+.plate .bar .btn svg{width:20px;height:20px;stroke-width:1.6}
+.plate .bar .tog{order:0;font-size:15px;display:flex}
+.plate .bar .pos{order:1;font-size:14px;color:var(--ink3)}
+.plate .bar .spacer{order:2;flex:1;display:block}
+.plate .bar .sbtn{order:3}
+.plate .bar .bm{order:4}
+.plate .bar .bm .bmt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.plate .bar #prev,.plate .bar #next{width:44px;height:40px;padding:0;border:1px solid var(--border-mid);order:5}
+.plate .bar #next{order:6;margin-left:-14px;background:var(--accent);border-color:var(--accent);color:#fff}
+.plate .bar #prev[aria-disabled="true"],.plate .bar #next[aria-disabled="true"]{opacity:.35;pointer-events:none}
+.plate .bar .bm[aria-pressed="true"]{color:var(--accent)}
+/* floating outline list (opens from the bar's outline button) */
+.plate .app:not(.collapsed) .rail,.plate.guide-page .app:not(.collapsed) .rail{display:block;position:fixed;left:var(--pad);bottom:calc(var(--bar-h) + 10px);top:auto;width:310px;max-height:calc(100vh - var(--nav-h) - var(--bar-h) - 30px);max-height:calc(100dvh - var(--nav-h) - var(--bar-h) - 30px);
+  background:#fff;border:1px solid var(--border-mid);border-radius:0;box-shadow:none;padding:12px 0;z-index:90;overflow:auto}
+.plate .rail .brand{display:none}
+.plate .rail .wk{margin:8px 18px 4px;font-size:.78rem;letter-spacing:0;text-transform:none;font-weight:500;color:var(--ink3)}
+.plate .rail .items{display:block;padding:0}
+.plate .rail .items a,.plate .rail .ho{display:block;padding:5px 18px;color:var(--ink2);font:400 15px var(--font);text-decoration:none;border-radius:0}
+.plate .rail .items a[aria-current="page"],.plate .rail .ho[aria-current="page"]{color:var(--accent);font-weight:500;box-shadow:inset 3px 0 var(--accent);background:none}
+.plate .rail p{margin:0}
+.plate .rail .wk:first-child{display:none}
+/* floating search */
+.plate .topbar{display:none}
+.plate.searchopen .topbar{display:flex;position:fixed;left:var(--pad);bottom:calc(var(--bar-h) + 10px);width:min(480px,calc(100vw - 32px));z-index:90;background:#fff;border:1px solid var(--border-mid);padding:10px;gap:8px}
+.plate.searchopen .topbar .search{flex:1}
+.plate .results{top:auto;bottom:calc(100% + 6px);border-radius:0;box-shadow:none;border:1px solid var(--border-mid)}
+.plate .search input{border-radius:0}
+.plate .savedp{bottom:calc(100% + 6px);top:auto}
+/* phones and iPads: painting edge to edge (tall ones fill the screen), label below */
+@media (max-width:900px){
+  .plate{--pad:20px}
+  .plate.guide-page>.app{padding:var(--nav-h) 0 24px 0;overflow-x:hidden}
+  .plate .slide,.plate.guide-page .slide:not(.text){display:block;padding-top:0}
+  .plate .pic img{max-width:none;max-height:none;width:100%}
+  .plate .notes{padding:22px var(--pad) 30px;max-width:640px}
+  .plate .title,.plate .title.plain{font-size:23px}
+  .plate .sum{font-size:16.5px}
+  .plate ul.b{font-size:15.5px}
+  .plate .slide.text{padding:22px var(--pad) 0}
+  .plate .slide.text .notes{padding:0 0 30px}
+  .plate .bar,.plate.guide-page>.bar{position:relative;padding:0 var(--pad);gap:14px}
+  .plate .tog{display:flex !important}
+  .plate .app:not(.collapsed) .rail,.plate.guide-page .app:not(.collapsed) .rail{left:var(--pad);right:var(--pad);width:auto}
+  .plate.searchopen .topbar{left:var(--pad);right:var(--pad);width:auto}
+  .plate .scalecard{position:relative;top:auto;margin-top:10px}
+  .plate.guide-page{padding-bottom:0}
+}
+@media (max-width:700px){.plate .bar .tog span{display:none}.plate .bar .pos{display:block}}
+
+.plate .scalecard{scroll-margin-bottom:calc(var(--bar-h) + 16px)}

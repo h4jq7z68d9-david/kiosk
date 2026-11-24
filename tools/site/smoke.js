@@ -107,6 +107,7 @@ async function courseCheck(page, tag, width) {
   }
   if (width > 700) {
     /* search returns something */
+    if (!(await page.isVisible('#q')) && (await page.$('.sbtn'))) await page.click('.sbtn'); /* plate viewer: search sits behind a bar button */
     await page.fill('#q', 'the'); await page.waitForTimeout(500);
     const n = await page.evaluate(() => document.querySelectorAll('#results a, #results li').length);
     if (!n) fail(`${tag}: search for "the" returned nothing`);

@@ -67,6 +67,7 @@ const COURSE = BASE + '/' + SLUG;
 const DIR = path.join(ROOT, COURSE);
 const IMG_COURSE = BASE + '/' + (CFG.imgFrom || SLUG);
 const THEME = CFG.themeLabel || 'Theme';
+const PLATE = CFG.viewer === 'plate';   // plate viewer (Nov 24 2026, High Renaissance pilot): painting left, ruled label, scale card, floating outline; settings "viewer": "plate"
 const SUBJ = CFG.subjLabel == null ? '' : CFG.subjLabel;
 const IMG_DIR = path.join(ROOT, IMG_COURSE, 'img');
 const NAME = CFG.name;
@@ -74,7 +75,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 26, bar: 5, guideCss: 20, guideJs: 16, search: 3, lightboxCss: 1, lightboxJs: 1, phoneAdvanceCss: 4, phoneAdvanceJs: 4 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 26, bar: 5, guideCss: 20, guideJs: 16, search: 3, lightboxCss: 1, lightboxJs: 1, phoneAdvanceCss: 4, phoneAdvanceJs: 4, plateCss: 1, plateJs: 1 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -200,6 +201,34 @@ const bul = (b) => (b && b.length ? '<ul class="b">' + b.map((x) => `<li>${esc(x
 const quote = (q) => (q ? `<blockquote><p>“${esc(q.q)}”</p><cite>${esc(q.by)}</cite></blockquote>` : '');
 const RULE = '<hr class="rule">';
 const crl = (k) => { const c = C[k]; return c ? `<p class="crl">Image: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(srcOf(c))}</a> · ${esc(c.license)}</p>` : ''; };
+/* plate viewer: the work drawn to scale beside a person 5 ft 8 in tall (68 in), from the inches in the details line. Static SVG; plate.js toggles the card. */
+const inch = (t) => { const m = String(t).trim().match(/^(\d+)(?:\s(\d+)\/(\d+))?$/); return m ? +m[1] + (m[2] ? m[2] / m[3] : 0) : null; };
+function dimsOf(det) {
+  const NUM = '(\\d+(?:\\s\\d+\\/\\d+)?)';
+  let m = String(det || '').match(new RegExp(NUM + '\\sin\\.?\\sacross'));
+  if (m) { const v = inch(m[1]); return { h: v, w: v, round: true, text: `${m[1]} in. across` }; }
+  m = String(det || '').match(new RegExp('(about\\s)?' + NUM + '\\s×\\s' + NUM + '\\sin'));
+  return m ? { h: inch(m[2]), w: inch(m[3]), text: `${m[1] || ''}${m[2]} × ${m[3]} in.` } : null;
+}
+function scaleSvg(key, d, maxW, maxH, alt) {
+  const person = 68, bottom = Math.max(57 - d.h / 2, 10), tp = Math.max(bottom + d.h, person) + 4, gap = 14, pw = 20;
+  const totalW = pw + gap + d.w, k = Math.min(maxW / totalW, maxH / tp), H = tp * k, W = totalW * k, px = (pw + gap) * k;
+  const y = (v) => ((tp - v) * k).toFixed(1), f = (v) => (v * k).toFixed(1);
+  const top = y(bottom + d.h), cx = (px + d.w * k / 2).toFixed(1), cy = ((tp - bottom - d.h) * k + d.h * k / 2).toFixed(1);
+  const fig = `<g class="fig"><circle cx="${f(10)}" cy="${y(63.5)}" r="${f(4.5)}"/><rect x="${f(3)}" y="${y(57)}" width="${f(14)}" height="${f(27)}" rx="${f(3.5)}"/><rect x="${f(4.5)}" y="${y(32)}" width="${f(5)}" height="${f(32)}"/><rect x="${f(10.5)}" y="${y(32)}" width="${f(5)}" height="${f(32)}"/></g>`;
+  const shape = d.round
+    ? `<defs><clipPath id="sc-clip"><circle cx="${cx}" cy="${cy}" r="${f(d.w / 2)}"/></clipPath></defs><image href="${img(key)}" x="${px.toFixed(1)}" y="${top}" width="${f(d.w)}" height="${f(d.h)}" preserveAspectRatio="none" clip-path="url(#sc-clip)"/><circle class="o" cx="${cx}" cy="${cy}" r="${f(d.w / 2)}"/>`
+    : `<image href="${img(key)}" x="${px.toFixed(1)}" y="${top}" width="${f(d.w)}" height="${f(d.h)}" preserveAspectRatio="none"/><rect class="o" x="${px.toFixed(1)}" y="${top}" width="${f(d.w)}" height="${f(d.h)}"/>`;
+  return `<svg class="scale" width="${W.toFixed(0)}" height="${(H + 1).toFixed(0)}" viewBox="0 0 ${W.toFixed(1)} ${(H + 1).toFixed(1)}" role="img" aria-label="${esc(alt)}">${fig}${shape}<line x1="0" x2="${W.toFixed(1)}" y1="${H.toFixed(1)}" y2="${H.toFixed(1)}"/></svg>`;
+}
+const FIG_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="7.5" r="2"/><path d="M5 11v10"/><rect x="11" y="4" width="10" height="13"/><path d="M1 21h22"/></svg>';
+const CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+/* the small box that takes the place of the first short divider; a work with no height and width keeps the plain rule */
+function scaleRow(d) {
+  const dm = dimsOf(d.det); if (!dm) return RULE;
+  return `<div class="scalerow"><button type="button" class="scalebtn" data-scale aria-expanded="false" aria-controls="scalecard" aria-label="Show the size beside a person">${FIG_ICON}</button>`
+    + `<div class="scalecard" id="scalecard" hidden><button type="button" class="x" data-scale-close aria-label="Close">${CLOSE_ICON}</button>${scaleSvg(d.key, dm, 290, 190, 'The work shown to scale beside a person')}<p>${esc(dm.text)}, beside a person 5 ft 8 in tall</p></div></div>`;
+}
 const pic = (k, alt, capHtml) => { const d = dims(k); return `<div class="pic"><img src="${img(k)}" width="${d.w}" height="${d.h}" alt="${esc(alt)}" data-cap="${esc(capHtml)}" tabindex="0" fetchpriority="high"></div>`; };
 /* Look list (work slides with `look`, page model of Nov 5 2026): the bullets, then a divider before the history
    bullets in `bul`; no label since Nov 18 2026. Slides without `look` render exactly as before. */
@@ -230,6 +259,11 @@ function slideHtml(f) {
     return [ik ? 'slide' : 'slide text', (ik ? pic(ik, iw ? iw.title : ik, iw ? cap(iw) : esc(C[ik].work)) : '') + `<div class="notes intro"><p class="eyebrow">Study guide</p><h1 class="htitle">${esc(NAME)}</h1><p class="hsub">${esc(CFG.ldDescription || '')}</p>
 ${para}${CFG.introBul && CFG.introBul.length ? RULE + bul(CFG.introBul) : ''}${ik ? crl(ik) : ''}</div>`];
   }
+  if (PLATE && f.kind === 'overview') {
+    const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
+    return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><h1 class="htitle">${esc(ONE ? NAME : d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}
+<p class="sum">${esc(o.sum)}</p>${o.sum2 ? `<p class="sum">${esc(o.sum2)}</p>` : ''}<p class="crl">${ch}. Image: <a href="${esc(C[o.img].page)}" target="_blank" rel="noopener">${esc(srcOf(C[o.img]))}</a> · ${esc(C[o.img].license)}</p></div>`];
+  }
   if (f.kind === 'overview') {
     const o = d.overview, c = o.cap, ch = [c[0] && esc(c[0]), '<i>' + esc(c[1]) + '</i>', c[2] && esc(c[2])].filter(Boolean).join(', ');
     return ['slide', pic(o.img, c[1], ch) + `<div class="notes"><p class="eyebrow">${esc(sec(d.wk))}</p><h1 class="htitle">${esc(ONE ? NAME : d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}
@@ -240,6 +274,10 @@ ${crl(o.img)}</div>`];   // title page: no works list (the outline has them)
     const th = themesOf(d.key);
     const tail = (th.length ? `<p class="lab">${esc(THEME)}s</p><ul class="wl">${th.map((t) => `<li><a class="wlink" href="${t.url}">${esc(t.d.title)}</a></li>`).join('')}</ul>` : '') + crl(d.key);
     const head = `<p class="eyebrow">${esc(sec(f.hd.wk))}</p>${d.artist ? `<p class="artist">${esc(d.artist)}</p>` : ''}<h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}`;
+    if (PLATE && d.lead) {   // plate label: artist, title, date, details, the scale box (or a short rule), main text, rule, history line, credit
+      return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes"><p class="artist">${esc(d.artist)}</p><h1 class="title">${esc(d.title)}</h1><p class="date">${esc(d.date)}</p>${d.det ? `<p class="det">${esc(d.det)}</p>` : ''}
+${scaleRow(d)}<p class="sum">${esc(d.lead)}</p>${d.bul && d.bul.length ? RULE + bul(d.bul) : ''}${crl(d.key)}</div>`];
+    }
     if (d.lead) {   // artwork-first format: lead paragraph, [Look at list + divider], bullets, then the subject
       return ['slide', pic(d.key, d.title, cap(d)) + `<div class="notes">${head}
 <p class="sum">${esc(d.lead)}</p>${look(d)}${bul(d.bul)}${d.subj ? RULE + (SUBJ ? `<p class="lab">${esc(SUBJ)}</p>` : '') + `<p class="sum">${esc(d.subj)}</p>` : ''}${terms(d.terms)}${quote(d.quote)}${tail}</div>`];
@@ -265,13 +303,13 @@ ${exHtml(d.ex)}${b ? RULE + `<p class="sum">${esc(b)}</p>` : ''}${crx(d.img, d.c
     return ['slide text', `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="htitle">${esc(d.title)}</h1>${d.sub ? `<p class="hsub">${esc(d.sub)}</p>` : ''}<p class="sum">${esc(d.sum)}</p>${RULE}${bul(d.bul)}${RULE}${terms(d.terms)}</div>`];
   }
   if (f.kind === 'sources') {
-    return ['slide text', `<div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Sources and further reading</h1><p class="sum">${esc(SRCS.intro)}</p>
+    return ['slide text', `<div class="notes">${PLATE ? '' : '<p class="eyebrow">Sources</p>'}<h1 class="htitle">Sources and further reading</h1><p class="sum">${esc(SRCS.intro)}</p>
 ${SRCS.groups.map((g) => `${RULE}<p class="lab">${esc(g.title)}</p><div class="cred">${g.items.map((it) => `<div>${it.html}${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noopener">Link</a>` : ''}</div>`).join('\n')}</div>`).join('\n')}
 <p class="crl"><a href="${COURSE}/credits.html">Image credits</a></p></div>`];
   }
   // credits
   const keys = creditKeys();
-  return ['slide text', `<div class="notes"><p class="eyebrow">Sources</p><h1 class="htitle">Image credits</h1>${SRCS ? `<p class="det"><a href="${COURSE}/sources.html">Sources and further reading</a></p>` : ''}<p class="sum">${esc(CFG.creditsIntro || 'Every image is public domain or CC0. Each entry below links to the file’s record with its source and license.')}</p>
+  return ['slide text', `<div class="notes">${PLATE ? '' : '<p class="eyebrow">Sources</p>'}<h1 class="htitle">Image credits</h1>${SRCS ? `<p class="det"><a href="${COURSE}/sources.html">Sources and further reading</a></p>` : ''}<p class="sum">${esc(CFG.creditsIntro || 'Every image is public domain or CC0. Each entry below links to the file’s record with its source and license.')}</p>
 <div class="cred">${keys.map((k) => { const c = C[k]; const au = (c.author || '').replace(/\s+/g, ' ').slice(0, 80); const w = byKey[k] != null ? flat[byKey[k]] : null;
     const pg = w || imgPage[k] || null;
     return `<div><b>${pg ? `<a href="${pg.url}">${esc(c.work)}</a>` : esc(c.work)}</b><br>File: <a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.file)}</a><br>${esc(c.license)}${au ? ' · Author/source field: ' + esc(au) : ''}</div>`; }).join('\n')}</div></div>`];
@@ -380,6 +418,8 @@ const NAV = `<nav data-chrome-nav></nav>
 <script src="/site-bar.js?v=${V.bar}"></script>
 <div id="menu-scrim"></div>
 <div id="menu-panel" aria-label="site menu"></div>`;
+const ARR_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>', ARR_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>';
+const PREV_T = (PLATE ? ARR_L + '<span class="vh">Previous</span>' : '← Prev'), NEXT_T = (PLATE ? ARR_R + '<span class="vh">Next</span>' : 'Next →');
 const BM_ICON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5h9v15l-4.5-3.6-4.5 3.6z"/></svg>';
 const SEARCH_ICON = '<svg class="sico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6l4.4 4.4"/></svg>';
 const OUTLINE = (ONE ? '' : `<p><a class="ho" href="${HOME}">${esc(NAME)}</a></p>`) + flat.filter((x) => x.isPart).map((x) => `<p><a class="ho" href="${x.url}">${esc(x.hd.title)}</a></p>`).join('')
@@ -436,9 +476,9 @@ ${FONTS}
 <link rel="stylesheet" href="/site-chrome.css?v=${V.chrome}">
 <link rel="stylesheet" href="/site-bar.css?v=${V.bar}">
 <link rel="stylesheet" href="/study/guide.css?v=${V.guideCss}">
-${LB ? `<link rel="stylesheet" href="/study/lightbox.css?v=${V.lightboxCss}">\n` : ''}${PA ? `<link rel="stylesheet" href="/study/phone-advance.css?v=${V.phoneAdvanceCss}">\n` : ''}${prev ? `<link rel="prev" href="${prev.url}">\n` : ''}${next ? `<link rel="next" href="${next.url}">\n` : ''}<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
+${PLATE ? `<link rel="stylesheet" href="/study/plate.css?v=${V.plateCss}">\n` : ''}${LB ? `<link rel="stylesheet" href="/study/lightbox.css?v=${V.lightboxCss}">\n` : ''}${PA ? `<link rel="stylesheet" href="/study/phone-advance.css?v=${V.phoneAdvanceCss}">\n` : ''}${prev ? `<link rel="prev" href="${prev.url}">\n` : ''}${next ? `<link rel="next" href="${next.url}">\n` : ''}<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
 </head>
-<body class="guide-page${CFG.greekKey === true ? ' greek-key' : ''}" data-id="${esc(f.id)}">
+<body class="guide-page${PLATE ? ' plate' : ''}${CFG.greekKey === true ? ' greek-key' : ''}" data-id="${esc(f.id)}">
 ${NAV}
 <div class="app" id="app">
   <nav class="rail" aria-label="Outline" id="rail">
@@ -462,8 +502,8 @@ ${NAV}
       <span class="spacer"></span>
       <span class="pos">${i + 1} / ${flat.length}</span>
       <button class="btn bm" id="bm" type="button" aria-pressed="false">${BM_ICON}<span class="bmt">Bookmark</span></button>
-      ${prev ? `<a class="btn" id="prev" rel="prev" href="${prev.url}" title="${esc((prev.d && prev.d.title) || prev.label)}">← Prev</a>` : '<a class="btn" id="prev" aria-disabled="true">← Prev</a>'}
-      ${next ? `<a class="btn primary" id="next" rel="next" href="${next.url}" title="${esc((next.d && next.d.title) || next.label)}">Next →</a>` : '<a class="btn primary" id="next" aria-disabled="true">Next →</a>'}
+      ${prev ? `<a class="btn" id="prev" rel="prev" href="${prev.url}" title="${esc((prev.d && prev.d.title) || prev.label)}">${PREV_T}</a>` : `<a class="btn" id="prev" aria-disabled="true">${PREV_T}</a>`}
+      ${next ? `<a class="btn primary" id="next" rel="next" href="${next.url}" title="${esc((next.d && next.d.title) || next.label)}">${NEXT_T}</a>` : `<a class="btn primary" id="next" aria-disabled="true">${NEXT_T}</a>`}
     </div>
   </main>
 </div>
@@ -471,7 +511,7 @@ ${NAV}
 <script src="${COURSE}/index.js?v=${INDEX_V}"></script>
 <script src="/study/search.js?v=${V.search}"></script>
 <script src="/study/guide.js?v=${V.guideJs}"></script>
-${LB ? `<script src="/study/lightbox.js?v=${V.lightboxJs}"></script>\n` : ''}${PA ? `<script src="/study/phone-advance.js?v=${V.phoneAdvanceJs}"></script>\n` : ''}<script src="/site-chrome.js?v=${V.chrome}"></script>
+${PLATE ? `<script src="/study/plate.js?v=${V.plateJs}"></script>\n` : ''}${LB ? `<script src="/study/lightbox.js?v=${V.lightboxJs}"></script>\n` : ''}${PA ? `<script src="/study/phone-advance.js?v=${V.phoneAdvanceJs}"></script>\n` : ''}<script src="/site-chrome.js?v=${V.chrome}"></script>
 </body>
 </html>
 `;
