@@ -74,7 +74,7 @@ window.SITE = {
      "title": "The Libyan Sibyl",
      "date": "about 1511–12",
      "det": "Fresco, about 178 3/4 × 149 1/2 in. (her section of the ceiling). Sistine Chapel ceiling, Vatican",
-     "lead": "The shoulders turn away while the knees face front, so the seated figure looks caught in the middle of a turn. Michelangelo's color in this half of the ceiling influenced many of the painters later called Mannerists.",
+     "lead": "The shoulders turn away while the knees face front, so the seated figure looks caught in the middle of a turn. Michelangelo's color in the second half of the ceiling influenced many of the painters later called Mannerists.",
      "bul": [
       "Painted in about twenty daily sections of plaster. A red chalk study for the pose, drawn from a male model, is in the Metropolitan Museum of Art, New York."
      ]
@@ -86,7 +86,7 @@ window.SITE = {
      "title": "The Sistine Madonna",
      "date": "1512–13",
      "det": "Oil on canvas, 106 × 79 1/4 in. Gemäldegalerie Alte Meister, Dresden",
-     "lead": "Curtains at the top and a ledge at the bottom make the scene look like a vision seen past a drawn curtain. Since about 1800, the two small angels on the ledge have been copied on their own.",
+     "lead": "Curtains drawn back at the top and a ledge at the bottom make the scene look like a vision. Since about 1800, the two small angels on the ledge have been copied on their own.",
      "bul": [
       "Painted for the high altar of the convent church of San Sisto in Piacenza, most likely on the order of Pope Julius II. Raphael added the two angels last."
      ]
