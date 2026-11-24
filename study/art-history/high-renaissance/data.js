@@ -61,7 +61,7 @@ window.SITE = {
      "artist": "Raphael",
      "title": "The School of Athens",
      "date": "about 1509–11",
-     "det": "Fresco, about 197 × 303 in. Stanza della Segnatura, Vatican",
+     "det": "Fresco, about 196 3/4 × 303 1/4 in. Stanza della Segnatura, Vatican",
      "lead": "The Vatican Museums date the start of the High Renaissance to the frescoes in this room. The arches shrink, one inside the next, toward two men at the center, so a large crowd stays easy to read.",
      "bul": [
       "Painted for Pope Julius II in a room he used as his library. The hall was inspired by Bramante's design for rebuilding St. Peter's. Raphael's cartoon for the figures survives in Milan."
