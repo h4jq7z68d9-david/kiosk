@@ -21,14 +21,6 @@ window.SOURCES = {
      "url": "https://www.uffizi.it/en/artworks/holy-family-known-as-the-doni-tondo"
     },
     {
-     "html": "Gallerie degli Uffizi, Florence. <em>Venus of Urbino</em>, Titian, Inv. 1890 no. 1437.",
-     "url": "https://www.uffizi.it/en/artworks/venus-urbino-titian"
-    },
-    {
-     "html": "Gallerie dell'Accademia, Venice. <em>La tempesta</em>, Giorgione, Cat. 915.",
-     "url": "https://www.gallerieaccademia.it/en/opera/la-tempesta/"
-    },
-    {
      "html": "Istituto Centrale per il Catalogo e la Documentazione. <em>Madonna Assunta</em>, Tiziano Vecellio, Santa Maria Gloriosa dei Frari, Venice.",
      "url": "https://sigecweb.beniculturali.it/sigec/item/print/ICCD2800894"
     },
@@ -37,16 +29,8 @@ window.SOURCES = {
      "url": "https://sigecweb.beniculturali.it/sigec/item/print/ICCD3288350"
     },
     {
-     "html": "Kunsthistorisches Museum, Vienna. <em>The Madonna of the Meadow</em>, Raphael, Gemäldegalerie 175.",
-     "url": "https://khm.at/en/object/1502"
-    },
-    {
      "html": "Lombardia Beni Culturali. <em>La Scuola di Atene</em> (cartoon), Raphael, Pinacoteca Ambrosiana, Milan, inv. 126, record L0130-00007.",
      "url": "https://lombardiabeniculturali.it/opere-arte/schede-complete/L0130-00007"
-    },
-    {
-     "html": "Lombardia Beni Culturali. <em>Lo sposalizio della Vergine</em>, Raphael, Pinacoteca di Brera, Milan, record RL480-00072.",
-     "url": "https://lombardiabeniculturali.it/opere-arte/schede-complete/RL480-00072"
     },
     {
      "html": "Lombardia Beni Culturali. <em>Ultima Cena</em>, Leonardo da Vinci, Santa Maria delle Grazie, Milan, record 3o210-01279.",
@@ -69,28 +53,8 @@ window.SOURCES = {
      "url": "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/"
     },
     {
-     "html": "Musée du Louvre, Paris. <em>Balthazar Castiglione (1478–1529), écrivain et diplomate</em>, Raphael, INV 611.",
-     "url": "https://collections.louvre.fr/en/ark:/53355/cl010066418"
-    },
-    {
-     "html": "Musée du Louvre, Paris. <em>La Vierge, l'Enfant Jésus et sainte Anne, dit La Sainte Anne</em>, Leonardo da Vinci, INV 776. Commentary by Vincent Delieuvin, 2021.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010066107"
-    },
-    {
      "html": "Musée du Louvre, Paris. <em>Portrait de Lisa Gherardini, épouse de Francesco del Giocondo, dit La Joconde ou Monna Lisa</em>, Leonardo da Vinci, INV 779. Commentary by Vincent Delieuvin, 2021.",
      "url": "https://collections.louvre.fr/ark:/53355/cl010062370"
-    },
-    {
-     "html": "National Gallery, London. <em>Doge Leonardo Loredan</em>, Giovanni Bellini, NG189.",
-     "url": "https://www.nationalgallery.org.uk/paintings/giovanni-bellini-doge-leonardo-loredan"
-    },
-    {
-     "html": "Pinacoteca di Brera, Milan. <em>The Marriage of the Virgin</em>, Raffaello Sanzio, Inv. 336.",
-     "url": "https://pinacotecabrera.org/en/collezioni/collezione-on-line/the-marriage-of-the-virgin/"
-    },
-    {
-     "html": "Pinacoteca di Brera, Milan. “Perugino and Raphael, the Marriage of the Virgin: A Dialogue between the Master and the Pupil.” Exhibition page, edited by Emanuela Daffra, Cristina Quattrini and Giovanni Agosti.",
-     "url": "https://pinacotecabrera.org/en/news/mostra/perugino-and-raphael-the-marriage-of-the-virgin-a-dialogue-between-the-master-and-the-pupil/"
     },
     {
      "html": "Staatliche Kunstsammlungen Dresden. <em>Die Sixtinische Madonna</em>, Raphael, Gemäldegalerie Alte Meister, Gal.-Nr. 93. Text by Andreas Henning.",
@@ -107,14 +71,6 @@ window.SOURCES = {
     {
      "html": "Vatican Museums. “Ceiling.” Sistine Chapel.",
      "url": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta.html"
-    },
-    {
-     "html": "Vatican Museums. “Creation of Adam.” Sistine Chapel ceiling.",
-     "url": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html"
-    },
-    {
-     "html": "Vatican Museums. “Handing over of the Keys.” Sistine Chapel, north wall.",
-     "url": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/parete-nord/storie-di-cristo/consegna-delle-chiavi.html"
     },
     {
      "html": "Vatican Museums. “History of the Sistine Chapel.”",
@@ -154,10 +110,6 @@ window.SOURCES = {
      "url": "https://nationalgallery.org.uk/paintings/catalogues/plazzotta-and-henry-2022/raphael"
     },
     {
-     "html": "Jewitt, James R. “Giorgione, The Tempest.” Smarthistory. Accessed November 20, 2026.",
-     "url": "https://smarthistory.org/giorgione-the-tempest"
-    },
-    {
      "html": "National Gallery, London. “High Renaissance.” Glossary. Accessed November 20, 2026.",
      "url": "https://www.nationalgallery.org.uk/paintings/glossary/high-renaissance"
     },
@@ -168,18 +120,6 @@ window.SOURCES = {
     {
      "html": "National Gallery, London. “Michelangelo.” Artist page. Accessed November 20, 2026.",
      "url": "https://www.nationalgallery.org.uk/artists/Michelangelo"
-    },
-    {
-     "html": "National Gallery, London. “Pietro Perugino.” Artist page. Accessed November 20, 2026.",
-     "url": "https://www.nationalgallery.org.uk/artists/pietro-perugino"
-    },
-    {
-     "html": "Pritchard, Shannon. “Perugino, Christ Giving the Keys of the Kingdom to St. Peter.” Smarthistory, November 11, 2015.",
-     "url": "https://smarthistory.org/perugino-christ-giving-the-keys-of-the-kingdom-to-st-peter"
-    },
-    {
-     "html": "Sorabella, Jean. “Portraiture in Renaissance and Baroque Europe.” In <em>Heilbrunn Timeline of Art History</em>. New York: The Metropolitan Museum of Art, 2007.",
-     "url": "https://www.metmuseum.org/essays/portraiture-in-renaissance-and-baroque-europe"
     }
    ]
   }

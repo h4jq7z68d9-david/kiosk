@@ -1639,11 +1639,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/christ-giving-the-keys-to-saint-peter.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/the-last-supper.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
@@ -1654,32 +1649,12 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/the-marriage-of-the-virgin.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/the-madonna-of-the-meadow.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/holy-family-doni-tondo.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/the-virgin-and-child-with-saint-anne.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/the-school-of-athens.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/the-creation-of-adam.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -1694,27 +1669,7 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/portrait-of-baldassare-castiglione.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/doge-leonardo-loredan.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/the-tempest.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/assumption-of-the-virgin.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/art-history/high-renaissance/italy-1481-1538/venus-of-urbino.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
