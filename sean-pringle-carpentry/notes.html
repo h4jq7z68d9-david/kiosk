@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>How this mockup works, Sean Pringle Carpentry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Notes for Sean about the design mockup. Not part of the site design. Unlisted, noindex. -->
+<style>
+:root{--ink:#16211c;--wood:#d7cdb9;--green:#1f5a45;--pad:40px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Libre Franklin',Arial,sans-serif;font-size:16px;color:var(--ink);background:#fff;line-height:1.5}
+a{color:inherit;text-decoration:none} img{display:block}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.mock{background:#fdf1d6;color:#5c430a;font-size:14px;padding:8px var(--pad)} .mock a{font-weight:600;text-decoration:underline;white-space:nowrap}
+.notes{max-width:calc(40em + 2*var(--pad));padding:34px var(--pad) 72px} .notes h1{font-size:30px;font-weight:600;letter-spacing:-.01em;line-height:1.2} .notes h2{font-size:19px;font-weight:600;margin-top:30px} .notes p{margin-top:12px} .notes ul{margin:10px 0 0 1.2em} .notes li+li{margin-top:6px} .notes .back{display:inline-block;font-weight:600;border-bottom:2px solid var(--green);padding-bottom:2px;margin-bottom:26px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px 26px;flex-wrap:wrap;padding:16px var(--pad)}
+.name{font-weight:700;font-size:19px}
+.bar nav{display:flex;gap:26px;align-items:center;font-size:15px}
+.bar nav a.here{font-weight:600;border-bottom:2px solid var(--green);padding-bottom:2px}
+.call{background:var(--green);color:#fff;padding:9px 16px;font-weight:600;white-space:nowrap}
+.ph{background:var(--wood);overflow:hidden} .ph img{width:100%;height:100%;object-fit:cover}
+button.ph{display:block;width:100%;border:0;padding:0;cursor:zoom-in;font:inherit}
+.hero .ph{aspect-ratio:21/9}
+.lead{padding:30px var(--pad) 0;font-size:34px;font-weight:500;line-height:1.2;max-width:22em;letter-spacing:-.012em}
+h1.page{padding:26px var(--pad) 0;font-size:34px;font-weight:500;line-height:1.2;letter-spacing:-.012em}
+.intro{padding:18px var(--pad) 40px;max-width:calc(36em + 2*var(--pad))} .intro p+p{margin-top:12px}
+.more{font-weight:600;border-bottom:2px solid var(--green);padding-bottom:2px}
+.about{display:grid;grid-template-columns:minmax(0,36em) minmax(0,380px);gap:56px;padding:22px var(--pad) 48px;align-items:start}
+.about p+p,.about h2+p{margin-top:12px} .about h2{font-size:20px;font-weight:600;margin-top:30px} .about .ph{aspect-ratio:4/5}
+.about ol{margin:12px 0 0 1.2em} .about li+li{margin-top:6px}
+.workhead{display:flex;align-items:baseline;gap:28px;padding:26px var(--pad) 20px;border-top:1px solid var(--ink)}
+.workhead.top{border-top:0;padding-top:16px} .workhead h2{font-size:22px;font-weight:600}
+.kinds{display:flex;gap:22px;font-size:15px} .kinds button{font:inherit;color:inherit;background:none;border:0;border-bottom:2px solid transparent;padding:0 0 3px;cursor:pointer}
+.kinds button[aria-pressed=true]{font-weight:600;border-bottom-color:var(--green)}
+.wall{display:grid;grid-template-columns:repeat(12,1fr);gap:34px 16px;padding:0 var(--pad) 28px;align-items:start}
+.wall article{grid-column:span 6} .wall article.w8{grid-column:span 8} .wall article.w4{grid-column:span 4} .wall article.w5{grid-column:span 5} .wall article.w7{grid-column:span 7}
+.wall article[hidden]{display:none}
+figcaption{font-size:15px;margin-top:7px} figcaption b{font-weight:600}
+.dets{display:grid;gap:10px;margin-top:12px} .dets.n3{grid-template-columns:repeat(3,1fr)} .dets.n2{grid-template-columns:repeat(2,1fr)} .dets figcaption{font-size:13px;margin-top:5px} .dets .ph{aspect-ratio:1/1}
+.seeall{padding:0 var(--pad) 48px}
+.ask{display:grid;grid-template-columns:1fr 1.5fr;gap:56px;padding:40px var(--pad) 64px;border-top:1px solid var(--ink);scroll-margin-top:8px}
+.ask h2{font-size:28px;font-weight:600;letter-spacing:-.01em;line-height:1.2} .ask p{margin-top:10px;max-width:24em}
+.tel{font-size:26px;font-weight:700;color:var(--green);display:inline-block;margin-top:14px}
+.sheet{border:1.5px solid var(--ink)} .r{display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid var(--ink)} .r:last-child{border-bottom:0}
+.r>label,.r>span{padding:13px 14px;font-size:14px;font-weight:600;border-right:1px solid var(--ink)}
+.sheet input,.sheet select,.sheet textarea{font:inherit;font-size:16px;border:0;border-radius:0;padding:12px 14px;width:100%;background:#fff;resize:vertical;color:var(--ink)}
+.sheet input:focus-visible,.sheet select:focus-visible,.sheet textarea:focus-visible{outline-offset:-2px}
+.send{font:inherit;font-weight:600;font-size:16px;padding:12px 22px;background:var(--ink);color:#fff;border:0;margin-top:14px;cursor:pointer}
+.msg{margin-top:12px;font-size:15px;max-width:34em} .msg.err{color:#a3271c;font-weight:500}
+.done{border:1.5px solid var(--ink);padding:20px 22px;max-width:34em} .done h3{font-size:18px;font-weight:600} .done p{margin-top:8px}
+.lb{position:fixed;inset:0;background:rgba(22,33,28,.55);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
+.lb.open{display:flex} .lb .card{background:#fff;border:1.5px solid var(--ink);max-width:min(1100px,100%);max-height:100%;display:flex;flex-direction:column}
+.lb img{max-width:100%;max-height:calc(100vh - 140px);object-fit:contain;background:var(--wood)}
+.lb .cap{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:10px 14px;font-size:15px}
+.lb .x{font:inherit;font-weight:600;background:none;border:0;cursor:pointer;color:var(--ink);text-decoration:underline}
+@media(max-width:700px){:root{--pad:16px} .bar{padding-bottom:10px;gap:10px 12px} .name{font-size:17px} .bar nav{order:3;width:100%;gap:22px;font-size:15px} .bar nav .call{display:none} .bar>.call{display:inline-block;padding:8px 11px;font-size:14px}
+ .hero .ph{aspect-ratio:4/3} .lead,h1.page{font-size:24px;padding-top:20px} .about{grid-template-columns:1fr;gap:22px} .about .ph{aspect-ratio:3/2}
+ .workhead{flex-direction:column;gap:10px} .wall{grid-template-columns:1fr} .wall article,.wall article.w8,.wall article.w4,.wall article.w5,.wall article.w7{grid-column:1}
+ .ask{grid-template-columns:1fr;gap:22px} .r{grid-template-columns:104px 1fr} .lb{padding:10px}}
+@media(min-width:701px){.bar>.call{display:none}}
+</style></head><body><main class="notes">
+<a class="back" href="/sean-pringle-carpentry.html">Back to the mockup</a>
+<h1>How this mockup works</h1>
+<p>This is a draft of your website for you to react to. It isn’t live, and customers can’t find it.</p>
+<h2>What’s real and what isn’t</h2>
+<ul><li>The layout, the pages, and the way it works are the proposal.</li><li>The photos are stock pictures, not your work. Yours will replace them.</li><li>The wording, the jobs, the sizes, and the phone number are examples.</li></ul>
+<h2>How a customer would use it</h2>
+<ul><li><a href="/sean-pringle-carpentry.html"><u>Home</u></a> shows a banner photo, a short introduction, and your recent jobs.</li>
+<li><a href="/sean-pringle-carpentry/work.html"><u>Work</u></a> shows every job. Customers can switch between Indoor and Outdoor, and tap any photo to see it larger.</li>
+<li>Each job has one main photo and a few close-ups that show the detail.</li>
+<li><a href="/sean-pringle-carpentry/about.html"><u>About</u></a> is where your own words go, with how a job runs and where you work.</li>
+<li>Request an estimate takes them to a short form at the bottom of any page. In this mockup the form doesn’t send anything. On the real site, what they fill in reaches you by email.</li>
+<li>The plan is for each request to show up in your expenses page too, where you can turn it into a job.</li>
+<li>Your phone number is on every page, and it dials when tapped on a phone.</li></ul>
+<h2>What we need from you</h2>
+<ul><li>Photos of finished jobs. For each job: one wide shot and two or three close-ups of the detail.</li><li>A line or two per job: what it was, the wood, the rough size, and how long it took.</li><li>A few sentences about yourself, in your own words.</li><li>Your phone number and the towns you work in.</li><li>One wide photo for the top of the home page.</li></ul>
+<h2>Tell David</h2>
+<ul><li>What you like and don’t like.</li><li>Anything missing that customers ask you about.</li></ul>
+</main></body></html>
