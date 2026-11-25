@@ -251,7 +251,7 @@ function exHtml(e) {
 
 /* plate viewer, technique slides: a figure with its caption. `cap` is [maker, title, rest] (title in italics; either of the last two may be empty);
    without it the caption is the credits.js "work" line. */
-const capHtml = (c) => `<span class="a">${esc(c[0])}</span>${c[1] ? `<i>${esc(c[1])}</i>` : ''}${c[1] && c[2] ? ', ' : ''}${c[2] ? esc(c[2]) : ''}`;
+const capHtml = (c) => `<span class="a">${esc(c[0])}</span>${c[1] ? `<i>${esc(c[1])}</i>` : ''}${c[1] && c[2] ? ', ' : ''}${c[2] ? esc(c[2]).replace(/\*([^*]+)\*/g, '<i>$1</i>') : ''}`;   // *…* in the tail marks a second title (a plate after another artist's work)
 const figP = (k, alt, c) => `<figure class="fig">${pic(k, alt, c ? capHtml(c).replace('<span class="a">', '').replace('</span>', ', ') : (C[k] ? esc(C[k].work) : ''))}<figcaption>${c ? capHtml(c) : (C[k] ? esc(C[k].work) : '')}</figcaption></figure>`;
 function slideHtml(f) {
   const d = f.d;

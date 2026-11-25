@@ -81,7 +81,7 @@ window.SITE = {
      "cap": [
       "Henry R. Poore",
       "Pictorial Composition",
-      "about 1915, after Gérôme, Lion in the Desert (detail)"
+      "about 1915, after Gérôme, *Lion in the Desert* (detail)"
      ]
     },
     {
@@ -102,7 +102,7 @@ window.SITE = {
      "cap": [
       "Henry R. Poore",
       "Pictorial Composition",
-      "about 1915, after Detaille, Salute to the Wounded"
+      "about 1915, after Detaille, *Salute to the Wounded*"
      ]
     },
     {
@@ -186,7 +186,7 @@ window.SITE = {
      "cap": [
       "Henry R. Poore",
       "Pictorial Composition",
-      "about 1915, after Millet, The Shepherdess"
+      "about 1915, after Millet, *The Shepherdess*"
      ]
     },
     {
