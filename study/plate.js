@@ -13,7 +13,7 @@
   if (rail0 && ol && !rail0.querySelector('.shome')) {
     var sh = document.createElement('p'); sh.className = 'shome';
     var art = location.pathname.indexOf('/study/art-history/') === 0;
-    sh.innerHTML = '<a class="ho" href="/study.html' + (art ? '' : '#technique') + '">Study home</a>';
+    sh.innerHTML = '<a class="ho" href="/study.html' + (art ? '' : '#technique') + '">Study</a>';
     rail0.insertBefore(sh, ol);
   }
   function sync() { tog.setAttribute('aria-expanded', String(!app.classList.contains('collapsed'))); }
