@@ -14,7 +14,12 @@ window.SITE = {
      "title": "Oil vs Acrylic",
      "img": "rand-1841-tube-patent",
      "alt": "Patent drawing of metal paint tubes, full, rolled up, and capped, beside a tall open box-like holder, signed John Rand and dated 1841",
-     "para": "For over five centuries oil has been the paint most painters chose, and John Rand's metal tube of 1841 made it easy to carry. Acrylic came out of the plastics industry, first as a solvent paint called Magna, then in water; by 1965 most makers of artists' paint sold a water-based acrylic."
+     "para": "For over five centuries oil has been the paint most painters chose, and John Rand's metal tube of 1841 made it easy to carry. Acrylic came out of the plastics industry, first as a solvent paint called Magna, then in water; by 1965 most makers of artists' paint sold a water-based acrylic.",
+     "cap": [
+      "John Rand",
+      "Metal Rolls for Paint",
+      "patent drawing, 1841"
+     ]
     },
     {
      "type": "concept",
@@ -30,7 +35,12 @@ window.SITE = {
       "det": "Oil on wood, 46 3/4 × 63 3/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Peasants cutting and resting in a golden wheat field under a pear tree, a wide valley and sea beyond",
       "line": "The same oil serves for washes so thin the drawing underneath still shows and for strokes thick enough to hide it."
-     }
+     },
+     "cap": [
+      "Adriaen van Ostade",
+      "The Painter in His Studio",
+      "about 1667 (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -88,7 +98,12 @@ window.SITE = {
       "det": "Oil on canvas, 23 1/2 × 39 1/2 in. The Art Institute of Chicago",
       "alt": "Two large wheat stacks in a field in low sunlight, hills and trees behind",
       "line": "The bigger stack's outline, worked wet into wet, is soft and broken against the hills, while sky color Monet added over dry strokes stays in distinct streaks."
-     }
+     },
+     "cap": [
+      "Johannes Vermeer",
+      "A Lady Writing",
+      "about 1665 (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -104,7 +119,12 @@ window.SITE = {
       "det": "Oil on canvas, 47 1/4 × 39 3/4 in. National Gallery of Art, Washington",
       "alt": "A woman in a gold gown with a pearl necklace holding a dagger in one hand and raising the other",
       "line": "The National Gallery of Art finds extensive palette-knife work in her left cuff, at the right of the picture, and low on her dress, where thick, broken pale patches catch the light."
-     }
+     },
+     "cap": [
+      "Vincent van Gogh",
+      "Green Wheat Fields, Auvers",
+      "1890 (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -141,7 +161,12 @@ window.SITE = {
       "det": "Oil on canvas, 79 1/4 × 40 1/4 in. Museo Nacional del Prado, Madrid",
       "alt": "The young king standing full length in black, a paper in his hand, beside a table",
       "line": "Velázquez changed the king's legs and cloak and painted over the first versions; their outlines have begun to show through the top layer as faint shapes beside the cloak and legs."
-     }
+     },
+     "cap": [
+      "Netherlandish Painter",
+      "Portrait of a Man in a Chaperon",
+      "1440s (detail)"
+     ]
     }
    ]
   }

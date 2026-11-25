@@ -14,7 +14,12 @@ window.SITE = {
      "title": "Color Theory",
      "img": "runge-farbenkugel",
      "alt": "Hand-colored plate of two color spheres seen from the white pole and the black pole, with two cross-sections below",
-     "para": "Modern color theory starts with Isaac Newton's Opticks (1704) and his prism. Goethe, the chemist Chevreul, and the teacher Munsell then asked a painter's questions: how colors change beside each other, and how to name them exactly."
+     "para": "Modern color theory starts with Isaac Newton's Opticks (1704) and his prism. Goethe, the chemist Chevreul, and the teacher Munsell then asked a painter's questions: how colors change beside each other, and how to name them exactly.",
+     "cap": [
+      "Philipp Otto Runge",
+      "Farben-Kugel",
+      "1810, color sphere plate"
+     ]
     },
     {
      "type": "concept",
@@ -30,7 +35,12 @@ window.SITE = {
       "det": "Oil on canvas, 39 1/2 × 26 in. National Gallery of Art, Washington",
       "alt": "Cathedral front dissolved in strokes of pale blue, lavender, and peach under a hazy sky",
       "line": "Monet painted this front more than thirty times; here the stone is pale blue, lavender, and peach, colors of one light and weather, not of the stone."
-     }
+     },
+     "cap": [
+      "Isaac Newton",
+      "Opticks",
+      "1704, color circle (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -46,7 +56,12 @@ window.SITE = {
       "det": "Oil on canvas, 69 1/2 × 75 1/4 in. The National Gallery, London",
       "alt": "Bacchus leaps from his chariot toward Ariadne under a deep blue sky, followed by a crowd of revelers",
       "line": "Titian laid his pigments on nearly pure and lightened them only with white, so the ultramarine sky keeps the strength a mixture would lose."
-     }
+     },
+     "cap": [
+      "Wilhelm von Bezold",
+      "The Theory of Color",
+      "1876, Plate I (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -62,7 +77,12 @@ window.SITE = {
       "det": "Oil on canvas, 28 3/4 × 22 3/4 in. The National Gallery, London",
       "alt": "Half-length Virgin with joined hands, in a white headcloth, red dress, and deep blue mantle against a dark background",
       "line": "Sassoferrato kept the mantle one ultramarine blue; only its value moves, from bright folds to deep navy shadow, and that alone gives the cloth depth."
-     }
+     },
+     "cap": [
+      "Wilhelm Ostwald",
+      "Die Farbenfibel",
+      "1921, tone triangle (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -78,7 +98,12 @@ window.SITE = {
       "det": "Oil on canvas, 25 1/2 × 32 in. The Metropolitan Museum of Art, New York",
       "alt": "Harbor at dusk in small dots of color: a yellow-orange hillside, violet-blue rocks, pale water, and fishing boats",
       "line": "Signac took his shadows from across the wheel: yellow-orange evening light on the hill, violet-blue on the rocks, so lit and shaded ground stand clearly apart."
-     }
+     },
+     "cap": [
+      "M. E. Chevreul",
+      "Des couleurs",
+      "1864, Plate V, chromatic circle"
+     ]
     },
     {
      "type": "concept",
@@ -94,7 +119,12 @@ window.SITE = {
       "det": "Oil on canvas, 35 3/4 × 47 3/4 in. The National Gallery, London",
       "alt": "Pale old warship towed by a dark steam tug, with a blazing orange sunset at right and a cool blue sky at left",
       "line": "Turner splits the sky between a blazing orange sunset on the right and cool blue on the left; each half looks warmer or cooler beside the other."
-     }
+     },
+     "cap": [
+      "George Field",
+      "Chromatography",
+      "1835, Plate I (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -110,7 +140,12 @@ window.SITE = {
       "det": "Oil on canvas, 28 1/2 × 36 1/4 in. Yale University Art Gallery, New Haven",
       "alt": "Café interior with a billiard table under hanging lamps, blood-red walls, a green ceiling, and a yellow floor",
       "line": "Van Gogh set blood-red walls against a green ceiling and billiard table; the opposites heighten each other into a clash he meant to feel harsh."
-     }
+     },
+     "cap": [
+      "M. E. Chevreul",
+      "The Principles of Harmony and Contrast of Colours",
+      "1890, Plate I"
+     ]
     },
     {
      "type": "concept",
@@ -126,7 +161,12 @@ window.SITE = {
       "det": "Oil on canvas, 79 1/4 × 167 1/2 in. The Cleveland Museum of Art",
       "alt": "Wide view of a pond surface in violets, blues, and greens, scattered with pale lily pads and a few warm blossoms",
       "line": "Monet kept the pond to violets, blues, and greens, neighbors that blend into one continuous surface; a few pale lily pads and warm blossoms break the run."
-     }
+     },
+     "cap": [
+      "M. E. Chevreul",
+      "The Principles of Harmony and Contrast of Colours",
+      "1890, Plate VI (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -142,7 +182,12 @@ window.SITE = {
       "det": "Oil on canvas, 29 1/4 × 37 1/4 in. J. Paul Getty Museum, Los Angeles",
       "alt": "Garden bed of blue-violet irises with long green leaves, reddish earth below, and orange flowers behind",
       "line": "Van Gogh set blue-violet irises against orange flowers and green leaves against red earth, so each color makes its neighbor look stronger."
-     }
+     },
+     "cap": [
+      "M. E. Chevreul",
+      "The Principles of Harmony and Contrast of Colours",
+      "1890, Plate II"
+     ]
     },
     {
      "type": "concept",
@@ -158,7 +203,12 @@ window.SITE = {
       "det": "Oil on canvas, 21 1/2 × 25 3/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Pine trees framing a bay and distant hills, painted in separate dabs of blue, green, orange, pink, and violet",
       "line": "Cross laid the shore in separate dabs of orange, pink, and violet; from a step back they merge into warm, sunlit ground."
-     }
+     },
+     "cap": [
+      "M. E. Chevreul",
+      "The Principles of Harmony and Contrast of Colours",
+      "1890, Plate X"
+     ]
     },
     {
      "type": "concept",

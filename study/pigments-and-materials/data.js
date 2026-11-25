@@ -14,7 +14,12 @@ window.SITE = {
      "title": "Pigments and Materials",
      "img": "amenhotep-palette",
      "alt": "Long ivory palette with six oval wells holding black, red, brown, yellowish, green, and blue pigment cakes, and a carved royal name at one end",
-     "para": "The earliest pigments, the colored powders that go into paint, were dug from the ground or burned, and Egyptian blue, fired in a furnace, is the oldest known synthetic pigment. Most laboratory-made colors arrived after 1800; in 1841 an American painter, John Goffe Rand, devised the collapsible metal paint tube."
+     "para": "The earliest pigments, the colored powders that go into paint, were dug from the ground or burned, and Egyptian blue, fired in a furnace, is the oldest known synthetic pigment. Most laboratory-made colors arrived after 1800; in 1841 an American painter, John Goffe Rand, devised the collapsible metal paint tube.",
+     "cap": [
+      "Egypt, New Kingdom",
+      "Painter’s Palette Inscribed with the Name of Amenhotep III",
+      "about 1386–1347 BCE"
+     ]
     },
     {
      "type": "concept",
@@ -30,7 +35,12 @@ window.SITE = {
       "det": "Oil on canvas, 33 1/4 × 26 in. National Gallery of Art, Washington",
       "alt": "Rembrandt in a dark beret and brown coat, his lined face lit from the left against a dark background",
       "line": "Analysis found red, yellow, and brown ochres, lead white, carbon black, and just traces of vermilion, a mineral red, so the whole picture, flesh included, holds to warm browns, tans, and dull reds."
-     }
+     },
+     "cap": [
+      "James Sowerby",
+      "British Mineralogy",
+      "1809, yellow and red ochres"
+     ]
     },
     {
      "type": "concept",
@@ -46,7 +56,12 @@ window.SITE = {
       "det": "Oil on canvas, 63 × 77 1/4 in. J. Paul Getty Museum, Los Angeles",
       "alt": "Venus clinging to Adonis as he turns away with his hounds, in a wooded landscape",
       "line": "Adonis wears both kinds of red: vermilion in the orange-red sleeve, a lake in the pinker tunic."
-     }
+     },
+     "cap": [
+      "Unknown engraver",
+      "The Manner of Propagating, Gathering, and Curing the Grana or Cochineel",
+      "engraving"
+     ]
     },
     {
      "type": "concept",
@@ -62,7 +77,12 @@ window.SITE = {
       "det": "Oil on canvas, 17 1/2 × 15 1/4 in. Mauritshuis, The Hague",
       "alt": "Girl looking over her shoulder, wearing a blue and yellow turban and a large pearl earring, against a dark background",
       "line": "Vermeer painted the turban's blue in top-quality natural ultramarine, with lead white in the light and chalk in the shade, so one blue turns from pale to deep around the head."
-     }
+     },
+     "cap": [
+      "James Sowerby",
+      "Exotic Mineralogy",
+      "1811–17, lapis lazuli and azurite"
+     ]
     },
     {
      "type": "concept",
@@ -78,7 +98,12 @@ window.SITE = {
       "det": "Oil on canvas, 81 1/4 × 113 1/2 in. The National Gallery, London",
       "alt": "Men of a Venetian family in red and dark robes kneel and stand around an altar with a cross, boys at the sides",
       "line": "Nearly 9 1/2 feet across, it is one unseamed length of patterned twill, so no seam crosses sky or figures; before the 1800s most large canvases were stitched from strips."
-     }
+     },
+     "cap": [
+      "Diderot and d’Alembert",
+      "Encyclopédie",
+      "1771, Peinture, Plate IV (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -115,7 +140,12 @@ window.SITE = {
       "det": "Tempera on poplar panel, 33 1/2 × 24 1/4 in. National Gallery of Art, Washington",
       "alt": "Madonna in a dark blue mantle holding the Christ Child, against a gold background in a pointed arch",
       "line": "Giotto set the shadows in a green underpaint before the pink of the flesh went on; it shows through as a cool gray-green on the shaded sides of the faces."
-     }
+     },
+     "cap": [
+      "Paolo di Giovanni Fei",
+      "Madonna and Child",
+      "1370s (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -131,7 +161,12 @@ window.SITE = {
       "det": "Fresco, mounted on canvas, 131 × 132 in. The Metropolitan Museum of Art (The Cloisters), New York",
       "alt": "Large pink lion striding on an orange and gray field beside an arcade, a band of scrollwork below",
       "line": "Painted on a monastery wall after 1200, then removed and fixed to canvas in the early 1900s, the lion still holds its pink, orange, and gray, locked into the plaster."
-     }
+     },
+     "cap": [
+      "Roman",
+      "",
+      "Wall painting fragment from Boscoreale, about 50–40 BCE"
+     ]
     },
     {
      "type": "concept",
@@ -147,7 +182,12 @@ window.SITE = {
       "det": "Oil on wood, transferred to mahogany, 24 1/2 × 21 1/2 in. The National Gallery, London",
       "alt": "Woman in a green dress and white headcloth seated on the floor reading a book, a jar beside her",
       "line": "Tests identified linseed oil; the lips melt together where wet paint met wet paint, and the brush pulled through the fur trim before it dried."
-     }
+     },
+     "cap": [
+      "Jan van der Straet (Stradanus)",
+      "Nova Reperta",
+      "about 1600, The Invention of Oil Painting"
+     ]
     },
     {
      "type": "concept",
@@ -163,7 +203,12 @@ window.SITE = {
       "det": "Transparent watercolor with touches of opaque watercolor and gum glaze, over graphite, on paper, 13 1/2 × 13 1/2 in. Art Institute of Chicago",
       "alt": "Two fishermen, one in a yellow oilskin, beside a beached boat, a sailboat on a pale sea behind them",
       "line": "Homer painted the soft pinks of sky and boat with pigments that hold their color in light, and they have survived; many of his other watercolors have lost washes like them."
-     }
+     },
+     "cap": [
+      "John Singer Sargent",
+      "Man with Red Drapery",
+      "after 1900 (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -179,7 +224,12 @@ window.SITE = {
       "det": "Oil on canvas, 29 × 36 1/4 in. Art Institute of Chicago",
       "alt": "Small bedroom with a yellow wooden bed, two chairs, a table, and pictures on light blue walls",
       "line": "Analysts found specks of red lake in the doors, suspected to have been violet and now light blue, and geranium lake, probably faded, in the floor."
-     }
+     },
+     "cap": [
+      "Vincent van Gogh",
+      "Roses",
+      "1890"
+     ]
     }
    ]
   }

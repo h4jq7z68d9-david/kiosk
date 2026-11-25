@@ -12,6 +12,7 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 - No site-made diagrams remain (David: no diagrams made by Claude; use paintings, old textbook images, or an existing open diagram or photo). Replacements: Ryder, *Moonlight Marine* detail (Oil Cures; wrinkling dropped, cracks shown); Holger Casselmann's film-formation diagram from Wikimedia Commons, labels translated into English (Acrylic Dries; CC BY-SA 3.0); Guido Reni, *Adoration of the Magi* detail, Cleveland, CC0 (Painting Over Dry Paint); Franz Marc, *Blue Horse I* (Local and Expressive Color); Dürer, *Salvator Mundi*, the Met (Grounds). Color Shift as It Dries dropped as a slide; its point moved into Acrylic Dries.
 - Image licence rule widened by David for diagrams and photos: CC BY and CC BY-SA are allowed with credit and a licence link. The credits page now links the licence label when `credits.js` gives a `licenseUrl` (all courses).
 - Two fact-review rounds by independent agents on the changed text: round 1 three wording fixes (Grounds, Painting Over Dry Paint, the diagram credit), round 2 all pass. Oxford commas added to the older slide text and settings text of the five courses (59 places) on David's instruction.
+- Two-line captions (`cap`: maker, title, short tail) added to the 43 older technique images, shortened from their credits lines; approved by David.
 - check.js PASS (18 courses). smoke.js PASS, run on a cloud copy of the built site because Chromium would not launch in the Mac sandbox.
 
 -----

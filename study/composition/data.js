@@ -14,7 +14,12 @@ window.SITE = {
      "title": "Composition",
      "img": "poore-picture-vision",
      "alt": "Line drawing in two parts: a narrow frame holding a small slice of landscape, labeled The Picture, and lines fanning out from a frame to a wide view of sky, hills, and a winding river, labeled The Vision",
-     "para": "Composition is how a painter arranges the parts of a picture. In 1435 Leon Battista Alberti named it one of three parts of a painter's job and compared the picture to an open window. In his 1899 book Composition, the American teacher Arthur Wesley Dow drew heavily on Japanese art, with line, dark-and-light, and color as its elements."
+     "para": "Composition is how a painter arranges the parts of a picture. In 1435 Leon Battista Alberti named it one of three parts of a painter's job and compared the picture to an open window. In his 1899 book Composition, the American teacher Arthur Wesley Dow drew heavily on Japanese art, with line, dark-and-light, and color as its elements.",
+     "cap": [
+      "Henry R. Poore",
+      "Pictorial Composition",
+      "about 1915, The Picture; The Vision"
+     ]
     },
     {
      "type": "concept",
@@ -30,7 +35,12 @@ window.SITE = {
       "det": "Color woodcut, image 5 × 2 1/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Tall, narrow color woodcut of a river valley: green field and purple-roofed houses below, a pale river bend, blue-green hills, and a pink sky above",
       "line": "The Met links this tiny upright print to Japanese pillar prints; its narrow frame stacks the view in bands, field to houses to river to hills."
-     }
+     },
+     "cap": [
+      "Arthur Wesley Dow",
+      "Composition",
+      "1914, No. 37"
+     ]
     },
     {
      "type": "concept",
@@ -46,7 +56,12 @@ window.SITE = {
       "det": "Woodcut, image 7 × 8 3/4 in. The Art Institute of Chicago",
       "alt": "Black-and-white woodcut of a nude woman lying face down across a bed of patterned covers, playing with a white cat",
       "line": "Vallotton uses no gray at all; the pale body is mostly bare paper, given its outline by the black around it."
-     }
+     },
+     "cap": [
+      "Arthur Wesley Dow",
+      "Composition",
+      "1914, No. 43 (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -62,7 +77,12 @@ window.SITE = {
       "det": "Oil on canvas, 37 × 49 1/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Saint Peter, an old bald man, gestures toward himself as a woman and a soldier in a helmet accuse him, in near darkness",
       "line": "Lit faces and hands stand out against near-black darkness, and the Met reads the pointing fingers as three accusations, matching Peter's three denials."
-     }
+     },
+     "cap": [
+      "Henry R. Poore",
+      "Pictorial Composition",
+      "about 1915, after Gérôme, Lion in the Desert (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -78,7 +98,12 @@ window.SITE = {
       "det": "Oil and gold on wood, main panel 67 3/4 × 67 3/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Altarpiece with the Virgin and Child on a high throne between four saints, and God the Father between two angels in the arched panel above",
       "line": "Raphael centers the Virgin and, in the arch above, God the Father, with a female and a male saint on each side, so the halves nearly mirror each other."
-     }
+     },
+     "cap": [
+      "Henry R. Poore",
+      "Pictorial Composition",
+      "about 1915, after Detaille, Salute to the Wounded"
+     ]
     },
     {
      "type": "concept",
@@ -94,7 +119,12 @@ window.SITE = {
       "det": "Oil on canvas, 35 1/4 × 51 in. National Gallery of Art, Washington",
       "alt": "A small girl sprawls in a large blue armchair at right; a small dog sleeps in a matching chair at left; more blue chairs and a sofa stand behind",
       "line": "Cassatt answers the large chair and sprawled girl right of center with a small dark dog and open floor at left, which keep the right from outweighing the left."
-     }
+     },
+     "cap": [
+      "Henry R. Poore",
+      "Pictorial Composition",
+      "about 1915, Three Ideas in Pictorial Balance"
+     ]
     },
     {
      "type": "concept",
@@ -110,7 +140,12 @@ window.SITE = {
       "det": "Oil on wood, 53 1/2 × 39 1/2 in. The Metropolitan Museum of Art, New York",
       "alt": "The young John the Baptist hands a globe to the Christ Child, who stands against the seated Virgin, with Joseph behind them against a green curtain",
       "line": "The Met notes how the four figures' hands spiral around the globe John passes to the Christ Child, gathering the group around one point."
-     }
+     },
+     "cap": [
+      "Henry R. Poore",
+      "Pictorial Composition",
+      "about 1915, Fundamental Forms of Construction"
+     ]
     },
     {
      "type": "concept",
@@ -126,7 +161,12 @@ window.SITE = {
       "det": "Oil on canvas, 39 1/4 × 59 in. The Metropolitan Museum of Art, New York",
       "alt": "Night scene of a circus sideshow: a trombone player on a platform, musicians at left, gas lamps above, and dark heads of a crowd below",
       "line": "Seurat's stiff horizontals and verticals invite golden-ratio lines drawn over them, yet a study of his notes, sketches, and paintings, summarized in 1981, found no sign he used the ratio."
-     }
+     },
+     "cap": [
+      "Henry R. Poore",
+      "Pictorial Composition",
+      "about 1915, tree landscape on an unequal grid"
+     ]
     },
     {
      "type": "concept",
@@ -142,7 +182,12 @@ window.SITE = {
       "det": "Oil on canvas, 18 × 16 in. The Metropolitan Museum of Art, New York",
       "alt": "A woman in a white linen headdress and collar opens a window with one hand and holds a gilt pitcher in a basin with the other",
       "line": "Window light falls on the white headdress and collar, the pitcher, and the basin; a Met audio-guide speaker says it \"is guiding me around the room.\""
-     }
+     },
+     "cap": [
+      "Henry R. Poore",
+      "Pictorial Composition",
+      "about 1915, after Millet, The Shepherdess"
+     ]
     },
     {
      "type": "concept",
@@ -158,7 +203,12 @@ window.SITE = {
       "det": "Woodblock print, image 13 1/2 × 9 in. Brooklyn Museum, New York",
       "alt": "A dark plum trunk with white blossoms fills the foreground; beyond it, an orchard and small visitors along a fence under a red sky",
       "line": "Hiroshige sets the plum trunk so close it runs off the frame and shows the orchard and its small visitors through its branches, with almost nothing in between: space jumps from very near to far."
-     }
+     },
+     "cap": [
+      "Arthur Wesley Dow",
+      "Composition",
+      "1914, No. 36, traced from Hiroshige (detail)"
+     ]
     }
    ]
   }

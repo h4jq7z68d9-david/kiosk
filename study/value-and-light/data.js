@@ -14,7 +14,12 @@ window.SITE = {
      "title": "Value and Light",
      "img": "cross-fig21",
      "alt": "Black-and-white reproduction of a drapery study by Leonardo: heavy cloth falling in deep folds, lit from the upper left",
-     "para": "Leonardo da Vinci saw light and shade as what lets a flat picture look solid. In the 1800s, drawing manuals by Mary Merrifield and Anson Cross taught the same ideas with plain white models."
+     "para": "Leonardo da Vinci saw light and shade as what lets a flat picture look solid. In the 1800s, drawing manuals by Mary Merrifield and Anson Cross taught the same ideas with plain white models.",
+     "cap": [
+      "Anson K. Cross",
+      "Light and Shade",
+      "1897, Fig. 21, after Leonardo da Vinci"
+     ]
     },
     {
      "type": "concept",
@@ -30,7 +35,12 @@ window.SITE = {
       "det": "Oil on canvas, 32 3/4 × 43 in. The Metropolitan Museum of Art, New York",
       "alt": "A reclining nude seen from behind, turning her head over her shoulder, painted almost entirely in grays beside a gray curtain, on a pale cream cushion",
       "line": "Ingres painted this unfinished, smaller repeat of his 1814 Grande Odalisque almost entirely in grays, so value does nearly all the work of building the body."
-     }
+     },
+     "cap": [
+      "Mary P. Merrifield",
+      "Handbook of Light and Shade",
+      "about 1880, Plate 2 (detail)"
+     ]
     },
     {
      "type": "concept",
@@ -46,7 +56,12 @@ window.SITE = {
       "det": "Oil on wood, 11 × 13 1/2 in. Musée du Louvre, Paris",
       "alt": "An old man seated by a bright window in a dark room with a spiral staircase, a small fire glowing at the right",
       "line": "Rembrandt gave most of the panel to darkness, so the window daylight reaching the old man and one small fire at the right glow against it."
-     }
+     },
+     "cap": [
+      "Berthe Morisot",
+      "Summer’s Day",
+      "about 1879"
+     ]
     },
     {
      "type": "concept",
@@ -62,7 +77,12 @@ window.SITE = {
       "det": "Oil on canvas, 27 1/4 × 33 1/4 in. The San Diego Museum of Art",
       "alt": "A quince and a cabbage hanging on strings, a cut melon and a cucumber on a stone ledge, in a dark opening",
       "line": "Sánchez Cotán let the lit fronts of the quince and cabbage give way to deep shadow on the sides away from the light, so each looks round against the dark opening."
-     }
+     },
+     "cap": [
+      "Mary P. Merrifield",
+      "Handbook of Light and Shade",
+      "about 1880, Plate 9"
+     ]
     },
     {
      "type": "concept",
@@ -78,7 +98,12 @@ window.SITE = {
       "det": "Oil on canvas, 24 3/4 × 20 3/4 in. Ordrupgaard, Copenhagen",
       "alt": "An empty gray room with a tall window and a closed door, sunbeams slanting through the air onto the floor",
       "line": "The window bars block parts of the sunbeams, so the patches of sun on the floor carry the window's grid of shadow."
-     }
+     },
+     "cap": [
+      "Mary P. Merrifield",
+      "Handbook of Light and Shade",
+      "about 1880, Plate 3"
+     ]
     },
     {
      "type": "concept",
@@ -94,7 +119,12 @@ window.SITE = {
       "det": "Black and white chalk with stumping on blue paper, 10 × 10 1/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Drawing of cloth falling in heavy folds, in black and white chalk on blue paper",
       "line": "Light from one side catches the cloth's ridges in white chalk, the deepest folds go to black, and the blue paper is the middle value, so each fold reads as rounded."
-     }
+     },
+     "cap": [
+      "Anson K. Cross",
+      "Light and Shade",
+      "1897, Figs. 8, 10, and 11"
+     ]
     },
     {
      "type": "concept",
@@ -110,7 +140,12 @@ window.SITE = {
       "det": "Oil on canvas, 32 × 27 1/2 in. The Metropolitan Museum of Art, New York",
       "alt": "Portrait of a man with dark curly hair and a beard, wearing a lace collar and a dark coat against a dark background",
       "line": "Velázquez kept the white collar crisp and let the beard melt into the hair and the dark coat into the dark background, so the collar and lit face stand forward."
-     }
+     },
+     "cap": [
+      "Anson K. Cross",
+      "Light and Shade",
+      "1897, Fig. 13"
+     ]
     },
     {
      "type": "concept",
@@ -126,7 +161,12 @@ window.SITE = {
       "det": "Oil on wood, 74 1/2 × 47 1/4 in. The National Gallery, London",
       "alt": "The Virgin with the infant John the Baptist, the Christ Child, and an angel in a dark, rocky grotto",
       "line": "The figures come out of the dark grotto by soft degrees, with no hard outline at the Virgin's temples or nose, an effect later called sfumato, from the Italian for \"to turn to smoke\"."
-     }
+     },
+     "cap": [
+      "Rembrandt",
+      "Aristotle with a Bust of Homer",
+      "1653 (detail)"
+     ]
     }
    ]
   }

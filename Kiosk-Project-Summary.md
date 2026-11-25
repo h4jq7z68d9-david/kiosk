@@ -685,7 +685,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 - [ ] **Technique courses on the plate viewer are on branch `plate-technique-mockup`, not on main.** Push only on David's word. Before a push: rerun `smoke.js` (run it in a cloud copy if Chromium will not launch on the Mac).
 - [ ] **Low-resolution images accepted for now:** the Reni detail (1,069 px) and the translated film-formation diagram (930 px). Replace if a larger open file turns up.
-- [ ] **Captions are uneven:** the five new concept images and all example paintings have a two-line caption; older concept images show their credits "work" line. Add `cap` to the older slides if David wants them to match.
+- [x] **Captions:** every technique slide image now has a two-line caption (`cap` on all 48 slides, Nov 25 2026); full citations stay on the credits page.
 - [ ] **Later:** David may photograph a wet acrylic stroke over a dry one (the Color Shift point now lives in Acrylic Dries). The electron-microscope photo of acrylic particles (`Dispersionspoly PMMA.tif`, CC BY-SA 4.0, Commons) has no slot yet.
 - [ ] **iCloud bundles** under `School v2/Art Technique Course Builder/` should match the repo after any push.
 
