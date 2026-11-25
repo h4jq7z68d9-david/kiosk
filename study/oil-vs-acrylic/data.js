@@ -45,7 +45,7 @@ window.SITE = {
       "date": "1870–90",
       "det": "Oil and possibly wax on wood, 11 1/2 × 12 in. The Metropolitan Museum of Art, New York",
       "alt": "A dark sailboat on a dark sea under heavy dark clouds, with pale moonlit sky between them, the surface crossed by wide cracks",
-      "line": "Ryder built up thick paint layer after layer; wide cracks now cross sky and sea, and the Met reports that the outlines of clouds, sails and hull have shifted since."
+      "line": "Ryder built up thick paint layer after layer; wide cracks now cross sky and sea, and the Met reports that the outlines of clouds, sails, and hull have shifted since."
      },
      "cap": [
       "Albert Pinkham Ryder",
@@ -111,7 +111,7 @@ window.SITE = {
      "title": "Painting Over Dry Paint",
      "img": "reni-adoration-detail",
      "alt": "Painting detail: a kneeling angel in pale, uncolored robes holding a gold vessel, with the faint shape of a dog’s head beside the knee",
-     "stmt": "Once a layer is dry, new paint no longer mixes with it, so the layer can be changed or covered completely; changes hidden this way are called pentimenti. In this unfinished altarpiece, a dog’s head from an earlier idea shows faintly above the angel’s knee.",
+     "stmt": "Once a layer is dry, new paint no longer mixes with it, so the layer can be changed or covered completely; such changes are called pentimenti, and some show through later. In this unfinished altarpiece, a dog’s head from an earlier idea shows faintly above the angel’s knee.",
      "ex": {
       "key": "titian-venus-with-a-mirror",
       "artist": "Titian",

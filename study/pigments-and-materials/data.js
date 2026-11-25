@@ -84,8 +84,8 @@ window.SITE = {
      "type": "concept",
      "title": "Grounds",
      "img": "durer-salvator-mundi",
-     "alt": "Christ in a blue robe and red cloak raising one hand and holding a globe; the face and hands are unpainted, showing a pale surface covered with fine drawn lines",
-     "stmt": "A ground is the first coat on a panel or canvas, a smooth, even surface for paint to cling to; its color shows through thin paint. Dürer never painted the face and hands, so the ground is still bare there, with his drawing on it.",
+     "alt": "Christ in a blue robe and red cloak raising one hand and holding a globe; the face and hands are unfinished, pale and covered with fine drawn lines",
+     "stmt": "A ground is the first coat on a panel or canvas, a smooth, even surface for paint to cling to; its color shows through thin paint. Dürer left the face and hands unfinished, so his drawing still shows there, on the bare ground or through the first thin layers of paint.",
      "ex": {
       "key": "rubens-samson-delilah",
       "artist": "Peter Paul Rubens",

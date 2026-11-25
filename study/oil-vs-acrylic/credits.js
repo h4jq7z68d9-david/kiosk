@@ -130,7 +130,7 @@ window.CREDITS = {
   "copyrightNotice": "Public Domain"
  },
  "casselmann-film-formation": {
-  "work": "Holger Casselmann, Trocknung PUD 1-5 (the steps of a polymer dispersion drying into a film); labels translated into English and layout adapted for this site, and shared under the same license",
+  "work": "Holger Casselmann, Trocknung PUD 1-5 (the steps of a polymer dispersion drying into a film); labels translated into English and layout adapted for this site; this version is shared under the same license",
   "page": "https://commons.wikimedia.org/wiki/File:Trocknung_PUD_1-5_HC1.png",
   "file": "https://upload.wikimedia.org/wikipedia/commons/7/79/Trocknung_PUD_1-5_HC1.png",
   "license": "CC BY-SA 3.0",
