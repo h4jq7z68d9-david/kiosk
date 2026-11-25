@@ -169,7 +169,7 @@ for (const slug of courses) {
       if (s.type === 'concept') {
         works++; keys.add(s.img);
         if (s.ex) { const k = s.ex.img || s.ex.key; keys.add(k); if (!fs.existsSync(path.join(imgDir, 'thumb', k + '.jpg'))) err(`${tag}: example "${s.ex.title}" has no img/thumb/${k}.jpg (rebuild the course)`); }
-        if (!s.look || s.look.length < 2 || s.look.length > 4) err(`${tag}: concept "${s.title}" needs 2 to 4 Look-at bullets`);
+        if (cfg.viewer === 'plate' ? (s.look && (s.look.length < 2 || s.look.length > 4)) : (!s.look || s.look.length < 2 || s.look.length > 4)) err(`${tag}: concept "${s.title}" needs 2 to 4 Look-at bullets`);   // plate viewer: look bullets optional
       }
     }
   }

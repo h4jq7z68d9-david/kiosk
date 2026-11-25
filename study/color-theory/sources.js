@@ -121,6 +121,10 @@ window.SOURCES = {
     {
      "html": "The Metropolitan Museum of Art. &ldquo;Henri-Edmond Cross, <i>Pines Along the Shore</i>, 1896.&rdquo; Collection record 1975.1.164.",
      "url": "https://www.metmuseum.org/art/collection/search/459095"
+    },
+    {
+     "html": "Städtische Galerie im Lenbachhaus und Kunstbau, Munich. Franz Marc, <i>Blue Horse I</i>, 1911. Record on Google Arts &amp; Culture.",
+     "url": "https://artsandculture.google.com/asset/blue-horse-i-0099/ZAFpPn_oQwEIwQ"
     }
    ]
   },

@@ -29,16 +29,6 @@ window.CREDITS = {
   "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
   "copyrightNotice": "Public Domain"
  },
- "oa-oil-cures": {
-  "work": "Oil Cures",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
  "ryder-moonlight-marine": {
   "work": "Albert Pinkham Ryder, Moonlight Marine (1870–90)",
   "page": "https://www.metmuseum.org/art/collection/search/11979",
@@ -48,16 +38,6 @@ window.CREDITS = {
   "source": "The Met Open Access",
   "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
   "copyrightNotice": "Public Domain"
- },
- "oa-acrylic-dries": {
-  "work": "Acrylic Dries",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site",
-  "licenseUrl": null,
-  "copyrightNotice": null
  },
  "dn-early-still": {
   "work": "David Nicholson, Early, Still (2025)",
@@ -89,46 +69,6 @@ window.CREDITS = {
   "licenseUrl": null,
   "copyrightNotice": "CC0 Public Domain Designation"
  },
- "oa-color-shift": {
-  "work": "Color Shift as It Dries",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "dn-umbrella-reverie": {
-  "work": "David Nicholson, Umbrella, Reverie (2024)",
-  "page": "https://davidnicholsonart.com/",
-  "file": "David Nicholson",
-  "license": "© David Nicholson",
-  "author": "David Nicholson",
-  "source": "David Nicholson Art",
-  "licenseUrl": null,
-  "copyrightNotice": "© David Nicholson"
- },
- "ginevra-blending-detail": {
-  "work": "Leonardo da Vinci, Ginevra de' Benci (c. 1474/1478) (detail)",
-  "page": "https://www.nga.gov/artworks/50724-ginevra-de-benci-obverse",
-  "file": "https://api.nga.gov/iiif/8f29e3c9-a289-4d53-abf0-31a66e9e98fa/full/max/0/default.jpg",
-  "license": "Public domain (NGA Open Access, CC0)",
-  "author": "Leonardo da Vinci",
-  "source": "National Gallery of Art, Washington",
-  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
-  "copyrightNotice": "This object’s media is free and in the public domain."
- },
- "rotari-girl-flower": {
-  "work": "Pietro Rotari, A Girl with a Flower in Her Hair (1760/1762)",
-  "page": "https://www.nga.gov/collection/art-object-page.249.html",
-  "file": "https://api.nga.gov/iiif/9d1455d3-8732-45af-9511-b0299968ad29/full/max/0/default.jpg",
-  "license": "Public domain (NGA Open Access, CC0)",
-  "author": "Pietro Rotari",
-  "source": "National Gallery of Art, Washington",
-  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
-  "copyrightNotice": "This object’s media is free and in the public domain."
- },
  "van-gogh-green-wheat-detail": {
   "work": "Vincent van Gogh, Green Wheat Fields, Auvers (1890) (detail)",
   "page": "https://www.nga.gov/artworks/163323-green-wheat-fields-auvers",
@@ -148,16 +88,6 @@ window.CREDITS = {
   "source": "National Gallery of Art, Washington",
   "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
   "copyrightNotice": "This object’s media is free and in the public domain."
- },
- "oa-painting-over": {
-  "work": "Painting Over Dry Paint",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site",
-  "licenseUrl": null,
-  "copyrightNotice": null
  },
  "titian-venus-with-a-mirror": {
   "work": "Titian, Venus with a Mirror (c. 1555)",
@@ -188,5 +118,35 @@ window.CREDITS = {
   "source": "Museo Nacional del Prado, via Wikimedia Commons",
   "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
   "copyrightNotice": "Public domain"
+ },
+ "ryder-moonlight-marine-detail": {
+  "work": "Albert Pinkham Ryder, Moonlight Marine (1870–90) (detail)",
+  "page": "https://www.metmuseum.org/art/collection/search/11979",
+  "file": "The Metropolitan Museum of Art, 34.55",
+  "license": "Public domain (Met Open Access)",
+  "author": "Albert Pinkham Ryder",
+  "source": "The Met Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
+ },
+ "casselmann-film-formation": {
+  "work": "Holger Casselmann, Trocknung PUD 1-5 (the steps of a polymer dispersion drying into a film); labels translated into English and layout adapted for this site, and shared under the same license",
+  "page": "https://commons.wikimedia.org/wiki/File:Trocknung_PUD_1-5_HC1.png",
+  "file": "https://upload.wikimedia.org/wikipedia/commons/7/79/Trocknung_PUD_1-5_HC1.png",
+  "license": "CC BY-SA 3.0",
+  "author": "Holger Casselmann",
+  "source": "Holger Casselmann, via Wikimedia Commons",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "copyrightNotice": null
+ },
+ "reni-adoration-detail": {
+  "work": "Guido Reni, Adoration of the Magi (1642) (detail)",
+  "page": "https://www.clevelandart.org/art/1969.132",
+  "file": "https://openaccess-cdn.clevelandart.org/1969.132/1969.132_print.jpg",
+  "license": "CC0",
+  "author": "Guido Reni",
+  "source": "The Cleveland Museum of Art Open Access",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "copyrightNotice": null
  }
 };

@@ -690,6 +690,10 @@ window.SOURCES = {
     {
      "html": "The Metropolitan Museum of Art, New York. &ldquo;<i>Roses</i>&rdquo; (1890), Vincent van Gogh. Collection record, 1993.400.5.",
      "url": "https://www.metmuseum.org/art/collection/search/436534"
+    },
+    {
+     "html": "The Metropolitan Museum of Art. &ldquo;<i>Salvator Mundi</i>&rdquo; (ca. 1505), Albrecht Dürer. Collection record, 32.100.64.",
+     "url": "https://www.metmuseum.org/art/collection/search/436243"
     }
    ]
   },

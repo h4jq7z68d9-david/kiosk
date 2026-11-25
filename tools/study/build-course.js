@@ -75,7 +75,7 @@ const STUDY = '/study.html';
 const HOME = COURSE + '.html';
 const fill = (t) => String(t).replace(/\{name\}/g, NAME);
 const srcOf = (c) => (c && c.source) || 'Wikimedia Commons';   // a credits entry may name its own source
-const V = { tokens: 2, chrome: 26, bar: 5, guideCss: 20, guideJs: 16, search: 3, lightboxCss: 1, lightboxJs: 1, phoneAdvanceCss: 4, phoneAdvanceJs: 4, plateCss: 1, plateJs: 1 };   // bump to refresh browser caches
+const V = { tokens: 2, chrome: 26, bar: 5, guideCss: 20, guideJs: 16, search: 3, lightboxCss: 1, lightboxJs: 1, phoneAdvanceCss: 4, phoneAdvanceJs: 4, plateCss: 2, plateJs: 1 };   // bump to refresh browser caches
 
 /* ---------- load data ---------- */
 const ctx = {}; ctx.window = ctx; vm.createContext(ctx);   // data files use both window.SITE and bare SITE
@@ -161,8 +161,8 @@ S.handouts.forEach((h) => h.slides.forEach((s, i) => {
   const need = (o, ks, w) => ks.forEach((k) => { if (o[k] == null || o[k] === '' || (Array.isArray(o[k]) && !o[k].length)) throw new Error(`${at}: ${w || s.type} needs "${k}"`); });
   if (s.type === 'topen') { need(s, ['title', 'para']); if (i !== 0) throw new Error(`${at}: a topen must be the first slide of its part`); }
   if (s.type === 'concept') {
-    need(s, ['title', 'img', 'alt', 'stmt', 'look', 'ex']);
-    if (s.look.length < 2 || s.look.length > 4) throw new Error(`${at}: "look" needs 2 to 4 bullets, has ${s.look.length}`);
+    need(s, PLATE ? ['title', 'img', 'alt', 'stmt', 'ex'] : ['title', 'img', 'alt', 'stmt', 'look', 'ex']);   // plate viewer (Nov 25 2026): thinned slides, look bullets optional and not shown
+    if (s.look && (s.look.length < 2 || s.look.length > 4)) throw new Error(`${at}: "look" needs 2 to 4 bullets, has ${s.look.length}`);
     if (Array.isArray(s.bul) && s.bul.length > 1) throw new Error(`${at}: "bul" is one line`);
     need(s.ex, ['key', 'artist', 'title', 'date', 'det', 'alt', 'line'], 'ex');
   }
@@ -249,6 +249,10 @@ function exHtml(e) {
     + `<div class="ex-cap"><p class="ex-a">${esc(e.artist)}</p><p class="ex-t"><i>${esc(e.title)}</i>, ${esc(e.date)}</p><p class="ex-l">${esc(e.line)}</p></div></div>`;
 }
 
+/* plate viewer, technique slides: a figure with its caption. `cap` is [maker, title, rest] (title in italics; either of the last two may be empty);
+   without it the caption is the credits.js "work" line. */
+const capHtml = (c) => `<span class="a">${esc(c[0])}</span>${c[1] ? `<i>${esc(c[1])}</i>` : ''}${c[1] && c[2] ? ', ' : ''}${c[2] ? esc(c[2]) : ''}`;
+const figP = (k, alt, c) => `<figure class="fig">${pic(k, alt, c ? capHtml(c).replace('<span class="a">', '').replace('</span>', ', ') : (C[k] ? esc(C[k].work) : ''))}<figcaption>${c ? capHtml(c) : (C[k] ? esc(C[k].work) : '')}</figcaption></figure>`;
 function slideHtml(f) {
   const d = f.d;
   if (f.kind === 'intro') {
@@ -290,6 +294,19 @@ ${scaleRow(d)}<p class="sum">${esc(d.lead)}</p>${d.bul && d.bul.length ? RULE + 
     return ['slide', pic(d.img, d.alt || d.title, w) + `<div class="notes"><p class="eyebrow">${esc(d.label || THEME)} · ${esc(sec(f.hd.wk))}</p><h1 class="title plain">${esc(d.title)}</h1><p class="stmt">${esc(d.stmt)}</p><p class="sum">${esc(d.para)}</p>${RULE}${bul(d.bul)}${d.terms && d.terms.length ? RULE + terms(d.terms) : ''}
 ${d.works && d.works.length ? `<p class="lab">See</p>${wl(d.works)}` : ''}${quote(d.quote)}${crl(d.img)}</div>`];
   }
+  /* plate viewer, technique slides (David, Nov 25 2026): two images side by side at one height, each with its own text under it
+     (concept image, title, statement | example painting, its line), so on phones the order is image, text, image, text.
+     No look bullets, no extra line, no scale card. The opening slide is image, title, paragraph; no list of concepts. */
+  if (PLATE && f.kind === 'topen') {
+    const body = `<div class="notes"><h1 class="htitle">${esc(d.title)}</h1><p class="sum">${esc(d.para)}</p>${d.img ? crx(d.img, d.credit) : ''}</div>`;
+    return d.img ? ['slide tq', figP(d.img, d.alt || d.title, d.cap) + body] : ['slide text', body];
+  }
+  if (PLATE && f.kind === 'concept') {
+    const e = d.ex, k = exImg(e), ed = dims(k); ensureThumb(k);   // the thumbnail still feeds search results
+    const exFig = `<figure class="fig"><button type="button" class="exf" data-lightbox data-full="${img(k)}" data-w="${ed.w}" data-h="${ed.h}" data-alt="${esc(e.alt)}" data-det="${esc(e.det)}" data-credit="${esc(creditText(k, e.credit))}" data-title="${esc(`${e.artist}, ${e.title}, ${e.date}`)}" aria-haspopup="dialog" aria-label="${esc(`Enlarge: ${e.artist}, ${e.title}, ${e.date}`)}"><img src="${img(k)}" width="${ed.w}" height="${ed.h}" alt="${esc(e.alt)}"></button><figcaption>${capHtml([e.artist, e.title, e.date])}</figcaption></figure>`;
+    return ['slide duo', `<div class="col">${figP(d.img, d.alt, d.cap)}<div class="words"><h1 class="title plain">${esc(d.title)}</h1><p class="sum">${esc(d.stmt)}</p>${crx(d.img, d.credit)}</div></div>
+<div class="col">${exFig}<div class="words"><p class="sum">${esc(e.line)}</p>${crx(k, e.credit)}</div></div>`];
+  }
   if (f.kind === 'topen') {   // opening slide: image left (optional), title and one or two lines of history right
     const body = `<div class="notes"><p class="eyebrow">${esc(sec(f.hd.wk))}</p><h1 class="htitle">${esc(d.title)}</h1><p class="sum">${esc(d.para)}</p>${d.img ? crx(d.img, d.credit) : ''}</div>`;
     return d.img ? ['slide', pic(d.img, d.alt || d.title, C[d.img] ? esc(C[d.img].work) : esc(d.title)) + body] : ['slide text', body];
@@ -328,7 +345,7 @@ function textOf(f) {
   else if (f.kind === 'intro' || f.kind === 'credits') p.push(f.label);
   else if (f.kind === 'sources') p.push(f.label, SRCS.intro, ...SRCS.groups.flatMap((g) => g.items.map((i) => i.html.replace(/<[^>]+>/g, ''))));
   else if (f.kind === 'topen') p.push(d.title, d.para);
-  else if (f.kind === 'concept') { const e = d.ex; p.push(d.title, d.stmt, ...d.look, e.artist, e.title, e.date, e.line, oneLine(d.bul)); }
+  else if (f.kind === 'concept') { const e = d.ex; p.push(d.title, d.stmt, ...(PLATE ? [] : d.look), e.artist, e.title, e.date, e.line, PLATE ? '' : oneLine(d.bul)); }
   else p.push(d.title, d.artist, d.date, d.det, d.lead, d.fn, d.stmt, d.para, d.sum, d.sub, ...(d.look || []), ...(d.bul || []), ...(d.terms || []).flat(), d.subj, d.quote && d.quote.q);
   return p.filter(Boolean).join(' · ');
 }

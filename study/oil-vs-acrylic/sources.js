@@ -281,6 +281,10 @@ window.SOURCES = {
     },
     {
      "html": "Museo Nacional del Prado. Diego Velázquez, <em>Philip IV</em> (P001182), as described and illustrated in Gallagher 2010, fig. 3."
+    },
+    {
+     "html": "The Cleveland Museum of Art. “<em>Adoration of the Magi</em>” (1642), Guido Reni. Collection record, 1969.132.",
+     "url": "https://www.clevelandart.org/art/1969.132"
     }
    ]
   }

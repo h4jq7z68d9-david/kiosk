@@ -9,46 +9,6 @@ window.CREDITS = {
   "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
   "copyrightNotice": "Public Domain"
  },
- "rickard-white-lead-pot": {
-  "work": "T. A. Rickard, White Lead from Mine to Battleship (San Francisco, [1908]), p. 37, Fig. 4 (a perforated lead \"buckle\") and Fig. 5 (corroding pot); line drawings, shown side by side and cropped",
-  "page": "https://archive.org/details/whiteleadfrommin00rickrich/page/n40/",
-  "file": "https://archive.org/download/whiteleadfrommin00rickrich/page/n40.jpg",
-  "license": "Public domain",
-  "author": "Rickard, T. A. (Thomas Arthur)",
-  "source": "University of California Libraries via Internet Archive",
-  "licenseUrl": null,
-  "copyrightNotice": "NOT_IN_COPYRIGHT"
- },
- "rembrandt-self-portrait-63": {
-  "work": "Rembrandt van Rijn, Self Portrait at the Age of 63 (1669)",
-  "page": "https://commons.wikimedia.org/wiki/File:Rembrandt,_Self_Portrait_at_the_Age_of_63.jpg",
-  "file": "File:Rembrandt, Self Portrait at the Age of 63.jpg",
-  "license": "Public domain (PD-Art)",
-  "author": "Rembrandt",
-  "source": "Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
- "lampblack-chamber-1906": {
-  "work": "\"Fabrication du noir de fumée\" (Fig. 33), wood engraving signed Perot, from B. Bussard and H. Dubois, Leçons élémentaires de chimie (1906), p. 39; caption cropped",
-  "page": "https://commons.wikimedia.org/wiki/File:Noir_de_fumee.jpg",
-  "file": "File:Noir de fumee.jpg",
-  "license": "Public domain",
-  "author": null,
-  "source": "Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
- "manet-music-tuileries": {
-  "work": "Édouard Manet, Music in the Tuileries Gardens (1862)",
-  "page": "https://commons.wikimedia.org/wiki/File:%C3%89douard_Manet_-_Music_in_the_Tuileries_Gardens.jpg",
-  "file": "File:Édouard Manet - Music in the Tuileries Gardens.jpg",
-  "license": "Public domain (PD-Art)",
-  "author": "Édouard Manet",
-  "source": "Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
  "sowerby-ochres": {
   "work": "James Sowerby, British Mineralogy, vol. 3 (London, 1809): Tab. CCLIV, yellow ochres, and Tab. CCLV, red ochres (both plates dated Feb. 1, 1808); hand-colored engravings, shown side by side and cropped",
   "page": "https://archive.org/details/britishmineralog03sowe/page/n213/",
@@ -105,46 +65,6 @@ window.CREDITS = {
   "file": "File:1665 Girl with a Pearl Earring.jpg",
   "license": "Public domain (PD-Art)",
   "author": "Johannes Vermeer",
-  "source": "Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
- "sowerby-malachite": {
-  "work": "James Sowerby, British Mineralogy, vol. 1 (London, 1804): Tab. XLVII, carbonate of copper (malachite); hand-colored engraving, cropped",
-  "page": "https://archive.org/details/britishmineralog01sowe/page/n207/",
-  "file": "https://archive.org/download/britishmineralog01sowe/page/n207.jpg",
-  "license": "Public domain",
-  "author": "Sowerby, James",
-  "source": "Smithsonian Libraries via Internet Archive",
-  "licenseUrl": null,
-  "copyrightNotice": "NOT_IN_COPYRIGHT"
- },
- "uccello-battle-san-romano": {
-  "work": "Paolo Uccello, The Battle of San Romano (probably about 1438–40)",
-  "page": "https://commons.wikimedia.org/wiki/File:San_Romano_Battle_(Paolo_Uccello,_London)_01.jpg",
-  "file": "File:San Romano Battle (Paolo Uccello, London) 01.jpg",
-  "license": "Public domain (PD-Art)",
-  "author": "Paolo Uccello",
-  "source": "Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
- "sowerby-orpiment-crocoite": {
-  "work": "James Sowerby, Exotic Mineralogy, vol. 1 (London, 1811–13): Tab. LXXI, Orpiment (plate dated Nov. 1, 1812), and Tab. IV, Chromate of Lead (crocoite); hand-colored engravings, shown side by side and cropped",
-  "page": "https://archive.org/details/Exoticmineralog1Sowe/page/n286/",
-  "file": "https://archive.org/download/Exoticmineralog1Sowe/page/n286.jpg ; https://archive.org/download/Exoticmineralog1Sowe/page/n19.jpg",
-  "license": "Public domain",
-  "author": "Sowerby, James",
-  "source": "Smithsonian Libraries via Internet Archive",
-  "licenseUrl": null,
-  "copyrightNotice": "NOT_IN_COPYRIGHT"
- },
- "vangogh-sunflowers": {
-  "work": "Vincent van Gogh, Sunflowers (1888)",
-  "page": "https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_Sunflowers_(1888,_National_Gallery_London).jpg",
-  "file": "File:Vincent van Gogh - Sunflowers (1888, National Gallery London).jpg",
-  "license": "Public domain (PD-Art)",
-  "author": "Vincent van Gogh",
   "source": "Wikimedia Commons",
   "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
   "copyrightNotice": "Public domain"
@@ -229,66 +149,6 @@ window.CREDITS = {
   "licenseUrl": null,
   "copyrightNotice": "CC0 Public Domain Designation"
  },
- "degas-hair-combed-detail": {
-  "work": "Edgar Degas, Woman Having Her Hair Combed (ca. 1886–88), pastel on light green wove paper, now discolored to warm gray, The Metropolitan Museum of Art, 29.100.35 (detail of the lower right)",
-  "page": "https://www.metmuseum.org/art/collection/search/436173",
-  "file": "https://images.metmuseum.org/CRDImages/ep/original/DP253480.jpg",
-  "license": "CC0 (Met Open Access)",
-  "author": "Edgar Degas",
-  "source": "The Metropolitan Museum of Art Open Access",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
- },
- "liotard-maria-frederike": {
-  "work": "Jean-Étienne Liotard, Portrait of Maria Frederike van Reede-Athlone at Seven Years of Age (1755–56)",
-  "page": "https://commons.wikimedia.org/wiki/File:Jean-%C3%89tienne_Liotard_-_Portrait_of_Maria_Frederike_van_Reede-Athlone_at_Seven_Years_of_Age.jpg",
-  "file": "File:Jean-Étienne Liotard - Portrait of Maria Frederike van Reede-Athlone at Seven Years of Age.jpg",
-  "license": "Public domain (PD-Art)",
-  "author": "Jean-Étienne Liotard",
-  "source": "Getty Open Content (via Wikimedia Commons)",
-  "licenseUrl": "http://www.getty.edu/about/opencontent.html",
-  "copyrightNotice": "No restrictions; Public domain"
- },
- "eutyches-portrait": {
-  "work": "Portrait of the Boy Eutyches (100–150 CE), Roman Egypt, encaustic on wood, The Metropolitan Museum of Art, 18.9.2 (cropped)",
-  "page": "https://www.metmuseum.org/art/collection/search/547951",
-  "file": "https://images.metmuseum.org/CRDImages/eg/original/DP-25887-001.jpg",
-  "license": "CC0 (Met Open Access)",
-  "author": null,
-  "source": "The Metropolitan Museum of Art Open Access",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
- },
- "fayum-young-woman-red": {
-  "work": "Roman Egypt, Portrait of a young woman in red (A.D. 90–120)",
-  "page": "https://commons.wikimedia.org/wiki/File:Portrait_of_a_young_woman_in_red_MET_29I_E15R6.jpg",
-  "file": "File:Portrait of a young woman in red MET 29I E15R6.jpg",
-  "license": "CC0",
-  "author": null,
-  "source": "The Met Open Access (via Wikimedia Commons)",
-  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "copyrightNotice": "CC0"
- },
- "pm-panel": {
-  "work": "Diagram: wood panels",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "vanderweyden-portrait-lady": {
-  "work": "Rogier van der Weyden, Portrait of a Lady (c. 1460)",
-  "page": "https://commons.wikimedia.org/wiki/File:Rogier_van_der_Weyden,_Portrait_of_a_Lady,_c._1460,_NGA_51.jpg",
-  "file": "File:Rogier van der Weyden, Portrait of a Lady, c. 1460, NGA 51.jpg",
-  "license": "CC0",
-  "author": "Rogier van der Weyden",
-  "source": "NGA Open Access (via Wikimedia Commons)",
-  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "copyrightNotice": "CC0"
- },
  "encyclopedie-peinture-pl4-chassis": {
   "work": "Diderot and d'Alembert, eds., Encyclopédie, Recueil de planches, vol. 8 (1771): Peinture, Pl. IV (Grand Chevalet, Châssis &c.), fig. 2, canvas stretched on a common stretcher; detail",
   "page": "https://archive.org/details/Recueildeplanch8Dide/page/n340/mode/1up",
@@ -308,16 +168,6 @@ window.CREDITS = {
   "source": "Wikimedia Commons",
   "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
   "copyrightNotice": "Public domain"
- },
- "pm-layers": {
-  "work": "Diagram: layers of a panel painting",
-  "page": "https://davidnicholsonart.com/",
-  "file": "Original diagram",
-  "license": "Original work",
-  "author": "David Nicholson Art",
-  "source": "Made for this site",
-  "licenseUrl": null,
-  "copyrightNotice": null
  },
  "rubens-samson-delilah": {
   "work": "Peter Paul Rubens, Samson and Delilah (about 1609–10)",
@@ -348,5 +198,15 @@ window.CREDITS = {
   "source": "Art Institute of Chicago",
   "licenseUrl": null,
   "copyrightNotice": "CC0 Public Domain Designation"
+ },
+ "durer-salvator-mundi": {
+  "work": "Albrecht Dürer, Salvator Mundi (about 1505)",
+  "page": "https://www.metmuseum.org/art/collection/search/436243",
+  "file": "The Metropolitan Museum of Art, 32.100.64",
+  "license": "Public domain (Met Open Access)",
+  "author": "Albrecht Dürer",
+  "source": "The Met Open Access",
+  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
+  "copyrightNotice": "Public Domain"
  }
 };

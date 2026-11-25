@@ -29,26 +29,6 @@ window.CREDITS = {
   "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
   "copyrightNotice": "Public Domain"
  },
- "dow-rectangles-various-shape": {
-  "work": "Dow, Composition (1899; 9th ed. 1914): No. 35. Landscape in Rectangles of Various Shape.",
-  "page": "https://www.gutenberg.org/cache/epub/45410/pg45410-images.html",
-  "file": "https://www.gutenberg.org/cache/epub/45410/images/no_35.jpg",
-  "license": "Public domain",
-  "author": "Dow",
-  "source": "Project Gutenberg",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "degas-woman-seated-beside-a-vase-of-flowers": {
-  "work": "Edgar Degas, A Woman Seated beside a Vase of Flowers (Madame Paul Valpinçon?) (1865)",
-  "page": "https://www.metmuseum.org/art/collection/search/436121",
-  "file": "The Metropolitan Museum of Art, New York, 29.100.128",
-  "license": "Public Domain (Met Open Access)",
-  "author": "Edgar Degas",
-  "source": "The Metropolitan Museum of Art, New York",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
- },
  "dow-notan-reversal": {
   "work": "Dow, Composition (1899; 9th ed. 1914): No. 43 (detail, middle row).",
   "page": "https://www.gutenberg.org/cache/epub/45410/pg45410-images.html",
@@ -68,26 +48,6 @@ window.CREDITS = {
   "source": "The Art Institute of Chicago",
   "licenseUrl": "https://www.artic.edu/image-licensing",
   "copyrightNotice": "CC0 Public Domain Designation"
- },
- "dow-notan-spotting": {
-  "work": "Dow, Composition (1899; 9th ed. 1914): NOTAN X. Compositions by various masters, reduced to two tones. “Spotting.” (after Manet, Tiepolo, Millet, Corot, Mauve, Fortuny, Giotto, Seymour Haden)",
-  "page": "https://www.gutenberg.org/cache/epub/45410/pg45410-images.html",
-  "file": "https://www.gutenberg.org/cache/epub/45410/images/no_47a.jpg",
-  "license": "Public domain",
-  "author": "Dow",
-  "source": "Project Gutenberg",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "hokusai-under-the-wave-off-kanagawa": {
-  "work": "Katsushika Hokusai, Under the Wave off Kanagawa (The Great Wave), from Thirty-six Views of Mount Fuji (ca. 1830–32)",
-  "page": "https://www.metmuseum.org/art/collection/search/45434",
-  "file": "The Metropolitan Museum of Art, New York, JP1847",
-  "license": "Public Domain (Met Open Access)",
-  "author": "Katsushika Hokusai",
-  "source": "The Metropolitan Museum of Art, New York",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
  },
  "poore-lion-desert": {
   "work": "Poore, Pictorial Composition (1903; 10th ed. c. 1915): Lion in the Desert—Gérôme (Balance of Isolated Measures) (after Jean-Léon Gérôme) (detail)",
@@ -189,46 +149,6 @@ window.CREDITS = {
   "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
   "copyrightNotice": "Public Domain"
  },
- "poore-aesthetics-of-line": {
-  "work": "Poore, Pictorial Composition (1903; 10th ed. c. 1915): Aesthetics of Line (after F. Lamayer; P. Moran; F. V. Spitzer; Rubens; “Swallows” from The Strand)",
-  "page": "https://www.gutenberg.org/cache/epub/26638/pg26638-images.html",
-  "file": "https://www.gutenberg.org/cache/epub/26638/images/line.jpg",
-  "license": "Public domain",
-  "author": "Poore",
-  "source": "Project Gutenberg",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "david-death-of-socrates": {
-  "work": "Jacques Louis David, The Death of Socrates (1787)",
-  "page": "https://www.metmuseum.org/en/art/collection/search/436105",
-  "file": "The Metropolitan Museum of Art, New York, 31.45",
-  "license": "Public Domain (Met Open Access)",
-  "author": "Jacques Louis David",
-  "source": "The Metropolitan Museum of Art, New York",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
- },
- "dow-repetition": {
-  "work": "Dow, Composition (1899; 9th ed. 1914): No 17. Repetition",
-  "page": "https://www.gutenberg.org/cache/epub/45410/pg45410-images.html",
-  "file": "https://www.gutenberg.org/cache/epub/45410/images/no_17.jpg",
-  "license": "Public domain",
-  "author": "Dow",
-  "source": "Project Gutenberg",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "hiroshige-sudden-shower": {
-  "work": "Utagawa Hiroshige, Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo (1857)",
-  "page": "https://www.metmuseum.org/art/collection/search/36461",
-  "file": "The Metropolitan Museum of Art, New York, JP643",
-  "license": "Public Domain (Met Open Access)",
-  "author": "Utagawa Hiroshige",
-  "source": "The Metropolitan Museum of Art, New York",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
- },
  "poore-shepherdess-exit": {
   "work": "Poore, Pictorial Composition (1903; 10th ed. c. 1915): The Shepherdess—Millet (Composition Exhibiting a Double Exit) (after Jean-François Millet)",
   "page": "https://www.gutenberg.org/cache/epub/26638/pg26638-images.html",
@@ -268,65 +188,5 @@ window.CREDITS = {
   "source": "Brooklyn Museum, Gift of Anna Ferris, 30.1478.30",
   "licenseUrl": null,
   "copyrightNotice": null
- },
- "poore-unity": {
-  "work": "Poore, Pictorial Composition (1903; 10th ed. c. 1915): Unity and its Lack; The Lovers—Gussow; The Poulterers—Wallander (after Gussow; Wallander)",
-  "page": "https://www.gutenberg.org/cache/epub/26638/pg26638-images.html",
-  "file": "https://www.gutenberg.org/cache/epub/26638/images/unity.jpg",
-  "license": "Public domain",
-  "author": "Poore",
-  "source": "Project Gutenberg",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "seurat-grande-jatte": {
-  "work": "Georges Seurat, A Sunday on La Grande Jatte — 1884 (1884–86)",
-  "page": "https://www.artic.edu/artworks/27992/a-sunday-on-la-grande-jatte-1884",
-  "file": "The Art Institute of Chicago, 1926.224",
-  "license": "Public domain (AIC API is_public_domain: true)",
-  "author": "Georges Seurat",
-  "source": "The Art Institute of Chicago",
-  "licenseUrl": null,
-  "copyrightNotice": "CC0 Public Domain Designation"
- },
- "dow-rectangles-proportion": {
-  "work": "Dow, Composition (1899; 9th ed. 1914): No. 31. Compositions in Rectangles.",
-  "page": "https://www.gutenberg.org/cache/epub/45410/pg45410-images.html",
-  "file": "https://www.gutenberg.org/cache/epub/45410/images/no_31.jpg",
-  "license": "Public domain",
-  "author": "Dow",
-  "source": "Project Gutenberg",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "cole-oxbow": {
-  "work": "Thomas Cole, View from Mount Holyoke, Northampton, Massachusetts, after a Thunderstorm — The Oxbow (1836)",
-  "page": "https://www.metmuseum.org/art/collection/search/10497",
-  "file": "The Metropolitan Museum of Art, New York, 08.228",
-  "license": "Public Domain (Met Open Access)",
-  "author": "Thomas Cole",
-  "source": "The Metropolitan Museum of Art, New York",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
- },
- "dow-two-value-sketches": {
-  "work": "Dow, Composition (1899; 9th ed. 1914): No. 48. Sketches from nature in two values.",
-  "page": "https://www.gutenberg.org/cache/epub/45410/pg45410-images.html",
-  "file": "https://www.gutenberg.org/cache/epub/45410/images/no_48.jpg",
-  "license": "Public domain",
-  "author": "Dow",
-  "source": "Project Gutenberg",
-  "licenseUrl": null,
-  "copyrightNotice": null
- },
- "seurat-oil-sketch-grande-jatte": {
-  "work": "Georges Seurat, Oil Sketch for \"A Sunday on La Grande Jatte — 1884\" (1884)",
-  "page": "https://www.artic.edu/artworks/61616/oil-sketch-for-a-sunday-on-la-grande-jatte-1884",
-  "file": "The Art Institute of Chicago, 1981.15",
-  "license": "Public domain (AIC API is_public_domain: true)",
-  "author": "Georges Seurat",
-  "source": "The Art Institute of Chicago",
-  "licenseUrl": null,
-  "copyrightNotice": "CC0 Public Domain Designation"
  }
 };

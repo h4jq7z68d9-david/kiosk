@@ -301,16 +301,6 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/the-value-of-a-color.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/saturation.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/warm-and-cool.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
@@ -321,27 +311,7 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/neutrals.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/monochromatic.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/analogous-colors.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/triads.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/contrast-of-area.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -357,11 +327,6 @@
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/local-and-expressive-color.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/color-theory/light-paint-and-the-eye/color-and-emotion.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -704,16 +669,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/whites.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/blacks.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/earth-pigments.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
@@ -725,21 +680,6 @@
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/blues.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/greens.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/yellows.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/wood-panels.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -770,16 +710,6 @@
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/watercolor-and-gouache.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/pastel.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/pigments-and-materials/what-paintings-are-made-of/encaustic.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -826,16 +756,6 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/blending.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/color-shift-as-it-dries.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/oil-vs-acrylic/two-paints-compared/impasto.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
@@ -873,17 +793,7 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/cropping.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/positive-and-negative-space.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/value-massing.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -913,37 +823,12 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/line-and-direction.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/rhythm.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/leading-the-eye.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/depth.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/unity-and-variety.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/proportion-and-scale.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/composition/arranging-a-picture/checking-a-composition.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -1077,22 +962,12 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/local-value-and-light.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/high-and-low-key.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/the-light-and-shadow-sequence.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/highlights.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -1107,27 +982,12 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/hard-and-soft-light.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/candlelight.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/edges.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/chiaroscuro.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://davidnicholsonart.com/study/value-and-light/light-shade-and-form/tenebrism.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>

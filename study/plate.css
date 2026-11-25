@@ -111,3 +111,39 @@
 .plate .slide:not(.text) .scalecard{position:relative;top:auto;margin-top:12px}
 .plate .slide:not(.text) .artist,.plate .slide:not(.text) .title{padding-right:42px}
 @media (max-width:900px){.plate .slide:not(.text) .scalerow{height:auto}.plate .slide:not(.text) .scalebtn{top:22px;right:var(--pad)}}
+
+/* technique slides on the plate viewer (David, Nov 25 2026). Concept slide (.duo): two images side by side at one height, each with its caption
+   and its own text under it, so the example painting's text never leaves the painting; on phones: image, text, image, text.
+   Opening slide (.tq): image left with its caption, title and paragraph right. No scale card on either. */
+.plate .fig{margin:0}
+.plate .fig figcaption{margin-top:10px;font-size:13px;color:var(--ink3);line-height:1.45}
+.plate .fig figcaption .a{display:block;font-size:14px;font-weight:500;color:var(--ink)}
+.plate .slide.duo,.plate.guide-page .slide.duo:not(.text){display:flex;gap:36px;align-items:flex-start;justify-content:flex-start}
+.plate .duo .col{min-width:0}
+.plate .exf{display:block;padding:0;border:0;border-radius:0;background:none;cursor:zoom-in;line-height:0}
+.plate .duo .pic img,.plate .duo .exf img{display:block;width:auto;max-height:none;object-fit:contain;object-position:left top;
+  height:calc(100vh - var(--nav-h) - var(--bar-h) - 250px);height:calc(100dvh - var(--nav-h) - var(--bar-h) - 250px);min-height:260px;
+  max-width:calc((100vw - var(--pad)*2 - 36px)/2)}
+.plate .duo .words{margin-top:14px;max-width:460px}
+.plate .duo .title.plain{font-style:normal;font-weight:500;font-size:24px;line-height:1.2;margin:0;padding-right:0}
+.plate .duo .sum{margin-top:8px}
+.plate .duo .words>.sum:first-child{margin-top:0}
+.plate .duo .crl{margin-top:10px}
+.plate .slide.tq,.plate.guide-page .slide.tq:not(.text){grid-template-columns:auto minmax(280px,380px);align-items:start}
+.plate .tq .pic img{max-height:calc(100vh - var(--nav-h) - var(--bar-h) - 110px);max-height:calc(100dvh - var(--nav-h) - var(--bar-h) - 110px);max-width:calc(100vw - var(--pad)*2 - 44px - 380px)}
+@media (max-width:900px){
+  .plate .slide.duo,.plate.guide-page .slide.duo:not(.text){display:block}
+  .plate .duo .pic img,.plate .duo .exf img,.plate .tq .pic img{width:100%;height:auto;max-width:none;max-height:none;min-height:0}
+  .plate .exf{width:100%}
+  .plate .fig figcaption{padding:0 var(--pad)}
+  .plate .duo .words{padding:16px var(--pad) 30px;max-width:640px;margin-top:0}
+}
+.plate .duo .col{flex:0 1 auto;max-width:calc((100vw - var(--pad)*2 - 36px)/2)}
+.plate .duo .fig{display:table}
+.plate .duo .fig figcaption{display:table-caption;caption-side:bottom}
+@media (max-width:900px){.plate .duo .col{max-width:none}.plate .duo .fig{display:block}.plate .duo .fig figcaption{display:block}}
+.plate .duo .pic img,.plate .duo .exf img{height:auto;min-height:0;object-fit:fill;max-height:calc(100vh - var(--nav-h) - var(--bar-h) - 250px);max-height:calc(100dvh - var(--nav-h) - var(--bar-h) - 250px)}
+@media (max-width:900px){.plate .duo .pic img,.plate .duo .exf img{max-height:none}}
+.plate .tq .fig{display:table}
+.plate .tq .fig figcaption{display:table-caption;caption-side:bottom}
+@media (max-width:900px){.plate .tq .fig{display:block}.plate .tq .fig figcaption{display:block}}
