@@ -7,6 +7,7 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 ## Completed This Session (November 24 2026) — Sean Pringle expenses page
 
 - Third push: `sean-pringle-carpentry.html`, an unlisted `noindex` design mockup of a customer site for Sean (stock placeholder photos, static form), hosted so David can send him a link.
+- Fourth push: the mockup became four pages (home, Work, About, and a "How this mockup works" notes page for Sean) with a working filter, photo viewer and a mockup-only request form. 47 headless checks (kept outside the repo).
 
 - New page `expenses-sean-pringle.html`, a separate copy of Jill's page for Sean Pringle (trim carpenter, Colorado), with its own `/admin/sean/*` routes, table `sean-expenses`, env `SEAN_PASSWORD` / `SEAN_TOKEN` and receipts prefix `receipts/sean/`. David created the table, the role's inline policy `sean-expenses-access` and both environment variables in the console the same day.
 - Added over Jill's page: an optional job on every entry (direction A: job column and filter; David wants direction B, a Jobs tab, later), vendor and sales tax on expenses, and three reports with CSVs: Profit by job, 1099 contractor totals ($2,000 threshold for 2026 payments, editable) and Sales tax paid.
