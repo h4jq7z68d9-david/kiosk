@@ -8,6 +8,14 @@
   tog.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>' + name + '</span>';
   tog.setAttribute('aria-label', 'Outline'); tog.title = 'Outline'; tog.setAttribute('aria-expanded', 'false');
   app.classList.add('collapsed');
+  /* the outline pop-up starts with a way back to the study home (David, Nov 25 2026): the plate viewer hides the breadcrumb */
+  var rail0 = document.getElementById('rail'), ol = document.getElementById('outline');
+  if (rail0 && ol && !rail0.querySelector('.shome')) {
+    var sh = document.createElement('p'); sh.className = 'shome';
+    var art = location.pathname.indexOf('/study/art-history/') === 0;
+    sh.innerHTML = '<a class="ho" href="/study.html' + (art ? '' : '#technique') + '">Study home</a>';
+    rail0.insertBefore(sh, ol);
+  }
   function sync() { tog.setAttribute('aria-expanded', String(!app.classList.contains('collapsed'))); }
   tog.addEventListener('click', function () { setTimeout(function () { sync(); if (!app.classList.contains('collapsed')) closeSearch(); }, 0); });
 

@@ -147,3 +147,5 @@
 .plate .tq .fig{display:table}
 .plate .tq .fig figcaption{display:table-caption;caption-side:bottom}
 @media (max-width:900px){.plate .tq .fig{display:block}.plate .tq .fig figcaption{display:block}}
+/* outline pop-up: study home link above the course's pages */
+.plate .rail .shome{margin:0 0 8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
