@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>About, Sean Pringle Carpentry (design mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Design mockup for Sean Pringle Carpentry, generated as three static pages. Unlisted: not in the site menu or sitemap, noindex.
+     Photos are Unsplash free-licence placeholders, not Sean's work. The text, jobs, sizes and phone number are example copy.
+     The request form checks its fields and shows a confirmation; it sends and stores nothing. -->
+<style>
+:root{--ink:#16211c;--wood:#d7cdb9;--green:#1f5a45;--pad:40px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Libre Franklin',Arial,sans-serif;font-size:16px;color:var(--ink);background:#fff;line-height:1.5}
+a{color:inherit;text-decoration:none} img{display:block}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.mock{background:#fdf1d6;color:#5c430a;font-size:14px;padding:8px var(--pad)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px 26px;flex-wrap:wrap;padding:16px var(--pad)}
+.name{font-weight:700;font-size:19px}
+.bar nav{display:flex;gap:26px;align-items:center;font-size:15px}
+.bar nav a.here{font-weight:600;border-bottom:2px solid var(--green);padding-bottom:2px}
+.call{background:var(--green);color:#fff;padding:9px 16px;font-weight:600;white-space:nowrap}
+.ph{background:var(--wood);overflow:hidden} .ph img{width:100%;height:100%;object-fit:cover}
+button.ph{display:block;width:100%;border:0;padding:0;cursor:zoom-in;font:inherit}
+.hero .ph{aspect-ratio:21/9}
+.lead{padding:30px var(--pad) 0;font-size:34px;font-weight:500;line-height:1.2;max-width:22em;letter-spacing:-.012em}
+h1.page{padding:26px var(--pad) 0;font-size:34px;font-weight:500;line-height:1.2;letter-spacing:-.012em}
+.intro{padding:18px var(--pad) 40px;max-width:calc(36em + 2*var(--pad))} .intro p+p{margin-top:12px}
+.more{font-weight:600;border-bottom:2px solid var(--green);padding-bottom:2px}
+.about{display:grid;grid-template-columns:minmax(0,36em) minmax(0,380px);gap:56px;padding:22px var(--pad) 48px;align-items:start}
+.about p+p,.about h2+p{margin-top:12px} .about h2{font-size:20px;font-weight:600;margin-top:30px} .about .ph{aspect-ratio:4/5}
+.about ol{margin:12px 0 0 1.2em} .about li+li{margin-top:6px}
+.workhead{display:flex;align-items:baseline;gap:28px;padding:26px var(--pad) 20px;border-top:1px solid var(--ink)}
+.workhead.top{border-top:0;padding-top:16px} .workhead h2{font-size:22px;font-weight:600}
+.kinds{display:flex;gap:22px;font-size:15px} .kinds button{font:inherit;color:inherit;background:none;border:0;border-bottom:2px solid transparent;padding:0 0 3px;cursor:pointer}
+.kinds button[aria-pressed=true]{font-weight:600;border-bottom-color:var(--green)}
+.wall{display:grid;grid-template-columns:repeat(12,1fr);gap:34px 16px;padding:0 var(--pad) 28px;align-items:start}
+.wall article{grid-column:span 6} .wall article.w8{grid-column:span 8} .wall article.w4{grid-column:span 4} .wall article.w5{grid-column:span 5} .wall article.w7{grid-column:span 7}
+.wall article[hidden]{display:none}
+figcaption{font-size:15px;margin-top:7px} figcaption b{font-weight:600}
+.dets{display:grid;gap:10px;margin-top:12px} .dets.n3{grid-template-columns:repeat(3,1fr)} .dets.n2{grid-template-columns:repeat(2,1fr)} .dets figcaption{font-size:13px;margin-top:5px} .dets .ph{aspect-ratio:1/1}
+.seeall{padding:0 var(--pad) 48px}
+.ask{display:grid;grid-template-columns:1fr 1.5fr;gap:56px;padding:40px var(--pad) 64px;border-top:1px solid var(--ink);scroll-margin-top:8px}
+.ask h2{font-size:28px;font-weight:600;letter-spacing:-.01em;line-height:1.2} .ask p{margin-top:10px;max-width:24em}
+.tel{font-size:26px;font-weight:700;color:var(--green);display:inline-block;margin-top:14px}
+.sheet{border:1.5px solid var(--ink)} .r{display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid var(--ink)} .r:last-child{border-bottom:0}
+.r>label,.r>span{padding:13px 14px;font-size:14px;font-weight:600;border-right:1px solid var(--ink)}
+.sheet input,.sheet select,.sheet textarea{font:inherit;font-size:16px;border:0;border-radius:0;padding:12px 14px;width:100%;background:#fff;resize:vertical;color:var(--ink)}
+.sheet input:focus-visible,.sheet select:focus-visible,.sheet textarea:focus-visible{outline-offset:-2px}
+.send{font:inherit;font-weight:600;font-size:16px;padding:12px 22px;background:var(--ink);color:#fff;border:0;margin-top:14px;cursor:pointer}
+.msg{margin-top:12px;font-size:15px;max-width:34em} .msg.err{color:#a3271c;font-weight:500}
+.done{border:1.5px solid var(--ink);padding:20px 22px;max-width:34em} .done h3{font-size:18px;font-weight:600} .done p{margin-top:8px}
+.lb{position:fixed;inset:0;background:rgba(22,33,28,.55);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
+.lb.open{display:flex} .lb .card{background:#fff;border:1.5px solid var(--ink);max-width:min(1100px,100%);max-height:100%;display:flex;flex-direction:column}
+.lb img{max-width:100%;max-height:calc(100vh - 140px);object-fit:contain;background:var(--wood)}
+.lb .cap{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:10px 14px;font-size:15px}
+.lb .x{font:inherit;font-weight:600;background:none;border:0;cursor:pointer;color:var(--ink);text-decoration:underline}
+@media(max-width:700px){:root{--pad:16px} .bar{padding-bottom:10px;gap:10px 12px} .name{font-size:17px} .bar nav{order:3;width:100%;gap:22px;font-size:15px} .bar nav .call{display:none} .bar>.call{display:inline-block;padding:8px 11px;font-size:14px}
+ .hero .ph{aspect-ratio:4/3} .lead,h1.page{font-size:24px;padding-top:20px} .about{grid-template-columns:1fr;gap:22px} .about .ph{aspect-ratio:3/2}
+ .workhead{flex-direction:column;gap:10px} .wall{grid-template-columns:1fr} .wall article,.wall article.w8,.wall article.w4,.wall article.w5,.wall article.w7{grid-column:1}
+ .ask{grid-template-columns:1fr;gap:22px} .r{grid-template-columns:104px 1fr} .lb{padding:10px}}
+@media(min-width:701px){.bar>.call{display:none}}
+</style></head><body>
+<p class="mock">Design mockup. The photos are stock placeholders, not Sean’s work. The text, jobs, and phone number are examples, and the form doesn’t send.</p>
+<header class="bar"><a class="name" href="/sean-pringle-carpentry.html">Sean Pringle Carpentry</a><a class="call" href="tel:+19705550100">Call (970) 555-0100</a>
+<nav aria-label="Site"><a href="/sean-pringle-carpentry/work.html">Work</a><a href="/sean-pringle-carpentry/about.html" class="here" aria-current="page">About</a><a href="#request">Request an estimate</a><a class="call" href="tel:+19705550100">Call (970) 555-0100</a></nav></header>
+<main><h1 class="page">About Sean</h1>
+<div class="about"><div>
+<p>Sean has worked as a carpenter in Colorado for most of his adult life. He started on framing crews, moved to finish work, and now takes on the jobs where the details show: trim, built-ins, stairs, decks, and pergolas.</p>
+<p>He works alone or with one helper, so the person who measures your room is the person who builds it. He would rather take a week longer than leave a joint he isn’t happy with.</p>
+<h2>How a job goes</h2>
+<ol><li>Sean visits, looks at the space, and measures.</li><li>You get a written estimate with the materials and the time it should take.</li><li>He schedules the work and tells you what to clear out beforehand.</li><li>He builds it, cleans up, and walks through the finished work with you.</li></ol>
+<h2>Where he works</h2>
+<p>Fort Collins, Loveland, Windsor, Greeley, and the towns between. Ask about jobs farther out.</p>
+</div><div class="ph"><img src="/sean-pringle-carpentry/stock-09.jpg" alt="Hands marking a board with a pencil at a workbench" loading="lazy"></div></div></main>
+<section class="ask" id="request"><div><h2>Have a project in mind?</h2><p>Fill in what you know. Sean will call or email back.</p><a class="tel" href="tel:+19705550100">(970) 555-0100</a></div>
+<div><form id="req" novalidate><div class="sheet">
+<div class="r"><label for="q-name">Name</label><input id="q-name" name="name" autocomplete="name"></div>
+<div class="r"><label for="q-phone">Phone</label><input id="q-phone" name="phone" type="tel" autocomplete="tel"></div>
+<div class="r"><label for="q-email">Email</label><input id="q-email" name="email" type="email" autocomplete="email"></div>
+<div class="r"><label for="q-where">Where</label><input id="q-where" name="where" placeholder="Town"></div>
+<div class="r"><label for="q-kind">Kind of work</label><select id="q-kind" name="kind"><option>Indoor</option><option>Outdoor</option><option>Both, or not sure</option></select></div>
+<div class="r"><label for="q-size">Size</label><input id="q-size" name="size" placeholder="Rooms, or rough length and width"></div>
+<div class="r"><label for="q-when">Wanted by</label><input id="q-when" name="when" placeholder="A month or season is fine"></div>
+<div class="r"><label for="q-notes">Notes</label><textarea id="q-notes" name="notes" rows="3"></textarea></div>
+<div class="r"><label for="q-photos">Photos</label><input id="q-photos" name="photos" type="file" accept="image/*" multiple></div>
+</div><button class="send">Send request</button><p class="msg" id="req-msg" role="alert"></p></form>
+<div class="done" id="req-done" hidden tabindex="-1"><h3>Thanks, <span class="who"></span>.</h3><p>This is a design mockup, so nothing was sent or saved. On the live site, Sean would get this request by email and reply by phone or email.</p><p><button class="x" id="req-again" type="button" style="font:inherit;font-weight:600;background:none;border:0;text-decoration:underline;cursor:pointer;color:inherit">Fill it in again</button></p></div></div></section>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo"><div class="card"><img src="" alt=""><div class="cap"><span class="t"></span><button class="x" type="button">Close</button></div></div></div>
+<script>
+// Work filter: All / Indoor / Outdoor
+document.querySelectorAll('.kinds button').forEach(function(b){b.addEventListener('click',function(){
+  var k=b.dataset.kind;document.querySelectorAll('.kinds button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+  document.querySelectorAll('.wall article').forEach(function(a){a.hidden=!(k==='all'||a.dataset.kind===k)});});});
+// Larger photo in a floating card
+var lb=document.getElementById('lb'),lbImg=lb.querySelector('img'),lbCap=lb.querySelector('.t'),last=null;
+function closeLb(){lb.classList.remove('open');if(last)last.focus();}
+document.querySelectorAll('button.ph').forEach(function(b){b.addEventListener('click',function(){
+  last=b;lbImg.src=b.querySelector('img').src;lbImg.alt=b.querySelector('img').alt;lbCap.textContent=b.dataset.cap||'';lb.classList.add('open');lb.querySelector('.x').focus();});});
+lb.addEventListener('click',function(e){if(e.target===lb||e.target.classList.contains('x'))closeLb();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('open'))closeLb();});
+// Request form: mockup only. Checks the fields, then shows a confirmation. Nothing is sent or stored.
+var f=document.getElementById('req');
+f.addEventListener('submit',function(e){e.preventDefault();
+  var v=function(n){return f.elements[n].value.trim()},m=document.getElementById('req-msg');
+  if(!v('name')){m.textContent='Add your name so Sean knows who to ask for.';m.className='msg err';f.elements.name.focus();return;}
+  if(!v('phone')&&!v('email')){m.textContent='Add a phone number or an email so Sean can reply.';m.className='msg err';f.elements.phone.focus();return;}
+  if(v('email')&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email'))){m.textContent='That email address doesn\u2019t look complete.';m.className='msg err';f.elements.email.focus();return;}
+  var d=document.getElementById('req-done');d.querySelector('.who').textContent=v('name');f.hidden=true;d.hidden=false;d.focus();});
+document.getElementById('req-again').addEventListener('click',function(){f.reset();f.hidden=false;document.getElementById('req-done').hidden=true;document.getElementById('req-msg').textContent='';});
+</script></body></html>

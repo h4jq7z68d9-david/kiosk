@@ -14,7 +14,7 @@ const ORIGIN = 'https://davidnicholsonart.com';
 const FOCUS = process.argv[2] || null;
 
 /* Pages that are tools or legacy and are not held to the public-page rules. */
-const SKIP_PAGES = new Set(['admin.html', 'kiosk.html', 'booth.html', 'expenses-jill-nicholson.html', 'expenses-sean-pringle.html', 'sean-pringle-carpentry.html', 'shop.html']);
+const SKIP_PAGES = new Set(['admin.html', 'kiosk.html', 'booth.html', 'expenses-jill-nicholson.html', 'expenses-sean-pringle.html', 'sean-pringle-carpentry.html', 'sean-pringle-carpentry/work.html', 'sean-pringle-carpentry/about.html', 'shop.html']);
 /* Shared assets whose ?v= must match the generator's V object. */
 const VERSIONED = { 'site-tokens.css': 'tokens', 'site-chrome.js': 'chrome', 'site-chrome.css': 'chrome', 'site-bar.js': 'bar', 'site-bar.css': 'bar', 'guide.css': 'guideCss', 'guide.js': 'guideJs', 'search.js': 'search', 'lightbox.css': 'lightboxCss', 'lightbox.js': 'lightboxJs', 'phone-advance.css': 'phoneAdvanceCss', 'phone-advance.js': 'phoneAdvanceJs', 'plate.css': 'plateCss', 'plate.js': 'plateJs' };
 const BANNED = [/\bweek \d+\b/i, /free study guide/i, /\bwritten by\b/i, /\bcomprised\b/i];
