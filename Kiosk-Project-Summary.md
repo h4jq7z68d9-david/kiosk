@@ -566,6 +566,10 @@ Standalone expenses/revenue page for Sean Pringle (trim carpenter, Colorado; LLC
 - **Recurring:** generated expenses carry no job or vendor (overhead).
 - **Not verified as of Nov 24 2026:** real S3 receipt upload under `receipts/sean/`, a real iPhone, and whether the draft categories fit Sean.
 
+### sean-pringle-carpentry.html (design mockup — added November 24 2026)
+
+Unlisted design mockup of a customer site for Sean Pringle Carpentry, hosted here only so David can send Sean a link. Not in the site menu or `sitemap.xml`; `noindex, nofollow`; skipped by `check.js`. It is a static page with no backend: the request form does not send anything. Photos in `sean-pringle-carpentry/stock-*.jpg` are Unsplash free-licence placeholders, not Sean's work, and the page says so in a notice at the top; jobs, sizes and the phone number are invented. Direction chosen by David: photo-led home page ("B1": each job with named close-ups), banner photo, a text area for Sean's own words, an All / Indoor / Outdoor filter, and a job-sheet request form. The real site is planned for Sean's own domain on AWS; this page comes down when that exists.
+
 ### varied-readings.html (show page)
 
 - Standalone retrospective page for the Varied Readings show (Phoenix Gallery, Lawrence KS, April 2026)
