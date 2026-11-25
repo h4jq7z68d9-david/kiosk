@@ -5,11 +5,11 @@
  ],
  "basePath": "/study",
  "introImg": "amenhotep-palette",
- "imagesNote": "The concept images are historic plates and prints, paintings and details of paintings, and a Roman wall painting; the opening shows an ancient palette. The plates, prints and paintings are public domain.",
+ "imagesNote": "The concept images are historic plates and prints, paintings and details of paintings, and a Roman wall painting; the opening shows an ancient palette. The plates, prints, and paintings are public domain.",
  "ldDescription": "A short course on painters' pigments and materials.",
  "homeDescription": "{name}: what paintings are made of and how colors change with time, shown with historic plates and public-domain paintings.",
- "creditsIntro": "The concept images mix historic plates and prints, paintings, and an ancient palette. The plates, prints and paintings are public domain or CC0; each entry links to the record of its source.",
+ "creditsIntro": "The concept images mix historic plates and prints, paintings, and an ancient palette. The plates, prints, and paintings are public domain or CC0; each entry links to the record of its source.",
  "creditsDescription": "Sources and licenses for the {count} plates and paintings in {name}.",
- "sourcesDescription": "The lectures, courses, museum records and references behind {name}.",
+ "sourcesDescription": "The lectures, courses, museum records, and references behind {name}.",
  "viewer": "plate"
 }

@@ -13,7 +13,7 @@ window.SITE = {
      "type": "topen",
      "title": "Pigments and Materials",
      "img": "amenhotep-palette",
-     "alt": "Long ivory palette with six oval wells holding black, red, brown, yellowish, green and blue pigment cakes, and a carved royal name at one end",
+     "alt": "Long ivory palette with six oval wells holding black, red, brown, yellowish, green, and blue pigment cakes, and a carved royal name at one end",
      "para": "The earliest pigments, the colored powders that go into paint, were dug from the ground or burned, and Egyptian blue, fired in a furnace, is the oldest known synthetic pigment. Most laboratory-made colors arrived after 1800; in 1841 an American painter, John Goffe Rand, devised the collapsible metal paint tube."
     },
     {
@@ -29,14 +29,14 @@ window.SITE = {
       "date": "1659",
       "det": "Oil on canvas, 33 1/4 × 26 in. National Gallery of Art, Washington",
       "alt": "Rembrandt in a dark beret and brown coat, his lined face lit from the left against a dark background",
-      "line": "Analysis found red, yellow and brown ochres, lead white, carbon black and just traces of vermilion, a mineral red, so the whole picture, flesh included, holds to warm browns, tans and dull reds."
+      "line": "Analysis found red, yellow, and brown ochres, lead white, carbon black, and just traces of vermilion, a mineral red, so the whole picture, flesh included, holds to warm browns, tans, and dull reds."
      }
     },
     {
      "type": "concept",
      "title": "Reds",
      "img": "cochineal-plantation",
-     "alt": "Engraving of a field of prickly-pear cactus in rows, a woman kneeling among them, a man walking with a pole and a shelter at left",
+     "alt": "Engraving of a field of prickly-pear cactus in rows, a woman kneeling among them, a man walking with a pole, and a shelter at left",
      "stmt": "A red could be a mineral, such as vermilion, or a lake: dye from a root or an insect fixed onto a colorless powder so it can be used as paint.",
      "ex": {
       "key": "titian-venus-adonis",
@@ -121,7 +121,7 @@ window.SITE = {
      "type": "concept",
      "title": "Fresco",
      "img": "boscoreale-fragment",
-     "alt": "Ragged fragment of Roman wall painting set into a modern panel: a paneled door and a red altar at left, a standing figure in blue-green and a seated figure in a pale mantle at right",
+     "alt": "Ragged fragment of Roman wall painting set into a modern panel: a paneled door and a red altar at left, a standing figure in blue-green, and a seated figure in a pale mantle at right",
      "stmt": "In fresco the color goes onto lime plaster that is still damp, so it ends up inside the wall instead of on it.",
      "ex": {
       "key": "arlanza-lion",
@@ -130,7 +130,7 @@ window.SITE = {
       "date": "after 1200",
       "det": "Fresco, mounted on canvas, 131 × 132 in. The Metropolitan Museum of Art (The Cloisters), New York",
       "alt": "Large pink lion striding on an orange and gray field beside an arcade, a band of scrollwork below",
-      "line": "Painted on a monastery wall after 1200, then removed and fixed to canvas in the early 1900s, the lion still holds its pink, orange and gray, locked into the plaster."
+      "line": "Painted on a monastery wall after 1200, then removed and fixed to canvas in the early 1900s, the lion still holds its pink, orange, and gray, locked into the plaster."
      }
     },
     {
@@ -170,14 +170,14 @@ window.SITE = {
      "title": "Fading and Darkening",
      "img": "vangogh-roses",
      "alt": "Thickly painted bouquet of pale roses with dark green leaves in a green vase, against a light green wall, a few blossoms on the table",
-     "stmt": "Some pigments shift color over the years as they react with light, with the air or with the oil that binds them.",
+     "stmt": "Some pigments shift color over the years as they react with light, with the air, or with the oil that binds them.",
      "ex": {
       "key": "vangogh-bedroom",
       "artist": "Vincent van Gogh",
       "title": "The Bedroom",
       "date": "1889",
       "det": "Oil on canvas, 29 × 36 1/4 in. Art Institute of Chicago",
-      "alt": "Small bedroom with a yellow wooden bed, two chairs, a table and pictures on light blue walls",
+      "alt": "Small bedroom with a yellow wooden bed, two chairs, a table, and pictures on light blue walls",
       "line": "Analysts found specks of red lake in the doors, suspected to have been violet and now light blue, and geranium lake, probably faded, in the floor."
      }
     }

@@ -13,22 +13,22 @@ window.SITE = {
      "type": "topen",
      "title": "Composition",
      "img": "poore-picture-vision",
-     "alt": "Line drawing in two parts: a narrow frame holding a small slice of landscape, labeled The Picture, and lines fanning out from a frame to a wide view of sky, hills and a winding river, labeled The Vision",
-     "para": "Composition is how a painter arranges the parts of a picture. In 1435 Leon Battista Alberti named it one of three parts of a painter's job and compared the picture to an open window. In his 1899 book Composition, the American teacher Arthur Wesley Dow drew heavily on Japanese art, with line, dark-and-light and color as its elements."
+     "alt": "Line drawing in two parts: a narrow frame holding a small slice of landscape, labeled The Picture, and lines fanning out from a frame to a wide view of sky, hills, and a winding river, labeled The Vision",
+     "para": "Composition is how a painter arranges the parts of a picture. In 1435 Leon Battista Alberti named it one of three parts of a painter's job and compared the picture to an open window. In his 1899 book Composition, the American teacher Arthur Wesley Dow drew heavily on Japanese art, with line, dark-and-light, and color as its elements."
     },
     {
      "type": "concept",
      "title": "Format",
      "img": "dow-three-proportions",
-     "alt": "Three line drawings of the same house and tall tree: in a tall narrow frame, a nearly square frame and a wider upright frame",
-     "stmt": "Format is the outline of the whole picture: tall, wide, square or round. It decides how much room each part of the subject gets, so one scene reads differently in each format.",
+     "alt": "Three line drawings of the same house and tall tree: in a tall narrow frame, a nearly square frame, and a wider upright frame",
+     "stmt": "Format is the outline of the whole picture: tall, wide, square, or round. It decides how much room each part of the subject gets, so one scene reads differently in each format.",
      "ex": {
       "key": "dow-view-of-ipswich",
       "artist": "Arthur Wesley Dow",
       "title": "View of Ipswich, or A Bend in the River",
       "date": "ca. 1895",
       "det": "Color woodcut, image 5 × 2 1/4 in. The Metropolitan Museum of Art, New York",
-      "alt": "Tall, narrow color woodcut of a river valley: green field and purple-roofed houses below, a pale river bend, blue-green hills and a pink sky above",
+      "alt": "Tall, narrow color woodcut of a river valley: green field and purple-roofed houses below, a pale river bend, blue-green hills, and a pink sky above",
       "line": "The Met links this tiny upright print to Japanese pillar prints; its narrow frame stacks the view in bands, field to houses to river to hills."
      }
     },
@@ -53,7 +53,7 @@ window.SITE = {
      "title": "Focal Point",
      "img": "poore-lion-desert",
      "alt": "Reproduction of a painting of a single lion lying in a wide, nearly empty desert under a pale sky",
-     "stmt": "The focal point is where the eye lands first. Painters build it with contrast, isolation and placement, because the eye goes to whatever differs most from its surroundings.",
+     "stmt": "The focal point is where the eye lands first. Painters build it with contrast, isolation, and placement, because the eye goes to whatever differs most from its surroundings.",
      "ex": {
       "key": "caravaggio-denial-of-saint-peter",
       "artist": "Caravaggio",
@@ -100,8 +100,8 @@ window.SITE = {
      "type": "concept",
      "title": "Armatures",
      "img": "poore-fundamental-forms",
-     "alt": "Chart of seven emblems along the top, scales, triangle, circle, cross, radiating lines, S-curve and L, each above small sketches of pictures built on it",
-     "stmt": "An armature is a simple figure, such as a triangle, circle, S-curve, cross or L, that a picture's main shapes are built around, so many separate parts read as one arrangement.",
+     "alt": "Chart of seven emblems along the top, scales, triangle, circle, cross, radiating lines, S-curve, and L, each above small sketches of pictures built on it",
+     "stmt": "An armature is a simple figure, such as a triangle, circle, S-curve, cross, or L, that a picture's main shapes are built around, so many separate parts read as one arrangement.",
      "ex": {
       "key": "sarto-holy-family",
       "artist": "Andrea del Sarto",
@@ -124,8 +124,8 @@ window.SITE = {
       "title": "Circus Sideshow (Parade de cirque)",
       "date": "1887–88",
       "det": "Oil on canvas, 39 1/4 × 59 in. The Metropolitan Museum of Art, New York",
-      "alt": "Night scene of a circus sideshow: a trombone player on a platform, musicians at left, gas lamps above and dark heads of a crowd below",
-      "line": "Seurat's stiff horizontals and verticals invite golden-ratio lines drawn over them, yet a study of his notes, sketches and paintings, summarized in 1981, found no sign he used the ratio."
+      "alt": "Night scene of a circus sideshow: a trombone player on a platform, musicians at left, gas lamps above, and dark heads of a crowd below",
+      "line": "Seurat's stiff horizontals and verticals invite golden-ratio lines drawn over them, yet a study of his notes, sketches, and paintings, summarized in 1981, found no sign he used the ratio."
      }
     },
     {
@@ -133,7 +133,7 @@ window.SITE = {
      "title": "Leading the Eye",
      "img": "poore-shepherdess-exit",
      "alt": "Reproduction of a painting of a shepherdess leaning on a tree in a row of trees, a dog at left and sheep grazing at lower right",
-     "stmt": "Painters plan a route for the eye: a way in, stops and a way out. Bright spots, strong contrasts and openings pull the eye, so their placement can lay out the route.",
+     "stmt": "Painters plan a route for the eye: a way in, stops, and a way out. Bright spots, strong contrasts, and openings pull the eye, so their placement can lay out the route.",
      "ex": {
       "key": "vermeer-young-woman-with-a-water-pitcher",
       "artist": "Johannes Vermeer",
@@ -141,7 +141,7 @@ window.SITE = {
       "date": "ca. 1662",
       "det": "Oil on canvas, 18 × 16 in. The Metropolitan Museum of Art, New York",
       "alt": "A woman in a white linen headdress and collar opens a window with one hand and holds a gilt pitcher in a basin with the other",
-      "line": "Window light falls on the white headdress and collar, the pitcher and the basin; a Met audio-guide speaker says it \"is guiding me around the room.\""
+      "line": "Window light falls on the white headdress and collar, the pitcher, and the basin; a Met audio-guide speaker says it \"is guiding me around the room.\""
      }
     },
     {

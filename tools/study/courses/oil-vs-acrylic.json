@@ -10,6 +10,6 @@
  "homeDescription": "{name}: how oil and acrylic paint differ, shown with paintings, prints, and a diagram.",
  "creditsIntro": "One diagram is by Holger Casselmann, licensed CC BY-SA 3.0; its labels were translated into English for this site. The patent drawing, the print, and the older paintings are public domain or CC0; the acrylic painting is by David Nicholson and remains his copyright. Each entry links to its source.",
  "creditsDescription": "Sources and licenses for the {count} images in {name}.",
- "sourcesDescription": "The lectures, courses, museum records and references behind {name}.",
+ "sourcesDescription": "The lectures, courses, museum records, and references behind {name}.",
  "viewer": "plate"
 }

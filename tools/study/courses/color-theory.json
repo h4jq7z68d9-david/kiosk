@@ -10,6 +10,6 @@
  "homeDescription": "{name}: how color works for painters, shown with historic color plates and public-domain paintings.",
  "creditsIntro": "The concept images are plates from public-domain books on color, published between 1704 and 1921, except one painting. The example paintings are public domain; each entry links to the record of its source.",
  "creditsDescription": "Sources and licenses for the {count} plates and paintings in {name}.",
- "sourcesDescription": "The lectures, courses, museum records, references and public-domain books behind {name}.",
+ "sourcesDescription": "The lectures, courses, museum records, references, and public-domain books behind {name}.",
  "viewer": "plate"
 }

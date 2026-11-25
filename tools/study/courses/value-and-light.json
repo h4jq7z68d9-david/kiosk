@@ -10,6 +10,6 @@
  "homeDescription": "{name}: how light and dark build form, shown with plates from two classic drawing books and public-domain paintings.",
  "creditsIntro": "Most concept images come from two public-domain books, Mary Merrifield's Handbook of Light and Shade (about 1880) and Anson Cross's Light and Shade (1897), from Internet Archive scans; some set two or three figures together. Two concept images are public-domain paintings. Each entry links to its source.",
  "creditsDescription": "Sources and licenses for the {count} plates and paintings in {name}.",
- "sourcesDescription": "The lectures, courses, books, museum records and references behind {name}.",
+ "sourcesDescription": "The lectures, courses, books, museum records, and references behind {name}.",
  "viewer": "plate"
 }

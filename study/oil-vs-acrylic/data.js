@@ -13,7 +13,7 @@ window.SITE = {
      "type": "topen",
      "title": "Oil vs Acrylic",
      "img": "rand-1841-tube-patent",
-     "alt": "Patent drawing of metal paint tubes, full, rolled up and capped, beside a tall open box-like holder, signed John Rand and dated 1841",
+     "alt": "Patent drawing of metal paint tubes, full, rolled up, and capped, beside a tall open box-like holder, signed John Rand and dated 1841",
      "para": "For over five centuries oil has been the paint most painters chose, and John Rand's metal tube of 1841 made it easy to carry. Acrylic came out of the plastics industry, first as a solvent paint called Magna, then in water; by 1965 most makers of artists' paint sold a water-based acrylic."
     },
     {
@@ -94,7 +94,7 @@ window.SITE = {
      "type": "concept",
      "title": "Impasto",
      "img": "van-gogh-green-wheat-detail",
-     "alt": "Painting detail: thick swirling strokes of white, pale green and lavender paint in a cloudy sky",
+     "alt": "Painting detail: thick swirling strokes of white, pale green, and lavender paint in a cloudy sky",
      "stmt": "Impasto is paint laid on thickly enough to hold the shape of each brush or knife stroke. The raised ridges catch light and cast small shadows, so the strokes themselves show.",
      "ex": {
       "key": "rembrandt-lucretia",
@@ -132,7 +132,7 @@ window.SITE = {
      "title": "How Oil Ages",
      "img": "chaperon-craquelure",
      "alt": "Painting detail: a man's face under a red turban, the paint covered in a fine net of cracks",
-     "stmt": "Over the decades oil paint stiffens, can yellow and grows more see-through, so changes the painter covered may start to show.",
+     "stmt": "Over the decades oil paint stiffens, can yellow, and grows more see-through, so changes the painter covered may start to show.",
      "ex": {
       "key": "velazquez-philip-iv",
       "artist": "Diego Velázquez",

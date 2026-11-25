@@ -4,6 +4,18 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 25 2026) — technique courses on the plate viewer
+
+- On branch `plate-technique-mockup` (commits 09d723eb, 6bdad9b4 and the Oxford-comma commit after them); not pushed to main when this block was written.
+- Plate viewer now renders technique slides (`topen`, `concept`): layout B, two images side by side, each with its caption and its own text (concept image, title, statement | example painting, its line); on phones the order is image, text, image, text. The opening slide is image, title and paragraph, with no list of concepts. No scale card. `build-course.js` plate branches, `figP` / `capHtml` helpers, optional `cap: [maker, title, rest]` on a slide; `plate.css` v2. `look` bullets are optional on plate courses (`build-course.js`, `check.js`) and are not shown.
+- The five technique courses set to `"viewer": "plate"` and thinned (David: under 10, closer to 7, never cut just to cut): Oil vs Acrylic 7 concepts, Value and Light 7, Composition 9, Color Theory 10, Pigments and Materials 10. Look bullets and the extra line removed from every kept slide. 28 cut pages redirect to their course home; older redirects that pointed at cut pages were retargeted.
+- No site-made diagrams remain (David: no diagrams made by Claude; use paintings, old textbook images, or an existing open diagram or photo). Replacements: Ryder, *Moonlight Marine* detail (Oil Cures; wrinkling dropped, cracks shown); Holger Casselmann's film-formation diagram from Wikimedia Commons, labels translated into English (Acrylic Dries; CC BY-SA 3.0); Guido Reni, *Adoration of the Magi* detail, Cleveland, CC0 (Painting Over Dry Paint); Franz Marc, *Blue Horse I* (Local and Expressive Color); Dürer, *Salvator Mundi*, the Met (Grounds). Color Shift as It Dries dropped as a slide; its point moved into Acrylic Dries.
+- Image licence rule widened by David for diagrams and photos: CC BY and CC BY-SA are allowed with credit and a licence link. The credits page now links the licence label when `credits.js` gives a `licenseUrl` (all courses).
+- Two fact-review rounds by independent agents on the changed text: round 1 three wording fixes (Grounds, Painting Over Dry Paint, the diagram credit), round 2 all pass. Oxford commas added to the older slide text and settings text of the five courses (59 places) on David's instruction.
+- check.js PASS (18 courses). smoke.js PASS, run on a cloud copy of the built site because Chromium would not launch in the Mac sandbox.
+
+-----
+
 ## Completed This Session (November 24 2026) — Sean Pringle expenses page
 
 - Third push: `sean-pringle-carpentry.html`, an unlisted `noindex` design mockup of a customer site for Sean (stock placeholder photos, static form), hosted so David can send him a link.

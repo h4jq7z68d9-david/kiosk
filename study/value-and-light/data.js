@@ -1,7 +1,7 @@
 window.SITE = {
  "title": "Value and Light",
  "sections": {
-  "1": "Light, Shade and Form"
+  "1": "Light, Shade, and Form"
  },
  "handouts": [
   {
@@ -84,7 +84,7 @@ window.SITE = {
      "type": "concept",
      "title": "Direction of Light",
      "img": "cross-figs-08-10-11",
-     "alt": "Three photographs of the same white cone, sphere, block and cylinder: lit from the side, lit from behind the camera, and lit from behind the group",
+     "alt": "Three photographs of the same white cone, sphere, block, and cylinder: lit from the side, lit from behind the camera, and lit from behind the group",
      "stmt": "Light reaches only the surfaces turned toward it, so its direction sets how a subject divides into lit and shaded areas, and with that how solid it looks.",
      "ex": {
       "key": "prudhon-blue-paper",
@@ -93,14 +93,14 @@ window.SITE = {
       "date": "about 1813",
       "det": "Black and white chalk with stumping on blue paper, 10 × 10 1/4 in. The Metropolitan Museum of Art, New York",
       "alt": "Drawing of cloth falling in heavy folds, in black and white chalk on blue paper",
-      "line": "Light from one side catches the cloth's ridges in white chalk, the deepest folds go to black and the blue paper is the middle value, so each fold reads as rounded."
+      "line": "Light from one side catches the cloth's ridges in white chalk, the deepest folds go to black, and the blue paper is the middle value, so each fold reads as rounded."
      }
     },
     {
      "type": "concept",
      "title": "Edges",
      "img": "cross-fig13",
-     "alt": "Photograph of a white cone, sphere, block and a cylinder lying on its side under strong light, with a curved shadow across the cylinder and dark cast shadows behind",
+     "alt": "Photograph of a white cone, sphere, block, and a cylinder lying on its side under strong light, with a curved shadow across the cylinder and dark cast shadows behind",
      "stmt": "An edge is where one value meets another: hard when the change is sharp, soft when it blends, lost when the values match. Hard edges catch the eye; soft and lost ones let a form sink into its surroundings.",
      "ex": {
       "key": "velazquez-juan-de-pareja",
@@ -124,7 +124,7 @@ window.SITE = {
       "title": "The Virgin of the Rocks",
       "date": "about 1491/2–9 and 1506–8",
       "det": "Oil on wood, 74 1/2 × 47 1/4 in. The National Gallery, London",
-      "alt": "The Virgin with the infant John the Baptist, the Christ Child and an angel in a dark, rocky grotto",
+      "alt": "The Virgin with the infant John the Baptist, the Christ Child, and an angel in a dark, rocky grotto",
       "line": "The figures come out of the dark grotto by soft degrees, with no hard outline at the Virgin's temples or nose, an effect later called sfumato, from the Italian for \"to turn to smoke\"."
      }
     }

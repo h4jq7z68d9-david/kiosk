@@ -1,7 +1,7 @@
 window.SITE = {
  "title": "Color Theory",
  "sections": {
-  "1": "Light, Paint and the Eye"
+  "1": "Light, Paint, and the Eye"
  },
  "handouts": [
   {
@@ -14,7 +14,7 @@ window.SITE = {
      "title": "Color Theory",
      "img": "runge-farbenkugel",
      "alt": "Hand-colored plate of two color spheres seen from the white pole and the black pole, with two cross-sections below",
-     "para": "Modern color theory starts with Isaac Newton's Opticks (1704) and his prism. Goethe, the chemist Chevreul and the teacher Munsell then asked a painter's questions: how colors change beside each other, and how to name them exactly."
+     "para": "Modern color theory starts with Isaac Newton's Opticks (1704) and his prism. Goethe, the chemist Chevreul, and the teacher Munsell then asked a painter's questions: how colors change beside each other, and how to name them exactly."
     },
     {
      "type": "concept",
@@ -28,8 +28,8 @@ window.SITE = {
       "title": "Rouen Cathedral, West Façade",
       "date": "1894",
       "det": "Oil on canvas, 39 1/2 × 26 in. National Gallery of Art, Washington",
-      "alt": "Cathedral front dissolved in strokes of pale blue, lavender and peach under a hazy sky",
-      "line": "Monet painted this front more than thirty times; here the stone is pale blue, lavender and peach, colors of one light and weather, not of the stone."
+      "alt": "Cathedral front dissolved in strokes of pale blue, lavender, and peach under a hazy sky",
+      "line": "Monet painted this front more than thirty times; here the stone is pale blue, lavender, and peach, colors of one light and weather, not of the stone."
      }
     },
     {
@@ -50,17 +50,17 @@ window.SITE = {
     },
     {
      "type": "concept",
-     "title": "Hue, Value and Saturation",
+     "title": "Hue, Value, and Saturation",
      "img": "ostwald-farbenfibel-triangle",
      "alt": "Triangle of square chips: a yellow at the left point, lighter tints along the top edge to white, darker shades along the bottom to near-black, olive tones between",
-     "stmt": "Three things pin down any color: hue (red, yellow, blue and so on), value (how light or dark) and saturation (how strong or grayed). Each can change while the others hold.",
+     "stmt": "Three things pin down any color: hue (red, yellow, blue, and so on), value (how light or dark) and saturation (how strong or grayed). Each can change while the others hold.",
      "ex": {
       "key": "sassoferrato-virgin-prayer",
       "artist": "Sassoferrato",
       "title": "The Virgin in Prayer",
       "date": "1640–50",
       "det": "Oil on canvas, 28 3/4 × 22 3/4 in. The National Gallery, London",
-      "alt": "Half-length Virgin with joined hands, in a white headcloth, red dress and deep blue mantle against a dark background",
+      "alt": "Half-length Virgin with joined hands, in a white headcloth, red dress, and deep blue mantle against a dark background",
       "line": "Sassoferrato kept the mantle one ultramarine blue; only its value moves, from bright folds to deep navy shadow, and that alone gives the cloth depth."
      }
     },
@@ -68,7 +68,7 @@ window.SITE = {
      "type": "concept",
      "title": "The Color Wheel",
      "img": "chevreul-chromatic-circle",
-     "alt": "Engraved circle of narrow colored wedges running from red through orange, yellow, green, blue and violet around a lettered center",
+     "alt": "Engraved circle of narrow colored wedges running from red through orange, yellow, green, blue, and violet around a lettered center",
      "stmt": "A color wheel bends the hues into a circle, so neighbors and opposites can be read at a glance.",
      "ex": {
       "key": "signac-evening-calm",
@@ -76,7 +76,7 @@ window.SITE = {
       "title": "Evening Calm, Concarneau, Opus 220 (Allegro Maestoso)",
       "date": "1891",
       "det": "Oil on canvas, 25 1/2 × 32 in. The Metropolitan Museum of Art, New York",
-      "alt": "Harbor at dusk in small dots of color: a yellow-orange hillside, violet-blue rocks, pale water and fishing boats",
+      "alt": "Harbor at dusk in small dots of color: a yellow-orange hillside, violet-blue rocks, pale water, and fishing boats",
       "line": "Signac took his shadows from across the wheel: yellow-orange evening light on the hill, violet-blue on the rocks, so lit and shaded ground stand clearly apart."
      }
     },
@@ -85,7 +85,7 @@ window.SITE = {
      "title": "Warm and Cool",
      "img": "field-chromatography-fig-2",
      "alt": "Engraved diagram of overlapping color circles labeled with hue names, inside a ring with an arrow marked Hot at one side and Cold at the other",
-     "stmt": "Reds, oranges and yellows read as warm, like fire and sunlight, and blues, greens and violets as cool, like water and shade, though any color is warmer or cooler only beside another.",
+     "stmt": "Reds, oranges, and yellows read as warm, like fire and sunlight, and blues, greens, and violets as cool, like water and shade, though any color is warmer or cooler only beside another.",
      "ex": {
       "key": "turner-temeraire",
       "artist": "Joseph Mallord William Turner",
@@ -108,7 +108,7 @@ window.SITE = {
       "title": "The Night Café",
       "date": "1888",
       "det": "Oil on canvas, 28 1/2 × 36 1/4 in. Yale University Art Gallery, New Haven",
-      "alt": "Café interior with a billiard table under hanging lamps, blood-red walls, a green ceiling and a yellow floor",
+      "alt": "Café interior with a billiard table under hanging lamps, blood-red walls, a green ceiling, and a yellow floor",
       "line": "Van Gogh set blood-red walls against a green ceiling and billiard table; the opposites heighten each other into a clash he meant to feel harsh."
      }
     },
@@ -117,22 +117,22 @@ window.SITE = {
      "title": "Analogous Colors",
      "img": "chevreul-1890-plate-vi-detail",
      "alt": "Half of a printed color circle: narrow numbered wedges running from deep green at the top through yellow to orange at the bottom",
-     "stmt": "Analogous colors are neighbors on the wheel, such as yellow, yellow-green and green. Each shares some of the next one's color, so they look calm together.",
+     "stmt": "Analogous colors are neighbors on the wheel, such as yellow, yellow-green, and green. Each shares some of the next one's color, so they look calm together.",
      "ex": {
       "key": "monet-water-lilies-agapanthus",
       "artist": "Claude Monet",
       "title": "Water Lilies (Agapanthus)",
       "date": "c. 1915–26",
       "det": "Oil on canvas, 79 1/4 × 167 1/2 in. The Cleveland Museum of Art",
-      "alt": "Wide view of a pond surface in violets, blues and greens, scattered with pale lily pads and a few warm blossoms",
-      "line": "Monet kept the pond to violets, blues and greens, neighbors that blend into one continuous surface; a few pale lily pads and warm blossoms break the run."
+      "alt": "Wide view of a pond surface in violets, blues, and greens, scattered with pale lily pads and a few warm blossoms",
+      "line": "Monet kept the pond to violets, blues, and greens, neighbors that blend into one continuous surface; a few pale lily pads and warm blossoms break the run."
      }
     },
     {
      "type": "concept",
      "title": "Simultaneous Contrast",
      "img": "chevreul-1890-plate-ii",
-     "alt": "Six panels with the same pale ornament printed on red, green, orange, blue-gray, dark red and yellow grounds",
+     "alt": "Six panels with the same pale ornament printed on red, green, orange, blue-gray, dark red, and yellow grounds",
      "stmt": "A color changes with its surroundings: the eye pushes it toward the opposite of its neighbor, in hue and lightness, so one paint looks different on different grounds, or backgrounds.",
      "ex": {
       "key": "vangogh-irises-getty",
@@ -140,7 +140,7 @@ window.SITE = {
       "title": "Irises",
       "date": "1889",
       "det": "Oil on canvas, 29 1/4 × 37 1/4 in. J. Paul Getty Museum, Los Angeles",
-      "alt": "Garden bed of blue-violet irises with long green leaves, reddish earth below and orange flowers behind",
+      "alt": "Garden bed of blue-violet irises with long green leaves, reddish earth below, and orange flowers behind",
       "line": "Van Gogh set blue-violet irises against orange flowers and green leaves against red earth, so each color makes its neighbor look stronger."
      }
     },
@@ -156,15 +156,15 @@ window.SITE = {
       "title": "Pines Along the Shore",
       "date": "1896",
       "det": "Oil on canvas, 21 1/2 × 25 3/4 in. The Metropolitan Museum of Art, New York",
-      "alt": "Pine trees framing a bay and distant hills, painted in separate dabs of blue, green, orange, pink and violet",
-      "line": "Cross laid the shore in separate dabs of orange, pink and violet; from a step back they merge into warm, sunlit ground."
+      "alt": "Pine trees framing a bay and distant hills, painted in separate dabs of blue, green, orange, pink, and violet",
+      "line": "Cross laid the shore in separate dabs of orange, pink, and violet; from a step back they merge into warm, sunlit ground."
      }
     },
     {
      "type": "concept",
      "title": "Local and Expressive Color",
      "img": "marc-blue-horse-i",
-     "alt": "A blue horse standing with lowered head before hills of red, yellow, violet and green",
+     "alt": "A blue horse standing with lowered head before hills of red, yellow, violet, and green",
      "stmt": "Local color is a thing's color in plain daylight; expressive color is chosen for feeling or design instead. A tree or a hill can still be read by its shape, which leaves the color free.",
      "ex": {
       "key": "gauguin-day-of-god",
@@ -172,8 +172,8 @@ window.SITE = {
       "title": "Mahana no atua (Day of the God)",
       "date": "1894",
       "det": "Oil on canvas, 27 × 36 in. The Art Institute of Chicago",
-      "alt": "Tahitian figures around a carved idol above a pink bank and water broken into flat shapes of yellow, blue and violet",
-      "line": "Gauguin painted this in Paris from memory and fantasy: a pink bank and water in flat zones of yellow, blue and violet that still read as bank and water."
+      "alt": "Tahitian figures around a carved idol above a pink bank and water broken into flat shapes of yellow, blue, and violet",
+      "line": "Gauguin painted this in Paris from memory and fantasy: a pink bank and water in flat zones of yellow, blue, and violet that still read as bank and water."
      },
      "cap": [
       "Franz Marc",
