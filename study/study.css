@@ -191,60 +191,45 @@ blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size
 .pager .pos { margin-right: 4px; }
 .open-guide { display: flex; justify-content: flex-end; }
 
-/* study.html art-history timeline: one left-aligned column, a rail with a dot and date per course, large image cards */
-.tl { position: relative; margin-top: 18px; padding-left: 28px; display: grid; gap: 28px; max-width: 880px; }
-.tl::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: var(--border); }
-.tl-item { position: relative; display: grid; gap: 6px; text-decoration: none; color: inherit; }
-.tl-item::before { content: ""; position: absolute; left: -28px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--panel); border: 2px solid var(--accent); }
-.tl-date { font-size: 13px; letter-spacing: .12em; color: var(--ink3); }
-.tl-card { display: flex; flex-direction: column; transition: border-color .15s; }
-.tl-item:hover .tl-card { border-color: var(--accent); }
-.tl-th { width: 100%; aspect-ratio: 16 / 7; background: var(--surface); overflow: hidden; }
-.tl-th img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.tl-tb { padding: 12px 16px 14px; display: grid; gap: 4px; }
-.tl .tt { font-weight: 500; font-size: 20px; color: var(--ink); line-height: 1.25; text-transform: lowercase; }
-.tl .ts { color: var(--ink2); font-size: 14.5px; line-height: 1.55; font-weight: 300; }
-@media (max-width: 600px) { .tl-th { aspect-ratio: 4 / 3; } }
-
 /* study.html tabs (technique / art history) */
 .stabs { display: flex; gap: 28px; margin-top: 26px; border-bottom: 1px solid var(--border); }
 .stabs button { font: 500 15px var(--font); letter-spacing: .08em; text-transform: lowercase; color: var(--ink3); background: none; border: 0; border-bottom: 2px solid transparent; padding: 0 0 10px; margin-bottom: -1px; cursor: pointer; }
 .stabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
 .stab-panel:not([hidden]) + .stab-panel:not([hidden]) { margin-top: 40px; }   /* only without JS, when both panels show */
-/* art history timeline (Nov 10 2026): small square cards alternating either side of a centre line, date beside each dot */
-.tl-alt { --gap: 22px; padding-left: 0; max-width: 880px; gap: 14px; }
-.tl-alt::before { left: 50%; margin-left: -1px; top: 0; bottom: 0; }
-.tl-alt .tl-item { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gap) * 2); align-items: center; }
-.tl-alt .tl-item::before { left: 50%; top: 50%; transform: translate(-50%, -50%); }
-.tl-alt .tl-card { grid-row: 1; width: min(230px, 100%); aspect-ratio: 1 / 1; overflow: hidden; }
-@media (min-width: 901px) { .tl-alt .tl-card { width: min(280px, 100%); } }
-.tl-alt .tl-date { grid-row: 1; }
-.tl-alt .tl-item:nth-child(odd) .tl-card { grid-column: 1; justify-self: end; }
-.tl-alt .tl-item:nth-child(odd) .tl-date { grid-column: 2; }
-.tl-alt .tl-item:nth-child(even) .tl-card { grid-column: 2; justify-self: start; }
-.tl-alt .tl-item:nth-child(even) .tl-date { grid-column: 1; text-align: right; }
-.tl-alt .tl-th { flex: 1; min-height: 0; aspect-ratio: auto; }
-.tl-alt .tl-tb { padding: 8px 10px 9px; }
-.tl-alt .tt { font-size: 16px; line-height: 1.2; }
-@media (max-width: 600px) {
-  .tl-alt { --gap: 16px; gap: 12px; }
-  .tl-alt .tl-th { aspect-ratio: auto; }
-  .tl-alt .tl-tb { padding: 6px 8px 7px; }
-  .tl-alt .tt { font-size: 14px; }
-  .tl-alt .tl-date { font-size: 12px; letter-spacing: .08em; }
-}
-/* technique tab (Nov 10 2026): a grid of small square cards (image + title), "N parts" under each; two across on phones, three on larger screens */
-.tl-grid { padding-left: 0; gap: 14px; max-width: 880px; grid-template-columns: repeat(2, 1fr); }   /* two across on phones */
-@media (min-width: 701px) { .tl-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }   /* three across on iPad and desktop, same width as the timeline */
-.tl-grid::before, .tl-grid .tl-item::before { display: none; }
-.tl-grid .tl-item { gap: 5px; }
-.tl-grid .tl-card { order: 1; aspect-ratio: 1 / 1; overflow: hidden; }
-.tl-grid .tl-date { order: 2; font-size: 12px; letter-spacing: .08em; }
-.tl-grid .tl-th { flex: 1; min-height: 0; aspect-ratio: auto; background: var(--panel); }
-.tl-grid .tl-th img { object-fit: contain; }   /* diagrams and plates shown whole on white, not cropped */
-.tl-grid .tl-tb { padding: 6px 8px 7px; }
-.tl-grid .tt { font-size: 14px; line-height: 1.2; }
-@media (min-width: 701px) { .tl-grid .tl-tb { padding: 8px 10px 9px; } .tl-grid .tt { font-size: 16px; } }
+/* study.html carousels (Nov 26 2026; replace the Nov 10 timeline and grid): one card at a time, neighbours peeking at
+   the edges, loops at both ends. Art history adds the date and a tick ruler (one tick per course) that slides under it.
+   The script in study.html adds .car-on; without it the cards stay a sideways-scrolling row. */
+.car { --cw: min(66vw, 320px); --gap: 18px; margin-top: 24px; }
+@media (min-width: 901px) { .car { --cw: 380px; --gap: 28px; } }
+.car-item { text-decoration: none; color: inherit; }
+.car-card { display: block; aspect-ratio: 1 / 1; transition: border-color .15s; }
+.car-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.car-tech .car-card img { object-fit: contain; }   /* plates and diagrams shown whole on white, not cropped */
+.car-item.is-on:hover .car-card { border-color: var(--accent); }
+.car-tt { display: block; margin-top: 10px; font-weight: 500; font-size: 18px; line-height: 1.25; color: var(--ink); text-transform: lowercase; text-align: center; text-wrap: balance; }
+.car-time { text-align: center; }
+.car-date { font-size: 15px; letter-spacing: .12em; color: var(--ink2); margin: 0 0 8px; }
+.car-ruler { position: relative; height: 18px; max-width: 520px; margin: 0 auto 16px; overflow: hidden; border-bottom: 1px solid var(--border);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent); mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent); }
+.car-ticks { position: absolute; left: 50%; bottom: 0; display: flex; transition: transform .35s ease; }
+.car-ticks i { position: relative; flex: none; width: 24px; height: 18px; }
+.car-ticks i::before { content: ""; position: absolute; left: 0; bottom: 0; width: 1px; height: 8px; background: var(--border-mid); }
+.car-ticks i.on::before { left: -1px; width: 3px; height: 18px; background: var(--accent); }
+.car-nav { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+.car-count { margin-right: auto; font-size: 13px; letter-spacing: .08em; color: var(--ink3); }
+.car-nav button { font: 400 18px var(--font); color: var(--ink); background: var(--panel); border: 1px solid var(--border-mid); border-radius: 50%; width: 42px; height: 42px; padding: 0; cursor: pointer; }
+.car-nav button:hover { border-color: var(--accent); }
+/* carousel on (JS): cards stacked in one spot and moved sideways by the script */
+.car-on .car-view { position: relative; height: calc(var(--cw) + 64px); overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.car-on .car-item { position: absolute; top: 0; left: 50%; width: var(--cw); margin-left: calc(var(--cw) / -2); transition: transform .35s ease, opacity .35s ease; }
+.car-on .car-item.jump { transition: none; }
+.car-on .car-item:not(.is-on) .car-tt { visibility: hidden; }
+.car-on .car-item img { -webkit-user-drag: none; }
+/* carousel off (no JS): a row that scrolls sideways */
+.car:not(.car-on) .car-view { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+.car:not(.car-on) .car-item { flex: 0 0 var(--cw); scroll-snap-align: start; }
+.car:not(.car-on) .car-time, .car:not(.car-on) .car-nav { display: none; }
+@media (max-width: 600px) { .car { --gap: 12px; } .car-tt { font-size: 16px; } .car-date { font-size: 14px; } }
 
 /* search across every study course (Oct 31 2026) — same look as the course pages' search */
 .study-search { position: relative; margin: 18px 0 6px; max-width: 560px; }

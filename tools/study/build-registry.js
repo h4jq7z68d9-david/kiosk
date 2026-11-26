@@ -66,16 +66,21 @@ study = study.replace(/,\n$/, '\n');
 const chromeNew = replaceBetween(R('site-chrome.js'), '  /* STUDY:START */\n', '  /* STUDY:END */', study, 'site-chrome.js');
 
 /* ---- study.html cards + JSON-LD ---- */
-/* Nov 10 2026: image + title cards. Art history: square cards alternating sides of a centre line, date beside the dot.
-   Technique: the same card in a grid, the date line reading "N parts" under the card. */
-const sqCard = (c) => `    <a class="tl-item" href="${c.href}">
-      <span class="tl-date">${esc(c.date)}</span>
-      <span class="card tl-card"><span class="tl-th"><img src="${c.img}" alt="" loading="lazy"></span><span class="tl-tb"><span class="tt">${esc(c.label)}</span></span></span>
-    </a>\n`;
+/* Nov 26 2026: one looping carousel per lane (replaces the Nov 10 timeline and grid). Cards are image + title links in
+   date order; the art history lane adds the date and a tick ruler (one tick per course) above the card. study.html's
+   script turns the list into the carousel; without JS it stays a row of cards that scrolls sideways. */
+const carCard = (c) => `      <a class="car-item" href="${c.href}"${c.lane.id === 'art-history' ? ` data-date="${esc(c.date)}"` : ''}>
+        <span class="card car-card"><img src="${c.img}" alt="" loading="lazy"></span><span class="car-tt">${esc(c.label)}</span>
+      </a>\n`;
 let panels = '';
 for (const lane of reg.lanes) {
-  panels += `  <section id="p-${lane.id}" class="stab-panel" role="tabpanel" aria-labelledby="t-${lane.id}">\n  <div class="tl${lane.id === 'technique' ? ' tl-grid' : ' tl-alt'}">\n`;
-  panels += courses.filter((x) => x.lane === lane).map(sqCard).join('');
+  const list = courses.filter((x) => x.lane === lane);
+  const hist = lane.id === 'art-history';
+  panels += `  <section id="p-${lane.id}" class="stab-panel" role="tabpanel" aria-labelledby="t-${lane.id}">\n`;
+  panels += `  <div class="car${hist ? ' car-hist' : ' car-tech'}" aria-roledescription="carousel" aria-label="${esc(lane.group)} courses">\n`;
+  if (hist) panels += `    <div class="car-time" aria-hidden="true"><p class="car-date">${esc(list[0].date)}</p><div class="car-ruler"><div class="car-ticks">${list.map(() => '<i></i>').join('')}</div></div></div>\n`;
+  panels += `    <div class="car-view">\n` + list.map(carCard).join('') + `    </div>\n`;
+  panels += `    <div class="car-nav"><span class="car-count" aria-live="polite">1 / ${list.length}</span><button type="button" class="car-prev" aria-label="Previous course">&larr;</button><button type="button" class="car-next" aria-label="Next course">&rarr;</button></div>\n`;
   panels += '  </div>\n  </section>\n';
 }
 let studyHtml = replaceBetween(R('study.html'), '<!-- COURSES:START -->\n', '<!-- COURSES:END -->', panels, 'study.html');
