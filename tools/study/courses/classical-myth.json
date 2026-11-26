@@ -4,10 +4,11 @@
   "data.js"
  ],
  "greekKey": true,
- "introImg": "h1_aphrodite",
- "homeDescription": "A short illustrated guide to the Greek and Roman myths in painting and sculpture, about 530 BCE to 1890.",
- "ldDescription": "A short guide to recognizing classical myth in art, about 530 BCE to 1890, compiled from museum collection records.",
+ "introImg": "h9_bacchus",
+ "homeDescription": "A short illustrated guide to the Greek and Roman myths in painting and sculpture, about 515 BCE to 1864.",
+ "ldDescription": "A short guide to recognizing classical myth in art, about 515 BCE to 1864, compiled from museum collection records.",
  "sourcesDescription": "Museum collection records, references and curricula used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
- "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source."
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "viewer": "plate"
 }

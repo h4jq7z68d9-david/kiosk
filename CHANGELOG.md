@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Classical Myth on the plate viewer
+- Classical Myth rebuilt and thinned to 7 works on the plate viewer (`"viewer": "plate"`; Greek-key dividers kept): Euphronios krater (Heracles and Antaeus), Venus de Milo, Botticelli Birth of Venus, Titian Diana and Actaeon, Rubens Judgement of Paris, Ingres Oedipus Explains the Riddle of the Sphinx, Moreau Oedipus and the Sphinx. Intro image Caravaggio Bacchus. Section renamed "Greece to Paris, 515 BCE–1864"; card dates "c. 515 bce–1864".
+- 11 works cut (Exekias cup, Artemision bronze, Apollo Belvedere, Titian Europa, Rubens Phaeton, El Greco Laocoön, Velázquez Vulcan's Forge, Rembrandt Proserpina, Turner Ulysses, Gérôme Pygmalion; Caravaggio Bacchus moved to the intro); their pages and the old section's pages redirect (85 stubs); 10 images removed.
+- Text rewritten to the thinning rules (one to two sentences, no look bullets, history line). Fact review rounds 1 (2 fails, plus 3 notes acted on) and 2 (all pass); paraphrase check (no fails; Botticelli history line reworded). check.js and smoke.js PASS.
+- Topic folder: iCloud School v2/Art History Course Builder/Classical Myth/Plate rebuild (Nov 26)/.
+
 ## Completed This Session (Nov 26 2026) — study.html carousels
 - study.html: the art history timeline and technique grid are replaced by one looping carousel per tab (direction A, chosen from three mockups): one card at a time with neighbours peeking, arrows bottom right with a count, swipe, arrow keys; loops both ways; tapping a peeking neighbour moves to it, tapping the centre card opens the course.
 - Art history starts at Classical Myth and shows the course dates plus a tick ruler (one tick per course) that slides under them; technique has no date or ruler.
