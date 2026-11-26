@@ -11,6 +11,7 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 - Panel held at 280px (`min-width:0`) — the badge had widened it ~35px and pushed the right wall off screen.
 - Walls always stack (desktop too), left-aligned, each followed by its coverage card; desktop scale = min(stage width / widest wall, 60% of window height / tallest wall). Totals line stays at the bottom. "1 piece" grammar fix.
 - New "See together" pop-out (floating card, view only): Left, Center, Right walls side by side at one scale plus a dashed door gap of side-wall width minus center width (3 ft at 10·7·10), on the left or right of the center wall by toggle; per-wall coverage and the totals line. `doorSide` saved in the layout JSON (`door`), default left.
+- Later the same day (branch `booth-two-rows`): one-column stack replaced by two rows — Left and Center walls on the first row, Right on the second — scale = min((stage − gap) / (Left + Center width), 75% of window height / two wall heights); the three coverage cards sit side by side under the walls (wall name back on each card). Originals list shows each painting's medium (from Square) under its title.
 - check.js PASS, smoke.js PASS; booth checked with Playwright at 1440 and 390 with the live `/originals` data mocked locally. Not tested on an iPhone/iPad.
 
 -----
