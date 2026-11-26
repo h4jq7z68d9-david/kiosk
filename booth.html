@@ -80,8 +80,7 @@
   .stage{flex:1 1 auto;min-width:0}
   .scene{width:100%;overflow-x:auto;padding-bottom:6px}
   .sceneInner{display:flex;align-items:flex-end;gap:10px}
-  .sceneInner.stacked{flex-direction:column;align-items:center;gap:20px}
-  .sceneInner.stacked .wallcol{align-items:center}
+  .sceneInner.stacked{flex-direction:column;align-items:flex-start;gap:18px}
   .wallcol{display:flex;flex-direction:column;gap:5px}
   .walltag{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.03em}
   .wall{position:relative;background:#fcfdfd;border:1px solid var(--line);border-radius:3px;box-shadow:inset 0 -10px 18px -14px rgba(43,54,64,.35)}
@@ -95,7 +94,22 @@
 
   /* readout */
   .readout{margin-top:12px;font-size:13px}
-  .wallstats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+  .wallcol .wstat{flex:none;margin-top:3px}
+  .booth-pop{display:none;position:fixed;inset:0;z-index:900;background:rgba(43,54,64,.38);align-items:flex-start;justify-content:flex-start;padding:70px 16px 16px}
+  .booth-pop.open{display:flex}
+  .booth-card{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(43,54,64,.22);padding:12px 14px;max-width:100%;overflow-x:auto}
+  .booth-head{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+  .booth-head h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 10px 0 0}
+  .booth-head .lbl{font-size:12px;color:var(--muted);margin-right:2px}
+  .booth-x{margin-left:auto;font-family:inherit;font-size:20px;line-height:1;width:30px;height:30px;border:none;background:none;color:var(--muted);cursor:pointer}
+  .booth-row{display:flex;align-items:flex-end;gap:4px}
+  .bcol{display:flex;flex-direction:column;gap:4px}
+  .bcol .walltag{white-space:nowrap}
+  .bwall{position:relative;background:#fcfdfd;border:1px solid var(--line);border-radius:3px}
+  .bwall .bp{position:absolute;background:#dfe4e8 center/cover no-repeat;border:1px solid var(--ink)}
+  .bdoor{border:1px dashed #9aa5ae;border-top:none;display:flex;align-items:flex-end;justify-content:center;font-size:11px;color:var(--muted);padding-bottom:4px}
+  .bcov{font-size:12px;color:var(--muted)}
+  .bcov b{color:var(--ink);font-weight:700}
   .wstat{flex:1 1 150px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
   .wstat .nm{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
   .wstat .big{font-size:17px;font-weight:700}
@@ -112,6 +126,13 @@
 </style>
 </head>
 <body>
+<div class="booth-pop" id="boothPop">
+  <div class="booth-card" role="dialog" aria-label="All walls together">
+    <div class="booth-head"><h3>Booth</h3><span class="lbl">door</span><button class="sortbtn" data-door="left">left</button><button class="sortbtn" data-door="right">right</button><button class="booth-x" id="boothClose" aria-label="Close">×</button></div>
+    <div class="booth-row" id="boothRow"></div>
+    <div class="bcov" id="boothCov" style="margin-top:8px"></div>
+  </div>
+</div>
 <div class="wrap">
   <h1>Booth Planner</h1>
   <p class="sub">Tap a painting then tap a wall to place it — or drag it across. Drag to reposition; tap ✕ to remove.</p>
@@ -123,6 +144,7 @@
     <button class="btn" id="btnWalls">Walls</button>
     <button class="btn" id="btnShuffle">Shuffle</button>
     <button class="btn" id="btnAlign">Align</button>
+    <button class="btn" id="btnTogether">See together</button>
     <button class="btn" id="clear">Clear walls</button>
     <span class="status" id="status"></span>
   </div>
@@ -166,7 +188,6 @@
     <div class="stage">
       <div class="scene"><div class="sceneInner" id="sceneInner"></div></div>
       <div class="readout">
-        <div class="wallstats" id="wallstats"></div>
         <div id="overall" class="verdict"></div>
         <div class="hint">Walls are shown to scale — set their sizes with the <b>Walls</b> button. Place pieces anywhere on a wall. Red outline = overlapping pieces.</div>
       </div>
@@ -193,7 +214,7 @@ const totalWin = () => WALLS.reduce((a,w)=>a+w.wIn,0);
 const wallName = w => `${w.name} (${w.wIn/FT}×${w.hIn/FT} ft)`;
 
 let scale=2.6, catalog=[], armed=null, uidc=0, suppressWallTap=false, booting=true;
-let currentId=null, currentTitle='';
+let currentId=null, currentTitle='', doorSide='left';
 
 const $  = id => document.getElementById(id);
 const isBig    = p => p.w>=30 || p.h>=30;
@@ -238,6 +259,7 @@ function wallsToJson(){
   return JSON.stringify({
     v:2,
     dims: WALLS.map(w=>({w:w.wIn,h:w.hIn})),
+    door: doorSide,
     pieces: WALLS.map(w=>w.pieces.map(p=>({pid:p.pid,title:p.title,w:p.w,h:p.h,img:p.img,xIn:p.xIn,yIn:p.yIn}))),
   });
 }
@@ -247,11 +269,12 @@ function saveLocalBackup(){
 function parseLayout(json){
   let d; try{ d=JSON.parse(json||'null'); }catch{ d=null; }
   if(Array.isArray(d)) return {dims:null, pieces:d};            // legacy: array of piece-arrays
-  if(d && Array.isArray(d.pieces)) return {dims:d.dims||null, pieces:d.pieces};
+  if(d && Array.isArray(d.pieces)) return {dims:d.dims||null, pieces:d.pieces, door:d.door};
   return {dims:null, pieces:[]};
 }
 function applyLayout(json){
-  const {dims,pieces}=parseLayout(json);
+  const {dims,pieces,door}=parseLayout(json);
+  doorSide=door==='right'?'right':'left';
   WALLS.forEach((w,i)=>{
     if(dims && dims[i]){ w.wIn=dims[i].w; w.hIn=dims[i].h; }
     else { const dd=DEFAULT_DIMS[i]||[8,8]; w.wIn=dd[0]*FT; w.hIn=dd[1]*FT; }
@@ -427,12 +450,13 @@ function resetWalls(){
 
 // ---------- scale ----------
 const STACK_BREAKPOINT=700;
-function isStacked(){ return window.innerWidth<=STACK_BREAKPOINT; }
+function isStacked(){ return true; } // walls always stack, each above its coverage card (Nov 26 2026)
 function computeScale(){
   const w=$('sceneInner').parentElement.clientWidth-4;
   if(isStacked()){
     const maxWallW=Math.max(...WALLS.map(x=>x.wIn));
-    scale=Math.max(1.3,Math.min(3.4,w/maxWallW));
+    const maxWallH=Math.max(...WALLS.map(x=>x.hIn));
+    scale=Math.max(1.3,Math.min(w/maxWallW,(window.innerHeight*0.6)/maxWallH));
   } else {
     scale=Math.max(1.3,Math.min(3.4,(w-GAPpx*(WALLS.length-1))/totalWin()));
   }
@@ -451,7 +475,8 @@ function buildScene(){
     const wall=document.createElement('div'); wall.className='wall';
     wall.style.width=(w.wIn*scale)+'px'; wall.style.height=(w.hIn*scale)+'px'; wall.dataset.idx=i;
     wall.addEventListener('click',e=>onWallTap(e,i));
-    w.el=wall; col.appendChild(tag); col.appendChild(wall); inner.appendChild(col);
+    const st=document.createElement('div'); st.className='wstat'; st.style.width=(w.wIn*scale)+'px';
+    w.el=wall; w.statEl=st; col.appendChild(tag); col.appendChild(wall); col.appendChild(st); inner.appendChild(col);
   });
   renderAllPieces();
 }
@@ -549,21 +574,62 @@ function flagOverlaps(){
   });
 }
 function updateReadout(){
-  const cont=$('wallstats'); cont.innerHTML=''; let artTot=0,areaTot=0,count=0;
+  let artTot=0,areaTot=0,count=0;
   WALLS.forEach(w=>{
     const art=w.pieces.reduce((a,p)=>a+p.w*p.h,0),area=w.wIn*w.hIn;
     artTot+=art; areaTot+=area; count+=w.pieces.length;
     const cov=area?art/area*100:0;
-    const el=document.createElement('div'); el.className='wstat';
-    el.innerHTML=`<div class="nm">${wallName(w)}</div><div class="big">${cov.toFixed(0)}%</div>
+    if(w.statEl) w.statEl.innerHTML=`<div class="big">${cov.toFixed(0)}%</div>
       <div class="bar"><i style="width:${Math.min(100,cov)}%"></i></div>
-      <div class="verdict">${w.pieces.length} pieces · ${verdict(cov)}</div>`;
-    cont.appendChild(el);
+      <div class="verdict">${w.pieces.length} ${w.pieces.length===1?'piece':'pieces'} · ${verdict(cov)}</div>`;
   });
   const cov=areaTot?artTot/areaTot*100:0;
-  $('overall').innerHTML=`<b>${count}</b> pieces · <b>${cov.toFixed(0)}%</b> total coverage — ${verdict(cov)}`;
+  $('overall').innerHTML=`<b>${count}</b> ${count===1?'piece':'pieces'} · <b>${cov.toFixed(0)}%</b> total coverage — ${verdict(cov)}`;
   $('overall').className='verdict '+(cov>62?'bad':cov<35?'warn':'');
+  if($('boothPop').classList.contains('open')) renderBooth();
 }
+
+// ---------- see together (view only) ----------
+// Door gap sits beside the center wall; center + door = side-wall width.
+const wallCov = w => w.wIn*w.hIn ? w.pieces.reduce((a,p)=>a+p.w*p.h,0)/(w.wIn*w.hIn)*100 : 0;
+function renderBooth(){
+  document.querySelectorAll('#boothPop [data-door]').forEach(b=>b.classList.toggle('on',b.dataset.door===doorSide));
+  const [L,C,R]=WALLS, doorIn=Math.max(0,Math.max(L.wIn,R.wIn)-C.wIn);
+  const order=doorSide==='left'?[L,'door',C,R]:[L,C,'door',R];
+  const totIn=L.wIn+C.wIn+R.wIn+doorIn, gaps=4*(order.length-1);
+  const avail=Math.min(window.innerWidth-32,1100)-30-gaps;
+  const sc=Math.max(0.6,Math.min(3,avail/totIn));
+  const maxH=Math.max(...WALLS.map(w=>w.hIn));
+  const row=$('boothRow'); row.innerHTML='';
+  order.forEach(w=>{
+    const col=document.createElement('div'); col.className='bcol';
+    const tag=document.createElement('div'); tag.className='walltag';
+    if(w==='door'){
+      tag.textContent='Door';
+      const d=document.createElement('div'); d.className='bdoor';
+      d.style.width=(doorIn*sc)+'px'; d.style.height=(maxH*sc)+'px'; d.textContent=(doorIn/FT)+' ft';
+      const sp=document.createElement('div'); sp.className='bcov'; sp.innerHTML='&nbsp;';
+      col.appendChild(tag); col.appendChild(d); col.appendChild(sp);
+    } else {
+      tag.textContent=w.name.replace(' wall','');
+      const el=document.createElement('div'); el.className='bwall';
+      el.style.width=(w.wIn*sc)+'px'; el.style.height=(w.hIn*sc)+'px';
+      w.pieces.forEach(pc=>{
+        const b=document.createElement('div'); b.className='bp';
+        b.style.left=(pc.xIn*sc)+'px'; b.style.top=(pc.yIn*sc)+'px';
+        b.style.width=(pc.w*sc)+'px'; b.style.height=(pc.h*sc)+'px';
+        if(pc.img) b.style.backgroundImage=`url("${pc.img}")`;
+        el.appendChild(b);
+      });
+      const cv=document.createElement('div'); cv.className='bcov'; cv.innerHTML=`<b>${wallCov(w).toFixed(0)}%</b>`;
+      col.appendChild(tag); col.appendChild(el); col.appendChild(cv);
+    }
+    row.appendChild(col);
+  });
+  $('boothCov').innerHTML=$('overall').innerHTML;
+}
+function openBooth(){ closePanels(); $('boothPop').classList.add('open'); renderBooth(); }
+function closeBooth(){ $('boothPop').classList.remove('open'); }
 function verdict(c){ if(!c)return 'empty'; if(c<35)return 'sparse'; if(c>62)return 'crowded'; return 'balanced'; }
 
 // ---------- drag ----------
@@ -641,6 +707,13 @@ $('clear').addEventListener('click', ()=>{ WALLS.forEach(w=>w.pieces=[]); armed=
 $('btnWalls').addEventListener('click', openWallsPanel);
 $('btnShuffle').addEventListener('click', shuffleWalls);
 $('btnAlign').addEventListener('click', alignWalls);
+$('btnTogether').addEventListener('click', openBooth);
+$('boothClose').addEventListener('click', closeBooth);
+$('boothPop').addEventListener('click', e=>{
+  if(e.target===$('boothPop')) return closeBooth();
+  const b=e.target.closest('[data-door]'); if(b){ doorSide=b.dataset.door; saveLocalBackup(); renderBooth(); }
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeBooth(); });
 $('btnCloseWalls').addEventListener('click', closeWallsPanel);
 $('btnResetWalls').addEventListener('click', resetWalls);
 let rz; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(buildScene,150);});
