@@ -4,6 +4,17 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (November 26 2026) — booth planner sort and stacked walls
+
+- Built on branch `booth-size-sort` and pushed to main Nov 26 2026 on David's word.
+- Originals list: sort buttons (largest, smallest, title) under the filter; size sort by area, no-size items last, choice kept in localStorage (`booth-sort`). Size shown as a bold navy badge on the right of each row (option A of three mockups).
+- Panel held at 280px (`min-width:0`) — the badge had widened it ~35px and pushed the right wall off screen.
+- Walls always stack (desktop too), left-aligned, each followed by its coverage card; desktop scale = min(stage width / widest wall, 60% of window height / tallest wall). Totals line stays at the bottom. "1 piece" grammar fix.
+- New "See together" pop-out (floating card, view only): Left, Center, Right walls side by side at one scale plus a dashed door gap of side-wall width minus center width (3 ft at 10·7·10), on the left or right of the center wall by toggle; per-wall coverage and the totals line. `doorSide` saved in the layout JSON (`door`), default left.
+- check.js PASS, smoke.js PASS; booth checked with Playwright at 1440 and 390 with the live `/originals` data mocked locally. Not tested on an iPhone/iPad.
+
+-----
+
 ## Completed This Session (November 25 2026) — technique courses on the plate viewer
 
 - Built on branch `plate-technique-mockup` and pushed to main Nov 25 2026 on David's word.
