@@ -4,6 +4,11 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Early Renaissance on the plate viewer
+- Early Renaissance in Italy thinned to 7 works on the plate viewer: Masaccio Holy Trinity, Piero Baptism of Christ, Uccello Battle of San Romano, Antonello Saint Jerome in his Study, Botticelli Primavera, Mantegna Lamentation over the Dead Christ, Botticelli Venus and Mars. Intro image Masaccio The Tribute Money. Section "Italy, 1425–1485"; card dates "1425–1485".
+- 8 works cut (Gentile Adoration, Fra Angelico Annunciation, Botticelli Adoration, Piero Duke and Duchess of Urbino, Pollaiuolo Saint Sebastian, Bellini St. Francis, Ghirlandaio Old Man and Boy; Tribute Money moved to the intro); 15 redirect stubs; 7 images removed. Holy Trinity size added (667 × 317 cm; Smarthistory caption, confirmed by two more sources).
+- Fact review rounds 1 (6 fails), 2 (2 fails: Uccello's fallen knight is reversed foreshortening, Primavera figure count) and 3 (all pass); paraphrase check (1 fail, Piero lead, fixed). check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 26 2026) — Classical Myth on the plate viewer
 - Classical Myth rebuilt and thinned to 7 works on the plate viewer (`"viewer": "plate"`; Greek-key dividers kept): Euphronios krater (Heracles and Antaeus), Venus de Milo, Botticelli Birth of Venus, Titian Diana and Actaeon, Rubens Judgement of Paris, Ingres Oedipus Explains the Riddle of the Sphinx, Moreau Oedipus and the Sphinx. Intro image Caravaggio Bacchus. Section renamed "Greece to Paris, 515 BCE–1864"; card dates "c. 515 bce–1864".
 - 11 works cut (Exekias cup, Artemision bronze, Apollo Belvedere, Titian Europa, Rubens Phaeton, El Greco Laocoön, Velázquez Vulcan's Forge, Rembrandt Proserpina, Turner Ulysses, Gérôme Pygmalion; Caravaggio Bacchus moved to the intro); their pages and the old section's pages redirect (85 stubs); 10 images removed.
