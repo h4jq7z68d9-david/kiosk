@@ -54,7 +54,7 @@
   /* main layout */
   .layout{display:flex;gap:16px;align-items:flex-start}
   @media(max-width:820px){.layout{flex-direction:column}}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;flex:0 0 280px;align-self:stretch}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;flex:0 0 280px;align-self:stretch;min-width:0}
   @media(max-width:820px){.panel{flex:1 1 auto;width:100%}}
   .panel h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px}
   .search{width:100%;font-family:inherit;font-size:14px;padding:8px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px}
@@ -66,7 +66,7 @@
   .pitem.armed{border-color:var(--hiviz);box-shadow:0 0 0 2px rgba(47,79,117,.35)}
   .pitem.used{opacity:.42}
   .pthumb{width:42px;height:42px;flex:0 0 42px;border-radius:4px;background:#e7ebee center/cover no-repeat;border:1px solid var(--line)}
-  .pmeta{min-width:0}
+  .pmeta{min-width:0;flex:1 1 auto}
   .ptitle{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .pdim{font-size:11px;color:var(--muted)}
   .pdim.nodim{color:var(--accent-ink)}
