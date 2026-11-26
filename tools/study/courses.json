@@ -54,6 +54,16 @@
    }
   },
   {
+   "slug": "mannerism",
+   "lane": "art-history",
+   "name": "Mannerism",
+   "label": "mannerism",
+   "dates": "1518–1588",
+   "card": {
+    "img": "pontormo-joseph-egypt"
+   }
+  },
+  {
    "slug": "japanese-woodblock-prints",
    "lane": "art-history",
    "name": "Japanese Woodblock Prints",
