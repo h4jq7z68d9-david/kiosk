@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Mannerism course
+- New public course Mannerism at /study/art-history/mannerism.html (Mode 2, plate viewer): Pontormo Joseph with Jacob in Egypt and Deposition, Parmigianino Self-Portrait in a Convex Mirror and Madonna with the Long Neck, Bronzino Allegory with Venus and Cupid, Tintoretto Origin of the Milky Way, El Greco Burial of the Count of Orgaz; intro image Bronzino Eleonora di Toledo.
+- Cut at outline: Rosso Deposition (size unresolved, image source unknown), Tintoretto Last Supper (only image low-res, pre-2025 restoration).
+- Fact review rounds 1 and 2 done; check.js and smoke.js PASS; Actions deploy green.
+- Topic folder: iCloud School v2/Art History Course Builder/Mannerism/.
+
 ## Completed This Session (November 26 2026) — booth planner sort and stacked walls
 
 - Built on branch `booth-size-sort` and pushed to main Nov 26 2026 on David's word.
