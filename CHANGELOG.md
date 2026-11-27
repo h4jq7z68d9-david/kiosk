@@ -4,6 +4,11 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Japanese Woodblock Prints on the plate viewer
+- Japanese Woodblock Prints thinned from 18 to 7 works on the plate viewer: Moronobu Entrance to Ageya-machi, Harunobu Woman Admiring Plum Blossoms at Night, Utamaro Three Beauties of the Kansei Period, Sharaku Ōtani Oniji III, Hokusai Great Wave, Hiroshige Plum Garden at Kameido, Yoshitoshi Moon over Daimotsu Bay: Benkei. Intro image Hokusai Red Fuji (unchanged). Section name unchanged, so kept pages keep their URLs.
+- 11 works cut; 82 redirect stubs; 10 images removed. Intro text shortened; intro sub-line removed.
+- Fact review rounds 1 (1 fail, notes acted on: Harunobu and Yoshitoshi history lines) and 2 (pass); paraphrase check within round 1 (Met object pages not read verbatim, HTTP 429). check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 26 2026) — Northern Renaissance on the plate viewer
 - Northern Renaissance thinned from 23 to 7 works on the plate viewer: Van Eyck Arnolfini Portrait, Rogier Descent from the Cross, Bosch Garden of Earthly Delights, Dürer Self-Portrait (1500) and Adam and Eve, Holbein The Ambassadors, Bruegel Hunters in the Snow. Intro image Campin workshop Merode Altarpiece. Section "Northern Europe, 1434–1565"; card dates "1434–1565". Look bullets dropped; new intro text; artist lines moved to each artist's first slide (Rogier now about 1399–1464, per the Prado).
 - 16 works cut; 23 redirect stubs; 15 images removed. Two lines with museum-attribution phrasing removed (Dürer self-portrait, Bruegel rank claim).

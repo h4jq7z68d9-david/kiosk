@@ -67,56 +67,16 @@ window.SOURCES = {
    "title": "Museum collection records",
    "items": [
     {
-     "html": "The Art Institute of Chicago. “<i>Fukagawa Susaki and Jūmantsubo</i>” (1857), Utagawa Hiroshige. Collection record, 1925.3761.",
-     "url": "https://www.artic.edu/artworks/26605"
-    },
-    {
-     "html": "The Art Institute of Chicago. “<i>On the Yoshida Highway</i>” (c. 1685), attributed to Sugimura Jihei. Collection record, 1925.1699.",
-     "url": "https://www.artic.edu/artworks/19052"
-    },
-    {
-     "html": "The Art Institute of Chicago. “<i>Ono no Komachi Visiting Kiyomizu Temple</i>” (about 1788), Chōbunsai Eishi. Collection record, 1925.3100.",
-     "url": "https://www.artic.edu/artworks/86939"
-    },
-    {
      "html": "The Art Institute of Chicago. “<i>Plum Garden at Kameido</i>” (1857), Utagawa Hiroshige. Collection record, 1925.3752.",
      "url": "https://www.artic.edu/artworks/26577"
-    },
-    {
-     "html": "The Cleveland Museum of Art. “<i>Driving Rain at Shōno</i>” (1833), Utagawa Hiroshige. Collection record, 1948.306.",
-     "url": "https://clevelandart.org/art/1948.306"
-    },
-    {
-     "html": "The Cleveland Museum of Art. “<i>Perspective View of the Interior of the Nakamura Theater</i>” (1740), Okumura Masanobu. Collection record, 1916.1154.",
-     "url": "https://clevelandart.org/art/1916.1154"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<i>A Boating Party under Azuma Bridge</i>” (c. 1785), Torii Kiyonaga. Collection record, JP2620a–c.",
-     "url": "https://www.metmuseum.org/art/collection/search/45257"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. “<i>The Entrance to Ageya-machi</i>” (1681–84), Hishikawa Moronobu. Collection record, JP808.",
      "url": "https://www.metmuseum.org/art/collection/search/37252"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. “<i>Evening Snow at Kanbara</i>” (c. 1833–34), Utagawa Hiroshige. Collection record, JP2492.",
-     "url": "https://www.metmuseum.org/art/collection/search/56915"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<i>Ghosts of the Taira at Daimotsu Bay</i>” (1849–52), Utagawa Kuniyoshi. Collection record, JP1115.2a–c.",
-     "url": "https://www.metmuseum.org/art/collection/search/893318"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<i>Lovers Walking in the Snow (Crow and Heron)</i>” (1764–72), Suzuki Harunobu. Collection record, JP2453.",
-     "url": "https://www.metmuseum.org/art/collection/search/45085"
-    },
-    {
      "html": "The Metropolitan Museum of Art, New York. “<i>Ōtani Oniji III as Yakko Edobei</i>” (1794), Tōshūsai Sharaku. Collection record, JP2822.",
      "url": "https://www.metmuseum.org/art/collection/search/37358"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. “<i>Shichirigahama in Sagami Province</i>” (c. 1830–32), Katsushika Hokusai. Collection record, JP15.",
-     "url": "https://www.metmuseum.org/art/collection/search/36496"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. “<i>South Wind, Clear Sky (Red Fuji)</i>” (c. 1830–32), Katsushika Hokusai. Collection record, JP9.",
