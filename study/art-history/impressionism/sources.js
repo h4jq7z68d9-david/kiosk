@@ -55,24 +55,8 @@ window.SOURCES = {
    "title": "Museum collection records",
    "items": [
     {
-     "html": "Musée d'Orsay, Paris. &ldquo;Édouard Manet, <i>Olympia</i>, 1863.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://www.musee-orsay.fr/en/artworks/olympia-712"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. &ldquo;Claude Monet, <i>La Grenouillère</i>, 1869.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://www.metmuseum.org/art/collection/search/437135"
-    },
-    {
      "html": "Musée Marmottan Monet, Paris. &ldquo;Claude Monet, <i>Impression, Sunrise</i>, 1872.&rdquo; Collection record. Accessed October 27, 2026.",
      "url": "https://www.marmottan.fr/notice/4014/"
-    },
-    {
-     "html": "The Nelson-Atkins Museum of Art, Kansas City. &ldquo;Claude Monet, <i>Boulevard des Capucines</i>, 1873–74.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://art.nelson-atkins.org/objects/17852/boulevard-des-capucines"
-    },
-    {
-     "html": "The Courtauld Gallery, London. &ldquo;Pierre-Auguste Renoir, <i>La Loge</i>, 1874.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://gallerycollections.courtauld.ac.uk/object-p-1948-sc-338"
     },
     {
      "html": "Musée d'Orsay, Paris. &ldquo;Berthe Morisot, <i>The Cradle</i>, 1872.&rdquo; Collection record. Accessed October 27, 2026.",
@@ -91,40 +75,16 @@ window.SOURCES = {
      "url": "https://www.artic.edu/artworks/20684"
     },
     {
-     "html": "The Courtauld Gallery, London. &ldquo;Édouard Manet, <i>A Bar at the Folies-Bergère</i>, 1882.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://gallerycollections.courtauld.ac.uk/object-p-1934-sc-234"
-    },
-    {
      "html": "The Metropolitan Museum of Art, New York. &ldquo;Edgar Degas, <i>The Dance Class</i>, 1874.&rdquo; Collection record. Accessed October 27, 2026.",
      "url": "https://www.metmuseum.org/art/collection/search/438817"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. &ldquo;Edgar Degas, <i>Woman Bathing in a Shallow Tub</i>, 1885.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://www.metmuseum.org/art/collection/search/436127"
-    },
-    {
-     "html": "The National Gallery, London. &ldquo;Berthe Morisot, <i>Summer's Day</i>, c. 1879.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://www.nationalgallery.org.uk/paintings/berthe-morisot-summer-s-day"
     },
     {
      "html": "National Gallery of Art, Washington. &ldquo;Mary Cassatt, <i>Little Girl in a Blue Armchair</i>, 1878.&rdquo; Collection record. Accessed October 27, 2026.",
      "url": "https://www.nga.gov/artworks/61368-little-girl-blue-armchair"
     },
     {
-     "html": "The Art Institute of Chicago. &ldquo;Mary Cassatt, <i>The Child's Bath</i>, 1893.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://web.archive.org/web/20250506072434/https://www.artic.edu/artworks/111442/the-child-s-bath"
-    },
-    {
-     "html": "The Art Institute of Chicago. &ldquo;Claude Monet, <i>Stacks of Wheat (End of Summer)</i>, 1890–91.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://www.artic.edu/artworks/64818"
-    },
-    {
      "html": "National Gallery of Art, Washington. &ldquo;Claude Monet, <i>Rouen Cathedral, West Façade, Sunlight</i>, 1894.&rdquo; Collection record. Accessed October 27, 2026.",
      "url": "https://www.nga.gov/collection/art-object-page.46654.html"
-    },
-    {
-     "html": "The Art Institute of Chicago. &ldquo;Claude Monet, <i>Water Lilies</i>, 1906.&rdquo; Collection record. Accessed October 27, 2026.",
-     "url": "https://www.artic.edu/artworks/16568"
     }
    ]
   },
@@ -158,10 +118,6 @@ window.SOURCES = {
     {
      "html": "J. Paul Getty Museum. “New Caillebotte Acquisition <i>Young Man at His Window</i> Now on View at Getty.” Press release, December 16, 2021.",
      "url": "https://getty.edu/news/new-caillebotte-acquisition-young-man-at-his-window-now-on-view-at-getty"
-    },
-    {
-     "html": "Marcereau DeGalan, Aimee. \"Claude Monet, <i>Boulevard des Capucines</i>, 1873–74.\" Catalogue entry, and Diana M. Jaskierny, technical entry. In <i>French Paintings and Pastels, 1600–1945: The Collections of the Nelson-Atkins Museum of Art</i>, edited by Aimee Marcereau DeGalan. Kansas City: The Nelson-Atkins Museum of Art, 2021. https://doi.org/10.37764/78973.5.626.5407. Accessed October 27, 2026.",
-     "url": "https://nelson-atkins.org/fpc/catalogue/Impressionism/626/"
     },
     {
      "html": "Metropolitan Museum of Art. <i>Poplars, Eragny</i>, by Camille Pissarro, 1895. Accession 67.187.93. Collection record and catalogue entry by Katharine Baetjer. New York: Metropolitan Museum of Art.",
@@ -214,14 +170,6 @@ window.SOURCES = {
     {
      "html": "Steele, Elizabeth. “A Look Beneath the Surface: Technical Study of <i>Luncheon of the Boating Party</i>.” The Phillips Collection. Accessed October 27, 2026.",
      "url": "https://www.phillipscollection.org/boating-party-technical-study"
-    },
-    {
-     "html": "The Courtauld. \"La Loge (The Theatre Box).\" Collection highlights. Accessed October 27, 2026.",
-     "url": "https://courtauld.ac.uk/highlights/la-loge-the-theatre-box/"
-    },
-    {
-     "html": "The Courtauld. “<i>A Bar at the Folies-Bergère</i>.” Collection highlights. Accessed October 27, 2026.",
-     "url": "https://courtauld.ac.uk/highlights/a-bar-at-the-folies-bergere/"
     },
     {
      "html": "The Phillips Collection. “<i>Renoir and Friends: Luncheon of the Boating Party</i>.” Exhibition page, October 7, 2017–January 7, 2018. Accessed October 27, 2026.",

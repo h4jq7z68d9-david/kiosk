@@ -3,10 +3,11 @@
  "dataFiles": [
   "data.js"
  ],
- "homeDescription": "A short illustrated guide to French Impressionism, 1863 to 1906.",
- "ldDescription": "A short guide to recognizing French Impressionism, 1863 to 1906, compiled from museum collection records.",
+ "homeDescription": "A short illustrated guide to Impressionism in Paris, 1872 to 1894.",
+ "ldDescription": "A short guide to recognizing Impressionist painting in Paris, 1872 to 1894, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
  "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
- "introImg": "monet-impression"
+ "introImg": "pissarro-hoarfrost",
+ "viewer": "plate"
 }
