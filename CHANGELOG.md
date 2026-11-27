@@ -5,6 +5,10 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 -----
 
 
+## Completed This Session (Nov 27 2026, The Birth of Abstraction)
+
+- New public course **The Birth of Abstraction** (`/study/art-history/birth-of-abstraction.html`), plate viewer, intro (Kandinsky, Improvisation No. 30 (Cannons)) + 7 works: af Klint The Ten Largest No. 7, Dove Sails, Delaunay Windows Open Simultaneously, Malevich Airplane Flying, Popova Architectonic Painting, Klee May Picture, Mondrian Composition with Red, Yellow and Blue (1927). Only artists public domain everywhere (David's call). Section "Europe and the United States, 1907–1927"; after Fauvism. Fact review rounds 1 and 2 logged in iCloud; check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 27 2026, American Painting)
 
 - Housekeeping: Gutenberg re-check of the Composition plates (fields stay null; pages carry only the eBook licence line); skill updates for the Opus-only model and the built-in browser proposed to David; project-instructions item closed.

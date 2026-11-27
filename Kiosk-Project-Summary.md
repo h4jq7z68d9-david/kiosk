@@ -684,6 +684,10 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - [x] **Admin home-screen icon re-added and Oct 31 receipt re-attached** (David, Nov 27 2026).
 - [x] **Gallery on phones (≤600px):** David decided phones stay centred (Nov 27 2026).
 
+### From November 27 2026 (The Birth of Abstraction)
+
+- [ ] **Birth of Abstraction open flags (David):** Malevich image is MoMA's scan via Commons, color not compared to MoMA (site blocks scripts); Malevich dates 1878–1935 (AIC, Britannica; Tate gives 1879); af Klint has no owner object record (facts from Moderna Museet, Guggenheim Bilbao, MoMAT, Britannica) and the image is Moderna Museet's photo; Dove image 1024 px (Terra); Mondrian is the 1927 Kröller-Müller painting (Zürich 1930 had no good free image).
+
 ### From November 27 2026 (American Painting)
 
 - [ ] **American Painting open flags (David):** Sloan image is the Phillips's own 1200 px scan (no larger faithful file; the Phillips page's "© ARS" line not carried, work is public domain); Tanner image is the PMA's scan via Commons; Homer is the Met's smaller Snap the Whip (12 × 20 in.), not the Butler version; Sargent height 82 1/8 in. rounded to 82 1/4 by the metric figure.
