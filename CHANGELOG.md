@@ -4,6 +4,13 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+
+## Completed This Session (Nov 27 2026, later)
+
+- Fauvism and Early Expressionism: section renamed "Paris, Dresden, Munich, and Vienna, 1905–1915"; the seven work pages moved folder, old URLs redirect (noindex), earlier redirect targets retargeted. check.js and smoke.js PASS.
+- Steering doc: closed iPhone carousel, admin date filters, admin icon and receipt, gallery on phones (stays centred), Search Console image-metadata validation; slide-editor review reminders removed (David's call, Nov 27).
+- iCloud bundles synced to the repo for all 20 courses; superseded files moved to `unused/superseded-2026-11-27/`.
+
 ## Completed This Session (Nov 27 2026) — Baroque course (new)
 - New public course Baroque (Mode 2, plate viewer): 7 works + intro, 1 section "Europe, 1599–1694", 10 pages, 8 images, 2.5 MB. Works: Caravaggio The Calling of Saint Matthew, Rubens The Elevation of the Cross, Artemisia Gentileschi Judith Beheading Holofernes, Rembrandt Christ in the Storm on the Sea of Galilee (David's must-have), Velázquez Las Meninas, Vermeer The Milkmaid, Pozzo The Glory of Saint Ignatius (ceiling fresco; David: ceiling frescoes count as painting). Intro image Caravaggio The Supper at Emmaus; card image the Calling. Poussin cut to keep 7.
 - Sizes: Gentileschi 78 1/4 × 64 in (ICCD and Uffizi-supplied GA&C 199 × 162.5 cm over the Uffizi web page's 146.5 × 108; David approved); Las Meninas 126 1/4 × 110 3/4 in from the Prado figure 320.5 × 281.5 cm as cited by Historylab (Prado page itself unreadable from the session); Pozzo vault in feet. Owner dates used: Rubens 1609–10, Vermeer about 1660.

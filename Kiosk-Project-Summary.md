@@ -686,7 +686,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ### From November 27 2026 (last three courses on the plate viewer)
 
-- [ ] **Open flags (David), Nov 27:** Fauvism section renamed "Paris, Dresden, Munich, and Vienna, 1905–1915" (Nov 27; old work URLs redirect). Blue Horse I also appears in Color Theory (single repeat). Earlier image flags still stand for kept works (Woman with a Hat 1860 px Commons file; Composition VII size from a figure with no units; Mont Sainte-Victoire and Starry Night from Commons). iCloud bundles not updated.
+- [ ] **Open flags (David), Nov 27:** Fauvism section renamed "Paris, Dresden, Munich, and Vienna, 1905–1915" (Nov 27; old work URLs redirect). Blue Horse I also appears in Color Theory (single repeat). Earlier image flags still stand for kept works (Woman with a Hat 1860 px Commons file; Composition VII size from a figure with no units; Mont Sainte-Victoire and Starry Night from Commons).
 
 ### From November 25 2026 (technique courses on the plate viewer)
 
@@ -694,7 +694,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - [ ] **Low-resolution images accepted for now:** the Reni detail (1,069 px) and the translated film-formation diagram (930 px). Replace if a larger open file turns up.
 - [x] **Captions:** every technique slide image now has a two-line caption (`cap` on all 48 slides, Nov 25 2026); full citations stay on the credits page.
 - [ ] **Later:** David may photograph a wet acrylic stroke over a dry one (the Color Shift point now lives in Acrylic Dries). The electron-microscope photo of acrylic particles (`Dispersionspoly PMMA.tif`, CC BY-SA 4.0, Commons) has no slot yet.
-- [ ] **iCloud bundles** under `School v2/Art Technique Course Builder/` should match the repo after any push.
+- [x] **iCloud bundles match the repo** (Nov 27 2026): every course's `Public Study Site/` (Neoclassicism and Rococo: the two `Public Study Site - Mode 2 - …` folders; Japonisme: new `Public Study Site/`) now holds the repo's data, credits, sources, redirects, settings and `img/`. Replaced or unused files moved to `unused/superseded-2026-11-27/`, nothing deleted. Re-sync after any course push.
 
 ### From November 24 2026 (High Renaissance thinning pilot + plate viewer)
 
