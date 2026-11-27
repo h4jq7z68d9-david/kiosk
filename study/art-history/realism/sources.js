@@ -51,36 +51,12 @@ window.SOURCES = {
      "url": "https://smb.museum-digital.de/json/object/142741"
     },
     {
-     "html": "Art Institute of Chicago. <em>The Song of the Lark</em>, Jules Breton, 1894.1033.",
-     "url": "https://www.artic.edu/artworks/94841/the-song-of-the-lark"
-    },
-    {
-     "html": "Museum of Fine Arts, Boston. <em>The Sower</em>, Jean-François Millet, 17.1485.",
-     "url": "https://collections.mfa.org/objects/31601"
-    },
-    {
      "html": "Musée d'Orsay, Paris. <em>A Burial at Ornans</em>, Gustave Courbet, RF 325.",
      "url": "https://www.musee-orsay.fr/fr/oeuvres/un-enterrement-ornans-924"
     },
     {
-     "html": "Musée d'Orsay, Paris. <em>The Angelus</em>, Jean-François Millet, RF 1877.",
-     "url": "https://www.musee-orsay.fr/fr/oeuvres/langelus-345"
-    },
-    {
      "html": "Musée d'Orsay, Paris. <em>The Gleaners</em>, Jean-François Millet, RF 592.",
      "url": "https://www.musee-orsay.fr/fr/oeuvres/des-glaneuses-342"
-    },
-    {
-     "html": "Musée d'Orsay, Paris. <em>The Painter's Studio</em>, Gustave Courbet, RF 2257.",
-     "url": "https://www.musee-orsay.fr/fr/oeuvres/latelier-du-peintre-927"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>Forest of Fontainebleau</em>, Camille Corot, 1963.10.109.",
-     "url": "https://www.nga.gov/artworks/46584-forest-fontainebleau"
-    },
-    {
-     "html": "National Gallery of Art, Washington. <em>The Old Musician</em>, Édouard Manet, 1963.10.162.",
-     "url": "https://www.nga.gov/artworks/46637-old-musician"
     },
     {
      "html": "Philadelphia Museum of Art and Pennsylvania Academy of the Fine Arts. <em>Portrait of Dr. Samuel D. Gross (The Gross Clinic)</em>, Thomas Eakins, PAFA 2007.2; PMA 2007-1-1.",
@@ -89,22 +65,6 @@ window.SOURCES = {
     {
      "html": "State Russian Museum, St Petersburg. <em>Barge Haulers on the Volga</em>, Ilya Repin, Ж-4056.",
      "url": "https://rusmuseumvrm.ru/data/collections/painting/19_20/zh_4056/?lang=en"
-    },
-    {
-     "html": "Städel Museum, Frankfurt am Main. <em>The Wave</em>, Gustave Courbet, 1433.",
-     "url": "https://sammlung.staedelmuseum.de/en/work/the-wave"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>Rue Transnonain, April 15, 1834</em>, Honoré Daumier, 20.23.",
-     "url": "https://www.metmuseum.org/art/collection/search/365806"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>The Champion Single Sculls (Max Schmitt in a Single Scull)</em>, Thomas Eakins, 34.92.",
-     "url": "https://www.metmuseum.org/art/collection/search/10819"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. <em>The Gulf Stream</em>, Winslow Homer, 06.1234.",
-     "url": "https://metmuseum.org/art/collection/search/11122"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. <em>The Horse Fair</em>, Rosa Bonheur, 87.25.",
@@ -136,16 +96,8 @@ window.SOURCES = {
      "url": "https://smarthistory.org/?p=1442"
     },
     {
-     "html": "Smarthistory. Daumier, <em>Rue Transnonain</em>.",
-     "url": "https://smarthistory.org/?p=52310"
-    },
-    {
      "html": "Tate. “Realism.” <em>Art Terms</em>. Accessed November 10, 2026.",
      "url": "https://www.tate.org.uk/art/art-terms/r/realism"
-    },
-    {
-     "html": "Tate. “Lithography.” <em>Art Terms</em>. Accessed November 10, 2026.",
-     "url": "https://www.tate.org.uk/art/art-terms/l/lithography"
     },
     {
      "html": "Tate. “Salon.” <em>Art Terms</em>. Accessed November 10, 2026.",

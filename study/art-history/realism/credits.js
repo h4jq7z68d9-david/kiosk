@@ -1,24 +1,4 @@
 window.CREDITS = {
- "corot-forest-of-fontainebleau": {
-  "work": "Jean-Baptiste-Camille Corot, Forest of Fontainebleau (1834)",
-  "page": "https://www.nga.gov/artworks/46584-forest-fontainebleau",
-  "file": "NGA IIIF 5c1e9c2f-31e2-4234-801b-033610d0102c (full/3216,)",
-  "license": "CC0",
-  "author": "Jean-Baptiste-Camille Corot",
-  "source": "National Gallery of Art, Washington",
-  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
-  "copyrightNotice": "This object’s media is free and in the public domain."
- },
- "daumier-rue-transnonain": {
-  "work": "Honoré Daumier, Rue Transnonain, 15 April 1834 (1834)",
-  "page": "https://www.metmuseum.org/art/collection/search/365806",
-  "file": "Met Open Access DP835611 (impression 20.23)",
-  "license": "CC0",
-  "author": "Honoré Daumier",
-  "source": "The Metropolitan Museum of Art",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
- },
  "courbet-burial-at-ornans": {
   "work": "Gustave Courbet, A Burial at Ornans (1849–50)",
   "page": "https://commons.wikimedia.org/wiki/File:Gustave_Courbet_-_A_Burial_at_Ornans_-_Google_Art_Project_2.jpg",
@@ -26,16 +6,6 @@ window.CREDITS = {
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Gustave Courbet",
   "source": "Musée d'Orsay, via Google Arts & Culture and Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
- "millet-sower": {
-  "work": "Jean-François Millet, The Sower (1850)",
-  "page": "https://commons.wikimedia.org/wiki/File:Jean-Fran%C3%A7ois_Millet_-_The_Sower_-_Google_Art_Project.jpg",
-  "file": "File:Jean-François Millet - The Sower - Google Art Project.jpg",
-  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
-  "author": "Jean-François Millet",
-  "source": "Museum of Fine Arts, Boston, via Google Arts & Culture and Wikimedia Commons",
   "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
   "copyrightNotice": "Public domain"
  },
@@ -49,16 +19,6 @@ window.CREDITS = {
   "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
   "copyrightNotice": "Public Domain"
  },
- "courbet-painters-studio": {
-  "work": "Gustave Courbet, The Painter's Studio (1854–55)",
-  "page": "https://commons.wikimedia.org/wiki/File:Courbet_LAtelier_du_peintre.jpg",
-  "file": "File:Courbet LAtelier du peintre.jpg",
-  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
-  "author": "Gustave Courbet",
-  "source": "Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
  "millet-gleaners": {
   "work": "Jean-François Millet, The Gleaners (1857)",
   "page": "https://commons.wikimedia.org/wiki/File:Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project.jpg",
@@ -68,26 +28,6 @@ window.CREDITS = {
   "source": "Musée d'Orsay, via Google Arts & Culture and Wikimedia Commons",
   "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
   "copyrightNotice": "Public domain"
- },
- "millet-angelus": {
-  "work": "Jean-François Millet, The Angelus (1857–59)",
-  "page": "https://commons.wikimedia.org/wiki/File:Jean-Fran%C3%A7ois_Millet_-_The_Angelus_-_Google_Art_Project.jpg",
-  "file": "File:Jean-François Millet - The Angelus - Google Art Project.jpg",
-  "license": "Public domain (faithful reproduction of a public-domain 2D work)",
-  "author": "Jean-François Millet",
-  "source": "Musée d'Orsay, via Google Arts & Culture and Wikimedia Commons",
-  "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-  "copyrightNotice": "Public domain"
- },
- "manet-old-musician": {
-  "work": "Édouard Manet, The Old Musician (1862)",
-  "page": "https://www.nga.gov/artworks/46637-old-musician",
-  "file": "NGA IIIF 8d7eff38-fff0-4f9b-9e36-9088b412864e (full/2483,)",
-  "license": "CC0",
-  "author": "Edouard Manet",
-  "source": "National Gallery of Art, Washington",
-  "licenseUrl": "https://www.nga.gov/terms-notices#open-access",
-  "copyrightNotice": "This object’s media is free and in the public domain."
  },
  "daumier-third-class-carriage": {
   "work": "Honoré Daumier, The Third-Class Carriage (1864)",
@@ -109,16 +49,6 @@ window.CREDITS = {
   "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
   "copyrightNotice": "Public Domain"
  },
- "courbet-the-wave": {
-  "work": "Gustave Courbet, The Wave (1869–70)",
-  "page": "https://sammlung.staedelmuseum.de/en/work/the-wave",
-  "file": "Städel download (form POST, file id 3253c557), PNG RGBA",
-  "license": "Public domain (Public Domain Mark)",
-  "author": "Gustave Courbet",
-  "source": "Städel Museum, Frankfurt am Main",
-  "licenseUrl": null,
-  "copyrightNotice": "Public Domain"
- },
  "repin-barge-haulers": {
   "work": "Ilya Repin, Barge Haulers on the Volga (1870–73)",
   "page": "https://commons.wikimedia.org/wiki/File:Ilya_Repin_-_Barge_Haulers_on_the_Volga_-_Google_Art_Project.jpg",
@@ -128,16 +58,6 @@ window.CREDITS = {
   "source": "State Russian Museum, via Google Arts & Culture and Wikimedia Commons",
   "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
   "copyrightNotice": "Public domain"
- },
- "eakins-champion-single-sculls": {
-  "work": "Thomas Eakins, The Champion Single Sculls (Max Schmitt in a Single Scull) (1871)",
-  "page": "https://www.metmuseum.org/art/collection/search/10819",
-  "file": "Met Open Access DT86 (primaryImage)",
-  "license": "CC0",
-  "author": "Thomas Eakins",
-  "source": "The Metropolitan Museum of Art",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
  },
  "menzel-iron-rolling-mill": {
   "work": "Adolph Menzel, The Iron Rolling Mill (1872–75)",
@@ -158,25 +78,5 @@ window.CREDITS = {
   "source": "Philadelphia Museum of Art",
   "licenseUrl": null,
   "copyrightNotice": "Images on this site are shared for educational use. For image rights, permissions, or to learn more about image rights and access, email library@philamuseum.org"
- },
- "breton-song-of-the-lark": {
-  "work": "Jules Breton, The Song of the Lark (1884)",
-  "page": "https://www.artic.edu/artworks/94841/the-song-of-the-lark",
-  "file": "AIC IIIF 48b2de88-ba73-8e19-f448-d1cef4a1c847 (full/3000,)",
-  "license": "CC0",
-  "author": "Jules Breton",
-  "source": "Art Institute of Chicago",
-  "licenseUrl": null,
-  "copyrightNotice": "CC0 Public Domain Designation"
- },
- "homer-gulf-stream": {
-  "work": "Winslow Homer, The Gulf Stream (1899)",
-  "page": "https://www.metmuseum.org/art/collection/search/11122",
-  "file": "DP-20821-001.jpg",
-  "license": "CC0",
-  "author": "Winslow Homer",
-  "source": "The Metropolitan Museum of Art",
-  "licenseUrl": "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access",
-  "copyrightNotice": "Public Domain"
  }
 };

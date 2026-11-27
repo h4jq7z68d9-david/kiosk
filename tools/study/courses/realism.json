@@ -3,10 +3,11 @@
  "dataFiles": [
   "data.js"
  ],
- "homeDescription": "A short illustrated guide to Realism in France, Europe and the United States, 1834 to 1899.",
- "ldDescription": "A short guide to recognizing Realism in France, Europe and the United States, 1834 to 1899, compiled from museum collection records.",
+ "homeDescription": "A short illustrated guide to Realist art in Europe and the United States, 1849 to 1875.",
+ "ldDescription": "A short guide to recognizing Realist art in Europe and the United States, 1849 to 1875, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
  "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
- "introImg": "millet-gleaners"
+ "introImg": "menzel-iron-rolling-mill",
+ "viewer": "plate"
 }
