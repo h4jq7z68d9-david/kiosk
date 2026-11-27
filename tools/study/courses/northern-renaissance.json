@@ -3,10 +3,11 @@
  "dataFiles": [
   "data.js"
  ],
- "homeDescription": "A short illustrated guide to painting and printmaking in the Netherlands and Germany, 1427 to 1568.",
- "ldDescription": "A short guide to recognizing painting and printmaking in the Netherlands and Germany, 1427 to 1568, compiled from museum collection records.",
+ "homeDescription": "A short illustrated guide to painting and printmaking in the Netherlands and Germany, 1434 to 1565.",
+ "ldDescription": "A short guide to recognizing painting and printmaking in the Netherlands and Germany, 1434 to 1565, compiled from museum collection records.",
  "sourcesDescription": "Lectures, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
  "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
- "introImg": "eyck-arnolfini"
+ "introImg": "campin-merode",
+ "viewer": "plate"
 }

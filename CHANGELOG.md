@@ -4,6 +4,12 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Northern Renaissance on the plate viewer
+- Northern Renaissance thinned from 23 to 7 works on the plate viewer: Van Eyck Arnolfini Portrait, Rogier Descent from the Cross, Bosch Garden of Earthly Delights, Dürer Self-Portrait (1500) and Adam and Eve, Holbein The Ambassadors, Bruegel Hunters in the Snow. Intro image Campin workshop Merode Altarpiece. Section "Northern Europe, 1434–1565"; card dates "1434–1565". Look bullets dropped; new intro text; artist lines moved to each artist's first slide (Rogier now about 1399–1464, per the Prado).
+- 16 works cut; 23 redirect stubs; 15 images removed. Two lines with museum-attribution phrasing removed (Dürer self-portrait, Bruegel rank claim).
+- Fact review rounds 1 (7 fails, mostly in the dropped look lines) and 2 (pass); paraphrase check within round 1 (no runs; Met and Prado Garden pages not read verbatim). check.js and smoke.js PASS.
+- Also removed the intro sub-line from Early Renaissance (missed in its rebuild; rule since Nov 24).
+
 ## Completed This Session (Nov 26 2026) — Early Renaissance on the plate viewer
 - Early Renaissance in Italy thinned to 7 works on the plate viewer: Masaccio Holy Trinity, Piero Baptism of Christ, Uccello Battle of San Romano, Antonello Saint Jerome in his Study, Botticelli Primavera, Mantegna Lamentation over the Dead Christ, Botticelli Venus and Mars. Intro image Masaccio The Tribute Money. Section "Italy, 1425–1485"; card dates "1425–1485".
 - 8 works cut (Gentile Adoration, Fra Angelico Annunciation, Botticelli Adoration, Piero Duke and Duchess of Urbino, Pollaiuolo Saint Sebastian, Bellini St. Francis, Ghirlandaio Old Man and Boy; Tribute Money moved to the intro); 15 redirect stubs; 7 images removed. Holy Trinity size added (667 × 317 cm; Smarthistory caption, confirmed by two more sources).

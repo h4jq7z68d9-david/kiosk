@@ -8,7 +8,6 @@ window.SITE = {
    "n": 1,
    "wk": 1,
    "title": "What to Look For",
-   "sub": "Solid figures in measured space",
    "overview": {
     "img": "masaccio-tribute-money",
     "cap": [
