@@ -5,14 +5,6 @@ window.SOURCES = {
    "title": "Lectures",
    "items": [
     {
-     "html": "Bowyer, Emerson, and Lisa Ayla &Ccedil;akmak. &ldquo;Conversation: Canova&rsquo;s Modern Classics.&rdquo; The Art Institute of Chicago, 2024. YouTube video.",
-     "url": "https://www.youtube.com/watch?v=0tFWz_77lGk"
-    },
-    {
-     "html": "Ferando, Christina. &ldquo;Displays of Power: Canova&rsquo;s Sculptures of Greatness.&rdquo; Lecture, The Frick Collection, New York, June 13, 2018. YouTube video.",
-     "url": "https://www.youtube.com/watch?v=sy7iETDjJw8"
-    },
-    {
      "html": "Galitz, Kathryn Calley. &ldquo;Becoming Jacques-Louis David.&rdquo; Evening Lecture Series, New York Studio School, March 27, 2013. YouTube video.",
      "url": "https://www.youtube.com/watch?v=tNXonLqnZOY"
     },
@@ -55,36 +47,12 @@ window.SOURCES = {
    "title": "Museum records",
    "items": [
     {
-     "html": "Bibliothèque nationale de France, Estampes et photographie. &ldquo;Étienne-Louis Boullée, <em>Cenotaph for Newton</em>, 1784.&rdquo; Collection record.",
-     "url": "https://gallica.bnf.fr/ark:/12148/btv1b531645749"
-    },
-    {
-     "html": "Musée du Louvre. &ldquo;Antonio Canova, <em>L&#x27;Amour et Psyché à demi couchée</em>, 1787–93.&rdquo; Collection record.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010091976"
-    },
-    {
      "html": "Musée du Louvre. &ldquo;Jacques-Louis David, <em>Le Serment des Horaces</em>, 1784–85.&rdquo; Collection record.",
      "url": "https://collections.louvre.fr/ark:/53355/cl010062239"
     },
     {
-     "html": "Musée du Louvre. &ldquo;Jacques-Louis David, <em>Les Sabines</em>, 1799.&rdquo; Collection record.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010065426"
-    },
-    {
-     "html": "Musée du Louvre. &ldquo;Jacques-Louis David, <em>Portrait de Juliette Récamier</em>, 1800.&rdquo; Collection record.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010059215"
-    },
-    {
-     "html": "Musée du Louvre. &ldquo;Anne-Louis Girodet, <em>Endymion. Effet de lune</em>, 1791.&rdquo; Collection record.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010064831"
-    },
-    {
      "html": "Musée national du château de Malmaison. &ldquo;Jacques-Louis David, <em>Le Premier Consul franchissant les Alpes au col du Grand Saint-Bernard</em>, 1800.&rdquo; Collection record.",
      "url": "https://www.pop.culture.gouv.fr/notice/joconde/00000095069"
-    },
-    {
-     "html": "National Gallery of Art, Washington. &ldquo;Jean-Antoine Houdon, <em>Voltaire</em>, 1778.&rdquo; Collection record.",
-     "url": "https://www.nga.gov/artworks/1266-voltaire"
     },
     {
      "html": "National Gallery of Canada. &ldquo;Benjamin West, <em>The Death of General Wolfe</em>, 1770.&rdquo; Collection record.",
@@ -95,28 +63,12 @@ window.SOURCES = {
      "url": "https://fine-arts-museum.be/fr/la-collection/jacques-louis-david-marat-assassine"
     },
     {
-     "html": "The Metropolitan Museum of Art. &ldquo;Pompeo Batoni, <em>Portrait of a Young Man</em>, about 1760–65.&rdquo; Collection record.",
-     "url": "https://www.metmuseum.org/art/collection/search/435623"
-    },
-    {
-     "html": "The Metropolitan Museum of Art. &ldquo;Anton Raphael Mengs, <em>Johann Joachim Winckelmann</em>, about 1777.&rdquo; Collection record.",
-     "url": "https://www.metmuseum.org/art/collection/search/437067"
-    },
-    {
      "html": "The Metropolitan Museum of Art. &ldquo;Jacques-Louis David, <em>The Death of Socrates</em>, 1787.&rdquo; Collection record.",
      "url": "https://www.metmuseum.org/art/collection/search/436105"
     },
     {
-     "html": "The Metropolitan Museum of Art. &ldquo;Jacques-Louis David, <em>Antoine Laurent Lavoisier and Marie Anne Lavoisier</em>, 1788.&rdquo; Collection record.",
-     "url": "https://www.metmuseum.org/art/collection/search/436106"
-    },
-    {
      "html": "The Metropolitan Museum of Art. &ldquo;Adélaïde Labille-Guiard, <em>Self-Portrait with Two Pupils</em>, 1785.&rdquo; Collection record.",
      "url": "https://www.metmuseum.org/art/collection/search/436840"
-    },
-    {
-     "html": "The Metropolitan Museum of Art. &ldquo;Antonio Canova, <em>Perseus with the Head of Medusa</em>, 1804–6.&rdquo; Collection record.",
-     "url": "https://www.metmuseum.org/art/collection/search/204758"
     },
     {
      "html": "Virginia Museum of Fine Arts. &ldquo;Angelica Kauffman, <em>Cornelia, Mother of the Gracchi, Pointing to Her Children as Her Treasures</em>, about 1785.&rdquo; Collection record.",
@@ -131,10 +83,6 @@ window.SOURCES = {
   {
    "title": "References",
    "items": [
-    {
-     "html": "Centeno, Silvia A., Dorothy Mahon, and David Pullins. &ldquo;Refashioning the Lavoisiers.&rdquo; <em>Met Perspectives</em>, September 1, 2021. The Metropolitan Museum of Art.",
-     "url": "https://www.metmuseum.org/perspectives/david-lavoisier-conservation"
-    },
     {
      "html": "Stacey, C. P. &ldquo;Benjamin West and &lsquo;The Death of Wolfe&rsquo;.&rdquo; <em>National Gallery of Canada Bulletin</em> 7 (1966).",
      "url": "https://www.gallery.ca/bulletin/num7/stacey1.html"
