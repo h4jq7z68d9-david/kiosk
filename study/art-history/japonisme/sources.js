@@ -59,48 +59,20 @@ window.SOURCES = {
      "url": "https://asia.si.edu/object/F1904.75a/"
     },
     {
-     "html": "Freer Gallery of Art, Smithsonian, Washington. James McNeill Whistler, <em>Variations in Flesh Colour and Green: The Balcony</em>, 1864–70. Collection record. Accessed November 10, 2026.",
-     "url": "https://asia.si.edu/object/F1892.23a-b/"
-    },
-    {
      "html": "The Metropolitan Museum of Art, New York. Félix Bracquemond, <em>Soup Plate, Rousseau Service</em>, 1866–75. Collection record. Accessed November 10, 2026.",
      "url": "https://www.metmuseum.org/art/collection/search/237758"
-    },
-    {
-     "html": "The Metropolitan Museum of Art, New York. Édouard Manet, <em>Boating</em>, 1874. Collection record. Accessed November 10, 2026.",
-     "url": "https://www.metmuseum.org/art/collection/search/436947"
     },
     {
      "html": "Museum of Fine Arts, Boston. Claude Monet, <em>La Japonaise (Camille Monet in Japanese Costume)</em>, 1876. Collection record. Accessed November 10, 2026.",
      "url": "https://collections.mfa.org/objects/33556"
     },
     {
-     "html": "The Metropolitan Museum of Art, New York. Edgar Degas, <em>Dancers in the Rehearsal Room with a Double Bass</em>, about 1882–85. Collection record. Accessed November 10, 2026.",
-     "url": "https://www.metmuseum.org/art/collection/search/436138"
-    },
-    {
      "html": "Van Gogh Museum, Amsterdam. Vincent van Gogh, <em>Flowering Plum Orchard (after Hiroshige)</em>, 1887. Collection record. Accessed November 10, 2026.",
      "url": "https://www.vangoghmuseum.nl/en/collection/s0115V1962"
     },
     {
-     "html": "Van Gogh Museum, Amsterdam. Vincent van Gogh, <em>Bridge in the Rain (after Hiroshige)</em>, 1887. Collection record. Accessed November 10, 2026.",
-     "url": "https://www.vangoghmuseum.nl/en/collection/s0114V1962"
-    },
-    {
-     "html": "The Cleveland Museum of Art. Paul Gauguin, <em>Volpini Suite: Laundresses (Les Laveuses)</em>, 1889. Collection record. Accessed November 10, 2026.",
-     "url": "https://clevelandart.org/art/1954.55.6"
-    },
-    {
-     "html": "Van Gogh Museum, Amsterdam. Vincent van Gogh, <em>Almond Blossom</em>, 1890. Collection record. Accessed November 10, 2026.",
-     "url": "https://www.vangoghmuseum.nl/en/collection/s0176V1962"
-    },
-    {
      "html": "Art Institute of Chicago. Mary Cassatt, <em>The Letter</em>, 1890–91. Collection record. Accessed November 10, 2026.",
      "url": "https://www.artic.edu/artworks/13508"
-    },
-    {
-     "html": "Art Institute of Chicago. Mary Cassatt, <em>Woman Bathing</em>, 1890–91. Collection record. Accessed November 10, 2026.",
-     "url": "https://www.artic.edu/artworks/13506"
     },
     {
      "html": "The Metropolitan Museum of Art, New York. Henri de Toulouse-Lautrec, <em>Moulin Rouge: La Goulue</em>, 1891. Collection record. Accessed November 10, 2026.",
@@ -111,16 +83,8 @@ window.SOURCES = {
      "url": "https://clevelandart.org/art/1999.323"
     },
     {
-     "html": "The Cleveland Museum of Art. Pierre Bonnard, <em>Nursemaids' Promenade, Frieze of Carriages</em>, 1895. Collection record. Accessed November 10, 2026.",
-     "url": "https://clevelandart.org/art/2008.31"
-    },
-    {
      "html": "Art Institute of Chicago. Arthur Wesley Dow, <em>Boats at Rest</em>, about 1895. Collection record. Accessed November 10, 2026.",
      "url": "https://www.artic.edu/artworks/121377"
-    },
-    {
-     "html": "Art Institute of Chicago. Claude Monet, <em>Water Lily Pond</em>, 1900. Collection record. Accessed November 10, 2026.",
-     "url": "https://www.artic.edu/artworks/87088"
     }
    ]
   },
@@ -138,10 +102,6 @@ window.SOURCES = {
     {
      "html": "National Gallery of Victoria. “A radical style: Japonisme, Art Nouveau and the Nabis.” Essay. Accessed November 10, 2026.",
      "url": "https://www.ngv.vic.gov.au/essay/a-radical-style"
-    },
-    {
-     "html": "Van Gogh Museum. “5x Van Gogh's Almond Blossom.” Museum story. Accessed November 10, 2026.",
-     "url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/5-things-you-need-to-know-about-van-goghs-almond-blossom"
     }
    ]
   }
