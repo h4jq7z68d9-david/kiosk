@@ -4,6 +4,11 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Romanticism on the plate viewer
+- Romanticism thinned from 18 to 7 works on the plate viewer: Fuseli The Nightmare, Goya The Third of May 1808, Friedrich Wanderer above the Sea of Fog, Géricault The Raft of the Medusa, Constable The Hay Wain, Delacroix Liberty Leading the People, Turner Rain, Steam, and Speed. Intro image Friedrich The Monk by the Sea. American works cut, so the section is "Europe, 1781–1844"; card dates "1781–1844".
+- 11 works cut (Blake, Goya Sleep of Reason and Saturn, Delacroix Sardanapalus and Women of Algiers, Turner Temeraire and Slave Ship, Cole, Church, Bierstadt; Monk moved to the intro); 89 redirect stubs; 10 images removed; sources pruned. Artist lines moved to Goya, Delacroix, Turner, and Friedrich's remaining slides. New intro text; Goya and Delacroix history lines replaced.
+- Fact review rounds 1 (4 fails: Wanderer "few upright canvases" removed, repeated words, Turner title now the National Gallery's) and 2 (one flag, "also called A Barricade", kept: the Louvre record lists it). check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 26 2026) — Neoclassicism on the plate viewer
 - Neoclassicism thinned from 18 to 7 works on the plate viewer: Hamilton The Death of Lucretia, West The Death of General Wolfe, Kauffman Cornelia, David The Oath of the Horatii, Labille-Guiard Self-Portrait with Two Pupils, David The Death of Marat, David Napoleon Crossing the Alps. Intro image David The Death of Socrates (was the Oath; David's choice). Section "Rome, Paris, and London, 1763–1800"; card dates "1763–1800".
 - 11 works cut (Batoni, Mengs, Houdon, Boullée, Lavoisiers, both Canovas, Girodet, Sabines, Récamier; Socrates moved to the intro); old section's 18 pages redirect (95 stubs total); 10 images removed; sources pruned to the kept works (Canova lectures, Lavoisier reference and cut works' records dropped). Look bullets folded into one-to-two-sentence leads; new intro text; Oxford commas.

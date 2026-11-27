@@ -15,7 +15,7 @@ window.SITE = {
      "The Monk by the Sea",
      "1808–10"
     ],
-    "sum": "Romanticism was a shift in art and literature at its height from about 1780 to 1830. Artists in Britain, Spain, Germany, and France turned away from classical restraint and put personal feeling, the workings of the mind, and the natural world at the center of their pictures.",
+    "sum": "Romanticism was a shift in art and literature at its height from about 1780 to 1830. Artists in Britain, Spain, Germany, and France moved away from classical calm and built their pictures around strong emotion, dreams and fears, and the force of nature.",
     "bul": []
    },
    "slides": [
@@ -50,9 +50,9 @@ window.SITE = {
      "title": "Wanderer above the Sea of Fog",
      "date": "about 1817",
      "det": "German, 1774–1840. Oil on canvas, 37 1/4 × 29 1/2 in. Hamburger Kunsthalle, Hamburg",
-     "lead": "Friedrich stood a single dark figure dead center, seen from behind, and made the lines of the landscape meet on it. Distant ridges slope down from both sides to the figure's chest, so the eye slides along them to the center.",
+     "lead": "Friedrich stood a single dark figure dead center, seen from behind. Distant ridges slope down from both sides and meet at his chest, so the eye slides along them to him.",
      "bul": [
-      "A figure seen from behind is called a Rückenfigur; this is one of the artist's few upright canvases."
+      "A figure seen from behind, like this one, is called a Rückenfigur."
      ]
     },
     {
@@ -62,7 +62,7 @@ window.SITE = {
      "title": "The Raft of the Medusa",
      "date": "1818–19",
      "det": "French, 1791–1824. Oil on canvas, 193 1/4 × 282 in. Musée du Louvre, Paris",
-     "lead": "Géricault piled the bodies into a pyramid climbing from lower left to a man waving a cloth at upper right. Raised arms all reach the same way, pulling the eye up the pile to the cloth.",
+     "lead": "Géricault stacked the bodies into a pyramid climbing from lower left to a man waving a cloth at upper right. Raised arms all reach the same way, pulling the eye to the top.",
      "bul": [
       "The picture records the 1816 wreck of a frigate off Senegal. About 150 people went onto a raft, and 15 were alive when a ship found them 12 days later."
      ]
@@ -74,7 +74,7 @@ window.SITE = {
      "title": "The Hay Wain",
      "date": "1821",
      "det": "British, 1776–1837. Oil on canvas, 51 1/4 × 73 in. The National Gallery, London",
-     "lead": "Constable built the foliage from many separate strokes and flecked the water and leaves with small dabs of white. The white sits on top of darker paint, so it reads as light catching the surface.",
+     "lead": "Constable built the foliage from many separate strokes and flecked the water and leaves with small dabs of white. Laid over darker paint, the dabs read as light catching the surface.",
      "bul": [
       "The millpond is at Flatford on the River Stour; the work was done in the artist's London studio."
      ]
@@ -86,19 +86,19 @@ window.SITE = {
      "title": "Liberty Leading the People",
      "date": "1830",
      "det": "French, 1798–1863. Oil on canvas, 102 1/4 × 128 in. Musée du Louvre, Paris",
-     "lead": "Delacroix echoed the flag's red, white, and blue in small notes across a mostly gray and brown picture. The jacket and sash on the figure kneeling at Liberty's feet repeat the flag's blue and red, tying him to it.",
+     "lead": "Delacroix echoed the flag's red, white, and blue in small notes across a mostly gray and brown picture. The jacket and sash on the figure kneeling at Liberty's feet repeat that blue and red, tying him to it.",
      "bul": [
-      "Painted from September to December 1830, after the July Revolution in Paris, and also called A Barricade."
+      "Painted in the autumn of 1830, after the July Revolution in Paris, and also called A Barricade."
      ]
     },
     {
      "type": "work",
      "key": "turner-rain-steam-speed",
      "artist": "J.M.W. Turner",
-     "title": "Rain, Steam and Speed – The Great Western Railway",
+     "title": "Rain, Steam, and Speed – The Great Western Railway",
      "date": "1844",
      "det": "British, 1775–1851. Oil on canvas, 35 3/4 × 48 in. The National Gallery, London",
-     "lead": "Turner blurred almost everything into pale haze and kept his sharpest edge for the engine. Creams, golds, and pale blues run together with no clear horizon, so the distance reads as one sheet of haze.",
+     "lead": "Turner blurred almost everything and kept his sharpest edge for the engine. Creams, golds, and pale blues run together with no clear horizon, so the distance reads as one sheet of haze.",
      "bul": [
       "A train crosses the Maidenhead railway bridge over the Thames; the bridge was finished in 1838."
      ]
