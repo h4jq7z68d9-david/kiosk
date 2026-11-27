@@ -19,7 +19,7 @@ window.CREDITS = {
   "copyrightNotice": "Public domain"
  },
  "pissarro-hoarfrost": {
-  "work": "Camille Pissarro, White Frost (1873)",
+  "work": "Camille Pissarro, Hoarfrost (1873)",
   "page": "https://commons.wikimedia.org/wiki/File:Camille_Pissarro_-_Gelée_blanche,_ancienne_route_d´Ennery,_Pontoise_-_1873.jpg",
   "file": "File:Camille Pissarro - Gelée blanche, ancienne route d´Ennery, Pontoise - 1873.jpg",
   "license": "Public domain",

@@ -12,7 +12,7 @@ window.SITE = {
     "img": "pissarro-hoarfrost",
     "cap": [
      "Camille Pissarro",
-     "White Frost",
+     "Hoarfrost",
      "1873"
     ],
     "sum": "Impressionism took shape in and around Paris from the late 1860s, and its painters first showed together in 1874, in an exhibition they organized themselves. They worked in short, separate strokes of bright, unblended color and often painted shadows in color, and conservative critics called the results unfinished.",
@@ -38,7 +38,7 @@ window.SITE = {
      "title": "The Cradle",
      "date": "1872",
      "det": "French, 1841–1895. Oil on canvas, 22 × 18 1/4 in. Musée d'Orsay, Paris",
-     "lead": "Morisot painted the veil over the cradle in thin strokes of white that let the baby show through. The mother's dark sleeve shows through it as gray, so the cloth looks sheer.",
+     "lead": "Morisot painted the veil over the cradle in thin strokes of white that let the baby show through. Beneath it the mother's dark sleeve turns gray, so the cloth looks sheer.",
      "bul": [
       "Hung in the 1874 exhibition, where Morisot was the first woman to show with the group. The sitter is her sister Edma, watching her daughter Blanche."
      ]
@@ -86,7 +86,7 @@ window.SITE = {
      "title": "Little Girl in a Blue Armchair",
      "date": "1878",
      "det": "American, 1844–1926. Oil on canvas, 35 1/4 × 51 in. National Gallery of Art, Washington",
-     "lead": "Cassatt built the room from a few large blue shapes, with the gray-brown floor as a plain shape between them. Loose red, green, and white strokes dot every chair but stop at the floor.",
+     "lead": "Cassatt built the room from a few large blue shapes, with the gray-brown floor left plain between them. Loose red, green, and white strokes dot every chair but stop at the floor.",
      "bul": [
       "Cassatt wrote that Degas helped with it; he probably painted part of the background."
      ]
@@ -98,7 +98,7 @@ window.SITE = {
      "title": "Rouen Cathedral, West Façade, Sunlight",
      "date": "1894",
      "det": "Oil on canvas, 39 1/2 × 26 in. National Gallery of Art, Washington",
-     "lead": "Monet built the stone front from thick, crusted paint, as rough as the stone it shows. The carvings break into patches of white, yellow, blue, and pink, so the stone looks sunlit but no single carving shows.",
+     "lead": "Monet built the cathedral front from thick, crusted paint, as rough as the stone it depicts. Doorways and towers break into patches of white, yellow, blue, and pink, so the façade looks sunlit but no single carving is clear.",
      "bul": [
       "One of more than thirty views painted in 1892 and 1893 from rooms facing the cathedral. Monet moved between canvases as the light changed and finished them at Giverny in 1894."
      ]

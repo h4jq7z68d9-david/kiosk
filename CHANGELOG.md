@@ -4,6 +4,11 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Impressionism on the plate viewer
+- Impressionism thinned from 18 to 7 works on the plate viewer: Monet Impression, Sunrise and Rouen Cathedral, West Façade, Sunlight, Morisot The Cradle, Degas The Dance Class, Renoir Bal du moulin de la Galette, Caillebotte Paris Street; Rainy Day, Cassatt Little Girl in a Blue Armchair. Intro image Pissarro Hoarfrost (was Impression, Sunrise, which stays a work slide; title now Orsay's English "Hoarfrost", was "White Frost"). Section "Paris, 1872–1894"; card dates "1872–1894".
+- 11 works cut (Manet Olympia and Folies-Bergère, Monet Grenouillère, Capucines, Wheat Stacks, Water Lilies, Renoir Loge, Morisot Summer's Day, Degas Shallow Tub, Cassatt Child's Bath; Pissarro moved to the intro); 88 redirect stubs; 10 images removed; sources pruned. Artist lines moved to Impression, Sunrise and the Galette; intro shortened to one paragraph; Degas museum-attribution line removed.
+- Fact review rounds 1 (2 fails: repeated words in the Cradle and Rouen leads; Renoir size confirmed from Orsay's 131.5 × 176.5 cm) and 2 (pass). check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 26 2026) — Realism on the plate viewer
 - Realism thinned from 18 to 7 works on the plate viewer: Courbet A Burial at Ornans, Bonheur The Horse Fair, Millet The Gleaners, Daumier The Third-Class Carriage, Homer The Veteran in a New Field, Repin Barge Haulers on the Volga, Eakins The Gross Clinic. Intro image Menzel The Iron Rolling Mill (was The Gleaners, which stays a work slide). Section "Europe and the United States, 1849–1875"; card dates "1849–1875".
 - 11 works cut (Corot, Daumier Rue Transnonain, Millet Sower and Angelus, Courbet Studio and Wave, Manet Old Musician, Eakins Single Sculls, Breton, Homer Gulf Stream; Menzel moved to the intro); 74 redirect stubs; 10 images removed; sources pruned. Artist lines moved to Millet, Daumier, and Eakins's remaining slides; new intro text about the period; museum-attribution phrasing removed (Burial, Daumier).
