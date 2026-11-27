@@ -194,6 +194,16 @@
    }
   },
   {
+   "slug": "american-scene",
+   "lane": "art-history",
+   "name": "American Scene, 1930s",
+   "label": "american scene, 1930s",
+   "dates": "1930–1934",
+   "card": {
+    "img": "wood-american-gothic"
+   }
+  },
+  {
    "slug": "color-theory",
    "lane": "technique",
    "name": "Color Theory",
