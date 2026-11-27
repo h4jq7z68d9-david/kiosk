@@ -684,6 +684,10 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - [x] **Admin home-screen icon re-added and Oct 31 receipt re-attached** (David, Nov 27 2026).
 - [x] **Gallery on phones (≤600px):** David decided phones stay centred (Nov 27 2026).
 
+### From November 27 2026 (American Painting)
+
+- [ ] **American Painting open flags (David):** Sloan image is the Phillips's own 1200 px scan (no larger faithful file; the Phillips page's "© ARS" line not carried, work is public domain); Tanner image is the PMA's scan via Commons; Homer is the Met's smaller Snap the Whip (12 × 20 in.), not the Butler version; Sargent height 82 1/8 in. rounded to 82 1/4 by the metric figure.
+
 ### From November 27 2026 (Art Nouveau and the Vienna Secession)
 
 - [ ] **Art Nouveau open flags (David):** Mucha JOB dated 1898 (V&A sheet; the Mucha Foundation dates the design 1896), small 20 1/4 × 15 1/4 in. sheet; Grasset life dates 1841–1917 per the V&A (LACMA and swissinfo give 1845); Beardsley image is the 1893 Studio line-block print, not the Princeton drawing; The Kiss dated 1908–09 per the Belvedere; Kiss image is the Belvedere scan via Commons.

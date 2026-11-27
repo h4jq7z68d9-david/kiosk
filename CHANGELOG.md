@@ -5,6 +5,11 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 -----
 
 
+## Completed This Session (Nov 27 2026, American Painting)
+
+- Housekeeping: Gutenberg re-check of the Composition plates (fields stay null; pages carry only the eBook licence line); skill updates for the Opus-only model and the built-in browser proposed to David; project-instructions item closed.
+- New public course **American Painting** (`/study/art-history/american-painting.html`), plate viewer, intro (Homer, Snap the Whip) + 7 works: Eakins The Champion Single Sculls, Sargent Madame X, Tanner The Annunciation (replaced The Banjo Lesson: no museum record), Hassam Late Afternoon, New York, Winter, Henri Snow in New York, Sloan The Wake of the Ferry II, Bellows Stag at Sharkey's. Section "The United States and Paris, 1871–1909"; after Art Nouveau. Fact review rounds 1 and 2 logged in iCloud; check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 27 2026, Art Nouveau)
 
 - New public course **Art Nouveau and the Vienna Secession** (`/study/art-history/art-nouveau.html`), plate viewer, intro (Mucha, Gismonda) + 7 works: Grasset Encre L. Marquet, Beardsley J'ai baisé ta bouche Iokanaan, Toorop Delftsche Slaolie, Steinlen Tournée du Chat Noir, Mucha JOB, Moser Fifth Secession Exhibition poster, Klimt The Kiss. Section "Europe, 1892–1909"; placed after Post-Impressionism. Fact review rounds 1 and 2 logged in iCloud; check.js and smoke.js PASS.
