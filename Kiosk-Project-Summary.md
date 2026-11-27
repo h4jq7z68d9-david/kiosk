@@ -714,9 +714,9 @@ All tables: PAY_PER_REQUEST, us-east-1.
 ### From November 19 2026 (image rights; public courses move here)
 
 - [x] **David: Search Console → Image Metadata → Validate fix** (done Nov 27 2026) (creator/copyrightNotice/license warnings on high-and-low-key and theme-local pages; fix live Nov 19).
-- [ ] **Gutenberg re-check, 17 Composition plates** (rights fields null since Gutenberg was down Nov 19). A scheduled task in the Art History Course Builder chat checks Mon Nov 23 and writes its result into `School v2/Art History Course Builder/Image Rights Update (Nov 19)/`; install it here.
-- [ ] **Skill text for the ownership move**: `study-site-builder` (intro, §7 credits fields, §8), `art-history-course-builder` §0/§6, `art-technique-course-builder` handoff steps, `dna-kiosk-conventions` (rights fields) — proposed to David Nov 19.
-- [ ] **Project instructions** still describe the old split (course content arrives from course-builder projects); David to replace them in the project settings.
+- [x] **Gutenberg re-check, Composition plates** (Nov 27 2026): Gutenberg is back; the plate pages carry only the eBook's general licence line, no rights statement for the images, so `licenseUrl` and `copyrightNotice` stay null (same rule as the 52 below). 10 Gutenberg plates remain after thinning. The Brooklyn Hiroshige entry already points at a working record.
+- [x] **Skill text** (Nov 27 2026): ownership text was already in all three course skills; the Fable/Opus split (study-site-builder, dna-kiosk-conventions) and the Chrome lecture-search line (art-history-course-builder) proposed to David as skill updates.
+- [x] **Project instructions** updated by David: this project runs the public courses end to end (confirmed Nov 27 2026).
 - 52 images have null `licenseUrl` because their source pages do not link a rights statement; David decided Nov 19 not to restore a fallback. Not a task.
 
 ### Process and tooling backlog (David, Nov 6 2026) — not started
