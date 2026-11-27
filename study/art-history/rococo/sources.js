@@ -51,14 +51,6 @@ window.SOURCES = {
      "url": "https://collections.louvre.fr/ark:/53355/cl010061995"
     },
     {
-     "html": "Musée du Louvre. &ldquo;Antoine Watteau, <em>Pierrot</em>, c. 1718–19.&rdquo; Collection record.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010059617"
-    },
-    {
-     "html": "Musée du Louvre. &ldquo;François Boucher, <em>Le Déjeuner</em>, 1739.&rdquo; Collection record.",
-     "url": "https://collections.louvre.fr/ark:/53355/cl010059924"
-    },
-    {
      "html": "National Gallery of Art, Washington. &ldquo;Jean-Honoré Fragonard, <em>Young Girl Reading</em>, c. 1769.&rdquo; Collection record.",
      "url": "https://www.nga.gov/collection/art-object-page.46303.html"
     },
@@ -67,20 +59,8 @@ window.SOURCES = {
      "url": "https://collection.nationalmuseum.se/en/collection/item/17773/"
     },
     {
-     "html": "Pilgrimage church, Steingaden (UNESCO WHC 271). &ldquo;Dominikus and Johann Baptist Zimmermann, <em>Pilgrimage Church of Wies, interior</em>, 1745–54.&rdquo; Collection record.",
-     "url": "https://whc.unesco.org/en/list/271"
-    },
-    {
-     "html": "Stiftung Preußische Schlösser und Gärten, Schloss Charlottenburg. &ldquo;Antoine Watteau, <em>L&#x27;Enseigne de Gersaint</em>, 1720.&rdquo; Collection record.",
-     "url": "https://www.spsg.de/en/news/exhibition/antoine-watteau"
-    },
-    {
      "html": "The Frick Collection, New York. &ldquo;Jean-Honoré Fragonard, <em>The Progress of Love: The Meeting</em>, 1771–72.&rdquo; Collection record.",
      "url": "https://collections.frick.org/objects/details.detail.detailactions.detailviewreportscontroller:generatereport/2/Objects/135625?t%3Aac=174"
-    },
-    {
-     "html": "The Metropolitan Museum of Art. &ldquo;Antoine Watteau, <em>Mezzetin</em>, c. 1718–20.&rdquo; Collection record.",
-     "url": "https://www.metmuseum.org/art/collection/search/437926"
     },
     {
      "html": "The Metropolitan Museum of Art. &ldquo;Rosalba Carriera, <em>Gustavus Hamilton, Second Viscount Boyne, in Masquerade Costume</em>, 1730–31.&rdquo; Collection record.",
@@ -106,10 +86,6 @@ window.SOURCES = {
     {
      "html": "National Gallery, London. &ldquo;F&ecirc;te galante.&rdquo; Glossary.",
      "url": "https://www.nationalgallery.org.uk/paintings/glossary/fete-galante"
-    },
-    {
-     "html": "Raux, Sophie. &ldquo;Virtual Explorations of an 18th-Century Art Market Space: Gersaint, Watteau, and the Pont Notre-Dame.&rdquo; <em>Journal18</em>, no. 5 (Spring 2018).",
-     "url": "https://www.journal18.org/2542"
     },
     {
      "html": "The Wallace Collection. &ldquo;Fragonard&rsquo;s <em>The Swing</em>.&rdquo; Explore in depth, 2021.",
