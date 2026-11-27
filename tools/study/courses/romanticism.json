@@ -3,10 +3,11 @@
  "dataFiles": [
   "data.js"
  ],
- "homeDescription": "A short illustrated guide to Romantic art in Europe and the United States, 1781 to 1863.",
- "ldDescription": "A short guide to recognizing Romantic art in Europe and the United States, 1781 to 1863, compiled from museum collection records.",
+ "homeDescription": "A short illustrated guide to Romantic art in Europe, 1781 to 1844.",
+ "ldDescription": "A short guide to recognizing Romantic art in Europe, 1781 to 1844, compiled from museum collection records.",
  "sourcesDescription": "Lectures, curricula, museum collection records and reference sources used to compile {name}.",
  "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
  "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
- "introImg": "friedrich-wanderer"
+ "introImg": "friedrich-monk-by-the-sea",
+ "viewer": "plate"
 }
