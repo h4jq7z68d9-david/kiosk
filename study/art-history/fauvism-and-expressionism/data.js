@@ -1,7 +1,7 @@
 window.SITE = {
  "title": "Fauvism and Early Expressionism",
  "sections": {
-  "1": "Paris, Germany, and Vienna, 1905–1915"
+  "1": "Paris, Dresden, Munich, and Vienna, 1905–1915"
  },
  "handouts": [
   {
