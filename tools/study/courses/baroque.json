@@ -1,0 +1,13 @@
+{
+ "name": "Baroque",
+ "dataFiles": [
+  "data.js"
+ ],
+ "homeDescription": "A short illustrated guide to Baroque painting in Europe, 1599 to 1694.",
+ "ldDescription": "A short guide to recognizing Baroque painting in Europe, 1599 to 1694, compiled from museum collection records.",
+ "sourcesDescription": "Lectures, museum collection records and reference sources used to compile {name}.",
+ "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "introImg": "caravaggio-supper-emmaus",
+ "viewer": "plate"
+}

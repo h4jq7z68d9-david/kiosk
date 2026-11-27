@@ -64,6 +64,16 @@
    }
   },
   {
+   "slug": "baroque",
+   "lane": "art-history",
+   "name": "Baroque",
+   "label": "baroque",
+   "dates": "1599–1694",
+   "card": {
+    "img": "caravaggio-calling-matthew"
+   }
+  },
+  {
    "slug": "japanese-woodblock-prints",
    "lane": "art-history",
    "name": "Japanese Woodblock Prints",

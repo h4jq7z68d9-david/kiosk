@@ -25,6 +25,7 @@
     { href: '/study/art-history/high-renaissance.html', label: 'high renaissance', section: '/study/art-history/high-renaissance/' },
     { href: '/study/art-history/northern-renaissance.html', label: 'northern renaissance', section: '/study/art-history/northern-renaissance/' },
     { href: '/study/art-history/mannerism.html', label: 'mannerism', section: '/study/art-history/mannerism/' },
+    { href: '/study/art-history/baroque.html', label: 'baroque', section: '/study/art-history/baroque/' },
     { href: '/study/art-history/japanese-woodblock-prints.html', label: 'japanese woodblock prints', section: '/study/art-history/japanese-woodblock-prints/' },
     { href: '/study/art-history/rococo.html', label: 'rococo', section: '/study/art-history/rococo/' },
     { href: '/study/art-history/neoclassicism.html', label: 'neoclassicism', section: '/study/art-history/neoclassicism/' },
