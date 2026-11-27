@@ -34,6 +34,7 @@
     { href: '/study/art-history/impressionism.html', label: 'impressionism', section: '/study/art-history/impressionism/' },
     { href: '/study/art-history/japonisme.html', label: 'japonisme', section: '/study/art-history/japonisme/' },
     { href: '/study/art-history/post-impressionism.html', label: 'post-impressionism', section: '/study/art-history/post-impressionism/' },
+    { href: '/study/art-history/art-nouveau.html', label: 'art nouveau and the vienna secession', section: '/study/art-history/art-nouveau/' },
     { href: '/study/art-history/fauvism-and-expressionism.html', label: 'fauvism and early expressionism', section: '/study/art-history/fauvism-and-expressionism/' },
     { group: 'technique', href: '/study.html#technique' },
     { href: '/study/color-theory.html', label: 'color theory', section: '/study/color-theory/' },

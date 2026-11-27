@@ -1,0 +1,13 @@
+{
+ "name": "Art Nouveau and the Vienna Secession",
+ "dataFiles": [
+  "data.js"
+ ],
+ "homeDescription": "A short illustrated guide to Art Nouveau and the Vienna Secession in Europe, 1892 to 1909.",
+ "ldDescription": "A short guide to recognizing Art Nouveau posters, prints, and paintings and the Vienna Secession, 1892 to 1909, compiled from museum collection records.",
+ "sourcesDescription": "Lectures, museum collection records and reference sources used to compile {name}.",
+ "creditsDescription": "Image credits and licenses for the {count} works in {name}.",
+ "creditsIntro": "Every image in this course is in the public domain or released under CC0. Each entry links to the file and names its source.",
+ "introImg": "mucha-gismonda",
+ "viewer": "plate"
+}

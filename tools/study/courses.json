@@ -154,6 +154,16 @@
    }
   },
   {
+   "slug": "art-nouveau",
+   "lane": "art-history",
+   "name": "Art Nouveau and the Vienna Secession",
+   "label": "art nouveau and the vienna secession",
+   "dates": "1892–1909",
+   "card": {
+    "img": "klimt-the-kiss"
+   }
+  },
+  {
    "slug": "fauvism-and-expressionism",
    "lane": "art-history",
    "name": "Fauvism and Early Expressionism",
