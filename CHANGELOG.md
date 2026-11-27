@@ -4,6 +4,11 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Neoclassicism on the plate viewer
+- Neoclassicism thinned from 18 to 7 works on the plate viewer: Hamilton The Death of Lucretia, West The Death of General Wolfe, Kauffman Cornelia, David The Oath of the Horatii, Labille-Guiard Self-Portrait with Two Pupils, David The Death of Marat, David Napoleon Crossing the Alps. Intro image David The Death of Socrates (was the Oath; David's choice). Section "Rome, Paris, and London, 1763–1800"; card dates "1763–1800".
+- 11 works cut (Batoni, Mengs, Houdon, Boullée, Lavoisiers, both Canovas, Girodet, Sabines, Récamier; Socrates moved to the intro); old section's 18 pages redirect (95 stubs total); 10 images removed; sources pruned to the kept works (Canova lectures, Lavoisier reference and cut works' records dropped). Look bullets folded into one-to-two-sentence leads; new intro text; Oxford commas.
+- Fact review rounds 1 (Marat size flagged, 50 1/2 in. confirmed as the nearest quarter of 128 cm; West capitalization and repetition; Oath wording) and 2 (one wording fix). check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 26 2026) — Rococo on the plate viewer
 - Rococo thinned from 13 to 7 works on the plate viewer: Watteau Pilgrimage to Cythera, Carriera Viscount Boyne (pastel), Boucher Triumph of Venus and Madame de Pompadour, Tiepolo Allegory of the Planets and Continents, Fragonard The Swing and Young Girl Reading. Intro image Fragonard The Progress of Love: The Meeting. Wieskirche cut (architecture), so Bavaria dropped: section "France and Venice, 1717–1772"; card dates "1717–1772".
 - 6 works cut; 13 redirect stubs; 5 images removed. Dates now "about"; Oxford commas added.

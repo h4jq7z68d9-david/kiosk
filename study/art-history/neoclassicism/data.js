@@ -38,9 +38,9 @@ window.SITE = {
      "title": "The Death of General Wolfe",
      "date": "1770",
      "det": "American, 1738–1820. Oil on canvas, 60 × 84 1/2 in. National Gallery of Canada, Ottawa",
-     "lead": "West arranged a modern death as a mourning group around a fallen hero, in the uniforms of 1759 rather than togas. Officers lean in from both sides under the flag, so a lit triangle leads the eye down to the dying general.",
+     "lead": "West arranged a modern death as a mourning group around a fallen hero, in contemporary uniforms rather than togas. Officers lean in from both sides under the flag, so a lit triangle leads the eye down to the dying general.",
      "bul": [
-      "A general dying at the battle of Quebec in 1759; shown at the Royal Academy in London in 1771."
+      "A general dying at the Battle of Quebec in 1759; shown at the Royal Academy in London in 1771."
      ]
     },
     {
@@ -62,7 +62,7 @@ window.SITE = {
      "title": "The Oath of the Horatii",
      "date": "1784–85",
      "det": "French, 1748–1825. Oil on canvas, 130 × 167 1/4 in. Musée du Louvre, Paris",
-     "lead": "David drew hard outlines and straight limbs and set the figures in a space no deeper than a stage. The men are straight lines and sharp angles, the women soft, sinking curves.",
+     "lead": "David drew hard outlines and straight limbs and set the figures in a space no deeper than a stage. The men are all sharp angles, the women soft, sinking curves.",
      "bul": [
       "Three Roman brothers swear to fight for their city; shown at the Paris Salon of 1785."
      ]
