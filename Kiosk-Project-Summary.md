@@ -684,6 +684,10 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - [x] **Admin home-screen icon re-added and Oct 31 receipt re-attached** (David, Nov 27 2026).
 - [x] **Gallery on phones (≤600px):** David decided phones stay centred (Nov 27 2026).
 
+### From November 27 2026 (American Scene, 1930s)
+
+- [ ] **American Scene open flags (David):** the Art Institute still marks American Gothic "not public domain" (image is the Google Art Project scan; 1930 US term ended Jan 1, 2026; Wood died 1942) — recheck AIC's flag later; Chichester has no known death year (page shows "born 1891"); Comfort's life dates are SAAM-only; Durston 1889 (SAAM) vs 1897 (NGA); Myers, Chichester, and Whiting have no SAAM label, so their history lines are short. Only 5 of the 57 works in SAAM's 1934 exhibition are CC0, so better-known PWAP paintings (Subway, Snow Shovellers, Baseball at Night) could not be used.
+
 ### From November 27 2026 (The Birth of Abstraction)
 
 - [ ] **Birth of Abstraction open flags (David):** Malevich image is MoMA's scan via Commons, color not compared to MoMA (site blocks scripts); Malevich dates 1878–1935 (AIC, Britannica; Tate gives 1879); af Klint has no owner object record (facts from Moderna Museet, Guggenheim Bilbao, MoMAT, Britannica) and the image is Moderna Museet's photo; Dove image 1024 px (Terra); Mondrian is the 1927 Kröller-Müller painting (Zürich 1930 had no good free image).

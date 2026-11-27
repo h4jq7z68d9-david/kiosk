@@ -5,6 +5,10 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 -----
 
 
+## Completed This Session (Nov 27 2026, American Scene, 1930s)
+
+- New public course **American Scene, 1930s** (`/study/art-history/american-scene.html`), plate viewer, intro (Wood, American Gothic) + 7 Public Works of Art Project paintings released CC0 by the Smithsonian American Art Museum: Myers Italians in Jefferson Park, Chichester Mid-Hudson Bridge--Winter, Whiting Decoration, Richardson Employment of Negroes in Agriculture, Redin At Madrid Coal Mine, Comfort Gold Is Where You Find It, Durston Industry. Section "The United States, 1930–1934"; after The Birth of Abstraction. Fact review rounds 1 and 2 logged in iCloud; check.js and smoke.js PASS. This completes the planned course list.
+
 ## Completed This Session (Nov 27 2026, The Birth of Abstraction)
 
 - New public course **The Birth of Abstraction** (`/study/art-history/birth-of-abstraction.html`), plate viewer, intro (Kandinsky, Improvisation No. 30 (Cannons)) + 7 works: af Klint The Ten Largest No. 7, Dove Sails, Delaunay Windows Open Simultaneously, Malevich Airplane Flying, Popova Architectonic Painting, Klee May Picture, Mondrian Composition with Red, Yellow and Blue (1927). Only artists public domain everywhere (David's call). Section "Europe and the United States, 1907–1927"; after Fauvism. Fact review rounds 1 and 2 logged in iCloud; check.js and smoke.js PASS.
