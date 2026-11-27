@@ -164,6 +164,16 @@
    }
   },
   {
+   "slug": "american-painting",
+   "lane": "art-history",
+   "name": "American Painting",
+   "label": "american painting",
+   "dates": "1871–1909",
+   "card": {
+    "img": "bellows-stag-at-sharkeys"
+   }
+  },
+  {
    "slug": "fauvism-and-expressionism",
    "lane": "art-history",
    "name": "Fauvism and Early Expressionism",
