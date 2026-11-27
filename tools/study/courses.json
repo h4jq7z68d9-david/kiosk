@@ -184,6 +184,16 @@
    }
   },
   {
+   "slug": "birth-of-abstraction",
+   "lane": "art-history",
+   "name": "The Birth of Abstraction",
+   "label": "the birth of abstraction",
+   "dates": "1907–1927",
+   "card": {
+    "img": "mondrian-composition-red-yellow-blue"
+   }
+  },
+  {
    "slug": "color-theory",
    "lane": "technique",
    "name": "Color Theory",

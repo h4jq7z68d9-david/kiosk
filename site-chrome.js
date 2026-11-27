@@ -37,6 +37,7 @@
     { href: '/study/art-history/art-nouveau.html', label: 'art nouveau and the vienna secession', section: '/study/art-history/art-nouveau/' },
     { href: '/study/art-history/american-painting.html', label: 'american painting', section: '/study/art-history/american-painting/' },
     { href: '/study/art-history/fauvism-and-expressionism.html', label: 'fauvism and early expressionism', section: '/study/art-history/fauvism-and-expressionism/' },
+    { href: '/study/art-history/birth-of-abstraction.html', label: 'the birth of abstraction', section: '/study/art-history/birth-of-abstraction/' },
     { group: 'technique', href: '/study.html#technique' },
     { href: '/study/color-theory.html', label: 'color theory', section: '/study/color-theory/' },
     { href: '/study/value-and-light.html', label: 'value and light', section: '/study/value-and-light/' },
