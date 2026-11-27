@@ -679,14 +679,14 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ## Pending — In Order of Priority
 
-- [ ] **Study carousel on iPhone:** swipe was tested headless only (Nov 26 2026); confirm on a real iPhone.
-- [ ] **Admin date filters on phones:** "To" wraps away from its box in the Reports chart rows at 390px — keep each label with its field if David wants.
-- [ ] **David:** re-add the admin home-screen icon from `davidnicholsonart.com/admin.html`, then re-attach the receipt to the Oct 31 $60.79 Google advertising expense (saved without one). If the upload still fails on the apex, investigate the failed `PUT /admin/expenses/{id}` (preflight reached Lambda, the PUT never did).
-- [ ] **Gallery on phones (≤600px):** wide screens hang left-justified rows since Nov 11 2026; phones still use centred `wallRows()`. David to decide whether phones go left-justified too.
+- [x] **Study carousel on iPhone:** confirmed working by David on a real iPhone (Nov 27 2026).
+- [x] **Admin date filters on phones:** David checked; works as is (Nov 27 2026).
+- [x] **Admin home-screen icon re-added and Oct 31 receipt re-attached** (David, Nov 27 2026).
+- [x] **Gallery on phones (≤600px):** David decided phones stay centred (Nov 27 2026).
 
 ### From November 27 2026 (last three courses on the plate viewer)
 
-- [ ] **Open flags (David), Nov 27:** Fauvism section name mixes cities and a country ("Paris, Germany, and Vienna"); reviewer suggested "Paris, Dresden, Munich, and Vienna" — not changed. Blue Horse I also appears in Color Theory (single repeat). Earlier image flags still stand for kept works (Woman with a Hat 1860 px Commons file; Composition VII size from a figure with no units; Mont Sainte-Victoire and Starry Night from Commons). iCloud bundles not updated. David reviews in the slide editor: `edit-course japonisme`, `edit-course post-impressionism`, `edit-course fauvism-and-expressionism`.
+- [ ] **Open flags (David), Nov 27:** Fauvism section renamed "Paris, Dresden, Munich, and Vienna, 1905–1915" (Nov 27; old work URLs redirect). Blue Horse I also appears in Color Theory (single repeat). Earlier image flags still stand for kept works (Woman with a Hat 1860 px Commons file; Composition VII size from a figure with no units; Mont Sainte-Victoire and Starry Night from Commons). iCloud bundles not updated.
 
 ### From November 25 2026 (technique courses on the plate viewer)
 
@@ -705,11 +705,11 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ### From November 21 2026 (Northern Renaissance)
 
-- [ ] **Northern Renaissance open flags — David to review in the slide editor (`edit-course northern-renaissance`):** 24 slides (over the 20 cap, his instruction); Ghent image pre-restoration, size from Smarthistory, no nationality; Isenheim has no size or inventory number, two slides for one work; medium unstated for the Munich Dürers and the Bruegels; approximate color corrections (St Luke, Descent, Hare, Wedding) and unchecked color (St Anthony, both Grünewalds); "The Ambassadors" and "Young Hare (Feldhase)" not the museums' exact titles; Prado Descent (mirror, no link on the Sources page), Lisbon, von Einem and the Unterlinden dossier read from mirrors or summaries; Portinari, Descent and Peasant Wedding dates hedged or chosen; course label unsourced, "glaze" defined but unused; Four Apostles composite, black corners on stepped plates, Man in a Red Turban frame cropped; Holbein added from outside the school course.
+- [ ] **Northern Renaissance open flags:** 24 slides (over the 20 cap, his instruction); Ghent image pre-restoration, size from Smarthistory, no nationality; Isenheim has no size or inventory number, two slides for one work; medium unstated for the Munich Dürers and the Bruegels; approximate color corrections (St Luke, Descent, Hare, Wedding) and unchecked color (St Anthony, both Grünewalds); "The Ambassadors" and "Young Hare (Feldhase)" not the museums' exact titles; Prado Descent (mirror, no link on the Sources page), Lisbon, von Einem and the Unterlinden dossier read from mirrors or summaries; Portinari, Descent and Peasant Wedding dates hedged or chosen; course label unsourced, "glaze" defined but unused; Four Apostles composite, black corners on stepped plates, Man in a Red Turban frame cropped; Holbein added from outside the school course.
 
 ### From November 19 2026 (image rights; public courses move here)
 
-- [ ] **David: Search Console → Image Metadata → Validate fix** (creator/copyrightNotice/license warnings on high-and-low-key and theme-local pages; fix live Nov 19).
+- [x] **David: Search Console → Image Metadata → Validate fix** (done Nov 27 2026) (creator/copyrightNotice/license warnings on high-and-low-key and theme-local pages; fix live Nov 19).
 - [ ] **Gutenberg re-check, 17 Composition plates** (rights fields null since Gutenberg was down Nov 19). A scheduled task in the Art History Course Builder chat checks Mon Nov 23 and writes its result into `School v2/Art History Course Builder/Image Rights Update (Nov 19)/`; install it here.
 - [ ] **Skill text for the ownership move**: `study-site-builder` (intro, §7 credits fields, §8), `art-history-course-builder` §0/§6, `art-technique-course-builder` handoff steps, `dna-kiosk-conventions` (rights fields) — proposed to David Nov 19.
 - [ ] **Project instructions** still describe the old split (course content arrives from course-builder projects); David to replace them in the project settings.
@@ -732,24 +732,24 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 
 ### From November 11 2026, later afternoon (Composition Mode 2; course switcher)
 
-- [ ] **Composition open flags (David):** *The Harvesters* repeat cleared (now only in Oil vs Acrylic); Armatures uses Andrea del Sarto, *Holy Family with the Young Saint John* (Met 22.75); allowed single repeats with art history courses (Great Wave and Plum Estate — Japanese Woodblock Prints; Cassatt — Impressionism; *Death of Socrates* — Neoclassicism; *The Oxbow* — Romanticism); every concept image is a Dow (1914) or Poore (c. 1915) plate at Gutenberg size, six under 500 px, not upscaled; Radial Balance and the second examples (*Alba Madonna*, *Paris Street*, *Night Watch*) cut; inches rounded to the nearest quarter; symmetry (Colonna Altarpiece), balance (Cassatt) and rhythm (*Sudden Shower*) are readings of the images, not museum text. Not yet reviewed in the slide editor (`edit-course composition`).
+- [ ] **Composition open flags (David):** *The Harvesters* repeat cleared (now only in Oil vs Acrylic); Armatures uses Andrea del Sarto, *Holy Family with the Young Saint John* (Met 22.75); allowed single repeats with art history courses (Great Wave and Plum Estate — Japanese Woodblock Prints; Cassatt — Impressionism; *Death of Socrates* — Neoclassicism; *The Oxbow* — Romanticism); every concept image is a Dow (1914) or Poore (c. 1915) plate at Gutenberg size, six under 500 px, not upscaled; Radial Balance and the second examples (*Alba Madonna*, *Paris Street*, *Night Watch*) cut; inches rounded to the nearest quarter; symmetry (Colonna Altarpiece), balance (Cassatt) and rhythm (*Sudden Shower*) are readings of the images, not museum text.
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Composition's URLs changed (19 pages; 46 old URLs redirect, noindex).
 - [x] **Course switcher** — replaced (Nov 11 2026, evening) by "study home" + divider at the top of the phone page dropdown and the breadcrumb moved above the search box on iPad/desktop. Check on a real iPhone: iOS may show "study home" in normal weight, and the divider needs iOS 17+.
 - [ ] **Impressionism course description says "in eighteen works"** (outline rail subtitle) — a count phrase banned Nov 7 2026; course text; fixed in this project since Nov 19 2026.
 
 ### From November 11 2026, afternoon (Oil vs Acrylic Mode 2)
 
-- [ ] **Oil vs Acrylic open flags (David):** Rembrandt *Lucretia* (NGA, CC0) for Impasto — attribution questioned by the Rembrandt Research Project (2015), NGA keeps it as Rembrandt; Velázquez *Philip IV* (Prado P001182) for How Oil Ages — Prado record not opened, facts from Gallagher, Met Journal 45 (2010), image a Commons PD-Art file; *Umbrella, Reverie* carries Color Shift as It Dries on David's own account (Nov 11), both his paintings credited as his copyright; diagrams and carried paintings 1200 px. Image redo (Nov 11, later): Ostade print dated ca. 1667 (Met) vs ca. 1647 (Morgan impression), no date on the slide; `chaperon-craquelure` is 1088 × 1116 px; Rembrandt *Flora* considered for Painting Over and dropped. Repeats with Color Theory (*The Milkmaid*) and Pigments and Materials (Rembrandt 1659) cleared. Not yet reviewed in the slide editor (`edit-course oil-vs-acrylic`).
+- [ ] **Oil vs Acrylic open flags (David):** Rembrandt *Lucretia* (NGA, CC0) for Impasto — attribution questioned by the Rembrandt Research Project (2015), NGA keeps it as Rembrandt; Velázquez *Philip IV* (Prado P001182) for How Oil Ages — Prado record not opened, facts from Gallagher, Met Journal 45 (2010), image a Commons PD-Art file; *Umbrella, Reverie* carries Color Shift as It Dries on David's own account (Nov 11), both his paintings credited as his copyright; diagrams and carried paintings 1200 px. Image redo (Nov 11, later): Ostade print dated ca. 1667 (Met) vs ca. 1647 (Morgan impression), no date on the slide; `chaperon-craquelure` is 1088 × 1116 px; Rembrandt *Flora* considered for Painting Over and dropped. Repeats with Color Theory (*The Milkmaid*) and Pigments and Materials (Rembrandt 1659) cleared.
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Oil vs Acrylic's URLs changed (12 pages; 35 old URLs redirect, noindex).
 
 ### From November 11 2026, midday (Value and Light Mode 2)
 
-- [ ] **Value and Light open flags (David):** painting details used as concept images (Morisot, Wright, Rembrandt *Aristotle*, Caravaggio *Calling*; about 650–800 px); Prud'hon drawing as the Direction of Light example; Morisot *Summer's Day* also in Impressionism (allowed) and on loan to the Hugh Lane 2026–31; Sánchez Cotán size from the Meadows Museum (San Diego record behind a bot gate); Sorolla facts from AMACI (no Ca' Pesaro record); Caravaggio in situ, no museum record; paintings and Merrifield plates 1200 px. Not yet reviewed in the slide editor (`edit-course value-and-light`).
+- [ ] **Value and Light open flags (David):** painting details used as concept images (Morisot, Wright, Rembrandt *Aristotle*, Caravaggio *Calling*; about 650–800 px); Prud'hon drawing as the Direction of Light example; Morisot *Summer's Day* also in Impressionism (allowed) and on loan to the Hugh Lane 2026–31; Sánchez Cotán size from the Meadows Museum (San Diego record behind a bot gate); Sorolla facts from AMACI (no Ca' Pesaro record); Caravaggio in situ, no museum record; paintings and Merrifield plates 1200 px.
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Value and Light's URLs changed (15 pages; 48 old URLs redirect, noindex).
 
 ### From November 11 2026 (Pigments and Materials Mode 2)
 
-- [ ] **Pigments and Materials open flags (David):** Rembrandt *Self-Portrait* (1659, NGA) repeat resolved — removed from Oil vs Acrylic at its Nov 11 rebuild; image redo (Nov 11, later) left 2 diagrams (`pm-panel`, `pm-layers`); Sargent and Degas crops chosen to show technique (Degas: seat, cloth and floor; Sargent: model's hip and legs); Blacks engraving (1906 French school book, Commons) not checked against a scan of the book; most example paintings 1200 px; Giotto binder "Tempera" per NGA (egg not confirmed, page makes no egg claim); Arlanza lion not confirmed as true fresco; *Magdalen Reading* image from an aggregator, colour not checked against the National Gallery; cochineal engraving undated (Wellcome); Liotard size from the Getty record; slides run about 85–115 words. Not yet reviewed in the slide editor (`edit-course pigments-and-materials`).
+- [ ] **Pigments and Materials open flags (David):** Rembrandt *Self-Portrait* (1659, NGA) repeat resolved — removed from Oil vs Acrylic at its Nov 11 rebuild; image redo (Nov 11, later) left 2 diagrams (`pm-panel`, `pm-layers`); Sargent and Degas crops chosen to show technique (Degas: seat, cloth and floor; Sargent: model's hip and legs); Blacks engraving (1906 French school book, Commons) not checked against a scan of the book; most example paintings 1200 px; Giotto binder "Tempera" per NGA (egg not confirmed, page makes no egg claim); Arlanza lion not confirmed as true fresco; *Magdalen Reading* image from an aggregator, colour not checked against the National Gallery; cochineal engraving undated (Wellcome); Liotard size from the Getty record; slides run about 85–115 words.
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Pigments and Materials' URLs changed (20 pages; 47 old URLs redirect, noindex).
 
 ### From November 10 2026, evening (technique slide model)
@@ -759,26 +759,26 @@ Agreed in a process review. Quality gates (fact review, paraphrase check, best-o
 
 ### From November 9 2026, late afternoon (Rococo + Neoclassicism split)
 
-- [ ] **Rococo open flags (David):** Wieskirche interior plate (CC0, only free candidate) is dim and slightly soft; Boucher *Le Déjeuner* 1440 px (Louvre caps at 1500). Not yet reviewed in the slide editor (`edit-course rococo`).
-- [ ] **Neoclassicism open flags (David):** Kauffman *Cornelia* 1538 px (VMFA). Napoleon plate colour-corrected Nov 6 to the Malmaison photo (no action). Marat size from the museum's cm (165 × 128) rounded to the nearest quarter inch. Plate rebuild (Nov 26) not yet reviewed in the slide editor (`edit-course neoclassicism`).
+- [ ] **Rococo open flags (David):** Wieskirche interior plate (CC0, only free candidate) is dim and slightly soft; Boucher *Le Déjeuner* 1440 px (Louvre caps at 1500).
+- [ ] **Neoclassicism open flags (David):** Kauffman *Cornelia* 1538 px (VMFA). Napoleon plate colour-corrected Nov 6 to the Malmaison photo (no action). Marat size from the museum's cm (165 × 128) rounded to the nearest quarter inch.
 - [ ] **Card dates overlap** (Rococo 1710s–1770s, Neoclassicism 1760s–1800s): deliberate.
 - [ ] **Generator:** `build-course.js` now accepts an optional settings key `retiredSlugs` (old slugs in the same lane whose URLs a course redirects). The old slug `neoclassicism-and-rococo` is retired for good; its stubs are rebuilt with every Neoclassicism build.
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** two new courses; the old combined course's URLs now redirect (noindex).
 
 ### From November 9 2026, afternoon (Fauvism and Early Expressionism Mode 2)
 
-- [ ] **Fauvism open flags (David):** Kirchner *Self-Portrait as a Soldier* plate (2400 px) from a press page, colour not checked against a museum image; *Woman with a Hat* is an 1860 px Commons file from an older SFMOMA URL, not a museum-supplied scan; Gerstl *Self-Portrait, Laughing* dated 1908 per the Belvedere (a chronology gives 1907); *Composition VII* size "about 79 × 118 in." from a Tretyakov "200 x 300" with no units; work slides run 94–146 words; *English Step Dancers* shown with full sheet and margins. Not yet reviewed in the slide editor.
+- [ ] **Fauvism open flags (David):** Kirchner *Self-Portrait as a Soldier* plate (2400 px) from a press page, colour not checked against a museum image; *Woman with a Hat* is an 1860 px Commons file from an older SFMOMA URL, not a museum-supplied scan; Gerstl *Self-Portrait, Laughing* dated 1908 per the Belvedere (a chronology gives 1907); *Composition VII* size "about 79 × 118 in." from a Tretyakov "200 x 300" with no units; work slides run 94–146 words; *English Step Dancers* shown with full sheet and margins.
 - [ ] **Nolde, *The Last Supper* (release Jan 2027):** scheduled task "Nolde page: ready to publish" fires Jan 2 2027. Held text is in the old page model; the course-builder project rewrites it as a Mode 2 slide (Look-at bullets from the plate, two review rounds), then this project adds slide, credit and source on a branch, inserted chronologically after *Street, Dresden*.
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Fauvism's URLs changed (21 pages; old URLs redirect, noindex).
 
 ### From November 9 2026 (Post-Impressionism Mode 2)
 
-- [ ] **Post-Impressionism open flags (David):** Van Gogh *Self-Portrait* facts from the Orsay-supplied Google Arts & Culture page (Orsay record unreachable; RF 1949 17 unverified, not on the page); *Mont Sainte-Victoire* plate is a Commons PD-Art file from an NGA 2006 exhibition page, not a museum scan; *The Starry Night* plate from Commons' 1920 px rendition of the GA&C scan; *The Talisman* source only 1606 × 2063 px; *The Sleeping Gypsy* plate now MoMA's GA&C scan (cooler, darker than the Oct file); work slides run about 95–120 words; *Divan Japonais* shows the poster's paper margin (kept). Not yet reviewed in the slide editor.
+- [ ] **Post-Impressionism open flags (David):** Van Gogh *Self-Portrait* facts from the Orsay-supplied Google Arts & Culture page (Orsay record unreachable; RF 1949 17 unverified, not on the page); *Mont Sainte-Victoire* plate is a Commons PD-Art file from an NGA 2006 exhibition page, not a museum scan; *The Starry Night* plate from Commons' 1920 px rendition of the GA&C scan; *The Talisman* source only 1606 × 2063 px; *The Sleeping Gypsy* plate now MoMA's GA&C scan (cooler, darker than the Oct file); work slides run about 95–120 words; *Divan Japonais* shows the poster's paper margin (kept).
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Post-Impressionism's URLs changed (21 pages; old URLs redirect, noindex).
 
 ### From November 7 2026, evening (Classical Myth Mode 2)
 
-- [ ] **Classical Myth open flags (David), plate rebuild Nov 26 2026:** no scale box on the krater or the Venus de Milo (3D objects; height only, and the statue photo shows the torso only); Rubens nationality and dates and the Titian dates confirmed by the round 1 reviewer (Britannica, museum pages), not in the Mode 2 Ledger; Met page text for Moreau not re-read (429), line supported by the Met API and round 2. Not yet reviewed in the slide editor (`edit-course classical-myth`).
+- [ ] **Classical Myth open flags (David), plate rebuild Nov 26 2026:** no scale box on the krater or the Venus de Milo (3D objects; height only, and the statue photo shows the torso only); Rubens nationality and dates and the Titian dates confirmed by the round 1 reviewer (Britannica, museum pages), not in the Mode 2 Ledger; Met page text for Moreau not re-read (429), line supported by the Met API and round 2.
 - [ ] **Count in credits meta description:** all 13 course settings files have a `creditsDescription` template with `{count}`. Not changed.
 - [ ] **Resubmit `sitemap.xml` in Google Search Console:** Classical Myth's URLs changed (21 pages; old URLs redirect, noindex).
 
