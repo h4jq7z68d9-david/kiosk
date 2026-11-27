@@ -4,6 +4,11 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 
 -----
 
+## Completed This Session (Nov 26 2026) — Realism on the plate viewer
+- Realism thinned from 18 to 7 works on the plate viewer: Courbet A Burial at Ornans, Bonheur The Horse Fair, Millet The Gleaners, Daumier The Third-Class Carriage, Homer The Veteran in a New Field, Repin Barge Haulers on the Volga, Eakins The Gross Clinic. Intro image Menzel The Iron Rolling Mill (was The Gleaners, which stays a work slide). Section "Europe and the United States, 1849–1875"; card dates "1849–1875".
+- 11 works cut (Corot, Daumier Rue Transnonain, Millet Sower and Angelus, Courbet Studio and Wave, Manet Old Musician, Eakins Single Sculls, Breton, Homer Gulf Stream; Menzel moved to the intro); 74 redirect stubs; 10 images removed; sources pruned. Artist lines moved to Millet, Daumier, and Eakins's remaining slides; new intro text about the period; museum-attribution phrasing removed (Burial, Daumier).
+- Fact review rounds 1 (5 fails: Burial visual claim and repetition, Daumier grid purpose, "St. Petersburg", Gross Clinic size now the Philadelphia Museum's 96 × 78 in.) and 2 (pass). check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 26 2026) — Romanticism on the plate viewer
 - Romanticism thinned from 18 to 7 works on the plate viewer: Fuseli The Nightmare, Goya The Third of May 1808, Friedrich Wanderer above the Sea of Fog, Géricault The Raft of the Medusa, Constable The Hay Wain, Delacroix Liberty Leading the People, Turner Rain, Steam, and Speed. Intro image Friedrich The Monk by the Sea. American works cut, so the section is "Europe, 1781–1844"; card dates "1781–1844".
 - 11 works cut (Blake, Goya Sleep of Reason and Saturn, Delacroix Sardanapalus and Women of Algiers, Turner Temeraire and Slave Ship, Cole, Church, Bierstadt; Monk moved to the intro); 89 redirect stubs; 10 images removed; sources pruned. Artist lines moved to Goya, Delacroix, Turner, and Friedrich's remaining slides. New intro text; Goya and Delacroix history lines replaced.
