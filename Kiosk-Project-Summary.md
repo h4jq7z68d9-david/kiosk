@@ -684,6 +684,10 @@ All tables: PAY_PER_REQUEST, us-east-1.
 - [x] **Admin home-screen icon re-added and Oct 31 receipt re-attached** (David, Nov 27 2026).
 - [x] **Gallery on phones (≤600px):** David decided phones stay centred (Nov 27 2026).
 
+### From November 27 2026 (Art Nouveau and the Vienna Secession)
+
+- [ ] **Art Nouveau open flags (David):** Mucha JOB dated 1898 (V&A sheet; the Mucha Foundation dates the design 1896), small 20 1/4 × 15 1/4 in. sheet; Grasset life dates 1841–1917 per the V&A (LACMA and swissinfo give 1845); Beardsley image is the 1893 Studio line-block print, not the Princeton drawing; The Kiss dated 1908–09 per the Belvedere; Kiss image is the Belvedere scan via Commons.
+
 ### From November 27 2026 (last three courses on the plate viewer)
 
 - [ ] **Open flags (David), Nov 27:** Fauvism section renamed "Paris, Dresden, Munich, and Vienna, 1905–1915" (Nov 27; old work URLs redirect). Blue Horse I also appears in Color Theory (single repeat). Earlier image flags still stand for kept works (Woman with a Hat 1860 px Commons file; Composition VII size from a figure with no units; Mont Sainte-Victoire and Starry Night from Commons).

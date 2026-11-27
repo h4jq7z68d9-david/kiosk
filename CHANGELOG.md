@@ -5,6 +5,10 @@ Session-by-session history of davidnicholsonart.com and the kiosk/admin system, 
 -----
 
 
+## Completed This Session (Nov 27 2026, Art Nouveau)
+
+- New public course **Art Nouveau and the Vienna Secession** (`/study/art-history/art-nouveau.html`), plate viewer, intro (Mucha, Gismonda) + 7 works: Grasset Encre L. Marquet, Beardsley J'ai baisé ta bouche Iokanaan, Toorop Delftsche Slaolie, Steinlen Tournée du Chat Noir, Mucha JOB, Moser Fifth Secession Exhibition poster, Klimt The Kiss. Section "Europe, 1892–1909"; placed after Post-Impressionism. Fact review rounds 1 and 2 logged in iCloud; check.js and smoke.js PASS.
+
 ## Completed This Session (Nov 27 2026, later)
 
 - Fauvism and Early Expressionism: section renamed "Paris, Dresden, Munich, and Vienna, 1905–1915"; the seven work pages moved folder, old URLs redirect (noindex), earlier redirect targets retargeted. check.js and smoke.js PASS.
