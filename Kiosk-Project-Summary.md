@@ -690,7 +690,7 @@ All tables: PAY_PER_REQUEST, us-east-1.
 
 ### From November 27 2026 (The Birth of Abstraction)
 
-- [ ] **Birth of Abstraction open flags (David):** Malevich image is MoMA's scan via Commons, color not compared to MoMA (site blocks scripts); Malevich dates 1878–1935 (AIC, Britannica; Tate gives 1879); af Klint has no owner object record (facts from Moderna Museet, Guggenheim Bilbao, MoMAT, Britannica) and the image is Moderna Museet's photo; Dove image 1024 px (Terra); Mondrian is the 1927 Kröller-Müller painting (Zürich 1930 had no good free image).
+- [ ] **Birth of Abstraction open flags (David):** Malevich image is MoMA's scan via Commons, color not compared to MoMA (site blocks scripts); Malevich dates 1878–1935 (AIC, Britannica; Tate gives 1879); af Klint has no owner object record (facts from Moderna Museet, Guggenheim Bilbao, MoMAT, Britannica) and the image is Moderna Museet's photo; Dove image 1024 px (Terra). Mondrian swapped Nov 27 to Dallas Museum of Art's Composition with Large Blue Plane (1921) at David's pick; course dates now 1907–1925, old URLs redirect; DMA record is a summary only (facts from the AMICA/DMA record and Google Arts & Culture).
 
 ### From November 27 2026 (American Painting)
 
