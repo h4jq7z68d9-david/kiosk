@@ -69,13 +69,13 @@ window.CREDITS = {
   "licenseUrl": null,
   "copyrightNotice": null
  },
- "mondrian-composition-red-yellow-blue": {
-  "work": "Piet Mondrian, Composition with Red, Yellow and Blue (1927)",
-  "page": "https://www.krollermuller.nl/en/collection/piet-mondriaan-composition-with-red-yellow-and-blue-km-101-213",
-  "file": "Kröller-Müller IIIF GzcRWC",
+ "mondrian-large-blue-plane": {
+  "work": "Piet Mondrian, Composition with Large Blue Plane, Red, Black, Yellow, and Gray (1921)",
+  "page": "https://commons.wikimedia.org/wiki/File:Piet_Mondrian_-_Composition_with_Large_Blue_Plane,_Red,_Black,_Yellow,_and_Gray_-_1984.200.FA_-_Dallas_Museum_of_Art.jpg",
+  "file": "Piet Mondrian - Composition with Large Blue Plane, Red, Black, Yellow, and Gray - 1984.200.FA - Dallas Museum of Art.jpg",
   "license": "Public domain (faithful reproduction of a public-domain 2D work)",
   "author": "Piet Mondrian",
-  "source": "Kröller-Müller Museum, Otterlo (KM 101.213)",
+  "source": "Dallas Museum of Art (1984.200.FA), via Wikimedia Commons",
   "licenseUrl": null,
   "copyrightNotice": null
  }

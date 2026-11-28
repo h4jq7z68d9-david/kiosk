@@ -1,7 +1,7 @@
 window.SITE = {
  "title": "The Birth of Abstraction",
  "sections": {
-  "1": "Europe and the United States, 1907–1927"
+  "1": "Europe and the United States, 1907–1925"
  },
  "handouts": [
   {
@@ -81,6 +81,18 @@ window.SITE = {
     },
     {
      "type": "work",
+     "key": "mondrian-large-blue-plane",
+     "artist": "Piet Mondrian",
+     "title": "Composition with Large Blue Plane, Red, Black, Yellow, and Gray",
+     "date": "1921",
+     "det": "Dutch, 1872–1944. Oil on canvas, 23 3/4 × 19 3/4 in. Dallas Museum of Art",
+     "lead": "Black lines divide the canvas into unequal rectangles: a large blue area fills the upper right, a red strip and a black block sit at the lower left, and a small yellow block touches the bottom edge.",
+     "bul": [
+      "By 1921 Mondrian had set himself strict limits: lines ran only upright or level, and color was only red, yellow, and blue, with white, black, and gray as neutrals."
+     ]
+    },
+    {
+     "type": "work",
      "key": "klee-may-picture",
      "artist": "Paul Klee",
      "title": "May Picture",
@@ -89,18 +101,6 @@ window.SITE = {
      "lead": "Small squares in many shades of color fill the board from edge to edge, so the surface reads like a mosaic that could go on past the frame.",
      "bul": [
       "Klee's Magic Square series traces back to a 1914 trip to Tunisia, and his study of color also shaped his teaching at the Bauhaus."
-     ]
-    },
-    {
-     "type": "work",
-     "key": "mondrian-composition-red-yellow-blue",
-     "artist": "Piet Mondrian",
-     "title": "Composition with Red, Yellow and Blue",
-     "date": "1927",
-     "det": "Dutch, 1872–1944. Oil on canvas, about 15 3/4 × 20 1/2 in. Kröller-Müller Museum, Otterlo",
-     "lead": "Straight black lines divide the canvas into rectangles, with red, yellow, and blue pushed to the edges around a large white square set off center.",
-     "bul": [
-      "Mondrian set himself strict limits for these paintings: lines only upright or level; color only red, yellow, and blue; and the neutrals white, black, and gray."
      ]
     }
    ]

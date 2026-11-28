@@ -51,8 +51,8 @@ window.SOURCES = {
      "url": "https://www.metmuseum.org/art/collection/search/483161"
     },
     {
-     "html": "Kr&ouml;ller-M&uuml;ller Museum, Otterlo. <em>Composition with Red, Yellow and Blue</em>, Piet Mondrian, KM 101.213.",
-     "url": "https://www.krollermuller.nl/en/collection/piet-mondriaan-composition-with-red-yellow-and-blue-km-101-213"
+     "html": "Dallas Museum of Art. <em>Composition with Large Blue Plane, Red, Black, Yellow, and Gray</em>, Piet Mondrian, 1984.200.FA. Google Arts &amp; Culture.",
+     "url": "https://artsandculture.google.com/asset/composition-with-large-blue-plane-red-black-yellow-and-gray/CwE7U9R78Q2UOQ"
     }
    ]
   },
@@ -87,6 +87,18 @@ window.SOURCES = {
     {
      "html": "The Museum of Modern Art, New York. <em>Painterly Architectonic</em>, Liubov Popova, 14.1958.",
      "url": "https://www.moma.org/collection/works/78444"
+    },
+    {
+     "html": "Art Institute of Chicago. &ldquo;Piet Mondrian.&rdquo; Artist page.",
+     "url": "https://www.artic.edu/artists/17549/piet-mondrian"
+    },
+    {
+     "html": "National Gallery of Art, Washington. <em>Tableau No. IV; Lozenge Composition with Red, Gray, Blue, Yellow, and Black</em>, Piet Mondrian.",
+     "url": "https://www.nga.gov/collection/art-object-page.52614.html"
+    },
+    {
+     "html": "Dallas Museum of Art. &ldquo;A Short Guide to the Life of Piet Mondrian.&rdquo; Google Arts &amp; Culture.",
+     "url": "https://artsandculture.google.com/story/gwURQIOAO1U5tg"
     }
    ]
   }
